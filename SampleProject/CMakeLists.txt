@@ -11,5 +11,5 @@ ENDIF(USE_ITK_FILE)
 # Add the executable with our source file.
 ADD_EXECUTABLE(itkSampleProject itkSampleProject.cxx)
 
-# We only need ITK's Common components.  Link to the common libraries.
-TARGET_LINK_LIBRARIES(itkSampleProject ${ITK_Common_LIBS})
+# We only need ITK's Common components.  Link to the common library.
+TARGET_LINK_LIBRARIES(itkSampleProject ITKCommon)
