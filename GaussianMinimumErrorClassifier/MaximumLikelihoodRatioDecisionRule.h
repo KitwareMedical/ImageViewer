@@ -19,29 +19,28 @@
 
 #include <vector>
 #include "vnl/vnl_matrix.h"
-#include "itkObject.h"
-#include "itkObjectFactory.h"
+#include "itkDecisionRuleBase.h"
 
 /** \class MaximumLikelihoodRatioDecisionRule
  *  \brief A Decision rule that choose the class that has maximum value
  */
  
 class MaximumLikelihoodRatioDecisionRule : 
-  public itk::Object
+  public itk::DecisionRuleBase
 {
  public:
   /** Standard class typedefs */ 
   typedef MaximumLikelihoodRatioDecisionRule Self ;
-  typedef itk::Object Superclass;
+  typedef itk::DecisionRuleBase Superclass;
   typedef itk::SmartPointer<Self> Pointer;
   
   /** Run-time type information (and related methods) */
-  itkTypeMacro(MaximumLikelihoodRatioDecisionRule, Object);
+  itkTypeMacro(MaximumLikelihoodRatioDecisionRule, DecisionRuleBase);
   
   /** Standard New() method support */
   itkNewMacro(Self) ;
   
-  unsigned int Evaluate(std::vector< double > &discriminantScores) const ;
+  unsigned int Evaluate(std::vector< double > &discriminantScores) ;
   void AddClassSampleSize(unsigned int size) ;
 
  protected:
@@ -56,7 +55,8 @@ class MaximumLikelihoodRatioDecisionRule :
 } ; // end of class
 
 inline unsigned int 
-MaximumLikelihoodRatioDecisionRule::Evaluate(std::vector< double > &discriminantScores) const
+MaximumLikelihoodRatioDecisionRule::Evaluate(std::vector< double > 
+                                             &discriminantScores)
 {
   unsigned int maxIndex = 0 ;
   double maxScore = 0.0 ;

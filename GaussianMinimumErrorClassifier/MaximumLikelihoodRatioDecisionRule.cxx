@@ -16,10 +16,11 @@
 =========================================================================*/
 #include "MaximumLikelihoodRatioDecisionRule.h"
 
-MaximumLikelihoodRatioDecisionRule::MaximumLikelihoodRatioDecisionRule() 
+MaximumLikelihoodRatioDecisionRule::MaximumLikelihoodRatioDecisionRule()
 {
   m_TotalSampleSize = 0 ;
 }
+
 
 void MaximumLikelihoodRatioDecisionRule::AddClassSampleSize(unsigned int size)
 {
