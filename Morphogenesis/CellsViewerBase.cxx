@@ -15,6 +15,7 @@ CellsViewerBase
 ::CellsViewerBase()
 {
   m_Display.GetGlWindow()->SetBackground( 0.8, 0.8, 0.9 );
+  m_Display.GetGlWindow()->SetZoom( 5.0 );
   m_Stop =            true;
   m_StartTime =          0;
 
