@@ -1,0 +1,40 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class fltkImage2DViewerGUI {open
+} {
+  Function {fltkImage2DViewerGUI()} {} {
+    Fl_Window externalWindow {
+      xywh {758 183 454 367} visible
+    } {
+      Fl_Box imageViewer {selected
+        xywh {0 0 450 365}
+        code0 {\#include <fltkImage2DViewerWindow.h>}
+        class {fltk::Image2DViewerWindow}
+      }
+    }
+  }
+  Function {~fltkImage2DViewerGUI()} {} {}
+  Function {SetLabel(const char *label)} {return_type void
+  } {
+    code {externalWindow->label( label );} {}
+  }
+  Function {Show(void)} {return_type void
+  } {
+    code {externalWindow->show();
+imageViewer->show();} {}
+  }
+  Function {Hide(void)} {return_type void
+  } {
+    code {externalWindow->hide();} {}
+  }
+  Function {Redraw(void)} {return_type void
+  } {
+    code {imageViewer->redraw();
+Fl::check();} {}
+  }
+} 
