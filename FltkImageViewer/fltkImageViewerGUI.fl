@@ -1,10 +1,7 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0011 
+version 1.0100 
 header_name {.h} 
-code_name {.cxx} 
-gridx 5 
-gridy 5 
-snap 3
+code_name {.cxx}
 class fltkImageViewerGUI {open
 } {
   Function {fltkImageViewerGUI()} {} {}
@@ -12,15 +9,15 @@ class fltkImageViewerGUI {open
   } {}
   Function {CreateGUI()} {open
   } {
-    Fl_Window iviewWindow {open
-      xywh {855 29 298 401} labelsize 10 resizable visible
+    Fl_Window iviewWindow {
+      xywh {855 29 295 400} labelsize 10 resizable visible
     } {
-      Fl_Group glWindowGroup {open
+      Fl_Group glWindowGroup {
         xywh {0 25 260 320}
       } {
         Fl_Choice orientationChoice {
-          callback {SetOrientation();} selected
-          xywh {20 325 50 20}
+          callback {SetOrientation();} open
+          xywh {20 325 50 20} down_box BORDER_BOX
         } {
           menuitem {} {
             label X
@@ -48,7 +45,7 @@ class fltkImageViewerGUI {open
         code0 {AddMenuBarOptions();}
       } {
         submenu {} {
-          label Filter
+          label Filter open
           xywh {0 0 100 20}
           code0 {AddFilterMenuOptions();}
         } {
@@ -60,6 +57,17 @@ class fltkImageViewerGUI {open
           menuitem {} {
             label Log
             callback {ImageMode(itk::IMG_LOG);}
+            xywh {10 10 100 20}
+          }
+        }
+        submenu {} {
+          label Overlay
+          xywh {10 10 100 20}
+          code0 {AddFilterMenuOptions();}
+        } {
+          menuitem {} {
+            label Opacity
+            callback {ShowOverlayOpacityControl();}
             xywh {10 10 100 20}
           }
         }
@@ -120,7 +128,7 @@ class fltkImageViewerGUI {open
     }
     Fl_Window clickedPointsWindow {
       label {Clicked Points}
-      xywh {548 29 291 405} visible
+      xywh {548 29 290 405} visible
     } {
       Fl_Browser clickedPointsBrowser {
         xywh {10 15 270 345} textfont 4
@@ -139,6 +147,21 @@ class fltkImageViewerGUI {open
         label Close
         callback {clickedPointsWindow->hide();}
         xywh {200 370 65 25}
+      }
+    }
+    Fl_Window overlayOpacityControlWindow {
+      label {Overlay Opacity} open
+      xywh {502 506 400 100} visible
+    } {
+      Fl_Button {} {
+        label Close
+        callback {overlayOpacityControlWindow->hide();}
+        xywh {145 64 115 25}
+      }
+      Fl_Value_Slider overlayOpacitySlider {
+        label Opacity
+        callback {SetOverlayOpacity( o->value() );}
+        xywh {25 29 360 25} type {Horz Fill} color 29 selection_color 21 align 1 value 0.5
       }
     }
   }
@@ -188,6 +211,10 @@ class fltkImageViewerGUI {open
   } {}
   Function {ClearClickedPoints(void)} {return_type {virtual void}
   } {}
-  Function {UpdateClickedPoints(void)} {return_type {virtual void}
+  Function {ShowOverlayOpacityControl(void)} {selected return_type {virtual void}
+  } {}
+  Function {SetOverlayOpacity(float)} {return_type {virtual void}
+  } {}
+  Function {UpdateClickedPoints()} {return_type {virtual void}
   } {}
 } 

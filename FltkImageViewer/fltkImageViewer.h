@@ -87,6 +87,9 @@ public:
   /** Get the opacity of the overlay */
   virtual float GetOverlayOpacity(void) const;
   
+  /** Show slider to control overlay opacity */
+  virtual void ShowOverlayOpacityControl(void);
+  
   /** Get the ColorTable for the Overlay */
   virtual ColorTablePointer GetOverlayColorTable(void);
 

@@ -68,6 +68,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 ::SetOverlayOpacity(float newOverlayOpacity)
 {
   glSliceView->OverlayOpacity( newOverlayOpacity );
+  glSliceView->update();
 }
 
 
@@ -130,6 +131,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 {
   iviewWindow->hide();
   clickedPointsWindow->hide();
+  overlayOpacityControlWindow->hide();
 }
 
 
@@ -489,6 +491,20 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 {
   glSliceView->viewCrosshairs(crosshairs);
 }
+
+
+
+
+  
+template <class ImagePixelType, class OverlayPixelType>
+void 
+ImageViewer<ImagePixelType,OverlayPixelType>
+::ShowOverlayOpacityControl()
+{
+  overlayOpacitySlider->value( this->GetOverlayOpacity() );
+  overlayOpacityControlWindow->show();
+}
+
 
 
 } // end namespace itk
