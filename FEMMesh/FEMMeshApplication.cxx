@@ -78,7 +78,7 @@ FEMMeshApplication
     fl_alert( excp.GetDescription() );
     return;
   }
-
+  
   m_FlRenderWindowInteractor->redraw();
   Fl::check();
 
