@@ -63,6 +63,8 @@ void print_usage()
   print_line("       [--degree int] ") ;
   print_line("       [--grow double] [--shrink double] [--max-iteration int]");
   print_line("       [--init-step-size double] ");
+  print_line("       [--use-slab-identification [yes|no]]") ;
+  print_line("       [--slice-direction [0-2]]" ) ;
 
   print_line("");
 
@@ -99,6 +101,12 @@ void print_usage()
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
   print_line("        inital step size [default 1.02]" );
+  print_line("--use-slab-identification [yes|no]") ;
+  print_line("       if yes, the bias correction will first identify slabs,") ;
+  print_line("       and then apply the bias correction to each slab") ;
+  print_line("--slice-direction [0-2]" ) ;
+  print_line("        slice creation direction ( 0 - x axis, 1 - y axis") ;
+  print_line("        2 - z axis) [default 2]") ;
 
   print_line("");
 
@@ -110,8 +118,9 @@ void print_usage()
   print_line("         --output-mask sample.mask2.mhd ") ;
   print_line("         --degree 3 --grow 1.05 --shrink 0.9");
   print_line("         --max-iteration 2000 --init-step-size 1.1") ;
+  print_line("         --use-slab-identification no") ;
+  print_line("         --slice-direction 2") ;
 }
-
 
 
 int main(int argc, char* argv[])
@@ -144,7 +153,9 @@ int main(int argc, char* argv[])
 
   int inputDimension ;
   itk::Size<3> inputSize ;
-  
+
+  bool usingSlabIdentification ;
+
   try
     {
       // get image file options
@@ -168,6 +179,10 @@ int main(int argc, char* argv[])
       shrink = pow(grow, -0.25) ;
       shrink = options.GetDoubleOption("shrink", shrink, false) ;
       initialRadius = options.GetDoubleOption("init-step-size", 1.02, false) ;
+
+      // get the filter operation option
+      usingSlabIdentification = 
+        options.GetBooleanOption("use-slab-identification", false, false) ;
     }
   catch(OptionList::RequiredOptionMissing e)
     {
@@ -199,7 +214,7 @@ int main(int argc, char* argv[])
         {
           loadMask(outputMaskFileName, outputMask) ;
           filter->SetOutputMask(outputMask) ;
-          std::cout << "Output maskimage loaded." << std::endl ;
+          std::cout << "Output mask image loaded." << std::endl ;
         }
       std::cout << "Images loaded." << std::endl ;
     }
@@ -211,6 +226,8 @@ int main(int argc, char* argv[])
     }
 
   ImagePointer output = ImageType::New() ;
+  output->SetLargestPossibleRegion(input->GetLargestPossibleRegion()) ;
+  output->SetRequestedRegion(input->GetLargestPossibleRegion()) ;
 
   filter->SetOutput(output) ;
 
@@ -221,10 +238,23 @@ int main(int argc, char* argv[])
   filter->SetOptimizerMaximumIteration(maximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;
   filter->SetBiasFieldDegree(degree) ;
-
+  filter->SetUsingSlabIdentification(usingSlabIdentification) ;
+  filter->SetSlicingDirection(sliceDirection) ;
+  filter->SetVerboseMode(true) ;
   filter->Update() ;
 
-  writeImage(outputFileName, output) ;
+  std::cout << "Writing the output image..." << std::endl ;
+
+  try 
+    {
+      writeImage(outputFileName, output) ;
+    }
+  catch (ImageIOError e)
+    {
+      std::cout << "Error: " << e.Operation << " file name:" 
+                << e.FileName << std::endl ;
+      exit(0) ;
+    }
   
   return 0 ;
 }
