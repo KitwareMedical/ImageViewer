@@ -51,7 +51,9 @@ FEMMeshApplicationBase
   // a renderer and render window
   m_RenderWindow->AddRenderer( m_Renderer );
 
-  m_Renderer->SetBackground( 1, 1, 1 );
+  m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
+  m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
+  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 20.0 ); 
 
   m_FEMMesh = FEMMeshType::New();
 
@@ -397,7 +399,6 @@ FEMMeshApplicationBase
 
   m_FEMMesh->SetPointData( displacementContainer );
 
-  std::cout << "Number of points = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
 
   //-----------------------------------------------
   // Now we can add Elements to the FEMMesh ...
@@ -423,7 +424,6 @@ FEMMeshApplicationBase
   m_FEMMesh->SetCell( cellId++, bar1.GetPointer() ); // GetPointer() returns a normal pointer
 
 
-  std::cout << "Number of cells  = " << m_FEMMesh->GetNumberOfCells() << std::endl;
 
   this->DisplayFEMMesh();
 
@@ -497,13 +497,18 @@ FEMMeshApplicationBase
   typedef HeatMeshType::PointIdentifier   HeatPointIdentifier;
   HeatPointIdentifier pointId = itk::NumericTraits< HeatPointIdentifier >::Zero;
 
+  typedef HeatMeshType::PointType::ValueType CoordinateRepresentationType;
+
+  CoordinateRepresentationType centerx = nx * dx / 2.0f;
+  CoordinateRepresentationType centery = ny * dy / 2.0f;
+
   for(unsigned int y=0; y<=ny; y++) 
     {
     HeatPointType point;
-    point[1] = y * dy;
+    point[1] = y * dy - centery;
     for(unsigned int x=0; x<=nx; x++) 
       {
-      point[0] = x * dx;
+      point[0] = x * dx - centerx;
       points->SetElement( pointId++, point );
       }
     }
@@ -522,16 +527,32 @@ FEMMeshApplicationBase
     {
     for(unsigned int x=0; x<nx; x++) 
       {
-      HeatCellType::Pointer cell = HeatCellType::New();
-      cells->SetElement( cellId++, cell.GetPointer() );
+      const unsigned int pointsPerRow = nx+1;
+      const HeatPointIdentifier point0 =   x   + (   y   * pointsPerRow );
+      const HeatPointIdentifier point1 = (x+1) + (   y   * pointsPerRow );
+      const HeatPointIdentifier point2 =   x   + ( (y+1) * pointsPerRow );
+      const HeatPointIdentifier point3 = (x+1) + ( (y+1) * pointsPerRow );
+
+      HeatCellType::Pointer cellA = HeatCellType::New();
+      cellA->SetPointId( 0, point0 );
+      cellA->SetPointId( 1, point1 );
+      cellA->SetPointId( 2, point3 );
+      cells->SetElement( cellId++, cellA.GetPointer() );
+
+      HeatCellType::Pointer cellB = HeatCellType::New();
+      cellB->SetPointId( 0, point0 );
+      cellB->SetPointId( 1, point3 );
+      cellB->SetPointId( 2, point2 );
+      cells->SetElement( cellId++, cellB.GetPointer() );
+
       }
     }
 
 
   heatMesh->SetCells( cells.GetPointer() );
 
-  std::cout << "Number of Points = " << heatMesh->GetNumberOfPoints() << std::endl;
-  std::cout << "Number of Cells  = " << heatMesh->GetNumberOfCells()  << std::endl;
+
+  this->DisplayFEMMesh();
 
   m_HeatSolver->AssembleMasterEquation();
 
@@ -595,11 +616,14 @@ FEMMeshApplicationBase
     // Set the vtk point at the index with the the coord array from itk
     // itk returns a const pointer, but vtk is not const correct, so
     // we have to use a const cast to get rid of the const
-    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetDataPointer()));
+    const HeatMeshType::PointType & p = i->Value();
+    vpoints->SetPoint(idx, p[0], p[1], 0.0f );
     }
+
   // Set the points on the vtk grid
   vgrid->SetPoints(vpoints);
   
+
   // Now create the cells using the MulitVisitor
   // 1. Create a MultiVisitor
   typedef HeatMeshType::CellMultiVisitorType       HeatCellMultiVisitorType;
@@ -617,7 +641,8 @@ FEMMeshApplicationBase
 
   // create vtk cells and estimate the size
   vtkCellArray* cells = vtkCellArray::New();
-  cells->EstimateSize(numCells, 4);
+  const unsigned int maximumExpectedNumberOfPointsPerCell = 3;
+  cells->EstimateSize( numCells, maximumExpectedNumberOfPointsPerCell );  
 
   // Set the TypeArray CellCount and CellArray for both visitors
   triangleVisitor->SetTypeArray( types );
@@ -625,7 +650,7 @@ FEMMeshApplicationBase
   triangleVisitor->SetCellArray( cells );
 
   // add the visitors to the multivisitor
-//  multiVisitor->AddVisitor( triangleVisitor );
+  multiVisitor->AddVisitor( triangleVisitor );
 
   // Now ask the mesh to accept the multivisitor which
   // will Call Visit for each cell in the mesh that matches the
@@ -650,6 +675,7 @@ FEMMeshApplicationBase
   vtkActor * actor = vtkActor::New();
   actor->SetMapper( mapper );
   actor->GetProperty()->SetColor(0,0,1); // color blue
+  actor->GetProperty()->SetRepresentationToWireframe();
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
