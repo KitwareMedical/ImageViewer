@@ -26,6 +26,9 @@
 #include "vtkUnstructuredGrid.h"
 #include "vtkPoints.h"
 #include "vtkFloatArray.h"
+#include "vtkLine.h"
+#include "vtkAxes.h"
+#include "vtkTubeFilter.h"
 
 #include "itkNumericTraits.h"
 
@@ -46,6 +49,10 @@ FEMMeshApplicationBase
   m_Nodes     = 0;
   m_Cells     = 0;
   m_Elements  = 0;
+
+  m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
+  m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
+  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 10.0 ); 
 
 }
 
@@ -105,7 +112,6 @@ FEMMeshApplicationBase
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
-  m_Renderer->SetBackground(1,1,1); // Background color white
 
   sphere->Delete();
   mapper->Delete();
@@ -158,6 +164,7 @@ FEMMeshApplicationBase
   vtkPolyData   * triangle = vtkPolyData::New();
   vtkPoints     * points   = vtkPoints::New();
   vtkCellArray  * lines    = vtkCellArray::New();
+  
 
   // Load the point, cell, and data attributes.
   for (unsigned int i=0; i<numberOfPoints; i++) 
@@ -189,7 +196,6 @@ FEMMeshApplicationBase
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
-  m_Renderer->SetBackground(1,1,1); // Background color white
 
 
   triangle->Delete();
@@ -198,6 +204,38 @@ FEMMeshApplicationBase
  
 
 }
+
+
+
+void
+FEMMeshApplicationBase
+::DisplayAxes(void)
+{
+    
+  vtkAxes *axes = vtkAxes::New();
+    axes->SetOrigin( 0.0, 0.0, 0.0 );
+    axes->SetScaleFactor( 1.0 );
+
+  vtkTubeFilter *axesTubes = vtkTubeFilter::New();
+    axesTubes->SetInput(axes->GetOutput());
+    axesTubes->SetRadius(axes->GetScaleFactor()/100.0);
+    axesTubes->SetNumberOfSides(6);
+
+  vtkPolyDataMapper *axesMapper = vtkPolyDataMapper::New();
+    axesMapper->SetInput(axesTubes->GetOutput());
+
+  vtkActor *axesActor = vtkActor::New();
+    axesActor->SetMapper(axesMapper);
+
+  m_Renderer->AddActor( axesActor );
+
+  axesActor->Delete();
+  axesMapper->Delete();
+  axesTubes->Delete();
+  axes->Delete();
+
+}
+
 
 
 
@@ -215,16 +253,51 @@ FEMMeshApplicationBase
     itkGenericExceptionMacro(<<"Attempt to display a Mesh with no points !");
     }
     
+
   // Create a vtkUnstructuredGrid
   vtkUnstructuredGrid * vgrid = vtkUnstructuredGrid::New();
+  
 
   // Create the vtkPoints object and set the number of points
   vtkPoints * vpoints = vtkPoints::New();
   vpoints->SetNumberOfPoints(numberOfPoints);
 
+  // Transfer Points information from the FEMMesh to the vtkMesh
+  vtkIdType pointId = itk::NumericTraits< vtkIdType >::Zero;
+  for(unsigned int p=0; p<numberOfPoints; p++)
+    {
+    const float x = m_Points[p][0];
+    const float y = m_Points[p][1];
+    const float z = m_Points[p][2];
+    vpoints->SetPoint(  pointId, x, y, z );
+    pointId++;
+    }
+
+  vgrid->SetPoints( vpoints );
   
-  // HERE CONVERT THE FEMMESH to a VTK Mesh
+  
   const unsigned int numberOfCells    = m_FEMMesh->GetNumberOfCells();  
+  {
+    vtkCellArray  * vcells   = vtkCellArray::New();
+    int * cellTypes = new int[ numberOfCells ];
+
+    for(unsigned int c=0; c<numberOfCells; c++)
+      {
+      vtkIdType pointIndex[2];
+      pointIndex[0] = 0;
+      pointIndex[1] = 1;
+      cellTypes[c] = VTK_LINE;
+      vcells->InsertNextCell ( cellTypes[c], pointIndex );
+      }
+    vgrid->SetCells ( cellTypes, vcells );
+    std::cout << "Number of Cells in the Grid ";
+    std::cout << vgrid->GetNumberOfCells() << std::endl;
+    std::cout << "Number of Points in the Grid ";
+    std::cout << vgrid->GetNumberOfPoints() << std::endl;
+  }
+
+
+
   const unsigned int numberOfNodes    = m_FEMMesh->GetNumberOfNodes();  
   const unsigned int numberOfElements = m_FEMMesh->GetNumberOfElements();  
 
@@ -232,6 +305,7 @@ FEMMeshApplicationBase
 
   // map to graphics library
   vtkDataSetMapper * mapper = vtkDataSetMapper::New();
+  
   mapper->SetInput( vgrid  );
 
   // actor coordinates geometry, properties, transformation
@@ -241,7 +315,7 @@ FEMMeshApplicationBase
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
-  m_Renderer->SetBackground(1,1,1); // Background color white
+
 
   vgrid->Delete();
   mapper->Delete();
@@ -272,13 +346,13 @@ FEMMeshApplicationBase
 
   m_Points = new ActualPointType[ numberOfPoints ];
 
-  m_Points[0][0] = 10;
-  m_Points[0][1] = 15;
-  m_Points[0][2] = 18;
+  m_Points[0][0] =   1.0;
+  m_Points[0][1] =   0.0;
+  m_Points[0][2] =   0.0;
 
-  m_Points[0][0] = 20;
-  m_Points[0][1] = 15;
-  m_Points[0][2] = 18;
+  m_Points[1][0] =  -1.0;
+  m_Points[1][1] =   0.0;
+  m_Points[1][2] =   0.0;
 
   m_FEMMesh->AddPoint( &(m_Points[0]) );
   m_FEMMesh->AddPoint( &(m_Points[1]) );

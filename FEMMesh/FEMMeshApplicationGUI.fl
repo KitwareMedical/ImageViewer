@@ -18,7 +18,7 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
         xywh {0 0 840 25}
       } {
         submenu {} {
-          label File
+          label File open
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -28,7 +28,7 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
           }
         }
         submenu {} {
-          label View
+          label View open
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -41,6 +41,11 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
             callback {this->CreateTriangle();}
             xywh {0 0 100 20}
           }
+          menuitem {} {
+            label {Coordinate Axes}
+            callback {this->DisplayAxes();} selected
+            xywh {10 10 100 20}
+          }
         }
         submenu {} {
           label Create
@@ -48,7 +53,7 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
         } {
           menuitem {} {
             label FEMMesh
-            callback {this->CreateFEMMesh();} selected
+            callback {this->CreateFEMMesh();}
             xywh {10 10 100 20}
           }
         }

@@ -79,6 +79,7 @@ public:
   virtual void CreateTriangle(void);
   virtual void CreateFEMMesh(void);
   virtual void DisplayFEMMesh(void);
+  virtual void DisplayAxes(void);
 
 protected:
  
