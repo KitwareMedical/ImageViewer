@@ -12,25 +12,27 @@ extern "C" {
 int main(int argc, char *argv[]) {
   
   // Test for command line arguments.
-  if (argc != 12)
+  if (argc != 13)
     {
       std::cerr << "Usage: " << argv[0]
-                << "input_image input_model output_model output_features iterations max_rms_change upper_threshold lower_threshold feature_scaling curvature_scaling isovalue"
+                << " input_image input_model output_model output_features iterations max_rms_change lower_threshold upper_threshold feature_scaling curvature_scaling isovalue negative_features"
                 << std::endl;
       return 1;
     }
 
   // Grab the number of iterations and conductance term
   int iterations;
+  int negative_features=0;
   float max_rms_change, upper_threshold, lower_threshold;
   float feature_scaling, curvature_scaling, isovalue;
   ::sscanf(argv[5], "%d", &iterations);
   ::sscanf(argv[6], "%f", &max_rms_change);
-  ::sscanf(argv[7], "%f", &upper_threshold);
-  ::sscanf(argv[8], "%f", &lower_threshold);
+  ::sscanf(argv[7], "%f", &lower_threshold);
+  ::sscanf(argv[8], "%f", &upper_threshold);
   ::sscanf(argv[9], "%f", &feature_scaling);
   ::sscanf(argv[10], "%f", &curvature_scaling);
   ::sscanf(argv[11], "%f", &isovalue);
+  ::sscanf(argv[12], "%d", &negative_features);
 
   // Convenient typedefs
   typedef itk::Image<float, 2> RealImageType;
@@ -80,20 +82,26 @@ int main(int argc, char *argv[]) {
   segmentation->SetIsoSurfaceValue(isovalue);
   segmentation->SetLowerThreshold(lower_threshold);
   segmentation->SetUpperThreshold(upper_threshold);
-
+  if (negative_features != 0)
+    {
+      segmentation->SetUseNegativeFeatures(true);
+    }
   // Connect the pipeline
   to_real->SetInput(feature_reader->GetOutput());
   segmentation->SetInput(seed_reader->GetOutput());
-  segmentation->SetFeatureImage(to_real->GetOutput());
   model_writer->SetInput(segmentation->GetOutput());
-  feature_writer->SetInput(segmentation->GetFeatureImage());
 
   // Execute the pipeline
   try {
     to_real->Update(); // In the future, the feature image will be a proper
                        // input to the segmenation filter and this step will
                        // not be necessary.
+
+    segmentation->SetFeatureImage(to_real->GetOutput());
+    
     model_writer->Write();
+
+    feature_writer->SetInput(segmentation->GetSpeedImage());
     feature_writer->Write();
   }
   catch(itk::ExceptionObject &e)
