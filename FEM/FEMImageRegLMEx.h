@@ -151,9 +151,7 @@ public:
    
 /** Instantiate the load class with the correct image type. */
   typedef  ImageMetricLoad<ImageType,ImageType> ImageMetricLoadType;
-  // Register load class.
-  template class itk::fem::ImageMetricLoadImplementation<ImageMetricLoadType>;
-
+  
   /**
    * Easy access to the FEMObjectFactory. We create a new class
    * whose name is shorter and it's not templated...

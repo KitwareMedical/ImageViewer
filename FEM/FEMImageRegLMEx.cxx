@@ -25,6 +25,9 @@
 namespace itk {
 namespace fem {
 
+// Register load class.
+template class itk::fem::ImageMetricLoadImplementation<ImageMetricLoadType>;
+
 /*
  * Generate a rectangular mesh of hexahedron elements
  */
