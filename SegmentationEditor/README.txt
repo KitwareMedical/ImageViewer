@@ -35,6 +35,8 @@ www.itk.org website.
 
 KNOWN BUGS
 
+7-28-02
+
 During the build process, you may need to provide CMake with the VTK_WRAP_HINTS
 variable.  To do this, edit the CMakeCache.txt file in your ITK build directory
 and change the line
@@ -47,5 +49,16 @@ VTK_WRAP_HINTS:FILEPATH=/path/to/your/vtk/source/Wrapping
 
 where "/path/to/your/vtk/source/" depends on where you have installed
 VTK on your machine.
+
+
+
+7-29-02
+
+You will need to disable wrapping for Python (and possibly Java) in your
+VTK build so that the ITK CMake configuration does not pick up these
+settings and attempt to wrap the SegmentationEditor code for Python and Java.
+This is a bug in the SegmentationEditor CMake setup and will be corrected
+in the future.
+
 
 
