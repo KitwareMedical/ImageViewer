@@ -54,13 +54,18 @@ public:
   typedef TFEMMesh                                FEMMeshType;
   typedef typename FEMMeshType::CellTraits        CellTraits;
   typedef typename FEMMeshType::PointType         PointType;
+  typedef typename FEMMeshType::PixelType         PixelType;
   typedef typename FEMMeshType::CoordRepType      CoordinateRepresentationType;
 
-  typedef LineCell< DisplacementType, CellTraits >        CellType;
+  // note that we cannot use "CellType" here because there 
+  // is already an enum called "CellType" defined in CellInterface<>
+  typedef typename LineCell< PixelType, CellTraits >  BaseCellType;
+  typedef typename BaseCellType::PointIdIterator      PointIdIterator;
+  typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
 
-  typedef FEMElement< CellType, 
+  typedef FEMElement< BaseCellType, 
                       FEMMeshType,
-                      NDisplacementComponentsPerPoint >           Superclass;
+                      NDisplacementComponentsPerPoint >   Superclass;
 
   typedef typename Superclass::MatrixType                 MatrixType;
   typedef typename Superclass::LoadsVectorType            LoadsVectorType;
@@ -68,8 +73,8 @@ public:
   typedef typename Superclass::PointsContainer            PointsContainer;
   typedef typename Superclass::PointDataContainer         PointDataContainer;
   typedef typename Superclass::CellsContainer             CellsContainer;
-  typedef typename Superclass::CellType::PointIdIterator  PointIdIterator;
   typedef typename Superclass::DisplacementType           DisplacementType;
+
 
   
   /**
@@ -80,11 +85,14 @@ public:
 
     MatrixType stiffnessMatrix( NumberOfDisplacementComponents, NumberOfDisplacementComponents);
     
-    PointIdIterator Id = this->GetPointIds(); 
-    typename PointsContainer::Pointer points = mesh->GetPoints();
+    PointIdConstIterator Id = this->GetPointIds(); 
+    typename PointsContainer::ConstPointer points = mesh->GetPoints();
 
-    const PointType & point1 = points->ElementAt( *Id++ );
-    const PointType & point2 = points->ElementAt( *Id++ );
+    PointType point1;
+    PointType point2;
+
+    points->GetElementIfIndexExists( *Id++, &point1 );
+    points->GetElementIfIndexExists( *Id++, &point2 );
 
     const CoordinateRepresentationType x1 = point1[0];
     const CoordinateRepresentationType y1 = point1[1];
