@@ -65,32 +65,26 @@ class VTK_EXPORT vtkITKThresholdSegmentationLevelSetImageFilter : public vtkITKI
     DelegateITKInputMacro ( SetMaximumRMSError, value );
   };
 
-  float GetMaximumRMSError()
-  {
-    DelegateITKOutputMacro ( GetMaximumRMSError );
-  };
-
   void SetUseNegativeFeatures (int value )
   {
     DelegateITKInputMacro( SetUseNegativeFeatures, value);
   }
   
-  void SetFeatureImage ( vtkImageData *value )
+  void SetFeatureImage ( vtkImageData *value)
   {
     this->vtkFeatureExporter->SetInput(value);
   }
-  
+
+  vtkImageData *GetSpeedImage()
+  {
+    this->vtkSpeedImporter->Update();
+    return this->vtkSpeedImporter->GetOutput();
+  }
+
   void SetFeatureScaling ( float value )
-  { DelegateITKInputMacro ( SetFeatureScaling, value ); };
-
-  float GetFeatureScaling ()
-  { DelegateITKOutputMacro(GetFeatureScaling) ; };
-
-  void SetCurvatureScaling ( float value )
-  { DelegateITKInputMacro ( SetCurvatureScaling, value ); };
-
-  float GetCurvatureScaling ()
-  { DelegateITKOutputMacro(GetCurvatureScaling) ; };
+  {
+    DelegateITKInputMacro ( SetFeatureScaling, value );
+  };
 
    float GetRMSChange ()
   {
@@ -103,27 +97,50 @@ class VTK_EXPORT vtkITKThresholdSegmentationLevelSetImageFilter : public vtkITKI
   };
 
   
+  // Description: Override vtkSource's Update so that we can access this class's GetOutput(). vtkSource's GetOutput is not virtual.
+  void Update()
+  {
+    if (this->vtkFeatureExporter->GetInput())
+      {
+        this->itkFeatureImporter->Update();
+        
+        if (this->GetOutput(0))
+          {
+            this->GetOutput(0)->Update();
+            if ( this->GetOutput(0)->GetSource() )
+              {
+                //          this->SetErrorCode( this->GetOutput(0)->GetSource()->GetErrorCode() );
+              }
+          }
+      }
+  }
+    
 protected:
   //BTX
   typedef itk::ThresholdSegmentationLevelSetImageFilter<Superclass::InputImageType,Superclass::InputImageType> ImageFilterType;
   typedef itk::VTKImageImport<InputImageType> FeatureImageImportType;
+  typedef itk::VTKImageExport<InputImageType> SpeedImageExportType;
   
   vtkITKThresholdSegmentationLevelSetImageFilter() : Superclass ( ImageFilterType::New() )
   {
     this->vtkFeatureExporter = vtkImageExport::New();
     this->itkFeatureImporter = FeatureImageImportType::New();
-    ConnectPipelines ( this->vtkFeatureExporter, this->itkFeatureImporter );
-    this->GetImageFilterPointer()->SetFeatureImage ( this->itkFeatureImporter->GetOutput() );
+    this->itkSpeedExporter = SpeedImageExportType::New();
+    this->vtkSpeedImporter = vtkImageImport::New();
+    ConnectPipelines(this->itkSpeedExporter, this->vtkSpeedImporter);
+    ConnectPipelines(this->vtkFeatureExporter, this->itkFeatureImporter);
+    (dynamic_cast<ImageFilterType*>(m_Filter.GetPointer()))->SetFeatureImage(this->itkFeatureImporter->GetOutput());
+    this->itkSpeedExporter->SetInput((dynamic_cast<ImageFilterType*>(m_Filter.GetPointer()))->GetSpeedImage());
   };
-  
   ~vtkITKThresholdSegmentationLevelSetImageFilter() {};
   ImageFilterType* GetImageFilterPointer() { return dynamic_cast<ImageFilterType*> ( m_Filter.GetPointer() ); }
   
   FeatureImageImportType::Pointer itkFeatureImporter;
+  SpeedImageExportType::Pointer itkSpeedExporter;
   //ETX
 
   vtkImageExport *vtkFeatureExporter;
-  // vtkImageImport *vtkSpeedImporter;
+  vtkImageImport *vtkSpeedImporter;
   
 private:
   vtkITKThresholdSegmentationLevelSetImageFilter(const vtkITKThresholdSegmentationLevelSetImageFilter&);  // Not implemented.
@@ -132,7 +149,7 @@ private:
   
 };
 
-vtkCxxRevisionMacro(vtkITKThresholdSegmentationLevelSetImageFilter, "$Revision: 1.4 $");
+vtkCxxRevisionMacro(vtkITKThresholdSegmentationLevelSetImageFilter, "$Revision: 1.5 $");
 vtkStandardNewMacro(vtkITKThresholdSegmentationLevelSetImageFilter);
 
 #endif
