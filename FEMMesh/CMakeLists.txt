@@ -33,6 +33,7 @@ LINK_LIBRARIES(
 )
 
 SOURCE_FILES(FEMMeshApplication_SRCS
+itkFEMHeatConduction2D
 FEMMeshApplicationBase
 FEMMeshApplication
 vtkFlRenderWindowInteractor
