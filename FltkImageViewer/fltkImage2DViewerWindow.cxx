@@ -279,6 +279,12 @@ Image2DViewerWindow::FitWindowToImage(void)
 void Image2DViewerWindow::draw(void) 
 {
 
+  if( !m_Buffer)
+  {
+    return;
+  }
+  
+  
   if( !visible_r() ) 
   {
     return;
