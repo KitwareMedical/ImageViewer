@@ -1,13 +1,13 @@
 % Configuration file for ITK FEM registration example
-3	% Number of levels in the multi-res pyramid
-3	% Maximum Level to use in the pyramid 
-4 8 12 %	% elts per dim each level
-1.e1 1.e1 1.e1   % Elasticity
-1.e0 1.e0 1.e0 %2.e2	% Rho
-4 4 6   	% NumberOfIntegrationPoints
-5 5 3 	  % WidthOfMetricRegion
-23 20 20 	% MaximumIterations
-0   0    % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
+4	% Number of levels in the multi-res pyramid
+4	% Maximum Level to use in the pyramid 
+4 8 16 32 %	% elts per dim each level
+1.e6 1.e6 1.e6 1.e7    % Elasticity
+1.e5 1.e5 1.e5 1.e5    % Rho
+4 6 6 6  	% NumberOfIntegrationPoints
+3 3 3 3	  % WidthOfMetricRegion
+10 15 20 20 	% MaximumIterations
+0   0.0    % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
 1.	% Alpha
 1	% DescentDirection
 1	% DoLineSearch
@@ -15,9 +15,9 @@
 1.	% TimeStep
 1.e-19  % Energy Reduction Factor
 3       % dimension of images
-128	% Nx (image x dimension)
-128	% Ny (image y dimension)
-91      % Nz (image z dimension - not used if 2D)
+256	% Nx (image x dimension)
+256	% Ny (image y dimension)
+183      % Nz (image z dimension - not used if 2D)
 .\temp\img1filename % ReferenceFileName - not necessary if setting image from outside
 .\temp\img2filename % TargetFileName
 0	% UseLandmarks - read the file name below if this is true
