@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   // Grab the number of iterations and conductance term
   int iterations;
   int negative_features=0;
-  float max_rms_change, threshold, outside_value, variance;
+  float max_rms_change, threshold, variance;
   float propagation_scaling, advection_scaling, curvature_scaling, isovalue;
   ::sscanf(argv[5], "%d", &iterations);
   ::sscanf(argv[6], "%f", &max_rms_change);
