@@ -1,0 +1,27 @@
+% Configuration file for ITK FEM registration example
+
+0.5	% Alpha
+0	% DescentDirection
+0	% DoLineSearch
+490000	% Elasticity
+9	% MaximumIterations
+1.0	% TimeStep
+1.e3	% Rho
+E:\\Avants\\MetaImages\\brain_slice1smth.im	% ReferenceFileName
+E:\\Avants\\MetaImages\\brain_slice2smth.im	% TargetFileName
+0	% UseLandmarks - read the file name below if this is true
+c:\tessa\temp\e15326s16i1_2.regLM	% LandmarkFileName
+E:\\Avants\\MetaImages\\result	% ResultsFileName
+128	% Nx (image x dimension)
+128	% Ny (image y dimension)
+8	% MeshResolution
+8	% NumberOfIntegrationPoints
+1	% WidthOfMetricRegion
+0	% DoMultiRes - read the parameters below if this is true
+1	% DoSearchForMinAtEachResolution
+2.0	% MaxSmoothing
+0.5	% MinSmoothing
+2.0	% SmoothingStep
+
+END
+
