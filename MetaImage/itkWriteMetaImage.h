@@ -16,7 +16,7 @@
 #ifndef __itkWriteMetaImage_h
 #define __itkWriteMetaImage_h
 
-#include "itkWriteImage.h"
+#include "itkImageWriter.h"
 #include "MetaUtils.h"
 #include <vector>
 
@@ -29,7 +29,7 @@ namespace itk
  * WriteMetaImage writes N-D images in Meta Image file format. 
  */
 template <class TInputImage>
-class ITK_EXPORT WriteMetaImage : public WriteImage<TInputImage>
+class ITK_EXPORT WriteMetaImage : public ImageWriter<TInputImage>
 {
 public:
   /**
@@ -40,7 +40,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef WriteImage<TInputImage>   Superclass;
+  typedef ImageWriter<TInputImage>   Superclass;
 
   /** 
    * Smart pointer typedef support.

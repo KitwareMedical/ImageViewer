@@ -1,8 +1,8 @@
-#ifndef __itkFileIOMetaImageCommon_h
-#define __itkFileIOMetaImageCommon_h
+#ifndef __itkImageIOMetaImageCommon_h
+#define __itkImageIOMetaImageCommon_h
 
 #include "MetaImageLib.h"
-#include <itkFileIOCommon.h>
+#include <itkImageIOCommon.h>
 
 namespace itk
 {
@@ -19,4 +19,4 @@ MET_Type ConvertTAtomicPixelToMET_Type (const AtomicPixelType value);
 
 } // end namespace itk
 
-#endif // __itkFileIOMetaImageCommon_h
+#endif // __itkImageIOMetaImageCommon_h

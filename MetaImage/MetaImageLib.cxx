@@ -1013,7 +1013,7 @@ ElemByteOrderMSB()
    }
 
 bool MetaImage::
-ElemByteSwapRequired()
+ElemByteSwapperRequired()
    {
    return (eByteOrderMSB != MET_SYSTEM_BYTE_ORDER_MSB);
    }
@@ -1071,7 +1071,7 @@ ElemByteOrderSwap()
 bool MetaImage::
 ElemByteOrderFix()
    {
-   if(ElemByteSwapRequired())
+   if(ElemByteSwapperRequired())
       {
       ElemByteOrderSwap();
       return true;

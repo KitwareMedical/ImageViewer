@@ -18,7 +18,7 @@
 #include "vtkRenderWindowInteractor.h"
 
 typedef itk::Mesh<float, 
-  itk::MeshTypeDefault< float, 3, 3, float, float > > floatMesh;
+  itk::DefaultStaticMeshType< float, 3, 3, float, float > > floatMesh;
 
 void Display(vtkUnstructuredGrid* itkgrid, vtkUnstructuredGrid* vtkgrid)
 {

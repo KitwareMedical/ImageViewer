@@ -13,14 +13,14 @@
   See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
-#ifndef __itkVispackRGBToInsightImageAdaptor_h
-#define __itkVispackRGBToInsightImageAdaptor_h
+#ifndef __itkVispackRGBPixelToInsightImageAdaptor_h
+#define __itkVispackRGBPixelToInsightImageAdaptor_h
 
 #include <iostream.h>
 #include "itkImageSource.h"
 #include "itkImageRegionIterator.h"
 #include "image.h"
-#include "imageRGBA.h"
+#include "imageRGBPixelA.h"
 #include "itkVispackToInsightImageAdaptor.h"
 #include "itkVectorComponentDataAccessor.h"
 #include "itkVector.h"
@@ -28,14 +28,14 @@
 namespace itk {
 
 template <class TOutputImage>
-class ITK_EXPORT VispackRGBToInsightImageAdaptor
+class ITK_EXPORT VispackRGBPixelToInsightImageAdaptor
   : public VispackToInsightImageAdaptor<TOutputImage>
 {
 public:
   /**
    * Standard "Self" typdef.
    */
-  typedef VispackRGBToInsightImageAdaptor Self;
+  typedef VispackRGBPixelToInsightImageAdaptor Self;
 
   /**
    * Standard Superclass typedef
@@ -55,7 +55,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(VispackRGBToInsightImageAdaptor,ImageSource);
+  itkTypeMacro(VispackRGBPixelToInsightImageAdaptor,ImageSource);
   
   /**
    * Method for creation through the object factory.
@@ -65,7 +65,7 @@ public:
   /**
    * Set the output image
    */
-  void SetInput(VISImageRGBA* img)
+  void SetInput(VISImageRGBPixelA* img)
   {
     cout << "Setting input to " << img << endl;
     m_Input = img;
@@ -75,7 +75,7 @@ public:
   /**
    * Get the input image
    */
-  VISImageRGBA* GetInput()
+  VISImageRGBPixelA* GetInput()
   {
     return m_Input;
   }
@@ -97,14 +97,14 @@ public:
   }
 
 protected:
-  VispackRGBToInsightImageAdaptor() {}
-  ~VispackRGBToInsightImageAdaptor() {}
-  VispackRGBToInsightImageAdaptor(const VispackRGBToInsightImageAdaptor&) {}
-  void operator=(const VispackRGBToInsightImageAdaptor&) {}
+  VispackRGBPixelToInsightImageAdaptor() {}
+  ~VispackRGBPixelToInsightImageAdaptor() {}
+  VispackRGBPixelToInsightImageAdaptor(const VispackRGBPixelToInsightImageAdaptor&) {}
+  void operator=(const VispackRGBPixelToInsightImageAdaptor&) {}
   void GenerateData();
 
 private:
-  VISImageRGBA *m_Input;
+  VISImageRGBPixelA *m_Input;
   
 };
 
@@ -113,7 +113,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVispackRGBToInsightImageAdaptor.txx"
+#include "itkVispackRGBPixelToInsightImageAdaptor.txx"
 #endif
 
 

@@ -1,28 +1,28 @@
-#ifndef __itkFileIOMetaImage_h
-#define __itkFileIOMetaImage_h
+#ifndef __itkImageIOMetaImage_h
+#define __itkImageIOMetaImage_h
 
-#include "itkFileIO.h"
+#include "itkImageIO.h"
 #include "MetaImageLib.h"
-#include "itkFileIOMetaImageCommon.h"
+#include "itkImageIOMetaImageCommon.h"
 #include <itkVersion.h>
 #include <string>
 
 namespace itk
 {
 
-class ITK_EXPORT FileIOMetaImage : public FileIO
+class ITK_EXPORT ImageIOMetaImage : public ImageIO
 {
 public:
   /**
    * Smart pointer typedef support.
    */
-  typedef FileIOMetaImage Self;
+  typedef ImageIOMetaImage Self;
   typedef SmartPointer<Self>  Pointer;
 
   /**
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(FileIOMetaImage, FileIO);
+  itkTypeMacro(ImageIOMetaImage, ImageIO);
 
   /**
    * Method for creation through the object factory.
@@ -68,7 +68,7 @@ public:
   virtual void ReadHeader (const std::string fileName="");
 
   /**
-   * Returns the file extension that a particular FileIO subclass
+   * Returns the file extension that a particular ImageIO subclass
    * is capable of handling (e.g. .jpg, .mhd, etc.)
    * Currently only a single string is returned, but can be modified
    * so that a whole list of strings is returned.
@@ -184,33 +184,33 @@ protected:
   MetaImage* m_MetaImage;
   AtomicPixelType ConvertMET_TypeToAtomicPixelType (const MET_Type value) const;
   MET_Type ConvertAtomicPixelTypeToMET_Type (const AtomicPixelType value) const;
-  void CopyAcquisitionParamsToFileIO (MetaImage* fromHere);
+  void CopyAcquisitionParamsToImageIO (MetaImage* fromHere);
   void CopyAcquisitionParamsToMetaImage (MetaImage* toHere);
   virtual void Reset();
 
   /**
    * Default constructor
    */
-  FileIOMetaImage();
+  ImageIOMetaImage();
 
   /**
    * Destructor
    */
-  ~FileIOMetaImage();
+  ~ImageIOMetaImage();
 
 private:
 };
 
-class ITK_EXPORT FileIOMetaImageFactory : public ObjectFactoryBase
+class ITK_EXPORT ImageIOMetaImageFactory : public ObjectFactoryBase
 {
 public:
-  FileIOMetaImageFactory();
+  ImageIOMetaImageFactory();
   const char* GetITKSourceVersion();
   const char* GetDescription();
 
 
 protected:
-  typedef FileIOMetaImage myProductType;
+  typedef ImageIOMetaImage myProductType;
 
   const myProductType* m_MyProduct;
 

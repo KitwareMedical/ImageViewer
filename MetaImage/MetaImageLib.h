@@ -315,10 +315,10 @@ class MetaImage
       //       returns whether byte order is Sun(MSB=TRUE) or IBM PC compatible (MSB=FALSE)
       bool           ElemByteOrderMSB();
       
-      //    ElemByteSwapRequired()
+      //    ElemByteSwapperRequired()
       //       Not a Field in a MetaImageFile
       //       returns whether byte swap is needed to convert to local machine's byte ordering
-      bool           ElemByteSwapRequired();
+      bool           ElemByteSwapperRequired();
 
 
       //    ElemMakeByteOrderMSB(), ElemMakeByteOrderLSB(), ElemByteOrderSwap(), ElemByteOrderFix()

@@ -13,24 +13,24 @@
   See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
-#ifndef __itkInsightToVispackRGBImageAdaptor_h
-#define __itkInsightToVispackRGBImageAdaptor_h
+#ifndef __itkInsightToVispackRGBPixelImageAdaptor_h
+#define __itkInsightToVispackRGBPixelImageAdaptor_h
 
 #include <iostream.h>
-#include "itkWriteImage.h"
+#include "itkImageWriter.h"
 #include "itkImageRegionIterator.h"
 #include "image.h"
 
 namespace itk {
 
 template <class TInputImage>
-class ITK_EXPORT InsightToVispackRGBImageAdaptor : public WriteImage<TInputImage>
+class ITK_EXPORT InsightToVispackRGBPixelImageAdaptor : public ImageWriter<TInputImage>
 {
 public:
   /**
    * Standard "Self" typdef.
    */
-  typedef InsightToVispackRGBImageAdaptor Self;
+  typedef InsightToVispackRGBPixelImageAdaptor Self;
 
   /**
    * Standard Superclass typedef
@@ -50,7 +50,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(InsightToVispackRGBImageAdaptor,ImageSource);
+  itkTypeMacro(InsightToVispackRGBPixelImageAdaptor,ImageSource);
   
   /**
    * Method for creation through the object factory.
@@ -60,7 +60,7 @@ public:
   /**
    * Set the output image.
    */
-  void SetOutput(VISImageRGBA *img)
+  void SetOutput(VISImageRGBPixelA *img)
   {
     m_Output = img;
     this->Modified();
@@ -69,20 +69,20 @@ public:
   /**
    * Get the output image.
    */
-  VISImageRGBA* GetOutput()
+  VISImageRGBPixelA* GetOutput()
   {
     return m_Output;
   }
   
 protected:
-  InsightToVispackRGBImageAdaptor() {}
-  ~InsightToVispackRGBImageAdaptor() {}
-  InsightToVispackRGBImageAdaptor(const InsightToVispackRGBImageAdaptor&) {}
-  void operator=(const InsightToVispackRGBImageAdaptor&) {}
+  InsightToVispackRGBPixelImageAdaptor() {}
+  ~InsightToVispackRGBPixelImageAdaptor() {}
+  InsightToVispackRGBPixelImageAdaptor(const InsightToVispackRGBPixelImageAdaptor&) {}
+  void operator=(const InsightToVispackRGBPixelImageAdaptor&) {}
   void WriteData();
 
 private:
-  VISImageRGBA *m_Output;
+  VISImageRGBPixelA *m_Output;
   
 };
 
@@ -91,7 +91,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkInsightToVispackRGBImageAdaptor.txx"
+#include "itkInsightToVispackRGBPixelImageAdaptor.txx"
 #endif
 
 

@@ -17,14 +17,14 @@
 #define __itkInsightToVispackImageAdaptor_h
 
 #include <iostream.h>
-#include "itkWriteImage.h"
+#include "itkImageWriter.h"
 #include "itkImageRegionIterator.h"
 #include "image.h"
 
 namespace itk {
 
 template <class TInputImage>
-class ITK_EXPORT InsightToVispackImageAdaptor : public WriteImage<TInputImage>
+class ITK_EXPORT InsightToVispackImageAdaptor : public ImageWriter<TInputImage>
 {
 public:
   /**
