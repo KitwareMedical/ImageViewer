@@ -5,7 +5,7 @@ code_name {.cpp}
 Function {make_window()} {open
 } {
   Fl_Window tkMain {
-    label SimpleMetaImageViewer open selected
+    label SimpleImageViewer open selected
     xywh {435 32 520 520} resizable visible
   } {
     Fl_Box tkWin {

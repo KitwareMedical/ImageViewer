@@ -32,9 +32,9 @@ Fl_Window *form;
 
 int usage(void)
    {
-   std::cout << "MetaImageViewer" << std::endl;
+   std::cout << "ImageViewer" << std::endl;
    std::cout << std::endl;
-   std::cout << "MetaImageViewer <Filename>" << std::endl;
+   std::cout << "ImageViewer <Filename>" << std::endl;
    std::cout << std::endl;
 
    return 1;
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
    else
     if(argc == 1)
       {
-      fName = fl_file_chooser("Pick a MetaImage file", "*.mh*", ".");
+      fName = fl_file_chooser("Pick an image file", "*.*", ".");
       if(fName == NULL || strlen(fName)<1)
         {
         return 0;
