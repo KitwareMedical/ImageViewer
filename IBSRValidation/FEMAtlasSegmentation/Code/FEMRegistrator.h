@@ -110,7 +110,7 @@ public:
                                     MovingImageType  >   MovingImagePyramidType;
 
   /** Registration Method. */
-  typedef typename itk::fem::FEMRegistrationFilter<MovingImageType,FixedImageType> RegistrationType; 
+  typedef fem::FEMRegistrationFilter<MovingImageType,FixedImageType> RegistrationType; 
 
   /** Set the fixed image. */
   itkSetObjectMacro( FixedImage, FixedImageType );
@@ -149,12 +149,12 @@ private:
 
   typename FixedImageType::Pointer            m_FixedImage;
   typename MovingImageType::Pointer           m_MovingImage;
-  typename LabelImageType::Pointer           m_AtlasLabelImage;
-  typename LabelImageType::Pointer           m_WarpedAtlasLabelImage;
-  typename RegistrationType          m_Registration;
+  typename LabelImageType::Pointer            m_AtlasLabelImage;
+  typename LabelImageType::Pointer            m_WarpedAtlasLabelImage;
+  RegistrationType                            m_Registration;
 
-  typename MovingImageType::Pointer          m_DeformedImage;
-  typename DeformationFieldType::Pointer          m_DeformationField;
+  typename MovingImageType::Pointer           m_DeformedImage;
+  typename DeformationFieldType::Pointer      m_DeformationField;
 
   unsigned long                               m_Tag;
 
