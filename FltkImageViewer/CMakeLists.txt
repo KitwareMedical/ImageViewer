@@ -21,6 +21,7 @@ IF(FLTK_LIBRARY)
      fltkRegularStepGradientDescent
      fltkRegularStepGradientDescentGUI
      fltkSlice3DDrawerGUI
+     fltkSlice2DDrawerGUI
      fltkShape3D
      fltkSphere3D
      fltkSphereFunctionControlGUI
