@@ -1,5 +1,3 @@
-
-
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -16,13 +14,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#pragma warning(disable: 4786)
 
 #include "itkFEM.h"
-#include <itkImage.h>
-#include <itkFileIOMetaImage.h>
-#include <itkWriteMetaImage.h>
-#include <itkFileIOToImageFilter.h>
+#include "itkFEMLinearSystemWrapperItpack.h"
+#include "itkFEMLinearSystemWrapperDenseVNL.h"
+
+#include "itkImage.h"
+#include "itkFileIOMetaImage.h"
+#include "itkWriteMetaImage.h"
+#include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h"
 #include "itkMetaImageIOFactory.h"
 
@@ -39,25 +39,14 @@
 #include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkBSplineInterpolateImageFunction.h"
 
-
-
-#include "itkFEMLinearSystemWrapperItpack.h"
-#include "itkFEMLinearSystemWrapperDenseVNL.h"
-
-
 #include "itkTranslationTransform.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "vnl/vnl_vector.h"
 #include "vnl/vnl_vector_fixed.h"
 
-using namespace std;
-using namespace itk;
-using namespace fem;
-
+#include <iostream>
 #include <string>
-#include <stdio.h>
-using namespace itk::fem;
-using namespace std;
+
 
 
 
@@ -224,4 +213,4 @@ Prentice-Hall.
 
 };
 
-}}
+}} // end namespace itk::fem

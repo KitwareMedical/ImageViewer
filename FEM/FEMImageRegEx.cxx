@@ -17,9 +17,14 @@
 
 =========================================================================*/
 
+// disable debug warnings in MS compiler
+#ifdef _MSC_VER
 #pragma warning(disable: 4786)
+#endif
+
 #include "FEMImageRegEx.h"
-//
+#include <sstream>
+
 namespace itk {
 namespace fem {
    
@@ -50,10 +55,10 @@ ImageRegEx::ImageRegEx( )
 
 void ImageRegEx::RunRegistration()
 {
-    cout << "beginning \n";  
-    cout << "input E  , m_Maxiters , dt , rho :" ;
+    std::cout << "beginning \n";  
+    std::cout << "input E  , m_Maxiters , dt , rho :" ;
     
-    cin >> m_E >> m_Maxiters >> m_dT >> m_Rho; 
+    std::cin >> m_E >> m_Maxiters >> m_dT >> m_Rho; 
   
     m_Solver.SetDeltatT(m_dT);  
     m_Solver.SetRho(m_Rho);    
@@ -122,13 +127,13 @@ void ImageRegEx::RunRegistration()
   /* Solve the system in time */
   IterativeSolve();
 
-  cout << " interpolating vector field " << endl;
+  std::cout << " interpolating vector field " << std::endl;
 
   GetVectorField();
 
   WarpImage();
 
-  cout<<"\n E " << m_E << " dt " << m_dT << "\n";
+  std::cout<<"\n E " << m_E << " dt " << m_dT << "\n";
   
 }
 
@@ -468,14 +473,14 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 
   // for image output
   FILE *fbin; 
-  string exte=".raw";
-  string fnum;
+  std::string exte=".raw";
+  std::string fnum;
   m_FileCount++;
   std::ostringstream os;
   os<<(m_FileCount+10);
   fnum=os.str();
 
-  string fullfname=(fname+fnum+exte);
+  std::string fullfname=(fname+fnum+exte);
 
   ImgIterator wimIter( m_WarpedImage,m_Wregion );
 
@@ -504,7 +509,7 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 
 
 
-}}
+}} // end namespace itk::fem
 
 
 int main() 
@@ -522,8 +527,7 @@ int main()
    m_ReferenceFileName="E:\\Avants\\MetaImages\\brain_slice1.mhd"; // good params E=1 its=10 dt=1. rho= 1.e7
    m_TargetFileName="E:\\Avants\\MetaImages\\brain_slice2.mhd";
     
-
-  ImageRegEx X; // Declare the registration clasm_Solver.
+  itk::fem::ImageRegEx X; // Declare the registration clasm_Solver.
   X.m_Nx=256*1.;   // set image size
   X.m_Ny=256*1.;  
  
