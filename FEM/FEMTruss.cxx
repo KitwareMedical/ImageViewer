@@ -216,8 +216,9 @@ int main( int argc, char *argv[] ) {
    * nodes of class NodeXYrotZ, we have to make sure that we
    * have the right node object by using dynamic_cast.
    */
-  e1->m_node1=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(0) );
-  e1->m_node2=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
+  e1->GN=0;
+  e1->m_node[0]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(0) );
+  e1->m_node[1]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
 
   /** same for material */
   e1->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(0) );
@@ -225,8 +226,9 @@ int main( int argc, char *argv[] ) {
 
   /** Create the other elements */
   e1=static_cast<Beam2D*>( &*FEMOF::Create(Beam2D::OFID) );
-  e1->m_node1=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
-  e1->m_node2=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(2) );
+  e1->GN=1;
+  e1->m_node[0]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
+  e1->m_node[1]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(2) );
   e1->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(0) );
   S.el.push_back( FEMP<Element>(&*e1) );
 
@@ -239,20 +241,23 @@ int main( int argc, char *argv[] ) {
    * dynamic_cast operator.
    */
   e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::OFID) );
-  e2->m_node1=dynamic_cast<NodeXY*>( &*S.node.Find(0) );
-  e2->m_node2=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
+  e2->GN=2;
+  e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(0) );
+  e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
   e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(1) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
   e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::OFID) );
-  e2->m_node1=dynamic_cast<NodeXY*>( &*S.node.Find(1) );
-  e2->m_node2=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
+  e2->GN=3;
+  e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(1) );
+  e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
   e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(2) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
   e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::OFID) );
-  e2->m_node1=dynamic_cast<NodeXY*>( &*S.node.Find(2) );
-  e2->m_node2=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
+  e2->GN=4;
+  e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(2) );
+  e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
   e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(1) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
@@ -282,7 +287,7 @@ int main( int argc, char *argv[] ) {
    * when having isotropic elements. This is not the case here, so we only have
    * a scalar.
    */
-  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.node.Find(0), 0, 1.0 ) );
+  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(0), 0, 1.0 ) );
   l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
@@ -291,24 +296,26 @@ int main( int argc, char *argv[] ) {
    * second DOF in a third node (it's only fixed in Y direction).
    */
   l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
-  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.node.Find(0), 1, 1.0 ) );
+  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(0), 1, 1.0 ) );
   l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
   l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
-  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.node.Find(2), 1, 1.0 ) );
+  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(1), 4, 1.0 ) );
   l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
 
   /**
    * Now we apply the external force on the fourth node. The force is specified
-   * by a vector [20,-20] in global coordinate system.
+   * by a vector [20,-20] in global coordinate system. This is the second point
+   * of the third element in a system.
    */
   LoadNode::Pointer l2;
 
   l2=static_cast<LoadNode*>( &*FEMOF::Create(LoadNode::OFID) );
-  l2->node=S.node.Find(3);
+  l2->m_element=S.el.Find(2);
+  l2->m_pt=1;
   l2->F=vnl_vector<double>(2);
   l2->F[0]=20;
   l2->F[1]=-20;
@@ -367,22 +374,19 @@ int main( int argc, char *argv[] ) {
   S.UpdateDisplacements();
 
   /**
-   * Output displacements of all nodes.;
+   * Output displacements of all nodes in a system;
    */
   std::cout<<"\nNodal displacements:\n";
   for( ::itk::fem::Solver::NodeArray::iterator n = S.node.begin(); n!=S.node.end(); n++)
   {
     std::cout<<"Node#: "<<(*n)->GN<<": ";
     /** For each DOF in the node... */
-    for( int dof=0; dof<(*n)->N(); dof++ )
+    for( unsigned int d=0, dof; (dof=(*n)->GetDegreeOfFreedom(d))!=::itk::fem::Element::InvalidDegreeOfFreedomID; d++ )
     {
-      std::cout<<(*n)->uDOF(dof)->value;
-      if ((dof+1)<(*n)->N())
-      {
-        std::cout<<",  ";
-      }
+      std::cout<<S.GetSolution(dof);
+      std::cout<<",  ";
     }
-    std::cout<<"\n";
+    std::cout<<"\b\b\b \b\n";
   }
 
   cout<<"\n";

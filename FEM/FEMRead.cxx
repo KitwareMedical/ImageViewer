@@ -137,15 +137,12 @@ char* filename;
   {
     std::cout<<"Node#: "<<(*n)->GN<<": ";
     /** For each DOF in the node... */
-    for( int dof=0; dof<(*n)->N(); dof++ )
+    for( unsigned int d=0, dof; (dof=(*n)->GetDegreeOfFreedom(d))!=::itk::fem::Element::InvalidDegreeOfFreedomID; d++ )
     {
-      std::cout<<(*n)->uDOF(dof)->value;
-      if ((dof+1)<(*n)->N())
-      {
-        std::cout<<",  ";
-      }
+      std::cout<<S.GetSolution(dof);
+      std::cout<<",  ";
     }
-    std::cout<<"\n";
+    std::cout<<"\b\b\b \b\n";
   }
 
   return 0;
