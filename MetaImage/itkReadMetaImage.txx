@@ -168,7 +168,7 @@ ReadMetaImage<TOutputImage>
 template <class TOutputImage>
 void 
 ReadMetaImage<TOutputImage>
-::PrintSelf(itk::Ofstream& os, Indent indent)
+::PrintSelf(std::ofstream& os, Indent indent)
 {
   Superclass::PrintSelf(os,indent);
 

@@ -3,8 +3,8 @@
 
 #include "MetaUtils.h"
 #include "MetaFileLib.h"
-#include "itkFstream.h"
-
+#include <fstream>
+#include <ostream>
 /*!
  *   Just a reminder of the dimension ordering in memory
  *       - metaImageFiles use 1D arrays to represent ND images (innermost loop x, then y, ...)
@@ -82,9 +82,9 @@ class MetaImage
       bool           iFreeEData;
 
       bool           iReadFileOpen;
-      itk::Ifstream  iReadFilePointer;
+      std::ifstream  iReadFilePointer;
       bool           iWriteFileOpen;
-      itk::Ofstream  iWriteFilePointer;
+      std::ofstream  iWriteFilePointer;
 
       //
       int           iNDims;

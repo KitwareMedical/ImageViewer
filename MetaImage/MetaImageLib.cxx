@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <cmath>
 
@@ -707,7 +708,7 @@ bool MetaImage::
 ReadImageData()
    {
    bool localData = false;
-   itk::Ifstream *fp;
+   std::ifstream *fp;
 
    char fName[800];
    if(!strcmp("LOCAL", iDataFileName))
@@ -726,7 +727,7 @@ ReadImageData()
         {
           sprintf(fName, "%s", iDataFileName);
         }
-        fp = new itk::Ifstream;
+        fp = new std::ifstream;
         fp->open(fName, std::ios::binary );
      }
    if( fp->fail() )

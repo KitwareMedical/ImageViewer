@@ -10,7 +10,7 @@
 char sepChar = '=';
 
 //
-bool MF_SkipToVal(itk::Ifstream &fp)
+bool MF_SkipToVal(std::ifstream &fp)
   {
   char c;
   if( fp.eof() )
@@ -46,7 +46,7 @@ bool MF_IsComplete(int nFields, MF_FieldRec *field)
 
 //
 //bool MF_Read(FILE *fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopOfFile, char _sepChar)
-bool MF_Read(itk::Ifstream &fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopOfFile, char _sepChar)
+bool MF_Read(std::ifstream &fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopOfFile, char _sepChar)
   {
   char s[255];
   int i, j;
@@ -222,7 +222,7 @@ bool MF_Read(itk::Ifstream &fp, int nFields, MF_FieldRec *field, int fTerm, bool
   }
 
 //
-bool MF_Write(itk::Ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
+bool MF_Write(std::ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
    {
    sepChar = _sepChar;
 
@@ -324,7 +324,7 @@ bool MF_ParseStringToCHAR_ARRAY(char *s, int *n, char ***val)
 
 }
 
-bool WriteFieldToFile(itk::Ofstream & _fp, const char *_fieldName,
+bool WriteFieldToFile(std::ofstream & _fp, const char *_fieldName,
                        MF_ValType _pType, int _n, const void *_v)
 {
   int i;
@@ -368,7 +368,7 @@ bool WriteFieldToFile(itk::Ofstream & _fp, const char *_fieldName,
   return true;
 }
 
-bool WriteFieldToFile(itk::Ofstream & _fp, const char *_fieldName,
+bool WriteFieldToFile(std::ofstream & _fp, const char *_fieldName,
                       MF_ValType _pType, float _v)
 {
   MF_FieldRec f;

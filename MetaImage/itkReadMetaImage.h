@@ -41,7 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __itkReadMetaImage_h
 #define __itkReadMetaImage_h
 
-#include "itkFstream.h"
 #include "itkImageSource.h"
 
 namespace itk
@@ -110,7 +109,7 @@ protected:
   ~ReadMetaImage() {};
   ReadMetaImage(const Self&) {}; 
   void operator=(const Self&) {};
-  void PrintSelf(itk::Ofstream& os, Indent indent);
+  void PrintSelf(std::ofstream& os, Indent indent);
   
   void GenerateData();
 
