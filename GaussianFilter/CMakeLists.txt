@@ -1,5 +1,5 @@
-FIND_INCLUDE( FLTK_INCLUDE_DIR    FL/Fl.H     H:/usr/local/fltk /usr/local/fltk /usr/local/include /usr/X11R6/include )
-FIND_LIBRARY( FLTK_LIBRARY_DIR    fltk.lib    H:/usr/local/fltk/lib /usr/local/fltk/lib /usr/local/lib /usr/X11R6/lib )
+INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -9,7 +9,8 @@ ${ITK_SOURCE_DIR}/Unsupported/MetaImage
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/GaussianFilter
-${FLTK_INCLUDE_DIR}
+${FLTK_INCLUDE_PATH}
+${OPENGL_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
@@ -20,7 +21,6 @@ ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
 ${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/GaussianFilter
-${FLTK_LIBRARY_DIR}
 )
 
 SOURCE_FILES(GaussianFilter_SRCS
@@ -36,21 +36,19 @@ ITKBasicFilters
 MetaImageIO
 IView
 FltkImageViewer
-fltk
+${FLTK_LIBRARY}
+${OPENGL_LIBRARY}
 )
 
 IF(WIN32)
   LINK_LIBRARIES(
   wsock32
-  opengl32
   )
 ENDIF(WIN32)
 
 IF(UNIX)
   LINK_LIBRARIES (
   -lm
-  -lfltk
-  -lGL
   )
 ENDIF(UNIX)
 
