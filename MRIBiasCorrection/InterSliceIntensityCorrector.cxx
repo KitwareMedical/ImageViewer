@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 
       std::cout << "Images loaded." << std::endl ;
     }
-  catch (ImageIOError e)
+  catch (ImageIOError &e)
     {
       std::cout << "Error: " << e.Operation << " file name:" 
                 << e.FileName << std::endl ;
@@ -238,7 +238,7 @@ int main(int argc, char* argv[])
     {
       writeImage(outputFileName, output) ;
     }
-  catch(itk::ExceptionObject)
+  catch(ImageIOError &e)
     {
       std::cout << "Error: " << e.Operation << " file name:" 
                 << e.FileName << std::endl ;
