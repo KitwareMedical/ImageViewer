@@ -15,10 +15,10 @@
 #ifndef liCOMMANDUPDATEIMAGEINTENSIFIERCLASS
 #define liCOMMANDUPDATEIMAGEINTENSIFIERCLASS
 
-#include <liFluoroscopyUnitView.h>
-#include <liFluoroscopyCArmMobile.h>
-#include <itkCommand.h>
-#include <liCommandEvents.h>
+#include "liFluoroscopyUnitView.h"
+#include "liFluoroscopyCArmMobile.h"
+#include "itkCommand.h"
+#include "liCommandEvents.h"
 
 
 namespace li {

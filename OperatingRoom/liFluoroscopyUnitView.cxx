@@ -12,11 +12,10 @@
 //--------------------------------------------
 
 #include "liFluoroscopyUnitView.h"
-#include "liBox3D.h"
-#include "liCommandEvents.h"
 #include "itkPoint.h"
 #include "itkImageSliceConstIteratorWithIndex.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
+#include "liCommandEvents.h"
 #include <GL/glu.h>
 #include <math.h>
 

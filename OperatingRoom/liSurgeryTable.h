@@ -14,7 +14,7 @@
 #ifndef liSURGERYTABLECLASS
 #define liSURGERYTABLECLASS
 
-#include <liBox3D.h>
+#include "fltkBox3D.h"
 
 namespace li {
 
@@ -26,7 +26,7 @@ namespace li {
  *  direction. All dimensions are assumed to be in millimeters.
  *
  */
-class ITK_EXPORT SurgeryTable: public Shape3D 
+class ITK_EXPORT SurgeryTable: public fltk::Shape3D 
 {
 public:
   /**
@@ -131,33 +131,33 @@ private:
   /**
    * Block in contact with the floor
    */
-  Box3D::Pointer    m_Base;
+  fltk::Box3D::Pointer    m_Base;
 
   /**
    * Block on top of the base, in which the hydraulic 
    * system is supposed to be held 
    */
-  Box3D::Pointer    m_FixedPile;
+  fltk::Box3D::Pointer    m_FixedPile;
 
   /**
    * Sliding Block that defines the height of the bed.
    * it is attached to the mobile part of the hydraulic
    * system.
    */
-  Box3D::Pointer    m_Pile;
+  fltk::Box3D::Pointer    m_Pile;
 
   /**
    * Flat surface that supports the bed.
    * It is attached to the Pile. Lateral displacements
    * affect this piece.
    */
-  Box3D::Pointer    m_BedSupport;
+  fltk::Box3D::Pointer    m_BedSupport;
 
   /**
    * Flat surface in which the patient lies.
    * Axial displacements move the Bed along the BedSupport.
    */
-  Box3D::Pointer    m_Bed;
+  fltk::Box3D::Pointer    m_Bed;
 
 };
 

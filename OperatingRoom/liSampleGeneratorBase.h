@@ -17,9 +17,9 @@
 #ifndef liSAMPLEGENERATORBASE
 #define liSAMPLEGENERATORBASE
 
-#include <liSample.h>
+#include "liSample.h"
+#include "itkPointSet.h"
 #include <vector>
-#include <itkPointSet.h>
 
 
 

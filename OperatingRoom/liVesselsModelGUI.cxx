@@ -27,7 +27,7 @@ void VesselsModelGUI::cb_zExternalOffsetAdjuster(Fl_Adjuster* o, void* v) {
 }
 
 inline void VesselsModelGUI::cb_None_i(Fl_Menu_*, void*) {
-  m_Vessels->SetDrawingMode( li::Shape3D::none );
+  m_Vessels->SetDrawingMode( fltk::Shape3D::none );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );
 }
 void VesselsModelGUI::cb_None(Fl_Menu_* o, void* v) {
@@ -35,7 +35,7 @@ void VesselsModelGUI::cb_None(Fl_Menu_* o, void* v) {
 }
 
 inline void VesselsModelGUI::cb_Points_i(Fl_Menu_*, void*) {
-  m_Vessels->SetDrawingMode( li::Shape3D::points );
+  m_Vessels->SetDrawingMode( fltk::Shape3D::points );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );
 }
 void VesselsModelGUI::cb_Points(Fl_Menu_* o, void* v) {
@@ -43,7 +43,7 @@ void VesselsModelGUI::cb_Points(Fl_Menu_* o, void* v) {
 }
 
 inline void VesselsModelGUI::cb_Lines_i(Fl_Menu_*, void*) {
-  m_Vessels->SetDrawingMode( li::Shape3D::lines );
+  m_Vessels->SetDrawingMode( fltk::Shape3D::lines );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );
 }
 void VesselsModelGUI::cb_Lines(Fl_Menu_* o, void* v) {
@@ -51,7 +51,7 @@ void VesselsModelGUI::cb_Lines(Fl_Menu_* o, void* v) {
 }
 
 inline void VesselsModelGUI::cb_Triangles_i(Fl_Menu_*, void*) {
-  m_Vessels->SetDrawingMode( li::Shape3D::triangles );
+  m_Vessels->SetDrawingMode( fltk::Shape3D::triangles );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );
 }
 void VesselsModelGUI::cb_Triangles(Fl_Menu_* o, void* v) {
@@ -59,7 +59,7 @@ void VesselsModelGUI::cb_Triangles(Fl_Menu_* o, void* v) {
 }
 
 inline void VesselsModelGUI::cb_SurfacePoints_i(Fl_Menu_*, void*) {
-  m_Vessels->SetDrawingMode( li::Shape3D::surfacepoints );
+  m_Vessels->SetDrawingMode( fltk::Shape3D::surfacepoints );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );
 }
 void VesselsModelGUI::cb_SurfacePoints(Fl_Menu_* o, void* v) {
@@ -169,7 +169,6 @@ m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );
         o->end();
       }
       { Fl_Group* o = new Fl_Group(10, 40, 280, 150, "Browse");
-        o->hide();
         { Fl_Scroll* o = new Fl_Scroll(25, 50, 255, 125);
           o->box(FL_DOWN_BOX);
           { Fl_Tile* o = new Fl_Tile(25, 50, 255, 125);

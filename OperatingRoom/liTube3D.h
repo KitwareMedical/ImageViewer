@@ -15,9 +15,9 @@
 #ifndef liTUBE3DCLASS
 #define liTUBE3DCLASS
 
-#include <liShape3D.h>
-#include <itkVector.h>
-#include <liPointSet3D.h>
+#include "fltkShape3D.h"
+#include "itkVector.h"
+#include "liPointSet3D.h"
 
 namespace li {
 
@@ -30,7 +30,7 @@ namespace li {
  *
  */ 
 
-class ITK_EXPORT Tube3D : public Shape3D 
+class ITK_EXPORT Tube3D : public fltk::Shape3D 
 {
 
 public:
@@ -43,7 +43,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -58,7 +58,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( Tube3D, Shape3D );
+  itkTypeMacro( Tube3D, fltk::Shape3D );
 
 
   /**
@@ -90,7 +90,7 @@ public:
 
 	bool Null(void) const;
 	void DrawGeometry(void) const;
-	int  Read(Shape3D::IfstreamType & is);
+	int  Read(fltk::Shape3D::IfstreamType & is);
 	int  Write(const char *filename) const;
 	int  GenerateSkin(void);
 	void GeneratePointSet(void);

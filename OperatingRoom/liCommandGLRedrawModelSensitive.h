@@ -15,9 +15,9 @@
 #ifndef liCOMMANDGLREDRAWMODELSENSITIVECLASS
 #define liCOMMANDGLREDRAWMODELSENSITIVECLASS
 
-#include <liShape3D.h>
-#include <itkCommand.h>
-#include <liCommandEvents.h>
+#include "fltkShape3D.h"
+#include "itkCommand.h"
+#include "liCommandEvents.h"
 
 
 namespace li {
@@ -74,7 +74,7 @@ public:
   /**
    * Set GL Model to redraw
    */
-  void SetModelShape( Shape3D * window );
+  void SetModelShape( fltk::Shape3D * window );
 
 
 
@@ -88,7 +88,7 @@ protected:
   /**
    * Open GL Model to redraw
    */
-  Shape3D::Pointer  m_ModelShape;
+  fltk::Shape3D::Pointer  m_ModelShape;
  
 
 };

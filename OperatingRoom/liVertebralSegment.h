@@ -14,9 +14,9 @@
 #ifndef liVERTEBRALSEGMENTMODELCLASS
 #define liVERTEBRALSEGMENTMODELCLASS
 
-#include <liPointSet3D.h>
-#include <liVertebralBody.h>
-#include <liVertebralPedicle.h>
+#include "liPointSet3D.h"
+#include "liVertebralBody.h"
+#include "liVertebralPedicle.h"
 
 
 
@@ -26,7 +26,7 @@ namespace li {
 /**
  *  This class implements a 3D model of a generic Vertebral Segment 
  */
-class ITK_EXPORT VertebralSegment : public Shape3D
+class ITK_EXPORT VertebralSegment : public fltk::Shape3D
 {
 
 public:
@@ -38,7 +38,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -60,7 +60,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( VertebralSegment, Shape3D );
+  itkTypeMacro( VertebralSegment, fltk::Shape3D );
 
 
   /**
@@ -133,13 +133,13 @@ public:
   /**
    *  Write the serialized model to an ostream
    */
-	int Write( Shape3D::OfstreamType &os, int level ) const;
+	int Write( fltk::Shape3D::OfstreamType &os, int level ) const;
 
   
   /**
    *  Read the serialized model of an ostream
    */
-  virtual int Read( Shape3D::IfstreamType &is );
+  virtual int Read( fltk::Shape3D::IfstreamType &is );
 
 
   virtual void SetAxisVisible( bool );

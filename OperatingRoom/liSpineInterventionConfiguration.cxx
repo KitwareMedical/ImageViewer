@@ -12,18 +12,18 @@
 //--------------------------------------------
 
 
-#include <liSpineInterventionConfiguration.h>
+#include "liSpineInterventionConfiguration.h"
 
-#include <itkFileIOMetaImage.h>
-#include <itkWriteMetaImage.h>
+#include "itkFileIOMetaImage.h"
+#include "itkWriteMetaImage.h"
 
-#include <liCommandUpdateSpineModelGUI.h>
-#include <liCommandGLRedrawModel.h>
-#include <liCommandGLRedrawModelFixed.h>
-#include <liCommandGLRedrawModelSensitive.h>
-#include <liCommandUpdateImageIntensifier.h>
-#include <liCommandUpdateRegistratorFieldOfView.h>
-#include <liCommandTubesGeneratePointSet.h>
+#include "liCommandUpdateSpineModelGUI.h"
+#include "liCommandGLRedrawModel.h"
+#include "liCommandGLRedrawModelFixed.h"
+#include "liCommandGLRedrawModelSensitive.h"
+#include "liCommandUpdateImageIntensifier.h"
+#include "liCommandUpdateRegistratorFieldOfView.h"
+#include "liCommandTubesGeneratePointSet.h"
 
 #include <FL/fl_file_chooser.H>
 #include <FL/fl_ask.H>
@@ -139,7 +139,7 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
 
   m_VolumeSliceDrawer = VolumeSlicerType::New();
 
-  m_VolumeSliceDrawer->AddObserver( li::VolumeReslicedEvent,
+  m_VolumeSliceDrawer->AddObserver( fltk::VolumeReslicedEvent,
                                     m_VolumeViewGUI.GetRedrawCommand() );
 
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->AddObserver( 
@@ -150,26 +150,15 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
                                     li::PatientMovedEvent,
                                     m_VolumeViewGUI.GetRedrawCommand() );
 
-  li::CommandGLRedrawModel::Pointer commandGLRedrawVolumeSlices = 
-                                              li::CommandGLRedrawModel::New();
 
-  commandGLRedrawVolumeSlices->SetModel( m_VolumeSliceDrawer.GetPointer() );
-
-
-  li::CommandGLRedrawModel::Pointer commandGLRedrawModelPatient = 
-                                              li::CommandGLRedrawModel::New();
-
-  commandGLRedrawModelPatient->SetModel( 
-                    m_OperatingRoomModel->GetPatient().GetPointer() );
+  m_VolumeViewGUI.GetNotifier()->AddObserver( 
+                                  fltk::GlDrawEvent, 
+                                  m_VolumeSliceDrawer->GetDrawCommand() );
 
 
-  m_VolumeViewGUI.GetNotifier()->
-              AddObserver( fltk::GlDrawEvent, commandGLRedrawVolumeSlices );
-
-
-  m_VolumeViewGUI.GetNotifier()->
-              AddObserver( fltk::GlDrawEvent, commandGLRedrawModelPatient );
-
+  m_VolumeViewGUI.GetNotifier()->AddObserver( 
+                    fltk::GlDrawEvent, 
+                    m_OperatingRoomModel->GetPatient()->GetDrawCommand() );
 
   li::CommandUpdateSpineModelGUI::Pointer commandUpdateSpineModelGUI =
                                     li::CommandUpdateSpineModelGUI::New();
@@ -445,7 +434,7 @@ SpineInterventionConfiguration
 
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->Load( filename );
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->SetDrawingMode( 
-                                                            Shape3D::lines );
+                                                            fltk::Shape3D::lines );
 
 }
 

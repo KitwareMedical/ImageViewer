@@ -14,7 +14,7 @@
 
 #include <FL/gl.h>
 #include <FL/fl_ask.H>
-#include <liVertebralPedicle.h>
+#include "liVertebralPedicle.h"
 
 namespace li {
 
@@ -37,8 +37,8 @@ VertebralPedicle::VertebralPedicle()
   m_Length                =  10.0;
   m_NumberOfSectors       =   6;
 
-  m_LeftTube   = Cylinder3D::New();
-  m_RightTube  = Cylinder3D::New();
+  m_LeftTube   = fltk::Cylinder3D::New();
+  m_RightTube  = fltk::Cylinder3D::New();
 
   m_LeftTube->SetNumberOfSectors( m_NumberOfSectors );
   m_LeftTube->SetNumberOfSectors( m_NumberOfSectors );
@@ -314,7 +314,7 @@ void VertebralPedicle::DrawGeometry(void) const
 //
 //----------------------------------------------------
 int 
-VertebralPedicle::Write( Shape3D::OfstreamType &os, int level ) const 
+VertebralPedicle::Write( fltk::Shape3D::OfstreamType &os, int level ) const 
 {
 
   int stat = 1;
@@ -360,7 +360,7 @@ VertebralPedicle::Write( Shape3D::OfstreamType &os, int level ) const
 //
 //----------------------------------------------------
 int 
-VertebralPedicle::Read( Shape3D::IfstreamType &is ) 
+VertebralPedicle::Read( fltk::Shape3D::IfstreamType &is ) 
 {
 
   char field[200];

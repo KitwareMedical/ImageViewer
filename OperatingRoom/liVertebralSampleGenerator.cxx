@@ -12,9 +12,10 @@
 //--------------------------------------------
 
 
-#include <liVertebralSampleGenerator.h>
-#include <liSampleGeneratorPedicle.h>
-#include <liSampleGeneratorBodyPlane.h>
+#include "liVertebralSampleGenerator.h"
+#include "liSampleGeneratorPedicle.h"
+#include "liSampleGeneratorBodyPlane.h"
+#include "liCommandEvents.h"
 
 
 namespace li {

@@ -15,8 +15,8 @@
 #ifndef liCOMMANDUPDATESPINEMODELGUICLASS
 #define liCOMMANDUPDATESPINEMODELGUICLASS
 
-#include <liSpineModelGUI.h>
-#include <liCommandEvents.h>
+#include "liSpineModelGUI.h"
+#include "liCommandEvents.h"
 
 
 

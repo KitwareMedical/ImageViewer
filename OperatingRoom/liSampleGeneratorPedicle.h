@@ -17,7 +17,7 @@
 #ifndef liSAMPLEGENERATORPEDICLE
 #define liSAMPLEGENERATORPEDICLE
 
-#include <liSampleGeneratorPedicleGUI.h>
+#include "liSampleGeneratorPedicleGUI.h"
 
 
 class liSampleGeneratorPedicle : public liSampleGeneratorPedicleGUI {

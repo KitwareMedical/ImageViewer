@@ -14,7 +14,7 @@
 #ifndef liFLUOROSCOPYCARMMOBILECLASS
 #define liFLUOROSCOPYCARMMOBILECLASS
 
-#include <liFluoroscopyCArm.h>
+#include "liFluoroscopyCArm.h"
 
 
 namespace li {
@@ -26,7 +26,7 @@ namespace li {
  *  used on the operating room
  */
 
-class ITK_EXPORT FluoroscopyCArmMobile : public Shape3D
+class ITK_EXPORT FluoroscopyCArmMobile : public fltk::Shape3D
 {
 public:
   /**
@@ -37,7 +37,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -52,7 +52,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( FluoroscopyCArmMobile, Shape3D );
+  itkTypeMacro( FluoroscopyCArmMobile, fltk::Shape3D );
 
 
   /**
@@ -246,13 +246,13 @@ private:
   /**
    * Model for the horizontal base of Fluoroscopy CArm
    */
-  li::Box3D::Pointer       m_Base;
+  fltk::Box3D::Pointer       m_Base;
   
   
   /**
    * Model for the vertical base of Fluoroscopy CArm
    */
-  li::Box3D::Pointer       m_Pile;
+  fltk::Box3D::Pointer       m_Pile;
   
   
   /**

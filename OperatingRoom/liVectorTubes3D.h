@@ -14,9 +14,9 @@
 #ifndef liVECTORTUBES3DCLASS
 #define liVECTORTUBES3DCLASS
 
-#include <liTube3D.h>
-#include <liBox3D.h>
-#include <liPointSet3D.h>
+#include "liTube3D.h"
+#include "fltkBox3D.h"
+#include "liPointSet3D.h"
 #include <vector>
 
 
@@ -27,7 +27,7 @@ namespace li {
  *  VectorTubes3D represents a set of Tubes3D
  *
  */
-class ITK_EXPORT VectorTubes3D : public Shape3D 
+class ITK_EXPORT VectorTubes3D : public fltk::Shape3D 
 {
 public:
   /**
@@ -38,7 +38,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -53,7 +53,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( VectorTubes3D, Shape3D );
+  itkTypeMacro( VectorTubes3D, fltk::Shape3D );
 
 
   /**
@@ -89,43 +89,43 @@ public:
   /**
    * Draw the OpenGL representation of the tubes
    */
-	void DrawGeometry(void) const;
+  void DrawGeometry(void) const;
 
   /**
    * Read the tube information from an ifstream
    */
-	void Read(Shape3D::IfstreamType & ifs);
+  void Read(fltk::Shape3D::IfstreamType & ifs);
 
   /**
    * Load the tube information from a file specified by 
    * the filename
    */
-	void Load(const char * filename);
+  void Load(const char * filename);
 
   /**
    * Save the tube information in a file specified by the
    * file name
    */
-	int Save(const char * filename) const;
+  int Save(const char * filename) const;
 
   /**
    * Enable the visualization of the boundaries from which
    * tubes have been extracted
    */
-	void EnableBoundary(void);
+  void EnableBoundary(void);
 
   /**
    * Disable the visualization of the boundaries from which
    * tubes have been extracted
    */
-	void DisableBoundary(void);
+  void DisableBoundary(void);
 
-	void SetRotation(GLdouble irz);
-	void SetOffset(const VectorType & newoffset);
-	void SetExternalOffset(const VectorType & newoffset);
-	VectorType GetOffset(void) const;
-	VectorType GetExternalOffset(void) const;
-	GLdouble GetRotation(void) const;
+  void SetRotation(GLdouble irz);
+  void SetOffset(const VectorType & newoffset);
+  void SetExternalOffset(const VectorType & newoffset);
+  VectorType GetOffset(void) const;
+  VectorType GetExternalOffset(void) const;
+  GLdouble GetRotation(void) const;
       
   void GeneratePointSet( const VectorType & sight );
 
@@ -141,25 +141,25 @@ public:
 
 protected:
 
-	VectorTubes3D();
-	~VectorTubes3D();
+  VectorTubes3D();
+  ~VectorTubes3D();
 
 
 private:
   
-	GLint nx,ny,nz;		  // Dimensions of Volume data
-	GLdouble dx,dy,dz;	// Voxel size
-	GLdouble rz;		    // Volume orientation (z angle)
-	GLdouble tx,ty,tz;	// Cube offset
-	GLdouble ex,ey,ez;	// Cube external offset (with respect to patient's head)
+  GLint nx,ny,nz;      // Dimensions of Volume data
+  GLdouble dx,dy,dz;  // Voxel size
+  GLdouble rz;        // Volume orientation (z angle)
+  GLdouble tx,ty,tz;  // Cube offset
+  GLdouble ex,ey,ez;  // Cube external offset (with respect to patient's head)
 
-  Box3D::Pointer      m_Boundary;  	  // Boundary of Volume data
+  fltk::Box3D::Pointer      m_Boundary;      // Boundary of Volume data
 
-  VectorTubeType      m_Tubes;
+  VectorTubeType            m_Tubes;
 
-  PointSet3D::Pointer m_PointSet3D;
+  PointSet3D::Pointer       m_PointSet3D;
 
-  bool                m_DisplayPointSet;
+  bool                      m_DisplayPointSet;
 };
 
 

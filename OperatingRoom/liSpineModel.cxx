@@ -12,7 +12,8 @@
 //--------------------------------------------
 
 
-#include <liSpineModel.h>
+#include "liSpineModel.h"
+#include "liCommandEvents.h"
 
 
 namespace li {
@@ -94,7 +95,7 @@ SpineModel::GetAxialAngle( void ) const
 //    Get Position
 //
 //--------------------------------------------------
-const Shape3D::PointType & 
+const fltk::Shape3D::PointType & 
 SpineModel::GetPosition( void ) const
 {
   return m_Position;
@@ -236,7 +237,7 @@ SpineModel::Save(const char *filename)
   }
 
 
-  Shape3D::OfstreamType outFile;
+  fltk::Shape3D::OfstreamType outFile;
   outFile.open(filename);
   
   
@@ -275,7 +276,7 @@ SpineModel::Load( const char *filename )
   }
 
   
-  Shape3D::IfstreamType inpFile;
+  fltk::Shape3D::IfstreamType inpFile;
   
   inpFile.open( filename );
 
@@ -327,7 +328,7 @@ SpineModel::Null(void) const
 //----------------------------------------------------
 
 int 
-SpineModel::Write( Shape3D::OfstreamType &os, int level ) const 
+SpineModel::Write( fltk::Shape3D::OfstreamType &os, int level ) const 
 {
 
   int stat = 1;
@@ -378,7 +379,7 @@ SpineModel::Write( Shape3D::OfstreamType &os, int level ) const
 
 
 int 
-SpineModel::Read( Shape3D::IfstreamType &is )
+SpineModel::Read( fltk::Shape3D::IfstreamType &is )
 {
 
   char field[200];

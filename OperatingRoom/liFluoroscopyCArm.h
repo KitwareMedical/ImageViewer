@@ -14,10 +14,10 @@
 #ifndef liFLUOROSCOPYCARMCLASS
 #define liFLUOROSCOPYCARMCLASS
 
-#include <liBox3D.h>
-#include <liCone3D.h>
-#include <liC_Arm3D.h>
-#include <liCylinder3D.h>
+#include "fltkBox3D.h"
+#include "fltkCone3D.h"
+#include "fltkCylinder3D.h"
+#include "liC_Arm3D.h"
 
 
 namespace li {
@@ -29,7 +29,7 @@ namespace li {
  *  mounted in a geometric C_Arm3D.
  */
 
-class ITK_EXPORT FluoroscopyCArm : public Shape3D
+class ITK_EXPORT FluoroscopyCArm : public fltk::Shape3D
 {
 public:
   /**
@@ -40,7 +40,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -55,7 +55,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( FluoroscopyCArm, Shape3D );
+  itkTypeMacro( FluoroscopyCArm, fltk::Shape3D );
 
 
   /**
@@ -199,49 +199,49 @@ private:
   /**
    * Model for the Image Intensifier 
    */
-  li::Cylinder3D::Pointer  m_Intensifier;
+  fltk::Cylinder3D::Pointer  m_Intensifier;
 
 
   /**
    * Model for the Image Detector Support
    */
-  li::Cylinder3D::Pointer  m_DetectorSupport;
+  fltk::Cylinder3D::Pointer  m_DetectorSupport;
   
 
   /**
    * Model for the Image Detector
    */
-  li::Cylinder3D::Pointer  m_Detector;
+  fltk::Cylinder3D::Pointer  m_Detector;
   
   
   /**
    * Model for the Support of the Intensifier 
    */
-  li::Box3D::Pointer       m_IntensifierSupport;
+  fltk::Box3D::Pointer       m_IntensifierSupport;
   
   
   /**
    * Model for the X-rays source
    */
-  li::Box3D::Pointer       m_Source;
+  fltk::Box3D::Pointer       m_Source;
   
 
   /**
    * Model for the support of the X-rays source
    */
-   li::Box3D::Pointer       m_SourceSupport;
+  fltk::Box3D::Pointer       m_SourceSupport;
   
 
   /**
    * Model for representing the Field of View 
    */
-  li::Cone3D::Pointer      m_FovCone;
+  fltk::Cone3D::Pointer      m_FovCone;
 
   
   /**
    * Model for the turning base of the C-Arm
    */
-  li::Box3D::Pointer       m_TurningBase;
+  fltk::Box3D::Pointer       m_TurningBase;
  
   
   /**

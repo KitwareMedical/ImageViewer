@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liShape3D.h>
-#include <liCommandGLRedrawModel.h>
+#include "fltkShape3D.h"
+#include "liCommandGLRedrawModel.h"
 #include <FL/Fl.H>
 
 namespace li {

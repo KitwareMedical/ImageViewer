@@ -15,10 +15,10 @@
 #define liOPERATINGROOMMODELCLASS
 
 
-#include <liLight.h>
-#include <liPatient.h>
-#include <liSurgeryTable.h>
-#include <liFluoroscopyCArmMobile.h>
+#include "liLight.h"
+#include "liPatient.h"
+#include "liSurgeryTable.h"
+#include "liFluoroscopyCArmMobile.h"
 
 
 
@@ -33,7 +33,7 @@ namespace li {
  *  a Table, a Fluorosocopy unit, Ligths, a Patient model.
  */
 
-class ITK_EXPORT OperatingRoomModel : public Shape3D
+class ITK_EXPORT OperatingRoomModel : public fltk::Shape3D
 {
 public:
   /**
@@ -128,7 +128,7 @@ private:
   /**
    * Model of the floor
    */
-  li::Box3D::Pointer                     m_Floor;
+  fltk::Box3D::Pointer                   m_Floor;
     
   /**
    * Light 0

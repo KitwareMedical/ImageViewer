@@ -28,14 +28,14 @@ FluoroscopyCArm::FluoroscopyCArm()
 {
 
   m_CArm                  = C_Arm3D::New();
-  m_Intensifier           = Cylinder3D::New();
-  m_IntensifierSupport    = Box3D::New();
-  m_Detector              = Cylinder3D::New();
-  m_DetectorSupport       = Cylinder3D::New();
-  m_Source                = Box3D::New();
-  m_SourceSupport         = Box3D::New();
-  m_FovCone               = Cone3D::New();
-  m_TurningBase           = Box3D::New();
+  m_Intensifier           = fltk::Cylinder3D::New();
+  m_IntensifierSupport    = fltk::Box3D::New();
+  m_Detector              = fltk::Cylinder3D::New();
+  m_DetectorSupport       = fltk::Cylinder3D::New();
+  m_Source                = fltk::Box3D::New();
+  m_SourceSupport         = fltk::Box3D::New();
+  m_FovCone               = fltk::Cone3D::New();
+  m_TurningBase           = fltk::Box3D::New();
 
   m_IntensifierOffset     = 0;
 

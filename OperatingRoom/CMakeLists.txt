@@ -25,7 +25,6 @@ ${ITK_BINARY_DIR}/Examples/OperatingRoom
 )
 
 SOURCE_FILES(OperatingRoom_SRCS
-liBox3D
 liC_Arm3D
 liCommandGLRedrawModel
 liCommandGLRedrawModelFixed
@@ -34,8 +33,6 @@ liCommandUpdateImageIntensifier
 liCommandUpdateSpineModelGUI
 liCommandUpdateRegistratorFieldOfView
 liCommandTubesGeneratePointSet
-liCone3D
-liCylinder3D
 liFluoroscopyCArm
 liFluoroscopyCArmMobile
 liFluoroscopyCArmMobileGUI
@@ -57,7 +54,6 @@ liSampleGeneratorCollectionGUI
 liSampleGeneratorGUI
 liSampleGeneratorPedicle
 liSampleGeneratorPedicleGUI
-liShape3D
 liSpineInterventionConfiguration
 liSpineInterventionConfigurationGUI
 liSpineModel

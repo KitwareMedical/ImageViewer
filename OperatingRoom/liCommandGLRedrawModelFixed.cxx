@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liShape3D.h>
-#include <liCommandGLRedrawModelFixed.h>
+#include "fltkShape3D.h"
+#include "liCommandGLRedrawModelFixed.h"
 #include <FL/Fl.H>
 
 namespace li {
@@ -34,7 +34,7 @@ CommandGLRedrawModelFixed::CommandGLRedrawModelFixed(void)
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelFixed::SetModelShape( Shape3D * model )  
+CommandGLRedrawModelFixed::SetModelShape( fltk::Shape3D * model )  
 {
   m_ModelShape  = model;
 }

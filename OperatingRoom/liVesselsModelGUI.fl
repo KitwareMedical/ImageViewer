@@ -17,16 +17,17 @@ class VesselsModelGUI {open
 m_Registrator = li::VesselsRegistrator::New();
 m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );} {}
     Fl_Window controlWindow {
-      label Vessels open
-      xywh {781 115 304 200}
-      code0 {\#include <liVectorTubes3D.h>} visible
+      label Vessels open selected
+      xywh {315 82 304 200}
+      code0 {\#include <liVectorTubes3D.h>}
+      code1 {\#include "liCommandEvents.h"} visible
     } {
       Fl_Tabs {} {open
         xywh {10 15 280 175}
       } {
         Fl_Group {} {
-          label {External Offset} selected
-          xywh {10 40 280 150} align 129
+          label {External Offset}
+          xywh {10 40 280 150} align 129 hide
         } {
           Fl_Value_Output xExternalOffsetValueOutput {
             xywh {205 65 65 25}
@@ -92,31 +93,31 @@ UpdateExternalOffset();}
           } {
             menuitem {} {
               label None
-              callback {m_Vessels->SetDrawingMode( li::Shape3D::none );
+              callback {m_Vessels->SetDrawingMode( fltk::Shape3D::none );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
               xywh {0 0 100 20}
             }
             menuitem {} {
               label Points
-              callback {m_Vessels->SetDrawingMode( li::Shape3D::points );
+              callback {m_Vessels->SetDrawingMode( fltk::Shape3D::points );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
               xywh {10 10 100 20}
             }
             menuitem {} {
               label Lines
-              callback {m_Vessels->SetDrawingMode( li::Shape3D::lines );
+              callback {m_Vessels->SetDrawingMode( fltk::Shape3D::lines );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
               xywh {20 20 100 20}
             }
             menuitem {} {
               label Triangles
-              callback {m_Vessels->SetDrawingMode( li::Shape3D::triangles );
+              callback {m_Vessels->SetDrawingMode( fltk::Shape3D::triangles );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
               xywh {30 30 100 20}
             }
             menuitem {} {
               label SurfacePoints
-              callback {m_Vessels->SetDrawingMode( li::Shape3D::surfacepoints );
+              callback {m_Vessels->SetDrawingMode( fltk::Shape3D::surfacepoints );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
               xywh {40 40 100 20}
             }
@@ -136,7 +137,7 @@ m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
         }
         Fl_Group {} {
           label Browse open
-          xywh {10 40 280 150} hide
+          xywh {10 40 280 150}
         } {
           Fl_Scroll {} {open
             xywh {25 50 255 125} box DOWN_BOX

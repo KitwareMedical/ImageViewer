@@ -14,7 +14,7 @@
 #ifndef liVERTEBRALBODYCLASS
 #define liVERTEBRALBODYCLASS
 
-#include <liShape3D.h>
+#include "fltkShape3D.h"
 #include <vector>
 
 namespace li {
@@ -23,7 +23,7 @@ namespace li {
 /**
  *  This class implements a 3D model of a generic Vertebral Body 
  */
-class ITK_EXPORT VertebralBody : public Shape3D 
+class ITK_EXPORT VertebralBody : public fltk::Shape3D 
 {
 public:
   /**
@@ -34,7 +34,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -49,7 +49,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( VertebralBody, Shape3D );
+  itkTypeMacro( VertebralBody, fltk::Shape3D );
 
 
   /**
@@ -97,8 +97,8 @@ public:
 	unsigned int GetSectorsNumber(void) const;
 	unsigned int GetLevelsNumber(void) const;
 
-  int Write( Shape3D::OfstreamType &os, int level ) const;
-  int Read( Shape3D::IfstreamType &is );
+  int Write( fltk::Shape3D::OfstreamType &os, int level ) const;
+  int Read( fltk::Shape3D::IfstreamType &is );
 
 private:  
 	double                      m_UpperEndYRadius;

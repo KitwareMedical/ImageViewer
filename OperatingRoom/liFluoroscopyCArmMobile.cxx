@@ -28,8 +28,8 @@ FluoroscopyCArmMobile::FluoroscopyCArmMobile()
 {
 
   m_CArm                  = FluoroscopyCArm::New();
-  m_Base                  = Box3D::New();
-  m_Pile                  = Box3D::New();
+  m_Base                  = fltk::Box3D::New();
+  m_Pile                  = fltk::Box3D::New();
 
   // The following values are in millimeters
 

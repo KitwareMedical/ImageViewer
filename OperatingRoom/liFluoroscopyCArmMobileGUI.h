@@ -4,7 +4,8 @@
 #define liFluoroscopyCArmMobileGUI_h
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include <liFluoroscopyCArmMobile.h>
+#include "liFluoroscopyCArmMobile.h"
+#include "liCommandEvents.h"
 #include <FL/Fl_Roller.H>
 #include <FL/Fl_Value_Output.H>
 #include <FL/Fl_Button.H>

@@ -17,7 +17,7 @@
 #ifndef liSAMPLE
 #define liSAMPLE
 
-#include <itkPoint.h>
+#include "itkPoint.h"
 
 
 class ITK_EXPORT liSample {

@@ -17,7 +17,7 @@
 #ifndef liSAMPLEGENERATOR
 #define liSAMPLEGENERATOR
 
-#include <liSampleGeneratorGUI.h>
+#include "liSampleGeneratorGUI.h"
 
 
 class liSampleGenerator : public liSampleGeneratorGUI {

@@ -15,7 +15,7 @@
 #ifndef liLIGHTCLASS
 #define liLIGHTCLASS
 
-#include <liShape3D.h>
+#include "fltkShape3D.h"
 
 
 
@@ -27,7 +27,7 @@ namespace li {
 /**
  *  Light derives from Shape3D and represents a light source 
  */
-class ITK_EXPORT Light : public Shape3D 
+class ITK_EXPORT Light : public fltk::Shape3D 
 {
 public:
   /**

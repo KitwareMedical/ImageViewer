@@ -12,7 +12,7 @@
 //--------------------------------------------
 
 
-#include <liVertebralBody.h>
+#include "liVertebralBody.h"
 
 
 namespace li {
@@ -44,7 +44,7 @@ VertebralBody::VertebralBody()
   
   GeneratePoints();
   
-  Shape3D::IfstreamType ifx;
+  fltk::Shape3D::IfstreamType ifx;
   ifx.open("hi");
   ifx.close();
 }
@@ -591,7 +591,7 @@ void VertebralBody::DrawGeometry(void) const
 //    Write to stream
 //
 //----------------------------------------------------
-int VertebralBody::Write( Shape3D::OfstreamType &os, int level ) const 
+int VertebralBody::Write( fltk::Shape3D::OfstreamType &os, int level ) const 
 {
 
   int stat = 1;
@@ -649,7 +649,7 @@ int VertebralBody::Write( Shape3D::OfstreamType &os, int level ) const
 //    Read from stream
 //
 //----------------------------------------------------
-int VertebralBody::Read( Shape3D::IfstreamType &is) 
+int VertebralBody::Read( fltk::Shape3D::IfstreamType &is) 
 {
 
   char field[200];

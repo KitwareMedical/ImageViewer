@@ -15,16 +15,16 @@
 #ifndef liPOINTSET3DCLASS
 #define liPOINTSET3DCLASS
 
-#include <liShape3D.h>
-#include <itkPointSet.h>
+#include "fltkShape3D.h"
+#include "itkPointSet.h"
 
 namespace li {
 
 
 /**
- *  PointSet3D derives from Shape3D and contains an itk::PointSet
+ *  \class PointSet3D derives from Shape3D and contains an itk::PointSet
  */
-class ITK_EXPORT PointSet3D : public Shape3D 
+class ITK_EXPORT PointSet3D : public fltk::Shape3D 
 {
 public:
   /**
@@ -35,7 +35,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -50,7 +50,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( PointSet3D, Shape3D );
+  itkTypeMacro( PointSet3D, fltk::Shape3D );
   
 
   /** 

@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0010 
+version 1.0009 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -10,8 +10,8 @@ class SpineInterventionConfigurationGUI {open
   decl {li::SpineInterventionConfiguration::Pointer m_Configuration;} {}
   Function {SpineInterventionConfigurationGUI()} {} {
     Fl_Window controlWindow {
-      label {Spine Intervention}
-      xywh {604 186 301 103}
+      label {Spine Intervention} selected
+      xywh {492 170 301 103}
       code0 {\#include <liSpineInterventionConfiguration.h>} visible
     } {
       Fl_Menu_Bar {} {
@@ -98,10 +98,14 @@ class SpineInterventionConfigurationGUI {open
           }
           menuitem {} {
             label Slicer
-            callback {m_Configuration->ShowVolumeSlicer();} selected
+            callback {m_Configuration->ShowVolumeSlicer();}
             xywh {30 30 100 20}
           }
         }
+      }
+      Fl_Button {} {
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.xpm}
+        xywh {185 30 110 70} box FLAT_BOX labeltype image
       }
     }
   }

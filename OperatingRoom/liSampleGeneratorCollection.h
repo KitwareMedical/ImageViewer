@@ -17,7 +17,7 @@
 #ifndef liSAMPLEGENERATORCOLLECTION
 #define liSAMPLEGENERATORCOLLECTION
 
-#include <liSampleGeneratorCollectionGUI.h>
+#include "liSampleGeneratorCollectionGUI.h"
 
 
 class liSampleGeneratorCollection : public liSampleGeneratorCollectionGUI {

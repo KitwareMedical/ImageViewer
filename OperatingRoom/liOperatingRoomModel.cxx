@@ -11,7 +11,7 @@
 //
 //--------------------------------------------
 
-#include <liOperatingRoomModel.h>
+#include "liOperatingRoomModel.h"
 
 
 namespace li {
@@ -29,7 +29,7 @@ OperatingRoomModel::OperatingRoomModel()
   m_Table                 =   SurgeryTable::New();
   m_Patient               =   Patient::New();
   m_FluoroscopyUnit       =   FluoroscopyCArmMobile::New();
-  m_Floor                 =   Box3D::New();
+  m_Floor                 =   fltk::Box3D::New();
 
 
   m_Floor->SetWidth(  2000.0f );

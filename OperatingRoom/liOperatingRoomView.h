@@ -14,9 +14,9 @@
 #ifndef liOPERATINGROOMVIEWCLASS
 #define liOPERATINGROOMVIEWCLASS
 
-#include <itkWin32Header.h>
-#include <itkObject.h>
-#include <fltkGlWindowInteractive.h>
+#include "itkWin32Header.h"
+#include "itkObject.h"
+#include "fltkGlWindowInteractive.h"
 
 
 

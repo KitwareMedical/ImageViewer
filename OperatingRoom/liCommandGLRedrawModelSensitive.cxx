@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liShape3D.h>
-#include <liCommandGLRedrawModelSensitive.h>
+#include "fltkShape3D.h"
+#include "liCommandGLRedrawModelSensitive.h"
 #include <FL/Fl.H>
 
 namespace li {
@@ -34,7 +34,7 @@ CommandGLRedrawModelSensitive::CommandGLRedrawModelSensitive(void)
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelSensitive::SetModelShape( Shape3D * model )  
+CommandGLRedrawModelSensitive::SetModelShape( fltk::Shape3D * model )  
 {
   m_ModelShape  = model;
 }

@@ -15,10 +15,10 @@
 #ifndef liCOMMANDGLREDRAWMODELCLASS
 #define liCOMMANDGLREDRAWMODELCLASS
 
-#include <itkCommand.h>
-#include <liCommandEvents.h>
-#include <fltkGlWindow.h>
-#include <fltkGlDrawer.h>
+#include "itkCommand.h"
+#include "liCommandEvents.h"
+#include "fltkGlWindow.h"
+#include "fltkGlDrawer.h"
 
 
 namespace li {

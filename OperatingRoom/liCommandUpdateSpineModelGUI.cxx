@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liShape3D.h>
-#include <liCommandUpdateSpineModelGUI.h>
+#include "fltkShape3D.h"
+#include "liCommandUpdateSpineModelGUI.h"
 #include <FL/Fl.H>
 
 namespace li {

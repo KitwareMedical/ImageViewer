@@ -16,10 +16,10 @@
 
 
 #if defined(_WIN32)
-#include <itkWindows.h>
+#include "itkWindows.h"
 #endif
 
-#include <liOperatingRoomModel.h>
+#include "liOperatingRoomModel.h"
 
 
 /**

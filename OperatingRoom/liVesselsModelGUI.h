@@ -5,6 +5,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <liVectorTubes3D.h>
+#include "liCommandEvents.h"
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Value_Output.H>

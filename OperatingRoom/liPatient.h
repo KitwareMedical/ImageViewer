@@ -16,10 +16,10 @@
 #define liPATIENTCLASS
 
 
-#include <liSpineModel.h>
-#include <liVectorTubes3D.h>
-#include <liBox3D.h>
-#include <itkAffineTransform.h>
+#include "fltkBox3D.h"
+#include "liSpineModel.h"
+#include "liVectorTubes3D.h"
+#include "itkAffineTransform.h"
 
 
 
@@ -31,7 +31,7 @@ namespace li {
  *  for organs that could be relevant during a particular type
  *  of intervention
  */
-class ITK_EXPORT Patient : public Shape3D 
+class ITK_EXPORT Patient : public fltk::Shape3D 
 {
 public:
   /**
@@ -42,7 +42,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -57,7 +57,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( Patient, Shape3D );
+  itkTypeMacro( Patient, fltk::Shape3D );
 
 
   /**
@@ -79,7 +79,7 @@ public:
   
   /**
    * DrawGeometry implements the drawing of the table.
-   * this method is called by liShape3D in its Draw method.
+   * this method is called by fltk::Shape3D in its Draw method.
    */
   void DrawGeometry(void) const;
 
@@ -156,19 +156,19 @@ protected:
 
 private:
 
-  Box3D::Pointer                 m_Body;
+  fltk::Box3D::Pointer                 m_Body;
 
-	mutable TransformType::Pointer m_Extrinsic;
+	mutable TransformType::Pointer       m_Extrinsic;
 
-  TransformType::Pointer         m_RegistrationCorrection;
+  TransformType::Pointer               m_RegistrationCorrection;
 
-	ClinicalPosition             m_ClinicalPosition;
+	ClinicalPosition                     m_ClinicalPosition;
 
-  double                       m_CorrectionTranslationBound;
+  double                               m_CorrectionTranslationBound;
 
-  SpineModel::Pointer          m_Spine;
+  SpineModel::Pointer                  m_Spine;
   
-  VectorTubes3D::Pointer       m_Vessels;
+  VectorTubes3D::Pointer               m_Vessels;
 
 };
 

@@ -157,32 +157,32 @@ m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
           } {
             menuitem {} {
               label Surface
-              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::triangles );
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::triangles );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {0 0 100 20}
             }
             menuitem {} {
               label Lines
-              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::lines );
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::lines );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {0 0 100 20}
             }
             menuitem {} {
               label Points
-              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::points );
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::points );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {10 10 100 20}
             }
             menuitem {} {
               label None
-              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::none );
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::none );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {20 20 100 20}
             }
           }
           Fl_Button {} {
             label Color
-            callback {li::Shape3D::ColorType color =
+            callback {fltk::Shape3D::ColorType color =
               m_VertebralSegment->GetVertebralBody()->GetColor();
 double red   = color.GetRed();
 double green = color.GetGreen();
@@ -249,25 +249,25 @@ m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
           } {
             menuitem {} {
               label Surface
-              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::triangles );
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::triangles );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {15 15 100 20}
             }
             menuitem {} {
               label Lines
-              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::lines );
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::lines );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {15 15 100 20}
             }
             menuitem {} {
               label Points
-              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::points );
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::points );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {25 25 100 20}
             }
             menuitem {} {
               label None
-              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::none );
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::none );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
               xywh {35 35 100 20}
             }
@@ -280,7 +280,7 @@ m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
           }
           Fl_Button {} {
             label Color
-            callback {li::Shape3D::ColorType color =
+            callback {fltk::Shape3D::ColorType color =
               m_VertebralSegment->GetVertebralPedicle()->GetColor();
 double red   = color.GetRed();
 double green = color.GetGreen();

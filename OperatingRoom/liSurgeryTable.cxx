@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liSurgeryTable.h>
-#include <liCommandEvents.h>
+#include "liSurgeryTable.h"
+#include "liCommandEvents.h"
 
 
 namespace li {
@@ -26,11 +26,11 @@ namespace li {
 //--------------------------------------------------
 SurgeryTable::SurgeryTable()
 {
-  m_Base       = Box3D::New();
-  m_FixedPile  = Box3D::New();
-  m_Pile       = Box3D::New();
-  m_BedSupport = Box3D::New();
-  m_Bed        = Box3D::New();
+  m_Base       = fltk::Box3D::New();
+  m_FixedPile  = fltk::Box3D::New();
+  m_Pile       = fltk::Box3D::New();
+  m_BedSupport = fltk::Box3D::New();
+  m_Bed        = fltk::Box3D::New();
 
   // all the values in millimeters
   m_Base->SetLength( 400.0f );

@@ -14,9 +14,9 @@
 #ifndef liVERTEBRALSEGMENTREGISTRATORCLASS
 #define liVERTEBRALSEGMENTREGISTRATORCLASS
 
-#include <liVertebralSegment.h>
-#include <itkImage.h>
-#include <itkPointSetToImageRigid3DPatternIntensityRegularStepGradientDescentRegistration.h>
+#include "liVertebralSegment.h"
+#include "itkImage.h"
+#include "itkPointSetToImageRigid3DPatternIntensityRegularStepGradientDescentRegistration.h"
 
 
 namespace li {

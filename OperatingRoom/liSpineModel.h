@@ -14,7 +14,7 @@
 #ifndef liSPINEMODELCLASS
 #define liSPINEMODELCLASS
 
-#include <liVertebralSegment.h>
+#include "liVertebralSegment.h"
 
 
 namespace li {
@@ -23,7 +23,7 @@ namespace li {
 /**
  *  This class implements a 3D model of a set of vertebral segments
  */
-class ITK_EXPORT SpineModel : public Shape3D
+class ITK_EXPORT SpineModel : public fltk::Shape3D
 {
 public:
   /**

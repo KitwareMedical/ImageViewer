@@ -17,9 +17,9 @@
 #ifndef liSAMPLEGENERATORCOLLECTIONBASE
 #define liSAMPLEGENERATORCOLLECTIONBASE
 
-#include <liSampleGenerator.h>
+#include "liSampleGenerator.h"
+#include "liSample.h"
 #include <vector>
-#include <liSample.h>
 
 
 class liSampleGeneratorCollectionBase {

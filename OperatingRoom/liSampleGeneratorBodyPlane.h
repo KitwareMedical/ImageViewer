@@ -17,7 +17,7 @@
 #ifndef liSAMPLEGENERATORBODYPLANE
 #define liSAMPLEGENERATORBODYPLANE
 
-#include <liSampleGeneratorBodyPlaneGUI.h>
+#include "liSampleGeneratorBodyPlaneGUI.h"
 
 
 class liSampleGeneratorBodyPlane : public liSampleGeneratorBodyPlaneGUI {

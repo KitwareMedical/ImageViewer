@@ -13,8 +13,10 @@
 
 
 
-#include <liVectorTubes3D.h>
-#include <itkExceptionObject.h>
+#include "liVectorTubes3D.h"
+#include "itkExceptionObject.h"
+#include "liCommandEvents.h"
+
 
 namespace li {
 
@@ -25,13 +27,13 @@ namespace li {
 //--------------------------------------------------
 VectorTubes3D::VectorTubes3D() {
 
-  Shape3D::ColorType color;
+  fltk::Shape3D::ColorType color;
   color.SetRed( 0.8 );
   color.SetGreen( 0.8 );
   color.SetBlue( 1.0 );
 
-  m_Boundary = Box3D::New();
-  m_Boundary->SetDrawingMode( Shape3D::lines );
+  m_Boundary = fltk::Box3D::New();
+  m_Boundary->SetDrawingMode( fltk::Shape3D::lines );
   m_Boundary->SetColor( color );
 
   nx = 0;
@@ -187,7 +189,7 @@ VectorTubes3D::GetExternalOffset(void)  const
 //--------------------------------------------------
 void VectorTubes3D::EnableBoundary(void) 
 {
-  m_Boundary->SetDrawingMode(Shape3D::lines);
+  m_Boundary->SetDrawingMode(fltk::Shape3D::lines);
 }
 
 
@@ -201,7 +203,7 @@ void VectorTubes3D::EnableBoundary(void)
 //--------------------------------------------------
 void VectorTubes3D::DisableBoundary(void) 
 {
-  m_Boundary->SetDrawingMode(Shape3D::none);
+  m_Boundary->SetDrawingMode(fltk::Shape3D::none);
 }
 
 
@@ -260,7 +262,7 @@ void VectorTubes3D::DrawGeometry(void) const
 void VectorTubes3D::Load( const char * filename )
 {
 
-  Shape3D::IfstreamType ifs;
+  fltk::Shape3D::IfstreamType ifs;
   ifs.open( filename );
   if( ifs.fail() ) 
   {
@@ -292,7 +294,7 @@ void VectorTubes3D::Load( const char * filename )
 //      Read tubes from an Ifstream
 //
 //--------------------------------------------------
-void VectorTubes3D::Read(Shape3D::IfstreamType & is)
+void VectorTubes3D::Read(fltk::Shape3D::IfstreamType & is)
 {
 
   Clear();

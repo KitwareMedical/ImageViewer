@@ -15,7 +15,7 @@
 #ifndef liCARM3DCLASS
 #define liCARM3DCLASS
 
-#include <liShape3D.h>
+#include "fltkShape3D.h"
 #include <vector>
 
 
@@ -26,7 +26,7 @@ namespace li {
  *  C_Arm3D implements the 3D model of the C-Shape structure
  *  that supports the X-Ray source and the Image Intensifier.
  */
-class ITK_EXPORT C_Arm3D : public Shape3D 
+class ITK_EXPORT C_Arm3D : public fltk::Shape3D 
 {
 public:
   /**
@@ -37,7 +37,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -52,7 +52,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( C_Arm3D, Shape3D );
+  itkTypeMacro( C_Arm3D, fltk::Shape3D );
 
 
   /**

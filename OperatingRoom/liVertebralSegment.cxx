@@ -12,9 +12,10 @@
 //--------------------------------------------
 
 
-#include <liVertebralSegment.h>
-#include <liSampleGeneratorPedicle.h>
-#include <liSampleGeneratorBodyPlane.h>
+#include "liVertebralSegment.h"
+#include "liSampleGeneratorPedicle.h"
+#include "liSampleGeneratorBodyPlane.h"
+#include "liCommandEvents.h"
 
 
 namespace li {
@@ -232,7 +233,7 @@ VertebralSegment::GetVertebralPedicle( void )
 //
 //----------------------------------------------------
 int 
-VertebralSegment::Write( Shape3D::OfstreamType &os, int level ) const 
+VertebralSegment::Write( fltk::Shape3D::OfstreamType &os, int level ) const 
 {
 
   int stat = 1;
@@ -277,7 +278,7 @@ VertebralSegment::Write( Shape3D::OfstreamType &os, int level ) const
 //
 //----------------------------------------------------
 int 
-VertebralSegment::Read( Shape3D::IfstreamType &is ) 
+VertebralSegment::Read( fltk::Shape3D::IfstreamType &is ) 
 {
 
   char field[200];

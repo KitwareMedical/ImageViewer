@@ -15,7 +15,7 @@
 #ifndef liCOMMANDEVENTS
 #define liCOMMANDEVENTS
 
-#include <itkCommand.h>
+#include "itkCommand.h"
 
 
 namespace li {

@@ -138,7 +138,7 @@ void liVertebralSegmentGUI::cb_HeightCounter(Fl_Counter* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Surface_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::triangles );
+  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::triangles );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_Surface(Fl_Menu_* o, void* v) {
@@ -146,7 +146,7 @@ void liVertebralSegmentGUI::cb_Surface(Fl_Menu_* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Lines_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::lines );
+  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::lines );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_Lines(Fl_Menu_* o, void* v) {
@@ -154,7 +154,7 @@ void liVertebralSegmentGUI::cb_Lines(Fl_Menu_* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Points_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::points );
+  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::points );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_Points(Fl_Menu_* o, void* v) {
@@ -162,7 +162,7 @@ void liVertebralSegmentGUI::cb_Points(Fl_Menu_* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_None_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::none );
+  m_VertebralSegment->GetVertebralBody()->SetDrawingMode( fltk::Shape3D::none );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_None(Fl_Menu_* o, void* v) {
@@ -181,7 +181,7 @@ Fl_Menu_Item liVertebralSegmentGUI::menu_Display[] = {
 };
 
 inline void liVertebralSegmentGUI::cb_Color_i(Fl_Button*, void*) {
-  li::Shape3D::ColorType color =
+  fltk::Shape3D::ColorType color =
               m_VertebralSegment->GetVertebralBody()->GetColor();
 double red   = color.GetRed();
 double green = color.GetGreen();
@@ -254,7 +254,7 @@ void liVertebralSegmentGUI::cb_HorizontalRadiusCounter(Fl_Counter* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Surface1_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::triangles );
+  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::triangles );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_Surface1(Fl_Menu_* o, void* v) {
@@ -262,7 +262,7 @@ void liVertebralSegmentGUI::cb_Surface1(Fl_Menu_* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Lines1_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::lines );
+  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::lines );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_Lines1(Fl_Menu_* o, void* v) {
@@ -270,7 +270,7 @@ void liVertebralSegmentGUI::cb_Lines1(Fl_Menu_* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Points1_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::points );
+  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::points );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_Points1(Fl_Menu_* o, void* v) {
@@ -278,7 +278,7 @@ void liVertebralSegmentGUI::cb_Points1(Fl_Menu_* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_None1_i(Fl_Menu_*, void*) {
-  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::none );
+  m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( fltk::Shape3D::none );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
 }
 void liVertebralSegmentGUI::cb_None1(Fl_Menu_* o, void* v) {
@@ -305,7 +305,7 @@ void liVertebralSegmentGUI::cb_PedicleSectorsCounter(Fl_Counter* o, void* v) {
 }
 
 inline void liVertebralSegmentGUI::cb_Color1_i(Fl_Button*, void*) {
-  li::Shape3D::ColorType color =
+  fltk::Shape3D::ColorType color =
               m_VertebralSegment->GetVertebralPedicle()->GetColor();
 double red   = color.GetRed();
 double green = color.GetGreen();

@@ -14,9 +14,9 @@
 #ifndef liVESSELSREGISTRATORCLASS
 #define liVESSELSREGISTRATORCLASS
 
-#include <liVectorTubes3D.h>
-#include <itkImage.h>
-#include <itkPointSetToImageRigid3DPerspectivePatternIntensityRegularStepGradientDescentRegistration.h>
+#include "liVectorTubes3D.h"
+#include "itkImage.h"
+#include "itkPointSetToImageRigid3DPerspectivePatternIntensityRegularStepGradientDescentRegistration.h"
 
 
 namespace li {

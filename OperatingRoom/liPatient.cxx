@@ -24,7 +24,7 @@ namespace li {
 Patient::Patient()
 {
 
-  m_Body = Box3D::New();
+  m_Body = fltk::Box3D::New();
 
 	m_Body->SetLength( 1200.0f );
   m_Body->SetWidth(   400.0f );

@@ -14,10 +14,10 @@
 #ifndef liVERTEBRALSAMPLEGENERATORCLASS
 #define liVERTEBRALSAMPLEGENERATORCLASS
 
-#include <liVertebralSegment.h>
-#include <liSampleGeneratorCollection.h>
-#include <liSampleGeneratorPedicle.h>
-#include <liSampleGeneratorBodyPlane.h>
+#include "liVertebralSegment.h"
+#include "liSampleGeneratorCollection.h"
+#include "liSampleGeneratorPedicle.h"
+#include "liSampleGeneratorBodyPlane.h"
 
 
 namespace li {
