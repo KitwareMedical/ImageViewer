@@ -46,6 +46,9 @@ RegionGrowingSegmentationBase
   m_ConnectedThresholdImageFilter = ConnectedThresholdImageFilterType::New();
   m_ConnectedThresholdImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
 
+  m_ConfidenceConnectedImageFilter = ConfidenceConnectedImageFilterType::New();
+  m_ConfidenceConnectedImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+
   m_InputImageIsLoaded  = false;
 
 }

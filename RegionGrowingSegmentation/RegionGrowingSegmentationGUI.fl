@@ -19,9 +19,6 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         xywh {0 0 825 357}
       } {
         Fl_Box {} {
-          xywh {195 191 110 9} box UP_BOX color 4
-        }
-        Fl_Box {} {
           xywh {64 47 85 10} box UP_BOX color 4
         }
         Fl_Box {} {
@@ -34,10 +31,13 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           xywh {170 142 9 53} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {300 67 9 257} box UP_BOX color 4
+          xywh {300 67 108 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {300 67 108 10} box UP_BOX color 4
+          xywh {301 173 108 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {300 67 9 257} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {170 202 9 48} box UP_BOX color 4
@@ -45,8 +45,14 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Box {} {
           xywh {60 131 85 9} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {195 191 115 9} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {491 173 108 10} box UP_BOX color 4
+        }
       }
-      Fl_Group controlsGroup {
+      Fl_Group controlsGroup {open
         xywh {5 5 820 352}
       } {
         Fl_Light_Button inputImageButton {
@@ -130,9 +136,20 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           }
           Fl_Value_Input iterationsValueInput {
             label Iterations
-            callback {m_CurvatureFlowImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );} selected
+            callback {m_CurvatureFlowImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
             xywh {31 180 55 25} align 1 minimum 1 maximum 100 value 2
           }
+        }
+        Fl_Button {} {
+          label {Confidence Connected}
+          callback {m_ConfidenceConnectedImageFilter->Update();}
+          xywh {370 159 170 37} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Light_Button confidenceConnectedImageButton {
+          label {Confidence Connected Image}
+          callback {this->ShowConfidenceConnectedImage();}
+          xywh {565 155 110 50} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
         }
       }
       Fl_Slider progressSlider {
@@ -148,6 +165,16 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         callback {this->LoadInputImage();}
         xywh {29 41 65 25} type Normal value 1 selection_color 1 labelsize 12
         class {fltk::LightButton}
+      }
+      Fl_Value_Input multiplierValueInput {
+        label Multiplier
+        callback {m_ConfidenceConnectedImageFilter->SetMultiplier( o->value() );} selected
+        xywh {462 197 55 25} minimum 1 maximum 100 value 2.5
+      }
+      Fl_Value_Input iterationsConfidenceValueInput {
+        label Iterations
+        callback {m_ConfidenceConnectedImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
+        xywh {462 223 55 25} minimum 1 maximum 100 value 2
       }
     }
   }
@@ -166,5 +193,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   Function {ShowConsole( void )} {return_type {virtual void}
   } {}
   Function {ShowHomogeneousImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowConfidenceConnectedImage( void )} {return_type {virtual void}
   } {}
 } 

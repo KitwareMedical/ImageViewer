@@ -71,6 +71,8 @@ public:
 
   virtual void ShowConnectedThresholdImage(void);
 
+  virtual void ShowConfidenceConnectedImage(void);
+
   virtual void ShowHomogeneousImage(void);
 
   virtual void Quit(void);
@@ -82,6 +84,7 @@ public:
 private:
 
   InternalImageViewerType     m_ConnectedThresholdImageViewer;
+  InternalImageViewerType     m_ConfidenceConnectedImageViewer;
   InternalImageViewerType     m_HomogeneousImageViewer;
 
   InputImageViewerType        m_InputImageViewer;

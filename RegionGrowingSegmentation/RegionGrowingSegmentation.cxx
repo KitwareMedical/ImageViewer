@@ -35,6 +35,9 @@ RegionGrowingSegmentation
   m_ConnectedThresholdImageViewer.SetLabel("Connected Threshold Image");
   m_ConnectedThresholdImageViewer.SetImage( m_ConnectedThresholdImageFilter->GetOutput() );  
 
+  m_ConfidenceConnectedImageViewer.SetLabel("Confidence Connected Image");
+  m_ConfidenceConnectedImageViewer.SetImage( m_ConfidenceConnectedImageFilter->GetOutput() );  
+
   m_HomogeneousImageViewer.SetLabel("Curvature Flow Image");
   m_HomogeneousImageViewer.ClickSelectCallBack( ClickSelectCallback, (void *)this);
   m_HomogeneousImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );
@@ -47,19 +50,27 @@ RegionGrowingSegmentation
       static_cast<InputPixelType>( upperThresholdCounter->value() ) );
 
   m_CurvatureFlowImageFilter->SetNumberOfIterations(
-                                   iterationsValueInput->value() );
+                                   static_cast<unsigned int>(iterationsValueInput->value()) );
 
   m_CurvatureFlowImageFilter->SetTimeStep(
                                    timeStep->value() );
+
+  m_ConfidenceConnectedImageFilter->SetMultiplier( multiplierValueInput->value() );
+
+  m_ConfidenceConnectedImageFilter->SetNumberOfIterations( 
+      static_cast<InputPixelType>( iterationsConfidenceValueInput->value() ) );
+
 
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   loadInputImageButton->Observe(  m_ImageReader.GetPointer() );
   homogeneousImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
   thresholdConnectedImageButton->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
+  confidenceConnectedImageButton->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
 
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
+  progressSlider->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
   progressSlider->Observe( m_CurvatureFlowImageFilter.GetPointer() );
 
 }
@@ -106,6 +117,7 @@ RegionGrowingSegmentation
 {
   m_InputImageViewer.Hide();
   m_ConnectedThresholdImageViewer.Hide();
+  m_ConfidenceConnectedImageViewer.Hide();
   m_HomogeneousImageViewer.Hide();
   consoleWindow->hide();
 }
@@ -217,6 +229,25 @@ RegionGrowingSegmentation
  
 /************************************
  *
+ *  Show Confidence Connected Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowConfidenceConnectedImage( void )
+{
+  m_ConfidenceConnectedImageFilter->Update();
+  m_ConfidenceConnectedImageViewer.SetImage( m_ConfidenceConnectedImageFilter->GetOutput() );  
+  m_ConfidenceConnectedImageViewer.Show();
+
+}
+
+
+
+
+ 
+/************************************
+ *
  *  Show Homogeneous Image
  *
  ***********************************/
@@ -271,7 +302,10 @@ RegionGrowingSegmentation
   seed[0] = static_cast<IndexType::IndexValueType>( x );
   seed[1] = static_cast<IndexType::IndexValueType>( y );
   seed[2] = static_cast<IndexType::IndexValueType>( z );
+
   m_ConnectedThresholdImageFilter->SetSeed( seed );
+  m_ConfidenceConnectedImageFilter->SetSeed( seed );
+
 }
 
 

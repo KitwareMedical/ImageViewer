@@ -22,6 +22,7 @@
 #include <itkImageFileWriter.h>
 
 #include <itkConnectedThresholdImageFilter.h>
+#include <itkConfidenceConnectedImageFilter.h>
 #include <itkCurvatureFlowImageFilter.h>
 #include <itkCastImageFilter.h>
 
@@ -69,6 +70,11 @@ public:
                  InternalImageType, 
                  InternalImageType >     ConnectedThresholdImageFilterType;
 
+  /** Confidence Connected Image Filter */
+  typedef   itk::ConfidenceConnectedImageFilter< 
+                 InternalImageType, 
+                 InternalImageType >     ConfidenceConnectedImageFilterType;
+
 public:
   RegionGrowingSegmentationBase();
   virtual ~RegionGrowingSegmentationBase();
@@ -91,6 +97,8 @@ protected:
   CurvatureFlowImageFilterType::Pointer       m_CurvatureFlowImageFilter;
 
   ConnectedThresholdImageFilterType::Pointer  m_ConnectedThresholdImageFilter;
+
+  ConfidenceConnectedImageFilterType::Pointer m_ConfidenceConnectedImageFilter;
 
 };
 
