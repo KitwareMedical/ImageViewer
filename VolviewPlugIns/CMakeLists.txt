@@ -53,6 +53,7 @@ vvCurvatureFlow
 vvGradientAnisotropicDiffusion
 vvCurvatureAnisotropicDiffusion
 vvConfidenceConnected
+vvSigmoid
 )
 
 # probably could be cleaned up...
@@ -70,6 +71,10 @@ TARGET_LINK_LIBRARIES(vvCurvatureAnisotropicDiffusion ITKCommon ITKBasicFilters)
 # probably could be cleaned up...
 ADD_LIBRARY(vvConfidenceConnected MODULE itkVVConfidenceConnectedPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvConfidenceConnected ITKCommon ITKBasicFilters)
+
+# probably could be cleaned up...
+ADD_LIBRARY(vvSigmoid MODULE itkVVSigmoidPlugin.cxx)
+TARGET_LINK_LIBRARIES(vvSigmoid ITKCommon ITKBasicFilters)
 
 
 # copy the plugins to a plugin directory
