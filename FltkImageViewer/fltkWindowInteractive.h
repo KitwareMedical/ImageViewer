@@ -47,10 +47,10 @@ public:
 
   const float & GetZoom(void) const;
   const OffsetType & GetOffset(void) const;
-  const OffsetVariationType & GetDiffOffset(void) const;
+  const OffsetVariationType & GetOffsetVariation(void) const;
 
   void  ClearOffset(void);
-  void  PlugDrawer( Drawer * dr );
+  void  AddDrawer( Drawer * dr );
 
 private:
 
@@ -60,7 +60,7 @@ private:
   float m_Zoom;
 
   OffsetType            m_Offset;
-  OffsetVariationType   m_DiffOffset;
+  OffsetVariationType   m_OffsetVariation;
 
   std::vector< Drawer * > m_Drawers;
   

@@ -38,7 +38,7 @@ WindowInteractive
   m_Zoom     = 1.0;
 
   m_Offset.Fill( 0.0 );
-  m_DiffOffset.Fill( 0.0 );
+  m_OffsetVariation.Fill( 0.0 );
 
   m_Mouse_a.Fill( 0.0 );
   m_Mouse_b.Fill( 0.0 );
@@ -70,7 +70,7 @@ WindowInteractive
 //------------------------------------------
 void 
 WindowInteractive
-::PlugDrawer( Drawer *dr) 
+::AddDrawer( Drawer *dr) 
 {
   if( !dr ) 
   {
@@ -117,9 +117,9 @@ WindowInteractive
 //------------------------------------------
 const WindowInteractive::OffsetVariationType &  
 WindowInteractive
-::GetDiffOffset(void) const 
+::GetOffsetVariation(void) const 
 {
-  return m_DiffOffset;
+  return m_OffsetVariation;
 }
 
 
@@ -135,7 +135,7 @@ WindowInteractive
 ::ClearOffset(void) 
 {
   m_Offset.Fill( 0.0 );  
-  m_DiffOffset.Fill( 0.0 );
+  m_OffsetVariation.Fill( 0.0 );
 }
 
 
@@ -180,7 +180,7 @@ WindowInteractive
 ::handle(int event) 
 {
 
-  m_DiffOffset.Fill( 0.0 );
+  m_OffsetVariation.Fill( 0.0 );
 
   switch(event) 
   {
@@ -201,9 +201,9 @@ WindowInteractive
       }
       else
       {
-        m_DiffOffset[0] = 90.0f*(m_Mouse_b[0] - m_Mouse_a[0])/w();
-        m_DiffOffset[1] = 90.0f*(m_Mouse_b[1] - m_Mouse_a[1])/h();
-        m_Offset += m_DiffOffset;
+        m_OffsetVariation[0] = 90.0f*(m_Mouse_b[0] - m_Mouse_a[0])/w();
+        m_OffsetVariation[1] = 90.0f*(m_Mouse_b[1] - m_Mouse_a[1])/h();
+        m_Offset += m_OffsetVariation;
       }
       m_Mouse_a = m_Mouse_b;
       redraw();
