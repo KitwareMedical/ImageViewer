@@ -50,7 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main()
 {
-   std::cerr << "itkEllipsoidInteriorExteriorSpatialFunction example start" << std::endl;
+   std::cout << "itkEllipsoidInteriorExteriorSpatialFunction example start" << std::endl;
 
   // This example will create an ellipsoid (3-D) in an image
   const unsigned int dimension = 3;
@@ -244,7 +244,7 @@ int main()
 
   else
     {
-    std::cerr << std::endl << "calculated ellipsoid volume = " << volume << std::endl
+    std::cout << std::endl << "calculated ellipsoid volume = " << volume << std::endl
               << "measured ellipsoid volume = " << numInteriorPixels << std::endl
               << "volume error = " << volumeError << "%" << std::endl
               << "function value = " << functionValue << std::endl
