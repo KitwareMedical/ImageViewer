@@ -24,14 +24,14 @@
   */
 
 
-#include "FEMMesh.h"
+#include "FEMMeshApplication.h"
 
 
 
 int main(int, char**)
 {
 
-  FEMMesh  application;
+  FEMMeshApplication  application;
 
   application.Show();
 

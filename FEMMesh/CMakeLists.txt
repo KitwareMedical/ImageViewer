@@ -32,15 +32,15 @@ LINK_LIBRARIES(
   vtkCommon
 )
 
-SOURCE_FILES(FEMMesh_SRCS
-FEMMeshBase
-FEMMesh
+SOURCE_FILES(FEMMeshApplication_SRCS
+FEMMeshApplicationBase
+FEMMeshApplication
 vtkFlRenderWindowInteractor
 main
 )
 
-SOURCE_FILES(FEMMesh_GUI_SRCS
-FEMMeshGUI.fl
+SOURCE_FILES(FEMMeshApplication_GUI_SRCS
+FEMMeshApplicationGUI.fl
 )
 
 LINK_LIBRARIES (
@@ -64,8 +64,8 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(FEMMesh FEMMesh_SRCS)
+ADD_EXECUTABLE(FEMMesh FEMMeshApplication_SRCS)
 
-FLTK_WRAP_UI(FEMMesh FEMMesh_GUI_SRCS)
+FLTK_WRAP_UI(FEMMesh FEMMeshApplication_GUI_SRCS)
 
 
