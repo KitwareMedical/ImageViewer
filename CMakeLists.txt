@@ -40,6 +40,9 @@ ENDIF(HAS_METAIMAGE)
 # Build the Multiresolution Registration example
 SUBDIRS(MultiResMIRegistration)
 
+# Build the MI Validation application
+SUBDIRS(MIValidation)
+
 # Build the IBSR Validation applications
 SUBDIRS(IBSRValidation)
 
