@@ -23,11 +23,13 @@
 #include "itkObjectFactory.h"
 
 /** \class MaximumLikelihoodRatioDecisionRule
- *  \brief A Decision rule that choose the class that has maximum value. */
+ *  \brief A Decision rule that choose the class that has maximum value
+ */
+ 
 class MaximumLikelihoodRatioDecisionRule : 
   public itk::Object
 {
-public:
+ public:
   /** Standard class typedefs */ 
   typedef MaximumLikelihoodRatioDecisionRule Self ;
   typedef itk::Object Superclass;
@@ -39,20 +41,43 @@ public:
   /** Standard New() method support */
   itkNewMacro(Self) ;
   
-  unsigned int Evaluate(std::vector< double > discriminantScores) ;
+  unsigned int Evaluate(std::vector< double > &discriminantScores) const ;
   void AddClassSampleSize(unsigned int size) ;
 
-protected:
+ protected:
   MaximumLikelihoodRatioDecisionRule() ;
   virtual ~MaximumLikelihoodRatioDecisionRule() {}
   
-private:
+ private:
   std::vector< unsigned int > m_ClassSizes ;
   std::vector< double > m_TempScores ;
   vnl_matrix< double > m_APrioriRatioMatrix ;
   unsigned long m_TotalSampleSize ;
-
 } ; // end of class
+
+inline unsigned int 
+MaximumLikelihoodRatioDecisionRule::Evaluate(std::vector< double > &discriminantScores) const
+{
+  unsigned int maxIndex = 0 ;
+  double maxScore = 0.0 ;
+  unsigned int i ;
+  
+  for (i = 0 ; i < m_ClassSizes.size() ; i++)
+    {
+      discriminantScores[i] *= m_ClassSizes[i] ;
+    }
+  
+  for (i = 0 ; i < m_ClassSizes.size() ; i++)
+    {
+      if (discriminantScores[i] > maxScore)
+        {
+          maxIndex = i ;
+          maxScore = discriminantScores[i] ;
+        }
+    }
+  
+  return maxIndex ;
+}
 
 #endif
 
