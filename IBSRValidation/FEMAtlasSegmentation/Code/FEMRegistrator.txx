@@ -63,11 +63,6 @@ FEMRegistrator<TFixedImage,TMovingImage,TFieldValue>
   m_Registration.SetReferenceImage(  m_MovingImage);
   m_Registration.SetTargetImage( m_FixedImage );
 
-  // Choose the similarity metric
-
-  m_Registration.ChooseMetric(0/*mean squares*/);
-
-
   // Choose the material properties
   itk::fem::MaterialLinearElasticity::Pointer m;
   m=itk::fem::MaterialLinearElasticity::New();
