@@ -39,7 +39,7 @@ FuzzySegGrayRun.cxx
 )
 
 SET(Project_FLTK_SRCS
-FuzzySeggrayUI.fl
+FuzzySegGrayUI.fl
 )
 
 ADD_EXECUTABLE(SimpleFuzzyConnectedness   ${Project_SRCS})
