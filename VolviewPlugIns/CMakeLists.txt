@@ -49,46 +49,22 @@ SET (LIBRARY_OUTPUT_PATH ${VolviewPlugIns_BINARY_DIR}/bin CACHE PATH "Single out
 
 # list all plugins here
 SET (PLUGINS 
-vvCurvatureFlow 
-vvGradientAnisotropicDiffusion
-vvCurvatureAnisotropicDiffusion
-vvConfidenceConnected
-vvSigmoid
-vvGradientMagnitude
-vvGradientMagnitudeRecursiveGaussian
-vvMedian
-)
-
-# probably could be cleaned up...
-ADD_LIBRARY(vvCurvatureFlow MODULE itkVVCurvatureFlowPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvCurvatureFlow ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvGradientAnisotropicDiffusion MODULE itkVVGradientAnisotropicDiffusionPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvGradientAnisotropicDiffusion ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvCurvatureAnisotropicDiffusion MODULE itkVVCurvatureAnisotropicDiffusionPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvCurvatureAnisotropicDiffusion ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvConfidenceConnected MODULE itkVVConfidenceConnectedPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvConfidenceConnected ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvSigmoid MODULE itkVVSigmoidPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvSigmoid ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvGradientMagnitudeRecursiveGaussian MODULE itkVVGradientMagnitudeRecursiveGaussianPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvGradientMagnitudeRecursiveGaussian ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvGradientMagnitude MODULE itkVVGradientMagnitudePlugin.cxx)
-TARGET_LINK_LIBRARIES(vvGradientMagnitude ITKCommon ITKBasicFilters)
-
-ADD_LIBRARY(vvMedian MODULE itkVVMedianPlugin.cxx)
-TARGET_LINK_LIBRARIES(vvMedian ITKCommon ITKBasicFilters)
+  vvITKConfidenceConnected
+  vvITKCurvatureAnisotropicDiffusion
+  vvITKCurvatureFlow 
+  vvITKGradientAnisotropicDiffusion
+  vvITKGradientMagnitude
+  vvITKGradientMagnitudeRecursiveGaussian
+  vvITKMedian
+  vvITKSigmoid
+  )
 
 
 # copy the plugins to a plugin directory
 FOREACH (PLUG ${PLUGINS})
+  ADD_LIBRARY( ${PLUG} MODULE ${PLUG}.cxx )
+  TARGET_LINK_LIBRARIES( ${PLUG} ITKCommon ITKBasicFilters )
   ADD_CUSTOM_COMMAND(
-#    SOURCE ${LIBRARY_OUTPUT_PATH}/${INTDIR}/${PLUG}${CMAKE_SHARED_MODULE_SUFFIX}
     SOURCE ${PLUG}
     COMMAND ${CMAKE_COMMAND} 
     ARGS -E copy ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}${PLUG}${CMAKE_SHARED_MODULE_SUFFIX} ${VOLVIEW_PLUGINS_DIR}/${PLUG}${CMAKE_SHARED_MODULE_SUFFIX}
