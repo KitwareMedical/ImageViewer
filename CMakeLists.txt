@@ -98,10 +98,10 @@ IF(HAS_METAIMAGE)
 ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the EllipsoidInteriorExteriorSpatialFunction example
-#SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
+SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 
 # Add an option to build or not build the SymmetricEllipsoidInteriorExteriorSpatialFunction example
-#SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
+SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
 
 
 # Add an option to build or not build the SurfaceGenerator example
