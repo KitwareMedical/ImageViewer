@@ -20,16 +20,18 @@ ${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/ParameterFileParser
 ${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/VolumeChunker
 )
 
-LINK_LIBRARIES (
-ITKBasicFilters
-ITKCommon
-VXLNumerics
-chunks
-param
-)
 
-ADD_EXECUTABLE(itkTreeGeneratorApp itkTreeGeneratorApp)
-ADD_EXECUTABLE(itkSegmenterApp itkSegmenterApp)
-ADD_EXECUTABLE(itkResolverApp itkResolverApp)
-ADD_EXECUTABLE(itkEquivalenceRelabelerApp itkEquivalenceRelabelerApp)
-ADD_EXECUTABLE(itkRelabelerApp itkRelabelerApp)
+ADD_EXECUTABLE(itkTreeGeneratorApp itkTreeGeneratorApp 
+ITKBasicFilters ITKCommon VXLNumerics param chunks )
+
+ADD_EXECUTABLE(itkSegmenterApp itkSegmenterApp
+ITKBasicFilters ITKCommon VXLNumerics param chunks )
+
+ADD_EXECUTABLE(itkResolverApp itkResolverApp
+ITKBasicFilters ITKCommon VXLNumerics param chunks )
+
+ADD_EXECUTABLE(itkEquivalenceRelabelerApp itkEquivalenceRelabelerApp
+ITKBasicFilters ITKCommon VXLNumerics param chunks )
+
+ADD_EXECUTABLE(itkRelabelerApp itkRelabelerApp
+ITKBasicFilters ITKCommon VXLNumerics param chunks )
