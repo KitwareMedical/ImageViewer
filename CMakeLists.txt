@@ -53,6 +53,11 @@ IF(BUILD_FUZZY_CONNECTEDNESS)
 SUBDIRS(FuzzyConnectedness)
 ENDIF(BUILD_FUZZY_CONNECTEDNESS)
 
+# Add an option to build or not build the ShapeDetection example
+OPTION(BUILD_SHAPE_DETECTION "Build the Shape Detection example")
+IF(BUILD_SHAPE_DETECTION)
+SUBDIRS(ShapeDetection)
+ENDIF(BUILD_SHAPE_DETECTION)
 
 LINK_LIBRARIES (
 VXLNumerics
