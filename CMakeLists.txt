@@ -136,7 +136,9 @@ MARK_AS_ADVANCED( BUILD_FEM_MESH_EXAMPLE )
 
 # Test the conditions for building the ThinPlateSplines example
 IF(HAS_VTK)
-  SUBDIRS(ThinPlateSplines)
+  IF(HAS_FLTKIMAGEVIEWER)
+    SUBDIRS(ThinPlateSplines)
+  ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_VTK)
 
 
