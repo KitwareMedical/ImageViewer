@@ -142,6 +142,7 @@ RawImageReaderViewer
 {
 
   m_RawImageSource->SetFileName( filename );
+  m_RawReader->SetFileDimensionality( 3 );
   m_RawReader->SetDimensions( 0, m_NumberOfPixelsInX );
   m_RawReader->SetDimensions( 1, m_NumberOfPixelsInY );
   m_RawReader->SetDimensions( 2, m_NumberOfPixelsInZ );
