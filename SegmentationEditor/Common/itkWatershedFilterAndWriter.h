@@ -33,7 +33,7 @@ namespace itk
  * to wrap for vtk using the vtkITK protocol.
  */
 template <class TInputImageType>
-class WatershedFilterAndWriter : public WatershedImageFilter<TInputImageType>
+class ITK_EXPORT WatershedFilterAndWriter : public WatershedImageFilter<TInputImageType>
 {
 public:
    /** Standard Itk typedefs and smart pointer declaration.   */

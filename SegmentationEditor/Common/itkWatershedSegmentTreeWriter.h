@@ -27,7 +27,7 @@ namespace itk
  * \brief A simple I/O object for writer SegmentTree data objects to disk.
  **/
 template <class TScalarType>
-class WatershedSegmentTreeWriter : public ProcessObject
+class ITK_EXPORT WatershedSegmentTreeWriter : public ProcessObject
 {
 public:
   /** Standard Itk typedefs and smart pointer declaration.   */
