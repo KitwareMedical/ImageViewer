@@ -20,5 +20,5 @@ VXLNumerics
 ITKIO
 )
 
-#ADD_EXECUTABLE(itk2DEdgeDetectionSample itk2DEdgeDetectionSample)
-ADD_EXECUTABLE(itk3DEdgeDetectionSample itk3DEdgeDetectionSample)
+#ADD_EXECUTABLE(itk2DEdgeDetectionSample itk2DEdgeDetectionSample.cxx)
+ADD_EXECUTABLE(itk3DEdgeDetectionSample itk3DEdgeDetectionSample.cxx)

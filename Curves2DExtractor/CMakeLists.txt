@@ -75,5 +75,5 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(Curves2DExtractor main)
+ADD_EXECUTABLE(Curves2DExtractor main.cxx)
 

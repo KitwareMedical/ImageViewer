@@ -7,4 +7,4 @@ ITKCommon
 VXLNumerics
 )
 
-ADD_EXECUTABLE(itkFloodFilledSpatialFunctionExample itkFloodFilledSpatialFunctionExample)
+ADD_EXECUTABLE(itkFloodFilledSpatialFunctionExample itkFloodFilledSpatialFunctionExample.cxx)

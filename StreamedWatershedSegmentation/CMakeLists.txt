@@ -21,11 +21,11 @@ ${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/VolumeChunker
 )
 
 
-ADD_EXECUTABLE(itkTreeGeneratorApp itkTreeGeneratorApp)
-ADD_EXECUTABLE(itkSegmenterApp itkSegmenterApp)
-ADD_EXECUTABLE(itkResolverApp itkResolverApp)
-ADD_EXECUTABLE(itkEquivalenceRelabelerApp itkEquivalenceRelabelerApp)
-ADD_EXECUTABLE(itkRelabelerApp itkRelabelerApp)
+ADD_EXECUTABLE(itkTreeGeneratorApp itkTreeGeneratorApp.cxx)
+ADD_EXECUTABLE(itkSegmenterApp itkSegmenterApp.cxx)
+ADD_EXECUTABLE(itkResolverApp itkResolverApp.cxx)
+ADD_EXECUTABLE(itkEquivalenceRelabelerApp itkEquivalenceRelabelerApp.cxx)
+ADD_EXECUTABLE(itkRelabelerApp itkRelabelerApp.cxx)
 
 
 TARGET_LINK_LIBRARIES (itkTreeGeneratorApp ITKBasicFilters ITKCommon

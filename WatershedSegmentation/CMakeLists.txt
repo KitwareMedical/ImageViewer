@@ -22,5 +22,5 @@ itkpng
 itkzlib
 )
 
-ADD_EXECUTABLE(itkWatershedSegmentationExample itkWatershedSegmentationExample)
-ADD_EXECUTABLE(itkWSRawToPNG itkWSRawToPNG)
+ADD_EXECUTABLE(itkWatershedSegmentationExample itkWatershedSegmentationExample.cxx)
+ADD_EXECUTABLE(itkWSRawToPNG itkWSRawToPNG.cxx)

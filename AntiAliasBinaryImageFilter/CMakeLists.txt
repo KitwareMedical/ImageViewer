@@ -22,5 +22,5 @@ VXLNumerics
 ITKIO
 )
 
-ADD_EXECUTABLE(itkAntiAliasBinaryImageFilterExample itkAntiAliasBinaryImageFilterExample)
-ADD_EXECUTABLE(itkSampleDataGenerator itkSampleDataGenerator)
+ADD_EXECUTABLE(itkAntiAliasBinaryImageFilterExample itkAntiAliasBinaryImageFilterExample.cxx)
+ADD_EXECUTABLE(itkSampleDataGenerator itkSampleDataGenerator.cxx)

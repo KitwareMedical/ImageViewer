@@ -49,5 +49,5 @@ ITKBasicFilters
 
 ADD_LIBRARY( Example_ITKFilterLib ITKFilterLib )
 
-ADD_EXECUTABLE( Example_ITKFilterLibTest ITKFilterLibTest )
+ADD_EXECUTABLE( Example_ITKFilterLibTest ITKFilterLibTest.cxx )
 

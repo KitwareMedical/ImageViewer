@@ -47,4 +47,4 @@ ITKBasicFilters
 ### HERE:  Modified this line
 ADD_LIBRARY(Example_ITKRegistrationLib ITKRegistrationLib )
 
-ADD_EXECUTABLE(Example_ITKRegistrationLibTest ITKRegistrationLibTest)
+ADD_EXECUTABLE(Example_ITKRegistrationLibTest ITKRegistrationLibTest.cxx)

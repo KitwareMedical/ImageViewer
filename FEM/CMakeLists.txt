@@ -60,8 +60,8 @@ ENDIF(NOT UNIX)
 
 
 # Create project files for all examples
-ADD_EXECUTABLE(FEMRead FEMRead)
-ADD_EXECUTABLE(FEMTruss FEMTruss)
+ADD_EXECUTABLE(FEMRead FEMRead.cxx)
+ADD_EXECUTABLE(FEMTruss FEMTruss.cxx)
 ADD_EXECUTABLE(FEMImageRegEx FEMImageRegEx_SRCS)
-ADD_EXECUTABLE(FEMImageRegLMEx FEMImageRegLMEx)
-ADD_EXECUTABLE(FEMSolverHyperbolicExample FEMSolverHyperbolicExample)
+ADD_EXECUTABLE(FEMImageRegLMEx FEMImageRegLMEx.cxx)
+ADD_EXECUTABLE(FEMSolverHyperbolicExample FEMSolverHyperbolicExample.cxx)

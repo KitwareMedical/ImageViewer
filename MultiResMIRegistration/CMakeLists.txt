@@ -26,5 +26,5 @@ ITKIO
 ITKBasicFilters 
 )
 
-ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration )
+ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration.cxx )
 

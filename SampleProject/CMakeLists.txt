@@ -18,5 +18,5 @@ ITKCommon
 )
 
 
-ADD_EXECUTABLE(itkSampleProject itkSampleProject )
+ADD_EXECUTABLE(itkSampleProject itkSampleProject.cxx )
 

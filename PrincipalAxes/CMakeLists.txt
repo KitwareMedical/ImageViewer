@@ -18,5 +18,5 @@ ITKIO
 )
 
 
-ADD_EXECUTABLE(itkPrincipalAxesResampler itkPrincipalAxesResampler )
+ADD_EXECUTABLE(itkPrincipalAxesResampler itkPrincipalAxesResampler.cxx )
 
