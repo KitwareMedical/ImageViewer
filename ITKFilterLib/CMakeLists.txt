@@ -24,26 +24,25 @@
 # ${ITK_SOURCE_DIR}/Code/Algorithms
 # )
 
-# LINK_DIRECTORIES(
-# ${ITK_BINARY_DIR}/Code/Common
-# ${ITK_BINARY_DIR}/Code/IO
-# ${ITK_BINARY_DIR}/Code/BasicFilters
-# ${ITK_BINARY_DIR}/Code/Algorithms
-# ${ITK_BINARY_DIR}/Code/Numerics
-# )
-
-# LINK_LIBRARIES (
-# VXLNumerics
-# ITKNumerics
-# ITKCommon
-# ITKIO
-# ITKBasicFilters 
-# )
-
 # -- End uncomment --
 
+LINK_DIRECTORIES (
+${ITK_BINARY_DIR}/Code/Common
+${ITK_BINARY_DIR}/Code/IO
+${ITK_BINARY_DIR}/Code/BasicFilters
+${ITK_BINARY_DIR}/Code/Algorithms
+${ITK_BINARY_DIR}/Code/Numerics
+)
 
-#
+LINK_LIBRARIES (
+VXLNumerics
+ITKNumerics
+ITKCommon
+ITKIO
+ITKBasicFilters 
+)
+
+
 ADD_LIBRARY( Example_ITKFilterLib ITKFilterLib )
 
 LINK_LIBRARIES (
