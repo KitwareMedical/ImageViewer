@@ -114,25 +114,25 @@ FEMElementQuadrilateral< TFEMMesh >
    * Compute the elements of the Jacobian matrix
    * for each coordinate of a node w.r.t. global coordinate system
    */
-  J[0][0] = (shapeD[0][0] * m_node1->X)
-          + (shapeD[1][0] * m_node2->X)
-          + (shapeD[2][0] * m_node3->X)
-          + (shapeD[3][0] * m_node4->X);
+  J[0][0] = (shapeFunctionsDerivatives[0][0] * p0[0] )
+          + (shapeFunctionsDerivatives[1][0] * p1[0] )
+          + (shapeFunctionsDerivatives[2][0] * p2[0] )
+          + (shapeFunctionsDerivatives[3][0] * p3[0] );
 
-  J[0][1] = (shapeD[0][1] * m_node1->X)
-          + (shapeD[1][1] * m_node2->X)
-          + (shapeD[2][1] * m_node3->X)
-          + (shapeD[3][1] * m_node4->X);
+  J[0][1] = (shapeFunctionsDerivatives[0][1] * p0[0] )
+          + (shapeFunctionsDerivatives[1][1] * p1[0] )
+          + (shapeFunctionsDerivatives[2][1] * p2[0] )
+          + (shapeFunctionsDerivatives[3][1] * p3[0] );
 
-  J[1][0] = (shapeD[0][0] * m_node1->Y)
-          + (shapeD[1][0] * m_node2->Y)
-          + (shapeD[2][0] * m_node3->Y)
-          + (shapeD[3][0] * m_node4->Y);
+  J[1][0] = (shapeFunctionsDerivatives[0][0] * p0[1] )
+          + (shapeFunctionsDerivatives[1][0] * p1[1] )
+          + (shapeFunctionsDerivatives[2][0] * p2[1] )
+          + (shapeFunctionsDerivatives[3][0] * p3[1] );
     
-  J[1][1] = (shapeD[0][1] * m_node1->Y)
-          + (shapeD[1][1] * m_node2->Y)
-          + (shapeD[2][1] * m_node3->Y)
-          + (shapeD[3][1] * m_node4->Y);
+  J[1][1] = (shapeFunctionsDerivatives[0][1] * p0[1] )
+          + (shapeFunctionsDerivatives[1][1] * p1[1] )
+          + (shapeFunctionsDerivatives[2][1] * p2[1] )
+          + (shapeFunctionsDerivatives[3][1] * p3[1] );
 
 }
 
@@ -213,6 +213,47 @@ FEMElementQuadrilateral< TFEMMesh >
 }
 
 
+
+/**
+* Return parametric coordinates of Gauss integration 
+* points used for numerical integration.
+*/
+template < typename TFEMMesh >
+void 
+FEMElementQuadrilateral< TFEMMesh >
+::GetGaussIntegrationPoints( 
+              ParametricPointsArrayType & gaussPoints )
+{
+  const double root = 1.0 / sqrt( 3.0 );
+  // Point #0
+  gaussPoints[0][0] =  -root;
+  gaussPoints[0][1] =  -root;
+  // Point #1
+  gaussPoints[1][0] =   root;
+  gaussPoints[1][1] =  -root;
+  // Point #2
+  gaussPoints[2][0] =   root;
+  gaussPoints[2][1] =   root;
+  // Point #3
+  gaussPoints[3][0] =  -root;
+  gaussPoints[3][1] =   root;
+}
+
+
+
+/**
+* Return parametric coordinates of Gauss integration 
+* points used for numerical integration.
+*/
+template < typename TFEMMesh >
+void 
+FEMElementQuadrilateral< TFEMMesh >
+::GetGaussIntegrationWeights( 
+                IntegrationWeightsArrayType & gaussWeights )
+{
+  // For the Quadrilateral all weights are equal to 1.0
+  gaussWeights.Fill( 1.0 );
+}
 
 
 }} // end namespace itk::fem

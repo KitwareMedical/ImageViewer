@@ -55,6 +55,7 @@ public:
    */
   enum { NumberOfDisplacementComponents = 4 };
   enum { ParametricSpaceDimension       = 2 };
+  enum { NumberOfGaussIntegrationPoints = 4 };
 
 
   // This macro takes care of declaring all the types
@@ -98,6 +99,20 @@ public:
   void ComputeShapeFunctionDerivativesAt( 
                                 const ParametricPointType & parametricPoint,
                                 ShapeFunctionsDerivativesType & ) const;
+
+  /**
+   * Return parametric coordinates of Gauss integration 
+   * points used for numerical integration.
+   */
+  static void GetGaussIntegrationPoints( 
+                  ParametricPointsArrayType & gaussPoints );
+
+  /**
+   * Return Weights for Gauss integration 
+   * points used for numerical integration.
+   */
+  static void GetGaussIntegrationWeights( 
+                  IntegrationWeightsArrayType & gaussWeights );
 
 
 
