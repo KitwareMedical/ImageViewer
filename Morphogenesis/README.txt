@@ -16,7 +16,7 @@
 
 
  To build this program you will need the FLTK associated library, in the 
- Unsupported/FltkImageViewer  directory.
+ Auxiliary/FltkImageViewer  directory.
 
 
 
