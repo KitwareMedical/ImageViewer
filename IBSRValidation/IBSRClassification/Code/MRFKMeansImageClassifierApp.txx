@@ -18,6 +18,7 @@
 #define _MRFKMeansImageClassifierApp_txx
 
 #include "MRFKMeansImageClassifierApp.h"
+#include <algorithm>
 
 namespace itk
 {

@@ -18,6 +18,7 @@
 #define _KmeansImageClassifierApp_txx
 
 #include "KmeansImageClassifierApp.h"
+#include <algorithm>
 
 namespace itk
 {
