@@ -13,9 +13,3 @@ ADD_LIBRARY(vtkFltk
 FLTK_WRAP_UI(vtkFltk fltkVTKImageViewerGUI.fl)
 
 TARGET_LINK_LIBRARIES(vtkFltk ${FLTK_LIBRARIES} ${GLU_LIBRARY})
-
-INSTALL_TARGETS(/lib/InsightToolkit vtkFltk)
-
-INSTALL_FILES(/include/InsightToolkit/Auxiliary/FltkImageViewer ".h"
-  fltkVTKImageViewerGUI
-  )

@@ -60,21 +60,4 @@ IF(HAS_FLTK)
 #
   FLTK_WRAP_UI(FltkImageViewer ${FltkImageViewer_GUI_SRCS} )
 
-  INSTALL_TARGETS(/lib/InsightToolkit FltkImageViewer)
-
-  INSTALL_FILES(/include/InsightToolkit/Auxiliary/FltkImageViewer ".h"
-    fltkClippingPlane3DDrawerGUI
-    fltkDisplayGlWindowGUI
-    fltkDisplayGlWindowFlatGUI
-    fltkFrustumFunctionControlGUI
-    fltkImageViewerGUI
-    fltkImage2DViewerGUI
-    fltkRGBImage2DViewerGUI
-    fltkRegularStepGradientDescentGUI
-    fltkSlice2DDrawerGUI
-    fltkSlice3DDrawerGUI
-    fltkSphereFunctionControlGUI
-    fltkTimeProbesCollectorGUI
-    )
-
 ENDIF(HAS_FLTK)
