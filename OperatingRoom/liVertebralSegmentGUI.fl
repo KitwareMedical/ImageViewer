@@ -194,7 +194,7 @@ color.SetBlue( blue );
 m_VertebralSegment->GetVertebralBody()->SetColor( color );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent() );}
             xywh {250 325 75 25}
-            code0 {\#include <Fl/Fl_Color_Chooser.H>}
+            code0 {\#include <FL/Fl_Color_Chooser.H>}
           }
         }
         Fl_Group {} {
@@ -292,7 +292,7 @@ color.SetBlue( blue );
 m_VertebralSegment->GetVertebralPedicle()->SetColor( color );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent() );}
             xywh {400 215 75 25}
-            code0 {\#include <Fl/Fl_Color_Chooser.H>}
+            code0 {\#include <FL/Fl_Color_Chooser.H>}
           }
           Fl_Counter FrontalPositionCounter {
             label {Frontal }
@@ -412,8 +412,7 @@ VerticalRadiusCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetVert
 HorizontalRadiusCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetHorizontalRadius() );
 m_SampleGenerator.SetVertebralSegment( segment );
 m_VolumeRegistrationOptimizerGUI.SetOptimizer( m_VertebralSegmentRegistrator->GetVolumeRegistrator()->GetOptimizer() );
-m_VertebralSegmentRegistrator->GetVolumeRegistrator()->SetTarget( m_SampleGenerator.GetPointSet() );} {selected
-    }
+m_VertebralSegmentRegistrator->GetVolumeRegistrator()->SetTarget( m_SampleGenerator.GetPointSet() );} {}
   }
   Function {SetVolume( li::VertebralSegmentRegistrator::VolumeImageType * image )} {return_type void
   } {
