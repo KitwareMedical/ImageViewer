@@ -25,6 +25,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
 #include <vtkOutlineFilter.h>
 #include <vtkProperty.h>
 

@@ -18,6 +18,9 @@
 #define _VTKVolRen_h
 #include <vtkVolumeRayCastMapper.h>
 #include <vtkVolumeRayCastMIPFunction.h>
+#include <vtkVolume.h>
+#include <vtkVolumeProperty.h>
+#include <vtkStructuredPoints.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkUnsignedCharArray.h>
 #include "itkImage.h"
