@@ -24,7 +24,6 @@ LINK_LIBRARIES(
  ITKCommon
  ITKIO
  VXLNumerics
- MetaIO
  ${GLU_LIBRARY}
 )
 
