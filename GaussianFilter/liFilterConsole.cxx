@@ -37,33 +37,33 @@ liFilterConsole
   
   typedef fltk::LightButtonRedrawCommand  CommandButton;
 
-  this->m_InputViewer = new InputImageViewerType;
+  m_InputViewer = new InputImageViewerType;
 
-  this->m_Viewer_H1x  = new ImageViewerType;
-  this->m_Viewer_H1y  = new ImageViewerType;
-  this->m_Viewer_H1z  = new ImageViewerType;
+  m_Viewer_H1x  = new ImageViewerType;
+  m_Viewer_H1y  = new ImageViewerType;
+  m_Viewer_H1z  = new ImageViewerType;
 
-  this->m_Viewer_H2x  = new ImageViewerType;
-  this->m_Viewer_H2y  = new ImageViewerType;
-  this->m_Viewer_H2z  = new ImageViewerType;
+  m_Viewer_H2x  = new ImageViewerType;
+  m_Viewer_H2y  = new ImageViewerType;
+  m_Viewer_H2z  = new ImageViewerType;
 
-  this->m_Viewer_Laplacian = new ImageViewerType;
+  m_Viewer_Laplacian = new ImageViewerType;
 
-  this->m_Viewer_Gradient_Modulus = new ImageViewerType;
+  m_Viewer_Gradient_Modulus = new ImageViewerType;
 
-  this->m_InputViewer->SetLabel( "Input Image" );
+  m_InputViewer->SetLabel( "Input Image" );
 
-  this->m_Viewer_H1x->SetLabel( "Gradient X" );
-  this->m_Viewer_H1y->SetLabel( "Gradient Y" );
-  this->m_Viewer_H1z->SetLabel( "Gradient Z" );
+  m_Viewer_H1x->SetLabel( "Gradient X" );
+  m_Viewer_H1y->SetLabel( "Gradient Y" );
+  m_Viewer_H1z->SetLabel( "Gradient Z" );
 
-  this->m_Viewer_H2x->SetLabel( "Second Derivative X" );
-  this->m_Viewer_H2y->SetLabel( "Second Derivative Y" );
-  this->m_Viewer_H2z->SetLabel( "Second Derivative Z" );
+  m_Viewer_H2x->SetLabel( "Second Derivative X" );
+  m_Viewer_H2y->SetLabel( "Second Derivative Y" );
+  m_Viewer_H2z->SetLabel( "Second Derivative Z" );
 
-  this->m_Viewer_Laplacian->SetLabel( "Laplacian" );
+  m_Viewer_Laplacian->SetLabel( "Laplacian" );
   
-  this->m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
+  m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
   fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
                             progressSlider->GetRedrawCommand().GetPointer();
@@ -151,7 +151,7 @@ liFilterConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
 
-  ShowStatus("Let's start by loading an image...");
+  this->ShowStatus("Let's start by loading an image...");
 
 }
 
@@ -167,59 +167,59 @@ liFilterConsole
 ::~liFilterConsole()
 {
 
-  if( this->m_Viewer_H1x ) 
+  if( m_Viewer_H1x ) 
   {
-    delete this->m_Viewer_H1x;
-    this->m_Viewer_H1x = 0;
+    delete m_Viewer_H1x;
+    m_Viewer_H1x = 0;
   }
 
-  if( this->m_Viewer_H1y ) 
+  if( m_Viewer_H1y ) 
   {
-    delete this->m_Viewer_H1y;
-    this->m_Viewer_H1y = 0;
+    delete m_Viewer_H1y;
+    m_Viewer_H1y = 0;
   }
 
-  if( this->m_Viewer_H1z ) 
+  if( m_Viewer_H1z ) 
   {
-    delete this->m_Viewer_H1z;
-    this->m_Viewer_H1z = 0;
+    delete m_Viewer_H1z;
+    m_Viewer_H1z = 0;
   }
 
-  if( this->m_Viewer_H2x ) 
+  if( m_Viewer_H2x ) 
   {
-    delete this->m_Viewer_H2x;
-    this->m_Viewer_H2x = 0;
+    delete m_Viewer_H2x;
+    m_Viewer_H2x = 0;
   }
 
-  if( this->m_Viewer_H2y ) 
+  if( m_Viewer_H2y ) 
   {
-    delete this->m_Viewer_H2y;
-    this->m_Viewer_H2y = 0;
+    delete m_Viewer_H2y;
+    m_Viewer_H2y = 0;
   }
 
-  if( this->m_Viewer_H2z ) 
+  if( m_Viewer_H2z ) 
   {
-    delete this->m_Viewer_H2z;
-    this->m_Viewer_H2z = 0;
+    delete m_Viewer_H2z;
+    m_Viewer_H2z = 0;
   }
 
 
-  if( this->m_InputViewer ) 
+  if( m_InputViewer ) 
   {
-    delete this->m_InputViewer;
-    this->m_InputViewer = 0;
+    delete m_InputViewer;
+    m_InputViewer = 0;
   }
 
-  if( this->m_Viewer_Laplacian ) 
+  if( m_Viewer_Laplacian ) 
   {
-    delete this->m_Viewer_Laplacian;
-    this->m_Viewer_Laplacian = 0;
+    delete m_Viewer_Laplacian;
+    m_Viewer_Laplacian = 0;
   }
 
-  if( this->m_Viewer_Gradient_Modulus ) 
+  if( m_Viewer_Gradient_Modulus ) 
   {
-    delete this->m_Viewer_Gradient_Modulus;
-    this->m_Viewer_Gradient_Modulus = 0;
+    delete m_Viewer_Gradient_Modulus;
+    m_Viewer_Gradient_Modulus = 0;
   }
 
 
@@ -244,7 +244,7 @@ liFilterConsole
     return;
   }
 
-  ShowStatus("Loading image file...");
+  this->ShowStatus("Loading image file...");
   
   try 
   {
@@ -252,13 +252,13 @@ liFilterConsole
   }
   catch( ... ) 
   {
-    ShowStatus("Problems reading file format");
+    this->ShowStatus("Problems reading file format");
     controlsGroup->deactivate();
     return;
   }
 
 
-  ShowStatus("File Loaded");
+  this->ShowStatus("File Loaded");
 
   controlsGroup->activate();
 
@@ -293,15 +293,15 @@ liFilterConsole
 {
 
   consoleWindow->hide();
-  this->m_Viewer_H1x->Hide();
-  this->m_Viewer_H1y->Hide();
-  this->m_Viewer_H1z->Hide();
-  this->m_Viewer_H2x->Hide();
-  this->m_Viewer_H2y->Hide();
-  this->m_Viewer_H2z->Hide();
-  this->m_InputViewer->Hide();
-  this->m_Viewer_Laplacian->Hide();
-  this->m_Viewer_Gradient_Modulus->Hide();
+  m_Viewer_H1x->Hide();
+  m_Viewer_H1y->Hide();
+  m_Viewer_H1z->Hide();
+  m_Viewer_H2x->Hide();
+  m_Viewer_H2y->Hide();
+  m_Viewer_H2z->Hide();
+  m_InputViewer->Hide();
+  m_Viewer_Laplacian->Hide();
+  m_Viewer_Gradient_Modulus->Hide();
   aboutWindow->hide();
 }
 
@@ -319,25 +319,6 @@ liFilterConsole
 ::Quit( void )
 {
   Hide();
-}
-
-
-
-
-
- 
-/************************************
- *
- *  Show Progress
- *
- ***********************************/
-void
-liFilterConsole
-::ShowProgress( float fraction )
-{
-  liFilterConsoleBase::ShowProgress( fraction );
-  //  progressSlider->value( fraction );
-  //  Fl::check();
 }
 
 
@@ -372,14 +353,14 @@ liFilterConsole
 ::ShowInput( void )
 {
 
-  if( ! (this->m_ImageLoaded) ) 
+  if( ! (m_ImageLoaded) ) 
   {
-    ShowStatus("Please load an image first");
+    this->ShowStatus("Please load an image first");
     return;
   }
 
-  this->m_InputViewer->SetImage( this->m_Reader->GetOutput() );  
-  this->m_InputViewer->Show();
+  m_InputViewer->SetImage( m_Reader->GetOutput() );  
+  m_InputViewer->Show();
 
 }
 
@@ -396,9 +377,9 @@ liFilterConsole
 ::ShowFilteredX( void )
 {
 
-  this->m_H1x->Update();
-  this->m_Viewer_H1x->SetImage( this->m_H1x->GetOutput() );  
-  this->m_Viewer_H1x->Show();
+  m_H1x->Update();
+  m_Viewer_H1x->SetImage( m_H1x->GetOutput() );  
+  m_Viewer_H1x->Show();
 
 }
 
@@ -414,9 +395,9 @@ liFilterConsole
 ::ShowFilteredY( void )
 {
 
-  this->m_H1y->Update(); 
-  this->m_Viewer_H1y->SetImage( this->m_H1y->GetOutput() );  
-  this->m_Viewer_H1y->Show();
+  m_H1y->Update(); 
+  m_Viewer_H1y->SetImage( m_H1y->GetOutput() );  
+  m_Viewer_H1y->Show();
 
 }
 
@@ -433,9 +414,9 @@ liFilterConsole
 ::ShowFilteredZ( void )
 {
 
-  this->m_H1z->Update();
-  this->m_Viewer_H1z->SetImage( this->m_H1z->GetOutput() );  
-  this->m_Viewer_H1z->Show();
+  m_H1z->Update();
+  m_Viewer_H1z->SetImage( m_H1z->GetOutput() );  
+  m_Viewer_H1z->Show();
 
 }
 
@@ -451,9 +432,9 @@ liFilterConsole
 ::ShowSecondDerivativeX( void )
 {
 
-  this->m_H2x->Update();
-  this->m_Viewer_H2x->SetImage( this->m_H2x->GetOutput() );  
-  this->m_Viewer_H2x->Show();
+  m_H2x->Update();
+  m_Viewer_H2x->SetImage( m_H2x->GetOutput() );  
+  m_Viewer_H2x->Show();
 
 }
 
@@ -469,9 +450,9 @@ liFilterConsole
 ::ShowSecondDerivativeY( void )
 {
 
-  this->m_H2y->Update();
-  this->m_Viewer_H2y->SetImage( this->m_H2y->GetOutput() );  
-  this->m_Viewer_H2y->Show();
+  m_H2y->Update();
+  m_Viewer_H2y->SetImage( m_H2y->GetOutput() );  
+  m_Viewer_H2y->Show();
 
 }
 
@@ -489,9 +470,9 @@ liFilterConsole
 ::ShowSecondDerivativeZ( void )
 {
 
-  this->m_H2z->Update();
-  this->m_Viewer_H2z->SetImage( this->m_H2z->GetOutput() );  
-  this->m_Viewer_H2z->Show();
+  m_H2z->Update();
+  m_Viewer_H2z->SetImage( m_H2z->GetOutput() );  
+  m_Viewer_H2z->Show();
 
 }
 
@@ -507,9 +488,9 @@ liFilterConsole
 ::ShowLaplacian( void )
 {
 
-  this->m_Add->Update();
-  this->m_Viewer_Laplacian->SetImage( this->m_Add->GetOutput() );  
-  this->m_Viewer_Laplacian->Show();
+  m_Add->Update();
+  m_Viewer_Laplacian->SetImage( m_Add->GetOutput() );  
+  m_Viewer_Laplacian->Show();
 
 }
 
@@ -526,9 +507,9 @@ liFilterConsole
 ::ShowGradientModulus( void )
 {
 
-  this->m_Modulus->Update();
-  this->m_Viewer_Gradient_Modulus->SetImage( this->m_Modulus->GetOutput() );  
-  this->m_Viewer_Gradient_Modulus->Show();
+  m_Modulus->Update();
+  m_Viewer_Gradient_Modulus->SetImage( m_Modulus->GetOutput() );  
+  m_Viewer_Gradient_Modulus->Show();
 
 }
 
@@ -565,19 +546,19 @@ liFilterConsole
 ::Execute( void )
 {
 
-  if( ! (this->m_ImageLoaded) ) 
+  if( ! (m_ImageLoaded) ) 
   {
-    ShowStatus("Please load an image first");
+    this->ShowStatus("Please load an image first");
     return;
   }
 
 
-  ShowStatus("Filtering Image with a Gaussian...");
+  this->ShowStatus("Filtering Image with a Gaussian...");
 
   liFilterConsoleBase::Execute();
 
 
-  ShowStatus("Filtering done ");
+  this->ShowStatus("Filtering done ");
   
 }
 
@@ -602,9 +583,9 @@ liFilterConsole
     return;
   }
 
-  ShowStatus("Writing Laplacian ...");
+  this->ShowStatus("Writing Laplacian ...");
   liFilterConsoleBase::WriteLaplacian( filename );
-  ShowStatus("Laplacian written");
+  this->ShowStatus("Laplacian written");
 
 }
 
@@ -627,9 +608,9 @@ liFilterConsole
     return;
   }
 
-  ShowStatus("Writing Gradient X ...");
+  this->ShowStatus("Writing Gradient X ...");
   liFilterConsoleBase::WriteGradientX( filename );
-  ShowStatus("Gradient X written");
+  this->ShowStatus("Gradient X written");
 
 }
 
@@ -653,9 +634,9 @@ liFilterConsole
     return;
   }
 
-  ShowStatus("Writing Gradient Y ...");
+  this->ShowStatus("Writing Gradient Y ...");
   liFilterConsoleBase::WriteGradientY( filename );
-  ShowStatus("Gradient Y written");
+  this->ShowStatus("Gradient Y written");
 
 }
 
@@ -682,9 +663,9 @@ liFilterConsole
     return;
   }
 
-  ShowStatus("Writing Gradient Z ...");
+  this->ShowStatus("Writing Gradient Z ...");
   liFilterConsoleBase::WriteGradientZ( filename );
-  ShowStatus("Gradient Z written");
+  this->ShowStatus("Gradient Z written");
 
 }
 
@@ -711,9 +692,9 @@ liFilterConsole
     return;
   }
 
-  ShowStatus("Writing Gradient Modulus ...");
+  this->ShowStatus("Writing Gradient Modulus ...");
   liFilterConsoleBase::WriteGradientModulus( filename );
-  ShowStatus("Gradient Modulus written");
+  this->ShowStatus("Gradient Modulus written");
 
 }
 

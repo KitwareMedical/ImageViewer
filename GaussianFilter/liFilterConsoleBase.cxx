@@ -27,85 +27,85 @@ liFilterConsoleBase
 ::liFilterConsoleBase()
 {
 
-  this->m_ImageLoaded = false;
+  m_ImageLoaded = false;
 
-  this->m_Reader     = VolumeReaderType::New();
+  m_Reader     = VolumeReaderType::New();
   
-  this->m_Hx   = InputGaussianFilterType::New();
-  this->m_Hy   = InputGaussianFilterType::New();
-  this->m_Hz   = InputGaussianFilterType::New();
+  m_Hx   = InputGaussianFilterType::New();
+  m_Hy   = InputGaussianFilterType::New();
+  m_Hz   = InputGaussianFilterType::New();
 
-  this->m_Hx->SetDirection( 0 );
-  this->m_Hy->SetDirection( 1 );
-  this->m_Hz->SetDirection( 2 );
+  m_Hx->SetDirection( 0 );
+  m_Hy->SetDirection( 1 );
+  m_Hz->SetDirection( 2 );
 
-  this->m_Hxy  = GaussianFilterType::New();
-  this->m_Hyz  = GaussianFilterType::New();
-  this->m_Hzx  = GaussianFilterType::New();
+  m_Hxy  = GaussianFilterType::New();
+  m_Hyz  = GaussianFilterType::New();
+  m_Hzx  = GaussianFilterType::New();
 
-  this->m_Hxy->SetDirection( 1 );
-  this->m_Hyz->SetDirection( 2 );
-  this->m_Hzx->SetDirection( 0 );
+  m_Hxy->SetDirection( 1 );
+  m_Hyz->SetDirection( 2 );
+  m_Hzx->SetDirection( 0 );
 
-  this->m_H1x  = GaussianFirstDerivativeFilterType::New();
-  this->m_H1y  = GaussianFirstDerivativeFilterType::New();
-  this->m_H1z  = GaussianFirstDerivativeFilterType::New();
+  m_H1x  = GaussianFirstDerivativeFilterType::New();
+  m_H1y  = GaussianFirstDerivativeFilterType::New();
+  m_H1z  = GaussianFirstDerivativeFilterType::New();
 
-  this->m_H1x->SetDirection( 0 );
-  this->m_H1y->SetDirection( 1 );
-  this->m_H1z->SetDirection( 2 );
+  m_H1x->SetDirection( 0 );
+  m_H1y->SetDirection( 1 );
+  m_H1z->SetDirection( 2 );
 
-  this->m_H2x  = GaussianSecondDerivativeFilterType::New();
-  this->m_H2y  = GaussianSecondDerivativeFilterType::New();
-  this->m_H2z  = GaussianSecondDerivativeFilterType::New();
+  m_H2x  = GaussianSecondDerivativeFilterType::New();
+  m_H2y  = GaussianSecondDerivativeFilterType::New();
+  m_H2z  = GaussianSecondDerivativeFilterType::New();
 
-  this->m_H2x->SetDirection( 0 );
-  this->m_H2y->SetDirection( 1 );
-  this->m_H2z->SetDirection( 2 );
-
-
-  this->m_Hx->SetInputImage( this->m_Reader->GetOutput() );
-  this->m_Hy->SetInputImage( this->m_Reader->GetOutput() );
-  this->m_Hz->SetInputImage( this->m_Reader->GetOutput() );
-
-  this->m_Hxy->SetInputImage( this->m_Hx->GetOutput() );
-  this->m_Hyz->SetInputImage( this->m_Hy->GetOutput() );
-  this->m_Hzx->SetInputImage( this->m_Hz->GetOutput() );
-
-  this->m_H1x->SetInputImage( this->m_Hyz->GetOutput() );
-  this->m_H1y->SetInputImage( this->m_Hzx->GetOutput() );
-  this->m_H1z->SetInputImage( this->m_Hxy->GetOutput() );
-
-  this->m_H2x->SetInputImage( this->m_Hyz->GetOutput() );
-  this->m_H2y->SetInputImage( this->m_Hzx->GetOutput() );
-  this->m_H2z->SetInputImage( this->m_Hxy->GetOutput() );
-
-  this->m_Add = AddFilterType::New();
-
-  this->m_Add->SetInput1( this->m_H2x->GetOutput() );
-  this->m_Add->SetInput2( this->m_H2y->GetOutput() );
-  this->m_Add->SetInput3( this->m_H2z->GetOutput() );
-
-  this->m_Modulus = ModulusFilterType::New();
-
-  this->m_Modulus->SetInput1( this->m_H1x->GetOutput() );
-  this->m_Modulus->SetInput2( this->m_H1y->GetOutput() );
-  this->m_Modulus->SetInput3( this->m_H1z->GetOutput() );
+  m_H2x->SetDirection( 0 );
+  m_H2y->SetDirection( 1 );
+  m_H2z->SetDirection( 2 );
 
 
-  this->m_Writer_Gradient_Modulus = VolumeWriterType::New();
-  this->m_Writer_Gradient_X      = VolumeWriterType::New();
-  this->m_Writer_Gradient_Y      = VolumeWriterType::New();
-  this->m_Writer_Gradient_Z      = VolumeWriterType::New();
-  this->m_Writer_Laplacian       = VolumeWriterType::New();
+  m_Hx->SetInputImage( m_Reader->GetOutput() );
+  m_Hy->SetInputImage( m_Reader->GetOutput() );
+  m_Hz->SetInputImage( m_Reader->GetOutput() );
 
-  this->m_Writer_Gradient_X->SetInput( this->m_H1x->GetOutput() );
-  this->m_Writer_Gradient_Y->SetInput( this->m_H1y->GetOutput() );
-  this->m_Writer_Gradient_Z->SetInput( this->m_H1z->GetOutput() );
+  m_Hxy->SetInputImage( m_Hx->GetOutput() );
+  m_Hyz->SetInputImage( m_Hy->GetOutput() );
+  m_Hzx->SetInputImage( m_Hz->GetOutput() );
 
-  this->m_Writer_Gradient_Modulus->SetInput( this->m_Modulus->GetOutput() );
+  m_H1x->SetInputImage( m_Hyz->GetOutput() );
+  m_H1y->SetInputImage( m_Hzx->GetOutput() );
+  m_H1z->SetInputImage( m_Hxy->GetOutput() );
 
-  this->m_Writer_Laplacian->SetInput( this->m_Add->GetOutput() );
+  m_H2x->SetInputImage( m_Hyz->GetOutput() );
+  m_H2y->SetInputImage( m_Hzx->GetOutput() );
+  m_H2z->SetInputImage( m_Hxy->GetOutput() );
+
+  m_Add = AddFilterType::New();
+
+  m_Add->SetInput1( m_H2x->GetOutput() );
+  m_Add->SetInput2( m_H2y->GetOutput() );
+  m_Add->SetInput3( m_H2z->GetOutput() );
+
+  m_Modulus = ModulusFilterType::New();
+
+  m_Modulus->SetInput1( m_H1x->GetOutput() );
+  m_Modulus->SetInput2( m_H1y->GetOutput() );
+  m_Modulus->SetInput3( m_H1z->GetOutput() );
+
+
+  m_Writer_Gradient_Modulus = VolumeWriterType::New();
+  m_Writer_Gradient_X      = VolumeWriterType::New();
+  m_Writer_Gradient_Y      = VolumeWriterType::New();
+  m_Writer_Gradient_Z      = VolumeWriterType::New();
+  m_Writer_Laplacian       = VolumeWriterType::New();
+
+  m_Writer_Gradient_X->SetInput( m_H1x->GetOutput() );
+  m_Writer_Gradient_Y->SetInput( m_H1y->GetOutput() );
+  m_Writer_Gradient_Z->SetInput( m_H1z->GetOutput() );
+
+  m_Writer_Gradient_Modulus->SetInput( m_Modulus->GetOutput() );
+
+  m_Writer_Laplacian->SetInput( m_Add->GetOutput() );
 
 
 }
@@ -141,10 +141,10 @@ liFilterConsoleBase
     return;
   }
 
-  this->m_Reader->SetFileToLoad( filename );
-  this->m_Reader->Update();
+  m_Reader->SetFileToLoad( filename );
+  m_Reader->Update();
 
-  this->m_ImageLoaded = true;
+  m_ImageLoaded = true;
 
 }
 
@@ -190,21 +190,21 @@ liFilterConsoleBase
 ::SetSigma( ComputationType value )
 {
   
-  this->m_Hx->SetSigma( value );
-  this->m_Hy->SetSigma( value );
-  this->m_Hz->SetSigma( value );
+  m_Hx->SetSigma( value );
+  m_Hy->SetSigma( value );
+  m_Hz->SetSigma( value );
 
-  this->m_Hxy->SetSigma( value );
-  this->m_Hyz->SetSigma( value );
-  this->m_Hzx->SetSigma( value );
+  m_Hxy->SetSigma( value );
+  m_Hyz->SetSigma( value );
+  m_Hzx->SetSigma( value );
 
-  this->m_H1x->SetSigma( value );
-  this->m_H1y->SetSigma( value );
-  this->m_H1z->SetSigma( value );
+  m_H1x->SetSigma( value );
+  m_H1y->SetSigma( value );
+  m_H1z->SetSigma( value );
 
-  this->m_H2x->SetSigma( value );
-  this->m_H2y->SetSigma( value );
-  this->m_H2z->SetSigma( value );
+  m_H2x->SetSigma( value );
+  m_H2y->SetSigma( value );
+  m_H2z->SetSigma( value );
 
 }
 
@@ -222,23 +222,23 @@ liFilterConsoleBase
 ::Execute( void )
 {
 
-  if( ! (this->m_ImageLoaded) ) 
+  if( ! (m_ImageLoaded) ) 
   {
     ShowStatus("Please load an image first");
     return;
   }
   
-  this->m_H1x->Update();
-  this->m_H1y->Update();
-  this->m_H1z->Update();
+  m_H1x->Update();
+  m_H1y->Update();
+  m_H1z->Update();
 
-  this->m_H2x->Update();
-  this->m_H2y->Update();
-  this->m_H2z->Update();
+  m_H2x->Update();
+  m_H2y->Update();
+  m_H2z->Update();
 
-  this->m_Add->Update();
+  m_Add->Update();
 
-  this->m_Modulus->Update();
+  m_Modulus->Update();
 
 }
 
@@ -256,9 +256,9 @@ void
 liFilterConsoleBase 
 ::WriteGradientX( const char * filename )
 {
-  this->m_Writer_Gradient_X->SetInput( this->m_H1x->GetOutput() );
-  this->m_Writer_Gradient_X->SetFileName( filename );
-  this->m_Writer_Gradient_X->Write();
+  m_Writer_Gradient_X->SetInput( m_H1x->GetOutput() );
+  m_Writer_Gradient_X->SetFileName( filename );
+  m_Writer_Gradient_X->Write();
 }
 
 
@@ -272,8 +272,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientY( const char * filename )
 {
-  this->m_Writer_Gradient_Y->SetFileName( filename );
-  this->m_Writer_Gradient_Y->Write();
+  m_Writer_Gradient_Y->SetFileName( filename );
+  m_Writer_Gradient_Y->Write();
 }
 
 
@@ -287,8 +287,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientZ( const char * filename )
 {
-  this->m_Writer_Gradient_Z->SetFileName( filename );
-  this->m_Writer_Gradient_Z->Write();
+  m_Writer_Gradient_Z->SetFileName( filename );
+  m_Writer_Gradient_Z->Write();
 }
 
 
@@ -302,8 +302,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientModulus( const char * filename )
 {
-  this->m_Writer_Gradient_Modulus->SetFileName( filename );
-  this->m_Writer_Gradient_Modulus->Write();
+  m_Writer_Gradient_Modulus->SetFileName( filename );
+  m_Writer_Gradient_Modulus->Write();
 }
 
 
@@ -317,8 +317,8 @@ void
 liFilterConsoleBase 
 ::WriteLaplacian( const char * filename )
 {
-  this->m_Writer_Laplacian->SetFileName( filename );
-  this->m_Writer_Laplacian->Write();
+  m_Writer_Laplacian->SetFileName( filename );
+  m_Writer_Laplacian->Write();
 }
 
 

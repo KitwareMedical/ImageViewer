@@ -16,10 +16,10 @@
 
 #include <GaussianFilter.h>
 
-
 int main()
 {
 
+  
   liFilterConsole * console = new liFilterConsole();
 
   console->Show();
