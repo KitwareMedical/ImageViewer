@@ -75,8 +75,11 @@ SUBDIRS(FuzzyConnectedness)
 # Add an option to build or not build the ShapeDetection example
 SUBDIRS(ShapeDetection)
 
-# Add an option to build or not build the MRI Registration example
-SUBDIRS(MRIRegistration)
+# The MRI Registration example needs VTK
+INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
+IF (USE_VTK_FILE)
+  SUBDIRS(MRIRegistration)
+ENDIF (USE_VTK_FILE)
 
 # Add an option to build or not build the TripleTKImageDisplay example
 IF(HAS_METAIMAGE)
