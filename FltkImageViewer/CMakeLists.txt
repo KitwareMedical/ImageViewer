@@ -1,10 +1,6 @@
 FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.H H:/usr/local/fltk /usr/local/fltk )
 
-LIBRARY(
-FltkImageViewer
-)
-
-SOURCE_FILES(
+SOURCE_FILES(FltkImageViewer_SRCS
 fltkDisplayWindowGUI
 fltkGlWindow
 fltkGlWindowInteractive
@@ -22,4 +18,7 @@ ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
 ${FLTK_INCLUDE_DIR}
 )
 
+ADD_LIBRARY(
+FltkImageViewer FltkImageViewer_SRCS
+)
 
