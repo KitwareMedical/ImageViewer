@@ -19,7 +19,7 @@
 #include "itkIsolatedConnectedImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_IMAGING_EXPORT vtkITKIsolatedConnectedImageFilter : public vtkITKImageToImageFilterUSUS
+class VTK_EXPORT vtkITKIsolatedConnectedImageFilter : public vtkITKImageToImageFilterUSUS
 {
  public:
   static vtkITKIsolatedConnectedImageFilter *New();
@@ -72,7 +72,7 @@ private:
   void operator=(const vtkITKIsolatedConnectedImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKIsolatedConnectedImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKIsolatedConnectedImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKIsolatedConnectedImageFilter);
 
 #endif

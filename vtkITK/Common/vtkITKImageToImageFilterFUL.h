@@ -13,7 +13,7 @@
 #include "vtkITKUtility.h"
 
 
-class VTK_IMAGING_EXPORT vtkITKImageToImageFilterFUL : public vtkITKImageToImageFilter
+class VTK_EXPORT vtkITKImageToImageFilterFUL : public vtkITKImageToImageFilter
 {
 public:
   vtkTypeMacro(vtkITKImageToImageFilterFUL,vtkITKImageToImageFilter);

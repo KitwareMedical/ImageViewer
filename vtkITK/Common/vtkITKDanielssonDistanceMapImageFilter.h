@@ -19,7 +19,7 @@
 #include "itkDanielssonDistanceMapImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_IMAGING_EXPORT vtkITKDanielssonDistanceMapImageFilter : public vtkITKImageToImageFilterFF
+class VTK_EXPORT vtkITKDanielssonDistanceMapImageFilter : public vtkITKImageToImageFilterFF
 {
  public:
   static vtkITKDanielssonDistanceMapImageFilter *New();
@@ -70,7 +70,7 @@ private:
   void operator=(const vtkITKDanielssonDistanceMapImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKDanielssonDistanceMapImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKDanielssonDistanceMapImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKDanielssonDistanceMapImageFilter);
 
 #endif

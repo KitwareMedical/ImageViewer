@@ -22,7 +22,7 @@
   std::cerr << message.str() << std::endl; \
   }
 
-class VTK_IMAGING_EXPORT vtkITKImageToImageFilter : public vtkImageToImageFilter
+class VTK_EXPORT vtkITKImageToImageFilter : public vtkImageToImageFilter
 {
 public:
   static vtkITKImageToImageFilter *New()
@@ -150,7 +150,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.1 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.2 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);

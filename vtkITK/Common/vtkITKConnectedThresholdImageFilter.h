@@ -19,7 +19,7 @@
 #include "itkConnectedThresholdImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_IMAGING_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImageFilterUSUS
+class VTK_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImageFilterUSUS
 {
  public:
   static vtkITKConnectedThresholdImageFilter *New();
@@ -67,7 +67,7 @@ private:
   void operator=(const vtkITKConnectedThresholdImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKConnectedThresholdImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKConnectedThresholdImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKConnectedThresholdImageFilter);
 
 #endif

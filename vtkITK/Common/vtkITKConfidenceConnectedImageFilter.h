@@ -19,7 +19,7 @@
 #include "itkConfidenceConnectedImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_IMAGING_EXPORT vtkITKConfidenceConnectedImageFilter : public vtkITKImageToImageFilterUSUS
+class VTK_EXPORT vtkITKConfidenceConnectedImageFilter : public vtkITKImageToImageFilterUSUS
 {
  public:
   static vtkITKConfidenceConnectedImageFilter *New();
@@ -66,7 +66,7 @@ private:
   void operator=(const vtkITKConfidenceConnectedImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKConfidenceConnectedImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKConfidenceConnectedImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKConfidenceConnectedImageFilter);
 
 #endif
