@@ -54,7 +54,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
           xywh {415 90 10 95} box UP_BOX color 21
         }
       }
-      Fl_Group controlsGroup {selected
+      Fl_Group controlsGroup {
         xywh {5 5 815 215} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -97,12 +97,12 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
         Fl_Value_Input upperThresholdValueInput {
           label Upper
           callback {m_ThresholdFilter->SetUpperThreshold( o->value() );}
-          xywh {570 15 55 25} labelsize 12 maximum 1000 value 100 textsize 12
+          xywh {570 15 55 25} labelsize 12 maximum 1000 step 0.1 value 100 textsize 12
         }
         Fl_Value_Input lowerThresholdValueInput {
           label Lower
-          callback {m_ThresholdFilter->SetLowerThreshold( o->value() );}
-          xywh {570 40 55 25} labelsize 12 maximum 1000 textsize 12
+          callback {m_ThresholdFilter->SetLowerThreshold( o->value() );} selected
+          xywh {570 40 55 25} labelsize 12 maximum 1000 step 0.1 textsize 12
         }
         Fl_Light_Button timeCrossingButton {
           label {Time Crossing Map}

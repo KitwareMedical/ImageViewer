@@ -60,6 +60,9 @@ public:
   typedef fltk::ImageViewer< InternalPixelType, 
                                     OverlayPixelType >     InternalImageViewerType;
 
+  typedef fltk::ImageViewer< ThresholdPixelType, 
+                                    OverlayPixelType >     ThresholdedImageViewerType;
+
   typedef fltk::VTKImageViewer< ThresholdPixelType >       VTKImageViewerType;
 
 
@@ -93,11 +96,13 @@ public:
   
   static void ClickSelectCallback(float x, float y, float z, float value, void * args );
 
+  virtual void ClearSeeds();
+
 private:
 
   SeedImageType::Pointer          m_SeedImage;
 
-  InternalImageViewerType         m_ThresholdedImageViewer;
+  ThresholdedImageViewerType      m_ThresholdedImageViewer;
 
   InternalImageViewerType         m_TimeCrossingMapViewer;
 

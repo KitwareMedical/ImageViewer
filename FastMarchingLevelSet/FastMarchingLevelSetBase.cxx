@@ -134,9 +134,6 @@ FastMarchingLevelSetBase
   m_TrialPoints->InsertElement( m_NumberOfSeeds, node );
   m_NumberOfSeeds++;
   
-  std::cout << "AddSeed( " << seedPosition << " ) " << std::endl;
-  std::cout << "m_NumberOfSeeds = " << m_NumberOfSeeds << std::endl;
-
 }
 
 
@@ -184,8 +181,6 @@ void
 FastMarchingLevelSetBase
 ::RunFastMarching( void )
 {
-
-  std::cout << "Number of Seeds = " << m_TrialPoints->Size() << std::endl;
 
   // update the marching filter
   try

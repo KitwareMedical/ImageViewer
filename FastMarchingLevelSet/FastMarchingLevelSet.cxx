@@ -69,6 +69,7 @@ FastMarchingLevelSet
   progressSlider->Observe( m_ThresholdFilter.GetPointer() );
   progressSlider->Observe( m_ExpNegativeFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
+  progressSlider->Observe( m_FastMarchingFilter.GetPointer() );
   
   typedef itk::SimpleMemberCommand< FastMarchingLevelSet > SimpleCommandType;
 
@@ -76,7 +77,7 @@ FastMarchingLevelSet
   iterationCommand->SetCallbackFunction( this, 
       & FastMarchingLevelSet::UpdateGUIAfterIteration );
 
-  m_ThresholdFilter->AddObserver( itk::IterationEvent(), iterationCommand );      
+  m_FastMarchingFilter->AddObserver( itk::IterationEvent(), iterationCommand );      
 
   m_ThresholdFilter->SetLowerThreshold( lowerThresholdValueInput->value() );
   m_ThresholdFilter->SetUpperThreshold( upperThresholdValueInput->value() );
@@ -127,6 +128,7 @@ FastMarchingLevelSet
   m_ThresholdedImageViewer.Hide();
   m_EdgePotentialImageViewer.Hide();
   m_GradientMagnitudeImageViewer.Hide();
+  m_TimeCrossingMapViewer.Hide();
   
   m_VTKSegmentedImageViewer->Hide();
 
@@ -198,6 +200,21 @@ FastMarchingLevelSet
 
 
 
+ 
+/************************************
+ *
+ *  Clear Seeds
+ *
+ ***********************************/
+void
+FastMarchingLevelSet
+::ClearSeeds( void )
+{
+  this->FastMarchingLevelSetBase::ClearSeeds();
+  m_SeedImage->FillBuffer( itk::NumericTraits<SeedImageType::PixelType>::Zero );
+}
+
+
 
  
 /************************************
@@ -240,7 +257,7 @@ FastMarchingLevelSet
     return;
     }
   this->RunFastMarching();
-  m_TimeCrossingMapViewer.SetImage( m_CastImageFilter->GetOutput() );  
+  m_TimeCrossingMapViewer.SetImage( m_FastMarchingFilter->GetOutput() );  
   m_TimeCrossingMapViewer.Show();
 
 }
@@ -306,6 +323,7 @@ FastMarchingLevelSet
 {
   m_ThresholdFilter->Update();
   m_ThresholdedImageViewer.SetImage( m_ThresholdFilter->GetOutput() );  
+  m_ThresholdedImageViewer.SetOverlay( m_SeedImage );
   m_ThresholdedImageViewer.Show();
 
 }
@@ -390,7 +408,6 @@ FastMarchingLevelSet
   static unsigned int iterationCounter = 0;
   iterationValueOutput->value( iterationCounter );
   iterationCounter++;
-  std::cout << "Iteration = " << iterationCounter << std::endl;
   Fl::check();
 }
 
