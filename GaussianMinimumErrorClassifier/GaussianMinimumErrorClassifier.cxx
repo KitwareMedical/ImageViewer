@@ -214,12 +214,12 @@ int main(int argc, char* argv[])
       ClassSampleType::Pointer subSample = 
         membershipSample->GetClassSample(i) ;
       meanCalculator->SetSample(subSample) ;
-      meanCalculator->GenerateData() ;
+      meanCalculator->Update() ;
       mean = meanCalculator->GetOutput() ;
       
       covarianceCalculator->SetSample(subSample) ;
       covarianceCalculator->SetMean(mean) ;
-      covarianceCalculator->GenerateData() ;
+      covarianceCalculator->Update() ;
       covariance = covarianceCalculator->GetOutput() ;
 
       densityFunctions[i] = DensityFunctionType::New() ;
