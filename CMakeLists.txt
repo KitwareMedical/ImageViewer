@@ -8,6 +8,9 @@ SUBDIRS (ITKFilterLib)
 # the multi-resolution mutual information registration framework in itk.
 SUBDIRS (ITKRegistrationLib)
 
+# Build the BasicIOAndFilter example
+SUBDIRS(BasicIOAndFilter)
+
 #Build the parameter file parser necessary for several examples that follow
 SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 
