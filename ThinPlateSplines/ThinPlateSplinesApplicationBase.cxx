@@ -407,7 +407,6 @@ void
 ThinPlateSplinesApplicationBase
 ::MapPointsThinPlateSplineITK(void)
 {
- 
   m_ThinPlateSplineTransformITK->SetSourceLandmarks( m_SourceLandMarks.GetPointer() );
   m_ThinPlateSplineTransformITK->SetTargetLandmarks( m_TargetLandMarks.GetPointer() );
   m_ThinPlateSplineTransformITK->ComputeWMatrix();

@@ -86,6 +86,25 @@ ThinPlateSplinesApplication
   
 
 
+void
+ThinPlateSplinesApplication
+::MapPointsVTK(void)
+{
+  const int splineType = splineKernelVTKChoice->value();
+  switch( splineType )
+  {
+  case 0:
+    m_ThinPlateSplineTransformVTK->SetBasisToR();
+    break;
+  case 1:
+    m_ThinPlateSplineTransformVTK->SetBasisToR2LogR();
+    break;
+  }
+  this->ThinPlateSplinesApplicationBase::MapPointsVTK();
+}
+
+
+
 
 void 
 ThinPlateSplinesApplication

@@ -124,11 +124,11 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           xywh {875 105 110 25}
         } {
           menuitem {} {
-            label R
+            label R selected
             xywh {15 15 100 20}
           }
           menuitem {} {
-            label {R log (R)}
+            label {R*R*log(R)}
             xywh {25 25 100 20}
           }
         }
