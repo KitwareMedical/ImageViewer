@@ -28,8 +28,8 @@ integer.  (But see below for hooks to change these parameters.)
 #include <stdlib.h>
 
 #include "itkAffineTransform.h"
-#include "itkImage.h"
-#include "itkImageMomentsCalculator.h"
+#include "itkPhysicalImage.h"
+#include "itkPhysicalImageMomentsCalculator.h"
 #include "itkSimpleImageRegionIterator.h"
 #include "itkLinearInterpolateImageFunction.h"
 
@@ -37,14 +37,14 @@ integer.  (But see below for hooks to change these parameters.)
 enum {NDimensions = 3};
 
 typedef unsigned short                      PixelType;
-typedef itk::Image<PixelType, NDimensions>  ImageType;
+typedef itk::PhysicalImage<PixelType, NDimensions>  ImageType;
 typedef ImageType::RegionType               ImageRegionType;
 typedef ImageType::SizeType                 ImageSizeType;
 typedef ImageType::AffineTransformType      AffineTransformType;
 
 typedef itk::Index<NDimensions>                    ImageIndexType;
 typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
-typedef itk::ImageMomentsCalculator<PixelType, NDimensions>  ImageMomentsCalculatorType;
+typedef itk::PhysicalImageMomentsCalculator<PixelType, NDimensions>  ImageMomentsCalculatorType;
 typedef itk::LinearInterpolateImageFunction<ImageType>  InterpolatorType;
 typedef itk::Point<double, NDimensions>            PointType;
 
