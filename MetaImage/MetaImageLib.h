@@ -4,7 +4,7 @@
 #include "MetaUtils.h"
 #include "MetaFileLib.h"
 #include <fstream>
-#include <ostream>
+#include <iostream>
 /*!
  *   Just a reminder of the dimension ordering in memory
  *       - metaImageFiles use 1D arrays to represent ND images (innermost loop x, then y, ...)
