@@ -1,5 +1,3 @@
-PROJECT( SegmentationEditor )
-
 SET( WSTCommon_SRCS
 vtkBinaryVolume.cxx
 vtkBinaryVolumeLogic.cxx
@@ -17,13 +15,6 @@ SET_SOURCE_FILES_PROPERTIES(
 vtkLookupTableEquivalencyHash.cxx  WRAP_EXCLUDE)
 
 ADD_LIBRARY ( vtkWSTCommon ${WSTCommon_SRCS} )
-
-# Link in with ITK
-INCLUDE_DIRECTORIES ( ${SegmentationEditor_SOURCE_DIR}/../../vtkITK/Common/ )
-INCLUDE_DIRECTORIES ( ${SegmentationEditor_SOURCE_DIR}/Common/ )
-
-LINK_DIRECTORIES ( ${SegmentationEditor_BINARY_DIR}/../../vtkITK/Common )
-LINK_DIRECTORIES ( ${SegmentationEditor_BINARY_DIR}/Common )
 
 
 # if we are wrapping into Tcl then add the library and extra 
