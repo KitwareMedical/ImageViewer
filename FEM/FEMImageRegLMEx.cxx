@@ -617,6 +617,9 @@ void ImageRegLMEx::MultiResSolve()
 void ImageRegLMEx::MultiResPyramidSolve()
 {
 
+  LinearSystemSolverType* ls;
+  vnl_vector<double> LastResolutionSolution;
+
 //   Setup a multi-resolution pyramid
   typedef itk::MultiResolutionPyramidImageFilter<FloatImageType,FloatImageType>
     PyramidType;
@@ -657,6 +660,8 @@ void ImageRegLMEx::MultiResPyramidSolve()
 //  m_MeshResolution=
 
     CreateMesh(); 
+    m_Solver.GenerateGFN();
+
     ApplyLoads();
     
     caster2->SetInput(pyramid1->GetOutput(i)); caster2->Update();
@@ -665,12 +670,21 @@ void ImageRegLMEx::MultiResPyramidSolve()
     caster2->SetInput(pyramid2->GetOutput(i)); caster2->Update();
     m_Load->SetMetricTargetImage(caster2->GetOutput());  
 
-    m_Solver.GenerateGFN();
-
-    if (i == 0) CreateLinearSystemSolver(); // for when we change # of gfns (remesh)
-
+    CreateLinearSystemSolver(); // for when we change # of gfns (remesh)
+   
     m_Solver.AssembleKandM();
 
+    if (i > 0)
+    {
+      ls=dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+      unsigned int TotalSolutionIndex=1; // from SolverType
+      for (unsigned int j=0; j<m_Solver.GetNGFN(); j++)
+      {
+        m_Solver.GetLinearSystemWrapper()->
+          AddSolutionValue(j,LastResolutionSolution[j],TotalSolutionIndex);
+      }
+//      m_Solver.SetLinearSystemWrapper(ls);
+    }
     IterativeSolve();
 
     if (i < numLevels-1)
@@ -678,14 +692,18 @@ void ImageRegLMEx::MultiResPyramidSolve()
       float s1=(float)SizeReduction[i][0];  
       float s2=(float)SizeReduction[i+1][0];  
       float Magnification=1.0;//s1/s2;
-      LinearSystemSolverType* ls=
-        dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+//      ls=dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+      LastResolutionSolution.clear();
+      LastResolutionSolution.resize(m_Solver.GetNGFN());
       unsigned int TotalSolutionIndex=1; // from SolverType
       for (unsigned int j=0; j<m_Solver.GetNGFN(); j++)
       {
-        float temp=ls->GetSolutionValue(i,TotalSolutionIndex);
-        ls->SetSolutionValue(i,temp*Magnification,TotalSolutionIndex);
-      }
+        double temp=m_Solver.GetLinearSystemWrapper()->
+          GetSolutionValue(j,TotalSolutionIndex);
+//        ls->SetSolutionValue(j,temp*Magnification,TotalSolutionIndex);
+        LastResolutionSolution[j]=temp*Magnification;
+      } 
+//      m_Solver.SetLinearSystemWrapper(ls);
     }
   }
   //m_RefImg=caster2->GetOutput(); // //FIXME for testing
@@ -751,7 +769,7 @@ int main()
 
   X.SetNumberOfIntegrationPoints(4);// Resolution of energy integration
   X.SetWidthOfMetricRegion(2);
-  X.DoMultiRes(false);// Use multi-resolution strategy
+  X.DoMultiRes(true);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
   X.m_MaxSmoothing=2.0; // set multi-res parameters
   X.m_MinSmoothing=0.5;
