@@ -49,7 +49,7 @@
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_vector_fixed.h"
 
-#include "itkVectorIndexSelectionCastImageFilter.h"
+//#include "itkVectorIndexSelectionCastImageFilter.h"
 
 #include <iostream>
 #include <string>
@@ -128,12 +128,15 @@ public:
   enum { ImageDimension = 2 };
   typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
   typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType;
+  typedef itk::NormalizedCorrelationImageToImageMetric<ImageType,ImageType> MetricType1;
+  typedef itk::PatternIntensityImageToImageMetric<ImageType,ImageType> MetricType2;
+  typedef itk::MutualInformationImageToImageMetric<ImageType,ImageType> MetricType3;
   typedef itk::Vector<Float,ImageDimension> VectorType;
   typedef itk::Image<VectorType,ImageDimension> FieldType;
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType; 
   typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator; 
   typedef itk::ImageRegionIteratorWithIndex<FieldType> FieldIterator; 
-  typedef itk::VectorIndexSelectionCastImageFilter<FieldType,FloatImageType> IndexSelectCasterType;
+//  typedef itk::VectorIndexSelectionCastImageFilter<FieldType,FloatImageType> IndexSelectCasterType;
 
   /**
    * Easy access to the FEMObjectFactory. We create a new class
