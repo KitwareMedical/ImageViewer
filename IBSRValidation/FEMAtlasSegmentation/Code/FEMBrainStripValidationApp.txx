@@ -69,7 +69,7 @@ void
 FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 ::InitializePreprocessor()
 {
-  bool Resample=false;
+ /* bool Resample=false;
 
   if ( Resample){  
   
@@ -122,7 +122,7 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   writer->Write();
 
   return;
-  }
+  }*/
 
   m_Preprocessor->SetInputFixedImage( m_Parser->GetSubjectImage() );
   m_Preprocessor->SetInputMovingImage( m_Parser->GetAtlasImage() );
