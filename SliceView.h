@@ -702,7 +702,7 @@ void SliceView<imType>::flipZ(bool newFlipZ)
 template <class imType>
 bool SliceView<imType>::flipZ()
   {
-  return cFlipZ[cWinOrientationder];
+  return cFlipZ[this->cWinOrientationder];
   }
 
 
