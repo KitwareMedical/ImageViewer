@@ -19,8 +19,12 @@
 #define __itkFEMMesh_h
 
 
-#include "itkMesh.h"
 #include "itkFEMNode.h"
+#include "itkFEMElement.h"
+#include "itkFEMCell.h"
+#include "itkPoint.h"
+#include "itkObject.h"
+
 
 namespace itk {
 namespace fem {
@@ -30,21 +34,18 @@ namespace fem {
 
 /** 
  * \class FEMMesh
- * \brief Translate itk mesh to appropriate FEM input
  *
- * FEM solver object which links to the itk's mesh. It takes a mesh as an input and
- * converts it into a FEM representation. It is templated over the input mesh type i.e.
- * we assume that the template parameter class has itk mesh functionality.
+ * FEM Solver Class 
  */
-template<class TMesh>
-class FEMMesh : public TMesh 
+template< unsigned int NPointDimension >
+class FEMMesh : public Object
 
 {
 
 public:
    /** Standard typedefs. */
   typedef FEMMesh                   Self;
-  typedef TMesh                     Superclass;
+  typedef Object                    Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
     
@@ -53,43 +54,96 @@ public:
 
   /** Standard part of every itk Object.
     \todo probably a fully resolved type should be used here... */
-  itkTypeMacro(Mesh, TMesh); 
+  itkTypeMacro(Mesh, Object); 
 
-  /** Hold on to the type information specified by the template parameters. */
-  typedef typename Superclass::MeshTraits                    MeshTraits;
-  typedef typename Superclass::CellTraits                    CellTraits;
-  typedef typename Superclass::CellMultiVisitorType          CellMultiVisitorType;
+  /** type used for representing coordinates in space 
+      it is used as template argument for the Points and Vectors */ 
+  typedef float   CoordinateRepresentationType;
 
-  /** Convenient enums obtained from TMeshTraits template parameter. */
-  enum {PointDimension = MeshTraits::PointDimension};
-  enum {MaxTopologicalDimension = MeshTraits::MaxTopologicalDimension};
-  
-  /** Base class for the polymorphic hierarchy of Node types */
-  typedef FEMNode< CellTraits >           NodeType;
+  /** Dimension of the geometrical space */
+  enum { PointDimension = NPointDimension };
 
+  /** Type used to represent positions in space  */
+  typedef Point< CoordinateRepresentationType, PointDimension > PointType;  
+
+  /** Type for the Cells */
+  typedef FEMCell< PointDimension >          CellType;
+
+  /** Type for the Nodes */
+  typedef FEMNode                            NodeType;
+
+  /** Type for the Element */
+  typedef FEMElement                         ElementType;
+
+  /** Type for storing the Points  */
+  typedef std::vector< PointType * >         PointsContainerType;
+
+  /** Type for storing the Cells */
+  typedef std::vector< CellType * >          CellsContainerType;
+
+  /** Type for storing the Nodes  */
+  typedef std::vector< NodeType * >          NodesContainerType;
+
+  /** Type for storing the Elements */
+  typedef std::vector< ElementType * >       ElementsContainerType;
+
+  /** Return the number of points currently stored */
+  unsigned long GetNumberOfPoints(void) const;
+
+  /** Return the number of cells currently stored */
+  unsigned long GetNumberOfCells(void) const;
+
+  /** Return the number of elements currently stored */
+  unsigned long GetNumberOfElements(void) const;
+
+  /** Return the number of nodes currently stored */
+  unsigned long GetNumberOfNodes(void) const;
+
+  /** Add Point */
+  void AddPoint( PointType * );
+
+  /** Add Node */
+  void AddNode( NodeType * );
+
+  /** Add Cell */
+  void AddCell( CellType * );
+
+  /** Add Element */
+  void AddElement( ElementType * );
 
 protected:
 
   /** Constructor for use by New() method. */
   FEMMesh();
   virtual ~FEMMesh();
-  void PrintSelf(std::ostream& os, Indent indent) const;
+
      
 private:
   FEMMesh(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
           
+  // Dimension of the Space in which the geometry of the Mesh is represented
+  unsigned int      m_PointsDimension;
+  
+  // Container of points defining the geometry of the mesh in space
+  PointsContainerType   m_Points;
+
+  // Container of Nodes defining the degrees of freedom
+  NodesContainerType   m_Nodes;
+
+  // Container of cells defining the geometry of the mesh in space
+  CellsContainerType    m_Cells;
+
+  // Container of Elements defining the physics of the problem
+  ElementsContainerType   m_Elements;
+
+
+
+protected:
+
+  void PrintSelf(std::ostream& os, Indent indent) const;
+
 };
-
-
- 
-template <typename TMesh>
-void
-FEMMesh<TMesh>
-::PrintSelf(std::ostream& os, Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-}
 
 
 

@@ -20,14 +20,16 @@
 
 #ifndef _itkFEMMesh_txx
 #define _itkFEMMesh_txx
+
 #include "itkFEMMesh.h"
+
 
 namespace itk {
 namespace fem {
 
 
-template<class TMesh>
-FEMMesh<TMesh>
+template< unsigned int NPointDimension >
+FEMMesh<NPointDimension>
 ::FEMMesh()
 {
 
@@ -35,13 +37,114 @@ FEMMesh<TMesh>
 }
 
 
-template<class TMesh>
-FEMMesh<TMesh>
+template< unsigned int NPointDimension >
+FEMMesh<NPointDimension>
 ::~FEMMesh()
 {
 
             
 }
+
+
+
+ 
+template < unsigned int NPointDimension >
+void
+FEMMesh<NPointDimension>
+::PrintSelf(std::ostream& os, Indent indent) const
+{
+  Superclass::PrintSelf(os, indent);
+}
+
+
+ 
+template < unsigned int NPointDimension >
+unsigned long
+FEMMesh<NPointDimension>
+::GetNumberOfPoints(void) const
+{
+  return m_Points.size();
+}
+
+
+
+ 
+template < unsigned int NPointDimension >
+unsigned long
+FEMMesh<NPointDimension>
+::GetNumberOfCells(void) const
+{
+  return m_Cells.size();
+}
+
+
+
+
+ 
+template < unsigned int NPointDimension >
+unsigned long
+FEMMesh<NPointDimension>
+::GetNumberOfNodes(void) const
+{
+  return m_Nodes.size();
+}
+
+
+
+
+ 
+template < unsigned int NPointDimension >
+unsigned long
+FEMMesh<NPointDimension>
+::GetNumberOfElements(void) const
+{
+  return m_Elements.size();
+}
+
+
+
+ 
+template < unsigned int NPointDimension >
+void
+FEMMesh<NPointDimension>
+::AddPoint( PointType * p ) 
+{
+  m_Points.push_back( p );
+}
+
+
+
+ 
+template < unsigned int NPointDimension >
+void
+FEMMesh<NPointDimension>
+::AddCell( CellType * p ) 
+{
+  m_Cells.push_back( p );
+}
+
+
+
+ 
+template < unsigned int NPointDimension >
+void
+FEMMesh<NPointDimension>
+::AddElement( ElementType * p ) 
+{
+  m_Elements.push_back( p );
+}
+
+
+
+ 
+template < unsigned int NPointDimension >
+void
+FEMMesh<NPointDimension>
+::AddNode( NodeType * p ) 
+{
+  m_Nodes.push_back( p );
+}
+
 
 
 
