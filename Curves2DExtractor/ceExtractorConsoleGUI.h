@@ -59,10 +59,14 @@ public:
   fltk::LightButton *HxButton;
   fltk::LightButton *HyButton;
   fltk::LightButton *HxyButton;
-  fltk::LightButton *H2xyButton;
 private:
-  inline void cb_H2xyButton_i(fltk::LightButton*, void*);
-  static void cb_H2xyButton(fltk::LightButton*, void*);
+  inline void cb_HxyButton_i(fltk::LightButton*, void*);
+  static void cb_HxyButton(fltk::LightButton*, void*);
+public:
+  fltk::LightButton *H1xyButton;
+private:
+  inline void cb_H1xyButton_i(fltk::LightButton*, void*);
+  static void cb_H1xyButton(fltk::LightButton*, void*);
 public:
   fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;
@@ -85,5 +89,7 @@ public:
   virtual void ShowSecondDerivativeY( void );
   virtual void ShowLaplacian( void );
   virtual void ShowGradientModulus( void );
+  virtual void ShowCrossDerivativeXY( void );
+  virtual void ShowSmoothed( void );
 };
 #endif

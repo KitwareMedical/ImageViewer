@@ -58,11 +58,18 @@ void ceExtractorConsoleGUI::cb_modulusButton(fltk::LightButton* o, void* v) {
   ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_modulusButton_i(o,v);
 }
 
-inline void ceExtractorConsoleGUI::cb_H2xyButton_i(fltk::LightButton*, void*) {
-  ShowSecondDerivativeY();
+inline void ceExtractorConsoleGUI::cb_HxyButton_i(fltk::LightButton*, void*) {
+  ShowSmoothed();
 }
-void ceExtractorConsoleGUI::cb_H2xyButton(fltk::LightButton* o, void* v) {
-  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H2xyButton_i(o,v);
+void ceExtractorConsoleGUI::cb_HxyButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_HxyButton_i(o,v);
+}
+
+inline void ceExtractorConsoleGUI::cb_H1xyButton_i(fltk::LightButton*, void*) {
+  ShowCrossDerivativeXY();
+}
+void ceExtractorConsoleGUI::cb_H1xyButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H1xyButton_i(o,v);
 }
 
 inline void ceExtractorConsoleGUI::cb_loadButton_i(fltk::LightButton*, void*) {
@@ -92,11 +99,11 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
     w = o;
     o->user_data((void*)(this));
     { Fl_Group* o = Connectors = new Fl_Group(5, 5, 745, 255);
-      { Fl_Box* o = new Fl_Box(460, 175, 45, 10);
+      { Fl_Box* o = new Fl_Box(410, 180, 45, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(466, 80, 51, 10);
+      { Fl_Box* o = new Fl_Box(416, 70, 51, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -124,27 +131,27 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(465, 55, 10, 35);
+      { Fl_Box* o = new Fl_Box(415, 45, 10, 35);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(430, 55, 45, 10);
+      { Fl_Box* o = new Fl_Box(380, 45, 45, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(425, 80, 45, 10);
+      { Fl_Box* o = new Fl_Box(375, 70, 45, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(405, 150, 70, 10);
+      { Fl_Box* o = new Fl_Box(355, 155, 70, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(400, 175, 75, 10);
+      { Fl_Box* o = new Fl_Box(350, 180, 75, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(465, 150, 10, 35);
+      { Fl_Box* o = new Fl_Box(415, 155, 10, 35);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -222,13 +229,13 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H2yButton);
       }
-      { fltk::LightButton* o = laplacianButton = new fltk::LightButton(490, 170, 89, 25, "Laplacian");
+      { fltk::LightButton* o = laplacianButton = new fltk::LightButton(440, 170, 89, 25, "Laplacian");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_laplacianButton);
       }
-      { fltk::LightButton* o = modulusButton = new fltk::LightButton(493, 75, 85, 25, "Modulus");
+      { fltk::LightButton* o = modulusButton = new fltk::LightButton(445, 65, 85, 25, "Modulus");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -248,12 +255,13 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->type(0);
         o->value(1);
         o->selection_color(1);
+        o->callback((Fl_Callback*)cb_HxyButton);
       }
-      { fltk::LightButton* o = H2xyButton = new fltk::LightButton(295, 198, 101, 25, "Second XY");
+      { fltk::LightButton* o = H1xyButton = new fltk::LightButton(295, 198, 101, 25, "Cross XY");
         o->type(0);
         o->value(1);
         o->selection_color(1);
-        o->callback((Fl_Callback*)cb_H2xyButton);
+        o->callback((Fl_Callback*)cb_H1xyButton);
       }
       o->end();
     }
@@ -308,4 +316,10 @@ void ceExtractorConsoleGUI::ShowLaplacian( void ) {
 }
 
 void ceExtractorConsoleGUI::ShowGradientModulus( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowCrossDerivativeXY( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowSmoothed( void ) {
 }

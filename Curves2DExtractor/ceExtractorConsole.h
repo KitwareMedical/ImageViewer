@@ -76,19 +76,26 @@ public:
   virtual void ShowFilteredY(void);
   virtual void ShowSecondDerivativeX(void);
   virtual void ShowSecondDerivativeY(void);
+  virtual void ShowCrossDerivativeXY(void);
   virtual void ShowLaplacian(void);
+  virtual void ShowSmoothed(void);
   virtual void ShowGradientModulus(void);
   virtual void Execute(void);
 
 private:
 
-  InputImageViewerPointer           m_InputViewer;
+  InputImageViewerPointer      m_InputViewer;
 
   ImageViewerPointer           m_Viewer_H1x;
   ImageViewerPointer           m_Viewer_H1y;
 
   ImageViewerPointer           m_Viewer_H2x;
   ImageViewerPointer           m_Viewer_H2y;
+
+  ImageViewerPointer           m_Viewer_Hxy;
+  ImageViewerPointer           m_Viewer_H1xy;
+
+  ImageViewerPointer           m_Viewer_Smoothed;
 
   ImageViewerPointer           m_Viewer_Laplacian;
 

@@ -72,6 +72,9 @@ ceExtractorConsoleBase
   m_H1x->SetDirection( 0 );
   m_H1y->SetDirection( 1 );
 
+  m_H1xy = GaussianFirstDerivativeFilterType::New();
+  m_H1xy->SetDirection( 1 );
+    
   m_H2x  = GaussianSecondDerivativeFilterType::New();
   m_H2y  = GaussianSecondDerivativeFilterType::New();
 
@@ -84,7 +87,13 @@ ceExtractorConsoleBase
 
   m_Hxy->SetInputImage( m_Hx->GetOutput() );
 
+  m_H1x->SetInputImage( m_Hy->GetOutput() );
+  m_H1y->SetInputImage( m_Hx->GetOutput() );
 
+  m_H2x->SetInputImage( m_Hy->GetOutput() );
+  m_H2y->SetInputImage( m_Hx->GetOutput() );
+
+  m_H1xy->SetInputImage( m_H1x->GetOutput() );
 
   m_Add = AddFilterType::New();
 
@@ -125,6 +134,7 @@ void
 ceExtractorConsoleBase 
 ::Load( const char * filename )
 {
+
   if( !filename )
   {
     return;
@@ -132,6 +142,11 @@ ceExtractorConsoleBase
 
   m_Reader->SetFileName( filename );
   m_Reader->Update();
+
+  InputImageType::Pointer inputImage = m_Reader->GetOutput();
+
+  inputImage->SetRequestedRegion( 
+      inputImage->GetLargestPossibleRegion() );
 
   m_ImageLoaded = true;
 
@@ -187,6 +202,8 @@ ceExtractorConsoleBase
   m_H1x->SetSigma( value );
   m_H1y->SetSigma( value );
 
+  m_H1xy->SetSigma( value );
+
   m_H2x->SetSigma( value );
   m_H2y->SetSigma( value );
 
@@ -212,15 +229,15 @@ ceExtractorConsoleBase
     return;
   }
   
-  m_H1x->Update();
-  m_H1y->Update();
 
-  m_H2x->Update();
-  m_H2y->Update();
+  m_Hxy->Update();
+
+  m_H1xy->Update();
 
   m_Add->Update();
 
   m_Modulus->Update();
+  
 
 }
 

@@ -70,6 +70,9 @@ ceExtractorConsole
   m_Viewer_H2x  = ImageViewerType::New();
   m_Viewer_H2y  = ImageViewerType::New();
 
+  m_Viewer_Hxy   = ImageViewerType::New();
+  m_Viewer_H1xy  = ImageViewerType::New();
+
   m_Viewer_Laplacian = ImageViewerType::New();
 
   m_Viewer_Gradient_Modulus = ImageViewerType::New();
@@ -82,7 +85,11 @@ ceExtractorConsole
   m_Viewer_H2x->SetLabel( "Second Derivative X" );
   m_Viewer_H2y->SetLabel( "Second Derivative Y" );
 
+  m_Viewer_H1xy->SetLabel( "Cross Derivative XY" );
+
   m_Viewer_Laplacian->SetLabel( "Laplacian" );
+
+  m_Viewer_Hxy->SetLabel( "Smoothed" );
   
   m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
@@ -96,6 +103,7 @@ ceExtractorConsole
   m_Hx->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Hy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Hxy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_H1xy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Add->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Modulus->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
                               
@@ -107,6 +115,7 @@ ceExtractorConsole
   m_H1y->AddObserver( itk::Command::StartEvent, H1yButton->GetRedrawCommand().GetPointer() );
   m_H2x->AddObserver( itk::Command::StartEvent, H2xButton->GetRedrawCommand().GetPointer() );
   m_H2y->AddObserver( itk::Command::StartEvent, H2yButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::StartEvent, H1xyButton->GetRedrawCommand().GetPointer() );
   m_Add->AddObserver( itk::Command::StartEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Modulus->AddObserver( itk::Command::StartEvent, modulusButton->GetRedrawCommand().GetPointer() );
 
@@ -118,6 +127,7 @@ ceExtractorConsole
   m_H1y->AddObserver( itk::Command::EndEvent, H1yButton->GetRedrawCommand().GetPointer() );
   m_H2x->AddObserver( itk::Command::EndEvent, H2xButton->GetRedrawCommand().GetPointer() );
   m_H2y->AddObserver( itk::Command::EndEvent, H2yButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::EndEvent, H1xyButton->GetRedrawCommand().GetPointer() );
   m_Add->AddObserver( itk::Command::EndEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Modulus->AddObserver( itk::Command::EndEvent, modulusButton->GetRedrawCommand().GetPointer() );
 
@@ -133,6 +143,7 @@ ceExtractorConsole
   m_H1y->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_H2x->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
   m_H2y->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::ModifiedEvent, H1xyButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -142,6 +153,7 @@ ceExtractorConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, H1yButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, H2xButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, H2yButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1xyButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
 
@@ -160,49 +172,6 @@ ceExtractorConsole
 ceExtractorConsole
 ::~ceExtractorConsole()
 {
-
-  if( m_Viewer_H1x ) 
-  {
-    delete m_Viewer_H1x;
-    m_Viewer_H1x = 0;
-  }
-
-  if( m_Viewer_H1y ) 
-  {
-    delete m_Viewer_H1y;
-    m_Viewer_H1y = 0;
-  }
-
-  if( m_Viewer_H2x ) 
-  {
-    delete m_Viewer_H2x;
-    m_Viewer_H2x = 0;
-  }
-
-  if( m_Viewer_H2y ) 
-  {
-    delete m_Viewer_H2y;
-    m_Viewer_H2y = 0;
-  }
-
-  if( m_InputViewer ) 
-  {
-    delete m_InputViewer;
-    m_InputViewer = 0;
-  }
-
-  if( m_Viewer_Laplacian ) 
-  {
-    delete m_Viewer_Laplacian;
-    m_Viewer_Laplacian = 0;
-  }
-
-  if( m_Viewer_Gradient_Modulus ) 
-  {
-    delete m_Viewer_Gradient_Modulus;
-    m_Viewer_Gradient_Modulus = 0;
-  }
-
 
 }
 
@@ -243,6 +212,7 @@ ceExtractorConsole
 
   controlsGroup->activate();
 
+  m_InputViewer->Update();
 
 }
 
@@ -278,6 +248,8 @@ ceExtractorConsole
   m_Viewer_H1y->Hide();
   m_Viewer_H2x->Hide();
   m_Viewer_H2y->Hide();
+  m_Viewer_H1xy->Hide();
+  m_Viewer_Hxy->Hide();
   m_InputViewer->Hide();
   m_Viewer_Laplacian->Hide();
   m_Viewer_Gradient_Modulus->Hide();
@@ -378,6 +350,45 @@ ceExtractorConsole
   m_Viewer_H1y->Show();
 
 }
+
+
+
+ 
+/************************************
+ *
+ *  Show Cross Derivative XY
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::ShowCrossDerivativeXY( void )
+{
+
+  m_H1xy->Update();
+  m_Viewer_H1xy->SetImage( m_H1xy->GetOutput() );  
+  m_Viewer_H1xy->Show();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Show Smoothed XY
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::ShowSmoothed( void )
+{
+
+  m_Hxy->Update();
+  m_Viewer_Hxy->SetImage( m_Hxy->GetOutput() );  
+  m_Viewer_Hxy->Show();
+
+}
+
 
 
 

@@ -9,8 +9,8 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
 } {
   Function {ceExtractorConsoleGUI()} {} {
     Fl_Window consoleWindow {
-      label {Gaussian Filter Console} selected
-      xywh {329 176 757 391}
+      label {Gaussian Filter Console} open
+      xywh {68 183 757 391}
       code0 {\#include <ceExtractorConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -18,10 +18,10 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         xywh {5 5 745 255}
       } {
         Fl_Box {} {
-          xywh {460 175 45 10} box UP_BOX color 4
+          xywh {410 180 45 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {466 80 51 10} box UP_BOX color 4
+          xywh {416 70 51 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {117 100 45 10} box UP_BOX color 4
@@ -42,22 +42,22 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {112 100 10 55} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {465 55 10 35} box UP_BOX color 4
+          xywh {415 45 10 35} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {430 55 45 10} box UP_BOX color 4
+          xywh {380 45 45 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {425 80 45 10} box UP_BOX color 4
+          xywh {375 70 45 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {405 150 70 10} box UP_BOX color 4
+          xywh {355 155 70 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {400 175 75 10} box UP_BOX color 4
+          xywh {350 180 75 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {465 150 10 35} box UP_BOX color 4
+          xywh {415 155 10 35} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {260 46 55 10} box UP_BOX color 4
@@ -125,13 +125,13 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button laplacianButton {
           label Laplacian
           callback {ShowLaplacian();}
-          xywh {490 170 89 25} type Normal value 1 selection_color 1
+          xywh {440 170 89 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button modulusButton {
           label Modulus
           callback {ShowGradientModulus();}
-          xywh {493 75 85 25} type Normal value 1 selection_color 1
+          xywh {445 65 85 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button HxButton {
@@ -146,12 +146,13 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         }
         Fl_Light_Button HxyButton {
           label {Smooth XY}
+          callback {ShowSmoothed();}
           xywh {295 106 98 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
-        Fl_Light_Button H2xyButton {
-          label {Second XY}
-          callback {ShowSecondDerivativeY();}
+        Fl_Light_Button H1xyButton {
+          label {Cross XY}
+          callback {ShowCrossDerivativeXY();}
           xywh {295 198 101 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
@@ -201,5 +202,9 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
   Function {ShowLaplacian( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientModulus( void )} {return_type {virtual void}
+  } {}
+  Function {ShowCrossDerivativeXY( void )} {return_type {virtual void}
+  } {}
+  Function {ShowSmoothed( void )} {selected return_type {virtual void}
   } {}
 } 

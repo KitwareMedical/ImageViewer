@@ -121,7 +121,7 @@ protected:
   InputGaussianFilterType::Pointer               m_Hy;
 
   GaussianFilterType::Pointer                    m_Hxy;
-  GaussianFilterType::Pointer                    m_Hyz;
+  GaussianFilterType::Pointer                    m_H1xy;
 
   GaussianFirstDerivativeFilterType::Pointer     m_H1x;
   GaussianFirstDerivativeFilterType::Pointer     m_H1y;
