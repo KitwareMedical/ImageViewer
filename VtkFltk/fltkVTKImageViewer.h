@@ -75,7 +75,7 @@ protected:
 
 private:
 
-  VTKImageExportType::Pointer  m_VTKImageExport;
+  typename VTKImageExportType::Pointer  m_VTKImageExport;
 
   vtkRenderWindow           *  m_RenderWindow;
 
