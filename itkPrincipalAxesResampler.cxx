@@ -140,11 +140,11 @@ main(int argc, char *argv[])
     std::cout << "Computing moments and transformation." << std::endl;
     ImageMomentsCalculatorType moments(image);
     double ctm = moments.GetTotalMass();
-    vnl_vector_fixed<double,3>
+    itk::Vector<double,3>
         ccg = moments.GetCenterOfGravity();
-    vnl_vector_fixed<double,3>
+    itk::Vector<double,3>
         cpm = moments.GetPrincipalMoments();
-    vnl_matrix_fixed<double,3,3>
+    itk::Matrix<double,3,3>
         cpa = moments.GetPrincipalAxes();
 
     /* Report moments information to the user */
@@ -165,7 +165,7 @@ main(int argc, char *argv[])
     /* Compute the transform from principal axes to original axes */
     double pi = 3.14159265359;
     AffineTransformType trans = resamp->GetIndexToPhysicalTransform();
-    vnl_vector_fixed<double,3> center;
+    itk::Vector<double,3> center;
     center[0] = -ImageWidth / 2.0;
     center[1] = -ImageHeight / 2.0;
     center[2] = -NumberOfSlices / 2.0;
