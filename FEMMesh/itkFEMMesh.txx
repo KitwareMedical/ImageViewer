@@ -146,6 +146,49 @@ FEMMesh<NPointDimension>
 }
 
 
+ 
+template < unsigned int NPointDimension >
+FEMMesh<NPointDimension>::PointType *
+FEMMesh<NPointDimension>
+::GetPoint( unsigned int Id ) 
+{
+  return m_Points[ Id ];
+}
+
+
+
+ 
+template < unsigned int NPointDimension >
+FEMMesh<NPointDimension>::NodeType *
+FEMMesh<NPointDimension>
+::GetNode( unsigned int Id ) 
+{
+  return m_Nodes[ Id ];
+}
+
+
+ 
+template < unsigned int NPointDimension >
+FEMMesh<NPointDimension>::CellType *
+FEMMesh<NPointDimension>
+::GetCell( unsigned int Id ) 
+{
+  return m_Cells[ Id ];
+}
+
+
+ 
+template < unsigned int NPointDimension >
+FEMMesh<NPointDimension>::ElementType *
+FEMMesh<NPointDimension>
+::GetElement( unsigned int Id ) 
+{
+  return m_Elements[ Id ];
+}
+
+
+
+
 
 
 

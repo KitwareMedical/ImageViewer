@@ -120,6 +120,20 @@ public:
    the memory for the Element */
   void AddElement( ElementType * );
 
+  
+  /** Return the pointer to the Point identified with pointId  */
+  PointType * GetPoint( unsigned int pointId );
+ 
+  /** Return the pointer to the Node identified with nodeId  */
+  NodeType * GetNode( unsigned int nodeId );
+ 
+  /** Return the pointer to the Cell identified with cellId  */
+  CellType * GetCell( unsigned int cellId );
+ 
+  /** Return the pointer to the Element identified with elementId  */
+  ElementType * GetElement( unsigned int elementId );
+
+
 protected:
 
   /** Constructor for use by New() method. */
