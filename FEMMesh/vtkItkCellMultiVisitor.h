@@ -101,7 +101,7 @@ public:
   // Visit a line and create the VTK_TRIANGLE cell 
   void Visit(unsigned long cellId, TriangleCellType * t)
     {
-      m_Cells->InsertNextCell(2,  (vtkIdType*)t->PointIdsBegin());
+      m_Cells->InsertNextCell(3,  (vtkIdType*)t->PointIdsBegin());
       m_TypeArray[*m_LastCell] = VTK_TRIANGLE;
       (*m_LastCell)++;
     }
