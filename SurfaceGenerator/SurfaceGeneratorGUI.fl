@@ -1,0 +1,113 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0011 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class SurfaceGeneratorGUI {open : {public SurfaceGeneratorBase}
+} {
+  Function {SurfaceGeneratorGUI()} {open
+  } {
+    Fl_Window controlWindow {
+      label {Surface Generator}
+      xywh {723 183 238 117}
+      code0 {\#include "SurfaceGeneratorBase.h"} visible
+    } {
+      Fl_Menu_Bar {} {open
+        xywh {0 0 235 25}
+      } {
+        submenu {} {
+          label File open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Load
+            callback {Load();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Generate Ellipsoid}
+            callback {ellipsoidWindow->show();}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label {Generate Patch}
+            callback {GeneratePatch();}
+            xywh {20 20 100 20}
+          }
+          menuitem {} {
+            label Save
+            callback {Save();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Quit
+            callback {Quit();}
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label View
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Surface
+            callback {ShowDisplay();}
+            xywh {0 0 100 20}
+          }
+        }
+      }
+    }
+    Fl_Window ellipsoidWindow {
+      label {Ellipsoid Parameters}
+      xywh {631 429 287 131} hide
+    } {
+      Fl_Value_Slider aValueSlider {
+        label {A }
+        xywh {35 15 230 20} type {Horz Knob} align 4 minimum 10 maximum 200 step 1 value 50
+      }
+      Fl_Value_Slider bValueSlider {
+        label {B }
+        xywh {35 37 230 20} type {Horz Knob} align 4 minimum 10 maximum 200 step 1 value 40
+      }
+      Fl_Value_Slider cValueSlider {
+        label {C }
+        xywh {35 60 230 20} type {Horz Knob} align 4 minimum 10 maximum 200 step 1 value 30
+      }
+      Fl_Button {} {
+        label Generate
+        callback {GenerateEllipsoid( aValueSlider->value(), bValueSlider->value(), cValueSlider->value() );}
+        xywh {55 95 80 25}
+      }
+      Fl_Button {} {
+        label Close
+        callback {ellipsoidWindow->hide();}
+        xywh {160 95 80 25}
+      }
+    }
+  }
+  Function {~SurfaceGeneratorGUI()} {return_type virtual
+  } {}
+  Function {Quit(void)} {return_type {virtual void}
+  } {
+    code {ellipsoidWindow->hide();
+controlWindow->hide();
+this->HideDisplay();} {}
+  }
+  Function {Hide(void)} {return_type {virtual void}
+  } {
+    code {ellipsoidWindow->hide();
+controlWindow->hide();} {}
+  }
+  Function {Show(void)} {return_type {virtual void}
+  } {
+    code {controlWindow->show();} {}
+  }
+  Function {Load(void)} {return_type {virtual void}
+  } {
+    Fl_Window {} {open
+      xywh {410 134 104 100} hide
+    } {}
+  }
+} 
