@@ -1,4 +1,7 @@
 
+# Look for OpenGL
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindOpenGL.cmake)
+  
 SET ( MetaImageViewer_SRCS
   MetaImageViewer.cxx
   )

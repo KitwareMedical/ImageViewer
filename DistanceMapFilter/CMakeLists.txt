@@ -1,4 +1,7 @@
 
+# Look for OpenGL
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindOpenGL.cmake)
+  
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/DistanceMapFilter

@@ -1,4 +1,7 @@
 
+# Look for OpenGL
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindOpenGL.cmake)
+  
 INCLUDE_REGULAR_EXPRESSION(".*")
 
 INCLUDE_DIRECTORIES(

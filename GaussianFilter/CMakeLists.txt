@@ -1,4 +1,7 @@
 
+# Look for OpenGL
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindOpenGL.cmake)
+  
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
