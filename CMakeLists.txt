@@ -7,4 +7,4 @@ LINK_DIRECTORIES(
 LINK_LIBRARIES(
 )
 
-EXECUTABLES(PrincipalAxesResampling)
+EXECUTABLES(itkPrincipalAxesResampler)
