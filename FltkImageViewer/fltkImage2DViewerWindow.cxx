@@ -250,7 +250,7 @@ Image2DViewerWindow::FitImageToWindow(void)
   m_Zoom = static_cast<GLdouble>( h() ) /
            static_cast<GLdouble>( m_Height ); 
   m_ShiftY = -m_Height;
-  m_ShiftX =  m_Width;
+  m_ShiftX = -m_Width;
   this->redraw();
   Fl::check();
 
@@ -418,16 +418,24 @@ Image2DViewerWindow
 ::handlePopUpMenu(void) 
 {
   static Fl_Menu_Button * popupMenu = 0;
+  // need to keep the shift of the first popup creation for redrawing purpose
+  static unsigned int popupShift=0; 
   if( !popupMenu )
-    {
-      popupMenu = new Fl_Menu_Button( 
-          Fl::event_x(), Fl::event_y(),100,200 );
-      popupMenu->type( Fl_Menu_Button::POPUP3);
-      popupMenu->add("Fit Image To Window");
-      popupMenu->add("Fit Window To Image");
-      popupMenu->add("Intensity Windowing");
-    }
-
+  {
+    popupMenu = new Fl_Menu_Button(m_ParentWindow->x()+Fl::event_x(),
+                                   m_ParentWindow->y()-(m_ParentWindow->h()/2)+Fl::event_y(),
+                                   100,200);
+    popupShift = (m_ParentWindow->h()/2);
+    //by using this function this seems to disable position() function (FTLK bug)
+      //popupMenu->type( Fl_Menu_Button::POPUP3); 
+    popupMenu->add("Fit Image To Window");
+    popupMenu->add("Fit Window To Image");
+    popupMenu->add("Intensity Windowing");
+  }
+  else
+  {
+    popupMenu->position(m_ParentWindow->x()+Fl::event_x(),m_ParentWindow->y()-popupShift+Fl::event_y());
+  }
   typedef enum 
     {
     FIT_IMAGE_TO_WINDOW,
@@ -555,6 +563,5 @@ Image2DViewerWindow
 
 
 } // end namespace fltk
-
 
 
