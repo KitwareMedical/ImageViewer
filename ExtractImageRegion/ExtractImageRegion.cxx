@@ -82,4 +82,5 @@ int main(int argc, char **argv)
   // Write the image 
   writer->Update();
 
+  return 0;
   }
