@@ -40,6 +40,7 @@ CellularAggregate
 
   m_Mesh = MeshType::New();
 
+  m_Mesh->SetCellsAllocationMethod( MeshType::CellsAllocatedDynamicallyCellByCell );
   m_Mesh->SetPoints( PointsContainer::New() );
   m_Mesh->SetPointData( PointDataContainer::New() );
   m_Mesh->SetCells( VoronoiRegionsContainer::New() );
@@ -246,7 +247,8 @@ CellularAggregate
   bool regionExist = m_Mesh->GetCell( id, region );
   if( regionExist )
     {
-    VoronoiRegionAutoPointer realRegion( 
+    VoronoiRegionAutoPointer realRegion;
+    realRegion.TakeOwnership( 
               dynamic_cast < VoronoiRegionType * >( region.ReleaseOwnership() ) );
 
     VoronoiRegionType::PointIdIterator neighbor = realRegion->PointIdsBegin();
@@ -287,7 +289,8 @@ CellularAggregate
     throw exception;
     }
 
-  voronoiPointer = dynamic_cast < VoronoiRegionType * >( cellPointer.GetPointer() );
+  voronoiPointer.TakeOwnership(
+        dynamic_cast < VoronoiRegionType * >( cellPointer.GetPointer() ) );
 
 }
 
