@@ -65,16 +65,6 @@ class VTK_EXPORT vtkITKLaplacianSegmentationLevelSetImageFilter : public vtkITKI
     DelegateITKOutputMacro(GetFeatureScaling) ;
   };
   
-  void SetCurvatureScaling (float value )
-  {
-    DelegateITKInputMacro (SetCurvatureScaling, value );
-  };
-
-  float GetCurvatureScaling (float value )
-  {
-    DelegateITKOutputMacro(GetCurvatureScaling);
-  };
-    
   vtkImageData *GetSpeedImage()
   {
     this->vtkSpeedImporter->Update();
@@ -144,7 +134,7 @@ private:
   
 };
 
-vtkCxxRevisionMacro(vtkITKLaplacianSegmentationLevelSetImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKLaplacianSegmentationLevelSetImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKLaplacianSegmentationLevelSetImageFilter);
 
 #endif

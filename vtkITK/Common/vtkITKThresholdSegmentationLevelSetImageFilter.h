@@ -86,16 +86,6 @@ class VTK_EXPORT vtkITKThresholdSegmentationLevelSetImageFilter : public vtkITKI
     DelegateITKInputMacro ( SetFeatureScaling, value );
   };
 
-  void SetCurvatureScaling (float value )
-  {
-    DelegateITKInputMacro (SetCurvatureScaling, value );
-  };
-
-  float GetCurvatureScaling (float value )
-  {
-    DelegateITKOutputMacro(GetCurvatureScaling);
-  };
-  
   float GetFeatureScaling ()
   {
     DelegateITKOutputMacro(GetFeatureScaling) ;
@@ -164,7 +154,7 @@ private:
   
 };
 
-vtkCxxRevisionMacro(vtkITKThresholdSegmentationLevelSetImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKThresholdSegmentationLevelSetImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKThresholdSegmentationLevelSetImageFilter);
 
 #endif
