@@ -22,6 +22,15 @@
   std::cerr << message.str() << std::endl; \
   }
 
+#undef itkGenericExceptionMacro  
+#define itkGenericExceptionMacro(x) \
+  { \
+  std::ostrstream message; \
+  itk::ExceptionMacroDetail::OStrStreamCleanup messageCleanup(message); \
+  message << "itk::ERROR: " x << std::ends; \
+  std::cerr << message.str() << std::endl; \
+  }
+
 class VTK_EXPORT vtkITKImageToImageFilter : public vtkImageToImageFilter
 {
 public:
@@ -143,14 +152,17 @@ protected:
   //ETX
   
   // Dummy ExecuteData
-  void ExecuteData (vtkDataObject *) {};
+  void ExecuteData (vtkDataObject *)
+    {
+    vtkWarningMacro(<< "This filter does not respond to Update(). Doing a GetOutput->Update() instead.");
+    }
   
 private:
   vtkITKImageToImageFilter(const vtkITKImageToImageFilter&);  // Not implemented.
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.2 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.3 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
