@@ -116,6 +116,11 @@ public:
   float* GetImagePosition() const;
 
   /**
+   * Get the image spacing
+   */
+  float* GetImageSpacing() const;
+
+  /**
    * Specify the patient orientation
    */
   void SetOrientation(const float* newValue);

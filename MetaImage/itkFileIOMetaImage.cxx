@@ -410,6 +410,11 @@ float* FileIOMetaImage::GetImagePosition() const
   return (float*) m_ImagePosition;
 }
 
+float* FileIOMetaImage::GetImageSpacing() const
+{
+  return (float*) m_ElementSpacing;
+}
+
 void FileIOMetaImage::SetPatientPosition(const float* newValue)
 {
   int i;
