@@ -14,22 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-/*=========================================================================
-
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    FEMImageRegLMEx.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for detailm_Solver.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
-=========================================================================*/
 
 // disable debug warnings in MS compiler
 #ifdef _MSC_VER
@@ -47,9 +31,7 @@ template class itk::fem::ImageMetricLoadImplementation<LMClass2>;
 
 ImageRegLMEx::ImageRegLMEx( )
 {
-  m_FileCount=0;    
-  m_Nx=256;
-  m_Ny=256;
+  m_FileCount=0; 
   m_MeshResolution=16*2;  // determines the 'resolution' of the grid
  
   m_MinE=9.e44;  // FIXME
@@ -141,9 +123,6 @@ void ImageRegLMEx::ReadImages()
 {
   // DEFINE INPUT FILES
  
-  const unsigned int nx = m_Nx;
-  const unsigned int ny = m_Ny;
-
   // Read a Raw File
   typedef  itk::ImageFileReader< ImageType >      FileSourceType;
   typedef  itk::RawImageIO<ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
@@ -155,8 +134,8 @@ void ImageRegLMEx::ReadImages()
   tarfilter->SetFileName( m_TargetFileName );
 
   RawReaderType::Pointer  rawReader  = RawReaderType::New();
-  rawReader->SetDimensions( 0, nx );
-  rawReader->SetDimensions( 1, ny );
+  
+  for (int ii=0; ii<ImageDimension; ii++) rawReader->SetDimensions( ii, ImageSize[ii] );
 
   reffilter->SetImageIO( rawReader );
   tarfilter->SetImageIO( rawReader );
@@ -250,13 +229,13 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname)
     
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
+    FEMLightObject::SkipWhiteSpace(f);
+    f >> buffer;
+
     if (ibuf == 1) {
       this->UseLandmarks(true);
-
-      FEMLightObject::SkipWhiteSpace(f);
-      f >> buffer;
-      sbuf = new char[256];
-      strcpy(sbuf, buffer);
+    sbuf = new char[256];
+    strcpy(sbuf, buffer);
       this->SetLandmarkFile(sbuf);
     }
     else { this->UseLandmarks(false); }
@@ -269,11 +248,11 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname)
     
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
-    this->m_Nx = ibuf;
+    this->ImageSize[0] = ibuf;
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
-    this->m_Ny = ibuf;
+    this->ImageSize[1] = ibuf;
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
@@ -429,7 +408,7 @@ void ImageRegLMEx::CreateMesh()
   vnl_vector<double> ElementsPerDimension;  ElementsPerDimension.resize(ImageDimension); 
   for (unsigned int i=0; i<ImageDimension; i++)
   { 
-    MeshSize[i]=(double)m_Nx-1; // FIX ME  make more general
+    MeshSize[i]=(double)ImageSize[i]-1; // FIX ME  make more general
     MeshOrigin[i]=(double)0.0;// FIX ME make more general
     ElementsPerDimension[i]=(double)m_MeshResolution;
   }
@@ -591,8 +570,7 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
 void ImageRegLMEx::GetVectorField()
 {
 
-  m_FieldSize[0] = m_Nx;
-  m_FieldSize[1] = m_Ny;
+  for (unsigned int i=0; i<ImageDimension; i++) m_FieldSize[i] = ImageSize[i];
    
   m_FieldRegion.SetSize( m_FieldSize );
   m_Field = FieldType::New();
@@ -719,7 +697,7 @@ void ImageRegLMEx::MultiResSolve()
 
     ImageType::SizeType Isz=pyramid2->GetOutput( i )->GetLargestPossibleRegion().GetSize();
 //  m_MeshResolution=
-    m_Nx=(double) Isz[0];
+    ImageSize=Isz;
 
     CreateMesh();     
     //if ( i == 0) {
@@ -832,7 +810,7 @@ int main()
 #include "FEMImageRegLMEx.h"
 
 namespace itk {
-namespace fem {
+namespace fem 
    
 // Register load class.
 typedef  ImageMetricLoad<ImageRegLMEx::ImageType,ImageRegLMEx::ImageType> LMClass2;
