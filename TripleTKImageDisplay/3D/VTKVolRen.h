@@ -297,30 +297,31 @@ bool VTKVolRen<T>::SetInputImage(ImageType::Pointer newIm)
   //double imRange = mImData->dataMax()-imMin;
 
   
-  itk::SimpleImageRegionIterator<ImageType> it(mImData,mImData->GetLargestPossibleRegion());
-  it.Begin();
+  itk::SimpleImageRegionIterator<ImageType> it(mImData, mImData->GetLargestPossibleRegion());
+  it = it.Begin();
   
   double imMin = 100000 ;
   double imMax = 0;
 
+  long i = 0;
   while (!it.IsAtEnd())
     {
     if (it.Get()<imMin) imMin = it.Get();
     if (it.Get()>imMax) imMax = it.Get();
     ++it;
+    i++;
     }
   double imRange = imMax -imMin; 
-    
 
-  it.Begin();
-  long i=0 ;
+  it = it.Begin();
+  i=0 ;
   //for (i = 0; i < (long)mImData->quantity(); i++)
   while (!it.IsAtEnd())
     {
     mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
     i++;
     ++it;
-    }
+    }  
 
   //try to put the scalars into the box and render directly
   mVol->GetPointData()->SetScalars(mScalars);
@@ -403,7 +404,7 @@ void VTKVolRen<T>::update(void)
   
   itk::SimpleImageRegionIterator<ImageType> it(mImData,mImData->GetRequestedRegion());
   itk::SimpleImageRegionIterator<OverlayType> itMask(mMask,mMask->GetRequestedRegion());
-  it.Begin();
+  it = it.Begin();
   
   double imMin = 100000 ;
   double imMax = 0;
@@ -421,8 +422,8 @@ void VTKVolRen<T>::update(void)
   //double imRange = mImData->dataMax()-imMin;
 	
   
-  it.Begin();
-  itMask.Begin();
+  it = it.Begin();
+  itMask = itMask.Begin();
   long i=0;
   
   if(mUseMask) 
