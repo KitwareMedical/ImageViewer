@@ -2,10 +2,6 @@
 #ifdef _MSC_VER
 #pragma warning ( disable : 4786 )
 #endif
-#define VTK_USE_ANSI_STDLIB
-#include "vtkDataSetReader.h"
-#include "vtkUnstructuredGrid.h"
-#include "vtkDataSet.h"
 #include <iostream>
 #include "itkMesh.h"
 #include "itkTriangleCell.h"
@@ -16,6 +12,9 @@
 #include "vtkRenderWindow.h"
 #include "vtkActor.h"
 #include "vtkRenderWindowInteractor.h"
+#include "vtkDataSetReader.h"
+#include "vtkUnstructuredGrid.h"
+#include "vtkDataSet.h"
 
 typedef itk::Mesh<float, 3,
   itk::DefaultStaticMeshTraits< float, 3, 3, float, float > > floatMesh;
@@ -56,6 +55,13 @@ void Display(vtkUnstructuredGrid* itkgrid, vtkUnstructuredGrid* vtkgrid)
   renWin->Delete();
 }
 
+#ifndef VTK_HAS_ID_TYPE
+// if you get a syntax error hear, then your VTK
+// has vtkIdType already defined
+typedef long vtkIdType;
+#endif
+
+
 floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
 {
   // Create a new mesh
@@ -89,8 +95,8 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
     }
   
   cells->Reserve(numcells);
-  int npts;
-  int* pts;
+  vtkIdType npts;
+  vtkIdType* pts;
   cellId = 0;
   for(vtkcells->InitTraversal(); vtkcells->GetNextCell(npts, pts); cellId++)
     {
@@ -173,14 +179,14 @@ public:
   // Visit a triangle and create the VTK_TRIANGLE cell 
   void Visit(unsigned long cellId, floatTriangleCell* t)
     {
-      m_Cells->InsertNextCell(3,  (int*)t->PointIdsBegin());
+      m_Cells->InsertNextCell(3,  (vtkIdType*)t->PointIdsBegin());
       m_TypeArray[*m_LastCell] = VTK_TRIANGLE;
       (*m_LastCell)++;
     }
   // Visit a triangle and create the VTK_QUAD cell 
   void Visit(unsigned long cellId, floatQuadrilateralCell* t)
     {
-      m_Cells->InsertNextCell(4,  (int*)t->PointIdsBegin());
+      m_Cells->InsertNextCell(4,  (vtkIdType*)t->PointIdsBegin());
       m_TypeArray[*m_LastCell] = VTK_QUAD;
       (*m_LastCell)++;
     }
@@ -272,7 +278,7 @@ vtkUnstructuredGrid* MeshToUnstructuredGrid(floatMesh* mesh)
 
 int main(int ac, char** av)
 {
-  const char* fname = "f:/vtkdata/blow.vtk";
+  const char* fname = "c:/blow.vtk";
   if(ac > 1 )
     {
     fname = av[1];
