@@ -27,6 +27,10 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       FilterModule< unsigned char, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
+      // Set the parameters on it
+      module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
+      // Execute the filter
       module.ProcessData( pds  );
       break; 
       }
@@ -35,6 +39,10 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       FilterModule< unsigned short, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
+      // Set the parameters on it
+      module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
+      // Execute the filter
       module.ProcessData( pds );
       break; 
       }

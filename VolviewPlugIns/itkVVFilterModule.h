@@ -79,6 +79,11 @@ public:
     }
 
 
+  FilterType * GetFilter()
+  {
+    return m_Filter.GetPointer();
+  }
+
 
   void SetUpdateMessage( const char * message )
   {
@@ -150,24 +155,18 @@ public:
                                     importFilterWillDeleteTheInputBuffer );
 
 
+    // Connect the pipeline
     m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
-
-
-    // Set the parameters on it
-    m_Filter->SetNumberOfIterations(
-      atoi(m_Info->GUIItems[0].CurrentValue));
-    m_Filter->SetTimeStep(
-      atof(m_Info->GUIItems[1].CurrentValue));
     m_Filter->SetInput( m_CastFilter->GetOutput() );
 
+    // Set the Observer for updating progress in the GUI
     m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
-
     m_Filter->AddObserver( itk::ProgressEvent(), m_CommandObserver );
 
-
+    // Execute the filter
     m_Filter->Update();
 
-
+    // Copy the data (with casting) to the output buffer provided by the Plug In API
     typename InternalImageType::ConstPointer outputImage =
                                                m_Filter->GetOutput();
 

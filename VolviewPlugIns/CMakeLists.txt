@@ -48,11 +48,15 @@ SET (LIBRARY_OUTPUT_PATH ${VolviewPlugIns_BINARY_DIR}/bin CACHE PATH "Single out
 
 
 # list all plugins here
-SET (PLUGINS vvCurvatureFlow)
+SET (PLUGINS vvCurvatureFlow vvGradientAnisotropicDiffusion)
 
 # probably could be cleaned up...
 ADD_LIBRARY(vvCurvatureFlow MODULE itkVVCurvatureFlowPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvCurvatureFlow ITKCommon ITKBasicFilters)
+
+# probably could be cleaned up...
+ADD_LIBRARY(vvGradientAnisotropicDiffusion MODULE itkVVGradientAnisotropicDiffusionPlugin.cxx)
+TARGET_LINK_LIBRARIES(vvGradientAnisotropicDiffusion ITKCommon ITKBasicFilters)
 
 
 # copy the plugins to a plugin directory
