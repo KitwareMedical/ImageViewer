@@ -20,22 +20,31 @@ class GLSliceView : public SliceView<ImagePixelType>,
                     public Fl_Gl_Window 
 {
 public:
+
   typedef itk::Image<ImagePixelType,3>     ImageType;
   typedef itk::Image<OverlayPixelType,3>   OverlayType;
+  typedef typename ImageType::Pointer      ImagePointer;
+  typedef typename OverlayType::Pointer    OverlayPointer;
+  typedef typename ImageType::RegionType   RegionType;
+  typedef typename ImageType::SizeType     SizeType;
+  typedef typename ImageType::IndexType    IndexType;
+
+
  
 protected:
   bool        cValidOverlayData;
   bool        cViewOverlayData;
   float       cOverlayOpacity;
   
-  OverlayType::Pointer cOverlayData;
+  OverlayPointer cOverlayData;
   void     (* cViewOverlayCallBack)(void);
 
   unsigned char * cWinOverlayData;
   
-  typedef itk::ColorTable<float> ColorTableType;
+  typedef itk::ColorTable<float>                ColorTableType;
+  typedef typename ColorTableType::Pointer      ColorTablePointer;
 
-  ColorTableType::Pointer      cColorTable;
+  ColorTablePointer      cColorTable;
 
 public:
   /*! FLTK required constructor - must use imData() to complete 
@@ -44,13 +53,13 @@ definition */
 
   /*! Specify the 3D image to view slice by slice */
   void SetInputImage(ImageType * newImData);
-  const ImageType::Pointer & GetInputImage(void) const;
+  const ImagePointer & GetInputImage(void) const;
 
   /*! Specify the 3D image to view as an overlay */
   void SetInputOverlay(OverlayType * newOverlayData);
 
   /*! Return a pointer to the overlay data */
-  const OverlayType::Pointer & GetInputOverlay(void) const;
+  const OverlayPointer & GetInputOverlay(void) const;
 
   /*! Turn on/off the viewing of the overlay */
   void	ViewOverlayData(bool newViewOverlayData);
@@ -110,17 +119,19 @@ SetInputImage(ImageType * newImData)
  
   if( cValidOverlayData )
   {
-   ImageType::RegionType region = 
-newImData->GetLargestPossibleRegion();
-   ImageType::SizeType   size   = region.GetSize();
+   RegionType region = 
+                              newImData->GetLargestPossibleRegion();
+
+   SizeType   size   = region.GetSize();
+
    unsigned long *newdimsize = new unsigned long[3] ; 
    newdimsize[0]=size[0];
    newdimsize[1]=size[1];
    newdimsize[2]=size[2];
 
-   ImageType::RegionType overlay_region = 
-cOverlayData->GetLargestPossibleRegion();
-   ImageType::SizeType   overlay_size   = overlay_region.GetSize();
+   RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
+   SizeType   overlay_size   = overlay_region.GetSize();
+
    unsigned long *overlaydimsize = new unsigned long [3] ; 
    overlaydimsize[0]=overlay_size[0];
    overlaydimsize[1]=overlay_size[1];
@@ -137,9 +148,8 @@ cOverlayData->GetLargestPossibleRegion();
   cImData = newImData;
 
   //calculating cDataMax and cDataMin
-  ImageType::RegionType cImData_region = 
-cImData->GetLargestPossibleRegion();
-  ImageType::SizeType   cImData_size   = cImData_region.GetSize();
+  RegionType cImData_region = cImData->GetLargestPossibleRegion();
+  SizeType   cImData_size   = cImData_region.GetSize();
 
    cDimSize = new unsigned long[3];
    cDimSize[0]=cImData_size[0];
@@ -148,7 +158,7 @@ cImData->GetLargestPossibleRegion();
  
  
 
-  ImageType::IndexType ind;
+  IndexType ind;
   ind[0] = 0; 
   ind[1] = 0; 
   ind[2] = 0;
@@ -250,7 +260,7 @@ cImData->GetLargestPossibleRegion();
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-const Image<ImagePixelType,3>::Pointer &
+const typename Image<ImagePixelType,3>::Pointer &
 GLSliceView<ImagePixelType, OverlayPixelType>
 ::GetInputImage(void) const
 {
@@ -266,15 +276,15 @@ void
 GLSliceView<ImagePixelType, OverlayPixelType>
 ::SetInputOverlay( OverlayType * newOverlayData )
 {
-  ImageType::RegionType newoverlay_region = 
+  RegionType newoverlay_region = 
                   newOverlayData->GetLargestPossibleRegion();
 
-  ImageType::SizeType   newoverlay_size   = newoverlay_region.GetSize();
+  SizeType   newoverlay_size   = newoverlay_region.GetSize();
 
-  ImageType::RegionType cImData_region = 
+  RegionType cImData_region = 
                                     cImData->GetLargestPossibleRegion();
 
-  ImageType::SizeType   cImData_size   = cImData_region.GetSize();
+  SizeType   cImData_size   = cImData_region.GetSize();
 
   if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
     {
@@ -466,7 +476,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   }
 
   unsigned int pointX[3];
-  ImageType::IndexType ind;
+  IndexType ind;
 
   int l, m;
 
