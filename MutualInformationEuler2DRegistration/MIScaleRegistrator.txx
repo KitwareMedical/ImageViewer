@@ -141,6 +141,7 @@ MIScaleRegistrator<TFixedImage,TMovingImage>
     {
     matrix[dim][dim] = scales[dim];
     }
+  m_AffineTransform->SetIdentity();
   m_AffineTransform->SetMatrix( matrix );
   return m_AffineTransform;
 }
