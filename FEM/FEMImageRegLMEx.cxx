@@ -25,10 +25,6 @@
 namespace itk {
 namespace fem {
 
-// Register load class.
-
-//template<class TReference,class TTarget, class TElement>
-//template class itk::fem::ImageMetricLoadImplementation<TReference,TTarget,TElement>::ImageMetricLoadType>;
 
 /*
  * Generate a rectangular mesh of hexahedron elements
@@ -1077,6 +1073,9 @@ void ImageRegLMEx<TReference,TTarget,TElement>::MultiResSolve()
 
 typedef itk::Image< unsigned char, 2 > ImageType;
 typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
+typedef itk::fem::ImageMetricLoad<ImageType,ImageType> LoadType;
+// Register load class.
+template class itk::fem::ImageMetricLoadImplementation<LoadType>;
 
 int main() 
 {
