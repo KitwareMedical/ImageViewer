@@ -72,7 +72,7 @@ PointSet3D<TPointSet>
 //
 //--------------------------------------------------
 template <class TPointSet>
-typename PointSet3D<TPointSet>::PointSetType::ConstPointer
+typename PointSet3D<TPointSet>::PointSetConstPointer
 PointSet3D<TPointSet>
 ::GetPointSet(void) const 
 {
