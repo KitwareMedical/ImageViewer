@@ -94,11 +94,9 @@ ReadMetaImage<TOutputImage>
     dimSize[i] = metaImage.DimSize(i);
     }
 
-  typename TOutputImage::IndexType start;
-  start[0] = 0;
-  start[1] = 0;
-  start[2] = 0;
+  typedef typename TOutputImage::IndexType IndexType;
 
+  IndexType start = IndexType::ZeroIndex;
 
   Region region;
   
