@@ -29,12 +29,15 @@ integer.  (But see below for hooks to change these parameters.)
 #include <stdlib.h>
 
 #include "itkAffineTransform.h"
-#include "itkByteSwapper.h"
+#include "itkRawImageIO.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
 #include "itkImage.h"
 #include "itkImageMomentsCalculator.h"
 #include "itkResampleImageFilter.h"
 #include "itkSimpleImageRegionIterator.h"
 #include "itkLinearInterpolateImageFunction.h"
+#include "itkMinimumMaximumImageFilter.h"
 
 enum {NDimensions = 3};
 
@@ -76,73 +79,55 @@ main(int argc, char *argv[])
     char *filename1 = argv[1];
     char *filename2 = argv[2];
 
-    /* Open image file */
-    /* FIXME: Translate into C++ */
-    FILE *infile = fopen(filename1, "rb");
-    if (infile == 0) 
-        {
-            fprintf(stderr, "Unable to open input file\n");
-            exit(EXIT_FAILURE);
-        }
+    typedef itk::RawImageIO<PixelType,NDimensions> IOType;
+    IOType::Pointer io = IOType::New();
 
-    /* Allocate an image object to store the input file in */
-    ImageIndexType base = {{0,0,0}};
+    io->SetFileTypeToBinary();
+    io->SetFileDimensionality( NDimensions );
+
+    if ( bigend )
+      {
+      io->SetByteOrderToBigEndian();
+      }
+    else
+      {
+      io->SetByteOrderToLittleEndian();
+      }
+
     ImageSizeType  size = {{ImageWidth, ImageHeight, NumberOfSlices}};
     double spacing[3] = {1.0, 1.0, 1.0};      // Pixel size
     double origin [3] = {0.0, 0.0, 0.0};      // Location of (0,0,0) pixel
-    ImageType::Pointer image = ImageType::New();
-    ImageRegionType region;
-    region.SetIndex(base);
-    region.SetSize(size);
-    image->SetLargestPossibleRegion(region);
-    image->SetBufferedRegion(region);
-    image->SetRequestedRegion(region);
-    image->Allocate();
-    image->SetOrigin(origin);
-    image->SetSpacing(spacing);
 
-    /* Read the image file into an itkImage object */
-    /* FIXME: Find or write Insightful tools for this */
-    std::cout << "Reading image file." << std::endl;
-    ImageIndexType index;        // Index to current pixel
-    ImageIndexValueType point[3];      // Location of current pixel
-    PixelType *buff = new PixelType[ImageWidth];  // Input/output buffer
-    PixelType maxval = 0;        // Maximum pixel value in image
-    size_t count;
-    for (long slice = 0; slice < NumberOfSlices; slice++) {
-        point[2] = slice;
-        for (long row = 0; row < ImageHeight; row++) {
-            point[1] = row;
-            count = fread(buff, sizeof(PixelType), ImageWidth, infile);
-            if (count != (size_t)ImageWidth) {
-                fprintf(stderr, "Error reading input file\n");
-                exit(EXIT_FAILURE); 
-            }
-            if (bigend)
-                {
-                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToBigEndian(buff, ImageWidth);
-                }
-            else
-                {
-                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToLittleEndian(buff, ImageWidth);
-                }
-            for (long col = 0; col < ImageWidth; col++) 
-                {
-                point[0] = col;
-                index.SetIndex(point);
-                image->SetPixel(index, buff[col]);
-                if (buff[col] > maxval)
-                    maxval = buff[col];
-            }
-        }
-    }
+    for( int j = 0; j < NDimensions; j++ )
+      {
+      io->SetDimensions( j, size[j] );
+      io->SetSpacing( j, spacing[j] );
+      io->SetOrigin( j, origin[j] );
+      }
+
+    typedef itk::ImageFileReader<ImageType> ReaderType;
+    ReaderType::Pointer reader = ReaderType::New();
+    reader->SetFileName( filename1 );
+    reader->SetImageIO( io );
+    reader->Update();
+
+    ImageType::Pointer image = reader->GetOutput();
+  
+
+    /* Find the maximum value in the image */
+    typedef itk::MinimumMaximumImageFilter<ImageType> MinMaxFilterType;
+    MinMaxFilterType::Pointer maxCalculator = MinMaxFilterType::New();
+
+    maxCalculator->SetInput( reader->GetOutput() );
+    maxCalculator->Update();
+
+    PixelType maxval = maxCalculator->GetMaximum();   // Maximum pixel value in image
+
 
     /* Print the maximum pixel value found.  (This is useful for detecting
        all-zero images, which confuse the moments calculation.) */
     std::cout << "   Max pixel value: " << maxval << std::endl;
 
-    /* Close the input file */
-    fclose(infile);
 
     /* Compute principal moments and axes */
     std::cout << "Computing moments and transformation." << std::endl;
@@ -235,45 +220,14 @@ main(int argc, char *argv[])
     // Run the resampling filter
     resample->Update();
 
-    // Extract the output image
-   ImageType::Pointer resamp = resample->GetOutput();
-
-    /* Open the output file */
-    /* FIXME: Translate into C++ */
-    std::cout << "Writing the output file" << std::endl;
-    FILE *outfile = fopen(filename2, "wb");
-    if (outfile == 0) 
-        {
-            fprintf(stderr, "Unable to open output file\n");
-            exit(EXIT_FAILURE);
-        }
-
     /* Write resampled image to a file */
-    for (long slice = 0; slice < NumberOfSlices; slice++) {
-        point[2] = slice;
-        for (long row = 0; row < ImageHeight; row++) {
-            point[1] = row;
-            for (long col = 0; col < ImageWidth; col++) {
-                point[0] = col;
-                index.SetIndex(point);
-                buff[col] = resamp->GetPixel(index);
-            }
-            if (bigend)
-                {
-                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToBigEndian(buff, ImageWidth);
-                }
-            else
-                {
-                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToLittleEndian(buff, ImageWidth);
-                }
-            count = fwrite(buff, 2, ImageWidth, outfile);
-            if (count != (size_t)ImageWidth) {
-                fprintf(stderr, "Error writing output file\n");
-                exit(EXIT_FAILURE); }
-        }
-    }
-    fclose(outfile);
+    typedef itk::ImageFileWriter<ImageType> WriterType;
+    WriterType::Pointer writer = WriterType::New();
+    writer->SetInput( resample->GetOutput() );
+    writer->SetFileName( filename2 );
+    writer->SetImageIO( io );
+    writer->Write();
 
-    delete [] buff;
+
     return 0;
 }

@@ -115,7 +115,7 @@ private:
    ImagePointer          m_SegmentationMask;
 
    /** Read in an image.  */
-   bool ReadImage( const char *, const SizeType&, bool, InputImageType * );
+   bool ReadImage( const char *, const SizeType&, bool, InputImageType::Pointer & );
 
    /** Initialize  */
    void Initialize();

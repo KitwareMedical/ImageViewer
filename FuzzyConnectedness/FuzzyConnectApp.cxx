@@ -16,14 +16,8 @@
 =========================================================================*/
 #include "FuzzyConnectApp.h"
 
-#include "itkByteSwapper.h"
-#include "itkImageRegionIterator.h"
-#include "itkImageMapper.h"
-#include "itkExceptionObject.h"
-
-#include "vnl/vnl_math.h"
-
-#include <fstream>
+#include "RawVolumeReader.h"
+#include "PGMVolumeWriter.h"
 #include <string>
 
 
@@ -279,62 +273,26 @@ const char * filename,
 const SizeType& size,
 const double * spacing,
 bool  bigEndian,
-InputImageType * imgPtr
+InputImageType::Pointer &imgPtr
 )
 {
-  //*****
-  //FIXME - use itkRawImageIO instead once its stable
-  //*****
 
-  // allocate memory in the image
-  InputImageType::RegionType region;
-  region.SetSize( size );
+  // Read in a raw volume
+  typedef itk::RawVolumeReader<InputPixelType,InputImageType> ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+ 
+  reader->SetFileName( filename );
+  reader->SetBigEndian( bigEndian );
+  reader->SetSize( size );
+  reader->SetSpacing( spacing );
+  reader->Execute();
 
-  imgPtr->SetLargestPossibleRegion( region );
-  imgPtr->SetBufferedRegion( region );
-  imgPtr->Allocate();
-
-  double origin[ImageDimension];
-  for( int j = 0; j < ImageDimension; j++ )
-    {
-    origin[j] = -0.5 * ( double(size[j]) - 1.0 ) * spacing[j];
-    }
-
-  imgPtr->SetSpacing( spacing );
-  imgPtr->SetOrigin( origin ); 
-
-  unsigned int numPixels = region.GetNumberOfPixels(); 
-
-
-  // open up the file
-  std::ifstream imgStream( filename, std::ios::binary | std::ios::in );
-  
-  if( !imgStream.is_open() )
-    {
-    return false;
-    }
-
-  // read the file
-  InputPixelType * buffer = imgPtr->GetBufferPointer();
-  imgStream.read( (char *) buffer, numPixels * sizeof(InputPixelType) );
-
-  // clost the file
-  imgStream.close();
-
-
-  // swap bytes if neccessary
-  if( bigEndian )
-    {
-    itk::ByteSwapper<InputPixelType>::SwapRangeFromSystemToBigEndian( buffer, numPixels );
-    }
-  else
-    {
-    itk::ByteSwapper<InputPixelType>::SwapRangeFromSystemToLittleEndian( buffer, numPixels );
-    }
+  imgPtr = reader->GetImage();
 
   return true;
 
 }
+
 
 bool
 FuzzyConnectApp
@@ -344,79 +302,12 @@ const char * dirname,
 const char * basename )
 {
 
-  // go through the image and compute the offset and scale
-  // to make it normalized to between 0 and 255
-  typedef itk::ImageRegionIterator<InputImageType>
-   InputIterator;
-
-  InputIterator inIter( input, input->GetBufferedRegion() );
-
-  InputPixelType minValue = inIter.Get();
-  InputPixelType maxValue = minValue;
-  while( !inIter.IsAtEnd() )
-    {
-    InputPixelType value = inIter.Get();
-    if( value < minValue ) minValue = value;
-    if( value > maxValue ) maxValue = value;
-    ++inIter;
-    }
-
-  double scale = double( maxValue - minValue );
-  if( !scale ) scale = 1.0;
-  double offset = double(minValue);
-  
-  // write image out to pgm files
-  char filename[256];
-  char buffer[50];
-  unsigned long ncol = input->GetBufferedRegion().GetSize()[0];
-  unsigned long nrow = input->GetBufferedRegion().GetSize()[1];
-  unsigned long nslice = input->GetBufferedRegion().GetSize()[2];
-
-  sprintf(buffer,"P5 %ld %ld 255\n", ncol, nrow );
-  unsigned int nchar = strlen(buffer);
-  unsigned long npixels = nrow * ncol;
-
-  inIter.GoToBegin();
-
-  for( unsigned int k = 0; k < nslice; k++ )
-    {
-    if( k < 10 )
-      {
-      sprintf(filename,"%s/%s00%d.pgm", dirname, basename, k );
-      }
-    else if( k < 100 )
-      {
-      sprintf(filename, "%s/%s0%d.pgm", dirname, basename, k );
-      }
-    else
-      {
-      sprintf(filename, "%s/%s%d.pgm", dirname, basename, k );
-      }
-
-    // open up the stream  
-    std::ofstream imgStream( filename, std::ios::out | std::ios::binary );
-  
-    if( !imgStream.is_open() )
-      {
-      return false;
-      }
-
-    // writer the header
-    imgStream.write( buffer, nchar );
-
-    // write the bytes
-    for( unsigned long i = 0; i < npixels; i++ )
-      {
-      double value = (double(inIter.Get()) - offset) / scale * 255;
-      char num = vnl_math_rnd( value );
-      imgStream.put( num );
-      ++inIter;
-      }
-
-    // close this file
-    imgStream.close();
-    
-    }
+  typedef itk::PGMVolumeWriter<InputImageType> WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetImage( input );
+  writer->SetDirectoryName( dirname );
+  writer->SetFilePrefix( basename );
+  writer->Execute();
 
   return true;
 }

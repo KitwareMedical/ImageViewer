@@ -17,7 +17,7 @@
 #include "ShapeDetectApp.h"
 #include "AppUtility.h"
 
-#include "itkByteSwapper.h"
+#include "RawVolumeReader.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageMapper.h"
 #include "itkExceptionObject.h"
@@ -377,52 +377,22 @@ ShapeDetectApp
 const char * filename,
 const SizeType& size,
 bool  bigEndian,
-InputImageType * imgPtr
+InputImageType::Pointer & imgPtr
 )
 {
-  //*****
-  //FIXME - use itkRawImageIO instead once its stable
-  //*****
 
-  // allocate memory in the image
-  InputImageType::RegionType region;
-  region.SetSize( size );
+  // Read in a raw volume
+  typedef itk::RawVolumeReader<InputPixelType,InputImageType> ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+ 
+  reader->SetFileName( filename );
+  reader->SetBigEndian( bigEndian );
+  reader->SetSize( size );
+  reader->Execute();
 
-  imgPtr->SetLargestPossibleRegion( region );
-  imgPtr->SetBufferedRegion( region );
-  imgPtr->Allocate();
-
-  unsigned int numPixels = region.GetNumberOfPixels(); 
-
-
-  // open up the file
-  std::ifstream imgStream( filename, std::ios::binary | std::ios::in );
-  
-  if( !imgStream.is_open() )
-    {
-    return false;
-    }
-
-  // read the file
-  InputPixelType * buffer = imgPtr->GetBufferPointer();
-  imgStream.read( (char *) buffer, numPixels * sizeof(InputPixelType) );
-
-  // clost the file
-  imgStream.close();
-
-
-  // swap bytes if neccessary
-  if( bigEndian )
-    {
-    itk::ByteSwapper<InputPixelType>::SwapRangeFromSystemToBigEndian( buffer, numPixels );
-    }
-  else
-    {
-    itk::ByteSwapper<InputPixelType>::SwapRangeFromSystemToLittleEndian( buffer, numPixels );
-    }
+  imgPtr = reader->GetImage();
 
   return true;
-
 }
 
 

@@ -111,7 +111,7 @@ private:
 
    /*** Read in an image  */
    bool ReadImage( const char *, const SizeType&, const double *, bool,
-    InputImageType * );
+    InputImageType::Pointer& );
 
    /*** Compute the fuzzy connectedness map  */
    void ComputeMap();
