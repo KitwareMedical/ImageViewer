@@ -183,11 +183,6 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
 
-  ImagePointer output = ImageType::New() ;
-  output->SetLargestPossibleRegion(input->GetLargestPossibleRegion()) ;
-  output->SetRequestedRegion(input->GetLargestPossibleRegion()) ;
-
-  filter->SetOutput(output) ;
   filter->SetSlicingDirection(sliceDirection) ;
   filter->IsBiasFieldMultiplicative(useLog) ;
   // sets tissue classes' statistics for creating the energy function
@@ -212,6 +207,8 @@ int main(int argc, char* argv[])
 
   std::cout << "Correcting the input image..." << std::endl ;
   filter->Update() ;
+
+  ImageType::Pointer output = filter->GetOutput() ;
 
   std::cout << "Writing the output image..." << std::endl ;
   metaITKUtilSaveImage<ImageType>(outputFileName.c_str(), NULL,
