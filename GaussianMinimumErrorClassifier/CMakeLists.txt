@@ -7,6 +7,7 @@ ${ITK_SOURCE_DIR}/Code/Numerics
 ${ITK_SOURCE_DIR}/Code/Numerics/Statistics
 ${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
+${ITK_SOURCE_DIR}/Examples/GaussianMinimumErrorClassifier
 )
 
 LINK_DIRECTORIES(
@@ -27,6 +28,7 @@ MetaImageIO
 SOURCE_FILES (GaussianMinimumErrorClassifier_SRCS
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection/OptionList
 ${ITK_SOURCE_DIR}/Code/Numerics/Statistics/itkMaxDecisionRule
+MaximumLikelihoodRatioDecisionRule
 GaussianMinimumErrorClassifier
 )
 
