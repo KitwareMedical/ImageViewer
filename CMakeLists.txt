@@ -47,6 +47,13 @@ IF(BUILD_MRI_BIAS_CORRECTION)
 SUBDIRS(MRIBiasCorrection)
 ENDIF(BUILD_MRI_BIAS_CORRECTION)
 
+# Add an option to build or not build the FuzzyConnectedness example
+OPTION(BUILD_FUZZY_CONNECTEDNESS "Build the Fuzzy connectedness example")
+IF(BUILD_FUZZY_CONNECTEDNESS)
+SUBDIRS(FuzzyConnectedness)
+ENDIF(BUILD_FUZZY_CONNECTEDNESS)
+
+
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
