@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    MetaImageViewer.cxx
+  Module:    ImageViewer.cxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
@@ -25,7 +25,7 @@
 #include <FL/fl_file_chooser.H>
 #include <GLSliceView.h>
 
-#include "MetaImageViewerGUI.h"
+#include "ImageViewerGUI.h"
 
 
 Fl_Window *form;
