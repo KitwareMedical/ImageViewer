@@ -579,7 +579,7 @@ SpineInterventionConfiguration
     m_FluoroscopyImageReader = ImageReaderType::New();
   }
 
-  m_FluoroscopyImageReader->SetFileToLoad( filename );
+  m_FluoroscopyImageReader->SetFileName( filename );
   m_FluoroscopyImageReader->Update();
 
   m_FluoroscopyUnitViewGUI.SetFluoroscopyImage(
@@ -652,7 +652,7 @@ SpineInterventionConfiguration
     m_VolumeImageReader = VolumeReaderType::New();
   }
 
-  m_VolumeImageReader->SetFileToLoad( filename );
+  m_VolumeImageReader->SetFileName( filename );
   m_VolumeImageReader->Update();
 
   m_VolumeImageReader->GetOutput()->SetRequestedRegion(
