@@ -30,7 +30,8 @@ namespace fltk {
 enum EventIds 
 {
   RedrawEvent = itk::Command::UserEvent+1,
-  GlDrawEvent
+  GlDrawEvent,
+  VolumeReslicedEvent
 };
 
 
