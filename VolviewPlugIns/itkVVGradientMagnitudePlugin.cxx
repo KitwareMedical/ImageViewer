@@ -83,7 +83,7 @@ void VV_PLUGIN_EXPORT vvGradientMagnitudeInit(vtkVVPluginInfo *info)
   info->Name = "Gradient Magnitude";
   info->TerseDocumentation = "Gradient Magnitude";
   info->FullDocumentation = 
-    "This filter computes the magnitude if the gradient using finite differences. Basically by convolving with masks of type [-1,0,1]."
+    "This filter computes the magnitude if the gradient using finite differences. Basically by convolving with masks of type [-1,0,1].";
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
