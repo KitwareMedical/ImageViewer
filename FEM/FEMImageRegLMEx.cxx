@@ -414,7 +414,7 @@ void ImageRegLMEx::WarpImage()
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
         tindex[ii]+=(long int)(disp[ii]+0.5);
-        if (tindex[ii] >=0 && tindex[ii] < m_FieldSize[ii]) InImage=true;
+        if ((unsigned int) tindex[ii] >= (unsigned int) 0 && (unsigned int) tindex[ii] < (unsigned int) m_FieldSize[ii])  InImage=true;
           else 
           {
             InImage=false;
@@ -870,7 +870,7 @@ void ImageRegLMEx::MultiResSolve()
       Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
  
       CreateMesh(m_ImageOrigin,Isz,MeshResolution,m_Solver); 
-      ApplyLoads(m_Solver,MeshResolution);
+      ApplyLoads(m_Solver,(unsigned int)MeshResolution);
 
       m_Solver.GenerateGFN(); 
 
@@ -906,7 +906,7 @@ void ImageRegLMEx::MultiResSolve()
       if ( i > 0) 
       {
         SampleVectorFieldAtNodes(m_Solver);
-        LastScaleEnergy=ThisScaleEnergy;
+        LastScaleEnergy=ThisScaleEnergy; ThisScaleEnergy=LastScaleEnergy; // need to resolve this
         ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
       }
 //    m_Solver.PrintDisplacements();
