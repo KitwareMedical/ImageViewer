@@ -95,6 +95,10 @@ public:
     { return MatrixType(); }
 
 
+  /** This must be implemented by all sub-classes of CellInterface */
+  typedef typename FEMMeshType::CellMultiVisitorType    CellMultiVisitorType;
+  virtual void Accept(unsigned long cellId, CellMultiVisitorType * )= 0; 
+  
 
 protected:
 

@@ -91,6 +91,10 @@ public:
    */
   LoadsVectorType GetExternalLoads(LoadElement * l) const;
 
+  /** This must be implemented by all sub-classes of CellInterface */
+  typedef typename FEMMeshType::CellMultiVisitorType    CellMultiVisitorType;
+  virtual void Accept(unsigned long cellId, CellMultiVisitorType* visitor) 
+      { this->BaseCellType::Accept( cellId, visitor ); }
 
 protected:
   /** Default constructor of an element */
