@@ -54,34 +54,30 @@ SUBDIRS(RawImageReadWrite)
 SUBDIRS(PNGImageReadWrite)
 
 # Examples requiring MetaImages and Fltk GUI 
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTK)
-    IF(HAS_FLTKIMAGEVIEWER)
-      SUBDIRS(DistanceMapFilter)
-      SUBDIRS(GaussianFilter)
-      SUBDIRS(GradientRecursiveGaussianFilter)
-      SUBDIRS(Curves2DExtractor)
-      SUBDIRS(Morphogenesis)
-      SUBDIRS(MutualInformationEuler2DRegistration)
-      SUBDIRS(ImageRegistration)
-      SUBDIRS(ImageRegistration2D)
-      SUBDIRS(RawImageReaderViewer)
-#     SUBDIRS(OperatingRoom)
-      IF(HAS_VTK)
-			  SUBDIRS(TripleTKImageDisplay)
-      ENDIF(HAS_VTK)
-      SUBDIRS(SurfaceGenerator)
-      SUBDIRS(MetaImageViewer)
-      SUBDIRS(MetaImageImporter)
-    ENDIF(HAS_FLTKIMAGEVIEWER)
-  ENDIF(HAS_FLTK)
-ENDIF(HAS_METAIMAGE)
+IF(HAS_FLTK)
+  IF(HAS_FLTKIMAGEVIEWER)
+    SUBDIRS(DistanceMapFilter)
+    SUBDIRS(GaussianFilter)
+    SUBDIRS(GradientRecursiveGaussianFilter)
+    SUBDIRS(Curves2DExtractor)
+    SUBDIRS(Morphogenesis)
+    SUBDIRS(MutualInformationEuler2DRegistration)
+    SUBDIRS(ImageRegistration)
+    SUBDIRS(ImageRegistration2D)
+    SUBDIRS(RawImageReaderViewer)
+#   SUBDIRS(OperatingRoom)
+    IF(HAS_VTK)
+      SUBDIRS(TripleTKImageDisplay)
+    ENDIF(HAS_VTK)
+    SUBDIRS(MetaImageImporter)
+    SUBDIRS(MetaImageViewer)
+    SUBDIRS(SurfaceGenerator)
+  ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_FLTK)
 
 
 # Test the conditions for building the MRIBiasCorrection example
-IF(HAS_METAIMAGE)
-  SUBDIRS(MRIBiasCorrection)
-ENDIF(HAS_METAIMAGE)
+SUBDIRS(MRIBiasCorrection)
 
 
 # Add an option to build FEM examples
@@ -102,9 +98,7 @@ ENDIF (HAS_VTK)
 
 # Add an option to build or not build the
 # GaussianMinimumErrorClassifier example
-IF(HAS_METAIMAGE)
-  SUBDIRS(GaussianMinimumErrorClassifier)
-ENDIF(HAS_METAIMAGE)
+SUBDIRS(GaussianMinimumErrorClassifier)
 
 # Add an option to build or not build the EllipsoidInteriorExteriorSpatialFunction example
 SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
