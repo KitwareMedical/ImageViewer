@@ -33,6 +33,7 @@ CellularAggregate
 Bacteria
 BacterialColony
 BacterialColonyRedrawCommand
+BacterialColonyGUI
 main
 )
 

@@ -32,6 +32,9 @@ public:
 
   virtual Cell * CreateNew(void);
 
+  static void SetGrowthLatencyTime( unsigned long );
+  static void SetDivisionLatencyTime( unsigned long );
+
 private:
   
   unsigned long m_GrowthLatencyTime;

@@ -1,6 +1,7 @@
 
 #include "BacterialColony.h"
 #include "BacterialColonyRedrawCommand.h"
+#include "BacterialColonyGUI.h"
 #include "CellsViewer.h"
 #include "CommandEvents.h"
 #include "CellsViewerCommand.h"
@@ -44,6 +45,9 @@ int main()
 
   viewer->Show();
   
+  BacterialColonyGUI  colonyGUI;
+  colonyGUI.Show();
+
   try 
     {
     Fl::run();

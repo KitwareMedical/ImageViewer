@@ -217,5 +217,30 @@ Bacteria
 
 
 
+/**
+ *    Set Division Latency Time
+ */ 
+void
+Bacteria
+::SetDivisionLatencyTime( unsigned long latency )
+{
+  Bacteria::DivisionMaxLatency = latency;
+}
+
+
+
+
+/**
+ *    Set Growth Latency Time
+ */ 
+void
+Bacteria
+::SetGrowthLatencyTime( unsigned long latency )
+{
+  Bacteria::GrowthMaxLatency = latency;
+}
+
+
+
 
 };  // end namespace bio
