@@ -115,7 +115,7 @@ public:
 	bool Alloc(unsigned int nsect, unsigned int nsecc);
 
   PointSetType::ConstPointer GetPointSet( void ) const
-            { return m_PointSet; }
+            { return m_PointSet.GetPointer(); }
 
 protected:
 

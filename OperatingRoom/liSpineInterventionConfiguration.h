@@ -15,8 +15,9 @@
 #define liSPINEINTERVENTIONCONFIGURATIONCLASS
 
 
-
+#if defined(_WIN32)
 #include <itkWindows.h>
+#endif
 
 #include <liOperatingRoomModel.h>
 

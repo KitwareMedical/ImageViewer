@@ -1,4 +1,7 @@
-INCLUDE(${CMAKE_SOURCE_DIR}/CMake/Modules/FindFLTK.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindGLUT.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -9,6 +12,9 @@ ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/OperatingRoom
 ${FLTK_INCLUDE_PATH}
+${OPENGL_INCLUDE_PATH}
+${GLU_INCLUDE_PATH}
+${GLUT_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
@@ -18,7 +24,6 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/OperatingRoom
-${FLTK_LIB_PATH}
 )
 
 SOURCE_FILES(OperatingRoom_SRCS
@@ -79,14 +84,15 @@ ITKBasicFilters
 MetaImageIO
 VXLNumerics
 FltkImageViewer
-fltk
+${FLTK_LIBRARY}
+${GLUT_LIBRARY}
+${GLU_LIBRARY}
+${OPENGL_LIBRARY}
 )
 
 IF(WIN32)
   LINK_LIBRARIES(
   wsock32
-  opengl32
-  glu32
   )
 ENDIF(WIN32)
 

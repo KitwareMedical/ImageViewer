@@ -15,7 +15,10 @@
 #ifndef liSHAPE3DCLASS
 #define liSHAPE3DCLASS
 
+#if  defined(_WIN32)
 #include <itkWindows.h>
+#endif
+
 #include <itkRGBPixel.h>
 #include <itkLightObject.h>
 #include <itkObjectFactory.h>

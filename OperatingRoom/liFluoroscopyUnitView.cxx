@@ -261,7 +261,7 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
     {
       while( !it.IsAtEndOfLine() ) 
       {
-        *dest = ( it.Get() - min ) * factor;     
+        *dest = (unsigned char)( ( it.Get() - min ) * factor );
         ++it;
         ++dest;
       }

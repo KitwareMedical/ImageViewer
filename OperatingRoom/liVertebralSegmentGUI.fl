@@ -194,7 +194,7 @@ color.SetBlue( blue );
 m_VertebralSegment->GetVertebralBody()->SetColor( color );
 m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
             xywh {250 325 75 25}
-            code0 {\#include <Fl/fl_color_chooser.h>}
+            code0 {\#include <Fl/Fl_Color_Chooser.H>}
           }
         }
         Fl_Group {} {
