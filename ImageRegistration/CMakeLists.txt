@@ -23,8 +23,6 @@ ${FLTK_LIBRARY_DIR}
 )
 
 SOURCE_FILES(
-liCommandUpdateLightButton
-liCommandUpdateProgress
 liImageRegistrationConsole
 liImageRegistrationConsoleGUI
 liImageRegistrationConsoleBase
