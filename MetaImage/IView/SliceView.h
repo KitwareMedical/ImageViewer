@@ -15,34 +15,41 @@ namespace itk {
  *  SELECT = report pixel info
  *  USER = call a user function
  */
-typedef enum {CM_NOP, CM_PAN, CM_SELECT, CM_USER, CM_BOX} ClickModeType;
+typedef enum {CM_NOP, CM_PAN, CM_SELECT, CM_USER, CM_BOX} 
+ClickModeType;
 
-/*! Handling of values outside intensity window range - values above and below
+/*! Handling of values outside intensity window range - values above 
+and below
  *      can be handled separately
  *  IW_MIN = set values outside range to min value
  *  IW_MAX = set values outside range to max value
  *  IW_FLIP = rescale values to be within range by flipping
  */
 
-typedef enum {IMG_VAL, IMG_LOG, IMG_DX, IMG_DY, IMG_DZ, IMG_H, IMG_MIP} ImageModeType;
+typedef enum {IMG_VAL, IMG_LOG, IMG_DX, IMG_DY, IMG_DZ, IMG_H, IMG_MIP} 
+ImageModeType;
 
 typedef enum {IW_MIN, IW_MAX, IW_FLIP} IWModeType;
 
-/*! Structure clickPoint to store the x,y,z and intensity value of a point
+/*! Structure clickPoint to store the x,y,z and intensity value of a 
+point
  *  in the image
  */
 struct ClickPoint {
    float x, y, z;
    double value;
 
-   ClickPoint(float _x,float _y,float _z,double v):x(_x),y(_y),z(_z),value(v){}
+   ClickPoint(float _x,float _y,float _z,double 
+v):x(_x),y(_y),z(_z),value(v){}
 };
 
 
 /*! Multifunction slice-by-slice viewer
- *  This is a virtual base class, which provides most of the data members and
+ *  This is a virtual base class, which provides most of the data 
+members and
  *  methods slice viewers would need.
- *  To get a concrete slice-viewer, inherit this class along with a windowing
+ *  To get a concrete slice-viewer, inherit this class along with a 
+windowing
  *  class (example: Fl_window or Fl_Gl_Window).
  *  /author Stephen R. Aylward
  *  /date 11/22/99
@@ -59,24 +66,30 @@ protected:
   PhysicalImage<imType,3>::Pointer cImData;
   void                    (* cViewImDataCallBack)(void);
   void                     * cViewImDataArg;
-  void                    (* cViewImDataArgCallBack)(void *viewImDataArg);
+  void                    (* cViewImDataArgCallBack)(void 
+*viewImDataArg);
 
   ClickModeType cClickMode;
   float         cClickSelectX, cClickSelectY, cClickSelectZ;
-  void          (* cClickSelectCallBack)(float x,float y,float z,float v);
+  void          (* cClickSelectCallBack)(float x,float y,float z,float 
+v);
   void           * cClickSelectArg;
-  void          (* cClickSelectArgCallBack)(float x, float y, float z, float v, void *clickSelectArg);
+  void          (* cClickSelectArgCallBack)(float x, float y, float z, 
+float v, void *clickSelectArg);
 
   float       cClickUserX, cClickUserY, cClickUserZ;
   void        (* cClickUserCallBack)(float x,float y,float z,float v);
   void         * cClickUserArg;
-  void        (* cClickUserArgCallBack)(float x, float y, float z, float v, void * clickUserArg);
+  void        (* cClickUserArgCallBack)(float x, float y, float z, 
+float v, void * clickUserArg);
 
   float       cBoxMinX, cBoxMinY, cBoxMinZ;
   float       cBoxMaxX, cBoxMaxY, cBoxMaxZ;
-  void        (* cClickBoxCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
+  void        (* cClickBoxCallBack)(float minX, float minY, float minZ, 
+float maxX, float maxY, float maxZ);
   void         * cClickBoxArg;
-  void        (* cClickBoxArgCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, void * clickBoxArg);
+  void        (* cClickBoxArgCallBack)(float minX, float minY, float 
+minZ, float maxX, float maxY, float maxZ, void * clickBoxArg);
 
   float       cIWMin;
   float       cIWMax;
@@ -97,7 +110,8 @@ protected:
   unsigned int        cWinOrientation;
   void                (* cWinOrientationCallBack)(void);
   void                 * cWinOrientationArg;
-  void                (* cWinOrientationArgCallBack)(void * winOrientationArg);
+  void                (* cWinOrientationArgCallBack)(void * 
+winOrientationArg);
 
   unsigned int        cWinCenter[3];
   void                (* cWinCenterCallBack)(void);
@@ -137,11 +151,13 @@ public:
   virtual ~SliceView(void);
 
   /*! Specify the 3D image to view in slices - pure virtual function*/
-  virtual void  SetInputImage(PhysicalImage<imType,3> * newImData) = 0;
+  virtual void  SetInputImage(PhysicalImage<imType,3>::Pointer 
+newImData) = 0;
 
   /*! Return a pointer to the image data */
   
-  const PhysicalImage<imType,3>::ConstPointer & GetInputImage(void) const;
+  const PhysicalImage<imType,3>::ConstPointer & GetInputImage(void) 
+const;
   
   /*! Dammit, give me a pointer to the image that's not const! */
   PhysicalImage<imType,3>::Pointer GetInputImage(void);
@@ -161,8 +177,10 @@ public:
   /*! Status of the image - viewed / not viewed */
   bool            viewImData(void);
   /*! Called when viewing of the image is toggled */
-  void            viewImDataCallBack(void (* newViewImDataCallBack)(void));
-  void            viewImDataCallBack(void (* newViewImDataArgCallBack)(void *), void * viewImDataArg);
+  void            viewImDataCallBack(void (* 
+newViewImDataCallBack)(void));
+  void            viewImDataCallBack(void (* 
+newViewImDataArgCallBack)(void *), void * viewImDataArg);
 
   /*! Flip the image about the x-axis */
   virtual void    flipX(bool newFlipX);
@@ -181,19 +199,24 @@ public:
   void    winZoom(float newWinZoom);
   /*! How much is the window zoomed */
   float   winZoom(void);
-  /*! Specify the coordinates of the center of the region of interest to view */
-  void    winCenter(unsigned int newWinCenterX, unsigned int newWinCenterY);
+  /*! Specify the coordinates of the center of the region of interest 
+to view */
+  void    winCenter(unsigned int newWinCenterX, unsigned int 
+newWinCenterY);
   /*! Default centering, center at the middle of the image */
   void    winCenter(void);
-  /*! Get the coordinates of the center of the region of interest being viewed */
+  /*! Get the coordinates of the center of the region of interest being 
+viewed */
   unsigned int    winCenterX(void);
-  /*! Get the coordinates of the center of the region of interest being viewed */
+  /*! Get the coordinates of the center of the region of interest being 
+viewed */
   unsigned int    winCenterY(void);
   /*! Shift the region of interest being viewed */
   void    winShift(int newWinShiftUp, int newWinShiftRight);
   /*! Called when center is changed */
   void    winCenterCallBack(void (* newWinCenterCallBack)(void));
-  void    winCenterCallBack(void (* newWinCenterArgCallBack)(void *), void * newWinCetnerArg);
+  void    winCenterCallBack(void (* newWinCenterArgCallBack)(void *), 
+void * newWinCetnerArg);
 
   /*! Return the total number of slices */
   unsigned int    numSlices(void);
@@ -203,14 +226,18 @@ public:
   unsigned int    sliceNum(void);
   /*! Called when new slice is viewed */
   void            sliceNumCallBack(void (* newSliceNumCallBack)(void));
-  void            sliceNumCallBack(void (* newSliceNumCallBack)(void *), void * newSliceNumArg);
+  void            sliceNumCallBack(void (* newSliceNumCallBack)(void 
+*), void * newSliceNumArg);
 
   unsigned int orientation(void);
   void         orientation(unsigned int newOrientation);
-  void         orientationCallBack(void (*newOrientationCallBack)(void));
-  void         orientationCallBack(void (*newOrientationArgCallBack)(void *), void * newOrientationArg);
+  void         orientationCallBack(void 
+(*newOrientationCallBack)(void));
+  void         orientationCallBack(void 
+(*newOrientationArgCallBack)(void *), void * newOrientationArg);
 
-  /*! Specify the clickMode - a user click in a window will cause various events */
+  /*! Specify the clickMode - a user click in a window will cause 
+various events */
   void            clickMode(ClickModeType newClickMode);
   ClickModeType   clickMode(void);
 
@@ -218,8 +245,10 @@ public:
   float        clickSelectX(void);
   float        clickSelectY(void);
   float        clickSelectZ(void);
-  void         clickSelectCallBack(void (*newClickSelectCallBack)(float newX, float newY, float newZ, float newV));
-  void         clickSelectCallBack(void (*newClickSelectArgCallBack)(float, float, float, float, void *), void * newClickSelectArg);
+  void         clickSelectCallBack(void (*newClickSelectCallBack)(float 
+newX, float newY, float newZ, float newV));
+  void         clickSelectCallBack(void 
+(*newClickSelectArgCallBack)(float, float, float, float, void *), void * newClickSelectArg);
 
   /*! Returns the last ith clicked point - ie. to get the last point
   * i = 0, to get the 2nd last point i = 1, and so on
@@ -237,13 +266,17 @@ public:
   float       clickUserX(void);
   float       clickUserY(void);
   float       clickUserZ(void);
-  void        clickUserCallBack(void (*newClickUserCallBack)(float newX, float newY, float newZ, float newV));
-  void        clickUserCallBack(void (*newClickUserArgCallBack)(float, float, float, float, void *), void * newClickUserArg);
+  void        clickUserCallBack(void (*newClickUserCallBack)(float 
+newX, float newY, float newZ, float newV));
+  void        clickUserCallBack(void (*newClickUserArgCallBack)(float, 
+float, float, float, void *), void * newClickUserArg);
 
   void            boxMin(float minX, float minY, float minZ);
   virtual void    boxMax(float maxX, float maxY, float maxZ);
-  void            clickBoxCallBack(void (*newClickBoxCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float maxZ));
-  void            clickBoxCallBack(void (*newClickBoxArgCallBack)(float, float, float, float, float, float, void *), void * newClickBoxArg);
+  void            clickBoxCallBack(void (*newClickBoxCallBack)(float 
+minX, float minY, float minZ, float maxX, float maxY, float maxZ));
+  void            clickBoxCallBack(void 
+(*newClickBoxArgCallBack)(float, float, float, float, float, float, void *), void * newClickBoxArg);
 
   void        iwMin(float newIWMin);
   float       iwMin(void);
@@ -254,7 +287,8 @@ public:
   void        iwModeMax(IWModeType newIWModeMin);
   IWModeType  iwModeMax(void);
   void        iwCallBack(void (*newIWCallBack)(void));
-  void        iwCallBack(void (*newIWArgCallBack)(void *), void * newIWArg);
+  void        iwCallBack(void (*newIWArgCallBack)(void *), void * 
+newIWArg);
 
   void            imageMode(ImageModeType newImageMode);
   ImageModeType   imageMode(void);
@@ -276,7 +310,8 @@ public:
 
 
 template<class imType>
-SliceView<imType>::SliceView(int x, int y, int w, int h, const char * l)
+SliceView<imType>::SliceView(int x, int y, int w, int h, const char * 
+l)
 {
     cX = x;
     cY = y;
@@ -454,7 +489,8 @@ bool SliceView<imType>::viewImData(void)
 
 
 template <class imType>
-void SliceView<imType>::viewImDataCallBack(void (* newViewImDataCallBack)(void))
+void SliceView<imType>::viewImDataCallBack(void (* 
+newViewImDataCallBack)(void))
 {
     cViewImDataCallBack = newViewImDataCallBack;
 }
@@ -463,7 +499,8 @@ void SliceView<imType>::viewImDataCallBack(void (* newViewImDataCallBack)(void))
   
   
 template <class imType>
-void SliceView<imType>::viewImDataCallBack(void (* newViewImDataArgCallBack)(void *), void * newViewImDataArg)
+void SliceView<imType>::viewImDataCallBack(void (* 
+newViewImDataArgCallBack)(void *), void * newViewImDataArg)
 {
     cViewImDataArg = newViewImDataArg;
     cViewImDataArgCallBack = newViewImDataArgCallBack;
@@ -537,7 +574,8 @@ bool SliceView<imType>::flipZ()
 template <class imType>
 unsigned int SliceView<imType>::numSlices(void)
 {
-PhysicalImage<imType,3>::RegionType cregion = cImData->GetLargestPossibleRegion();
+PhysicalImage<imType,3>::RegionType cregion = 
+cImData->GetLargestPossibleRegion();
 PhysicalImage<imType,3>::SizeType   size   = cregion.GetSize();
 unsigned long *s=new unsigned long[3];
 s[0]=size[0];
@@ -577,7 +615,8 @@ unsigned int SliceView<imType>::sliceNum(void)
 
 
 template <class imType>
-void SliceView<imType>::sliceNumCallBack(void (* newSliceNumCallBack)(void))
+void SliceView<imType>::sliceNumCallBack(void (* 
+newSliceNumCallBack)(void))
 {
     cSliceNumCallBack = newSliceNumCallBack;
 }
@@ -586,7 +625,8 @@ void SliceView<imType>::sliceNumCallBack(void (* newSliceNumCallBack)(void))
 
 
 template <class imType>
-void SliceView<imType>::sliceNumCallBack(void (* newSliceNumArgCallBack)(void *), void * newSliceNumArg)
+void SliceView<imType>::sliceNumCallBack(void (* 
+newSliceNumArgCallBack)(void *), void * newSliceNumArg)
 {
     cSliceNumArg = newSliceNumArg;
     cSliceNumArgCallBack = newSliceNumArgCallBack;
@@ -616,7 +656,8 @@ ClickModeType SliceView<imType>::clickMode(void)
 
 
 template <class imType>
-void SliceView<imType>::clickSelectCallBack(void (*newClickSelectCallBack)(float _x, float _y, float _z, float _v))
+void SliceView<imType>::clickSelectCallBack(void 
+(*newClickSelectCallBack)(float _x, float _y, float _z, float _v))
 {
     cClickSelectCallBack = newClickSelectCallBack;
 }
@@ -625,7 +666,9 @@ void SliceView<imType>::clickSelectCallBack(void (*newClickSelectCallBack)(float
 
 
 template <class imType>
-void SliceView<imType>::clickSelectCallBack(void (*newClickSelectArgCallBack)(float _x, float _y, float _z, float _v, void *clickSelectArg), void * newClickSelectArg)
+void SliceView<imType>::clickSelectCallBack(void 
+(*newClickSelectArgCallBack)(float _x, float _y, float _z, float _v, void *clickSelectArg), 
+void * newClickSelectArg)
 {
     cClickSelectArg = newClickSelectArg;
     cClickSelectArgCallBack = newClickSelectArgCallBack;
@@ -663,7 +706,8 @@ void SliceView<imType>::clickSelect(float newX, float newY, float newZ)
     ind[2] = (unsigned long)cClickSelectZ;
     imType tf = cImData->GetPixel(ind);
         
-    /*if length of list is equal to max, remove the earliest point stored */
+    /*if length of list is equal to max, remove the earliest point 
+stored */
     if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
 	      cClickedPoints.pop_back();
 
@@ -671,9 +715,11 @@ void SliceView<imType>::clickSelect(float newX, float newY, float newZ)
 				cClickSelectY, cClickSelectZ, tf));
 
     if(cClickSelectCallBack != NULL)
-        cClickSelectCallBack(cClickSelectX, cClickSelectY, cClickSelectZ, tf);
+        cClickSelectCallBack(cClickSelectX, cClickSelectY, 
+cClickSelectZ, tf);
     if(cClickSelectArgCallBack != NULL)
-        cClickSelectArgCallBack(cClickSelectX, cClickSelectY, cClickSelectZ, tf, cClickSelectArg);
+        cClickSelectArgCallBack(cClickSelectX, cClickSelectY, 
+cClickSelectZ, tf, cClickSelectArg);
 }
 
 
@@ -755,7 +801,8 @@ float* SliceView<imType>::getClickedPointCoordinates(int index)
 
 
 template <class imType>
-void SliceView<imType>::clickUserCallBack(void (*newClickUserCallBack)(float _x, float _y, float _z, float _v))
+void SliceView<imType>::clickUserCallBack(void 
+(*newClickUserCallBack)(float _x, float _y, float _z, float _v))
 {
     cClickUserCallBack = newClickUserCallBack;
 }
@@ -764,7 +811,9 @@ void SliceView<imType>::clickUserCallBack(void (*newClickUserCallBack)(float _x,
 
 
 template <class imType>
-void SliceView<imType>::clickUserCallBack(void (*newClickUserArgCallBack)(float _x, float _y, float _z, float _v, void * clickUserArg), void * newClickUserArg)
+void SliceView<imType>::clickUserCallBack(void 
+(*newClickUserArgCallBack)(float _x, float _y, float _z, float _v, void * clickUserArg), void * 
+newClickUserArg)
 {
     cClickUserArg = newClickUserArg;
     cClickUserArgCallBack = newClickUserArgCallBack;
@@ -805,7 +854,8 @@ void SliceView<imType>::clickUser(float newX, float newY, float newZ)
     if(cClickUserCallBack != NULL)
         cClickUserCallBack(cClickUserX, cClickUserY, cClickUserZ, tf);
     if(cClickUserArgCallBack != NULL)
-        cClickUserArgCallBack(cClickUserX, cClickUserY, cClickUserZ, tf, cClickUserArg);
+        cClickUserArgCallBack(cClickUserX, cClickUserY, cClickUserZ, 
+tf, cClickUserArg);
 
 }
 
@@ -843,7 +893,8 @@ float SliceView<imType>::clickUserZ(void)
 //
 //
 template <class imType>
-void SliceView<imType>::clickBoxCallBack(void (*newClickBoxCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float maxZ))
+void SliceView<imType>::clickBoxCallBack(void 
+(*newClickBoxCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float maxZ))
 {
     cClickBoxCallBack = newClickBoxCallBack;
 }
@@ -852,7 +903,9 @@ void SliceView<imType>::clickBoxCallBack(void (*newClickBoxCallBack)(float minX,
 
 
 template <class imType>
-void SliceView<imType>::clickBoxCallBack(void (*newClickBoxArgCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, void * clickBoxArg), void * newClickBoxArg)
+void SliceView<imType>::clickBoxCallBack(void 
+(*newClickBoxArgCallBack)(float minX, float minY, float minZ, float maxX, float maxY, float 
+maxZ, void * clickBoxArg), void * newClickBoxArg)
 {
     cClickBoxArg = newClickBoxArg;
     cClickBoxArgCallBack = newClickBoxArgCallBack;
@@ -895,9 +948,11 @@ void SliceView<imType>::boxMax(float x, float y, float z)
     cBoxMaxZ = z1;
 
     if(cClickBoxCallBack != NULL)
-        cClickBoxCallBack(cBoxMinX, cBoxMinY, cBoxMinZ, cBoxMaxX, cBoxMaxY, cBoxMaxZ);
+        cClickBoxCallBack(cBoxMinX, cBoxMinY, cBoxMinZ, cBoxMaxX, 
+cBoxMaxY, cBoxMaxZ);
     if(cClickBoxArgCallBack != NULL)
-        cClickBoxArgCallBack(cBoxMinX, cBoxMinY, cBoxMinZ, cBoxMaxX, cBoxMaxY, cBoxMaxZ, cClickBoxArg);
+        cClickBoxArgCallBack(cBoxMinX, cBoxMinY, cBoxMinZ, cBoxMaxX, 
+cBoxMaxY, cBoxMaxZ, cClickBoxArg);
 }
 
         
@@ -1039,7 +1094,8 @@ void SliceView<imType>::iwCallBack(void (* newIWCallBack)(void))
 
 
 template <class imType>
-void SliceView<imType>::iwCallBack(void (* newIWArgCallBack)(void *), void * newIWArg)
+void SliceView<imType>::iwCallBack(void (* newIWArgCallBack)(void *), 
+void * newIWArg)
 {
     cIWArg = newIWArg;
     cIWArgCallBack = newIWArgCallBack;
@@ -1099,7 +1155,8 @@ void SliceView<imType>::winCenter(void)
 //
 //
 template <class imType>
-void SliceView<imType>::winCenter(unsigned int newWinCenterX, unsigned int newWinCenterY)
+void SliceView<imType>::winCenter(unsigned int newWinCenterX, unsigned 
+int newWinCenterY)
 {
     cWinCenter[cWinOrder[0]] = newWinCenterX;
     if(cWinCenter[cWinOrder[0]]>=cDimSize[cWinOrder[0]])
@@ -1136,7 +1193,8 @@ unsigned int SliceView<imType>::winCenterY(void)
 
 
 template <class imType>
-void SliceView<imType>::winCenterCallBack(void (* newWinCenterCallBack)(void))
+void SliceView<imType>::winCenterCallBack(void (* 
+newWinCenterCallBack)(void))
 {
     cWinCenterCallBack = newWinCenterCallBack;
 }
@@ -1145,7 +1203,8 @@ void SliceView<imType>::winCenterCallBack(void (* newWinCenterCallBack)(void))
 
 
 template <class imType>
-void SliceView<imType>::winCenterCallBack(void (* newWinCenterArgCallBack)(void *), void * newWinCenterArg)
+void SliceView<imType>::winCenterCallBack(void (* 
+newWinCenterArgCallBack)(void *), void * newWinCenterArg)
 {
     cWinCenterArg = newWinCenterArg;
     cWinCenterArgCallBack = newWinCenterArgCallBack;
@@ -1157,7 +1216,8 @@ void SliceView<imType>::winCenterCallBack(void (* newWinCenterArgCallBack)(void 
 //
 //
 template <class imType>
-void SliceView<imType>::winShift(int newWinShiftUp, int newWinShiftRight)
+void SliceView<imType>::winShift(int newWinShiftUp, int 
+newWinShiftRight)
 {
     winCenter(cWinCenter[cWinOrder[0]]+newWinShiftRight,
 	      cWinCenter[cWinOrder[1]]+newWinShiftUp);
@@ -1212,7 +1272,8 @@ void SliceView<imType>::orientation(unsigned int newOrientation)
 
 
 template <class imType>
-void SliceView<imType>::orientationCallBack(void (* newOrientationCallBack)(void))
+void SliceView<imType>::orientationCallBack(void (* 
+newOrientationCallBack)(void))
 {
     cWinOrientationCallBack = newOrientationCallBack;
 }
@@ -1221,7 +1282,8 @@ void SliceView<imType>::orientationCallBack(void (* newOrientationCallBack)(void
 
 
 template <class imType>
-void SliceView<imType>::orientationCallBack(void (* newOrientationArgCallBack)(void *), void * newOrientationArg)
+void SliceView<imType>::orientationCallBack(void (* 
+newOrientationArgCallBack)(void *), void * newOrientationArg)
 {
     cWinOrientationArg = newOrientationArg;
     cWinOrientationArgCallBack = newOrientationArgCallBack;
@@ -1275,8 +1337,10 @@ int SliceView<imType>::handle(int event)
     imgShiftSize = 1;
   }
 
-  float scale0 = (cW/(float)cDimSize[0]*cWinZoom)*spacing[cWinOrder[0]]/spacing[0];
-  float scale1 = (cW/(float)cDimSize[0]*cWinZoom)*spacing[cWinOrder[1]]/spacing[0];
+  float scale0 = 
+(cW/(float)cDimSize[0]*cWinZoom)*spacing[cWinOrder[0]]/spacing[0];
+  float scale1 = 
+(cW/(float)cDimSize[0]*cWinZoom)*spacing[cWinOrder[1]]/spacing[0];
 
     switch(event)
     {
@@ -1287,28 +1351,39 @@ int SliceView<imType>::handle(int event)
         if(button <= 0)
             if(cClickMode == CM_PAN) 
                 {
-                int c0 = (int)(cWinMinX + (cFlipX*(cW-x) + (1-cFlipX)*x) / scale0);
+                int c0 = (int)(cWinMinX + (cFlipX*(cW-x) + 
+(1-cFlipX)*x) / scale0);
                 if(c0<(int)cWinMinX) c0 = cWinMinX;
                 if(c0>(int)cWinMaxX) c0 = cWinMaxX;
-                int c1 = (int)(cWinMinY + (cFlipY*y + (1-cFlipY)*(cH-y)) / scale1);
+                int c1 = (int)(cWinMinY + (cFlipY*y + 
+(1-cFlipY)*(cH-y)) / scale1);
                 if(c1<(int)cWinMinY) c1 = cWinMinY;
                 if(c1>(int)cWinMaxY) c1 = cWinMaxY;
-                winCenter((3*cWinCenter[cWinOrder[0]]+c0)/4, (3*cWinCenter[cWinOrder[1]]+c1)/4);
+                winCenter((3*cWinCenter[cWinOrder[0]]+c0)/4, 
+(3*cWinCenter[cWinOrder[1]]+c1)/4);
                 return 1;
                 }
-            else if(cClickMode == CM_SELECT || cClickMode == CM_USER || cClickMode == CM_BOX) 
+            else if(cClickMode == CM_SELECT || cClickMode == CM_USER || 
+cClickMode == CM_BOX) 
                 {
                 float p[3];
-                p[cWinOrder[0]] = cWinMinX + (cFlipX*(cW-x) + (1-cFlipX)*x) / scale0;
-                if(p[cWinOrder[0]]<cWinMinX) p[cWinOrder[0]] = cWinMinX;
-                if(p[cWinOrder[0]]>cWinMaxX) p[cWinOrder[0]] = cWinMaxX;
-                p[cWinOrder[1]] = cWinMinY + (cFlipY*y + (1-cFlipY)*(cH-y)) / scale1;
-                if(p[cWinOrder[1]]<cWinMinY) p[cWinOrder[1]] = cWinMinY;
-                if(p[cWinOrder[1]]>cWinMaxY) p[cWinOrder[1]] = cWinMaxY;
+                p[cWinOrder[0]] = cWinMinX + (cFlipX*(cW-x) + 
+(1-cFlipX)*x) / scale0;
+                if(p[cWinOrder[0]]<cWinMinX) p[cWinOrder[0]] = 
+cWinMinX;
+                if(p[cWinOrder[0]]>cWinMaxX) p[cWinOrder[0]] = 
+cWinMaxX;
+                p[cWinOrder[1]] = cWinMinY + (cFlipY*y + 
+(1-cFlipY)*(cH-y)) / scale1;
+                if(p[cWinOrder[1]]<cWinMinY) p[cWinOrder[1]] = 
+cWinMinY;
+                if(p[cWinOrder[1]]>cWinMaxY) p[cWinOrder[1]] = 
+cWinMaxY;
                 if(cImageMode != IMG_MIP)
                     p[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
                 else
-                    p[cWinOrder[2]] = cWinZBuffer[(int)p[cWinOrder[0]]-cWinMinX + ((int)p[cWinOrder[1]]-cWinMinY)*cWinDataSizeX];
+                    p[cWinOrder[2]] = 
+cWinZBuffer[(int)p[cWinOrder[0]]-cWinMinX + ((int)p[cWinOrder[1]]-cWinMinY)*cWinDataSizeX];
                 if(cClickMode == CM_SELECT)
                      clickSelect(p[0], p[1], p[2]);
                 else if(cClickMode == CM_USER)
@@ -1324,16 +1399,23 @@ int SliceView<imType>::handle(int event)
             if(cClickMode == CM_BOX)
                 {
                 float p[3];
-                p[cWinOrder[0]] = cWinMinX + (cFlipX*(cW-x) + (1-cFlipX)*x) / scale0;
-                if(p[cWinOrder[0]]<cWinMinX) p[cWinOrder[0]] = cWinMinX;
-                if(p[cWinOrder[0]]>cWinMaxX) p[cWinOrder[0]] = cWinMaxX;
-                p[cWinOrder[1]] = cWinMinY + (cFlipY*y + (1-cFlipY)*(cH-y)) / scale1;
-                if(p[cWinOrder[1]]<cWinMinY) p[cWinOrder[1]] = cWinMinY;
-                if(p[cWinOrder[1]]>cWinMaxY) p[cWinOrder[1]] = cWinMaxY;
+                p[cWinOrder[0]] = cWinMinX + (cFlipX*(cW-x) + 
+(1-cFlipX)*x) / scale0;
+                if(p[cWinOrder[0]]<cWinMinX) p[cWinOrder[0]] = 
+cWinMinX;
+                if(p[cWinOrder[0]]>cWinMaxX) p[cWinOrder[0]] = 
+cWinMaxX;
+                p[cWinOrder[1]] = cWinMinY + (cFlipY*y + 
+(1-cFlipY)*(cH-y)) / scale1;
+                if(p[cWinOrder[1]]<cWinMinY) p[cWinOrder[1]] = 
+cWinMinY;
+                if(p[cWinOrder[1]]>cWinMaxY) p[cWinOrder[1]] = 
+cWinMaxY;
                 if(cImageMode != IMG_MIP)
                     p[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
                 else
-                    p[cWinOrder[2]] = cWinZBuffer[(int)p[cWinOrder[0]]-cWinMinX + ((int)p[cWinOrder[1]]-cWinMinY)*cWinDataSizeX];
+                    p[cWinOrder[2]] = 
+cWinZBuffer[(int)p[cWinOrder[0]]-cWinMinX + ((int)p[cWinOrder[1]]-cWinMinY)*cWinDataSizeX];
                 boxMax(p[0], p[1], p[2]);
                 return 1;
                 }
@@ -1379,7 +1461,8 @@ int SliceView<imType>::handle(int event)
               return false;
             }
             winZoom(1);
-            winCenter(cDimSize[cWinOrder[0]]/2, cDimSize[cWinOrder[1]]/2);
+            winCenter(cDimSize[cWinOrder[0]]/2, 
+cDimSize[cWinOrder[1]]/2);
             imageMode(IMG_VAL);
             iwMax(cDataMax);
             iwMin(cDataMin);
@@ -1520,33 +1603,41 @@ int SliceView<imType>::handle(int event)
             break;
         case 'i':
             if(cFlipY)
-                winCenter(cWinCenter[cWinOrder[0]], cWinCenter[cWinOrder[1]]-imgShiftSize);
+                winCenter(cWinCenter[cWinOrder[0]], 
+cWinCenter[cWinOrder[1]]-imgShiftSize);
             else
-                winCenter(cWinCenter[cWinOrder[0]], cWinCenter[cWinOrder[1]]+imgShiftSize);
+                winCenter(cWinCenter[cWinOrder[0]], 
+cWinCenter[cWinOrder[1]]+imgShiftSize);
             update();
             return 1;
             break;
         case 'm':
             if(cFlipY)
-                winCenter(cWinCenter[cWinOrder[0]], cWinCenter[cWinOrder[1]]+imgShiftSize);
+                winCenter(cWinCenter[cWinOrder[0]], 
+cWinCenter[cWinOrder[1]]+imgShiftSize);
             else
-                winCenter(cWinCenter[cWinOrder[0]], cWinCenter[cWinOrder[1]]-imgShiftSize);
+                winCenter(cWinCenter[cWinOrder[0]], 
+cWinCenter[cWinOrder[1]]-imgShiftSize);
             update();
             return 1;
             break;
         case 'j':
             if(cFlipX)
-                winCenter(cWinCenter[cWinOrder[0]]+imgShiftSize, cWinCenter[cWinOrder[1]]);
+                winCenter(cWinCenter[cWinOrder[0]]+imgShiftSize, 
+cWinCenter[cWinOrder[1]]);
             else
-                winCenter(cWinCenter[cWinOrder[0]]-imgShiftSize, cWinCenter[cWinOrder[1]]);
+                winCenter(cWinCenter[cWinOrder[0]]-imgShiftSize, 
+cWinCenter[cWinOrder[1]]);
             update();
             return 1;
             break;
         case 'k':
             if(cFlipX)
-                winCenter(cWinCenter[cWinOrder[0]]-imgShiftSize, cWinCenter[cWinOrder[1]]);
+                winCenter(cWinCenter[cWinOrder[0]]-imgShiftSize, 
+cWinCenter[cWinOrder[1]]);
             else
-                winCenter(cWinCenter[cWinOrder[0]]+imgShiftSize, cWinCenter[cWinOrder[1]]);
+                winCenter(cWinCenter[cWinOrder[0]]+imgShiftSize, 
+cWinCenter[cWinOrder[1]]);
             update();
             return 1;
             break;
@@ -1565,3 +1656,4 @@ int SliceView<imType>::handle(int event)
 
 }; //namespace
 #endif
+
