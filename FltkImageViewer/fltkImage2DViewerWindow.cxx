@@ -613,7 +613,7 @@ Image2DViewerWindow
   
   if (m_ClickCallBack != 0)
     {
-      m_ClickCallBack( m_ClickCallBackTargetObject, px, py ) ;
+    m_ClickCallBack( m_ClickCallBackTargetObject, px, py ) ;
     }
 
   redraw();

@@ -177,5 +177,15 @@ Image2DViewer<ImagePixelType>
 
 
 
+template <class ImagePixelType>
+void
+Image2DViewer<ImagePixelType>
+::SetInteractionMode( Image2DViewerWindow::InteractionModeType mode )
+{
+  imageViewer->SetInteractionMode( mode );
+}
+
+
+
 
 } // end namespace itk

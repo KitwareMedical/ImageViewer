@@ -86,7 +86,7 @@ public:
                              int & x, int & y )) ;
 
 
-  void (*clickCallBack)( void *ptrObject, int & px, int & py);
+  void (*clickCallBack)( void *ptrObject, int & px, int & py );
 
 
   typedef enum { 
@@ -103,8 +103,8 @@ private:
 
   ColorType          m_Background;
   ValueType       *  m_Buffer;
-  int       m_Width;
-  int       m_Height;
+  int                m_Width;
+  int                m_Height;
   double             m_Zoom;
   int                m_ShiftX;
   int                m_ShiftY;
@@ -118,7 +118,7 @@ private:
   void* m_SelectionCallBackTargetObject ;
   void* m_ClickCallBackTargetObject ;
   void (*m_SelectionCallBack)(void* ptrObject, SelectionBoxType* box) ;
-  void (*m_ClickCallBack)(void* ptrObject, int & px, int & py) ;
+  void (*m_ClickCallBack)(void* ptrObject, int & px, int & py ) ;
 };
 
 

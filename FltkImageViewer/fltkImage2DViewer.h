@@ -95,10 +95,12 @@ public:
    void SetClickCallBack(void* ptrObject, 
                              void (*selectionCallBack)
                              (void* ptrObject, 
-                             int & px, int & y));
+                             int & px, int & y ));
 
 
   itkSetMacro(FlipY, bool) ;
+
+  void SetInteractionMode( Image2DViewerWindow::InteractionModeType mode );
 
 protected:
   
