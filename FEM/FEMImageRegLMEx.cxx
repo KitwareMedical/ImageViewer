@@ -429,11 +429,19 @@ bool ImageRegLMEx<TReference,TTarget>::ReadConfigFile(const char* fname, SolverT
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
+    unsigned int dim = ibuf;
+
+    FEMLightObject::SkipWhiteSpace(f);
+    f >> ibuf;
     this->m_ImageSize[0] = ibuf;
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
     this->m_ImageSize[1] = ibuf;
+
+    FEMLightObject::SkipWhiteSpace(f);
+    f >> ibuf;
+    if (dim == 3) this->m_ImageSize[2] = ibuf;
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
