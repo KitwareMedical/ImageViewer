@@ -104,7 +104,7 @@ RegionGrowingSegmentationBase
  
 /************************************
  *
- *  Save Confidence Connected image
+ *  Write Output Image
  *
  ***********************************/
 void

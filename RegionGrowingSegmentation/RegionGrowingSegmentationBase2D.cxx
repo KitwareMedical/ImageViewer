@@ -31,6 +31,7 @@ RegionGrowingSegmentationBase2D
 {
 
   m_ImageReader                  = ImageReaderType::New();
+  m_ImageWriter                  = ImageWriterType::New();
 
   itk::RawImageIOFactory< InputImageType::PixelType, 
                           InputImageType::ImageDimension >::RegisterOneFactory();
@@ -122,6 +123,27 @@ RegionGrowingSegmentationBase2D
   m_ConnectedThresholdImageFilter->SetReplaceValue( replacementValue );
   m_ConfidenceConnectedImageFilter->SetReplaceValue( replacementValue );
 
+}
+
+
+ 
+/************************************
+ *
+ *  Write Output Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentationBase2D 
+::WriteOutputImage( const char * filename )
+{
+  if( !filename )
+  {
+    return;
+  }
+
+  m_ImageWriter->SetFileName( filename );
+  m_ImageWriter->Update();
+  
 }
 
 

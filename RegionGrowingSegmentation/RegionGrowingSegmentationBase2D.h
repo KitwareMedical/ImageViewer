@@ -52,17 +52,26 @@ public:
   /** Pixel type used for reading the input image */
   typedef   signed short                         InputPixelType;
 
+  /** Pixel type used for writing the output image */
+  typedef   unsigned char                        OutputPixelType;
+
   /** Pixel type to be used internally */
   typedef   float                                 InternalPixelType;
   
   /** Type of the input image */
   typedef   itk::Image<InputPixelType,ImageDimension>    InputImageType;
 
+  /** Type of the output image */
+  typedef   itk::Image<OutputPixelType,ImageDimension>   OutputImageType;
+
   /** Type of the internal image */
   typedef   itk::Image<InternalPixelType,ImageDimension> InternalImageType;
 
   /** Filter for reading the input image */
   typedef   itk::ImageFileReader< InputImageType >       ImageReaderType;
+
+  /** Filter for writing the input image */
+  typedef   itk::ImageFileWriter< OutputImageType >      ImageWriterType;
 
   /** Cast filter needed because Curvature flow expects double images */
   typedef   itk::CastImageFilter< 
@@ -100,27 +109,27 @@ public:
   /** Threshold Connected Image Filter */
   typedef   itk::ConnectedThresholdImageFilter< 
                  InternalImageType, 
-                 InternalImageType >     ConnectedThresholdImageFilterType;
+                 OutputImageType >     ConnectedThresholdImageFilterType;
 
   /** Confidence Connected Image Filter */
   typedef   itk::ConfidenceConnectedImageFilter< 
                  InternalImageType, 
-                 InternalImageType >     ConfidenceConnectedImageFilterType;
+                 OutputImageType >     ConfidenceConnectedImageFilterType;
 
   /** Fuzzy Connected Image Filter */
   typedef   itk::SimpleFuzzyConnectednessScalarImageFilter< 
                  InternalImageType, 
-                 InternalImageType >     FuzzyConnectedImageFilterType;
+                 OutputImageType >     FuzzyConnectedImageFilterType;
 
   /** Sobel Filter for extracting the contour of a segmented region */
   typedef   itk::SobelEdgeDetectionImageFilter<
-                 InternalImageType, 
-                 InternalImageType >     SobelImageFilterType;
+                 OutputImageType, 
+                 OutputImageType >     SobelImageFilterType;
 
   /** Maximum Filter for composing the edge with the original image */
   typedef   itk::MaximumImageFilter<
                  InternalImageType, 
-                 InternalImageType,
+                 OutputImageType,
                  InternalImageType >     MaximumImageFilterType;
 
 
@@ -130,6 +139,12 @@ public:
 
   virtual void LoadInputImage(void)=0;
   virtual void LoadInputImage(const char * filename);
+
+  virtual void WriteOutputImage()=0;
+  virtual void WriteOutputImage(const char * filename);
+  virtual void WriteConnectedThresholdImage()=0;
+  virtual void WriteConfidenceConnectedImage()=0;
+  virtual void WriteFuzzyConnectedImage()=0;
 
   virtual void ShowStatus(const char * text)=0;
 
@@ -141,6 +156,8 @@ public:
 protected:
 
   ImageReaderType::Pointer                    m_ImageReader;
+
+  ImageWriterType::Pointer                    m_ImageWriter;
 
   bool                                        m_InputImageIsLoaded;
 

@@ -50,6 +50,9 @@ public:
   typedef fltk::Image2DViewer< InputPixelType >         InputImageViewerType;
   typedef InputImageViewerType::Pointer                 InputImageViewerPointer;
 
+  typedef fltk::Image2DViewer< OutputPixelType >        OutputImageViewerType;
+  typedef OutputImageViewerType::Pointer                OutputImageViewerPointer;
+
   typedef fltk::Image2DViewer< InternalPixelType >      InternalImageViewerType;
   typedef InternalImageViewerType::Pointer              InternalImageViewerPointer;
 
@@ -60,6 +63,7 @@ public:
   virtual ~RegionGrowingSegmentation2D();
 
   virtual void LoadInputImage(void);
+  virtual void WriteOutputImage();
 
   virtual void ShowConsole(void);
 
@@ -77,6 +81,10 @@ public:
   virtual void ShowComposedImage(void);
   virtual void SelectSmoothingFilter( unsigned int );
 
+  virtual void WriteConnectedThresholdImage();
+  virtual void WriteConfidenceConnectedImage();
+  virtual void WriteFuzzyConnectedImage();
+
   virtual void Quit(void);
 
   virtual void SelectSeedPoint( int x, int y );
@@ -89,11 +97,12 @@ private:
   InternalImageViewerPointer     m_CurvatureFlowImageViewer;
   InternalImageViewerPointer     m_GradientAnisotropicDiffusionImageViewer;
   InternalImageViewerPointer     m_CurvatureAnisotropicDiffusionImageViewer;
-  InternalImageViewerPointer     m_ConnectedThresholdImageViewer;
-  InternalImageViewerPointer     m_ConfidenceConnectedImageViewer;
-  InternalImageViewerPointer     m_FuzzyConnectedImageViewer;
   InternalImageViewerPointer     m_HomogeneousImageViewer;
   InternalImageViewerPointer     m_ComposedImageViewer;
+
+  OutputImageViewerPointer       m_ConnectedThresholdImageViewer;
+  OutputImageViewerPointer       m_ConfidenceConnectedImageViewer;
+  OutputImageViewerPointer       m_FuzzyConnectedImageViewer;
 
   InputImageViewerPointer        m_InputImageViewer;
 

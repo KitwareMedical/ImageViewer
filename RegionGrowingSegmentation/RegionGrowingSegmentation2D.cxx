@@ -34,9 +34,11 @@
     m_CurvatureFlowImageViewer                  = InternalImageViewerType::New();
     m_GradientAnisotropicDiffusionImageViewer   = InternalImageViewerType::New();
     m_CurvatureAnisotropicDiffusionImageViewer  = InternalImageViewerType::New();
-    m_ConnectedThresholdImageViewer             = InternalImageViewerType::New();
-    m_ConfidenceConnectedImageViewer            = InternalImageViewerType::New();
-    m_FuzzyConnectedImageViewer                 = InternalImageViewerType::New();
+
+    m_ConnectedThresholdImageViewer             = OutputImageViewerType::New();
+    m_ConfidenceConnectedImageViewer            = OutputImageViewerType::New();
+    m_FuzzyConnectedImageViewer                 = OutputImageViewerType::New();
+
     m_HomogeneousImageViewer                    = InternalImageViewerType::New();
     m_ComposedImageViewer                       = InternalImageViewerType::New();
     m_InputImageViewer                          = InputImageViewerType::New();
@@ -210,6 +212,88 @@
   }
 
 
+
+   
+  /************************************
+   *
+   *  Write Output Image
+   *
+   ***********************************/
+  void
+  RegionGrowingSegmentation2D
+  ::WriteOutputImage( void )
+  {
+
+    const char * filename = fl_file_chooser("Output Image filename","*.*","");
+    if( !filename )
+    {
+      return;
+    }
+
+    this->ShowStatus("Writing output image file...");
+    
+    try 
+    {
+      RegionGrowingSegmentationBase2D::WriteOutputImage( filename );
+    }
+    catch( ... ) 
+    {
+      this->ShowStatus("Problems writing image");
+      return;
+    }
+
+    this->ShowStatus("Output Image saved");
+
+  }
+
+
+   
+  /************************************
+   *
+   *  Write Confidence Connected Image
+   *
+   ***********************************/
+  void
+  RegionGrowingSegmentation2D
+  ::WriteConfidenceConnectedImage( void )
+  {
+    m_ImageWriter->SetInput( 
+          m_ConfidenceConnectedImageFilter->GetOutput() );
+
+    this->WriteOutputImage();
+  }
+
+    
+  /************************************
+   *
+   *  Write Fuzzy Connectedness Image
+   *
+   ***********************************/
+  void
+  RegionGrowingSegmentation2D
+  ::WriteFuzzyConnectedImage( void )
+  {
+    m_ImageWriter->SetInput( 
+          m_FuzzyConnectedImageFilter->GetOutput() );
+
+    this->WriteOutputImage();
+  }
+
+   
+  /************************************
+   *
+   *  Write Confidence Connected Image
+   *
+   ***********************************/
+  void
+  RegionGrowingSegmentation2D
+  ::WriteConnectedThresholdImage( void )
+  {
+    m_ImageWriter->SetInput( 
+          m_ConnectedThresholdImageFilter->GetOutput() );
+
+    this->WriteOutputImage();
+  }
 
 
 
