@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    main.cxx
+  Module:    itkFEMElementBar2D_test.cxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
@@ -15,31 +15,26 @@
 
 =========================================================================*/
 
-
-/** 
-
-  This program illustrate how to make use of the FEM classes
-  
-
-  */
-
 #include "itkFEMElementBar2D_test.h"
 
-#include "FEMMeshApplication.h"
 
+namespace itk {
+namespace fem {
 
+/* Define mapping between points and local DOF */
+const unsigned int Bar2D::pt2dof[2][2] = 
+  { {0,1},
+    {2,3} };
 
-int main(int, char**)
+Bar2D::Bar2D()
 {
-  itk::fem::Bar2D a;
-
-  FEMMeshApplication  application;
-
-  application.Show();
-
-  Fl::run();
-
-  return 0;
-
+  /* Initialize the dofs array */
+  for(int i=0;i<NDOF;i++)
+  {
+    dofs[i]=-1;
+  }
 
 }
+
+
+}} // end namespace itk::fem
