@@ -1,11 +1,12 @@
-TESTS(
-itkFileIOMetaImageTest
+EXECUTABLES(
+itkFileIOMetaImageExample
 )
 
 LINK_LIBRARIES(
 MetaImageIO
 ITKCommon
 ITKBasicFilters
+VXLNumerics
 )
 
 LINK_DIRECTORIES(
