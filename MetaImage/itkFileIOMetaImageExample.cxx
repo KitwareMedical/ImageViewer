@@ -12,7 +12,6 @@
 #include <itkFileIOToImageFilter.h>
 
 using namespace itk;
-using namespace std;
 
 int main ()
 {
