@@ -253,8 +253,8 @@ newX, float newY, float newZ, float newV));
   /*! Returns the last ith clicked point - ie. to get the last point
   * i = 0, to get the 2nd last point i = 1, and so on
   */
-  ClickPoint*  getClickedPoint(int i=0);
-  float*       getClickedPointCoordinates(int i=0);
+  ClickPoint*  getClickedPoint(unsigned int i=0);
+  float*       getClickedPointCoordinates(unsigned int i=0);
   int numClickedPointsStored(){ return cClickedPoints.size();}
 
   void         maxClickedPointsStored(unsigned int i);
@@ -771,7 +771,7 @@ float SliceView<imType>::clickSelectZ(void)
 
 
 template <class imType>
-ClickPoint* SliceView<imType>::getClickedPoint(int index)
+ClickPoint* SliceView<imType>::getClickedPoint(unsigned int index)
 {
     if(index >= cClickedPoints.size())
 	return ((ClickPoint*)0);
@@ -784,7 +784,7 @@ ClickPoint* SliceView<imType>::getClickedPoint(int index)
 
 
 template <class imType>
-float* SliceView<imType>::getClickedPointCoordinates(int index)
+float* SliceView<imType>::getClickedPointCoordinates(unsigned int index)
 {
     if(index>= cClickedPoints.size())
 	return (float*)0;
