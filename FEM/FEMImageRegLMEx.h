@@ -22,11 +22,9 @@
 #include "itkImageFileReader.h"
 #include "itkRawImageIO.h"
 #include "itkRawImageWriter.h"
-#include "itkCannyEdgeDetectionImageFilter.h"
-#include "itkSobelEdgeDetectionImageFilter.h"
-#include "itkZeroCrossingBasedEdgeDetectionImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 #include "itkHistogramMatchingImageFilter.h"
+#include "itkFEMRegistrationFilter.h"
 
 
 namespace itk {

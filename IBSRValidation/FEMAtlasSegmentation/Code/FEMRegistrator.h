@@ -20,7 +20,6 @@
 #include "itkObject.h"
 #include "itkVector.h"
 #include "itkImage.h"
-#include "itkFEM.h"
 #include "itkFEMRegistrationFilter.h"
 
 #include "itkArray.h"
