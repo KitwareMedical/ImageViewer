@@ -20,14 +20,18 @@ template <class T>
 class FLVTKVolRenWin : public FLVTKWin
   {
 
-  typedef itk::Image<T,3>  ImageType;
-  typedef itk::Image<unsigned char,3>  OverlayType;
+  typedef itk::Image<T,3>                 ImageType;
+  typedef itk::Image<unsigned char,3>     OverlayType;
+
+  typedef typename ImageType::Pointer     ImagePointer;
+  typedef typename OverlayType::Pointer   OverlayPointer;
+
 
     protected:
        
-       ImageType::Pointer         mImData;
+       ImagePointer               mImData;
        
-       OverlayType::Pointer       mMask;
+       OverlayPointer             mMask;
        
 
        bool                       mMaskAlloc;
@@ -75,11 +79,11 @@ class FLVTKVolRenWin : public FLVTKWin
        
        ~FLVTKVolRenWin();
        
-       ImageType::Pointer GetInputImage(void);
-       void SetInputImage(ImageType::Pointer newIm);
+       ImagePointer GetInputImage(void);
+       void SetInputImage(ImageType * newIm);
        
-       OverlayType::Pointer maskData(void);
-       void maskData(OverlayType::Pointer newMaskData);
+       OverlaymaskData(void);
+       void maskData(OverlayType * newMaskData);
        
        void useMask(bool newUseMask);
        bool useMask(void);
@@ -199,14 +203,14 @@ FLVTKVolRenWin<T>::~FLVTKVolRenWin()
 *
 *****************************/
 template <class T>
-FLVTKVolRenWin<T>::ImageType::Pointer 
+typename FLVTKVolRenWin<T>::ImagePointer 
 FLVTKVolRenWin<T>::GetInputImage(void)
 {
   return mImData;
 }
 
 template <class T>
-void FLVTKVolRenWin<T>::SetInputImage(ImageType::Pointer newIm)
+void FLVTKVolRenWin<T>::SetInputImage(ImageType * newIm)
 {
 
   mImData = newIm;
