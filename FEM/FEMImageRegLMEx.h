@@ -140,6 +140,9 @@ public:
   
   /* Main functions */
  
+  /** Read the configuration file to set up the example parameters */
+  bool ReadConfigFile(const char*);
+
   /** Call this to register two images. */
   void  RunRegistration(); 
   
@@ -209,6 +212,7 @@ public:
   Float m_E;  // elasticity 
   unsigned int m_Nx; // image x size
   unsigned int m_Ny; // image y size
+  ImageType::SizeType ImageSize; // image size
   Float m_Energy; // current value of energy
   Float m_MinE;  // minimum recorded energy
   Float m_Rho;   // mass matrix weight
