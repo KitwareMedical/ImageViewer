@@ -65,6 +65,7 @@ liFilterConsole2D
   progressSlider->Observe( m_Add.GetPointer() );
   progressSlider->Observe( m_Modulus.GetPointer() );
                               
+  loadButton->Observe( m_Reader.GetPointer() );
   inputButton->Observe( m_Reader.GetPointer() );
   HxButton->Observe( m_Hx.GetPointer() );
   HyButton->Observe( m_Hy.GetPointer() );
@@ -75,7 +76,6 @@ liFilterConsole2D
   laplacianButton->Observe( m_Add.GetPointer() );
   modulusButton->Observe( m_Modulus.GetPointer() );
 
-  m_Reader->AddObserver( itk::ModifiedEvent(), inputButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand().GetPointer() );
