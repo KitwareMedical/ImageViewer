@@ -139,10 +139,14 @@ int main()
 { 
   
 // Register the correct load implementation with the element typed visitor dispatcher. 
-  DispatcherType::RegisterVisitor((ImageLoadType*)0, 
-          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
-  DispatcherType2::RegisterVisitor((ImageLoadType*)0, 
-          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
+  {
+    ElementType::LoadImplementationFunctionPointer fp = itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad;
+    DispatcherType::RegisterVisitor((ImageLoadType*)0,fp);
+  }
+  {
+    ElementType2::LoadImplementationFunctionPointer fp = itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad;
+    DispatcherType2::RegisterVisitor((ImageLoadType*)0,fp);
+  }
 
   RegistrationType::Pointer X= RegistrationType::New(); // Declare the registration class
 

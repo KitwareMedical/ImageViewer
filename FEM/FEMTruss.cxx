@@ -34,7 +34,7 @@ using namespace std;
  * This example constructs a same problem as described in file truss.fem
  * by creating the appropriate classes.
  */
-int main( int argc, char *argv[] ) {
+int main( int, char * [] ) {
 
   /*
    * First we create the FEM solver object. This object stores pointers
