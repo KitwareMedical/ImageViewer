@@ -104,7 +104,6 @@ int main(int argc, char* argv[])
   std::string outputFileName ;
   int sliceDirection ;
   bool useLog ;
-  int degree ;
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
   int maximumIteration ;
@@ -123,7 +122,6 @@ int main(int argc, char* argv[])
       sliceDirection = options.GetIntOption("slice-direction", 2, false) ;
       // get bias field options
       useLog = options.GetBooleanOption("use-log", true, true) ;
-      degree = options.GetIntOption("degree", 3, false) ;
   
       // get energyfunction options
       options.GetMultiDoubleOption("class-mean", &classMeans, true) ;
