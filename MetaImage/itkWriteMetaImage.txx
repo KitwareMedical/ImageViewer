@@ -46,7 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkWriteMetaImage.h"
 #include "itkObjectFactory.h"
 #include <MetaImageLib.h>
-#include <itkSimpleImageRegionIterator.h>
+#include "itkImageRegionIterator.h"
 
 namespace itk
 {
@@ -111,17 +111,28 @@ WriteMetaImage<TInputImage>
   }
 
   typedef typename TInputImage::PixelType PixelType;
-  
-  PixelType *yetAnotherBuffer = new PixelType[ 
-            m_InputImage->GetOffsetTable()[dimension] ];
+  PixelType *yetAnotherBuffer = 0 ;
 
-  typedef itk::SimpleImageRegionIterator< TInputImage > IteratorType;
-  
+  try 
+    {
+      yetAnotherBuffer = 
+        new PixelType[ m_InputImage->GetOffsetTable()[dimension] ];
+    }
+  catch(std::bad_alloc)
+    {
+      throw ExceptionObject() ;
+    }
+
+  typedef ImageRegionIterator< TInputImage > IteratorType;
+
   IteratorType it(	m_InputImage, 
                     m_InputImage->GetBufferedRegion() );
 
+
   
   PixelType * destination = yetAnotherBuffer;
+
+
   while( !it.IsAtEnd() ) 
   {
     *destination++ = it.Get(); 
