@@ -39,6 +39,8 @@ ImageRegEx::ImageRegEx( )
   m_Ny=256;
   m_MeshResolution=16*2;  // determines the 'resolution' of the grid
  
+  m_MinE=9.e44;  // FIXME
+
   m_DescentDirection=positive;
   m_E=1.; 
   m_Maxiters=1;  
@@ -48,18 +50,19 @@ ImageRegEx::ImageRegEx( )
   m_NumberOfIntegrationPoints=4;
   m_MetricWidth=3;
   m_DoLineSearch=false;
+  m_SearchForMinAtEachLevel=false;
   m_LineSearchStep=0.05;
 
+  m_MaxSmoothing=1;
+  m_MinSmoothing=1;
+  m_SmoothingStep=2;
+  m_DoMultiRes=false;
 }
 
 
 void ImageRegEx::RunRegistration()
 {
     std::cout << "beginning \n";  
-    //std::cout << "input E  , m_Maxiters , dt , rho :" ;
-    
-    //std::cin >> m_E >> m_Maxiters >> m_dT >> m_Rho; 
-  
     m_Solver.SetDeltatT(m_dT);  
     m_Solver.SetRho(m_Rho);    
 
@@ -78,20 +81,13 @@ void ImageRegEx::RunRegistration()
     ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
     m_Load->SetMetricRadius(r);
     m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
-
+    m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
     m_Load->SetSign((Float)m_DescentDirection);
-    m_Solver.load.push_back( FEMP<Load>(&*m_Load) ); 
+    m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
+    m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+  
    
-    // FIXME UNTIL COPY CONSTRUCTOR DONE
-    m_Load= LMClass2::New();  
-    m_Load->SetReferenceImage(m_RefImg);
-    m_Load->SetTargetImage(m_TarImg);
-    m_Load->InitializeMetric();
-    m_Load->SetMetricRadius(r);
-    m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
-
-
-   //FIXME - experiment with these values and choices for solver
+    //FIXME - experiment with these values and choices for solver
     LinearSystemWrapperItpack itpackWrapper; 
     LinearSystemWrapperDenseVNL vnld;  
     itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
@@ -124,12 +120,15 @@ void ImageRegEx::RunRegistration()
  
     
   /* Solve the system in time */
-  IterativeSolve();
+
+  if (!m_DoMultiRes) IterativeSolve(); else MultiResSolve();
 
   std::cout << " interpolating vector field " << std::endl;
 
   GetVectorField();
 
+  
+//  ReadImages(); //FIXME
   WarpImage();
 
   std::cout<<"\n E " << m_E << " dt " << m_dT << "\n";
@@ -165,15 +164,7 @@ void ImageRegEx::ReadImages()
 
 void ImageRegEx::WarpImage()
 {
-
- 
-  
-  FieldIterator m_FieldIter( m_Field, m_FieldRegion );
-  ImgIterator rimIter( m_RefImg,m_Rregion );
-  ImgIterator timIter( m_TarImg,m_Tregion );
-  ImgIterator wimIter( m_WarpedImage,m_Wregion );
-  
-  // -------------------------------------------------------
+ // -------------------------------------------------------
   std::cout << "Warping image" << std::endl;
 
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType;
@@ -352,16 +343,15 @@ void ImageRegEx::GenRegMesh()
 
 void ImageRegEx::IterativeSolve()
 {
-  m_Energy=9.e9;
-  m_MinE=m_Energy;
+//  m_Energy=9.e9;
+if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
   
   // iterative solve  
-  Float mine=9.e9;
   for (unsigned int iters=0; iters<m_Maxiters; iters++){
 
-    float radparam=1.-(float)iters/((float)m_Maxiters-1.);
-    unsigned int maxrad=9,minrad=1;
-    SetWidthOfMetricRegion(minrad+maxrad*(unsigned int)radparam);
+//    float radparam=1.-(float)iters/((float)m_Maxiters-1.);
+//    unsigned int maxrad=9,minrad=1;
+//    SetWidthOfMetricRegion(minrad+maxrad*(unsigned int)radparam);
     /*
      * Assemble the master force vector (from the applied loads)
      */
@@ -371,19 +361,21 @@ void ImageRegEx::IterativeSolve()
      * Solve the system of equations for displacements (u=K^-1*F)
      */
     m_Solver.Solve();
-    
-    m_Load->SetSolution(m_Solver.GetLS());  // NECESSARY B/C THIS IS A COPY OF m_Load
-   Float cure=0.0,mint=0.0,tstep=m_LineSearchStep;
-   //m_Solver.AverageLastTwoDisplacements();
+   
+    Float cure=0.0,mint=0.0,tstep=m_LineSearchStep;
+  
+    //m_Solver.AverageLastTwoDisplacements();
 
    if (m_DoLineSearch) 
    {
+     if (!m_SearchForMinAtEachLevel) m_Load->SetMetricReferenceImage(m_RefImg);// in case the current img is multi-res
+     if (!m_SearchForMinAtEachLevel) m_Load->SetMetricTargetImage(m_TarImg);// in case the current img is multi-res
      for (Float t=tstep; t <= 1.0; t=t+tstep) 
      {
         cure=m_Load->EvaluateMetricGivenSolution(&(m_Solver.el), t);
-        if (cure <= mine)
+        if (cure <= m_MinE)
         {
-          mine=cure;
+          m_MinE=cure;
           mint=t;       
         }
      }
@@ -391,7 +383,7 @@ void ImageRegEx::IterativeSolve()
    }
    else m_Solver.AddToDisplacements(1.);
    
-   std::cout << " min E " << mine << "  t " << mint << " iter " << iters << std::endl;
+   std::cout << " min E " << m_MinE << "  t " << mint << " iter " << iters << std::endl;
    //m_Solver.ZeroVector(2);
    //m_Solver.ZeroVector(3);
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere
@@ -419,7 +411,7 @@ void ImageRegEx::GetVectorField()
   m_WarpedImage = ImageType::New();
   m_WarpedImage->SetLargestPossibleRegion( m_Wregion );
   m_WarpedImage->SetBufferedRegion( m_Wregion );
-  m_WarpedImage->Allocate(); 
+//  m_WarpedImage->Allocate(); 
 
   Element::ArrayType* el = &(m_Solver.el);
   vnl_vector_fixed<double,2> Pos(0.0);  // solution at the point
@@ -499,6 +491,49 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
   
 }
 
+void ImageRegEx::MultiResSolve()
+{
+     
+//  typedef DiscreteGaussianImageFilter<ImageType, ImageType>  SmootherType;
+  typedef MeanImageFilter<ImageType, ImageType>  SmootherType;
+  SmootherType::Pointer filter = SmootherType::New();
+
+  ImageType::SizeType neighRadius;
+  neighRadius[0] = 1;
+  neighRadius[1] = 1;
+  filter->SetRadius(neighRadius);
+
+  // run the algorithm
+//  filter->SetVariance(1.0f);
+//  filter->SetMaximumError(.01f);
+      
+  float smoothing;
+  // run the algorithm
+  for (smoothing=m_MaxSmoothing; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
+  {
+
+    neighRadius[0] =(unsigned long) smoothing;
+    neighRadius[1] =(unsigned long) smoothing;
+    filter->SetRadius(neighRadius);
+
+    //filter->SetVariance(smoothing);
+
+    filter->SetInput(m_TarImg);
+    filter->Update();
+    m_Load->SetMetricTargetImage(filter->GetOutput());    
+    filter->SetInput(m_RefImg);
+    filter->Update();
+    m_Load->SetMetricReferenceImage(filter->GetOutput());
+    IterativeSolve();
+  }
+// now full res
+  m_Load->SetMetricTargetImage(m_TarImg); 
+  m_Load->SetMetricReferenceImage(m_RefImg);
+  IterativeSolve();
+//  if (smoothing <= m_MinSmoothing) m_RefImg=filter->GetOutput(); // //FIXME for testing
+
+  return;
+}
 
 
 }} // end namespace itk::fem
@@ -506,39 +541,42 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 
 int main() 
 {
-  const char* m_ReferenceFileName;
-  const char* m_TargetFileName;
+  const char* m_ReferenceFileName="image1";
+  const char* m_TargetFileName="image2";
 
-//    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa_seg2.mhd"; 
-//    m_TargetFileName="E:\\Avants\\MetaImages\\callosa_seg1.mhd"; 
-//    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt_shift.mhd";  
-//    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt.mhd"; 
-//    m_TargetFileName="E:\\Avants\\MetaImages\\callosa2_dt.mhd";
-//  m_ReferenceFileName="E:\\Avants\\MetaImages\\gauss_im1.mhd"; 
-//  m_TargetFileName="E:\\Avants\\MetaImages\\gauss_im2.mhd";
-   m_ReferenceFileName="E:\\Avants\\MetaImages\\brain_slice1.mhd"; // good params E=1 its=10 dt=1. rho= 1.e7
-   m_TargetFileName="E:\\Avants\\MetaImages\\brain_slice2.mhd";
-    
   itk::fem::ImageRegEx X; // Declare the registration clasm_Solver.
-  X.m_Nx=256;   // set image size
-  X.m_Ny=256;
+  X.m_Nx=64;   // set image size
+  X.m_Ny=64;
  
   X.SetReferenceFile(m_ReferenceFileName);
   X.SetTargetFile(m_TargetFileName);
-  X.SetMeshResolution(16);
-  X.SetNumberOfIntegrationPoints(4);
-  X.SetWidthOfMetricRegion(3);
+ 
   X.m_Solver.SetAlpha(0.5);
-  X.SetDescentDirectionPositive();
-  X.SetLineSearch(false);
+  X.SetDescentDirectionMinimize();// for Mean Squares
+  X.DoLineSearch(true);// Perform line search at each iteration
 
+
+//  std::cout << "input E  , m_Maxiters , dt , rho :" ;  
+//  std::cin >> X.m_E >> X.m_Maxiters >> X.m_dT >> X.m_Rho; 
+  
 /* typically Set by user interaction */  
-  X.SetMaximumIterations(5);
-  X.SetTimeStep(0.01);
-  X.SetElasticity(1.0);
-  X.SetRho(1.0);
+  X.SetMaximumIterations(5);// Iterations at each resolution
+  X.SetTimeStep(0.01);// Time step (controls solution size)
+  X.SetElasticity(1.0);// Physical property of elasticity
+  X.SetRho(1.0);// Controls damping
+
+  
+  X.SetMeshResolution(2);//  Number of voxels per element
+
+  X.SetNumberOfIntegrationPoints(2);// Resolution of energy integration
+  X.SetWidthOfMetricRegion(1);
+  X.DoMultiRes(true);// Use multi-resolution strategy
+  X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
+  X.m_MaxSmoothing=16.0; // set multi-res parameters
+  X.m_MinSmoothing=1.;
+  X.m_SmoothingStep=2.0;
   X.RunRegistration();
-  X.WriteWarpedImage("E:\\Avants\\MetaImages\\result");
+  X.WriteWarpedImage("result");
 
   return 0;
 }

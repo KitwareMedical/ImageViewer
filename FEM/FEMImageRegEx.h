@@ -23,9 +23,9 @@
 #include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h"
 /* Meta Image stuff 
- *#include "itkFileIOMetaImage.h"
- *#include "itkWriteMetaImage.h"
- *#include "itkMetaImageIOFactory.h"
+ #include "itkFileIOMetaImage.h"
+ #include "itkWriteMetaImage.h"
+ #include "itkMetaImageIOFactory.h"
  */
 
 #include "itkImageFileWriter.h"
@@ -34,6 +34,8 @@
 #include "itkRawImageWriter.h"
 
 #include "itkVector.h"
+#include "itkDiscreteGaussianImageFilter.h"
+#include "itkMeanImageFilter.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkVectorCastImageFilter.h"
 #include "itkWarpImageFilter.h"
@@ -98,10 +100,6 @@ namespace fem {
      Change the ImageDataType typedef to output your type or keep it the same
      to always output unsigned char.
 
-     FIXMEs :  We should be able to vary the region size of the metric at run-time,
-     allowing a kind of multi-resolution approach.
-     However, there are some issues with the FEMP array and the pointer gets lost.
-     This needs to be fixed.
 */
 class ImageRegEx
 {
@@ -128,8 +126,8 @@ public:
   /* Main functions */
  
   /** Call this to register two images. */
-  void  RunRegistration();  
- 
+  void  RunRegistration(); 
+  
  /** Call this to write out images - a counter is attached to the 
   *  file name so we can output a numbered sequence tracking the deformation.
   */
@@ -141,12 +139,14 @@ public:
   /** This function generates a rectangular mesh of MeshResolution size */
   void  GenRegMesh(); 
   /** The solution loop */
-  void  IterativeSolve(); 
+  void  IterativeSolve();  
+  /** The solution loop for a simple multi-resolution strategy. */
+  void  MultiResSolve();
   /** Evaluates the energy by calling the image metric */
   Float EvaluateEnergy();
   /** Interpolates the vector field over the domain */
   void  GetVectorField(); 
-  /** Applies the warp to the image */
+  /** Applies the warp to the reference image */
   void  WarpImage();      
 
   /** Set the following parameters to run the example */
@@ -158,11 +158,12 @@ public:
   void SetMaximumIterations(unsigned int i) { m_Maxiters=i;}
   void SetTimeStep(Float i) { m_dT=i;}
   void SetElasticity(Float i) { m_E=i;} /** Stiffness Matrix weight */
-  void SetRho(Float r) { m_Rho=r;} /** Mass matrix weight */
-  void SetLineSearch(bool b) { m_DoLineSearch=b; } /** Finds the minimum energy between the current and next solution by linear search.*/
-  void SetDescentDirectionPositive() { m_DescentDirection=positive;}
-  void SetDescentDirectionNegative() { m_DescentDirection=negative;}
-  
+  void SetRho(Float r) { m_Rho=r;} /** Mass matrix weight */  
+  void SetDescentDirectionMinimize() { m_DescentDirection=positive;} /** Tries to minimize energy */
+  void SetDescentDirectionMaximize() { m_DescentDirection=negative;} /** Tries to maximize energy */
+  void DoLineSearch(bool b) { m_DoLineSearch=b; } /** Finds the minimum energy between the current and next solution by linear search.*/
+  void DoMultiRes(bool b) { m_DoMultiRes=b; } 
+  void DoSearchForMinAtEachResolution(bool b) { m_SearchForMinAtEachLevel=b; } 
 
   const char* m_ReferenceFileName;  
   const char* m_TargetFileName;
@@ -170,6 +171,9 @@ public:
   unsigned int m_NumberOfIntegrationPoints;
   unsigned int m_MetricWidth;
   unsigned int m_Maxiters; // max iterations
+  float m_MaxSmoothing; // max smoothing
+  float m_MinSmoothing; // min smoothing
+  float m_SmoothingStep;// smoothing step size
   Float m_dT; // time step
   Float m_E;  // elasticity 
   unsigned int m_Nx; // image x size
@@ -178,6 +182,8 @@ public:
   Float m_MinE;  // minimum recorded energy
   Float m_Rho;   // mass matrix weight
   bool  m_DoLineSearch;  
+  bool  m_DoMultiRes;
+  bool  m_SearchForMinAtEachLevel;
   Float m_LineSearchStep;
   Sign  m_DescentDirection;
   int m_FileCount; // keeps track of number of files written
