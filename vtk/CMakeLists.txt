@@ -12,10 +12,15 @@ IF (USE_VTK_FILE)
   )
 ENDIF (USE_VTK_FILE)
 
+INCLUDE_DIRECTORIES(${ITK_SOURCE_DIR}/Code/BasicFilters)
+INCLUDE_DIRECTORIES(${ITK_SOURCE_DIR}/Code/Algorithms)
+
 LINK_LIBRARIES(
 VXLNumerics
 ITKCommon
+ITKBasicFilters
 )
 
 ADD_EXECUTABLE(vtk2itk vtk2itk)
 
+ADD_EXECUTABLE(itkCurvatureFlowToVTK itkCurvatureFlowToVTK)
