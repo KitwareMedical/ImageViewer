@@ -81,8 +81,17 @@ FastMarchingLevelSet
 
   m_FastMarchingFilter->AddObserver( itk::IterationEvent(), iterationCommand );      
 
+  SimpleCommandType::Pointer startCommand = SimpleCommandType::New();
+  startCommand->SetCallbackFunction( this, 
+      & FastMarchingLevelSet::CommandOnStartFastMarching );
+
+  m_FastMarchingFilter->AddObserver( itk::StartEvent(), startCommand );      
+
+
   m_ThresholdFilter->SetLowerThreshold( lowerThresholdValueInput->value() );
   m_ThresholdFilter->SetUpperThreshold( upperThresholdValueInput->value() );
+
+  m_IterationCounter = 0;
 
 }
 
@@ -243,6 +252,7 @@ FastMarchingLevelSet
 
 
 
+
  
 /************************************
  *
@@ -396,7 +406,24 @@ FastMarchingLevelSet
 }
 
 
- 
+  
+/*****************************************
+ *
+ *  Command to be run when the FastMarching
+ *  filter starts execution
+ *
+ *****************************************/
+void
+FastMarchingLevelSet
+::CommandOnStartFastMarching()
+{
+  m_IterationCounter = 0;
+  iterationValueOutput->value( m_IterationCounter );
+  Fl::check();
+}
+
+
+
  
 /*****************************************
  *
@@ -407,9 +434,8 @@ void
 FastMarchingLevelSet
 ::UpdateGUIAfterIteration()
 {
-  static unsigned int iterationCounter = 0;
-  iterationValueOutput->value( iterationCounter );
-  iterationCounter++;
+  iterationValueOutput->value( m_IterationCounter );
+  m_IterationCounter++;
   Fl::check();
 }
 
