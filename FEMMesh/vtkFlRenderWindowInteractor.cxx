@@ -31,14 +31,11 @@
 
 #include "vtkFlRenderWindowInteractor.h"
 // FLTK
-#include <Fl/x.H>
+#include <FL/x.H>
 // vtk
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkInteractorStyle.h>
-#ifndef WIN32
-#include <vtkXRenderWindow.h>
-#endif
 
 //---------------------------------------------------------------------------
 vtkFlRenderWindowInteractor::vtkFlRenderWindowInteractor() : 
@@ -76,8 +73,8 @@ void vtkFlRenderWindowInteractor::Initialize()
     // if don't have render window then we can't do anything yet
     if (!RenderWindow)
     {
-      vtkErrorMacro(<< "vtkFlRenderWindowInteractor::Initialize has no render window");
-      return;
+  vtkErrorMacro(<< "vtkFlRenderWindowInteractor::Initialize has no render window");
+  return;
     }
 
     int *size = RenderWindow->GetSize();
@@ -85,7 +82,8 @@ void vtkFlRenderWindowInteractor::Initialize()
     Enable();
     // here we USED to have RenderWindow->Start(); vtkRWI has it as ->Render(),
     // so we'll try that to remain more consistent.
-    RenderWindow->Render();
+    //RenderWindow->Render();
+   RenderWindow->Render();
 
     // set the size in the render window interactor
     Size[0] = size[0];
@@ -139,23 +137,23 @@ void vtkFlRenderWindowInteractor::UpdateSize(int W, int H)
 {
     if (RenderWindow != NULL)
     {
-       // if the size changed tell render window
-       if ( (W != Size[0]) || (H != Size[1]) )
-       {
-           // adjust our (vtkRenderWindowInteractor size)
-           Size[0] = W;
-           Size[1] = H;
-           // and our RenderWindow's size
-           RenderWindow->SetSize(W, H);
-        
-           // FLTK can move widgets on resize; if that happened, make
-           // sure the RenderWindow position agrees with that of the
-           // Fl_Gl_Window
-           int *pos = RenderWindow->GetPosition();
-           if( pos[0] != x() || pos[1] != y() ) {
-              RenderWindow->SetPosition( x(), y() );
-           }
-       }
+  // if the size changed tell render window
+  if ( (W != Size[0]) || (H != Size[1]) )
+  {
+      // adjust our (vtkRenderWindowInteractor size)
+      Size[0] = W;
+      Size[1] = H;
+      // and our RenderWindow's size
+      RenderWindow->SetSize(W, H);
+   
+      // FLTK can move widgets on resize; if that happened, make
+      // sure the RenderWindow position agrees with that of the
+      // Fl_Gl_Window
+      int *pos = RenderWindow->GetPosition();
+      if( pos[0] != x() || pos[1] != y() ) {
+    RenderWindow->SetPosition( x(), y() );
+      }
+  }
     }
 }
 //---------------------------------------------------------------------------
@@ -220,18 +218,15 @@ void vtkFlRenderWindowInteractor::flush(void)
 void vtkFlRenderWindowInteractor::draw(void){
     if (RenderWindow!=NULL)
     {
-       // make sure the vtk part knows where and how large we are
-       UpdateSize( this->w(), this->h() );
-       
-#ifdef WIN32
-       // in windows, we don't need the cast, because HWND is probably void *
-       RenderWindow->SetWindowId( fl_xid( this ) );
-#else
-       ((vtkXRenderWindow*)RenderWindow)->SetWindowId( fl_xid( this ) );
-       RenderWindow->SetDisplayId( fl_display );
+  // make sure the vtk part knows where and how large we are
+  UpdateSize( this->w(), this->h() );
+  
+  RenderWindow->SetWindowId( (void *)fl_xid( this ) );
+#ifndef WIN32
+  RenderWindow->SetDisplayId( fl_display );
 #endif
-       // get vtk to render to the Fl_Gl_Window
-       Render();
+  // get vtk to render to the Fl_Gl_Window
+  Render();
     }
 }
 //---------------------------------------------------------------------------
@@ -250,58 +245,58 @@ int vtkFlRenderWindowInteractor::handle( int event ) {
     {
       case FL_FOCUS:
       case FL_UNFOCUS:
-       ;   // Return 1 if you want keyboard events, 0 otherwise. Yes we do
-       break;
+  ;   // Return 1 if you want keyboard events, 0 otherwise. Yes we do
+  break;
       
       case FL_KEYBOARD:   // keypress
-       InteractorStyle->OnChar(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_key(), 1);
-       // now for possible controversy: there is no way to find out if the InteractorStyle actually did
-       // something with this event.  To play it safe (and have working hotkeys), we return "0", which indicates
-       // to FLTK that we did NOTHING with this event.  FLTK will send this keyboard event to other children
-       // in our group, meaning it should reach any FLTK keyboard callbacks (including hotkeys)
-       return 0;
-       break;
+  InteractorStyle->OnChar(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_key(), 1);
+  // now for possible controversy: there is no way to find out if the InteractorStyle actually did
+  // something with this event.  To play it safe (and have working hotkeys), we return "0", which indicates
+  // to FLTK that we did NOTHING with this event.  FLTK will send this keyboard event to other children
+  // in our group, meaning it should reach any FLTK keyboard callbacks (including hotkeys)
+  return 0;
+  break;
       
       case FL_PUSH: // mouse down
-       this->take_focus();  // this allows key events to work
-       switch( Fl::event_button() ) 
-       {
-         case FL_LEFT_MOUSE:
-           InteractorStyle->OnLeftButtonDown(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-           break;
-         case FL_MIDDLE_MOUSE:
-           InteractorStyle->OnMiddleButtonDown(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-           break;
-         case FL_RIGHT_MOUSE:
-           InteractorStyle->OnRightButtonDown(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-           break;
-       }
-       break; // this break should be here, at least according to vtkXRenderWindowInteractor
+  this->take_focus();  // this allows key events to work
+  switch( Fl::event_button() ) 
+  {
+    case FL_LEFT_MOUSE:
+      InteractorStyle->OnLeftButtonDown(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+      break;
+    case FL_MIDDLE_MOUSE:
+      InteractorStyle->OnMiddleButtonDown(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+      break;
+    case FL_RIGHT_MOUSE:
+      InteractorStyle->OnRightButtonDown(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+      break;
+  }
+  break; // this break should be here, at least according to vtkXRenderWindowInteractor
 
-       // we test for both of these, as fltk classifies mouse moves as with or
-       // without button press whereas vtk wants all mouse movement (this bug took
-       // a while to find :)
+  // we test for both of these, as fltk classifies mouse moves as with or
+  // without button press whereas vtk wants all mouse movement (this bug took
+  // a while to find :)
       case FL_DRAG:
       case FL_MOVE:
-       InteractorStyle->OnMouseMove(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-       break;
+  InteractorStyle->OnMouseMove(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+  break;
 
       case FL_RELEASE:    // mouse up
-       switch( Fl::event_button() ) {
-         case FL_LEFT_MOUSE:
-           InteractorStyle->OnLeftButtonUp(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-           break;
-         case FL_MIDDLE_MOUSE:
-           InteractorStyle->OnMiddleButtonUp(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-           break;
-         case FL_RIGHT_MOUSE:
-           InteractorStyle->OnRightButtonUp(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
-           break;
-       }
-       break;
+  switch( Fl::event_button() ) {
+    case FL_LEFT_MOUSE:
+      InteractorStyle->OnLeftButtonUp(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+      break;
+    case FL_MIDDLE_MOUSE:
+      InteractorStyle->OnMiddleButtonUp(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+      break;
+    case FL_RIGHT_MOUSE:
+      InteractorStyle->OnRightButtonUp(Fl::event_state( FL_CTRL ), Fl::event_state( FL_SHIFT ), Fl::event_x(), this->h()-Fl::event_y()-1);
+      break;
+  }
+  break;
 
-      default:       // let the base class handle everything else 
-       return Fl_Gl_Window::handle( event );
+      default:  // let the base class handle everything else 
+  return Fl_Gl_Window::handle( event );
 
     } // switch(event)...
 
