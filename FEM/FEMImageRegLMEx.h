@@ -284,7 +284,7 @@ private :
   typename FieldType::Pointer m_Field;
 
   // define the warper
-  WarperType::Pointer m_Warper; 
+  typename WarperType::Pointer m_Warper; 
   
  // declare a new image to hold the warped  reference
   typename ImageType::Pointer  m_WarpedImage;
