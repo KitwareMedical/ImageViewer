@@ -42,6 +42,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OptionList.h"
 #include "itkImage.h"
 #include "itkReadMetaImage.h"
+#include "itkWriteMetaImage.h"
+#include "itkImageRegionIteratorWithIndex.h"
 
 #include "vnl/vnl_matrix.h"
 
@@ -53,28 +55,69 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkMeanCalculator.h"
 #include "itkCovarianceCalculator.h"
 #include "itkGenericClassifier.h"
-#include "itkMaxDecisionRule.h"
+#include "MaximumLikelihoodRatioDecisionRule.h"
+
+void print_usage()
+{
+  std::cout << "GaussianMinimumErrorClassifier 1.0 (17. Dec. 2001)" << std::endl ;
+
+  std::cout << "usage: GaussianMinimumErrorClassifier --training file"  << std::endl ;
+  std::cout << "       --class-mask file" << std::endl ;
+  std::cout << "       --target file"  << std::endl ;
+  std::cout << "       --output file"  << std::endl ;
+
+  std::cout << "" << std::endl ;
+
+  std::cout << "--training file" << std::endl ;
+  std::cout << "        image file name with intesnity values [meta image format]"  
+    << std::endl ;
+  std::cout << "--class-mask file" << std::endl ;
+  std::cout << "        image file name with class labels [meta image format]"  
+    << std::endl ;
+  std::cout << "--target file" << std::endl ;
+  std::cout << "        target image file name with intensity values [meta image format]" 
+    << std::endl ;
+  std::cout << "--output file" << std::endl ;
+  std::cout << "        output image file name that will have the class labels for pixels" 
+    << std::endl ;
+  std::cout << "        in the target image file [meta image format]"  << std::endl ;
+
+  std::cout << "" << std::endl ;
+
+  std::cout << "example: GaussianMinimumErrorClassifier --training train.mhd" << std::endl ;
+  std::cout << "         --class-mask class_mask.mhd" << std::endl ;
+  std::cout << "         --target target.mhd" << std::endl ;
+  std::cout << "         --output output.mhd" << std::endl ;
+}
+
 
 int main(int argc, char* argv[])
 {
   namespace stat = itk::Statistics ;
-
+ 
   if (argc <= 1)
     {
+      print_usage() ;
       exit(0) ;
     }
 
   OptionList options(argc, argv) ;
 
-  std::string inputFileName ;
+  std::string trainingFileName ;
   std::string classMaskFileName ;
+  std::string targetFileName ;
+  std::string outputFileName ;
 
   try
     {
       // get image file options
-      options.GetStringOption("input", &inputFileName, true) ;
+      options.GetStringOption("training", &trainingFileName, true) ;
       // get image file options
       options.GetStringOption("class-mask", &classMaskFileName, true) ;
+      // get image file options
+      options.GetStringOption("target", &targetFileName, true) ;
+      // get image file options
+      options.GetStringOption("output", &outputFileName, true) ;
     }
   catch(OptionList::RequiredOptionMissing e)
     {
@@ -87,18 +130,19 @@ int main(int argc, char* argv[])
   typedef itk::Image< short, 3 > ImageType ;
   typedef ImageType::Pointer ImagePointer ;
 
-  ImagePointer input ;
+  ImagePointer training ;
   ImagePointer classMask ;
+  ImagePointer target ;
 
   std::cout << "Loading image(s)..." << std::endl ;
-  //      readMetaImageHeader(inputFileName, inputDimension, inputSize) ;
+  //      readMetaImageHeader(trainingFileName, trainingDimension, trainingSize) ;
   typedef itk::ReadMetaImage<ImageType> Reader ;
   Reader::Pointer reader = Reader::New() ;
       
-  reader->SetFileName(inputFileName.c_str()) ;
+  reader->SetFileName(trainingFileName.c_str()) ;
   reader->Update() ;
-  input = reader->GetOutput() ;
-  std::cout << "Input image loaded." << std::endl ;
+  training = reader->GetOutput() ;
+  std::cout << "Training image loaded." << std::endl ;
 
   Reader::Pointer reader2 = Reader::New() ;
   reader2->SetFileName(classMaskFileName.c_str()) ;
@@ -106,8 +150,14 @@ int main(int argc, char* argv[])
   classMask = reader2->GetOutput() ;
   std::cout << "Class mask loaded." << std::endl ;
 
+  Reader::Pointer reader3 = Reader::New() ;
+  reader3->SetFileName(targetFileName.c_str()) ;
+  reader3->Update() ;
+  target = reader3->GetOutput() ;
+  std::cout << "Target image loaded." << std::endl ;
+
   /* ================================================== */
-  std::cout << "Importing the image and the class mask image to samples..."
+  std::cout << "Importing the images to samples..."
             << std::endl ;
   typedef stat::ImageListSampleAdaptor<ImageType, short, 1> 
     ImageListSampleType;
@@ -118,10 +168,14 @@ int main(int argc, char* argv[])
   ImageListSampleType::Pointer mask =
     ImageListSampleType::New() ;
 
-  sample->SetImage(input);
+  ImageListSampleType::Pointer targetSample =
+    ImageListSampleType::New() ;
+
+  sample->SetImage(training);
   mask->SetImage(classMask) ;
+  targetSample->SetImage(target) ;
   /* ==================================================== */
-  std::cout << "Creating the membership sample.." << std::endl ;
+  std::cout << "Creating the membership sample for training.." << std::endl ;
   typedef stat::MembershipSampleGenerator< ImageListSampleType, 
     ImageListSampleType > MembershipSampleGeneratorType ;  
   MembershipSampleGeneratorType::Pointer generator = 
@@ -134,7 +188,7 @@ int main(int argc, char* argv[])
     generator->GetOutput() ;
   unsigned int numberOfClasses = membershipSample->GetNumberOfClasses() ;
   /* =================================================== */
-  std::cout << "Inducing the gaussian density function parameters..." 
+  std::cout << "Inducing the gaussian density function parameters and apriori probabilities..." 
             << std::endl ;
   typedef ImageListSampleType::MeasurementVectorType
     MeasurementVectorType ;
@@ -156,6 +210,11 @@ int main(int argc, char* argv[])
   vnl_vector< double > mean ;
   vnl_matrix< double > covariance ;
 
+  typedef MaximumLikelihoodRatioDecisionRule DecisionRuleType ;
+  DecisionRuleType::Pointer rule = DecisionRuleType::New() ;
+
+  unsigned int sampleSize = 0 ;
+
   for (unsigned int i = 0 ; i < numberOfClasses ; i++)
     {
       meanCalculator->SetSample(membershipSample->GetClassSample(i)) ;
@@ -175,17 +234,21 @@ int main(int argc, char* argv[])
                 << std::endl ;
       std::cout << "  covariance = " << std::endl ;
       (densityFunctions[i])->GetCovariance().print(std::cout) ;
+      
+      // add the class sample size to the decision rule for the Apriori probability
+      // calculation
+      std::cout << "Sample size of the class [" << i << "] = " ;
+      sampleSize = (membershipSample->GetClassSample(i))->GetSize(0) ;
+      std::cout << sampleSize << std::endl ;
+      rule->AddClassSampleSize(sampleSize) ;
     }
   /* =================================================== */
   std::cout << "Classifying..." << std::endl ;
   
-  typedef stat::MaxDecisionRule DecisionRuleType ;
-  DecisionRuleType::Pointer rule = DecisionRuleType::New() ;
-
   typedef stat::GenericClassifier< ImageListSampleType, DensityFunctionType, DecisionRuleType > ClassifierType ;
 
   ClassifierType::Pointer classifier = ClassifierType::New() ;
-  classifier->SetSample(sample) ;
+  classifier->SetSample(targetSample) ;
   for (unsigned int i = 0 ; i < numberOfClasses ; i++)
     {
       classifier->AddMembershipCalculator(densityFunctions[i]) ;
@@ -195,28 +258,31 @@ int main(int argc, char* argv[])
   
   classifier->GenerateData() ;
   
-  ClassifierType::ClassSampleVectorType output = classifier->GetOutput() ;
-  
-  vnl_matrix< int > classMatrix(numberOfClasses, numberOfClasses, 0) ;
-  unsigned long id ;
-  int count ;
-  unsigned int classLabel ;
-  for (unsigned int c = 0 ; c < numberOfClasses ; c++)
+  ClassifierType::OutputPointer result = classifier->GetOutput() ;
+
+  /* ===================================================== */
+  std::cout << "Creating a image with result class labels..." << std::endl ;
+  typedef itk::WriteMetaImage< ImageType > Writer ;
+  Writer::Pointer writer = Writer::New() ;
+
+  ImagePointer output = ImageType::New() ;
+  output->SetBufferedRegion(target->GetLargestPossibleRegion()) ;
+  output->SetLargestPossibleRegion(target->GetLargestPossibleRegion()) ;
+  output->Allocate() ;
+  typedef itk::ImageRegionIteratorWithIndex< ImageType > ImageIteratorType ;
+  ImageIteratorType i_iter(output, output->GetLargestPossibleRegion()) ;
+  ClassifierType::OutputType::Iterator m_iter = result->Begin() ;
+  while (!i_iter.IsAtEnd())
     {
-      ClassifierType::ClassSamplePointer classSample = output[c] ;
-       std::cout << "length of sample of class [" << c << "] = "
-                << classSample->GetSize() << std::endl ;
-      ClassifierType::ClassSampleType::Iterator iter = classSample->Begin() ;
-      while (iter != classSample->End())
-        {
-          id = iter.GetInstanceIdentifier() ;
-          classLabel = membershipSample->GetClassLabel(id) ;
-          count = classMatrix.get(c, classLabel) ;
-          classMatrix.put(c, classLabel, ++count) ;
-          ++iter ;
-        }
+      i_iter.Set(m_iter.GetClassLabel()) ;
+      ++i_iter ;
+      ++m_iter ;
     }
-  classMatrix.print(std::cout) ;
+
+  writer->SetInput(output) ;
+  writer->SetFileName(outputFileName.c_str()) ;
+  writer->GenerateData() ;
+
   return 0 ;
 }
 
