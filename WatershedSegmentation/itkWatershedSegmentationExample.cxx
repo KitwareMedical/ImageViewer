@@ -58,7 +58,7 @@ extern "C" {
  */
 class pgm_reader
 {
-  void getln(ifstream &in, char *buf) const;
+  void getln(std::ifstream &in, char *buf) const;
   
 public:
   typedef itk::Image<float, 2> ImageType;
@@ -73,10 +73,10 @@ unsigned int pgm_reader::m_BufferSize = 256;
 pgm_reader::ImageType::Pointer pgm_reader::read(const char *fn) const
 {
   unsigned int x, y, col_depth, tmp;
-  char buf[m_BufferSize];
+  char buf[256];
 
   // Open input file
-  ifstream in;
+  std::ifstream in;
   in.open(fn);
   if (! in ) die ("Could not open input image for reading.");
 
@@ -123,13 +123,13 @@ pgm_reader::ImageType::Pointer pgm_reader::read(const char *fn) const
 }
  
 void
-pgm_reader::getln(ifstream &in, char *buf) const
+pgm_reader::getln(std::ifstream &in, char *buf) const
 {
   char *c;
   buf[0] = '\0';  // clear the buffer
   while( (strcmp(buf,"") == 0) && !in.eof() )
     {
-      in.getline(buf, m_BufferSize, '\n');
+      in.getline(buf, 256, '\n');
       for (c=buf; *c != '#' && *c != '\0'; c++);  // strip out comments
       *c = '\0';
     }
