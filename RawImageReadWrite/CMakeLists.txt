@@ -1,4 +1,0 @@
-ADD_EXECUTABLE(RawImageReadWrite itkRawImageReadWrite.cxx)
-TARGET_LINK_LIBRARIES(RawImageReadWrite ITKIO)
-ADD_EXECUTABLE(RawImageReadWritePNG itkRawImageReadWritePNG.cxx)
-TARGET_LINK_LIBRARIES(RawImageReadWritePNG ITKIO)
