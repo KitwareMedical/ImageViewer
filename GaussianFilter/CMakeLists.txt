@@ -1,3 +1,4 @@
+PROJECT( GaussianFilter )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -6,7 +7,7 @@ ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_SOURCE_DIR}/Examples/GaussianFilter
+${GaussianFilter_SOURCE_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
@@ -17,7 +18,7 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/GaussianFilter
+${GaussianFilter_BINARY_DIR}
 )
 
 SET(GaussianFilter_SRCS
