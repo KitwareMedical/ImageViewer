@@ -23,6 +23,7 @@
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkSimilarityIndexImageFilter.h"
 #include "itkHausdorffDistanceImageFilter.h"
+#include "itkStatisticsImageFilter.h"
 
 namespace itk
 {
@@ -66,7 +67,7 @@ ValidationOutput<TImage>
 
   // Compute the overlap
   typedef itk::BinaryThresholdImageFilter<ImageType,ImageType> ThresholdType;
-  ThresholdType::Pointer threshold1 = ThresholdType::New();
+  typename ThresholdType::Pointer threshold1 = ThresholdType::New();
 
   threshold1->SetInput( m_LabelImage );
   threshold1->SetLowerThreshold( m_LabelLowerThreshold );
@@ -74,7 +75,7 @@ ValidationOutput<TImage>
   threshold1->SetInsideValue( 1 );
   threshold1->SetOutsideValue( 0 );
 
-  ThresholdType::Pointer threshold2 = ThresholdType::New();
+  typename ThresholdType::Pointer threshold2 = ThresholdType::New();
 
   threshold2->SetInput( m_GroundTruthImage );
   threshold2->SetLowerThreshold( m_GroundTruthLowerThreshold );
@@ -84,7 +85,7 @@ ValidationOutput<TImage>
 
 
   typedef itk::SimilarityIndexImageFilter<ImageType,ImageType> OverlapType;
-  OverlapType::Pointer overlap = OverlapType::New();
+  typename OverlapType::Pointer overlap = OverlapType::New();
 
   overlap->SetInput1( threshold1->GetOutput() );
   overlap->SetInput2( threshold2->GetOutput() );
@@ -93,16 +94,32 @@ ValidationOutput<TImage>
 
 
   typedef itk::HausdorffDistanceImageFilter<ImageType,ImageType> DistanceType;
-  DistanceType::Pointer distance = DistanceType::New();
+  typename DistanceType::Pointer distance = DistanceType::New();
 
   distance->SetInput1( threshold1->GetOutput() );
   distance->SetInput2( threshold2->GetOutput() );
 
   distance->Update();
 
+  typedef itk::StatisticsImageFilter<ImageType> SumType;
+  typename SumType::Pointer summer = SumType::New();
+  unsigned long volume1, volume2;
+
+  summer->SetInput( threshold1->GetOutput() );
+  summer->Update();
+  volume1 = static_cast<unsigned long>( summer->GetSum() );
+
+  summer->SetInput( threshold2->GetOutput() );
+  summer->Update();
+  volume2 = static_cast<unsigned long>( summer->GetSum() );
+
+  summer->SetInput( threshold1->GetOutput() );
+
   std::cout << m_PatientID.c_str() 
             << " Overlap: " << overlap->GetSimilarityIndex() 
             << " Distance: " << distance->GetHausdorffDistance()
+            << " Est. volume: " << volume1
+            << " True volume: " << volume2
             << std::endl;
 
   // Write out the overlap
@@ -125,8 +142,8 @@ ValidationOutput<TImage>
     throw err;
     }
 
-  fprintf( file, "%s\t%.5f\t%3.3f\n", m_PatientID.c_str(), overlap->GetSimilarityIndex(),
-    distance->GetHausdorffDistance() );
+  fprintf( file, "%s\t%.5f\t%3.3f\t%ld\t%ld\n", m_PatientID.c_str(), overlap->GetSimilarityIndex(),
+    distance->GetHausdorffDistance(), volume1, volume2 );
 
   fclose( file );
 
