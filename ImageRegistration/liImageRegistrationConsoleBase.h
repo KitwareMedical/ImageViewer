@@ -132,7 +132,7 @@ public:
 
   typedef   itk::Point< double, ImageDimension * (ImageDimension + 1) >   TransformParametersType;
 
-  typedef   itk::AffineRegistrationTransform< 
+  typedef   itk::AffineTransform< 
                                       double,
                                       ImageDimension,
                                       TransformParametersType 

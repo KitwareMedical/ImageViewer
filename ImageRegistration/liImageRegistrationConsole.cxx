@@ -375,10 +375,10 @@ liImageRegistrationConsole
 
   typedef   itk::AffineTransform<double,3> TransformType;
 
-  TransformType affineTransform;
+  TransformType::Pointer affineTransform = TransformType::New();
 
-  TransformType::VectorType      offset;
-  TransformType::VectorType      axis;
+  TransformType::OffsetType           offset;
+  TransformType::OutputVectorType     axis;
 
   const double  angle = angleRotation->value() * atan( 1.0 ) / 45.0 ;
 
@@ -390,13 +390,13 @@ liImageRegistrationConsole
   offset[1] = yTranslation->value();
   offset[2] = zTranslation->value();
 
-  affineTransform.Rotate3D( axis, angle );
-  affineTransform.SetOffset( offset );
+  affineTransform->Rotate3D( axis, angle );
+  affineTransform->SetOffset( offset );
 
   TransformType::MatrixType matrix;
 
-  matrix = affineTransform.GetMatrix();
-  offset = affineTransform.GetOffset();
+  matrix = affineTransform->GetMatrix();
+  offset = affineTransform->GetOffset();
 
   std::cout << "Matrix = " << matrix << std::endl;
   std::cout << "Offset = " << offset << std::endl;
