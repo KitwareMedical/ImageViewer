@@ -39,12 +39,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
 
+#include <fstream>
+
 #if    defined(_WIN32)
 #include <itkWindows.h>
 #endif
 
 #include <fltkGlWindow.h>
-#include <fstream>
 #include <FL/fl_ask.H>
 #include <FL/fl_file_chooser.H>
 
@@ -152,8 +153,8 @@ void GlWindow::SaveImage(const char * filename)
   const int wny = h();
 
   
-/*
-  ::std::ofstream  of;
+
+  std::ofstream  of;
   of.open(filename);
   if( of.fail() ) 
   {
@@ -210,7 +211,7 @@ void GlWindow::SaveImage(const char * filename)
 
   delete [] image;
   
-  */
+  
 }
 
 
