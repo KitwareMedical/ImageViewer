@@ -31,13 +31,13 @@
 //#define THREED
 #ifdef TWOD
 typedef itk::Image< unsigned char, 2 >                     fileImageType;
-typedef itk::Image< unsigned char, 2 >                     ImageType;
+typedef itk::Image< float, 2 >                     ImageType;
 // We now declare an element type and load implementation pointer for the visitor class.
 typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
 #endif 
 #ifdef THREED
 typedef itk::Image< unsigned char, 3 >                     fileImageType;
-typedef itk::Image< unsigned char, 3 >                     ImageType;
+typedef itk::Image< float, 3 >                     ImageType;
 typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
 #endif
 typedef itk::fem::ImageMetricLoad<ImageType,ImageType>     ImageLoadType;
@@ -103,7 +103,7 @@ void ReadRawImageFiles( RegistrationType&  X )
   tarrescalefilter->SetInput(tarfilter->GetOutput());
 
   const double desiredMinimum =  0.0;
-  const double desiredMaximum =  1.0;
+  const double desiredMaximum =  255.0;
 
   refrescalefilter->SetOutputMinimum( desiredMinimum );
   refrescalefilter->SetOutputMaximum( desiredMaximum );
@@ -117,16 +117,16 @@ void ReadRawImageFiles( RegistrationType&  X )
   HEFilterType::Pointer IntensityEqualizeFilter = HEFilterType::New();
 
   IntensityEqualizeFilter->SetReferenceImage( refrescalefilter->GetOutput() );
-  IntensityEqualizeFilter->SetSourceImage( tarrescalefilter->GetOutput() );
-  IntensityEqualizeFilter->SetNumberOfHistogramLevels( 128 );
-  IntensityEqualizeFilter->SetNumberOfMatchPoints( 7 );
+  IntensityEqualizeFilter->SetInput( tarrescalefilter->GetOutput() );
+  IntensityEqualizeFilter->SetNumberOfHistogramLevels( 100);
+  IntensityEqualizeFilter->SetNumberOfMatchPoints( 15);
   IntensityEqualizeFilter->ThresholdAtMeanIntensityOn();
   IntensityEqualizeFilter->Update();
 
-//  X.SetReferenceImage(refrescalefilter->GetOutput());
-//  X.SetTargetImage(IntensityEqualizeFilter->GetOutput());
-  X.SetReferenceImage(reffilter->GetOutput());
-  X.SetTargetImage(tarfilter->GetOutput());
+  X.SetReferenceImage(refrescalefilter->GetOutput());
+  X.SetTargetImage(IntensityEqualizeFilter->GetOutput()/*tarrescalefilter->GetOutput()*/);
+//  X.SetReferenceImage(reffilter->GetOutput());
+//  X.SetTargetImage(tarfilter->GetOutput());
 }
 
 int main() 
@@ -185,6 +185,7 @@ int main()
     X.WriteDisplacementField(1);
   }
   delete e1;
+  delete m;
   return 0;
 }
 
