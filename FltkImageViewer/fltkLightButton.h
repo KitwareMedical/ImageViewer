@@ -62,7 +62,7 @@ public:
   /**
    * Command Class invoked for button redraw
    */
-  typedef itk::MemberCommand< LightButton >  RedrawCommandType;
+  typedef itk::ReceptorMemberCommand< LightButton >  RedrawCommandType;
 
 
   /**
@@ -87,20 +87,27 @@ public:
   /**
    * Manage a Progress event
    */
-  void ProcessEvent( const itk::Object *caller, const itk::EventObject & event )
+  void ProcessEvent( const itk::EventObject & event )
   {
-  if( typeid( event ) == typeid( itk::StartEvent ) )
+    std::cout << "LightButton event " << typeid( event ).name() << std::endl;
+  if( typeid( itk::StartEvent )  ==   ( typeid( event ) ) ||
+      typeid( itk::StartEvent ).before( typeid( event ) ) )
     {
+    std::cout << " FL_YELLOW " << std::endl;
     this->selection_color( FL_YELLOW );
     this->value( 1 );
     }
-  else if ( typeid( event ) == typeid( itk::EndEvent ) )
+  else if ( typeid( itk::EndEvent )   ==   ( typeid( event ) ) ||
+            typeid( itk::EndEvent ) .before( typeid( event ) ) )
     {
+    std::cout << " FL_GREEN " << std::endl;
     this->selection_color( FL_GREEN );
     this->value( 1 );
     }
-  else if  ( typeid( event ) == typeid( itk::ModifiedEvent ) )
+  else if  ( typeid( itk::ModifiedEvent )  ==   ( typeid( event ) ) || 
+             typeid( itk::ModifiedEvent ).before( typeid( event ) ) ) 
     {
+    std::cout << " FL_RED " << std::endl;
     this->selection_color( FL_RED );
     this->value( 1 );
     }
@@ -110,13 +117,14 @@ public:
   
 
   /**
-   * Manage a Progress event
+   *  Register as observer for a set of standard events
    */
   void Observe( itk::Object *caller )
   {
-    caller->AddObserver(  itk::StartEvent(),    m_RedrawCommand.GetPointer() );
-    caller->AddObserver(  itk::ModifiedEvent(), m_RedrawCommand.GetPointer() );
-    caller->AddObserver(  itk::EndEvent(),      m_RedrawCommand.GetPointer() );
+    itk::Object::Pointer observed( caller );
+    observed->AddObserver(  itk::StartEvent(),    m_RedrawCommand.GetPointer() );
+    observed->AddObserver(  itk::ModifiedEvent(), m_RedrawCommand.GetPointer() );
+    observed->AddObserver(  itk::EndEvent(),      m_RedrawCommand.GetPointer() );
   }
 
 
@@ -131,3 +139,4 @@ private:
 
 
 #endif
+

@@ -74,6 +74,7 @@ public:
     Fl_Slider( x, y, w, h, label ) {
       m_RedrawCommand = RedrawCommandType::New();
       m_RedrawCommand->SetCallbackFunction( this, &ProgressBar::ProcessEvent );
+      m_RedrawCommand->SetCallbackFunction( this, &ProgressBar::ConstProcessEvent );
     }
 
 
@@ -90,9 +91,22 @@ public:
   /**
    * Manage a Progress event
    */
-  void ProcessEvent( const itk::Object *caller, const itk::EventObject & event )
+  void ProcessEvent(itk::Object * caller, const itk::EventObject & event )
   {
-    if( typeid( event ) == typeid( itk::ProgressEvent ) ) 
+    if( typeid( itk::ProgressEvent )   ==  ( typeid( event ) ) ||  
+        typeid( itk::ProgressEvent ).before( typeid( event ) ) )  
+      {
+      itk::ProcessObject::Pointer  process = 
+                 dynamic_cast< itk::ProcessObject *>( caller );
+      this->value( process->GetProgress() );
+      this->redraw();
+      }
+  }
+
+  void ConstProcessEvent(const itk::Object * caller, const itk::EventObject & event )
+  {
+    if( typeid( itk::ProgressEvent )   ==  ( typeid( event ) ) ||  
+        typeid( itk::ProgressEvent ).before( typeid( event ) ) )  
       {
       itk::ProcessObject::ConstPointer  process = 
                  dynamic_cast< const itk::ProcessObject *>( caller );
@@ -100,7 +114,7 @@ public:
       this->redraw();
       }
   }
-  
+ 
 
   /**
    * Manage a Progress event
