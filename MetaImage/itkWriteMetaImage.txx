@@ -120,7 +120,7 @@ WriteMetaImage<TInputImage>
     }
   catch(std::bad_alloc)
     {
-      throw ExceptionObject() ;
+      throw ExceptionObject(__FILE__, __LINE__) ;
     }
 
   typedef ImageRegionIterator< TInputImage > IteratorType;

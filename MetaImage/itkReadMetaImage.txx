@@ -74,12 +74,12 @@ ReadMetaImage<TOutputImage>
 
   if( metaImage.Error() ) 
     {
-    throw ExceptionObject();
+    throw ExceptionObject(__FILE__, __LINE__);
     }
 
   if( metaImage.NDims() != TOutputImage::ImageDimension )
     {
-    throw ExceptionObject();
+    throw ExceptionObject(__FILE__, __LINE__);
     }
   
   typename TOutputImage::Pointer m_OutputImage( GetOutput() );
