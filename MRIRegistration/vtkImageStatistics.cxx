@@ -70,7 +70,7 @@ vtkImageStatistics::vtkImageStatistics()
 //----------------------------------------------------------------------------
 // Description:
 void vtkImageStatistics::ComputeInputUpdateExtent(int inExt[6], 
-						    int outExt[6])
+                                                  int outExt[6])
 {
   int *wholeExtent;
 
@@ -83,8 +83,8 @@ void vtkImageStatistics::ComputeInputUpdateExtent(int inExt[6],
 // This templated function executes the filter for any type of data.
 template <class IT, class OT>
 static void vtkImageStatisticsExecute(vtkImageStatistics *self,
-				vtkImageData *inData, IT *inPtr,
-				vtkImageData *outData, OT *outPtr)
+                                      vtkImageData *inData, IT *inPtr,
+                                      vtkImageData *outData, OT *outPtr)
 {
   IT max, min, *inptr1;
   int idxR, idxY, idxZ;
@@ -101,8 +101,8 @@ static void vtkImageStatisticsExecute(vtkImageStatistics *self,
 
   id = 1;
   outData->GetExtent(outExt);
-  max = inData->GetScalarTypeMin();
-  min = inData->GetScalarTypeMax();
+  max = static_cast<IT>(inData->GetScalarTypeMin());
+  min = static_cast<IT>(inData->GetScalarTypeMax());
 
   // find the region to loop over
   rowLength = (outExt[1] - outExt[0]+1)*inData->GetNumberOfScalarComponents();
@@ -123,28 +123,28 @@ static void vtkImageStatisticsExecute(vtkImageStatistics *self,
     for (idxY = 0; !self->AbortExecute && idxY <= maxY; idxY++)
       {
       if (!id) 
-	{
-	if (!(count%target))
-	  {
-	  self->UpdateProgress(count/(50.0*target));
-	  }
-	count++;
-	}
+        {
+        if (!(count%target))
+          {
+    self->UpdateProgress(count/(50.0*target));
+    }
+  count++;
+  }
       for (idxR = 0; idxR < rowLength; idxR++)
-	{
-	  // Pixel operation
-          if ( *inptr1 > max )
-	    {
-	    max = *inptr1;
-	    }
-	  if ( *inptr1 < min )
-	    {
-	    min = *inptr1;
-	    }
-	  mean += (double)(*inptr1);
-	  sumSqr += ((double)(*inptr1) * (double)(*inptr1));
-	  inptr1++;
-	}
+  {
+        // Pixel operation
+        if ( *inptr1 > max )
+          {
+          max = *inptr1;
+          }
+        if ( *inptr1 < min )
+          {
+          min = *inptr1;
+          }
+        mean += (double)(*inptr1);
+        sumSqr += ((double)(*inptr1) * (double)(*inptr1));
+        inptr1++;
+  }
       inptr1 += inIncY;
       }
     inptr1 += inIncZ;
@@ -153,7 +153,7 @@ static void vtkImageStatisticsExecute(vtkImageStatistics *self,
   count = maxZ*maxY*rowLength;
   mean /= (double) count;
   variance = sumSqr / (double) (count - 1) - ((double) count * mean * mean / (double) (count - 1));
-
+  
   self->MinValue = min;
   self->MaxValue = max;
   self->MeanValue = mean;
@@ -175,11 +175,11 @@ void vtkImageStatistics::ExecuteData(vtkDataObject *vtkNotUsed(out))
   void *outPtr;
 
   vtkDebugMacro(<< "ExecuteData: inData = " << inData 
-		<< ", outData = " << outData);
+                << ", outData = " << outData);
   
   outData->AllocateScalars();
-  outData->SetExtent(this->GetOutput()->GetUpdateExtent());
-  outPtr = outData->GetScalarPointerForExtent(outData->GetUpdateExtent());
+  outData->SetExtent(this->GetOutput()->GetWholeExtent());
+  outPtr = outData->GetScalarPointer();
 
   // this filter expects that input is the same type as output.
   if (inData->GetScalarType() != outData->GetScalarType())
@@ -193,53 +193,53 @@ void vtkImageStatistics::ExecuteData(vtkDataObject *vtkNotUsed(out))
     {
     case VTK_DOUBLE:
       vtkImageStatisticsExecute(this, 
-			  inData, (double *)(inPtr), 
-			  outData, (double *)(outPtr));
+                                inData, (double *)(inPtr), 
+                                outData, (double *)(outPtr));
       break;
     case VTK_FLOAT:
       vtkImageStatisticsExecute(this, 
-			  inData, (float *)(inPtr), 
-			  outData, (float *)(outPtr));
+                                inData, (float *)(inPtr), 
+                                outData, (float *)(outPtr));
       break;
     case VTK_LONG:
       vtkImageStatisticsExecute(this, 
-			  inData, (long *)(inPtr), 
-			  outData, (long *)(outPtr));
+                                inData, (long *)(inPtr), 
+                                outData, (long *)(outPtr));
       break;
     case VTK_UNSIGNED_LONG:
       vtkImageStatisticsExecute(this, 
-			  inData, (unsigned long *)(inPtr), 
-			  outData, (unsigned long *)(outPtr));
+                                inData, (unsigned long *)(inPtr), 
+                                outData, (unsigned long *)(outPtr));
       break;
     case VTK_INT:
       vtkImageStatisticsExecute(this, 
-			  inData, (int *)(inPtr), 
-			  outData, (int *)(outPtr));
+                                inData, (int *)(inPtr), 
+                                outData, (int *)(outPtr));
       break;
     case VTK_UNSIGNED_INT:
       vtkImageStatisticsExecute(this, 
-			  inData, (unsigned int *)(inPtr), 
-			  outData, (unsigned int *)(outPtr));
+                                inData, (unsigned int *)(inPtr), 
+                                outData, (unsigned int *)(outPtr));
       break;
     case VTK_SHORT:
       vtkImageStatisticsExecute(this, 
-			  inData, (short *)(inPtr), 
-			  outData, (short *)(outPtr));
+                                inData, (short *)(inPtr), 
+                                outData, (short *)(outPtr));
       break;
     case VTK_UNSIGNED_SHORT:
       vtkImageStatisticsExecute(this, 
-			  inData, (unsigned short *)(inPtr), 
-			  outData, (unsigned short *)(outPtr));
+                                inData, (unsigned short *)(inPtr), 
+                                outData, (unsigned short *)(outPtr));
       break;
     case VTK_CHAR:
       vtkImageStatisticsExecute(this, 
-			  inData, (char *)(inPtr), 
-			  outData, (char *)(outPtr));
+                                inData, (char *)(inPtr), 
+                                outData, (char *)(outPtr));
       break;
     case VTK_UNSIGNED_CHAR:
       vtkImageStatisticsExecute(this, 
-			  inData, (unsigned char *)(inPtr), 
-			  outData, (unsigned char *)(outPtr));
+                                inData, (unsigned char *)(inPtr), 
+                                outData, (unsigned char *)(outPtr));
       break;
     default:
       vtkErrorMacro(<< "Execute: Unknown ScalarType");
