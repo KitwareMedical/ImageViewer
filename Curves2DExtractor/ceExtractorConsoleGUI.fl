@@ -293,7 +293,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         xywh {305 275 215 30} box ROUND_UP_BOX
       }
       Fl_Button {} {
-        label {../../Documentation/Art/itkLogoSmallTransparentBackground.xpm}
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
         xywh {850 300 110 75} box FLAT_BOX labeltype image
       }
     }

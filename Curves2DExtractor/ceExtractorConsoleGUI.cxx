@@ -151,455 +151,241 @@ void ceExtractorConsoleGUI::cb_Execute(Fl_Button* o, void* v) {
 
 #include <FL/Fl_Pixmap.H>
 static const char *image_itkLogoSmallTransparentBackground[] = {
-"100 64 256 2",
-"   c gray100",
-".  c #313131",
-"X  c #393939",
-"o  c gray26",
-"O  c gray29",
-"+  c gray32",
-"@  c #5a5a5a",
-"#  c gray39",
-"$  c gray42",
-"%  c gray45",
-"&  c #7b7b7b",
-"*  c #848484",
-"=  c gray55",
-"-  c gray58",
-";  c gray61",
-":  c #a5a5a5",
-">  c gray68",
-",  c gray71",
-"<  c gray74",
-"1  c #c6c6c6",
-"2  c #cecece",
-"3  c gray84",
-"4  c gray87",
-"5  c #e7e7e7",
-"6  c #efefef",
-"7  c #efe7e7",
-"8  c #d6cece",
-"9  c #e7dede",
-"0  c #ada5a5",
-"q  c #e7ded6",
-"w  c #a59c94",
-"e  c #948c84",
-"r  c #efe7de",
-"t  c #6b635a",
-"y  c #5a5242",
-"u  c #423108",
-"i  c #8c7b4a",
-"p  c #847342",
-"a  c #7b735a",
-"s  c #736331",
-"d  c #312910",
-"f  c #c6a529",
-"g  c #5a4a10",
-"h  c #846b10",
-"j  c #8c8463",
-"k  c #736b4a",
-"l  c #9c8c4a",
-"z  c #8c7b31",
-"x  c #847329",
-"c  c #736321",
-"v  c #a58c29",
-"b  c #efce39",
-"n  c #ad9429",
-"m  c #debd31",
-"M  c #cead29",
-"N  c #d6b529",
-"B  c #ffd631",
-"V  c #debd29",
-"C  c #7b734a",
-"Z  c #736b42",
-"A  c #847321",
-"S  c #c6ad31",
-"D  c #8c7b21",
-"F  c #f7d639",
-"G  c #b59c29",
-"H  c #ffde39",
-"J  c #bda529",
-"K  c #736318",
-"L  c #f7d631",
-"P  c #7b6b18",
-"I  c #847318",
-"U  c #b59c21",
-"Y  c #e7c629",
-"T  c #efce29",
-"R  c #f7d629",
-"E  c #a58c18",
-"W  c #ad9418",
-"Q  c #947b08",
-"!  c #8c8452",
-"~  c #847b42",
-"^  c #6b6331",
-"/  c #635a21",
-"(  c #948429",
-")  c #9c8c29",
-"_  c #948421",
-"`  c #bda521",
-"\'  c #847308",
-"]  c #7b7339",
-"[  c #736b31",
-"{  c #ffe742",
-"}  c #ffe739",
-"|  c #524a10",
-" . c #948418",
-".. c #ffef42",
-"X. c #efefe7",
-"o. c #f7f7ef",
-"O. c #fffff7",
-"+. c #cecec6",
-"@. c #deded6",
-"#. c #e7e7de",
-"$. c #b5b5ad",
-"%. c #c6c6bd",
-"&. c #94948c",
-"*. c #8c8c84",
-"=. c #5a5a52",
-"-. c #52524a",
-";. c #8c8c7b",
-":. c #9c9c84",
-">. c #84846b",
-",. c #292921",
-"<. c #525239",
-"1. c #525231",
-"2. c #212110",
-"3. c #292910",
-"4. c #101000",
-"5. c #f7ffff",
-"6. c #dee7e7",
-"7. c #bdc6c6",
-"8. c #848c8c",
-"9. c #424a4a",
-"0. c #102131",
-"q. c #eff7ff",
-"w. c #081829",
-"e. c #d6dee7",
-"r. c #737b84",
-"t. c #101821",
-"y. c #cedef7",
-"u. c #39527b",
-"i. c #a5bde7",
-"p. c #42639c",
-"a. c #213963",
-"s. c #4284ff",
-"d. c #183973",
-"f. c #e7efff",
-"g. c #c6d6f7",
-"h. c #94adde",
-"j. c #5a6b8c",
-"k. c #4a5a7b",
-"l. c #425273",
-"z. c #4a6394",
-"x. c #425a8c",
-"c. c #29395a",
-"v. c #527bce",
-"b. c #395a9c",
-"n. c #294273",
-"m. c #2952a5",
-"M. c #102142",
-"N. c #183163",
-"B. c #397bff",
-"V. c #295abd",
-"C. c #214a9c",
-"Z. c #18397b",
-"A. c #3173ff",
-"S. c #10295a",
-"D. c #296bef",
-"F. c #184294",
-"G. c #081839",
-"H. c #001031",
-"J. c #737b8c",
-"K. c #9cb5ef",
-"L. c #8ca5de",
-"P. c #6b8cd6",
-"I. c #6384ce",
-"U. c #39528c",
-"Y. c #426bc6",
-"T. c #3963bd",
-"R. c #294a94",
-"E. c #081021",
-"W. c #3973ef",
-"Q. c #21428c",
-"!. c #3163ce",
-"~. c #3973f7",
-"^. c #316be7",
-"/. c #295ac6",
-"(. c #214aa5",
-"). c #183984",
-"_. c #2963e7",
-"`. c #2152bd",
-"\'. c #2152c6",
-"]. c #215ad6",
-"[. c #1842a5",
-"{. c #10317b",
-"}. c #184ab5",
-"|. c #184abd",
-" X c #103994",
-".X c #1042ad",
-"XX c #08215a",
-"oX c #082973",
-"OX c #bdcef7",
-"+X c #6b7ba5",
-"@X c #94adef",
-"#X c #5a6b94",
-"$X c #8ca5e7",
-"%X c #7b94d6",
-"&X c #7394e7",
-"*X c #394a73",
-"=X c #31426b",
-"-X c #5a7bce",
-";X c #5273c6",
-":X c #21315a",
-">X c #4263b5",
-",X c #3152a5",
-"<X c #294a9c",
-"1X c #315abd",
-"2X c #214294",
-"3X c #2952b5",
-"4X c #2952bd",
-"5X c #316bf7",
-"6X c #214ab5",
-"7X c #18398c",
-"8X c #081842",
-"9X c #08297b",
-"0X c #dee7ff",
-"qX c #b5c6f7",
-"wX c #8ca5ef",
-"eX c #738cd6",
-"rX c #7394ef",
-"tX c #6b8ce7",
-"yX c #6384e7",
-"uX c #5273ce",
-"iX c #4a6bc6",
-"pX c #395abd",
-"aX c #3152ad",
-"sX c #18399c",
-"dX c #10318c",
-"fX c #d6def7",
-"gX c #737b94",
-"hX c #5a7be7",
-"jX c #adbdf7",
-"kX c #a5b5ef",
-"lX c #849cef",
-"zX c #849cf7",
-"xX c #7b94ef",
-"cX c #738ce7",
-"vX c #21316b",
-"bX c #ced6f7",
-"nX c #636b8c",
-"mX c #738cef",
-"MX c #6b84e7",
-"NX c #c6cef7",
-"BX c #525a84",
-"VX c #bdc6f7",
-"CX c #e7e7ef",
-"ZX c #efeff7",
-"AX c #f7f7ff",
-"SX c #c6c6ce",
-"DX c #ceced6",
-"FX c #d6d6de",
-"GX c #adadb5",
-"HX c #bdbdc6",
-"JX c #efefff",
-"KX c #bdbdce",
-"LX c #e7e7ff",
-"PX c #dedeff",
-"IX c black",
-"UX c silver",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 <\
- > - * * $ O + + + + O + O + + + + O + & % - ; < < UXUXUXUXUXUXUXUXUXUXUXUXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< > = & @ @\
- $ * : , 3 6 6 o.              o.o.ZX5 1 , ; & t + # & ; , < UXUXUXUXUXUXUXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< - $ + $ - < 5  \
-                                                 5.4 , * @ @ & : < UXUXUXUXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX, = @ @ = 2 o.         \
-                                                           6 , % + % : < UXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< ; # + - 4                  \
-                                                                   < & O & > U\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< - O % 2                        \
-                                                                       o.GX@ $\
- : < UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< ; + = 5                            \
-                                                                             2\
- $ + ; 1 UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 - o = 6                                \
-                                                                              \
-   3 $ @ > UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX, + & o.    6 6 5 6                        \
-                                                                              \
-       2 O & < UXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< = + 3 o., = = = = - - = - < 6                \
-                           AX0XfXbXNXqXqXkXK.@XlXkX                           \
-           ; o > UXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUX, + = 6 ; * GX4 o.  O.r @.@.9 > & - o.           \
-                           OXyXtXtXtXMXtXMXcXtXtXwX                           \
-             5 + & < UXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUX: o 2 3 % <         > k.R.R.U.r.#.  , % 3          \
-                           AXbXK.cXcXcXcX&XmXcXcX@X                           \
-                 = @ < UXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUX; O 6 2 % 6         & sX5XB.B.B.].n.%.  5 % 3        \
-                                 OXcXmX&XcXcX&XtX@X                           \
-                   , o < UXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUX= @ o.o.% 6         ; [.B.B.s.s.B.s.5X*X7   4 %        \
-                                   wXtXcXrXcXcXcX@X                           \
-                     2 O , UXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUX= #     > >         o.u.A.B.s./.<XW.B.B.`.-     ; <      \
-                                   kXtX&XcXcXrXMX@X                           \
-                       3 o < UXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUX> +       = 4         +.m.B.s.m.IXIX0.W.s.D.nX    3 ;      \
-       5.JX                        jXtXmXcX&XcXtX@X                           \
-                         3 o < UXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUX, o o.      = 5         < aXB.s.S.IXIXIX/.s.D.j.O.  3 -      \
-       K.cXq.                      jXMX&XcXmXcXcX@X                           \
-                           1 + 1 UXUXUXUXUXUX",
-"UXUXUXUXUXUXUX1 O 4         ; <         8 <XB.s.2XIXIXE.^.s.D.nX    > >      \
-     qXMX&XAX                      jXtXcX&XcX&XtX@X                           \
-                             ; % UXUXUXUXUXUX",
-"UXUXUXUXUXUXUX# >           6.&         O.l.5XB.B.<Xd.!.s.B.(.;   o.& 6      \
-   NXtXmX&XJX                      jXtXcXmXcXcXMX@X                           \
-                               # : UXUXUXUXUX",
-"UXUXUXUXUXUX> $               : -         0 2XB.s.B.s.s.B._.l.o.  * ,        \
- PX&XcXcX&Xq.                      jXMX&XcX&XmXtX@X                           \
-                               6 O < UXUXUXUX",
-"UXUXUXUXUX1 O 5                 ; * 6       - Q._.A.B.5X\'.k.#.6 & >         \
-0X&XtXcXcXxXAX                      jXtXcXcXcX&XcX@X                          \
-                                  ; = UXUXUXUX",
-"UXUXUXUXUX; *                     1 % ; 4     8 J.z.p.j.= %.; & 2         0X&\
-XcXcXrXcX&XJX                      jXtXcXrXcXcXtX@X                           \
-                                   + 1 UXUXUX",
-"UXUXUXUX1 + 5                         < = * = > $.w e *.- - 1           0X&Xc\
-XmX&XcXcX&Xq.                      jXMX&XcXcX&XMX@X                           \
-                                   : & UXUXUX",
-"UXUXUXUX> %                               o.5 8 +.8 @.X.O.            fX&XcX&\
-XcXcXcXcXxXAX                      jXtXmXcX&XmXtX@X                           \
-                                   o.o 1 UXUX",
-"UXUXUXUX& 1                             5.AXZXfXg.qXi.h.eXL.        VXtXcXmXc\
-XmX&XmXcX&XAX                      jXMX&XcXcXcXcX@X                           \
-                                     & = 1 UX",
-"UXUXUX< @ o.                      q.P.-XiXT.1X1X3X6X6X}.}.iX5.  JXK.MXcXcX&Xc\
-X&XcX&XcX&XK.kXkXkXkXkXkXK.PX      jXtXcX&XmX&XtX@X            f.K.K.kXkXkXkXk\
-XkXkXkXkXK.K.PX                      < O 2 UX",
-"UXUXUX, $                         o.I.1X`././.V.V.V.4X1X6X;X    @XyXtXtXcXcXr\
-XcXcXcXmXcXMXyXyXyXyXyXyXhXOX      jXtXcXcXcXcXMX@X            JXkXxXMXtXtXtXt\
-XtXMXyXtXlXK.0X                      6 o 1 UX",
-"UXUXUX- -                       e.;.l ~ O a.).[.6X/././.4X;X    fXNXbXbXjXcXc\
-X&XmX&XcX&XOXbXbXbXbXbXbXg.ZX      jXMX&XmX&XcXtX@X                AXwXcXcXmXc\
-XtXlXOXf.                              + : 1 ",
-"UXUXUX& GX                    e x M J P f Y G x <.c.Z.C..XiX5.          bXtXc\
-XcX&XcXcXxXAX                      jXtXcXcXcXrXcX@X                  qXMXrXtX&\
-XqXAX                                  $ * 1 ",
-"UXUXUX& %.                  e.P B H M J { { { } H Y J ( ^ -.- 6.        bXtXm\
-X&XcXmXcX&Xq.                      jXtXcX&XcXcXtX@X                  @XtXMX@XC\
-X                                      * % 2 ",
-"UXUXUX# 2                   5 a ! k y / F L { { { { H { } L ` s 7.      g.cXc\
-XcXcX&XcX&XJX                      jXMX&XcXmX&XMX@X              AXkXMXcXqXAX \
-                                       = $ 2 ",
-"UXUXUX# 2                     AX# / c A ] i D f H { { F H { { T C AX    bXtXc\
-XcXrXcXcXxXAX                      jXtXcXmX&XcXtX@X            0XwXyXlXfX     \
-                                       * % 1 ",
-"UXUXUX* <                       0 j :., 5   +XH.g J H { { F { { z 6.    g.tXm\
-X&XcX&XcX&XAX                      jXMX&XcXcXcXcX@X          OXcXMXkXAX       \
-                                       & & 1 ",
-"UXUXUXr.0                                   $X`.dXG.d  .m F { H z e.    bXtXc\
-XcX&XmXcX&XJX                      jXtXcX&XmX&XtX@X      q.K.MX&XbX           \
-                                       # = 1 ",
-"UXUXUX: =                               ZX&.x./././.7X8Xt.d S H ] ZX    bXcXc\
-XrXcXcXmX&Xq.                      jXtXcXcXcXcXMX@X    fXxXMXcXqX             \
-                                       + : < ",
-"UXUXUX, $                             AXa Q vX/.1X1X/./.4X9Xv N *.      bXtXc\
-XcXcX&XcX&XAX                      jXMX&XmX&XcXcX@XAXjXtXcX&XcXcXbX           \
-                                     5 o , 1 ",
-"UXUXUX1 @ 6                           ; U Y vX/.1X4X1X1X/.2XK p CX      g.tXm\
-X&XcXcXcXxXAX                      jXtXcXcXcXrXcXlXwXtXcXcXmX&XcXcXbX         \
-                                     : @ 1 1 ",
-"UXUXUXUX* >                           j T F c vX}./.1X1X4X>XGX6.        bXtXc\
-XcXrXcXcX&XJX                      jXtXcX&XcXcX&XcXMXcX&XcX&XcXmXtXrXfX       \
-                                     $ * < 1 ",
-"UXUXUXUX, #                           >.m { { f 1.vXsX`.\'.uX            bXcX\
-cX&XcX&XmX&Xq.                      jXMX&XcXrXcXcXlXlXcXcXrXcXcX&XcXtXcXPX    \
-                                    5 o , < 2 ",
-"UXUXUXUXUX# 3                         HXA H { { H N x <.a.b.ZX          bXtXc\
-XmX&XcXcX&XAX                      jXtXcXrXcXcXtXK.ZXlXtXcXcXrXcX&XcXcX&X0X   \
-                                   * # 1 < 1 ",
-"UXUXUXUXUX: $                           ; D F { { { } F N ( k DX        g.tXc\
-X&XcXmXcXxXAX                      jXMXcXcX&XcXcX@X  f.&XcX&XcXcXmX&XcXtX&X0X \
-                                 6 X > < 1 UX",
-"UXUXUXUXUX1 # 1                           HX^ W b { { { { { Y [ JX      bXtXm\
-XcX&XcXcX&XAX                      jXtXcX&XmXcXtX@X    f.xXcXcX&XcXmX&XcXcXxXf\
-.                                & # 1 , 2 UX",
-"UXUXUXUXUXUX< O                           , n.8X2.| I U V b { ) 1       g.cX&\
-XcXmX&XcX&XJX                      jXMX&XcXcX&XMX@X      0XxXtXcXcX&XcXcXcXcX&\
-Xf.                            2 . , < 1 1 UX",
-"UXUXUXUXUXUXUX- *                       e h a.!..X{.XXM.G.,.E ] CX      bXtXc\
-XcX&XcXmX&XLX                      jXtXcXmX&XcXcX@X        0X&XcXrXcX&XmX&XcXc\
-XlXJX                        o.o * 1 , 2 UXUX",
-"UXUXUXUXUXUXUX1 @ ,                   FXD R a.!.1X/.!././.Q.=.FX        fXcXm\
-X&XcXcXcXcXbX                      jXMX&XcXcXmXtX@X          fX&XcXcXcX&XcXmXc\
-XtXlXq.                      % @ 1 < 1 1 UXUX",
-"UXUXUXUXUXUXUXUX< o 3                 DX) B c./.1X1X1X1X4XY.AX          f.cXc\
-XmX&XmX&XMXkX              AX      kXtXcX&XcX&XcXwX            fXcXmX&XcXcX&Xc\
-XcXtXwXAX                  - X < < , 1 UXUXUX",
-"UXUXUXUXUXUXUXUXUX< o 4               AXC T [  X/.4X4X4X3X3XbX            @Xt\
-X&XcX&XcXcXcXy.          qXlXAX  AXlXcXcXcXmXcXcXcXf.            y.cXcXcXrXcXc\
-X&XcXMXwXAX              : . > 1 , 2 UXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUX> o 4               KXg ` c :X3X1X1X1X3X-Xq.          bXt\
-XcXmXcXcXrXcX&XjXfX0XfX@XyXjX  5.kXtXcXcXrXcX&XmXcXK.AX            bXmXcXcXcX&\
-XmX&XcXtXwXq.          > . > 1 , 1 1 UXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUX> o 2         fXh.-XoX0.d 4.H.aX4X3X4X6XiXh.fX        j\
-XtXcX&XcXcXcXcXtXcXcXMXMXVXZXqXlXMXcXcXcXcXcXcXcXcXMXxXjXf.          g.cXcXmXc\
-XcXcXcXcXtX&XqXbX5.  ; ,.> 1 , HX1 UXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUX, o ,       %X6X1X!.pX1XaX,XpXT.T.T.T.1X6XeX         \
- OX&XMXtXcXmXcXcXtXMXlXy.  OXMX&X&XxX&XxX&XxX&XxX&X&X&XtXqX            g.&X&Xx\
-X&XxX&XxX&X&XcXzX0X& X , 1 , 1 1 UXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUX< O *     5.AX5.AXAXAX5.5.AXAXAXAXAXAXAX5.         \
-   JXOXK.lXlX&XwXK.g.AX      AX  5.          AX        AX                     \
- AX            4 O -.< < , 1 +.UXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUX1 # O 3                                          \
-           AX                                                                 \
-             > . % 1 HX, 1 1 UXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 ; ,.= o.                                     \
-                                                                              \
-         4 @ X : 1 < < +.1 UXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 HX+ o ,                                    \
-                                                                              \
-     o.8.. % 1 < < < 1 HXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXSX: X + <                                \
-                                                                              \
- o.- X @ > 1 < < < 1 UXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX%.2 = X + >                            \
-                                                                           CX=\
- X + : +.< < < 1 1 UXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 1 = O o * 4                      \
-                                                                       1 $ X @\
- : SX< , < 1 1 UXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 1 ; # X @ ; 5                \
-                                                                 2 * o o & , 1\
- < < < 1 1 UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 2 < = @ X + = 1 o.       \
-                                                         5 , & O o $ : < 1 < <\
- < 1 1 1 UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 2 1 < - # O o @ * > 3\
- o.                                            6 2 ; & + o + % : < 1 < < < < 1\
- 1 UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX1 1 1 2 HX> - $ @ O\
- o + $ * - : , 1 3 3 4 5 5 3 4 2 < , ; = & # O o O # % ; , 1 1 < < < < 1 1 1 U\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX%.1 1 1 1 1 <\
- GX: = % # # + + O O o o O O O + + @ # $ & - > , < 1 1 < < < < 1 1 1 1 UXUXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX< 1 1 1\
- 1 < 1 1 1 1 1 1 < < < , < < < < 1 1 1 1 1 < < < < < 1 1 1 1 1 1 UXUXUXUXUXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX",
-"UXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXU\
-XUX1 < 1 1 1 1 1 1 1 1 < < < < < < < 1 1 < 1 1 1 1 1 < < UXUXUXUXUXUXUXUXUXUXU\
-XUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUXUX"
+"100 64 -237 1",
+" \300\300\300!111\"999#BBB$JJJ%RRR&ZZZ\'ccc(kkk)sss*{{{+\204\204\204,\214\
+\214\214-\224\224\224.\234\234\234/\245\245\245""0\255\255\255""1\265\265\265""\
+2\275\275\275""3\306\306\306""4\316\316\316""5\326\326\326""6\336\336\336""7\
+\347\347\347""8\357\357\357""9\357\347\347:\326\316\316;\347\336\336<\255\245\
+\245=\245\234\224>\224\214\204?\357\347\336@kcZAZRBB\214{JC\204sBD{sZEsc1F1)\
+\20G\306\245)HZJ\20I\204k\20J\214\204""cKskJL\234\214JM\214{1N\204s)Osc!P\245\
+\214)Q\357\316""9R\336\275""1S\316\255)T\326\265)U\377\326""1V\336\275)W{sJX\
+\204s!Y\306\255""1Z\214{![\367\326""9\\\265\234)]\377\336""9^\275\245)_sc\30`\
+\367\326""1a{k\30""b\204s\30""c\265\234!d\347\306)e\357\316)f\367\326)g\245\
+\214\30h\255\224\30i\224{\bj\214\204Rk\204{Blkc1mcZ!n\224\204)o\234\214)p\275\
+\245!q{s9rsk1s\377\347""Bt\377\347""9uRJ\20v\224\204\30w\357\357\347x\367\367\
+\357y\377\377\367z\316\316\306{\336\336\326|\347\347\336}\265\265\255~\306\
+\306\275\177\224\224\214\200\214\214\204\201ZZR\202RRJ\203\214\214{\204\234\
+\234\204\205\204\204k\206))!\207RR9\210RR1\211!!\20\212\20\20\0\213\367\377\
+\377\214\336\347\347\215\275\306\306\216\204\214\214\217\20!1\220\357\367\377\
+\221\326\336\347\222s{\204\223\20\30!\224\316\336\367\225""9R{\226\245\275\
+\347\227""Bc\234\230!9c\231""B\204\377\232\30""9s\233\347\357\377\234\306\326\
+\367\235\224\255\336\236Zk\214\237JZ{\240""BRs\241Jc\224\242""BZ\214\243)9Z\
+\244""9Z\234\245)Bs\246)R\245\247\20!B\250""9{\377\251)Z\275\252!J\234\253\30""\
+9{\254""1s\377\255\20)Z\256)k\357\257\b\30""9\260\0\20""1\261s{\214\262\234\
+\265\357\263\214\245\336\264k\214\326\265""c\204\316\266""9R\214\267""Bk\306\
+\270""9c\275\271)J\224\272\b\20!\273""9s\357\274!B\214\275""1c\316\276""1k\
+\347\277)Z\306\300!J\245\301\30""9\204\302)c\347\303!R\275\304!R\306\305!Z\
+\326\306\30""B\245\307\20""1{\310\30J\265\311\20""9\224\312\20""B\255\313\b!Z\
+\314\b)s\315\275\316\367\316k{\245\317\224\255\357\320\214\245\347\321{\224\
+\326\322s\224\347\323""9Js\324Z{\316\325Rs\306\326!1Z\327""Bc\265\330""1R\245\
+\331)J\234\332""1Z\275\333!B\224\334)R\265\335)R\275\336""1k\367\337!J\265\
+\340\30""9\214\341\b\30""B\342\b){\343\336\347\377\344\265\306\367\345\214\
+\245\357\346s\214\326\347s\224\357\350k\214\347\351""c\204\347\352Rs\316\353Jk\
+\306\354""9Z\275\355""1R\255\356\30""9\234\357\20""1\214\360\326\336\367\361Z{\
+\347\362\255\275\367\363\245\265\357\364\204\234\357\365\204\234\367\366{\224\
+\357\367s\214\347\370!1k\371\316\326\367\372""ck\214\373s\214\357\374k\204\
+\347\375\306\316\367\376\275\306\367\377\347\347\357\0\357\357\367\1\367\367\
+\377\2\306\306\316\3\316\316\326\4\326\326\336\5\255\255\265\6\275\275\306\7\
+\357\357\377\b\275\275\316\t\347\347\377\n\336\336\377\13\0\0\0\f\377\377\377",
+"                                     320-++($%%%%$%$%%%%$%*)-.22             \
+                       ",
+"                                 20,*&&(+/1588x\f\f\f\f\f\f\fxx\0""731.*@%\'*\
+.12                               ",
+"                              2-(%(-27\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\213""61+&&*/2                            ",
+"                           1,&&,4x\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f81)%)/2                         ",
+"                        2.\'%-6\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f2*$*0                       ",
+"                      2-$)4\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\fx\5&(/2                    ",
+"                    2.%,7\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f4(%.3                  ",
+"                  3-#,8\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f5(&0                \
+ ",
+"                 1%*x\f\f8878\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f4$*2              \
+ ",
+"               2,%5x1,,,,--,-28\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\1\
+\343\360\371\375\344\344\363\262\317\364\363\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f.#0              ",
+"              1%,8.+\5""6x\fy?{{;0*-x\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\315\351\350\350\350\374\350\374\367\350\350\345\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f7%*2            ",
+"             /#45)2\f\f\f\f0\237\271\271\266\222|\f1)5\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\1\371\262\367\367\367\367\322\373\367\367\317\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f,&2           ",
+"            .$84)8\f\f\f\f*\356\336\250\250\250\305\245~\f7)5\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\315\367\373\322\367\367\322\350\317\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f1#2          ",
+"           ,&xx)8\f\f\f\f.\306\250\250\231\231\250\231\336\323""9\f6)\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\345\350\367\347\367\367\367\317\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f4$1         ",
+"          ,\'\f\f00\f\f\f\fx\225\254\250\231\277\331\273\250\250\303-\f\f.2\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\363\350\322\367\367\347\374\317\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f5#2        ",
+"         0%\f\f\f,6\f\f\f\fz\246\250\231\246\13\13\217\273\231\256\372\f\f5.\
+\f\f\f\f\f\f\213\7\f\f\f\f\f\f\f\f\f\f\f\f\362\350\373\367\322\367\350\317\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f5#2       ",
+"        1#x\f\f\f,7\f\f\f\f2\355\250\231\255\13\13\13\277\231\256\236y\f5-\f\
+\f\f\f\f\f\262\367\220\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\373\367\367\317\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f3%3      ",
+"       3$6\f\f\f\f.2\f\f\f\f:\331\250\231\333\13\13\272\276\231\256\372\f\f00\
+\f\f\f\f\f\344\374\322\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\322\367\322\350\
+\317\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f.)      ",
+"       \'0\f\f\f\f\f\214*\f\f\f\fy\240\336\250\250\331\232\275\231\250\300.\f\
+x*8\f\f\f\f\375\350\373\322\7\f\f\f\f\f\f\f\f\f\f\f\362\350\367\373\367\367\
+\374\317\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\'/     ",
+"      0(\f\f\f\f\f\f\f/-\f\f\f\f<\333\250\231\250\231\231\250\302\240x\f+1\f\
+\f\f\f\n\322\367\367\322\220\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\322\373\
+\350\317\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f8$2    ",
+"     3$7\f\f\f\f\f\f\f\f.+8\f\f\f-\274\302\254\250\336\304\237|8*0\f\f\f\f\
+\343\322\350\367\367\366\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\367\367\322\367\
+\317\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f.,    ",
+"     .+\f\f\f\f\f\f\f\f\f\f3).6\f\f:\261\241\227\236,~.*4\f\f\f\f\343\322\
+\367\367\347\367\322\7\f\f\f\f\f\f\f\f\f\f\f\362\350\367\347\367\367\350\317\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f%3   ",
+"    3%7\f\f\f\f\f\f\f\f\f\f\f\f2,+,0}=>\200--3\f\f\f\f\f\343\322\367\373\322\
+\367\367\322\220\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\367\322\374\317\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f/*   ",
+"    0)\f\f\f\f\f\f\f\f\f\f\f\f\f\f\fx7:z:{wy\f\f\f\f\f\f\360\322\367\322\367\
+\367\367\367\366\1\f\f\f\f\f\f\f\f\f\f\f\362\350\373\367\322\373\350\317\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\fx#3  ",
+"    *3\f\f\f\f\f\f\f\f\f\f\f\f\f\f\213\1\0\360\234\344\226\235\346\263\f\f\f\
+\f\376\350\367\373\367\373\322\373\367\322\1\f\f\f\f\f\f\f\f\f\f\f\362\374\
+\322\367\367\367\367\317\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f*,3 ",
+"   2&x\f\f\f\f\f\f\f\f\f\f\f\220\264\324\353\270\332\332\334\337\337\310\310\
+\353\213\f\7\262\374\367\367\322\367\322\367\322\367\322\262\363\363\363\363\
+\363\363\262\n\f\f\f\362\350\367\322\373\322\350\317\f\f\f\f\f\f\233\262\262\
+\363\363\363\363\363\363\363\363\363\262\262\n\f\f\f\f\f\f\f\f\f\f\f2$4 ",
+"   1(\f\f\f\f\f\f\f\f\f\f\f\fx\265\332\303\277\277\251\251\251\335\332\337\
+\325\f\f\317\351\350\350\367\367\347\367\367\367\373\367\374\351\351\351\351\
+\351\351\361\315\f\f\f\362\350\367\367\367\367\374\317\f\f\f\f\f\f\7\363\366\
+\374\350\350\350\350\350\374\351\350\364\262\343\f\f\f\f\f\f\f\f\f\f\f8#3 ",
+"   --\f\f\f\f\f\f\f\f\f\f\f\221\203Lk$\230\301\306\337\277\277\277\335\325\f\
+\f\360\375\371\371\362\367\367\322\373\322\367\322\315\371\371\371\371\371\
+\371\234\0\f\f\f\362\374\322\373\322\367\350\317\f\f\f\f\f\f\f\f\1\345\367\
+\367\373\367\350\364\315\233\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f%/3",
+"   *\5\f\f\f\f\f\f\f\f\f\f>NS^aGd\\N\207\243\253\252\312\353\213\f\f\f\f\f\
+\371\350\367\367\322\367\367\366\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\367\367\
+\347\367\317\f\f\f\f\f\f\f\f\f\344\374\347\350\322\344\1\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f(+3",
+"   *~\f\f\f\f\f\f\f\f\f\221""aU]S^ssst]d^nl\202-\214\f\f\f\f\371\350\373\322\
+\367\373\367\322\220\f\f\f\f\f\f\f\f\f\f\f\362\350\367\322\367\367\350\317\f\f\
+\f\f\f\f\f\f\f\317\350\374\317\377\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f+)4",
+"   \'4\f\f\f\f\f\f\f\f\f7DjKAm[`ssss]st`pE\215\f\f\f\234\367\367\367\367\322\
+\367\322\7\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\373\322\374\317\f\f\f\f\f\f\f\
+\1\363\374\367\344\1\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f,(4",
+"   \'4\f\f\f\f\f\f\f\f\f\f\1\'mOXqBZG]ss[]sseW\1\f\f\371\350\367\367\347\367\
+\367\366\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\373\322\367\350\317\f\f\f\f\f\f\
+\343\345\351\364\360\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f+)3",
+"   +2\f\f\f\f\f\f\f\f\f\f\f<J\204""17\f\316\260H^]ss[ssM\214\f\f\234\350\373\
+\322\367\322\367\322\1\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\367\367\367\317\f\
+\f\f\f\f\315\367\374\363\1\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f**3",
+"   \222<\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\320\303\357\257""FvR[s]M\221\f\f\
+\371\350\367\367\322\373\367\322\7\f\f\f\f\f\f\f\f\f\f\f\362\350\367\322\373\
+\322\350\317\f\f\f\220\262\374\322\371\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\',3",
+"   /,\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\0\177\242\277\277\277\340\341\223""FY]q\
+\0\f\f\371\367\367\347\367\367\373\322\220\f\f\f\f\f\f\f\f\f\f\f\362\350\367\
+\367\367\367\374\317\f\f\360\366\374\367\344\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f%/2",
+"   1(\f\f\f\f\f\f\f\f\f\f\f\f\f\f\1""Di\370\277\332\332\277\277\335\342PT\
+\200\f\f\f\371\350\367\367\367\322\367\322\1\f\f\f\f\f\f\f\f\f\f\f\362\374\
+\322\373\322\367\367\317\1\362\350\367\322\367\367\371\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f7#13",
+"   3&8\f\f\f\f\f\f\f\f\f\f\f\f\f.cd\370\277\332\335\332\332\277\333_C\377\f\f\
+\f\234\350\373\322\367\367\367\366\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\367\
+\367\347\367\364\345\350\367\367\373\322\367\367\371\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f/&33",
+"    +0\f\f\f\f\f\f\f\f\f\f\f\f\fJe[O\370\310\277\332\332\335\327\5\214\f\f\f\
+\f\371\350\367\367\347\367\367\322\7\f\f\f\f\f\f\f\f\f\f\f\362\350\367\322\
+\367\367\322\367\374\367\322\367\322\367\373\350\347\360\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f(+23",
+"    1\'\f\f\f\f\f\f\f\f\f\f\f\f\f\205RssG\210\370\356\303\304\352\f\f\f\f\f\f\
+\371\367\367\322\367\322\373\322\220\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\
+\347\367\367\364\364\367\367\347\367\367\322\367\350\367\n\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f7#124",
+"     \'5\f\f\f\f\f\f\f\f\f\f\f\f\6X]ss]TN\207\230\244\0\f\f\f\f\f\371\350\
+\367\373\322\367\367\322\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\347\367\367\350\
+\262\0\364\350\367\367\347\367\322\367\367\322\343\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f+\'323",
+"     /(\f\f\f\f\f\f\f\f\f\f\f\f\f.Z[ssst[TnK\3\f\f\f\f\234\350\367\322\367\
+\373\367\366\1\f\f\f\f\f\f\f\f\f\f\f\362\374\367\367\322\367\367\317\f\233\
+\322\367\322\367\367\373\322\367\350\322\343\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+8\"023 ",
+"     3\'3\f\f\f\f\f\f\f\f\f\f\f\f\f\6lhQsssssdr\7\f\f\f\371\350\373\367\322\
+\367\367\322\1\f\f\f\f\f\f\f\f\f\f\f\362\350\367\322\373\367\350\317\f\f\233\
+\366\367\367\322\367\373\322\367\367\366\233\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f*\
+\'314 ",
+"      2$\f\f\f\f\f\f\f\f\f\f\f\f\f1\245\341\211ubcVQso3\f\f\f\234\367\322\
+\367\373\322\367\322\7\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\367\322\374\317\f\
+\f\f\343\366\350\367\367\322\367\367\367\367\322\233\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f4!1233 ",
+"       -+\f\f\f\f\f\f\f\f\f\f\f>I\230\275\312\307\313\247\257\206gq\377\f\f\f\
+\371\350\367\367\322\367\373\322\t\f\f\f\f\f\f\f\f\f\f\f\362\350\367\373\322\
+\367\367\317\f\f\f\f\343\322\367\347\367\322\373\322\367\367\364\7\f\f\f\f\f\f\
+\f\f\f\f\f\fx#+314  ",
+"       3&1\f\f\f\f\f\f\f\f\f\4Zf\230\275\332\277\275\277\277\274\201\4\f\f\f\
+\f\360\367\373\322\367\367\367\367\371\f\f\f\f\f\f\f\f\f\f\f\362\374\322\367\
+\367\373\350\317\f\f\f\f\f\360\322\367\367\367\322\367\373\367\350\364\220\f\f\
+\f\f\f\f\f\f\f\f\f)&3233  ",
+"        2#5\f\f\f\f\f\f\f\f\3oU\243\277\332\332\332\332\335\267\1\f\f\f\f\f\
+\233\367\367\373\322\373\322\374\363\f\f\f\f\f\f\f\1\f\f\f\363\350\367\322\
+\367\322\367\345\f\f\f\f\f\f\360\367\373\322\367\367\322\367\367\350\345\1\f\f\
+\f\f\f\f\f\f\f-\"2213   ",
+"         2#6\f\f\f\f\f\f\f\1Wer\311\277\335\335\335\334\334\371\f\f\f\f\f\f\
+\317\350\322\367\322\367\367\367\224\f\f\f\f\f\344\364\1\f\1\364\367\367\367\
+\373\367\367\367\233\f\f\f\f\f\f\224\367\367\367\347\367\367\322\367\374\345\
+\1\f\f\f\f\f\f\f/!0314    ",
+"          0#6\f\f\f\f\f\f\f\bHpO\326\334\332\332\332\334\324\220\f\f\f\f\f\
+\371\350\367\373\367\367\347\367\322\362\360\343\360\317\351\362\f\213\363\
+\350\367\367\347\367\322\373\367\262\1\f\f\f\f\f\f\371\373\367\367\367\322\
+\373\322\367\350\345\220\f\f\f\f\f0!03133    ",
+"           0#4\f\f\f\f\360\235\324\314\217""F\212\260\355\335\334\335\337\
+\353\235\360\f\f\f\f\362\350\367\322\367\367\367\367\350\367\367\374\374\376\
+\0\344\364\374\367\367\367\367\367\367\367\367\374\366\362\233\f\f\f\f\f\234\
+\367\367\373\367\367\367\367\367\350\322\344\371\213\f.\206""031\6""3     ",
+"            1#1\f\f\f\321\337\332\275\354\332\355\330\354\270\270\270\270\
+\332\337\346\f\f\f\f\f\315\322\374\350\367\373\367\367\350\374\364\224\f\315\
+\374\322\322\366\322\366\322\366\322\366\322\322\322\350\344\f\f\f\f\f\f\234\
+\322\322\366\322\366\322\366\322\322\367\365\343*\"13133      ",
+"             2$+\f\f\213\1\213\1\1\1\213\213\1\1\1\1\1\1\1\213\f\f\f\f\f\f\7\
+\315\262\364\364\322\345\262\234\1\f\f\f\1\f\213\f\f\f\f\f\1\f\f\f\f\1\f\f\f\f\
+\f\f\f\f\f\f\f\1\f\f\f\f\f\f6$\202""2213z       ",
+"              3\'$5\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\1\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f0!)3\
+\6""133        ",
+"               3.\206,x\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f6&\"/322\
+z3         ",
+"                3\6%#1\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\fx\216!)32223\
+\6          ",
+"                  \2/\"%2\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\fx-\"&032223         \
+   ",
+"                   ~4,\"%0\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\377,\"%/z22233           \
+  ",
+"                     33,$#+6\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f3(\"&/\2""21233               ",
+"                       33.\'\"&.7\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f4+##*1322233                 ",
+"                         342,&\"%,3x\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f\f\f\f\f\f\f\f\f71*$#(/23222333                  ",
+"                           3432-\'$#&+05x\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\f\
+\f\f\f\f84.*%#%)/23222233                     ",
+"                             3334\6""0-(&$#%(+-/135567756421.,*\'$#$\').13322\
+22333                       ",
+"                                ~333332\5/,)\'\'%%$$##$$$%%&\'(*-012332222333\
+3                          ",
+"                                   233332333333222122223333322222333333      \
+                       ",
+"                                        323333333322222223323333322          \
+                       "
 };
 static Fl_Pixmap pixmap_itkLogoSmallTransparentBackground(image_itkLogoSmallTransparentBackground);
 
