@@ -56,11 +56,11 @@ FileIOMetaImage::~FileIOMetaImage()
 {
 }
 
-void FileIOMetaImage::Reset ()
+void FileIOMetaImage::Reset (const bool freeDynamic)
 {
   int i;
 
-  ImageIO::Reset();
+  ImageIO::Reset( freeDynamic );
   m_Modality = MET_MOD_UNKNOWN;
   m_Comment = "";
   m_Date = "";

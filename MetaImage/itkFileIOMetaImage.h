@@ -203,7 +203,7 @@ protected:
   MET_Type ConvertAtomicPixelTypeToMET_Type (const AtomicPixelType value) const;
   void CopyAcquisitionParamsToImageIO (MetaImage* fromHere);
   void CopyAcquisitionParamsToMetaImage (MetaImage* toHere);
-  virtual void Reset();
+  virtual void Reset(const bool freeDynamic = true);
 
   /**
    * Default constructor
