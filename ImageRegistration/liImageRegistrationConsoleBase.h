@@ -25,7 +25,7 @@
 #include <itkImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration.h>
 #include <itkImageToImageAffinePatternIntensityRegularStepGradientDescentRegistration.h>
 #include <itkImageToImageAffineNormalizedCorrelationRegularStepGradientDescentRegistration.h>
-#include <itkImageToImageAffineMutualInformationRegistration.h>
+#include <itkImageToImageAffineMutualInformationGradientDescentRegistration.h>
 #include <itkDataAccessor.h>
 
 
@@ -97,7 +97,7 @@ public:
                                                 TargetType> 
                                                   PatternIntensityRegistrationMethodType;
 
-  typedef   itk::ImageToImageAffineMutualInformationRegistration<
+  typedef   itk::ImageToImageAffineMutualInformationGradientDescentRegistration<
                                                 ReferenceType,
                                                 TargetType> 
                                                   MutualInformationRegistrationMethodType;
@@ -135,6 +135,7 @@ public:
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
   virtual void Execute(void);
+  virtual void Stop(void);
   virtual void GenerateReference(void);
   virtual void GenerateMappedReference(void);
   virtual void UpdateTransformationParameters(void);

@@ -54,7 +54,12 @@ private:
   inline void cb_mappedReferenceButton_i(fltk::LightButton*, void*);
   static void cb_mappedReferenceButton(fltk::LightButton*, void*);
 public:
-  Fl_Group *transformParameters;
+  Fl_Group *rotationParameters;
+  Fl_Value_Input *xRotation;
+  Fl_Value_Input *yRotation;
+  Fl_Value_Input *zRotation;
+  Fl_Value_Input *angleRotation;
+  Fl_Group *translationParameters;
   Fl_Value_Input *xTranslation;
   Fl_Value_Input *yTranslation;
   Fl_Value_Input *zTranslation;
@@ -68,6 +73,8 @@ private:
   static void cb_Pattern(Fl_Menu_*, void*);
   inline void cb_Mutual_i(Fl_Menu_*, void*);
   static void cb_Mutual(Fl_Menu_*, void*);
+  inline void cb_Stop_i(Fl_Button*, void*);
+  static void cb_Stop(Fl_Button*, void*);
 public:
   fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;

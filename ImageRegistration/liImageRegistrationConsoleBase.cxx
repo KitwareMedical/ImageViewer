@@ -161,7 +161,7 @@ liImageRegistrationConsoleBase
 
   ReferenceIteratorType it( m_ReferenceImage,
                    m_ReferenceImage->GetRequestedRegion() );
-
+  
   float percent = 0.0;
 
   const unsigned long totalPixels =
@@ -209,6 +209,45 @@ liImageRegistrationConsoleBase
 
 
  
+
+
+/************************************
+ *
+ *  Stop Registration
+ *
+ ***********************************/
+void
+liImageRegistrationConsoleBase 
+::Stop( void )
+{
+
+  if( ! (m_ImageLoaded) ) 
+  {
+    this->ShowStatus("Please load an image first");
+    return;
+  }
+  
+  switch( m_SelectedMethod )
+  {
+  case mutualInformation:
+    m_MutualInformationMethod->GetOptimizer()->StopOptimization();
+    break;
+  case normalizedCorrelation:
+    m_NormalizedCorrelationMethod->GetOptimizer()->StopOptimization();
+    break;
+  case patternIntensity:
+    m_PatternIntensityMethod->GetOptimizer()->StopOptimization();
+    break;
+  case meanSquares:
+    m_MeansSquaresMethod->GetOptimizer()->StopOptimization();
+    break;
+  }
+
+
+
+}
+
+
 
 
 /************************************

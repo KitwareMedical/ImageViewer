@@ -348,11 +348,50 @@ liImageRegistrationConsole
 ::UpdateTransformationParameters( void )
 {
 
+  typedef   itk::AffineTransform<double,3> TransformType;
+
+  TransformType affineTransform;
+
+  TransformType::VectorType      offset;
+  TransformType::VectorType      axis;
+
+  const double  angle = angleRotation->value() * atan( 1.0 ) / 45.0 ;
+
+  axis[0] = xRotation->value();
+  axis[1] = yRotation->value();
+  axis[2] = zRotation->value();
+
+  offset[0] = xTranslation->value();
+  offset[1] = yTranslation->value();
+  offset[2] = zTranslation->value();
+
+  affineTransform.Rotate3D( axis, angle );
+  affineTransform.SetOffset( offset );
+
+  TransformType::MatrixType matrix;
+
+  matrix = affineTransform.GetMatrix();
+  offset = affineTransform.GetOffset();
+
+  std::cout << "Matrix = " << matrix << std::endl;
+  std::cout << "Offset = " << offset << std::endl;
+
   ParametersType transformationParameters;
 
-  transformationParameters[0] = xTranslation->value();
-  transformationParameters[1] = yTranslation->value();
-  transformationParameters[2] = zTranslation->value();
+  unsigned int counter = 0;
+
+  for(unsigned int i=0; i<ImageDimension; i++)
+  {
+    for(unsigned int j=0; j<ImageDimension; j++)
+    {
+      transformationParameters[counter++] = matrix[i][j];
+    }
+  }
+
+  for(unsigned int k=0; k<ImageDimension; k++)
+  {
+    transformationParameters[counter++] = offset[k];
+  }
 
   m_ImageMapper->GetTransformation()->SetParameters(
                                               transformationParameters);

@@ -119,6 +119,13 @@ Fl_Menu_Item liImageRegistrationConsoleGUI::menu_1[] = {
  {0}
 };
 
+inline void liImageRegistrationConsoleGUI::cb_Stop_i(Fl_Button*, void*) {
+  Stop();
+}
+void liImageRegistrationConsoleGUI::cb_Stop(Fl_Button* o, void* v) {
+  ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Stop_i(o,v);
+}
+
 inline void liImageRegistrationConsoleGUI::cb_Documentation_i(Fl_Button*, void*) {
   aboutWindow->hide();
 }
@@ -1735,131 +1742,146 @@ static Fl_Pixmap pixmap_itkLogo(image_itkLogo);
 
 liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
   Fl_Window* w;
-  { Fl_Window* o = consoleWindow = new Fl_Window(757, 391, "Image Registration Console");
+  { Fl_Window* o = consoleWindow = new Fl_Window(843, 390, "Image Registration Console");
     w = o;
     o->user_data((void*)(this));
-    { Fl_Menu_Bar* o = new Fl_Menu_Bar(0, 0, 760, 25);
+    { Fl_Menu_Bar* o = new Fl_Menu_Bar(0, 0, 845, 25);
       o->menu(menu_);
     }
-    { Fl_Group* o = Connectors = new Fl_Group(0, 25, 755, 365);
-      { Fl_Box* o = new Fl_Box(65, 90, 8, 90);
+    { Fl_Group* o = Connectors = new Fl_Group(0, 25, 835, 365);
+      { Fl_Box* o = new Fl_Box(190, 70, 8, 90);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(212, 170, 8, 90);
+      { Fl_Box* o = new Fl_Box(255, 170, 8, 90);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(108, 85, 215, 10);
+      { Fl_Box* o = new Fl_Box(215, 65, 210, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(325, 250, 160, 10);
+      { Fl_Box* o = new Fl_Box(440, 250, 160, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(212, 250, 55, 10);
+      { Fl_Box* o = new Fl_Box(255, 250, 115, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(320, 183, 8, 76);
+      { Fl_Box* o = new Fl_Box(420, 170, 8, 89);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(315, 85, 8, 90);
+      { Fl_Box* o = new Fl_Box(420, 65, 8, 90);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(346, 170, 105, 10);
+      { Fl_Box* o = new Fl_Box(460, 155, 105, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(478, 185, 8, 75);
+      { Fl_Box* o = new Fl_Box(595, 170, 8, 90);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(495, 170, 100, 10);
+      { Fl_Box* o = new Fl_Box(630, 155, 100, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(65, 170, 55, 10);
+      { Fl_Box* o = new Fl_Box(275, 155, 90, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(165, 170, 55, 10);
+      { Fl_Box* o = new Fl_Box(210, 180, 8, 90);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(145, 180, 8, 90);
+      { Fl_Box* o = new Fl_Box(75, 149, 8, 90);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(98, 260, 55, 10);
+      { Fl_Box* o = new Fl_Box(75, 148, 122, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
       o->end();
     }
-    { Fl_Group* o = controlsGroup = new Fl_Group(0, 25, 755, 365);
+    { Fl_Group* o = controlsGroup = new Fl_Group(0, 25, 840, 365);
       o->deactivate();
-      { fltk::LightButton* o = targetButton = new fltk::LightButton(20, 75, 105, 30, "Target");
+      { fltk::LightButton* o = targetButton = new fltk::LightButton(140, 55, 105, 30, "Target");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_targetButton);
       }
-      { Fl_Button* o = new Fl_Button(585, 255, 105, 45, "Start Regisration");
+      { Fl_Button* o = new Fl_Button(685, 215, 105, 45, "Start Regisration");
         o->box(FL_ROUND_UP_BOX);
         o->callback((Fl_Callback*)cb_Start);
         o->align(FL_ALIGN_WRAP);
       }
-      { fltk::LightButton* o = referenceButton = new fltk::LightButton(235, 240, 105, 30, "Reference");
+      { fltk::LightButton* o = referenceButton = new fltk::LightButton(350, 240, 105, 30, "Reference");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_referenceButton);
       }
-      { Fl_Button* o = new Fl_Button(85, 150, 115, 55, "Apply Known Transformation");
+      { Fl_Button* o = new Fl_Button(160, 128, 130, 55, "Apply Known Transformation");
         o->box(FL_ROUND_UP_BOX);
         o->callback((Fl_Callback*)cb_Apply);
         o->align(FL_ALIGN_WRAP);
       }
-      { fltk::LightButton* o = registrationMethodButton = new fltk::LightButton(285, 148, 130, 51, "Registration Method");
+      { fltk::LightButton* o = registrationMethodButton = new fltk::LightButton(355, 134, 130, 51, "Registration Method");
         o->type(0);
         o->box(FL_ROUND_UP_BOX);
         o->value(1);
         o->selection_color(1);
         o->align(132|FL_ALIGN_INSIDE);
       }
-      { Fl_Button* o = new Fl_Button(438, 151, 125, 49, "Estimated Transformation");
+      { Fl_Button* o = new Fl_Button(538, 133, 125, 49, "Estimated Transformation");
         o->box(FL_ROUND_UP_BOX);
         o->callback((Fl_Callback*)cb_Estimated);
         o->align(FL_ALIGN_WRAP);
       }
-      { fltk::LightButton* o = mappedReferenceButton = new fltk::LightButton(585, 155, 105, 40, "Mapped Reference");
+      { fltk::LightButton* o = mappedReferenceButton = new fltk::LightButton(700, 139, 105, 40, "Mapped Reference");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_mappedReferenceButton);
         o->align(132|FL_ALIGN_INSIDE);
       }
-      { Fl_Group* o = transformParameters = new Fl_Group(18, 215, 100, 100);
+      { Fl_Group* o = rotationParameters = new Fl_Group(20, 173, 100, 140, "Rotation");
         o->box(FL_ENGRAVED_BOX);
-        xTranslation = new Fl_Value_Input(56, 226, 50, 25, "X : ");
-        yTranslation = new Fl_Value_Input(56, 251, 50, 25, "Y : ");
-        zTranslation = new Fl_Value_Input(56, 276, 50, 25, "Z : ");
+        o->align(FL_ALIGN_TOP|FL_ALIGN_INSIDE);
+        xRotation = new Fl_Value_Input(58, 224, 50, 25, "X : ");
+        yRotation = new Fl_Value_Input(58, 249, 50, 25, "Y : ");
+        zRotation = new Fl_Value_Input(58, 274, 50, 25, "Z : ");
+        angleRotation = new Fl_Value_Input(59, 198, 50, 25, "A : ");
         o->end();
       }
-      { Fl_Choice* o = new Fl_Choice(265, 118, 165, 30);
+      { Fl_Group* o = translationParameters = new Fl_Group(135, 200, 100, 113, "Translation");
+        o->box(FL_ENGRAVED_BOX);
+        o->align(FL_ALIGN_TOP|FL_ALIGN_INSIDE);
+        xTranslation = new Fl_Value_Input(173, 224, 50, 25, "X : ");
+        yTranslation = new Fl_Value_Input(173, 249, 50, 25, "Y : ");
+        zTranslation = new Fl_Value_Input(173, 274, 50, 25, "Z : ");
+        o->end();
+      }
+      { Fl_Choice* o = new Fl_Choice(345, 105, 165, 30);
         o->menu(menu_1);
+      }
+      { Fl_Button* o = new Fl_Button(685, 265, 105, 45, "Stop Regisration");
+        o->box(FL_ROUND_UP_BOX);
+        o->callback((Fl_Callback*)cb_Stop);
+        o->align(FL_ALIGN_WRAP);
       }
       o->end();
     }
-    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 735, 15);
+    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 825, 15);
       o->type(3);
       o->selection_color(2);
     }
-    statusTextOutput = new Fl_Output(5, 349, 735, 25);
+    statusTextOutput = new Fl_Output(5, 349, 825, 25);
     o->end();
   }
   { Fl_Window* o = aboutWindow = new Fl_Window(471, 338, "About ...");
