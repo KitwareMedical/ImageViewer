@@ -117,7 +117,7 @@ void correctBias(ImagePointer input, MaskPointer mask,
   if (maskAvailable)
     {
       itk::ImageRegionIteratorWithIndex<MaskType> mIter(mask, region) ;
-      mIter.GotoBegin() ;
+      mIter.GoToBegin() ;
       // mask diff image
       while (!oIter.IsAtEnd())
         {
