@@ -14,10 +14,6 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
-      Fl_Button {} {
-        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
-        xywh {10 75 110 75} box FLAT_BOX labeltype image
-      }
       Fl_Menu_Bar {} {
         xywh {0 0 250 25}
       } {

@@ -146,10 +146,6 @@ class ImageRegistrationConsoleGUI {open : {public ImageRegistrationConsoleBase}
           callback {Execute();}
           xywh {156 265 65 27} box ROUND_UP_BOX labelsize 12 align 128
         }
-        Fl_Button {} {
-          label {../../Documentation/Art/itkLogoSmall.gif}
-          xywh {75 18 100 67} box DOWN_FRAME labeltype image
-        }
         Fl_Choice {} {
           label Transform
           xywh {470 34 99 30} labelsize 12 align 1 textsize 12
