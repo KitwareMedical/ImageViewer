@@ -36,8 +36,10 @@ namespace fem {
  */
 template < typename TFEMMesh >
 class FEMElementLine : 
-        public FEMElement< LineCell < typename TFEMMesh::PixelType,
-                                      typename TFEMMesh::CellTraits >,
+        public FEMElement< LineCell < 
+                                CellInterface<
+                                      typename TFEMMesh::PixelType,
+                                      typename TFEMMesh::CellTraits > >,
                            TFEMMesh >
 {
 

@@ -52,7 +52,8 @@
   typedef typename FEMMeshType::PixelType         PixelType;      \
   typedef typename FEMMeshType::CoordRepType      CoordinateRepresentationType;   \
   enum    { PointDimension = PointType::PointDimension }; \
-  typedef baseCellType< PixelType, CellTraits >       BaseCellType;    \
+  typedef CellInterface< PixelType, CellTraits >      CellInterfaceType;    \
+  typedef baseCellType< CellInterfaceType >           BaseCellType;    \
   typedef typename BaseCellType::PointIdIterator      PointIdIterator;      \
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;   \
   typedef FEMElement< BaseCellType, FEMMeshType >         Superclass;     \

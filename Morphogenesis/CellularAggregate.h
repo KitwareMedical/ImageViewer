@@ -83,9 +83,10 @@ public:
   typedef MeshType::PointIdentifier               IdentifierType;
 
   /**   Voronoi region around a bio::Cell */
-  typedef itk::PolygonCell<  MeshType::CellPixelType, 
-                             MeshType::CellTraits > VoronoiRegionType;
-  typedef VoronoiRegionType::Pointer VoronoiRegionPointer;
+  typedef itk::CellInterface<  MeshType::CellPixelType, 
+                               MeshType::CellTraits >     CellInterfaceType;
+  typedef itk::PolygonCell<  CellInterfaceType >          VoronoiRegionType;
+  typedef VoronoiRegionType::Pointer                      VoronoiRegionPointer;
 
   /** Convenient typedefs. */
   typedef double                                          ImagePixelType;

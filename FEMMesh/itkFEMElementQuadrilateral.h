@@ -36,8 +36,10 @@ namespace fem {
  */
 template < typename TFEMMesh >
 class FEMElementQuadrilateral : 
-        public FEMElement< QuadrilateralCell <  typename TFEMMesh::PixelType,
-                                                typename TFEMMesh::CellTraits >,
+        public FEMElement< QuadrilateralCell <  
+                                  CellInterface < 
+                                        typename TFEMMesh::PixelType,
+                                        typename TFEMMesh::CellTraits > >,
                            TFEMMesh >
 {
 

@@ -21,6 +21,7 @@
 #include "itkFEMHeatConduction2D.h"
 #include "itkFEMElementTriangleHeatConductionVisitor.h"
 #include "itkFEMElementQuadrilateralHeatConductionVisitor.h"
+#include "vnl/algo/vnl_lsqr.h"
 
 
 namespace itk {
@@ -133,6 +134,10 @@ FEMHeatConduction2D
 
   std::cout << "Stiffness Matrix = " << std::endl;
   std::cout << m_StiffnessMatrix     << std::endl;
+
+  std::cout << "Number of Columns = " << m_StiffnessMatrix.cols() << std::endl;
+  std::cout << "Number of Rows    = " << m_StiffnessMatrix.rows() << std::endl;
+
 
 }
 

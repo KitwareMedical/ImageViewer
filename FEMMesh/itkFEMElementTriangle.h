@@ -36,8 +36,9 @@ namespace fem {
  */
 template < typename TFEMMesh >
 class FEMElementTriangle : 
-        public FEMElement< TriangleCell < typename TFEMMesh::PixelType,
-                                          typename TFEMMesh::CellTraits >,
+        public FEMElement< TriangleCell < CellInterface <
+                                            typename TFEMMesh::PixelType,
+                                            typename TFEMMesh::CellTraits > >,
                            TFEMMesh >
 {
 
@@ -55,7 +56,7 @@ public:
    */
   enum { NumberOfDisplacementComponents = 3 };
   enum { ParametricSpaceDimension       = 2 };
-  enum { NumberOfGaussIntegrationPoints = 2 };
+  enum { NumberOfGaussIntegrationPoints = 1 };
 
   // This macro takes care of declaring all the types
   // required by the API of the superclass. This is 

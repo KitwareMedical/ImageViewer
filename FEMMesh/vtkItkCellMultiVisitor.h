@@ -54,9 +54,10 @@ public:
 
 
   // typedef the itkCells we are interested in
-  typedef itk::VertexCell<CellPixelType,CellTraits>     VertexCellType;
-  typedef itk::LineCell<CellPixelType,CellTraits>       LineCellType;
-  typedef itk::TriangleCell<CellPixelType,CellTraits>   TriangleCellType;
+  typedef itk::CellInterface<CellPixelType,CellTraits>  CellInterfaceType;
+  typedef itk::VertexCell<CellInterfaceType>            VertexCellType;
+  typedef itk::LineCell<CellInterfaceType>              LineCellType;
+  typedef itk::TriangleCell<CellInterfaceType>          TriangleCellType;
 
 
   // Set the vtkCellArray that will be constructed
