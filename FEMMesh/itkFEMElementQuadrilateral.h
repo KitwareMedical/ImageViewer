@@ -32,7 +32,7 @@ namespace fem {
  * \class FEMElementQuadrilateral
  * \brief Quadrilateral finite element.
  *
- * This element is defined by two points and a MaterialStandard object.
+ * This element is defined by four points 
  */
 template < typename TFEMMesh >
 class FEMElementQuadrilateral : 
@@ -54,51 +54,69 @@ public:
    * (also known as number of degrees of freedom)
    */
   enum { NumberOfDisplacementComponents = 4 };
+  enum { ParametricSpaceDimension       = 2 };
 
-  typedef TFEMMesh                                FEMMeshType;
-  typedef typename FEMMeshType::CellTraits        CellTraits;
-  typedef typename FEMMeshType::PointType         PointType;
-  typedef typename FEMMeshType::PixelType         PixelType;
-  typedef typename FEMMeshType::CoordRepType      CoordinateRepresentationType;
 
-  // note that we cannot use "CellType" here because there 
-  // is already an enum called "CellType" defined in CellInterface<>
-  typedef QuadrilateralCell< PixelType, CellTraits >       BaseCellType;
-  typedef typename BaseCellType::PointIdIterator      PointIdIterator;
-  typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
-
-  typedef FEMElement< BaseCellType, FEMMeshType >         Superclass;
-
-  typedef typename Superclass::MatrixType                 MatrixType;
-  typedef typename Superclass::LoadsVectorType            LoadsVectorType;
-
-  typedef typename Superclass::PointsContainer            PointsContainer;
-  typedef typename Superclass::PointDataContainer         PointDataContainer;
-  typedef typename Superclass::CellsContainer             CellsContainer;
-
- 
-  /**
-   * Function that handles all external loads applied to the element
-   */
-  LoadsVectorType GetExternalLoads(LoadElement * l) const;
+  // This macro takes care of declaring all the types
+  // required by the API of the superclass. This is 
+  // is needed here because typedef's are not inherited
+  itkFEMElementTypesMacro( QuadrilateralCell );
 
   /** Declare the methods for visitors */
-  itkElementVisitMacro(QUADRILATERAL_ELEMENT);
+  itkElementVisitMacro( QUADRILATERAL_ELEMENT );
+
+
+
+
+  /**
+   * Function that returns a point in the global coordinate
+   * system corresponding to a given point in the master element.
+   */
+  void ComputePositionAt( const ParametricPointType & parametricPoint,
+                                PointType           & globalPoint,
+                          const PointsContainer     & points       ) const;
+
+  /** 
+   * Function that computes the Jacobian matrix of the
+   * transformation from the master element.
+   */
+  void ComputeJacobianMatrixAt( const ParametricPointType &,
+                                      JacobianMatrixType  &  ) const;
+
+  /** 
+   * Function that computes the shape functions defining
+   * the geometry of this finite element at a given point.
+   */
+  void ComputeShapeFunctionsAt( const ParametricPointType &,
+                                      ShapeFunctionsArrayType & ) const;
+
+  /**
+   * Function that computes the derivatives of the shape
+   * functions of this element at a given point.
+   */
+  void ComputeShapeFunctionDerivativesAt( 
+                                const ParametricPointType &,
+                                ShapeFunctionsDerivativesType & ) const;
+
+
 
 protected:
   /** Default constructor of an element */
-  FEMElementQuadrilateral() {}
+  FEMElementQuadrilateral();
 
   /** Default destructor of an element */
-  virtual ~FEMElementQuadrilateral() {}
+  virtual ~FEMElementQuadrilateral();
 
 };
 
 
 
-
-
 }} // end namespace itk::fem
+
+  
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkFEMElementQuadrilateral.txx"
+#endif
 
 #endif // #ifndef __itkFEMElementQuadrilateral_h
 
