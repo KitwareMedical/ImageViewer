@@ -47,8 +47,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkExceptionObject.h"
 
 #include "vnl/vnl_math.h"
-#include "vnl/vnl_quaternion.h"
-#include "vnl/vnl_diag_matrix.h"
 
 #include <fstream>
 #include <string>
