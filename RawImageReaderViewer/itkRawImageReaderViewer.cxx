@@ -15,7 +15,7 @@
 
 =========================================================================*/
 
-
+#include <fstream>
 #include "itkRawImageReaderViewer.h"
 #include "FL/fl_ask.H"
 

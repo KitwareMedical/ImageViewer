@@ -317,7 +317,6 @@ proc PreprocessorInitialize {} {
 
     # A reader for the input to the module
     vtkImageReader PreprocessorSourceReader
-    PreprocessorSourceReader SetHeaderSize 0
     set PreprocessorGlobals(source_reader) PreprocessorSourceReader
 
     # A color lookup table for the source

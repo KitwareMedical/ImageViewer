@@ -15,7 +15,7 @@
 
 =========================================================================*/
 
-#include <iostream>
+#include <fstream>
 
 #include "SimpleApp.h"
 #include "itkExceptionObject.h"

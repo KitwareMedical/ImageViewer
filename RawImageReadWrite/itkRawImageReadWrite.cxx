@@ -15,7 +15,7 @@
 
 =========================================================================*/
 
-
+#include <fstream>
 #include "itkImage.h"
 
 // Include generic Input Source

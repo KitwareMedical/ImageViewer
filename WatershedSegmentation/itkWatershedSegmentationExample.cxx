@@ -17,13 +17,13 @@
 #if defined(_MSC_VER)
 #pragma warning ( disable : 4786 )
 #endif
+#include <fstream>
 #include "itkWatershedImageFilter.h"
 #include "itkCurvatureAnisotropicDiffusionImageFilter.h"
 #include "itkGradientMagnitudeImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkRawImageIO.h"
 #include "itkImageFileWriter.h"
-#include <fstream>
 #include <string>
 #include "itkCommand.h"
 

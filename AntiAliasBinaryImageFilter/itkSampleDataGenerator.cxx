@@ -14,6 +14,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+#include <fstream>
 #include "itkImage.h"
 #include "itkRawImageIO.h"
 #include "itkImageFileWriter.h"
@@ -93,4 +94,5 @@ int main()
   writer->SetFileName("sample_input.64x64x64.char");
   writer->SetInput(image);
   writer->Write();
+  return 0;
 }
