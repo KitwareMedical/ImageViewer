@@ -16,6 +16,6 @@
 #=========================================================================*/
 
 set Globals(default_window) "Help"
-set Globals(module_names) "Exit Data Preprocessor Segmenter Editor License Help"
-set Globals(functional_module_names) "Data Preprocessor Segmenter Editor"
+set Globals(module_names) "Exit Data Preprocessor Segmenter Editor Postprocessor License Help"
+set Globals(functional_module_names) "Data Preprocessor Segmenter Editor Postprocessor"
 set Globals(options_module_names)  "License Help Exit"

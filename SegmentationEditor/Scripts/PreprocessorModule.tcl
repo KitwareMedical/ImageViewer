@@ -515,6 +515,9 @@ proc PreprocessorLoadData {} {
         0 [GetCacheEntryValue $cacheEntry "size_z"]
     $PreprocessorGlobals(source_reader) SetFileNameSliceOffset \
         [GetCacheEntryValue $cacheEntry "slice_offset"]
+    $PreprocessorGlobals(source_reader) SetHeaderSize \
+        [GetCacheEntryValue $cacheEntry "header_size"]
+
 
     if { [regexp {^[yY]} [GetCacheEntryValue $cacheEntry "multiple_files"] ] } {
         $PreprocessorGlobals(source_reader) SetFileDimensionality 2
@@ -532,7 +535,7 @@ proc PreprocessorLoadData {} {
 
     $PreprocessorGlobals(source_slice_scale) configure -from 0 \
         -to [GetCacheEntryValue $cacheEntry "size_z"] \
-        -length [GetCacheEntryValue $cacheEntry "size_z"]
+        -length [expr [GetCacheEntryValue $cacheEntry "size_z"] * 2]
 
     $PreprocessorGlobals(source_viewer_widget) configure \
         -height [GetCacheEntryValue $cacheEntry "size_y"] \
@@ -648,7 +651,7 @@ proc PreprocessorStartDiffusion {} {
     set size_x [GetCacheEntryValue $PreprocessorGlobals(loaded_data_tag) "size_x"]
 
     $PreprocessorGlobals(diffused_slice_scale) configure -from 0 -to $size_z \
-        -length $size_z
+        -length [expr $size_z * 2]
     
     $PreprocessorGlobals(diffused_viewer_widget) configure \
         -height $size_y -width $size_x
@@ -681,7 +684,7 @@ proc PreprocessorStartDiffusion {} {
     }
     set noComponents [GetCacheEntryValue $PreprocessorGlobals(loaded_data_tag) "number_of_components"]
     
-    set entryStr "$fn Float $size_x $size_y $size_z $DataGlobals(default_file_endianness) $multFiles $noComponents $DataGlobals(default_file_pattern) 0"
+    set entryStr "$fn Float $size_x $size_y $size_z $DataGlobals(default_file_endianness) $multFiles $noComponents $DataGlobals(default_file_pattern) 0 0"
     AddDataCacheEntry $PreprocessorGlobals(diffused_tag) $entryStr
     
     $PreprocessorGlobals(diffused_viewer) Render
@@ -735,7 +738,7 @@ $PreprocessorGlobals(gradient_magnitude) SetProgressMethod \
     set size_x [GetCacheEntryValue $PreprocessorGlobals(loaded_data_tag) "size_x"]
 
     $PreprocessorGlobals(gradient_slice_scale) configure -from 0 -to $size_z \
-        -length $size_z
+        -length [expr $size_z * 2]
     
     $PreprocessorGlobals(gradient_viewer_widget) configure \
         -height $size_y -width $size_x
@@ -758,7 +761,7 @@ $PreprocessorGlobals(gradient_magnitude) SetProgressMethod \
     }
     set noComponents [GetCacheEntryValue $PreprocessorGlobals(loaded_data_tag) "number_of_components"]
     
-    set entryStr "$fn Float $size_x $size_y $size_z $DataGlobals(default_file_endianness) $multFiles $noComponents $DataGlobals(default_file_pattern) 0"
+    set entryStr "$fn Float $size_x $size_y $size_z $DataGlobals(default_file_endianness) $multFiles $noComponents $DataGlobals(default_file_pattern) 0 0"
     AddDataCacheEntry $PreprocessorGlobals(gradient_tag) $entryStr
     $PreprocessorGlobals(gradient_viewer) Render
     destroy .gradientProgressBar

@@ -53,6 +53,7 @@ set EditorGlobals(default_window)  256.0
 set EditorGlobals(default_level)   127.5
 set EditorGlobals(help_file) "EditorHelp.txt"
 set EditorGlobals(help_text) "Sorry, could not find the file $EditorGlobals(help_file)"
+set EditorGlobals(binary_volume_tag) "mask"
 
 proc ConstructEditorFrame {f} {
     global Options EditorGlobals DataGlobals
@@ -509,6 +510,8 @@ proc EditorSegmentationReaderLoadData {} {
 
     $EditorGlobals(labeledImgReader) SetFileNameSliceOffset \
         [GetCacheEntryValue $cacheEntry "slice_offset"]
+    $EditorGlobals(labeledImgReader) SetHeaderSize \
+        [GetCacheEntryValue $cacheEntry "header_size"]
 
     if { [regexp {^[yY]} [GetCacheEntryValue $cacheEntry "multiple_files"] ] } {
         $EditorGlobals(labeledImgReader) SetFileDimensionality 2
@@ -566,6 +569,9 @@ proc EditorSourceReaderLoadData {} {
         0 [GetCacheEntryValue $cacheEntry "size_z"]
     $EditorGlobals(colorImgReader) SetFileNameSliceOffset \
         [GetCacheEntryValue $cacheEntry "slice_offset"]
+
+    $EditorGlobals(colorImgReader) SetHeaderSize \
+        [GetCacheEntryValue $cacheEntry "header_size"]
 
     if { [regexp {^[yY]} [GetCacheEntryValue $cacheEntry "multiple_files"] ] } {
         $EditorGlobals(colorImgReader) SetFileDimensionality 2
@@ -701,7 +707,9 @@ proc EditorStartEditor {} {
         -height [expr $EditorGlobals(Y) * $Options(default_editor_magnification) ] \
         -width [expr $EditorGlobals(X) * $Options(default_editor_magnification) ]
     
-    $EditorGlobals(slice_slider) configure -length $EditorGlobals(Z)
+
+    $EditorGlobals(slice_slider) configure -length [expr 2 * $EditorGlobals(Z)] \
+        -from 0 -to $EditorGlobals(Z)
 
 
     #
@@ -1206,6 +1214,14 @@ proc EditorWriteBinaryVolume {} {
 
     if { $retVal == 0} { tk_messageBox -message "Save OK" -icon info }
     if { $retVal != 0} { tk_messageBox -message "Save failed." -icon "error" }
+
+    #Register this saved data
+    set size_x $EditorGlobals(X)
+    set size_y $EditorGlobals(Y)
+    set size_z $EditorGlobals(Z)
+
+    set entryStr "$filename UnsignedChar $size_x $size_y $size_z $DataGlobals(default_file_endianness) No 1 $DataGlobals(default_file_pattern) 0 24"
+    AddDataCacheEntry $EditorGlobals(binary_volume_tag) $entryStr
 }
 
 proc EditorReadBinaryVolume {} {

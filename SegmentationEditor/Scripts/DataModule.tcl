@@ -29,7 +29,7 @@ set DataGlobals(frame_title_text)  "Data"
 set DataGlobals(delete_cache_files_on_exit) "yes"
 set DataGlobals(unique_user_prefix) ""
 set DataGlobals(cache_directory) ""
-set DataGlobals(load_cache_entry_fields) "tag filename data_type size_x size_y size_z endianness multiple_files number_of_components file_pattern slice_offset"
+set DataGlobals(load_cache_entry_fields) "tag filename data_type size_x size_y size_z endianness multiple_files number_of_components file_pattern slice_offset header_size"
 set DataGlobals(null_data_string)  "/dev/null null_type"
 set DataGlobals(user_configurable_options) "unique_user_prefix cache_directory"
 set DataGlobals(labeled_image_type) "labeled_image"
@@ -59,6 +59,7 @@ set DataLabels(multiple_files) "Stored in multiple files?"
 set DataLabels(number_of_components) "Number of components"
 set DataLabels(file_pattern) "VTK file extension pattern"
 set DataLabels(slice_offset) "Number of first slice"
+set DataLabels(header_size) "Size of any header to skip"
 
 set DataLabels(unique_user_prefix) "Session prefix"
 set DataLabels(cache_directory) "Session directory"
@@ -180,7 +181,7 @@ proc EraseDataCache {} {
 # 
 proc GetDataCacheEntry {tag} {
     global DataCache
-    
+
     return $DataCache($tag)
 }
 

@@ -16,6 +16,7 @@
 =========================================================================*/
 
 #include "vtkLookupTableEquivalencyHash.h"
+#include <iostream>
 
 #include <iostream>
 

@@ -238,6 +238,9 @@ proc SegmenterLoadData {} {
         0 [GetCacheEntryValue $cacheEntry "size_y"] \
         0 [GetCacheEntryValue $cacheEntry "size_z"]
 
+    $SegmenterGlobals(source_reader) SetHeaderSize \
+        [GetCacheEntryValue $cacheEntry "header_size"]
+
     if { [regexp {^[yY]} [GetCacheEntryValue $cacheEntry "multiple_files"] ] } {
         $SegmenterGlobals(source_reader) SetFileDimensionality 2
         $SegmenterGlobals(source_reader) SetFilePrefix \
@@ -397,10 +400,10 @@ proc SegmenterStartSegmentation {} {
 #    $SegmenterGlobals(lookup_table_manager) Merge 0.0
     $SegmenterGlobals(segmentation_viewer) Render    
     #Record the data in the cache list
-    set entryStr "$output_fn UnsignedLong $size_x $size_y $size_z $DataGlobals(default_file_endianness) No 1 $DataGlobals(default_file_pattern) 0"
+    set entryStr "$output_fn UnsignedLong $size_x $size_y $size_z $DataGlobals(default_file_endianness) No 1 $DataGlobals(default_file_pattern) 0 0"
     AddDataCacheEntry $SegmenterGlobals(segmentation_tag) $entryStr
 
-    set entryStr "$tree_fn SegmentationTree Null Null Null $DataGlobals(default_file_endianness) Null Null Null Null"
+    set entryStr "$tree_fn SegmentationTree Null Null Null $DataGlobals(default_file_endianness) Null Null Null Null Null"
     AddDataCacheEntry $SegmenterGlobals(tree_tag) $entryStr
 
     wm deiconify $SegmenterGlobals(output_window)
