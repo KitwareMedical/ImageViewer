@@ -46,7 +46,9 @@ public:
   typedef char      PointDataType;
   typedef char      CellDataType;
 
-  typedef itk::DefaultDynamicMeshTraits<
+
+  // Traits for all the elements of the Mesh
+  typedef itk::fem::DefaultDynamicMeshTraits<
                                 PointDataType,
                                 PointsDimension,
                                 MaximumTopologicalDimension,
@@ -55,10 +57,22 @@ public:
                                 CellDataType
                                                   >  MeshTraits;
 
-  typedef itk::Mesh< MeshTraits > MeshType;
 
-  typedef itk::fem::FEMMesh< MeshType >   FEMMeshType;
+  // Type for the Geometrical level
+  typedef itk::fem::Mesh< MeshTraits >        MeshType;
 
+  // Type for the Physical level
+  typedef itk::fem::FEMMesh< MeshType >       FEMMeshType;
+
+  // Node type. It is derived from a Zero dimension Cell
+  typedef  FEMMeshType::NodeType              NodeType;
+  typedef  NodeType::Pointer                  NodePointer;
+  typedef  FEMMeshType::CellIdentifier        CellIdentifierType;
+
+
+  // Types related with Points
+  typedef  FEMMeshType::PointType             PointType;
+  typedef  FEMMeshType::PointIdentifier       PointIdentifierType;
 
 public:
 
@@ -67,13 +81,16 @@ public:
   
   virtual void CreateSphere(void);
   virtual void CreateTriangle(void);
+  virtual void CreateFEMMesh(void);
+
 
 protected:
  
   vtkRenderWindow * m_RenderWindow;
   vtkRenderer     * m_Renderer;
 
-  FEMMeshType::Pointer  * m_FEMMesh;
+
+  FEMMeshType::Pointer  m_FEMMesh;
 
 };
 

@@ -26,6 +26,8 @@
 #include "vtkPoints.h"
 #include "vtkFloatArray.h"
 
+#include "itkNumericTraits.h"
+
 
 
 FEMMeshApplicationBase
@@ -36,6 +38,8 @@ FEMMeshApplicationBase
 
   // a renderer and render window
   m_RenderWindow->AddRenderer( m_Renderer );
+
+  m_FEMMesh = FEMMeshType::New();
 
 }
 
@@ -167,6 +171,119 @@ FEMMeshApplicationBase
  
 
 }
+
+
+
+
+
+void
+FEMMeshApplicationBase
+::CreateFEMMesh(void)
+{
+
+  // Create the FEMMesh that will hold both the Geometric 
+  // and the Physical representation of the problem 
+  m_FEMMesh = FEMMeshType::New();
+
+
+
+  // In this section we create Points and the Nodes associated with them
+
+  // Start numbering points
+  PointIdentifierType pointId = 
+              ::itk::NumericTraits<PointIdentifierType>::Zero;
+
+  // Start numbering Nodes (Note that Nodes are Zero Dimensional Cells !)
+   CellIdentifierType cellId = 
+              ::itk::NumericTraits<CellIdentifierType>::Zero;
+
+   
+  PointType           point;
+  NodeType::Pointer   node;
+
+
+  // BTW we are making just a pyramid here
+
+  const float baseLength  = 10.0f;
+  const float a           = baseLength / 2.0f;
+
+  // First point of the base
+  point[0] = -a; 
+  point[1] = -a; 
+  point[2] = 0.0; 
+
+  m_FEMMesh->SetPoint( pointId, point );
+
+  node = NodeType::New();
+  node->SetPointId( pointId );
+  m_FEMMesh->SetCell( cellId, node.GetPointer() );
+
+  pointId++;
+  cellId++;
+
+  // Second point of the base
+  point[0] =  a; 
+  point[1] = -a; 
+  point[2] = 0.0; 
+
+  m_FEMMesh->SetPoint( pointId, point );
+
+  node = NodeType::New();
+  node->SetPointId( pointId );
+  m_FEMMesh->SetCell( cellId, node.GetPointer() );
+
+  pointId++;
+  cellId++;
+
+  // Third point of the base
+  point[0] =  a; 
+  point[1] =  a; 
+  point[2] = 0.0; 
+
+  m_FEMMesh->SetPoint( pointId, point );
+
+  node = NodeType::New();
+  node->SetPointId( pointId );
+  m_FEMMesh->SetCell( cellId, node.GetPointer() );
+
+  pointId++;
+  cellId++;
+
+  // Fourth point of the base
+  point[0] = -a; 
+  point[1] =  a; 
+  point[2] = 0.0; 
+
+  m_FEMMesh->SetPoint( pointId, point );
+
+  node = NodeType::New();
+  node->SetPointId( pointId );
+  m_FEMMesh->SetCell( cellId, node.GetPointer() );
+
+  pointId++;
+  cellId++;
+
+
+  // point at the top of the pyramid 
+  point[0] = 0.0;
+  point[1] = 0.0; 
+  point[2] = 10;
+
+  m_FEMMesh->SetPoint( pointId, point );
+
+  node = NodeType::New();
+  node->SetPointId( pointId );
+  m_FEMMesh->SetCell( cellId, node.GetPointer() );
+
+  pointId++;
+  cellId++;
+
+
+  std::cout << "Number of points = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
+  std::cout << "Number of cells  = " << m_FEMMesh->GetNumberOfCells() << std::endl;
+
+}
+
 
 
 

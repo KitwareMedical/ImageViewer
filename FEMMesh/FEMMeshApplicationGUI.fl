@@ -28,7 +28,7 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
           }
         }
         submenu {} {
-          label View open
+          label View
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -42,11 +42,21 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
             xywh {0 0 100 20}
           }
         }
+        submenu {} {
+          label Create
+          xywh {10 10 100 20}
+        } {
+          menuitem {} {
+            label FEMMesh
+            callback {this->CreateFEMMesh();} selected
+            xywh {10 10 100 20}
+          }
+        }
       }
       Fl_Group {} {
         xywh {35 60 780 435} box DOWN_FRAME
       } {
-        Fl_Box m_FlRenderWindowInteractor {selected
+        Fl_Box m_FlRenderWindowInteractor {
           xywh {45 70 760 415} box DOWN_FRAME
           code0 {\#include "vtkFlRenderWindowInteractor.h"}
           code1 {m_FlRenderWindowInteractor->SetRenderWindow( m_RenderWindow );}
