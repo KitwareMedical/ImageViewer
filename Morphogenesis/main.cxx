@@ -20,6 +20,7 @@
 #include "Eukariote.h"
 #include "PressureSensitiveBacteria.h"
 #include "GradientEatingBacteria.h"
+#include "BilayerOrganism.h"
 #include "CellsViewer.h"
 #include "CommandEvents.h"
 #include "CellsViewerCommand.h"
@@ -77,6 +78,11 @@ int main()
   viewer->AddSpeciesEggProducer( 
             & bio::Eukariote::CreateEgg,  
               bio::Eukariote::GetSpeciesName() );
+
+  viewer->AddSpeciesEggProducer( 
+            & bio::BilayerOrganism::CreateEgg,  
+              bio::BilayerOrganism::GetSpeciesName() );
+
 
 
 

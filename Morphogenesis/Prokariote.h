@@ -37,7 +37,6 @@ public:
   virtual void Apoptosis(void);
 
   virtual bool CheckPointDNAReplication(void);
-  virtual bool CheckPointApoptosis(void);
 
   static  Cell * CreateEgg(void);
 

@@ -200,24 +200,6 @@ Prokariote
 
 
 
-/**
- *    Check point before apoptosis
- *    This check point will control
- *    the entrance in the apoptosis stage.
- *    It returns true when conditions
- *    required for apoptosis are satisfied.
- *    The cell will die in apoptosis.
- */ 
-bool
-Prokariote
-::CheckPointApoptosis(void) 
-{
-  bool super = SuperClass::CheckPointApoptosis();
-  bool here  = false;
-  return ( super || here );
-}
-
-
 
 
 /**

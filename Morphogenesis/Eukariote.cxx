@@ -198,27 +198,10 @@ Eukariote
       here = true;
       }
     }
-
   return ( super && here );
 
 }
 
-
-
-/**
- *    Check point before apoptosis
- *    This check point will control the entrance in the apoptosis stage.
- *    It returns true when conditions required for apoptosis are satisfied.
- *    The cell will die in apoptosis.
- */ 
-bool
-Eukariote
-::CheckPointApoptosis(void) 
-{
-  const bool super = SuperClass::CheckPointApoptosis();
-  const bool here  = false;
-  return ( super || here );
-}
 
 
 
@@ -247,6 +230,25 @@ Eukariote
   return Eukariote::DivisionMaximumLatencyTime;
 }
 
+
+
+
+
+/**
+ *   Compute the Gene Network
+ *   This method update the level of expression of 
+ *   all the genes in the cell's genome.
+ *   see: http://www.ingeneue.org  for details
+ */ 
+void
+Eukariote
+::ComputeGeneNetwork(void) 
+{
+  // force the cell cycle : this should be replaced
+  // by computations from Teleomerasa counting and
+  // cell radius
+  m_Genome->SetExpressionLevel( Cdk2E, 0.9 ); 
+}
 
 
 

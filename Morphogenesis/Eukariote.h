@@ -22,7 +22,7 @@
 namespace bio {
 
 /** \class Eukariote 
- * \brief This class implements the basic behavior of Prokariote cells. */
+ * \brief This class implements the basic behavior of Eukariote cells. */
 class Eukariote  : public Cell
 {
 public:
@@ -36,12 +36,13 @@ public:
   virtual void Apoptosis(void);
 
   virtual bool CheckPointDNAReplication(void);
-  virtual bool CheckPointApoptosis(void);
 
   static  Cell * CreateEgg(void);
 
   static void SetDivisionMaximumLatencyTime( unsigned long );
   static unsigned long GetDivisionMaximumLatencyTime(void);
+
+  virtual void ComputeGeneNetwork(void);
 
   static const char * GetSpeciesName(void) 
                           { return "Primitive Eukariote"; }

@@ -34,7 +34,6 @@ public:
   virtual ~PressureSensitiveBacteria();
 
   virtual void ComputeGeneNetwork(void);
-  virtual bool CheckPointDNAReplication(void);
 
   static  Cell * CreateEgg(void);
 
@@ -44,8 +43,6 @@ public:
 private:
   virtual Cell *   CreateNew(void);
 
-  static double    PressureThresold;
-  static double    PressureRamp;
   
 };
 

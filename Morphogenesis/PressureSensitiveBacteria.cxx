@@ -26,10 +26,6 @@
 namespace bio {
 
 
-// Class static variables
-double    PressureSensitiveBacteria::PressureThresold =  5.0f;
-double    PressureSensitiveBacteria::PressureRamp     =  5.0f;
-
 
 
 /**
@@ -117,51 +113,17 @@ PressureSensitiveBacteria
   // Color the bacteria acording to pressure.
   // This is done by generating pigments under 
   // the influence of presure.
-  const double red = Genome::Sigmoide( PressureThresold, 
-                                       PressureRamp, 
-                                       m_Pressure );
+  const double red = Genome::Sigmoide( 5.0, 1.0, m_Pressure );
 
-  if( m_Pressure > 1e-5 ) {
-  std::cout << m_Pressure  << "  ->  " << red << std::endl;
-  }
-  m_Genome->SetExpressionLevel( RedGene,      red  );
-  m_Genome->SetExpressionLevel( BlueGene,    0.0   );
-  m_Genome->SetExpressionLevel( GreenGene, 1.0-red );
+  m_Genome->SetExpressionLevel( RedGene,       red );
+  m_Genome->SetExpressionLevel( BlueGene,  1.0-red );
+  m_Genome->SetExpressionLevel( GreenGene,     0.0 );
 
-}
+  const double cdk2E = Genome::Sigmoide( 2.0, -0.5, m_Pressure );
+  m_Genome->SetExpressionLevel( Cdk2E, cdk2E );
 
-
-
-
-/**
- *    Check point before initiating DNA replication.
- *    This check point controls the entrance in the 
- *    duplication of the genome by DNA synthesis, also
- *    known as the S phase of the Cell cycle.
- *    This method returns true when conditions required 
- *    for DNA replication are satisfied.
- */ 
-bool
-PressureSensitiveBacteria
-::CheckPointDNAReplication(void) 
-{
-  const bool parent = Prokariote::CheckPointDNAReplication();
-  if( !parent )
-    {
-    return parent;
-    }
-  bool pressureOk = true;
-  if( m_Pressure > PressureThresold )
-    {
-    pressureOk = false;
-    // this should rather be done by relating a
-    // pressure sensitive protein with one of the 
-    // cycline kinases involved in cell cycle control.
-    std::cout << "Cell " << m_SelfIdentifier << " stopped replication ";
-    std::cout << " pressure = " << m_Pressure << std::endl;
-    }
-
-  return pressureOk;
+  const double caspase = Genome::Sigmoide( 3.0, 90.0, m_Pressure );
+  m_Genome->SetExpressionLevel( Caspase, caspase );
 
 }
 

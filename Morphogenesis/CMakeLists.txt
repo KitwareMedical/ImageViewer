@@ -39,6 +39,7 @@ CellsViewerCommand
 CellularAggregate
 Eukariote
 GradientEatingBacteria
+BilayerOrganism
 Genome
 PressureSensitiveBacteria
 Prokariote

@@ -54,6 +54,8 @@ int                Cell::DisplayList = 0;  // OpenGL display list
 Cell::GeneIdType   Cell::RedGene   = "Red";
 Cell::GeneIdType   Cell::GreenGene = "Green";
 Cell::GeneIdType   Cell::BlueGene  = "Blue";
+Cell::GeneIdType   Cell::Cdk2E     = "Cdk2E";
+Cell::GeneIdType   Cell::Caspase   = "Caspase";
 
 
 /**
@@ -178,9 +180,20 @@ bool
 Cell
 ::CheckPointDNAReplication(void) 
 {
+  // radius & teleomerasa counting should be removed from here
+  // and be related to Cdk expression by using proteins like P53
+  // The radius should be estimated by a cytoskeleton-related protein.
   const bool fatality = (m_Generation < MaximumGenerationLimit );
   const bool radius   = (m_Radius >= GrowthRadiusLimit);
-  return ( radius && fatality );
+
+  bool isOkToReplicate = true;
+  const double cdk2E = m_Genome->GetExpressionLevel( Cdk2E );
+  if( cdk2E < 0.8 )
+    {
+    isOkToReplicate = false;
+    }
+
+  return ( radius && fatality && isOkToReplicate );
 }
 
 
@@ -219,7 +232,16 @@ bool
 Cell
 ::CheckPointApoptosis(void) 
 {
-  return false;
+  bool executeApoptosis = false;
+  if(  m_Genome->GetExpressionLevel( Caspase ) > 0.8 )
+    {
+    executeApoptosis = true;
+    }
+  else
+    {
+    executeApoptosis = false;
+    }
+  return executeApoptosis;
 }
 
 

@@ -38,7 +38,7 @@ class CellularAggregate;
 class Cell  
 {
 public:
-  enum { Dimension = 3 };
+  enum { Dimension = 2 };
   enum { PointDimension = Dimension };
 
   typedef   itk::Vector<double,PointDimension>  VectorType;
@@ -149,9 +149,11 @@ protected:
    static     double      DefaultRadius;
    static     ColorType   DefaultColor;
 
-   static     GeneIdType  BlueGene;
+   static     GeneIdType  BlueGene;   // Pigment genes
    static     GeneIdType  RedGene;
    static     GeneIdType  GreenGene;
+   static     GeneIdType  Cdk2E;      // cell cycle control  genes
+   static     GeneIdType  Caspase;    // cleavage enzyme: apoptosis effector
 
    static     double      GrowthRadiusLimit;
    static     double      GrowthRadiusIncrement;
