@@ -610,12 +610,16 @@ void ImageRegLMEx::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
 
 void ImageRegLMEx::IterativeSolve(SolverType& mySolver)
 {
-//  m_Energy=9.e9;
-if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
-  
+
+  unsigned int minct=0,NumMins=2;
+  if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
+  m_MinE=10.e9;
+  Float LastE=9.e9 , deltE=1.e9, ETol=1.e-5;
   // iterative solve  
-  for (unsigned int iters=0; iters<m_Maxiters; iters++){
-    /*
+  //for (unsigned int iters=0; iters<m_Maxiters; iters++){
+  unsigned int iters=0;
+  while ( (iters < m_Maxiters && m_MinE >= LastE && deltE > ETol )  || minct < NumMins){
+  /*
      * Assemble the master force vector (from the applied loads)
      */
      mySolver.AssembleFforTimeStep();
@@ -643,17 +647,19 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
    }
    else 
    {
-     cure=m_Load->EvaluateMetricGivenSolution(&(mySolver.el), 1.0);
- //    if (cure <= m_MinE)
+     LastE=m_Solver.EvaluateResidual(1.0);
+     deltE=fabs(LastE-m_MinE);
+     if (LastE <= m_MinE  || minct < NumMins )
      {
-        m_MinE=cure;
         mint=iters;   
         mySolver.AddToDisplacements();  
+        if (LastE > m_MinE) minct++; 
+        m_MinE=LastE;
      } //else iters=m_Maxiters;
    }
    
-   std::cout << " min E " << m_MinE << " Cur E " << cure << "  t " << mint << " iter " << iters << std::endl;
- 
+   std::cout << " min E " << m_MinE << " Cur E " << LastE << "  t " << mint << " iter " << iters << std::endl;
+   iters++;
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere.
    //GetVectorField();
    //WarpImage();
@@ -693,10 +699,12 @@ void ImageRegLMEx::GetVectorField(SolverType& mySolver)
       Sol=(*elt)->InterpolateSolution(Pos,*(mySolver.GetLS()),mySolver.TotalSolutionIndex); // for total solution index
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        rindex[ii]=(long int) (Gpt[ii]*(Float)m_ImageScaling[ii]+0.5);
-        disp[ii] =(Float) 1.*Sol[ii]*((Float)m_ImageScaling[ii]);
-        if (disp[ii] < -100.) std:: cout << " Num Error " << disp[ii] << std::endl;
+        long int temp=(long int) (Gpt[ii]*(Float)m_ImageScaling[ii]+0.5);
+        rindex[ii]=temp;
+        disp[ii] =(Float) 1.0*Sol[ii]*((Float)m_ImageScaling[ii]);
+//        if (disp[ii] < -100.) std:: cout << " Num Error " << disp[ii] << std::endl;
       }
+    //  std::cout << " ind " << rindex << " vec " << disp << std::endl;
       m_Field->SetPixel(rindex, disp );
     }    
   }
@@ -901,6 +909,7 @@ void ImageRegLMEx::MultiResSolve()
       IterativeSolve(m_Solver);
 
       ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
+      std::cout << " E " << ThisScaleEnergy << std::endl;
 
       GetVectorField(m_Solver);
       if ( i == m_MaxLevel-1) 
@@ -935,6 +944,7 @@ int main()
   X.RunRegistration();
   X.WriteWarpedImage(X.m_ResultsFileName);
 
+  X.m_WriteDisplacementField=false;
   if (X.m_WriteDisplacementField) {
     X.WriteDisplacementField(0);
     X.WriteDisplacementField(1);
