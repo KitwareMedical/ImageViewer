@@ -111,6 +111,7 @@ public:
   virtual value_type GetValueType() const { return ValueTraits<T>::ValueType; }
   virtual void PrintSelf(std::ostream &s) const
   { ValueTraits<T>::PrintValue(s, m_Value); }
+  virtual ~Value() {}
 };
 
 class ValueFactory
