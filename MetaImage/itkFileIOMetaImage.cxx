@@ -81,7 +81,7 @@ void FileIOMetaImage::Load()
   ReadHeader();
 
   m_MetaImage = new MetaImage();
-  m_MetaImage->OpenMetaFile(m_FullFileName.c_str());
+  m_MetaImage->OpenMetaFile(m_FileName.c_str());
   Resize(m_NumberOfDimensions, m_Dimensions);
   memmove(m_FileData, m_MetaImage->Get(), m_MetaImage->Quantity()*GetComponentStride());
   CopyAcquisitionParamsToImageIO(m_MetaImage);
@@ -106,7 +106,7 @@ void FileIOMetaImage::Load2DSlice(const std::string fileName,
   m_MetaImage = new MetaImage();
   if (fileName == "")
   {
-    m_MetaImage->OpenMetaFile(m_FullFileName.c_str());
+    m_MetaImage->OpenMetaFile(m_FileName.c_str());
   }
   else
   {
@@ -137,10 +137,10 @@ void FileIOMetaImage::Save3D(const std::string headerFile, const std::string dat
   CopyAcquisitionParamsToMetaImage(m_MetaImage);
 
   if ((headerFile == "") && (dataFile == ""))
-  { // use m_FullFileName to determine
-    extension = ExtractFileExtension(m_FullFileName.c_str());
-    name = ExtractFileName(m_FullFileName.c_str());
-    path = ExtractFilePath(m_FullFileName.c_str());
+  { // use m_FileName to determine
+    extension = ExtractFileExtension(m_FileName.c_str());
+    name = ExtractFileName(m_FileName.c_str());
+    path = ExtractFilePath(m_FileName.c_str());
     if (Strucmp(extension, META_EXT1) == 0)
     { // combined header/data file
       sprintf(hFile, "%s%s.%s", path, name, META_EXT1);
@@ -213,7 +213,7 @@ void FileIOMetaImage::ReadHeader(const std::string fileName)
   m_MetaImage = new MetaImage();
   if (fileName == "")
   {
-    m_MetaImage->OpenMetaFile(m_FullFileName.c_str(), false);
+    m_MetaImage->OpenMetaFile(m_FileName.c_str(), false);
   }
   else
   {
@@ -225,7 +225,7 @@ void FileIOMetaImage::ReadHeader(const std::string fileName)
   {
     m_Dimensions[i] = m_MetaImage->DimSize(i);
   }
-  SetComponentsPerPixel(1);
+  SetNumberOfComponents(1);
   m_PixelType = ConvertMET_TypeToAtomicPixelType(m_MetaImage->ElemType());
   CopyAcquisitionParamsToImageIO(m_MetaImage);
   ComputeStrides();

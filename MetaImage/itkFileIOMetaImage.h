@@ -40,11 +40,10 @@ public:
   virtual void Load2D(const std::string fileName="");
 
   /**
-   * Load a 2D slice from a volume dataset.
-   * fileName is file to read from. default="", which uses m_FileName instead
-   * sliceNum is the slice # to load (starting at 0). default = 0.
-   * offset is the offset, in bytes, into fileData at which the data should be loaded
-   *  default = 0
+   * Load a 2D slice from a volume dataset.  fileName is file to read
+   * from. default="", which uses m_FileName instead sliceNum is the slice #
+   * to load (starting at 0). default = 0.  offset is the offset, in bytes,
+   * into fileData at which the data should be loaded default = 0 
    */
   virtual void Load2DSlice(const std::string fileName="",
                            const unsigned int sliceNum=0,
