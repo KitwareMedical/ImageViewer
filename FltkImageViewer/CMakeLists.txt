@@ -7,26 +7,31 @@ IF(FLTK_LIBRARY)
    SOURCE_FILES(FltkImageViewer_SRCS
      fltkBox3D
      fltkCone3D
+     fltkClippingPlane3DDrawer
      fltkCylinder3D
-     fltkDisplayGlWindowGUI
-     fltkDisplayGlWindowFlatGUI
      fltkFrustum3D
-     fltkFrustumFunctionControlGUI
      fltkGlWindow
      fltkGlWindowInteractive
      fltkGlWindowInteractiveFlat
-     fltkImageViewerGUI
-     fltkImage2DViewerGUI
      fltkImage2DViewerWindow
      fltkRegularStepGradientDescent
-     fltkRegularStepGradientDescentGUI
-     fltkSlice3DDrawerGUI
-     fltkSlice2DDrawerGUI
      fltkShape3D
      fltkSphere3D
-     fltkSphereFunctionControlGUI
      fltkWindowInteractive
      )
+
+  SOURCE_FILES(FltkImageViewer_GUI_SRCS
+     fltkClippingPlane3DDrawerGUI.fl
+     fltkDisplayGlWindowGUI.fl
+     fltkDisplayGlWindowFlatGUI.fl
+     fltkFrustumFunctionControlGUI.fl
+     fltkImageViewerGUI.fl
+     fltkImage2DViewerGUI.fl
+     fltkRegularStepGradientDescentGUI.fl
+     fltkSlice2DDrawerGUI.fl
+     fltkSlice3DDrawerGUI.fl
+     fltkSphereFunctionControlGUI.fl
+    )
 
   INCLUDE_DIRECTORIES(
      ${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
@@ -37,6 +42,12 @@ IF(FLTK_LIBRARY)
   ADD_LIBRARY(
      FltkImageViewer FltkImageViewer_SRCS
      )
+
+#
+# Take the list of GUI files, generate .cxx and .h from 
+# them and add them to the build process of the target
+#
+  FLTK_WRAP_UI(FltkImageViewer FltkImageViewer_GUI_SRCS )
 
   ENDIF(FLTK_LIBRARY)
 ENDIF(FLTK_INCLUDE_PATH)
