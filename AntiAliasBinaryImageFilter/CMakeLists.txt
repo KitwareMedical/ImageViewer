@@ -2,6 +2,7 @@ PROJECT(AntiAliasBinaryImageFilter)
 
 INCLUDE_DIRECTORIES(
 ${AntiAliasBinaryImageFilter_SOURCE_DIR}
+${AntiAliasBinaryImageFilter_SOURCE_DIR}/../StreamedWatershedSegmentation/ParameterFileParser
 )
 
 LINK_LIBRARIES (
