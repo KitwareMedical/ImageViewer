@@ -26,6 +26,7 @@ if {[lindex $study1Extent 1] == "511" } {
 } else {
     set mag 2
 }
+set mag 1
 
 # compute the means
 vtkImageAccumulate stat1
@@ -143,8 +144,9 @@ vtkImageMapper mapDiff
 vtkActor2D imgCheckers
   imgCheckers SetMapper mapCheckers
 
+set label1 [lrange [file split $study1Prefix] 3 end]
 vtkTextMapper mapText1
-  mapText1 SetInput "Study: $study1Prefix"
+  mapText1 SetInput "Study: $label1"
   mapText1 SetFontSize 12
 
 vtkActor2D text1
@@ -155,8 +157,9 @@ vtkActor2D text1
 vtkActor2D img1
   img1 SetMapper map1
 
+set label2 [lrange [file split $study2Prefix] 3 end]
 vtkTextMapper mapText2
-  mapText2 SetInput "Study: $study2Prefix"
+mapText2 SetInput "Study: $label2"
   mapText2 SetFontSize 12
 
 vtkActor2D text2
