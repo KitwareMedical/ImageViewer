@@ -5,4 +5,9 @@ y.tab.cxx
 param.cxx
 )
 
+INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
+)
+
+
 ADD_LIBRARY(param param_SRCS)

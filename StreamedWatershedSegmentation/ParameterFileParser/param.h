@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <hash_map>
+#include "itk_hash_map.h"
 
 #ifndef __VISParameterFile_h__
 #define __VISParameterFile_h__
@@ -28,12 +28,12 @@ inline std::ostream& operator<<(std::ostream& s, const Exception &f)
 { s << "VPF::Exception: " << f.info; return s; }
 
   
-class strhash : public std::hash<const char *>
+class strhash : public itk::hash<const char *>
 {
 public:
   ::size_t operator()(const std::string &s) const
   {
-    return std::hash<const char *>::operator()(s.c_str());
+    return itk::hash<const char *>::operator()(s.c_str());
   }
 };
   
@@ -173,7 +173,7 @@ public:
   }
 };
 
-typedef std::hash_map<std::string, Parameter, strhash, eqstr> File;
+typedef itk::hash_map<std::string, Parameter, strhash, eqstr> File;
 
 class ParameterFile
 {
@@ -185,9 +185,9 @@ public:
   ParameterFile(const std::string &s) { this->Initialize(s.c_str()); }
   void PrintSelf(std::ostream &s) const
   {
-    for (std::hash_map<std::string, Parameter, strhash, eqstr>::const_iterator
+    for (itk::hash_map<std::string, Parameter, strhash, eqstr>::const_iterator
            it = m_File.begin(); it != m_File.end(); ++it )
-      { it->second.PrintSelf(s); }
+      { (*it).second.PrintSelf(s); }
   }
   void Initialize(const char *);
   bool valid()    const { return m_File.empty(); }
