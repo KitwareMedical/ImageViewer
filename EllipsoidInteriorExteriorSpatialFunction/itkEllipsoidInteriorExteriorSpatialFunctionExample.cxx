@@ -44,7 +44,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkImageRegionIterator.h"
 #include "itkFloodFilledSpatialFunctionConditionalIterator.h"
 #include "itkEllipsoidInteriorExteriorSpatialFunction.h" 
-#include "itkVTKImageWriter.h"
+#include "itkImageFileWriter.h"
+#include "itkVTKImageIO.h"
 
 #include "vnl/vnl_matrix.h"
 
@@ -66,7 +67,7 @@ int main()
   // Calculate image volume
   unsigned long imageVolume = xExtent * yExtent * zExtent; 
 
-	// Image typedef
+        // Image typedef
   typedef itk::Image< unsigned char, dimension> TImageType;
 
   // Creates the sourceImage (but doesn't set the size or allocate memory)
@@ -252,13 +253,14 @@ int main()
               << "itkEllipsoidInteriorExteriorSpatialFunction ended succesfully!" << std::endl;
 
     // Write the ellipsoid image to a vtk image file
-    itk::VTKImageWriter< TImageType >::Pointer vtkWriter;
-    vtkWriter = itk::VTKImageWriter< TImageType >::New();
-
-    vtkWriter->SetInput(sourceImage);
-    vtkWriter->SetFileName("ellipsoid.vtk");
-    vtkWriter->SetFileTypeToBinary();
-    vtkWriter->Write();
+    itk::VTKImageIO::Pointer vtkIO;
+    vtkIO = itk::VTKImageIO::New();
+    itk::ImageFileWriter<TImageType>::Pointer writer;
+    writer = itk::ImageFileWriter<TImageType>::New();
+    writer->SetInput(sourceImage);
+    writer->SetFileName("ellipsoid.vtk");
+    writer->SetImageIO(vtkIO);
+    writer->Write();
 
     return EXIT_SUCCESS;
     }

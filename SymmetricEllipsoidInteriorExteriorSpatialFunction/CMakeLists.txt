@@ -1,11 +1,13 @@
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
+${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Examples/SymmetricEllipsoidInteriorExteriorSpatialFunction
 )
 
 LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/Common
+${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Code/BasicFilters
 )
 
@@ -15,6 +17,7 @@ itkSymmetricEllipsoidInteriorExteriorSpatialFunctionExample
 
 LINK_LIBRARIES (
 ITKCommon
+ITKIO
 ITKBasicFilters
 )
 
