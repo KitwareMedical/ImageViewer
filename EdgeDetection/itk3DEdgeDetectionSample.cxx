@@ -36,7 +36,7 @@ main(int argc, char*argv[])
   char  in[20], out[20];
 
   if( argc < 3)
-    {x
+    {
       cout<<"Usage: "<<argv[0]<<" inputImage outputImage"<<endl;
       exit(-1);
     }
