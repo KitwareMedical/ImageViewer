@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    FEMTruss.cxx
+  Module:    FEMTrussMFC.cxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
@@ -21,7 +21,6 @@
 #endif
 
 #include "itkFEM.h"
-#include "itkFEMItpackLinearSystemWrapper.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -51,6 +50,7 @@ int main( int argc, char *argv[] ) {
    * effectively defines one FEM problem.
    */
   Solver S;
+
 
 
 
@@ -274,38 +274,35 @@ int main( int argc, char *argv[] ) {
    * The first node is completely fixed i.e. both displacements
    * are fixed to 0.
    * 
-   * This is done by using the LoadBC class.
+   * This is done by using the LoadBCMFC class.
    */
-  LoadBC::Pointer l1;
+  LoadBCMFC::Pointer l1;
 
-  l1=static_cast<LoadBC*>( &*FEMOF::Create(LoadBC::OFID) );
+  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
 
   /**
    * Here we're saying that the first degree of freedom at first node
-   * is fixed to value m_value=0.0. See comments in class LoadBC declaration
-   * for more information. Note that the m_value is a vector. This is useful
-   * when having isotropic elements. This is not the case here, so we only
-   * have a scalar.
+   * is fixed to value rhs=0.0. See the comments in class LoadBCMFC declaration
+   * for more information. Note that the rhs is a vector. This is useful
+   * when having isotropic elements. This is not the case here, so we only have
+   * a scalar.
    */
-  l1->m_element = &*S.el.Find(0);
-  l1->m_dof = 0;
-  l1->m_value = vnl_vector<double>(1,0.0);
+  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(0), 0, 1.0 ) );
+  l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
   /**
    * In a same way we also fix the second DOF in a first node and the
    * second DOF in a third node (it's only fixed in Y direction).
    */
-  l1=static_cast<LoadBC*>( &*FEMOF::Create(LoadBC::OFID) );
-  l1->m_element = &*S.el.Find(0);
-  l1->m_dof = 1;
-  l1->m_value = vnl_vector<double>(1,0.0);
+  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
+  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(0), 1, 1.0 ) );
+  l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
-  l1=static_cast<LoadBC*>( &*FEMOF::Create(LoadBC::OFID) );
-  l1->m_element = &*S.el.Find(1);
-  l1->m_dof = 4;
-  l1->m_value = vnl_vector<double>(1,0.0);
+  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
+  l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(1), 4, 1.0 ) );
+  l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
 
