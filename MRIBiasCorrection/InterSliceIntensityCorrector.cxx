@@ -204,6 +204,8 @@ int main(int argc, char* argv[])
     }
 
   ImagePointer output = ImageType::New() ;
+  output->SetLargestPossibleRegion(input->GetLargestPossibleRegion()) ;
+  output->SetRequestedRegion(input->GetLargestPossibleRegion()) ;
 
   filter->SetOutput(output) ;
   filter->SetSlicingDirection(sliceDirection) ;
@@ -232,7 +234,16 @@ int main(int argc, char* argv[])
   filter->Update() ;
 
   std::cout << "Writing the output image..." << std::endl ;
-  writeImage(outputFileName, output) ;
-  
+  try
+    {
+      writeImage(outputFileName, output) ;
+    }
+  catch(itk::ExceptionObject)
+    {
+      std::cout << "Error: " << e.Operation << " file name:" 
+                << e.FileName << std::endl ;
+      exit(0) ;
+    }
+
   return 0 ;
 }
