@@ -85,7 +85,7 @@ int main( int argc, char *argv[] ) {
    * not used. The resulting (dumb) pointer NodeXYrotZ* is then automatically
    * converted to SmartPointer if necessary and stored in n1.
    */
-  n1=static_cast<NodeXYrotZ*>( &*FEMOF::Create(NodeXYrotZ::OFID) );
+  n1=static_cast<NodeXYrotZ*>( &*FEMOF::Create(NodeXYrotZ::CLID) );
 
   /**
    * Additionally we could create the objects in the standard way...
@@ -142,7 +142,7 @@ int main( int argc, char *argv[] ) {
    * FEMObjectFactory and not copying the objects inside arrays.
    * This is what we'll do for the final node.
    */
-  n2=static_cast<NodeXY*>( &*FEMOF::Create(NodeXY::OFID) );
+  n2=static_cast<NodeXY*>( &*FEMOF::Create(NodeXY::CLID) );
   n2->X=0.0;
   n2->Y=0.0;
   S.node.push_back( FEMP<Node>(&*n2) );
@@ -165,14 +165,14 @@ int main( int argc, char *argv[] ) {
    * the elements.
    */
   MaterialStandard::Pointer m;
-  m=static_cast<MaterialStandard*>( &*FEMOF::Create(MaterialStandard::OFID) );
+  m=static_cast<MaterialStandard*>( &*FEMOF::Create(MaterialStandard::CLID) );
   m->GN=0;       /** Global number of the material */
   m->E=30000.0;  /** Young modulus */
   m->A=0.02;     /** Crossection area */
   m->I=0.004;    /** Momemt of inertia */
   S.mat.push_back( FEMP<Material>(&*m) );
 
-  m=static_cast<MaterialStandard*>( &*FEMOF::Create(MaterialStandard::OFID) );
+  m=static_cast<MaterialStandard*>( &*FEMOF::Create(MaterialStandard::CLID) );
   m->GN=1;       /** Global number of the material */
   m->E=200000.0;  /** Young modulus */
   m->A=0.001;     /** Crossection area */
@@ -183,7 +183,7 @@ int main( int argc, char *argv[] ) {
   m->I=0.0;
   S.mat.push_back( FEMP<Material>(&*m) );
 
-  m=static_cast<MaterialStandard*>( &*FEMOF::Create(MaterialStandard::OFID) );
+  m=static_cast<MaterialStandard*>( &*FEMOF::Create(MaterialStandard::CLID) );
   m->GN=2;       /** Global number of the material */
   m->E=200000.0;  /** Young modulus */
   m->A=0.003;     /** Crossection area */
@@ -207,7 +207,7 @@ int main( int argc, char *argv[] ) {
   Beam2D::Pointer e1;
   Bar2D::Pointer e2;
 
-  e1=static_cast<Beam2D*>( &*FEMOF::Create(Beam2D::OFID) );
+  e1=static_cast<Beam2D*>( &*FEMOF::Create(Beam2D::CLID) );
 
   /**
    * Initialize the pointers to correct node objects. We use the
@@ -225,7 +225,7 @@ int main( int argc, char *argv[] ) {
   S.el.push_back( FEMP<Element>(&*e1) );
 
   /** Create the other elements */
-  e1=static_cast<Beam2D*>( &*FEMOF::Create(Beam2D::OFID) );
+  e1=static_cast<Beam2D*>( &*FEMOF::Create(Beam2D::CLID) );
   e1->GN=1;
   e1->m_node[0]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
   e1->m_node[1]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(2) );
@@ -240,21 +240,21 @@ int main( int argc, char *argv[] ) {
    * guarantied by compiler either at compile time or by
    * dynamic_cast operator.
    */
-  e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::OFID) );
+  e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::CLID) );
   e2->GN=2;
   e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(0) );
   e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
   e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(1) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
-  e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::OFID) );
+  e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::CLID) );
   e2->GN=3;
   e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(1) );
   e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
   e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(2) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
-  e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::OFID) );
+  e2=static_cast<Bar2D*>( &*FEMOF::Create(Bar2D::CLID) );
   e2->GN=4;
   e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(2) );
   e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
@@ -278,7 +278,7 @@ int main( int argc, char *argv[] ) {
    */
   LoadBCMFC::Pointer l1;
 
-  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
+  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::CLID) );
 
   /**
    * Here we're saying that the first degree of freedom at first node
@@ -295,12 +295,12 @@ int main( int argc, char *argv[] ) {
    * In a same way we also fix the second DOF in a first node and the
    * second DOF in a third node (it's only fixed in Y direction).
    */
-  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
+  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::CLID) );
   l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(0), 1, 1.0 ) );
   l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
-  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::OFID) );
+  l1=static_cast<LoadBCMFC*>( &*FEMOF::Create(LoadBCMFC::CLID) );
   l1->lhs.push_back( LoadBCMFC::MFCTerm( &*S.el.Find(1), 4, 1.0 ) );
   l1->rhs=vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
@@ -313,7 +313,7 @@ int main( int argc, char *argv[] ) {
    */
   LoadNode::Pointer l2;
 
-  l2=static_cast<LoadNode*>( &*FEMOF::Create(LoadNode::OFID) );
+  l2=static_cast<LoadNode*>( &*FEMOF::Create(LoadNode::CLID) );
   l2->m_element=S.el.Find(2);
   l2->m_pt=1;
   l2->F=vnl_vector<double>(2);
