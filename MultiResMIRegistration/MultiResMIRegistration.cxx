@@ -48,8 +48,8 @@ int main()
 {
   //Allocate Images
   typedef float PixelType;
-  typedef itk::PhysicalImage<float,2>           ReferenceType;
-  typedef itk::PhysicalImage<float,2>           TargetType;
+  typedef itk::PhysicalImage<PixelType,2>           ReferenceType;
+  typedef itk::PhysicalImage<PixelType,2>           TargetType;
   enum { ImageDimension = ReferenceType::ImageDimension };
 
   ReferenceType::SizeType size = {{100,100}};
@@ -139,11 +139,11 @@ int main()
 
   registrator->SetTarget( imgTarget );
   registrator->SetReference( imgReference );
-  registrator->SetNumberOfLevels( 4 );
+  registrator->SetNumberOfLevels( 3 );
 
-  unsigned int niter[4] = { 200, 100, 100, 50 };
-  double rates[4] = { 1e-5, 1e-6, 1e-7, 1e-8 };
-  double scales[4] = { 1000, 1000, 100, 100 };
+  unsigned int niter[4] = { 300, 100, 50 };
+  double rates[4] = { 1e-6, 1e-6, 1e-7 };
+  double scales[4] = { 1000, 100, 100 };
 
   registrator->SetNumberOfIterations( niter );
   registrator->SetLearningRates( rates );
@@ -159,6 +159,11 @@ int main()
   method->GetMetric()->SetReferenceStandardDeviation( 5.0 );
   method->GetMetric()->SetNumberOfSpatialSamples( 50 );
 
+  std::cout << "Target schedule: " << std::endl;
+  std::cout << registrator->GetTargetPyramid()->GetSchedule() << std::endl;
+
+  std::cout << "Reference schedule: " << std::endl;
+  std::cout << registrator->GetReferencePyramid()->GetSchedule() << std::endl;
 
   /**
    * Do the registration
