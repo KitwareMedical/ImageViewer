@@ -27,8 +27,6 @@
 #include "vtkPoints.h"
 #include "vtkFloatArray.h"
 
-#include "vtkItkCellMultiVisitor.h"
-
 #include "itkNumericTraits.h"
 
 
