@@ -1,0 +1,29 @@
+INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
+${ITK_SOURCE_DIR}/Code/IO
+)
+
+LINK_DIRECTORIES(
+${ITK_BINARY_DIR}/Code/Common
+${ITK_BINARY_DIR}/Code/IO
+)
+
+SOURCE_FILES(RawImageReadWrite_SRCS
+itkRawImageReadWrite
+)
+
+
+LINK_LIBRARIES (
+ITKCommon
+ITKIO
+)
+
+IF(UNIX)
+  LINK_LIBRARIES (
+  ${CMAKE_X_LIBS} -lm
+  )
+ENDIF(UNIX)
+
+ADD_EXECUTABLE(RawImageReadWrite   RawImageReadWrite_SRCS)
+
+
