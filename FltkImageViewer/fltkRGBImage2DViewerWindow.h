@@ -68,8 +68,8 @@ private:
 
   ColorType          m_Background;
   ValueType       *  m_Buffer;
-  int       m_Width;
-  int       m_Height;
+  int                m_Width;
+  int                m_Height;
   double             m_Zoom;
   int                m_ShiftX;
   int                m_ShiftY;

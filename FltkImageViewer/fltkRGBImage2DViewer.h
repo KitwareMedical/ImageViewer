@@ -24,7 +24,7 @@
 
 namespace fltk {
 
-template <class ImagePixelType>
+template <class PixelComponentType>
 class RGBImage2DViewer : public itk::Object, public fltkRGBImage2DViewerGUI
 {
 
@@ -55,12 +55,13 @@ public:
   /**
    * Image Type
    */
+  typedef itk::RGBPixel<PixelComponentType> ImagePixelType;
   typedef itk::Image< ImagePixelType, 2 >   ImageType;
   
   /**
    * Chanel Image Type
    */
-  typedef unsigned char ChannelPixelType ;
+  typedef PixelComponentType             ChannelPixelType ;
   typedef itk::Image< ChannelPixelType > ChannelImageType ;
   
   /**
