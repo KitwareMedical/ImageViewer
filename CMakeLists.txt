@@ -20,14 +20,14 @@ SUBDIRS(WatershedSegmentation)
 ENDIF(BUILD_WATERSHED_SEGMENTATION)
 
 # Add an option to build or not build the Image Registration example
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(ImageRegistration)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
+# IF(HAS_METAIMAGE)
+#  IF(HAS_FLTKIMAGEVIEWER)
+#    SUBDIRS(ImageRegistration)
+#  ENDIF(HAS_FLTKIMAGEVIEWER)
+# ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the Multiresolution Registration example
-SUBDIRS(MultiResMIRegistration)
+# SUBDIRS(MultiResMIRegistration)
 
 # Add an option to build or not build the Gaussian Filter GUI example
 IF(HAS_METAIMAGE)
@@ -79,9 +79,9 @@ SUBDIRS(FuzzyConnectedness)
 SUBDIRS(ShapeDetection)
 
 # The MRI Registration example needs VTK
-IF (USE_VTK_FILE)
-  SUBDIRS(MRIRegistration)
-ENDIF (USE_VTK_FILE)
+# IF (USE_VTK_FILE)
+#  SUBDIRS(MRIRegistration)
+# ENDIF (USE_VTK_FILE)
 
 # Add an option to build or not build the TripleTKImageDisplay example.
 # It needs VTK.
