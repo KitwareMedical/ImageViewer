@@ -22,13 +22,13 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           xywh {195 191 110 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {64 72 85 9} box UP_BOX color 4
+          xywh {64 47 85 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {490 68 108 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {170 77 9 53} box UP_BOX color 4
+          xywh {170 50 9 80} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {170 142 9 53} box UP_BOX color 4
@@ -42,6 +42,9 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Box {} {
           xywh {170 202 9 48} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {60 131 85 9} box UP_BOX color 4
+        }
       }
       Fl_Group controlsGroup {
         xywh {5 5 820 352}
@@ -49,7 +52,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Light_Button inputImageButton {
           label {Input Image}
           callback {ShowInputImage();}
-          xywh {129 63 96 25} type Normal value 1 selection_color 1 labelsize 12
+          xywh {129 41 96 25} type Normal value 1 selection_color 1 labelsize 12
           class {fltk::LightButton}
         }
         Fl_Button {} {
@@ -117,6 +120,20 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           xywh {115 175 120 40} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
+        Fl_Group curvatureFlowGroup {open
+          xywh {21 110 75 115} box ENGRAVED_BOX align 17
+        } {
+          Fl_Value_Input timeStep {
+            label TimeStep
+            callback {m_CurvatureFlowImageFilter->SetTimeStep( o->value() );}
+            xywh {31 135 55 25} align 1 maximum 10 value 0.25
+          }
+          Fl_Value_Input iterationsValueInput {
+            label Iterations
+            callback {m_CurvatureFlowImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );} selected
+            xywh {31 180 55 25} align 1 minimum 1 maximum 100 value 2
+          }
+        }
       }
       Fl_Slider progressSlider {
         xywh {10 363 810 15} type {Horz Fill} selection_color 2
@@ -129,7 +146,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
       Fl_Light_Button loadInputImageButton {
         label Load
         callback {this->LoadInputImage();}
-        xywh {29 63 65 25} type Normal value 1 selection_color 1 labelsize 12
+        xywh {29 41 65 25} type Normal value 1 selection_color 1 labelsize 12
         class {fltk::LightButton}
       }
     }
@@ -148,6 +165,6 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   } {}
   Function {ShowConsole( void )} {return_type {virtual void}
   } {}
-  Function {ShowHomogeneousImage( void )} {selected return_type {virtual void}
+  Function {ShowHomogeneousImage( void )} {return_type {virtual void}
   } {}
 } 

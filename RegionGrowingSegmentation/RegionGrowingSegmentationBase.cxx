@@ -37,8 +37,11 @@ RegionGrowingSegmentationBase
   itk::RawImageIOFactory< InputImageType::PixelType, 
                           InputImageType::ImageDimension >::RegisterOneFactory();
 
+  m_CastImageFilter = CastImageFilterType::New();
+  m_CastImageFilter->SetInput( m_ImageReader->GetOutput() );
+
   m_CurvatureFlowImageFilter = CurvatureFlowImageFilterType::New();
-  m_CurvatureFlowImageFilter->SetInput( m_ImageReader->GetOutput() );
+  m_CurvatureFlowImageFilter->SetInput( m_CastImageFilter->GetOutput() );
 
   m_ConnectedThresholdImageFilter = ConnectedThresholdImageFilterType::New();
   m_ConnectedThresholdImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );

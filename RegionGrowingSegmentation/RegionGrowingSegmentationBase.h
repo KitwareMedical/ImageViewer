@@ -23,6 +23,7 @@
 
 #include <itkConnectedThresholdImageFilter.h>
 #include <itkCurvatureFlowImageFilter.h>
+#include <itkCastImageFilter.h>
 
 
 /**
@@ -41,7 +42,7 @@ public:
   typedef   unsigned char                         InputPixelType;
 
   /** Pixel type to be used internally */
-  typedef   unsigned char                         InternalPixelType;
+  typedef   double                                InternalPixelType;
   
   /** Type of the input image */
   typedef   itk::Image<InputPixelType,ImageDimension>    InputImageType;
@@ -52,9 +53,15 @@ public:
   /** Filter for reading the input image */
   typedef   itk::ImageFileReader< InputImageType >       ImageReaderType;
 
+  /** Cast filter needed because Curvature flow expects double images */
+  typedef   itk::CastImageFilter< 
+                 InputImageType, 
+                 InternalImageType >     CastImageFilterType;
+
+
   /** Curvature flow image filter for producing homogeneous regions */
   typedef   itk::CurvatureFlowImageFilter< 
-                 InputImageType, 
+                 InternalImageType, 
                  InternalImageType >     CurvatureFlowImageFilterType;
 
   /** Threshold Connected Image Filter */
@@ -78,6 +85,8 @@ protected:
   ImageReaderType::Pointer                    m_ImageReader;
 
   bool                                        m_InputImageIsLoaded;
+
+  CastImageFilterType::Pointer                m_CastImageFilter;
 
   CurvatureFlowImageFilterType::Pointer       m_CurvatureFlowImageFilter;
 
