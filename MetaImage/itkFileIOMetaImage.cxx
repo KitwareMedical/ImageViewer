@@ -82,7 +82,7 @@ void FileIOMetaImage::Load()
 
   m_MetaImage = new MetaImage();
   m_MetaImage->OpenMetaFile(m_FullFileName.c_str());
-  Resize(m_NumDimensions, m_Dimensions);
+  Resize(m_NumberOfDimensions, m_Dimensions);
   memmove(m_FileData, m_MetaImage->Get(), m_MetaImage->Quantity()*GetComponentStride());
   CopyAcquisitionParamsToImageIO(m_MetaImage);
   delete m_MetaImage;
@@ -99,9 +99,9 @@ void FileIOMetaImage::Load2DSlice(const std::string fileName,
                                   const unsigned int offset)
 {
   ReadHeader();
-  m_NumDimensions = 3;
+  m_NumberOfDimensions = 3;
   m_Dimensions[2] = 1;
-  Resize(m_NumDimensions, m_Dimensions);
+  Resize(m_NumberOfDimensions, m_Dimensions);
 
   m_MetaImage = new MetaImage();
   if (fileName == "")
@@ -131,7 +131,7 @@ void FileIOMetaImage::Save3D(const std::string headerFile, const std::string dat
   char* dFile = NULL;
   char *path = NULL, *name = NULL, *extension = NULL;
 
-  m_MetaImage = new MetaImage(m_NumDimensions, (const int *) m_Dimensions,
+  m_MetaImage = new MetaImage(m_NumberOfDimensions, (const int *) m_Dimensions,
                               ConvertAtomicPixelTypeToMET_Type(m_PixelType), NULL, 0,
                               MET_SYSTEM_BYTE_ORDER_MSB, m_FileData);
   CopyAcquisitionParamsToMetaImage(m_MetaImage);
@@ -220,15 +220,15 @@ void FileIOMetaImage::ReadHeader(const std::string fileName)
     m_MetaImage->OpenMetaFile(fileName.c_str(), false);
   }
 
-  SetNumDimensions(m_MetaImage->NDims());
-  for (unsigned int i = 0; i < m_NumDimensions; i++)
+  SetNumberOfDimensions(m_MetaImage->NDims());
+  for (unsigned int i = 0; i < m_NumberOfDimensions; i++)
   {
     m_Dimensions[i] = m_MetaImage->DimSize(i);
   }
   SetComponentsPerPixel(1);
   m_PixelType = ConvertMET_TypeToAtomicPixelType(m_MetaImage->ElemType());
   CopyAcquisitionParamsToImageIO(m_MetaImage);
-  CalcStrides();
+  ComputeStrides();
 
   m_MetaImage->ReadFileClose();
   delete m_MetaImage;

@@ -253,8 +253,8 @@ bool MF_Write(itk::Ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
                }
             }
             char temp_str[80] ;
-            for (int d = 0 ; d < field[i].length ; d++)
-              temp_str[d] = (char) field[i].val[d] ;
+            for (j = 0 ; j < field[i].length ; j++)
+              temp_str[j] = (char) field[i].val[j] ;
             fp.write(temp_str, field[i].length );
             fp << std::endl;
             break;

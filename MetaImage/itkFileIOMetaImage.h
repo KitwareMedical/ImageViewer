@@ -55,12 +55,14 @@ public:
    * Since MetaImages can be saved as a header/data file pair, we need to be able to pass
    * in these strings as parameters. Most other file formats will simply use m_FullFileName
    */
-  virtual void Save(const std::string headerFile="", const std::string dataFile="");
+  virtual void Save(const std::string headerFile="", 
+                    const std::string dataFile="");
 
   /**
    * Save a 3D image
    */
-  virtual void Save3D(const std::string headerFile="", const std::string dataFile="");
+  virtual void Save3D(const std::string headerFile="", 
+                      const std::string dataFile="");
 
   /**
    * Read a file's header to determine image dimensions, etc.
