@@ -42,7 +42,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <liFilterConsole.h>
 #include <FL/fl_file_chooser.H>
-#include <fltkLightButtonRedrawCommand.h>
  
 
 
@@ -55,8 +54,6 @@ liFilterConsole
 ::liFilterConsole()
 {
  
-  
-  typedef fltk::LightButtonRedrawCommand  CommandButton;
 
   m_InputViewer = new InputImageViewerType;
 
@@ -86,91 +83,53 @@ liFilterConsole
   
   m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
-  fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
-                            progressSlider->GetRedrawCommand().GetPointer();
 
-  m_H1x->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H1y->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H1z->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H2x->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H2y->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H2z->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hx->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hz->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hxy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hyz->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hzx->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Add->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Modulus->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  progressSlider->Observe( m_Hx.GetPointer() );
+  progressSlider->Observe( m_Hy.GetPointer() );
+  progressSlider->Observe( m_Hz.GetPointer() );
+  progressSlider->Observe( m_H1x.GetPointer() );
+  progressSlider->Observe( m_H1y.GetPointer() );
+  progressSlider->Observe( m_H1z.GetPointer() );
+  progressSlider->Observe( m_H2x.GetPointer() );
+  progressSlider->Observe( m_H2y.GetPointer() );
+  progressSlider->Observe( m_H2z.GetPointer() );
+  progressSlider->Observe( m_Hxy.GetPointer() );
+  progressSlider->Observe( m_Hyz.GetPointer() );
+  progressSlider->Observe( m_Hzx.GetPointer() );
+  progressSlider->Observe( m_Add.GetPointer() );
+  progressSlider->Observe( m_Modulus.GetPointer() );
                               
-  m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Hx->AddObserver(  itk::Command::StartEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Hy->AddObserver(  itk::Command::StartEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Hz->AddObserver(  itk::Command::StartEvent, HzButton->GetRedrawCommand().GetPointer() );
-  m_Hxy->AddObserver( itk::Command::StartEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_Hyz->AddObserver( itk::Command::StartEvent, HyzButton->GetRedrawCommand().GetPointer() );
-  m_Hzx->AddObserver( itk::Command::StartEvent, HzxButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::StartEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::StartEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_H1z->AddObserver( itk::Command::StartEvent, H1zButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::StartEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::StartEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_H2z->AddObserver( itk::Command::StartEvent, H2zButton->GetRedrawCommand().GetPointer() );
-  m_Add->AddObserver( itk::Command::StartEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Modulus->AddObserver( itk::Command::StartEvent, modulusButton->GetRedrawCommand().GetPointer() );
+  inputButton->Observe( m_Reader.GetPointer() );
+  HxButton->Observe( m_Hx.GetPointer() );
+  HyButton->Observe( m_Hy.GetPointer() );
+  HzButton->Observe( m_Hz.GetPointer() );
+  H1xButton->Observe( m_H1x.GetPointer() );
+  H1yButton->Observe( m_H1y.GetPointer() );
+  H1zButton->Observe( m_H1z.GetPointer() );
+  H2xButton->Observe( m_H2x.GetPointer() );
+  H2yButton->Observe( m_H2y.GetPointer() );
+  H2zButton->Observe( m_H2z.GetPointer() );
+  HxyButton->Observe( m_Hxy.GetPointer() );
+  HyzButton->Observe( m_Hyz.GetPointer() );
+  HzxButton->Observe( m_Hzx.GetPointer() );
+  laplacianButton->Observe( m_Add.GetPointer() );
+  modulusButton->Observe( m_Modulus.GetPointer() );
 
-  m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Hx->AddObserver(  itk::Command::EndEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Hy->AddObserver(  itk::Command::EndEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Hz->AddObserver(  itk::Command::EndEvent, HzButton->GetRedrawCommand().GetPointer() );
-  m_Hxy->AddObserver( itk::Command::EndEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_Hyz->AddObserver( itk::Command::EndEvent, HyzButton->GetRedrawCommand().GetPointer() );
-  m_Hzx->AddObserver( itk::Command::EndEvent, HzxButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::EndEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::EndEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_H1z->AddObserver( itk::Command::EndEvent, H1zButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::EndEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::EndEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_H2z->AddObserver( itk::Command::EndEvent, H2zButton->GetRedrawCommand().GetPointer() );
-  m_Add->AddObserver( itk::Command::EndEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Modulus->AddObserver( itk::Command::EndEvent, modulusButton->GetRedrawCommand().GetPointer() );
-
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Hy->AddObserver(  itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Hz->AddObserver(  itk::Command::ModifiedEvent, HzButton->GetRedrawCommand().GetPointer() );
-  m_Hxy->AddObserver( itk::Command::ModifiedEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_Hyz->AddObserver( itk::Command::ModifiedEvent, HyzButton->GetRedrawCommand().GetPointer() );
-  m_Hzx->AddObserver( itk::Command::ModifiedEvent, HzxButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::ModifiedEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::ModifiedEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_H1z->AddObserver( itk::Command::ModifiedEvent, H1zButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::ModifiedEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::ModifiedEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_H2z->AddObserver( itk::Command::ModifiedEvent, H2zButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_H1z->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_H2z->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
-
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HzButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HyzButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HzxButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1zButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H2zButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), inputButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HzButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxyButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HyzButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HzxButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1zButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2zButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
 
   this->ShowStatus("Let's start by loading an image...");
 
