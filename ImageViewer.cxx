@@ -102,6 +102,7 @@ int main(int argc, char **argv)
   tkMain->label(mainName);
   
   tkWin->SetInputImage(imP);
+  tkWin->flipY(true);
   
   form->show();
   tkWin->show();
