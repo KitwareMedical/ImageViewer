@@ -17,6 +17,7 @@
 
 
 #include <liFilterConsole.h>
+#include <itkMetaImageIO.h>
 #include <FL/fl_file_chooser.H>
  
 
@@ -59,7 +60,11 @@ liFilterConsole
   
   m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
+  itk::MetaImageIO::Pointer metaImageIO = itk::MetaImageIO::New();
+  
+  m_Reader->SetImageIO( metaImageIO );
 
+  progressSlider->Observe( metaImageIO.GetPointer() );
   progressSlider->Observe( m_Hx.GetPointer() );
   progressSlider->Observe( m_Hy.GetPointer() );
   progressSlider->Observe( m_Hz.GetPointer() );
