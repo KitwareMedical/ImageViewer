@@ -36,7 +36,6 @@ GaussianFilterLib
 
 
 LINK_LIBRARIES (
-VXLNumerics
 ITKCommon
 ITKBasicFilters 
 GaussianFilterLib
