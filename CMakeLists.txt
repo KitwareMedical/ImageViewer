@@ -160,6 +160,12 @@ IF(HAS_METAIMAGE)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
+# Test the condition to build or not build the 
+# mutual informantion + Euler 2D transform image registration example
+IF(HAS_FLTKIMAGEVIEWER)
+  SUBDIRS(MutualInformationEuler2DRegistration)
+ENDIF(HAS_FLTKIMAGEVIEWER)
+
 # Add an option to build or not build the FEM - Mesh example
 OPTION(BUILD_FEM_MESH_EXAMPLE "Build the FEM-Mesh example" OFF)
 IF(BUILD_FEM_MESH_EXAMPLE)
