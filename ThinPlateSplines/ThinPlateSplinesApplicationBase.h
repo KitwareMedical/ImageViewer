@@ -26,6 +26,7 @@
 #include "vtkPoints.h"
 #include "fltkTimeProbesCollector.h"
 #include "itkThinPlateSplineKernelTransform.h"
+#include "vtkThinPlateSplineTransform.h"
 
 #include <set>
 
@@ -86,7 +87,8 @@ protected:
   PointSetPointer   m_TargetLandMarks;   
 
   PointArrayType    m_PointsToTransform;   
-  PointArrayType    m_PointsTransformed;   
+
+  PointArrayType    m_PointsTransformedByITK;   
   
   vtkPoints       * m_VTKSourceLandMarks;
   vtkPoints       * m_VTKTargetLandMarks;
@@ -94,16 +96,23 @@ protected:
   vtkPoints       * m_VTKPointsToTransform;
   vtkCellArray    * m_VTKLinesToTransform;
 
-  vtkPoints       * m_VTKPointsTransformed;
-  vtkCellArray    * m_VTKLinesTransformed;
+  vtkPoints       * m_VTKPointsTransformedByITK;
+  vtkCellArray    * m_VTKLinesTransformedByITK;
+
+  vtkPoints       * m_VTKPointsTransformedByVTK;
+  vtkCellArray    * m_VTKLinesTransformedByVTK;
 
   fltk::TimeProbesCollector  m_TimeCollector;
 
   virtual void    MapPoints(void);
+  virtual void    MapPointsITK(void);
+  virtual void    MapPointsVTK(void);
   virtual void    CreateSourcePoints(void);
   virtual void    RemoveActors(void);
 
-  ThinPlateSplineTransformPointer  m_ThinPlateSplineTransform;
+  ThinPlateSplineTransformPointer  m_ThinPlateSplineTransformITK;
+
+  vtkThinPlateSplineTransform   *  m_ThinPlateSplineTransformVTK;
 
 private:
 
