@@ -18,6 +18,7 @@
 #define _VTKVolRen_h
 #include <vtkVolumeRayCastMapper.h>
 #include <vtkVolumeRayCastMIPFunction.h>
+#include <vtkPiecewiseFunction.h>
 #include <vtkUnsignedCharArray.h>
 #include "itkImage.h"
 #include "itkSimpleImageRegionIterator.h"
