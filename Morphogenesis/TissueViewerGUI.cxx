@@ -16,6 +16,27 @@ Fl_Menu_Item TissueViewerGUI::menu_[] = {
  {0}
 };
 
+inline void TissueViewerGUI::cb_3_i(Fl_Button*, void*) {
+  Run();
+}
+void TissueViewerGUI::cb_3(Fl_Button* o, void* v) {
+  ((TissueViewerGUI*)(o->parent()->user_data()))->cb_3_i(o,v);
+}
+
+inline void TissueViewerGUI::cb_4square_i(Fl_Button*, void*) {
+  Stop();
+}
+void TissueViewerGUI::cb_4square(Fl_Button* o, void* v) {
+  ((TissueViewerGUI*)(o->parent()->user_data()))->cb_4square_i(o,v);
+}
+
+inline void TissueViewerGUI::cb__i(Fl_Button*, void*) {
+  Restart();
+}
+void TissueViewerGUI::cb_(Fl_Button* o, void* v) {
+  ((TissueViewerGUI*)(o->parent()->user_data()))->cb__i(o,v);
+}
+
 TissueViewerGUI::TissueViewerGUI() {
   Fl_Window* w;
   { Fl_Window* o = tissueWindow = new Fl_Window(435, 416, "Tissue Window");
@@ -23,18 +44,31 @@ TissueViewerGUI::TissueViewerGUI() {
     o->user_data((void*)(this));
     { bio::TissueViewerWindow* o = tissueView = new bio::TissueViewerWindow(5, 5, 425, 405);
       o->box(FL_DOWN_BOX);
-      o->color(115);
+      o->color(215);
     }
     o->end();
     o->resizable(o);
   }
-  { Fl_Window* o = controlWindow = new Fl_Window(399, 103, "Control Panel");
+  { Fl_Window* o = controlWindow = new Fl_Window(399, 131, "Control Panel");
     w = o;
     o->user_data((void*)(this));
     { Fl_Menu_Bar* o = new Fl_Menu_Bar(0, 0, 400, 25);
       o->menu(menu_);
     }
-    new Fl_Button(50, 45, 65, 30, ">");
+    { Fl_Button* o = new Fl_Button(50, 45, 65, 30, "@-3>");
+      o->labeltype(FL_SYMBOL_LABEL);
+      o->callback((Fl_Callback*)cb_3);
+    }
+    { Fl_Button* o = new Fl_Button(115, 45, 65, 30, "@#-4square");
+      o->labeltype(FL_SYMBOL_LABEL);
+      o->callback((Fl_Callback*)cb_4square);
+    }
+    timeValueOutput = new Fl_Value_Output(280, 45, 85, 30, "Time : ");
+    cellsValueOutput = new Fl_Value_Output(280, 75, 85, 30, "Cells : ");
+    { Fl_Button* o = new Fl_Button(50, 75, 65, 30, "@#|<");
+      o->labeltype(FL_SYMBOL_LABEL);
+      o->callback((Fl_Callback*)cb_);
+    }
     o->end();
   }
   { Fl_Window* o = new Fl_Window(104, 100);
@@ -54,4 +88,13 @@ void TissueViewerGUI::Show(void) {
 }
 
 void TissueViewerGUI::Hide(void) {
+}
+
+void TissueViewerGUI::Run(void) {
+}
+
+void TissueViewerGUI::Stop(void) {
+}
+
+void TissueViewerGUI::Restart(void) {
 }

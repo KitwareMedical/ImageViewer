@@ -10,17 +10,17 @@ class TissueViewerGUI {open
   Function {TissueViewerGUI()} {} {
     Fl_Window tissueWindow {
       label {Tissue Window} open
-      xywh {386 200 435 416} resizable visible
+      xywh {414 333 435 416} resizable visible
     } {
-      Fl_Box tissueView {selected
-        xywh {5 5 425 405} box DOWN_BOX color 115
+      Fl_Box tissueView {
+        xywh {5 5 425 405} box DOWN_BOX color 215
         code0 {\#include "TissueViewerWindow.h"}
         class {bio::TissueViewerWindow}
       }
     }
     Fl_Window controlWindow {
       label {Control Panel} open
-      xywh {494 37 399 103} visible
+      xywh {494 37 399 131} visible
     } {
       Fl_Menu_Bar {} {open
         xywh {0 0 400 25}
@@ -37,8 +37,27 @@ class TissueViewerGUI {open
         }
       }
       Fl_Button {} {
-        label {>}
-        xywh {50 45 65 30}
+        label {@-3>}
+        callback {Run();}
+        xywh {50 45 65 30} labeltype SYMBOL_LABEL
+      }
+      Fl_Button {} {
+        label {@\#-4square}
+        callback {Stop();}
+        xywh {115 45 65 30} labeltype SYMBOL_LABEL
+      }
+      Fl_Value_Output timeValueOutput {
+        label {Time : }
+        xywh {280 45 85 30}
+      }
+      Fl_Value_Output cellsValueOutput {
+        label {Cells : }
+        xywh {280 75 85 30}
+      }
+      Fl_Button {} {
+        label {@\#|<}
+        callback {Restart();}
+        xywh {50 75 65 30} labeltype SYMBOL_LABEL
       }
     }
     Fl_Window {} {open
@@ -52,5 +71,11 @@ class TissueViewerGUI {open
   Function {Show(void)} {return_type {virtual void}
   } {}
   Function {Hide(void)} {return_type {virtual void}
+  } {}
+  Function {Run(void)} {return_type {virtual void}
+  } {}
+  Function {Stop(void)} {return_type {virtual void}
+  } {}
+  Function {Restart(void)} {selected return_type {virtual void}
   } {}
 } 

@@ -7,6 +7,7 @@
 #include "TissueViewerWindow.h"
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Value_Output.H>
 
 class TissueViewerGUI {
 public:
@@ -18,10 +19,23 @@ public:
 private:
   inline void cb_Quit_i(Fl_Menu_*, void*);
   static void cb_Quit(Fl_Menu_*, void*);
+  inline void cb_3_i(Fl_Button*, void*);
+  static void cb_3(Fl_Button*, void*);
+  inline void cb_4square_i(Fl_Button*, void*);
+  static void cb_4square(Fl_Button*, void*);
+public:
+  Fl_Value_Output *timeValueOutput;
+  Fl_Value_Output *cellsValueOutput;
+private:
+  inline void cb__i(Fl_Button*, void*);
+  static void cb_(Fl_Button*, void*);
 public:
   virtual ~TissueViewerGUI();
   virtual void Quit(void);
   virtual void Show(void);
   virtual void Hide(void);
+  virtual void Run(void);
+  virtual void Stop(void);
+  virtual void Restart(void);
 };
 #endif

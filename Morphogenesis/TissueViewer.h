@@ -21,6 +21,7 @@ public:
 	virtual void Quit(void);
 	virtual void Run(void);
 	virtual void Stop(void);
+	virtual void Restart(void);
 
 private:
 	Tissue   m_Tissue;

@@ -9,19 +9,27 @@ namespace bio {
 class Tissue 
 {
 
+  typedef Cell                  CellType;
+  typedef CellType::VectorType  VectorType;
+  typedef CellType::PointType   PointType;
 
 public:
 
-	typedef std::list<Cell>  CellListType;
+	typedef std::list<CellType *>  CellsListType;
 	
 	Tissue();
   ~Tissue();
   void Draw(void) const;
   void Grow(void);
+  void Spread(void);
+  void Restart(void);
+  VectorType WellPotentialGradient( const VectorType & relativePosition) const;
+  unsigned int GetNumberOfCells(void) const;
+  void SetCells( CellsListType * );
 
 private:
 
-	CellListType    cells;
+	CellsListType   * m_Cells;
 
 
 };

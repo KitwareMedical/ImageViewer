@@ -35,10 +35,13 @@ TissueViewerWindow
 	Fl_Box::draw();
     fl_clip(0,0,w(),h());
 	fl_pop_clip();
+  fl_push_matrix();
+  fl_translate( w()/2.0, h()/2.0 );
 	if( m_Tissue )
 	{
 		m_Tissue->Draw();
 	}
+  fl_pop_matrix();
 	
 }
 

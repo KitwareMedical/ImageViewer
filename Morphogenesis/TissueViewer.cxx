@@ -1,4 +1,5 @@
 #include "TissueViewer.h"
+#include "Bacteria.h"
 
 
 namespace bio {
@@ -8,6 +9,11 @@ namespace bio {
 TissueViewer::TissueViewer()
 {
   m_Stop = true;
+  
+  Bacteria * first = new Bacteria;
+
+  m_Tissue.SetCells( first->GetAggregate() );
+
   tissueView->SetTissue( & m_Tissue );
 }
 
@@ -52,12 +58,17 @@ void
 TissueViewer
 ::Run(void)
 {
+  unsigned int iteration = 0;
 	m_Stop = false;
 	while( !m_Stop )
 	{
-       m_Tissue.Grow();
+     timeValueOutput->value( iteration );
+     cellsValueOutput->value( m_Tissue.GetNumberOfCells() );
+     m_Tissue.Grow();
+     m_Tissue.Spread();
 	   tissueView->redraw();
 	   Fl::check();
+     iteration++;
 	}
 }
 
@@ -70,6 +81,18 @@ TissueViewer
 	m_Stop = true;
 }
 
+
+
+
+void TissueViewer::Restart(void)
+{
+	m_Stop = true;
+  m_Tissue.Restart();
+  timeValueOutput->value( 0 );
+  cellsValueOutput->value( 1 );
+  tissueView->redraw();
+  Fl::check();
+}
 
 
 }; // end namespace bio
