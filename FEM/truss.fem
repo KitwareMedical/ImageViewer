@@ -75,7 +75,8 @@
 % We apply only one nodal force. This is not the in book.
 <LoadNode>
 	0	% Global object number
-	3	% GN of node on which the load acts
+	2	% GN of element on which the load acts
+	1   % Point number within the element
 	2 20 -20	% Force vector (first number is the size of a vector)
 
 % Essential boundary conditions in form of MFCs are applyed, so that the system is
@@ -84,8 +85,8 @@
 	1	% Global object number
 	1	% Number of DOFs in this MFC
 	  %==>
-	  0	% GN of node
-	  0	% DOF# in node
+	  0	% GN of element
+	  0	% DOF# in element
 	  1	% weight
 	  %==>
 	1 0	% rhs of MFC
@@ -93,8 +94,8 @@
 	2	% Global object number
 	1	% Number of DOFs in this MFC
 	  %==>
-	  0	% GN of node
-	  1	% DOF# in node
+	  0	% GN of element
+	  1	% DOF# in element
 	  1	% weight
 	  %==>
 	1 0	% rhs of MFC
@@ -102,8 +103,8 @@
 	3	% Global object number
 	1	% Number of DOFs in this MFC
 	  %==>
-	  2	% GN of node
-	  1	% DOF# in node
+	  1	% GN of element
+	  4	% DOF# in element
 	  1	% weight
 	  %==>
 	1 0	% rhs of MFC
