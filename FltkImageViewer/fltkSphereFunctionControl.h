@@ -82,7 +82,8 @@ public:
   /**
    * Spatial Function Type
    */
-  typedef TSphereSpatialFunction        SpatialFunctionType;
+  typedef TSphereSpatialFunction                  SpatialFunctionType;
+  typedef typename SpatialFunctionType::Pointer   SpatialFunctionPointer;
   
 
   /**
@@ -95,12 +96,14 @@ public:
    * Shape type
    */
   typedef Sphere3D                      ShapeType;
+  typedef ShapeType::Pointer            ShapePointer;
   
   
   /**
    *  Simple Command for drawing in OpenGL 
    */
   typedef itk::SimpleConstMemberCommand<Self>  DrawCommandType;
+  typedef typename DrawCommandType::Pointer    DrawCommandPointer;
   itkGetObjectMacro( DrawCommand, DrawCommandType );
     
 
@@ -141,9 +144,9 @@ protected:
 
 
 private:
-  typename SpatialFunctionType::Pointer    m_SpatialFunction;
-  ShapeType::Pointer                       m_Shape;
-  DrawCommandType::Pointer                 m_DrawCommand;
+  SpatialFunctionPointer              m_SpatialFunction;
+  ShapePointer                        m_Shape;
+  DrawCommandPointer                  m_DrawCommand;
 
 };
 
