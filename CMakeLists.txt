@@ -8,6 +8,13 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+# Add an option to build or not build the Image Registration example
+OPTION(BUILD_IMAGE_REGISTRATION "Build the image registration example")
+IF(BUILD_IMAGE_REGISTRATION)
+SUBDIRS(ImageRegistration)
+ENDIF(BUILD_IMAGE_REGISTRATION)
+
+
 # Add an option to build or not build the Multiresolution Registration example
 OPTION(BUILD_MULTIRESOLUTION "Build the multiresolution example")
 IF(BUILD_MULTIRESOLUTION)
