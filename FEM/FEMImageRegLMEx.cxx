@@ -19,7 +19,6 @@
 #ifdef _MSC_VER
 #pragma warning(disable: 4786)
 #endif
-#include <afx.h>
 #include <fstream>
 
 #include "FEMImageRegLMEx.h"
