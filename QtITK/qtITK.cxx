@@ -19,6 +19,7 @@
 
 #include <qapplication.h>
 #include <qpushbutton.h>
+#include <qfiledialog.h>
 
 #include "itkImage.h"
 #include "itkImageFileReader.h"
@@ -51,8 +52,6 @@ int main(int argc, char **argv)
   // Create Qt Application to let Qt get its 
   // parameters from the command line
   QApplication app( argc, argv );
-
-  reader->SetFileName( argv[1] );
 
   QWidget qb;
   qb.resize(620,100);
@@ -147,10 +146,12 @@ int main(int argc, char **argv)
   QObject::connect( &qt, SIGNAL(clicked()), &app, SLOT(quit()) );
 
 
-
-
   app.setMainWidget( &qb );
   qb.show();
+
+  QString s = QFileDialog::getOpenFileName(".","Images (*.png *.mha)", 0, "open file dialog","Chose an image filename" );
+
+  reader->SetFileName( s.latin1() );
 
   return app.exec();
 
