@@ -188,6 +188,10 @@ VanderbiltValidationOutput<TImage>
 
     }
 
+    fprintf(file, "\n");
+    fprintf(file, "(All distances are in millimeters.)\n");
+    fprintf(file, "-------------------------------------------------------------------------\n");
+
 
   fclose( file );
 
