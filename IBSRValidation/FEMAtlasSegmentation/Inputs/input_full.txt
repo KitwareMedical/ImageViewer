@@ -1,0 +1,24 @@
+G:\Avants\IBSR\OriginalNormals\20Normals_T1_8bit_reslice
+G:\Avants\IBSR\OriginalNormals\20Normals_T1_brain_reslice
+U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Results\output_2.txt
+U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3Db.txt
+10 256 256 0 183
+11 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+12 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+13 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+14 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+15 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+16 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+17 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+18 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+19 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+20 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+21 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+22 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+23 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+24 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+25 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+26 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+27 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+28 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+29 256 256 0 183 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt

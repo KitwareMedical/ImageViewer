@@ -1,0 +1,23 @@
+E:\img\IBSR\20Normals_T1_16bit
+E:\img\IBSR\20Normals_T1_brain
+U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Results\output_1.txt
+100_23 0 63
+1_24   0  65 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+11_3   0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+110_3  0  64 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+111_2  0  64 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+112_2  0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+12_3   0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+13_3   0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+15_3   0  60 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+16_3   0  60 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+17_3   0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+191_3  0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+2_4    0  65 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+202_3  0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+205_3  0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+4_8    0  61 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+5_8    0  60 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+6_10   0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+7_8    0  60 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
+8_4    0  63 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\param_1.txt
