@@ -152,7 +152,7 @@ VanderbiltValidationOutput<TImage>
   for ( unsigned int k = 0; k < numberOfCorners; k++ )
     {
     unsigned int upper = k;
-    int j;
+    unsigned int j;
 
     ContinuousIndex<double,ImageDimension> contIndex;
     for( j = 0; j < ImageDimension; j++ )

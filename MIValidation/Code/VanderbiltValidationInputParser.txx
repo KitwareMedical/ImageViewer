@@ -40,7 +40,7 @@ VanderbiltValidationInputParser<TImage>
   m_FixedImage = NULL;
   m_MovingImage = NULL;
 
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     m_PermuteOrder[j] = j;
     }
@@ -161,7 +161,7 @@ ShrinkFactorsType & shrinkFactors )
     maxShrinkFactor = MaximumShrinkFactor;
     }
 
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     unsigned int factor;
 
@@ -193,7 +193,7 @@ VanderbiltValidationInputParser<TImage>
 ::Execute()
 {
 
-  int j, k;
+  unsigned int j, k;
 
   PermuteOrderType fixedAxes, movingAxes;
   FlipAxesType     fixedDirection, movingDirection;

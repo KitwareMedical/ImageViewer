@@ -32,7 +32,7 @@ VanderbiltHeaderParser<VImageDimension>
   m_ImageSize.Fill( 0 );
   m_ImageSpacing.Fill( 0.0 );
   
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     m_ImageAxes[j] = ImageDimension;
     }
@@ -111,7 +111,7 @@ VanderbiltHeaderParser<VImageDimension>
       pos = currentLine.find( ":=" );
       sscanf( currentLine.c_str() + pos + 2, " %c : %c : %c", ch, ch+1, ch+2 );
 
-      for ( int j = 0; j < ImageDimension; j++ )
+      for ( unsigned int j = 0; j < ImageDimension; j++ )
         {
         switch ( ch[j] )
           {
