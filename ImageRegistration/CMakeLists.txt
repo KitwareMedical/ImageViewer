@@ -13,6 +13,9 @@ ${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/ImageRegistration
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${ITK_BINARY_DIR}/Examples/ImageRegistration
+${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
