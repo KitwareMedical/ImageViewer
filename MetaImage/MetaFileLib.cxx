@@ -250,3 +250,66 @@ bool MF_ParseStringToCHAR_ARRAY(char *s, int *n, char ***val)
     return true;
 
 }
+
+bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
+              	 			MF_ValType _pType, int _n, const void *_v)
+{
+  int i;
+  MF_FieldRec f;
+
+  sprintf(f.name, "%s", _fieldName);
+  f.defined = false;
+  f.dependsOn = -1;
+  f.length = _n;
+  f.required = false;
+  f.type = _pType;
+  switch(_pType)
+  {
+    case MF_CHAR_ARRAY:
+    case MF_CHAR:
+      for(i = 0; i < _n; i++)
+      {
+        f.val[i] = (float)(((char *)_v)[i]);
+      }
+      break;
+    case MF_INT:
+    case MF_INT_ARRAY:
+      for(i=0; i<_n; i++)
+      {
+        f.val[i] = (float)(((int *)_v)[i]);
+      }
+      break;
+    case MF_FLOAT:
+    case MF_FLOAT_ARRAY:
+      for(i=0; i<_n; i++)
+      {
+        f.val[i] = ((float *)_v)[i];
+      }
+      break;
+    default:
+      break;
+  }
+
+  MF_Write(_fp, 1, &f);
+
+  return true;
+}
+
+bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
+											MF_ValType _pType, float _v)
+{
+  MF_FieldRec f;
+
+  sprintf(f.name, "%s", _fieldName);
+  f.defined = false;
+  f.dependsOn = -1;
+  f.length = 1;
+  f.required = false;
+  f.type = _pType;
+  f.val[0] = _v;
+
+  MF_Write(_fp, 1, &f);
+
+  return true;
+}
+

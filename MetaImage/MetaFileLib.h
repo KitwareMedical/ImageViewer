@@ -14,10 +14,10 @@
 //
 // Author:
 //    Stephen R. Aylward
-// 
+//
 // Date:
 //    August 29, 1999
-// 
+//
 // Depends on:
 //    MetaUtils.h
 //
@@ -30,7 +30,7 @@
 
 
 // Given an array of fieldRec that define a metaFile format, parse that file
-//    fTerm specifies what field (if any) marks the field (variable name) 
+//    fTerm specifies what field (if any) marks the field (variable name)
 //       at which file parsing should stop (e.g., if binary data follows)
 //    fromTopOfFile indicates whether the File pointer fp should be reset
 //       to topOfFile before parsing begins
@@ -49,5 +49,11 @@ extern bool MF_Write(FILE *fp,
                      char _sepChar='=');
 
 extern bool MF_ParseStringToCHAR_ARRAY(char *s, int *n, char ***val);
+
+extern bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
+              	 						 MF_ValType _pType, int _n, const void *_v);
+
+extern bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
+														 MF_ValType _pType, float _v);
 
 #endif
