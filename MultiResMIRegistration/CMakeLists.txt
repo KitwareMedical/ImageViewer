@@ -34,4 +34,8 @@ VanderbiltValidation/VanderbiltModality )
 
 
 ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration )
+IF(UNIX)
 ADD_EXECUTABLE(VanderbiltValidation/VanderbiltValidation   VanderbiltValidation_SRCS )
+ELSE(UNIX)
+ADD_EXECUTABLE(VanderbiltValidation   VanderbiltValidation_SRCS )
+ENDIF(UNIX)
