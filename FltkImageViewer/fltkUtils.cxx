@@ -313,15 +313,13 @@ int ifuGetText(const char *mesg, char *buffer)
 int ifuShowText(const char *mesg)
   {
   Fl_Window window(532,577);
-  Fl_Text_Display txt(10, 10, 512, 512);
+  Fl_Multiline_Output txt(10, 10, 512, 512);
+  txt.value(mesg);
   Fl_Return_Button ok(150, 540, 80, 25, "OK");
   window.hotspot(&ok);
   window.end();
   window.set_modal();
   window.show();
-  Fl_Text_Buffer txtbuf;
-  txtbuf.text(mesg);
-  txt.buffer(txtbuf);
   for (;;)
     {
     Fl::wait();
