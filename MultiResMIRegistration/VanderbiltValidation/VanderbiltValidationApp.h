@@ -32,10 +32,10 @@ namespace itk
 
 /** \class VanderbiltValidationApp
  * 
- * This class is a simple application that reads in a parameter
- * file, perform an MIM registration and outputs the 
- * target (fixed), source (moving) and registered images as PGM 
- * files.
+ * This class is a simple application that reads in the user
+ * specified images from the Vanderbilt "images" directory, 
+ * perform an MIM registration and outputs the
+ * overall transform in Vanderbilt format.
  *
  * This class is activatived by method Execute().
  *
