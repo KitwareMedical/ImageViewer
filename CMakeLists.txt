@@ -82,9 +82,7 @@ SUBDIRS(MRIBiasCorrection)
 
 
 # Add an option to build FEM examples
-IF(HAS_FEM)
-  SUBDIRS(FEM)
-ENDIF(HAS_FEM)
+SUBDIRS(FEM)
 
 # Add an option to build or not build the FuzzyConnectedness example
 SUBDIRS(FuzzyConnectedness)
