@@ -1,5 +1,9 @@
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
+#Build the example of how to do simple scalar anisotropic diffusion
+#on a PNG image
+SUBDIRS (AnisotropicDiffusionImageFilter)
+
 #Build the example of how to create a static library for 
 # select filters in itk.
 SUBDIRS (ITKFilterLib)
