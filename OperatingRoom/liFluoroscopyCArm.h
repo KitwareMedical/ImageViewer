@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liFluoroscopyCArm.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -75,13 +91,13 @@ public:
   /**
    * Draw the model using OpenGL commands
    */
-	void DrawGeometry(void) const;
+        void DrawGeometry(void) const;
 
 
   /**
    * Destructor
    */
-	~FluoroscopyCArm();
+        ~FluoroscopyCArm();
 
 
   /**
@@ -173,20 +189,20 @@ protected:
   /**
    * Constructor
    */
-	FluoroscopyCArm();
+        FluoroscopyCArm();
 
 private:
 
   /**
    * Draw the Source
    */
-	void DrawSource(void) const;
+        void DrawSource(void) const;
 
 
   /**
    * Draw the Detector
    */
-	void DrawDetector(void) const;
+        void DrawDetector(void) const;
 
 
 
@@ -249,31 +265,31 @@ private:
    * This value changes de source-film distance
    * and as a consequence alters the field of view
    */
-	double        m_IntensifierOffset;
+        double        m_IntensifierOffset;
 
   
   /**
    * Vector to be used as Up direction in the camera model
    */
-	mutable VectorType m_DetectorVerticalDirection;
+        mutable VectorType m_DetectorVerticalDirection;
 
   
   /**
    * Angle to move the system in the Left/Right direction
    */
-	double m_RaoLaoAngle;
+        double m_RaoLaoAngle;
 
   
   /**
    * Angle to move the system in the Cranio/Caudal direction
    */
-	double m_CranioCaudalAngle;
+        double m_CranioCaudalAngle;
 
 
   /**
    * Define whether the Field of View cone is visible or not
    */
-	bool m_FovIsVisible;
+        bool m_FovIsVisible;
 
   /**
    * Position of the Detector in the CArm

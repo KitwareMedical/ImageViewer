@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liVertebralSegmentRegistrator.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -96,31 +112,31 @@ public:
    */
   itkNewMacro( Self );
 
-	
+        
   /**
    *  Get the Vertebral Pedicles
    */
   VertebralSegment::Pointer     GetVertebralSegment(void);
-	
+        
   
   /**
    *  Get the Volume Registrator
    */
   VolumeRegistrationMethod::Pointer GetVolumeRegistrator(void);
-	
+        
 
 protected:
 
   /**
    *  Constructor
    */
-	VertebralSegmentRegistrator();
+        VertebralSegmentRegistrator();
 
 
   /**
    *  Destructor
    */
-	~VertebralSegmentRegistrator();
+        ~VertebralSegmentRegistrator();
 
 
 private:
@@ -137,7 +153,7 @@ private:
   VolumeRegistrationMethod::Pointer   m_VolumeRegistrator;
 
 
-	};
+        };
 
 
 } // end namespace li

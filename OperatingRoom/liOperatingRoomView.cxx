@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liOperatingRoomView.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project:  Operating Room
@@ -23,7 +39,7 @@ namespace li {
 
 //--------------------------------------------
 //
-//		Creator
+//              Creator
 //
 //--------------------------------------------
 OperatingRoomView
@@ -41,7 +57,7 @@ OperatingRoomView
 
 //--------------------------------------------
 //
-//		Get the Notifier
+//              Get the Notifier
 //
 //--------------------------------------------
 itk::Object::Pointer
@@ -54,19 +70,19 @@ OperatingRoomView::GetNotifier(void)
 
 //--------------------------------------------
 //
-//		Draw the model
+//              Draw the model
 //
 //--------------------------------------------
 void OperatingRoomView::draw(void) 
 {
 
-	glViewport(0,0,w(),h());
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	const GLdouble width = 1800.0;
-	const GLdouble height = width*h()/w();
+        glViewport(0,0,w(),h());
+        glMatrixMode( GL_PROJECTION );
+        glLoadIdentity();
+        const GLdouble width = 1800.0;
+        const GLdouble height = width*h()/w();
 
-	glOrtho(-width,width,-height,height,-20000,10000);
+        glOrtho(-width,width,-height,height,-20000,10000);
 
   // Put Z axis up
   glRotatef( -90.0f, 0.1f, 0.0f, 0.0f );
@@ -76,18 +92,18 @@ void OperatingRoomView::draw(void)
 
 
   glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_NORMALIZE);
-	glEnable(GL_DEPTH_TEST);
-	glShadeModel(GL_SMOOTH);
-	
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_NORMALIZE);
+        glEnable(GL_DEPTH_TEST);
+        glShadeModel(GL_SMOOTH);
+        
   glClearColor((GLfloat)0.9,(GLfloat)0.9,(GLfloat)0.9,(GLfloat)1.0);
 
- 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
+        glMatrixMode( GL_MODELVIEW );
+        glLoadIdentity();
 
   glEnable( GL_LIGHTING );
 

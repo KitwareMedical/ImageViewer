@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liFluoroscopyUnitView.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Angio Room
@@ -36,13 +52,13 @@ public:
   /**
    *  Constructor
    */
-	FluoroscopyUnitView(int x,int y,int w,int h, const char * label=0);
-	
+        FluoroscopyUnitView(int x,int y,int w,int h, const char * label=0);
+        
   /**
    *  Constructor
    */
   virtual ~FluoroscopyUnitView();
-	
+        
   /**
    *  Point type for 3D 
    */

@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liVesselsRegistrator.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -90,43 +106,43 @@ public:
    */
   itkNewMacro( Self );
 
-	
+        
   /**
    *  Get the Vessels
    */
   VectorTubes3D::Pointer GetVessels( void );
-	
+        
 
   /**
    *  Set the Vessels
    */
   void SetVessels( VectorTubes3D  * vessels );
-	
+        
   
   /**
    *  Set the Fluoroscopic image
    */
   void SetImage( FluoroscopicImageType  * image );
-	 
+         
 
   /**
    *  Get the  Registrator
    */
   RegistrationMethod::Pointer GetRegistrator(void);
-	
+        
 
 protected:
 
   /**
    *  Constructor
    */
-	VesselsRegistrator();
+        VesselsRegistrator();
 
 
   /**
    *  Destructor
    */
-	~VesselsRegistrator();
+        ~VesselsRegistrator();
 
 
 private:
@@ -148,7 +164,7 @@ private:
    */
   FluoroscopicImageType::Pointer  m_Image;
 
-	};
+        };
 
 
 } // end namespace li

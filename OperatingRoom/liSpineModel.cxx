@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liSpineModel.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -29,9 +45,9 @@ SpineModel::SpineModel()
 {
   m_Position.Fill( 0.0 );
 
-	m_RaoLaoAngle       =  0.0;
+        m_RaoLaoAngle       =  0.0;
   m_CranioCaudalAngle = 25.0;
-	m_AxialAngle        =  0.0;
+        m_AxialAngle        =  0.0;
 
 }
 

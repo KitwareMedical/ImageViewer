@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    TripleTKGUI_CB.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 /*===============================================================
 Summer 2001
 
@@ -21,8 +37,8 @@ Summer 2001
 
 
 /*
-*	  View the spefified slice (num), update the slider to
-*	  show the corresponding slice number, and update the 
+*         View the spefified slice (num), update the slider to
+*         show the corresponding slice number, and update the 
 *   specified slice in 3D.  Is called by the callback for 
 *   the slider and the up/down slice movement buttons.
 */
@@ -39,7 +55,7 @@ void selectSlice(unsigned int num)
 
 
 /*
-*	  Zooms out of the 2D window.
+*         Zooms out of the 2D window.
 */
 void zoomOut(void)
   {
@@ -49,7 +65,7 @@ void zoomOut(void)
 
 
 /*
-*	  Zooms into the 2D window.
+*         Zooms into the 2D window.
 */
 void zoomIn(void)
   {
@@ -59,7 +75,7 @@ void zoomIn(void)
 
 
 /*
-*	  Shift the image in the 2D window up.
+*         Shift the image in the 2D window up.
 */
 void shiftUp(void)
   {
@@ -69,7 +85,7 @@ void shiftUp(void)
 
 
 /*
-*	  Shift the image in the 2D window down.
+*         Shift the image in the 2D window down.
 */
 void shiftDown(void)
   {
@@ -79,13 +95,13 @@ void shiftDown(void)
 
 
 /*
-*	  Spefifies the sagittal, axial or coronal view of the 2D image.
+*         Spefifies the sagittal, axial or coronal view of the 2D image.
 *   The unsigned interger parameter specifies these and 
 *   corresponds to each as follows:
-*	
+*       
 *   coronal:    0
-*   sagittal:	  1	
-*   axial:		  2
+*   sagittal:     1     
+*   axial:                2
 */
 void Orientation(unsigned int value)
   {  
@@ -172,8 +188,8 @@ void reset(void)
 
 
 /*
-*	  Changes slice being viewed and updates slice number
-*	  displayed correspondingly; both by calling function
+*         Changes slice being viewed and updates slice number
+*         displayed correspondingly; both by calling function
 *   selectSlice(unsigned int blah) where blah is the
 *   changed value of the slider.
 */
@@ -184,7 +200,7 @@ void sliceNumberSlider_CB(Fl_Value_Slider*o, void*)
 
 
 /*
-* 	When this radio button is clicked, only its value in its 
+*       When this radio button is clicked, only its value in its 
 *   group is one; therefore, the up/down arrow buttons function 
 *   as is specified by the button.
 */
@@ -194,7 +210,7 @@ void zoom2D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  When this radio button is clicked, only its value in its 
+*         When this radio button is clicked, only its value in its 
 *   group is one; therefore, the up/down arrow buttons function 
 *   as is specified by the button.
 */
@@ -204,7 +220,7 @@ void move2D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  When this radio button is clicked, only its value in its 
+*         When this radio button is clicked, only its value in its 
 *   group is one; therefore, the up/down arrow buttons function 
 *   as is specified by the button.
 */
@@ -214,7 +230,7 @@ void sliceScroll_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Sets the arrow buttons so that they adjust the "level"
+*         Sets the arrow buttons so that they adjust the "level"
 *   and "window" properties of the 2D window.  Level is 
 *   adjusted using the up and down buttons; window is 
 *   adjusted using the right and left buttons.
@@ -225,7 +241,7 @@ void levelWindow_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Change the 2D view to coronal by using the Orientation function.
+*         Change the 2D view to coronal by using the Orientation function.
 */
 void coronal2D_CB(Fl_Check_Button*, void*)
   {
@@ -235,7 +251,7 @@ void coronal2D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Change the 2D view to sagittal using the Orientation function.
+*         Change the 2D view to sagittal using the Orientation function.
 */
 void sagittal2D_CB(Fl_Check_Button*, void*)
   {
@@ -245,8 +261,8 @@ void sagittal2D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Change the 2D view to axial using the Orientation function.
-*	  This view is default in the beginning.
+*         Change the 2D view to axial using the Orientation function.
+*         This view is default in the beginning.
 */
 void axial2D_CB(Fl_Check_Button*, void*)
   {
@@ -256,7 +272,7 @@ void axial2D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Change the 3D view to coronal.
+*         Change the 3D view to coronal.
 */
 void coronal3D_CB(Fl_Check_Button*, void*)
   {
@@ -269,7 +285,7 @@ void coronal3D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Change the 3D view to sagittal.
+*         Change the 3D view to sagittal.
 */
 void sagittal3D_CB(Fl_Check_Button*, void*)
   {
@@ -282,8 +298,8 @@ void sagittal3D_CB(Fl_Check_Button*, void*)
 
 
 /*
-* 	Change the 3D view to axial.
-*	  This view is default in the beginning.
+*       Change the 3D view to axial.
+*         This view is default in the beginning.
 */
 void axial3D_CB(Fl_Check_Button*, void*)
   {
@@ -296,10 +312,10 @@ void axial3D_CB(Fl_Check_Button*, void*)
 
 
 /*
-*	  Performs either a slice scroll, movement up in 2D, or zoom into
-*	  in 2D.  The functionality of the button is determined by 
-*	  the value of the radio buttons, Slice Scroll, Move 2D, and Zoom 2D,
-*	  all whose purpose is to determine this functionality. 
+*         Performs either a slice scroll, movement up in 2D, or zoom into
+*         in 2D.  The functionality of the button is determined by 
+*         the value of the radio buttons, Slice Scroll, Move 2D, and Zoom 2D,
+*         all whose purpose is to determine this functionality. 
 */
 void upButton_CB(Fl_Button*, void*)
   {
@@ -316,10 +332,10 @@ void upButton_CB(Fl_Button*, void*)
 
 
 /*
-*	  Performs either a slice scroll, movement down in 2D, or zoom out of
-*	  in 2D.  The functionality of the button is determined by 
-*	  the value of the radio buttons, Slice Scroll, Move 2D, and Zoom 2D,
-*	  all whose purpose is to determine this functionality. 
+*         Performs either a slice scroll, movement down in 2D, or zoom out of
+*         in 2D.  The functionality of the button is determined by 
+*         the value of the radio buttons, Slice Scroll, Move 2D, and Zoom 2D,
+*         all whose purpose is to determine this functionality. 
 */
 void downButton_CB(Fl_Button*, void*)
   {
@@ -336,7 +352,7 @@ void downButton_CB(Fl_Button*, void*)
 
 
 /*
-*	  Pan left in 2D.
+*         Pan left in 2D.
 */
 void leftButton_CB(Fl_Button*, void*)
   {
@@ -347,7 +363,7 @@ void leftButton_CB(Fl_Button*, void*)
 
 
 /*
-*	  Pan right in 2D.
+*         Pan right in 2D.
 */
 void rightButton_CB(Fl_Button*, void*)
   {
@@ -358,7 +374,7 @@ void rightButton_CB(Fl_Button*, void*)
 
 
 /*
-*	  Toggles between displaying and hiding the outline
+*         Toggles between displaying and hiding the outline
 *   box in 3D.
 */
 void outline_CB(Fl_Light_Button* o, void*)
@@ -369,7 +385,7 @@ void outline_CB(Fl_Light_Button* o, void*)
 
 
 /*
-*	  Toggles between displaying all of or only viewing one 
+*         Toggles between displaying all of or only viewing one 
 *   of the views (axial, sagittal, or coronal) in 3D.
 */
 void allViews_CB(Fl_Light_Button*o, void*)
@@ -391,7 +407,7 @@ void allViews_CB(Fl_Light_Button*o, void*)
 
 
 /*
-*   Restores the program to its original state.	
+*   Restores the program to its original state. 
 */
 void resetAll_CB(Fl_Button*, void*)
   {
@@ -400,7 +416,7 @@ void resetAll_CB(Fl_Button*, void*)
 
 
 /*
-*	  Closes the program.
+*         Closes the program.
 */
 void fileExit_CB(Fl_Menu_*, void*)
   {
@@ -409,7 +425,7 @@ void fileExit_CB(Fl_Menu_*, void*)
 
 
 /*
-* 	Closes the program.
+*       Closes the program.
 */
 void buttonExit_CB(Fl_Button*, void*)
   {

@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liLight.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project:   Operating Room
@@ -103,27 +119,27 @@ Light::SetPosition( const PointType & point )
 void 
 Light::DrawGeometry(void)  const 
 {
-	glEnable( m_LightNumber );
+        glEnable( m_LightNumber );
 
-	GLfloat specular[4];
+        GLfloat specular[4];
   specular[0] = m_Specular.GetRed();
   specular[1] = m_Specular.GetGreen();
   specular[2] = m_Specular.GetBlue();
   specular[3] = 0.0f;
 
-	GLfloat diffuse[4];
+        GLfloat diffuse[4];
   diffuse[0] = m_Diffuse.GetRed();
   diffuse[1] = m_Diffuse.GetGreen();
   diffuse[2] = m_Diffuse.GetBlue();
   diffuse[3] = 0.0f;
 
   // the last zero implies a directional light
-	GLfloat position[]  = { m_Position[0], m_Position[1], m_Position[2], 0.0 };
+        GLfloat position[]  = { m_Position[0], m_Position[1], m_Position[2], 0.0 };
 
-	glLightfv( m_LightNumber, GL_SPECULAR,  specular );
-	glLightfv( m_LightNumber, GL_DIFFUSE,   diffuse  );
-	glLightfv( m_LightNumber, GL_POSITION,  position );
-	
+        glLightfv( m_LightNumber, GL_SPECULAR,  specular );
+        glLightfv( m_LightNumber, GL_DIFFUSE,   diffuse  );
+        glLightfv( m_LightNumber, GL_POSITION,  position );
+        
 }
 
 

@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liFluoroscopyCArmMobile.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -70,7 +86,7 @@ public:
   /**
    * Draw the model using OpenGL commands
    */
-	void DrawGeometry(void) const;
+        void DrawGeometry(void) const;
 
 
   /**
@@ -82,31 +98,31 @@ public:
   /**
    * Set the position of the machine on the floor
    */
-	void SetPosition( const  Point2DType & point );
+        void SetPosition( const  Point2DType & point );
 
 
   /**
    * Set the axial position of the machine on the floor
    */
-	void SetCranioCaudalPosition( double val );
+        void SetCranioCaudalPosition( double val );
 
 
   /**
    * Set the axial position of the machine on the floor
    */
-	void SetLateralPosition( double val );
+        void SetLateralPosition( double val );
 
 
   /**
    * Set the orientation of the machine on the floor
    */
-	void SetAzimuthAngle( double angle );
+        void SetAzimuthAngle( double angle );
 
 
   /**
    * Set the tilt of the axis 
    */
-	void SetAxisTilt( double angle );
+        void SetAxisTilt( double angle );
 
 
   /**
@@ -148,32 +164,32 @@ public:
   /**
    * Get the position of the machine on the floor
    */
-	const Point2DType & GetPosition( void ) const;
+        const Point2DType & GetPosition( void ) const;
 
 
   /**
    * Get the axial position of the machine on the floor
    */
-	double GetCranioCaudalPosition( void ) const;
+        double GetCranioCaudalPosition( void ) const;
 
 
   /**
    * Get the axial position of the machine on the floor
    */
-	double GetLateralPosition( void ) const;
+        double GetLateralPosition( void ) const;
 
 
 
   /**
    * Get the orientation of the machine on the floor
    */
-	double GetAzimuthAngle( void ) const;
+        double GetAzimuthAngle( void ) const;
 
 
   /**
    * Get the tilt of the axis 
    */
-	double GetAxisTilt( void ) const;
+        double GetAxisTilt( void ) const;
 
 
   /**
@@ -227,13 +243,13 @@ public:
   /**
    * Destructor
    */
-	~FluoroscopyCArmMobile();
+        ~FluoroscopyCArmMobile();
 
 protected:
   /**
    * Constructor
    */
-	FluoroscopyCArmMobile();
+        FluoroscopyCArmMobile();
 
 private:
 

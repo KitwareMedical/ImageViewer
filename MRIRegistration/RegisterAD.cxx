@@ -1,16 +1,17 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit (ITK)
+  Program:   Insight Segmentation & Registration Toolkit
   Module:    RegisterAD.cxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
 
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-Copyright (c) 2000 National Library of Medicine
-All rights reserved.
-
-See COPYRIGHT.txt for copyright details.
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #include <iostream>
@@ -73,8 +74,8 @@ int main(int argc, char **argv)
   catch(OptionList::RequiredOptionMissing e)
     {
     std::cerr << "Error: The '" << e.OptionTag
-	      << "' option is required but missing." 
-	      << std::endl ;
+              << "' option is required but missing." 
+              << std::endl ;
     exit(0) ;
     }
   
@@ -85,11 +86,11 @@ int main(int argc, char **argv)
     aReader1->SetFilePrefix(study1Prefix.c_str());
     aReader1->SetDataByteOrderToBigEndian();
     aReader1->SetDataExtent(0,study1Resolution[0] - 1,
-			    0,study1Resolution[1] - 1,
-			    1, study1Resolution[2]);
+                            0,study1Resolution[1] - 1,
+                            1, study1Resolution[2]);
     aReader1->SetDataSpacing(study1Spacing[0],
-			     study1Spacing[1],
-			     study1Spacing[2]);
+                             study1Spacing[1],
+                             study1Spacing[2]);
     aReader1->Update();
 
   vtkImageCast *floatImage1 = vtkImageCast::New();
@@ -111,8 +112,8 @@ int main(int argc, char **argv)
   vtkImageShrink3D *shrinkImage1 = vtkImageShrink3D::New();
     shrinkImage1->SetInput(centerImage1->GetOutput());
     shrinkImage1->SetShrinkFactors(shrinkFactors[0],
-				   shrinkFactors[1],
-				   shrinkFactors[2]);
+                                   shrinkFactors[1],
+                                   shrinkFactors[2]);
     shrinkImage1->Update();
   // Export the original data
   int originalBounds1[6];
@@ -132,11 +133,11 @@ int main(int argc, char **argv)
     aReader2->SetDataScalarTypeToUnsignedShort();
     aReader2->SetDataByteOrderToBigEndian();
     aReader2->SetDataExtent(0,study2Resolution[0] - 1,
-			    0,study2Resolution[1] - 1,
-			    1,study2Resolution[2]);
+                            0,study2Resolution[1] - 1,
+                            1,study2Resolution[2]);
     aReader2->SetDataSpacing(study2Spacing[0],
-			     study2Spacing[1],
-			     study2Spacing[2]);
+                             study2Spacing[1],
+                             study2Spacing[2]);
     aReader2->Update();
   vtkImageCast *floatImage2 = vtkImageCast::New();
     floatImage2->SetInput(aReader2->GetOutput());
@@ -156,8 +157,8 @@ int main(int argc, char **argv)
   vtkImageShrink3D *shrinkImage2 = vtkImageShrink3D::New();
     shrinkImage2->SetInput(centerImage2->GetOutput());
     shrinkImage2->SetShrinkFactors(shrinkFactors[0],
-				   shrinkFactors[1],
-				   shrinkFactors[2]);
+                                   shrinkFactors[1],
+                                   shrinkFactors[2]);
     shrinkImage2->Update();
 
   int originalBounds2[6];
@@ -313,26 +314,26 @@ int main(int argc, char **argv)
   // Write a vtk tcl script to load the data sets and register them
   std::ofstream fptr("reg.tcl", ios::out);
   fptr << "set study1Prefix \""
-	<< study1Prefix.c_str() << "\"" << std::endl;
+        << study1Prefix.c_str() << "\"" << std::endl;
   fptr << "set study1Extent \""
-	<< 0 << " " << study1Resolution[0] - 1 << " "
-    	<< 0 << " " << study1Resolution[1] - 1 << " "
-    	<< 1 << " " << study1Resolution[2] << "\"" << std::endl;
+        << 0 << " " << study1Resolution[0] - 1 << " "
+        << 0 << " " << study1Resolution[1] - 1 << " "
+        << 1 << " " << study1Resolution[2] << "\"" << std::endl;
   fptr << "set study1Spacing \""
-	<< study1Spacing[0] << " "
-    	<< study1Spacing[1] << " "
-    	<< study1Spacing[2] << "\"" << std::endl;
+        << study1Spacing[0] << " "
+        << study1Spacing[1] << " "
+        << study1Spacing[2] << "\"" << std::endl;
 
   fptr << "set study2Prefix \""
-	<< study2Prefix.c_str() << "\"" << std::endl;
+        << study2Prefix.c_str() << "\"" << std::endl;
   fptr << "set study2Extent \""
-	<< 0 << " " << study2Resolution[0] - 1 << " "
-    	<< 0 << " " << study2Resolution[1] - 1 << " "
-    	<< 1 << " " << study2Resolution[2] << "\"" << std::endl;
+        << 0 << " " << study2Resolution[0] - 1 << " "
+        << 0 << " " << study2Resolution[1] - 1 << " "
+        << 1 << " " << study2Resolution[2] << "\"" << std::endl;
   fptr << "set study2Spacing \""
-	<< study2Spacing[0] << " "
-    	<< study2Spacing[1] << " "
-    	<< study2Spacing[2] << "\"" << std::endl;
+        << study2Spacing[0] << " "
+        << study2Spacing[1] << " "
+        << study2Spacing[2] << "\"" << std::endl;
 
   fptr << "set rotateX "
        << aTrans->GetOrientation()[0] << std::endl;
@@ -341,9 +342,9 @@ int main(int argc, char **argv)
   fptr << "set rotateZ "
        << aTrans->GetOrientation()[2] << std::endl;
   fptr << "set translate \""
-	<< aTrans->GetPosition()[0] << " "
-	<< aTrans->GetPosition()[1] << " "
-	<< aTrans->GetPosition()[2] << "\"" << std::endl;
+        << aTrans->GetPosition()[0] << " "
+        << aTrans->GetPosition()[1] << " "
+        << aTrans->GetPosition()[2] << "\"" << std::endl;
     
   
   return 0;
@@ -351,7 +352,7 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.8 $  $Date: 2001-10-15 14:48:20 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.9 $  $Date: 2002-01-15 20:12:18 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;

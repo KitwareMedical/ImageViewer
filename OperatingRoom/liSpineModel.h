@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liSpineModel.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -67,13 +83,13 @@ public:
   /**
    * Returns whether the spine contains vertebras or not
    */
-	bool Null() const;
+        bool Null() const;
 
 
   /**
    * Get Cranio Caudal Angle
    */
-	double GetCranioCaudalAngle( void ) const;
+        double GetCranioCaudalAngle( void ) const;
 
 
   /**
@@ -85,7 +101,7 @@ public:
   /**
    * Get Axial Angle
    */
-	double GetAxialAngle( void ) const;
+        double GetAxialAngle( void ) const;
 
 
   /**
@@ -109,25 +125,25 @@ public:
   /**
    * Set Cranio Caudal Angle
    */
-	void SetCranioCaudalAngle( double angle );
+        void SetCranioCaudalAngle( double angle );
 
 
   /**
    * Set Rao Lao Angle
    */
-	void SetRaoLaoAngle( double angle );
+        void SetRaoLaoAngle( double angle );
 
 
   /**
    * Set Axial Angle
    */
-	void SetAxialAngle( double angle );
+        void SetAxialAngle( double angle );
 
 
    /**
    * Set Position
    */
-	void SetPosition( const PointType & pnt );
+        void SetPosition( const PointType & pnt );
 
 
 protected:
@@ -135,12 +151,12 @@ protected:
  /**
   *  Constructor
   */
-	SpineModel();
+        SpineModel();
 
   /**
    * Destructor
    */
-	~SpineModel();
+        ~SpineModel();
 
 
 
@@ -149,58 +165,58 @@ public:
   /**
    *  Load from file
    */
-	virtual	void Load(const char *filename);
+        virtual void Load(const char *filename);
 
   /**
    *  Save to a file
    */
-	virtual	void Save(const char *filename);
+        virtual void Save(const char *filename);
 
   /**
    *  Save to a file
    */
-	void DrawGeometry(void) const;
+        void DrawGeometry(void) const;
 
   
   /**
    *  Write to an ofstream
    */
-	int Write( fltk::Shape3D::OfstreamType &os,int level ) const;
+        int Write( fltk::Shape3D::OfstreamType &os,int level ) const;
 
   /**
    *  Read from an ifstream
    */
-	int Read( fltk::Shape3D::IfstreamType &is );
+        int Read( fltk::Shape3D::IfstreamType &is );
 
 
 private:
   /**
    *  STL vector containing a set of contiguous vertebral segments
    */
-	VertebraContainer       m_Segments;
+        VertebraContainer       m_Segments;
 
   /**
    *  Rao Lao Angle
    */
-	double                  m_RaoLaoAngle;
+        double                  m_RaoLaoAngle;
 
 
   /**
    *  Cranio Caudal Angle
    */
-	double                  m_CranioCaudalAngle;
+        double                  m_CranioCaudalAngle;
 
 
   /**
    *  Axial Angle
    */
-	double                  m_AxialAngle;
+        double                  m_AxialAngle;
 
 
   /**
    *  Position
    */
-	PointType               m_Position;
+        PointType               m_Position;
   
 };
 

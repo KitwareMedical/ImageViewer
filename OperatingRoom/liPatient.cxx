@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liPatient.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -18,7 +34,7 @@ namespace li {
 
 //--------------------------------------------------
 //
-//		Creator
+//              Creator
 //
 //--------------------------------------------------
 Patient::Patient()
@@ -26,14 +42,14 @@ Patient::Patient()
 
   m_Body = fltk::Box3D::New();
 
-	m_Body->SetLength( 1200.0f );
+        m_Body->SetLength( 1200.0f );
   m_Body->SetWidth(   400.0f );
   m_Body->SetHeight(  150.0f );
   m_Body->SetDrawingMode( lines );
 
   m_Spine = SpineModel::New();
 
-	m_ClinicalPosition = Ventral;
+        m_ClinicalPosition = Ventral;
 
   m_Vessels = VectorTubes3D::New();
     
@@ -47,7 +63,7 @@ Patient::Patient()
 
 //--------------------------------------------------
 //
-//		Destructor	
+//              Destructor      
 //
 //--------------------------------------------------
 Patient::~Patient() 
@@ -57,43 +73,43 @@ Patient::~Patient()
 
 
 
-	
+        
 //--------------------------------------------------
 //
-//		return extrinsic matrix
+//              return extrinsic matrix
 //
 //--------------------------------------------------
 Patient::TransformType::ConstPointer 
 Patient::GetExtrinsic(void) const 
 {
-	return m_Extrinsic.GetPointer();
+        return m_Extrinsic.GetPointer();
 }
 
 
-	
+        
 //--------------------------------------------------
 //
-//		Return a Pointer to the Spine Model
+//              Return a Pointer to the Spine Model
 //
 //--------------------------------------------------
 SpineModel::Pointer &
 Patient::GetSpineModel(void)  
 {
-	return m_Spine;
+        return m_Spine;
 }
 
 
 
-	
+        
 //--------------------------------------------------
 //
-//		Return a Pointer to the Vessels Model
+//              Return a Pointer to the Vessels Model
 //
 //--------------------------------------------------
 VectorTubes3D::Pointer &
 Patient::GetVesselsModel(void)  
 {
-	return m_Vessels;
+        return m_Vessels;
 }
 
 
@@ -101,45 +117,45 @@ Patient::GetVesselsModel(void)
 
 //--------------------------------------------------
 //
-//		Draw patient representation in OpenGL
+//              Draw patient representation in OpenGL
 //
 //--------------------------------------------------
 void 
 Patient::DrawGeometry(void)  const 
 {
 
-	switch( m_ClinicalPosition ) 
+        switch( m_ClinicalPosition ) 
   {
-	case Supine: 
+        case Supine: 
     {
-		  break;
-		}
-	case Ventral: 
+                  break;
+                }
+        case Ventral: 
     {
-  		glTranslated( 0.0, 0.0, m_Body->GetHeight() );
-	  	glRotated( 180, 1.0, 0.0, 0.0 );
-		  break;
-		}
+                glTranslated( 0.0, 0.0, m_Body->GetHeight() );
+                glRotated( 180, 1.0, 0.0, 0.0 );
+                  break;
+                }
   case LateralRight:
     {
-  		glTranslated( 0.0, 0.0, m_Body->GetHeight() );
-	  	glRotated( 90, 1.0, 0.0, 0.0 );
-		  break;
-		}
+                glTranslated( 0.0, 0.0, m_Body->GetHeight() );
+                glRotated( 90, 1.0, 0.0, 0.0 );
+                  break;
+                }
   case LateralLeft:
     {
-  		glTranslated( 0.0, 0.0, m_Body->GetHeight() );
-	  	glRotated( 90, 1.0, 0.0, 0.0 );
-		  break;
-		}
+                glTranslated( 0.0, 0.0, m_Body->GetHeight() );
+                glRotated( 90, 1.0, 0.0, 0.0 );
+                  break;
+                }
   default:
     {
       std::cerr << "Patient: Unknown patient position " << std::cerr;
     }
-	}
+        }
 
 
-	m_Body->glDraw();
+        m_Body->glDraw();
 
   glPushMatrix();
 
@@ -164,16 +180,16 @@ Patient::DrawGeometry(void)  const
 }
 
 
-	
+        
 //--------------------------------------------------
 //
-//		Sets patient clinical position
+//              Sets patient clinical position
 //
 //--------------------------------------------------
 void 
 Patient::SetClinicalPosition( ClinicalPosition newPos )
 {
-	m_ClinicalPosition = newPos;
+        m_ClinicalPosition = newPos;
 }
 
 
@@ -181,15 +197,15 @@ Patient::SetClinicalPosition( ClinicalPosition newPos )
 
 //--------------------------------------------------
 //
-//		Sets Corrections obtained from registration
+//              Sets Corrections obtained from registration
 //
 //--------------------------------------------------
 void 
 Patient
 ::SetRegistrationOffset(const VectorType & trans, const VectorType & rot) 
 {
-	
-	m_RegistrationCorrection->Translate( trans );
+        
+        m_RegistrationCorrection->Translate( trans );
   m_RegistrationCorrection->Rotate( 1, 2, rot[0]);
   m_RegistrationCorrection->Rotate( 2, 0, rot[1]);
   m_RegistrationCorrection->Rotate( 0, 1, rot[2]);
@@ -199,14 +215,14 @@ Patient
 
 //--------------------------------------------------
 //
-//		Clear Corrections obtained from registration
+//              Clear Corrections obtained from registration
 //
 //--------------------------------------------------
 void 
 Patient::ClearRegistrationOffset(void) 
 {
-	
-	m_RegistrationCorrection->SetIdentity();
+        
+        m_RegistrationCorrection->SetIdentity();
 
 }
 
@@ -217,7 +233,7 @@ Patient::ClearRegistrationOffset(void)
 
 //---------------------------------------------------------------------------
 //
-//  	Set the bound for Correction in translation
+//      Set the bound for Correction in translation
 //
 //---------------------------------------------------------------------------
 void 

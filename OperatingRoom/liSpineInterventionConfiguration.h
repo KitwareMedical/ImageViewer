@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liSpineInterventionConfiguration.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -117,138 +133,138 @@ public:
   /**
    * Draw the model using OpenGL commands
    */
-	void DrawGeometry(void) const;
+        void DrawGeometry(void) const;
 
 
   /**
    * Show the graphic interface
    */
-	void Show(void);
+        void Show(void);
 
   /**
    * Show the graphic interface of the Room View
    */
-	void ShowRoomView(void);
+        void ShowRoomView(void);
 
 
   /**
    * Show the graphic interface of the Fluoroscopy View
    */
-	void ShowFluoroscopyView(void);
+        void ShowFluoroscopyView(void);
 
 
   /**
    * Show the fluoroscopy unit controls
    */
-	void ShowFluoroscopyControls(void);
+        void ShowFluoroscopyControls(void);
 
 
   /**
    * Show the graphic interface
    */
-	void ShowTableControls(void);
+        void ShowTableControls(void);
 
 
   /**
    * Show the Spine Model controls
    */
-	void ShowSpineControls(void);
+        void ShowSpineControls(void);
 
 
   /**
    * Show the Vessels Model controls
    */
-	void ShowVesselsControls(void);
+        void ShowVesselsControls(void);
 
 
   /**
    * Show the graphic interface of the Volume View
    */
-	void ShowVolumeView(void);
+        void ShowVolumeView(void);
 
 
   /**
    * Show the graphic interface of the Volume Slicer
    */
-	void ShowVolumeSlicer(void);
+        void ShowVolumeSlicer(void);
 
 
   /**
    * Load a fluoroscopic image
    */
-	void LoadFluoroscopy(void);
+        void LoadFluoroscopy(void);
 
 
   /**
    * Load a fluoroscopic image
    */
-	void LoadFluoroscopy( const char * filename );
+        void LoadFluoroscopy( const char * filename );
 
 
   /**
    * Load a volume image
    */
-	void LoadVolume(void);
+        void LoadVolume(void);
 
 
   /**
    * Load a volume image
    */
-	void LoadVolume( const char * filename );
+        void LoadVolume( const char * filename );
 
 
   /**
    * Load a Vessel Model
    */
-	void LoadVesselsModel(void);
+        void LoadVesselsModel(void);
 
 
   /**
    * Load a Vessel Model
    */
-	void LoadVesselsModel(const char * filename);
+        void LoadVesselsModel(const char * filename);
 
 
   /**
    * Load a Spine Model
    */
-	void LoadSpineModel(void);
+        void LoadSpineModel(void);
 
   /**
    * Save a Spine Model
    */
-	void SaveSpineModel(void);
+        void SaveSpineModel(void);
 
 
   /**
    * Load a fluoroscopic image
    */
-	void LoadSpineModel( const char * filename );
+        void LoadSpineModel( const char * filename );
 
   /**
    * Save a Spine Model
    */
-	void SaveSpineModel( const char * filename );
+        void SaveSpineModel( const char * filename );
 
 
 
   /**
    * Hide the graphic interface
    */
-	void Hide(void);
+        void Hide(void);
 
 
   /**
    * Destructor
    */
-	~SpineInterventionConfiguration();
+        ~SpineInterventionConfiguration();
 
 
 protected:
   /**
    * Constructor
    */
-	SpineInterventionConfiguration();
+        SpineInterventionConfiguration();
 
 private:
 

@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liC_Arm3D.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -64,89 +80,89 @@ public:
   /**
    *  Destructor
    */
-	~C_Arm3D();
+        ~C_Arm3D();
 
   /**
    *  Return the Width of the C, the dimension normal to the C plane
    */
-	double GetWidth(void) const;
+        double GetWidth(void) const;
 
   /**
    *  Return the Radius of the C.
    */
-	double GetRadius(void) const;
+        double GetRadius(void) const;
 
   /**
    *  Return the Radial Width of the C.
    */
-	double GetRadialWidth(void) const;
+        double GetRadialWidth(void) const;
 
   /**
    *  Return the Radial Width of the C.
    */
-	unsigned int GetNumberOfSectors(void) const;
+        unsigned int GetNumberOfSectors(void) const;
 
   /**
    *  Set the Radius of the C.
    */
-	void SetRadius( double radius );
+        void SetRadius( double radius );
 
   /**
    *  Set the Width of the C, the dimension normal to the C plane.
    */
-	void SetWidth( double width );
+        void SetWidth( double width );
 
  /**
    *  Set the Radial Width of the C.
    */
-	void SetRadialWidth( double radialWidth );
+        void SetRadialWidth( double radialWidth );
 
  /**
    *  Set the number of sector to digitize the C shape.
    */
-	void SetNumberOfSectors( unsigned int numberOfSectors );
+        void SetNumberOfSectors( unsigned int numberOfSectors );
 
   /**
    *  Draw the model with OpenGL commands.
    */
-	void DrawGeometry(void) const;
+        void DrawGeometry(void) const;
 
 protected:
   /**
    *  Constructor
    */
-	 C_Arm3D();
+         C_Arm3D();
 
   /**
    *  Generate points with the discretization of the C.
    *  this function should be called after any change in
    *  geometric parameters.
    */
-	void SetupGeometry(void);
+        void SetupGeometry(void);
 
 private:
   /**
    * Dimension of the C-Arm in the direcction normal to the C plane
    */
-	double m_Width;
+        double m_Width;
 
   /**
    * Radius of the C-Arm.
    */
-	double m_Radius;
+        double m_Radius;
 
 
   /**
    * Dimension of the C along the radial direction.
    * along with the m_Width this value define the cross-section of the C.
    */
-	double m_RadialWidth;
+        double m_RadialWidth;
 
 
   /**
    * Number of Sector on which the C will be discretized.
    */
-	unsigned int m_NumberOfSectors;
+        unsigned int m_NumberOfSectors;
 
 
   /**

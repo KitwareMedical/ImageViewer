@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liVertebralSegment.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -342,21 +358,21 @@ void VertebralSegment::DrawAxis(void ) const
 
   glDisable(GL_LIGHTING);
 
- 	// Draw axes
-	const GLfloat axisLength = 50;
-	glBegin(GL_LINES);
-		glColor3f((GLfloat)1.0,(GLfloat)0.0,(GLfloat)0.0);
-		glVertex3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0);
-		glVertex3f(axisLength,(GLfloat)0.0,(GLfloat)0.0);
-		
-		glColor3f((GLfloat)0.0,(GLfloat)1.0,(GLfloat)0.0);
-		glVertex3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0);
-		glVertex3f((GLfloat)0.0,axisLength,(GLfloat)0.0);
-		
-		glColor3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)1.0);
-		glVertex3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0);
-		glVertex3f((GLfloat)0.0,(GLfloat)0.0,axisLength);
-	glEnd();
+        // Draw axes
+        const GLfloat axisLength = 50;
+        glBegin(GL_LINES);
+                glColor3f((GLfloat)1.0,(GLfloat)0.0,(GLfloat)0.0);
+                glVertex3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0);
+                glVertex3f(axisLength,(GLfloat)0.0,(GLfloat)0.0);
+                
+                glColor3f((GLfloat)0.0,(GLfloat)1.0,(GLfloat)0.0);
+                glVertex3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0);
+                glVertex3f((GLfloat)0.0,axisLength,(GLfloat)0.0);
+                
+                glColor3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)1.0);
+                glVertex3f((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0);
+                glVertex3f((GLfloat)0.0,(GLfloat)0.0,axisLength);
+        glEnd();
 }
 
 

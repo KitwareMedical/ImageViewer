@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liTube3D.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project Angio Room
@@ -88,48 +104,48 @@ public:
   typedef   PointSet3D::PointSetType   PointSetType;
   
 
-	bool Null(void) const;
-	void DrawGeometry(void) const;
-	int  Read(fltk::Shape3D::IfstreamType & is);
-	int  Write(const char *filename) const;
-	int  GenerateSkin(void);
-	void GeneratePointSet(void);
+        bool Null(void) const;
+        void DrawGeometry(void) const;
+        int  Read(fltk::Shape3D::IfstreamType & is);
+        int  Write(const char *filename) const;
+        int  GenerateSkin(void);
+        void GeneratePointSet(void);
   void GeneratePointSet( const VectorType & sight ); 
 
   void ScalePoints(double sx,double sy, double sz);
 
   
-	void SetRadius( float radius );
+        void SetRadius( float radius );
 
-	PointType & GetMedial( unsigned int i ) const { return m_Medial[i]; }
-	PointType & GetVertex( unsigned int i ) const { return m_Vertex[i]; }
+        PointType & GetMedial( unsigned int i ) const { return m_Medial[i]; }
+        PointType & GetVertex( unsigned int i ) const { return m_Vertex[i]; }
 
-	float & GetRadius( unsigned int i ) { return m_Radius[i]; }
+        float & GetRadius( unsigned int i ) { return m_Radius[i]; }
 
-	void Smooth(void);
+        void Smooth(void);
 
   void SubsampleUsingRadius(void);
 
-	void Copy(const Tube3D & sm );
+        void Copy(const Tube3D & sm );
 
-	bool Alloc(unsigned int nsect, unsigned int nsecc);
+        bool Alloc(unsigned int nsect, unsigned int nsecc);
 
   PointSetType::ConstPointer GetPointSet( void ) const
             { return m_PointSet.GetPointer(); }
 
 protected:
 
-	Tube3D();
-	~Tube3D();
-	void Clear(void);
+        Tube3D();
+        ~Tube3D();
+        void Clear(void);
   
 private:
 
-	unsigned int	m_NumberOfSectors;	  // Number of radial sectors
-	unsigned int	m_NumberOfSections; 	// Number of rectilinear sections
-	float        *m_Radius;	            // Array of radius
-	PointType    *m_Vertex;	            // Array of vertex coordinates
-	PointType    *m_Medial;	            // Array of medial Point3Ds
+        unsigned int    m_NumberOfSectors;        // Number of radial sectors
+        unsigned int    m_NumberOfSections;     // Number of rectilinear sections
+        float        *m_Radius;             // Array of radius
+        PointType    *m_Vertex;             // Array of vertex coordinates
+        PointType    *m_Medial;             // Array of medial Point3Ds
 
   PointSetType::Pointer    m_PointSet; // Point Set
 

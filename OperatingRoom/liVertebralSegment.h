@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liVertebralSegment.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -73,44 +89,44 @@ public:
   /**
    *  Destructor
    */
-	~VertebralSegment();
+        ~VertebralSegment();
 
 
   /**
    *  Draw the Model using OpenGL commands
    */
-	void DrawGeometry(void) const;
+        void DrawGeometry(void) const;
 
   
   /**
    *  Set the name of this model
    */
-	virtual void SetName(const char *newName);
-	
+        virtual void SetName(const char *newName);
+        
   
   /**
    *  Get the name of this model
    */
   const char * GetName(void);
-	
+        
   
   /**
    *  Set the vertical shift with respect to the previous Segment
    */
   void SetShift(double val);
-	
+        
   
   /**
    *  Get the vertical shift with respect to the previous Segment
    */
   double GetShift(void);
-	
+        
   
   /**
    *  Set the rotation with respect to the previous Segment
    */
   void SetRotation(double val);
-	
+        
   
   /**
    *  Get the rotation with respect to the previous Segment
@@ -123,17 +139,17 @@ public:
    */
   VertebralBody::Pointer        GetVertebralBody(void);
 
-	
+        
   /**
    *  Get the Vertebral Pedicles
    */
   VertebralPedicle::Pointer     GetVertebralPedicle(void);
-	
+        
   
   /**
    *  Write the serialized model to an ostream
    */
-	int Write( fltk::Shape3D::OfstreamType &os, int level ) const;
+        int Write( fltk::Shape3D::OfstreamType &os, int level ) const;
 
   
   /**
@@ -165,7 +181,7 @@ protected:
   /**
    *  Constructor
    */
-	VertebralSegment();
+        VertebralSegment();
 
 
 private:
@@ -173,19 +189,19 @@ private:
   /**
    *  Name assigned to this model
    */
-	char *      m_Name;
+        char *      m_Name;
   
 
   /**
    *  Separation from the previous Vertebral Segment
    */
-	double      m_Shift;
+        double      m_Shift;
 
 
   /**
    *  Rotation with respect to the previous Segment
    */
-	double      m_Rotation;
+        double      m_Rotation;
 
   
   /**
