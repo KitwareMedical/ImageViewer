@@ -41,8 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __OPTIONLIST_H_
 #define __OPTIONLIST_H_
 
-#pragma warning( disable : 4786 ) // Disable warning messages
-
+#include <itkWin32Header.h>
 #include <iostream>
 #include <string>
 #include <vector>
