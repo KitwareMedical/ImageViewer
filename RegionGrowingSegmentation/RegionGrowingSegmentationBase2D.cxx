@@ -17,7 +17,6 @@
 
 #include <RegionGrowingSegmentationBase2D.h>
 #include <FL/fl_ask.H>
-#include <itkRawImageIO.h>
 #include <itkMinimumMaximumImageCalculator.h>
 
 
@@ -33,8 +32,6 @@ RegionGrowingSegmentationBase2D
   m_ImageReader                  = ImageReaderType::New();
   m_ImageWriter                  = ImageWriterType::New();
 
-  itk::RawImageIOFactory< InputImageType::PixelType, 
-                          InputImageType::ImageDimension >::RegisterOneFactory();
 
   m_CastImageFilter = CastImageFilterType::New();
   m_CastImageFilter->SetInput( m_ImageReader->GetOutput() );
