@@ -54,8 +54,8 @@ ITKCommon
 ITKBasicFilters 
 ITKIO
 MetaImageIO
-png
-zlib
+vtkpng
+vtkzlib
 FltkImageViewer
 Curves2DExtractorLib
 ${FLTK_LIBRARY}
