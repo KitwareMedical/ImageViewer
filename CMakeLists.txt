@@ -26,3 +26,4 @@ SET(ImageViewer_GUI_SRCS
   )
 
 FLTK_WRAP_UI( ImageViewer ${ImageViewer_GUI_SRCS} )
+ITK_DISABLE_FLTK_GENERATED_WARNINGS("${ImageViewer_GUI_SRCS}")
