@@ -18,7 +18,7 @@
 #ifndef METUTILS_H
 #define METUTILS_H
 
-#include <cstdio>
+#include <stdio.h>
 
 #ifndef _WIN32
 #define  MET_SYSTEM_BYTE_ORDER_MSB   true

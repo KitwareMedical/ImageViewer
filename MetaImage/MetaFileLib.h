@@ -24,7 +24,7 @@
 #ifndef METAFILELIB_H
 #define METAFILELIB_H
 
-#include <cstdio>
+#include <stdio.h>
 
 #include "MetaUtils.h"     // Generic Memory/IO/Debug/Misc Routines
 

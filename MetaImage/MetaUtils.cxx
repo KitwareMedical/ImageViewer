@@ -1,8 +1,8 @@
-#include <cstdlib>
-#include <cstdio>
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
-#include <cstring>
-#include <cctype>
+#include <string.h>
+#include <ctype.h>
 
 using namespace std;
 

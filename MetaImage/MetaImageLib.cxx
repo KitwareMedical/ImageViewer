@@ -1,8 +1,8 @@
-#include <cstdlib>
-#include <cstdio>
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
-#include <cstring>
-#include <cmath>
+#include <string.h>
+#include <math.h>
 
 using namespace std;
 
