@@ -166,7 +166,7 @@ liFilterConsoleBase
     return;
   }
 
-  m_Reader->SetFileToLoad( filename );
+  m_Reader->SetFileName( filename );
   m_Reader->Update();
 
   m_ImageLoaded = true;
