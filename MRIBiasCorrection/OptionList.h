@@ -77,7 +77,9 @@ public:
   int GetStringOption(std::string tag, std::string* ret, bool required) 
     throw (RequiredOptionMissing) ;
   
-
+  int GetMultiStringOption(std::string tag, std::vector< std::string >* ret,
+                           bool required)
+    throw (RequiredOptionMissing) ;
 protected:
 
 private:

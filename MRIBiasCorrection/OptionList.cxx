@@ -238,3 +238,25 @@ int OptionList::GetStringOption(std::string tag,
   return arg_no ;
 }
 
+int OptionList::GetMultiStringOption(std::string tag, 
+                                     std::vector< std::string >* ret, 
+                                     bool required)
+  throw (RequiredOptionMissing) 
+{
+  ret->clear() ;
+  StringVector args ;
+  int arg_no = this->GetOption(tag, &args) ;
+  
+  if (required && arg_no == 0)
+    throw RequiredOptionMissing(tag) ;
+  
+  if (arg_no == 0)
+    return -1 ;
+  
+  for (int i = 0 ; i < arg_no ; i++)
+    {
+      ret->push_back( args[i] ) ;
+    }
+
+  return arg_no ;
+}
