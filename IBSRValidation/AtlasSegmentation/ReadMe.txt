@@ -6,11 +6,11 @@
  for atlas-based segmentation validation study.
 
  The study evaluates the effectivenessof the ITK implementation of the
- "demons" based deformable registration algorithm [1] for the application
+ "demons" based deformable registration algorithm for the application
  of atlas-based segmentation of the whole brain volume from MR images.
 
  The accompanying validation report can be found at
- InsightDocuments/Validation/AtlasSegmentation/AtlasegmentationStudy.pdf
+ <put path here>
  or
  <put weblink here>
 
@@ -18,7 +18,7 @@
  Code:
  =====
  
- This sub-directory contains the source code to build a 
+ This sub-directory contains the source code to build the 
  BrainStripValidationApp application used for the study described
  in the report above.
 

@@ -19,14 +19,15 @@
  This sub-directory contains source code, input parameter files and ouput files
  for atlas-based segmentation validation study.
 
- The study evaluates the effectivenessof the ITK implementation of the
- "demons" based deformable registration algorithm [1] for the application
+ The study evaluates the effectiveness of the ITK implementation of the
+ "demons" based deformable registration algorithm for the application
  of atlas-based segmentation of the whole brain volume from MR images.
 
  The accompanying validation report can be found at
- InsightDocuments/Validation/AtlasSegmentation/AtlasegmentationStudy.pdf
+ <put path here>
  or
  <put weblink here>
 
- Also see AtlasSegmentation/ReadMe.txt
+ See also AtlasSegmentation/ReadMe.txt
+
 

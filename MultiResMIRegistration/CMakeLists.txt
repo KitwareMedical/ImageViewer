@@ -1,10 +1,7 @@
 INCLUDE_REGULAR_EXPRESSION(".*")
 
-SUBDIRS( SampleInputs )
-
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
-${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/VanderbiltValdiation
 ${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/IO
@@ -29,11 +26,5 @@ ITKIO
 ITKBasicFilters 
 )
 
-SOURCE_FILES( VanderbiltValidation_SRCS
-VanderbiltValidation/VanderbiltValidation
-VanderbiltValidation/VanderbiltModality )
-
-
 ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration )
-ADD_EXECUTABLE(VanderbiltValidationApp   VanderbiltValidation_SRCS )
 
