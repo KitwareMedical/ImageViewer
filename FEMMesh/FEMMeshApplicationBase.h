@@ -45,6 +45,7 @@ public:
   virtual void DisplayFEMMesh(void);
   virtual void DisplayAxes(void) const;
   virtual void ComputeArea(void) const;
+  virtual void ComputeHeatConduction(void) const;
 
 protected:
  

@@ -48,13 +48,18 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
           }
         }
         submenu {} {
-          label Compute selected
+          label Compute
           xywh {5 5 100 20}
         } {
           menuitem {} {
             label Area
             callback {this->ComputeArea();}
             xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Heat Conduction}
+            callback {this->ComputeHeatConduction();} selected
+            xywh {10 10 100 20}
           }
         }
       }

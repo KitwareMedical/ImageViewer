@@ -31,6 +31,8 @@ public:
   
   void CreateFEMMesh(void);
   void DisplayFEMMesh(void);
+  void ComputeArea(void) const;
+  void ComputeHeatConduction(void) const;
 
 private:
  

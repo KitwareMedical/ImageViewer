@@ -84,3 +84,49 @@ FEMMeshApplication
 
 
 
+
+void
+FEMMeshApplication
+::ComputeArea(void) const
+{
+ 
+  try
+    {
+    this->FEMMeshApplicationBase::ComputeArea();
+    }
+  catch( itk::ExceptionObject & excp )
+  {
+    fl_alert( excp.GetDescription() );
+    return;
+  }
+  
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+
+}
+
+
+
+
+void
+FEMMeshApplication
+::ComputeHeatConduction(void) const
+{
+ 
+  try
+    {
+    this->FEMMeshApplicationBase::ComputeHeatConduction();
+    }
+  catch( itk::ExceptionObject & excp )
+  {
+    fl_alert( excp.GetDescription() );
+    return;
+  }
+  
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+
+}
+
+
+

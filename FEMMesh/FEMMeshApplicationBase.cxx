@@ -65,7 +65,7 @@ FEMMeshApplicationBase
 
   m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
   m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
-  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 20.0 ); 
+  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 30.0 ); 
 
   m_HeatSolver = HeatSolverType::New();
 
@@ -154,6 +154,7 @@ FEMMeshApplicationBase
   CoordinateRepresentationType centerx = nx * dx / 2.0f;
   CoordinateRepresentationType centery = ny * dy / 2.0f;
 
+  // Create the Points
   for(unsigned int y=0; y<=ny; y++) 
     {
     HeatPointType point;
@@ -236,11 +237,21 @@ FEMMeshApplicationBase
 
   heatMesh->SetElementsContainer( elements.GetPointer() );
 
+  const unsigned int numberOfPoints = heatMesh->GetNumberOfPoints();
+  HeatMeshType::PointDataContainerPointer values = 
+                              HeatMeshType::PointDataContainer::New();
+
+  values->Reserve( numberOfPoints );
+  HeatMeshType::PointDataContainer::Iterator pointData = values->Begin();
+  for(unsigned int i=0; i<numberOfPoints; i++) 
+    {
+    pointData.Value() =  itk::NumericTraits< HeatMeshType::PixelType >::Zero;
+    ++pointData;
+    }
+
+  heatMesh->SetPointData( values );
 
   this->DisplayFEMMesh();
-
-  m_HeatSolver->AssembleMasterEquation();
-
 
 }
 
@@ -471,4 +482,16 @@ FEMMeshApplicationBase
 
 
 
+
+//
+// Instantiate Visitors that compute Element's HeatConduction
+// and send them to visit all the Element in the Mesh.
+// This is all delegated to the HeatConduction2D object.
+//
+void
+FEMMeshApplicationBase
+::ComputeHeatConduction(void) const
+{
+  m_HeatSolver->AssembleMasterEquation();
+}
 
