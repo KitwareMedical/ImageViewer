@@ -18,8 +18,6 @@ IF(FLTK_LIBRARY)
      fltkImageViewerGUI
      fltkImage2DViewerGUI
      fltkImage2DViewerWindow
-     fltkLightButtonRedrawCommand
-     fltkProgressBarRedrawCommand
      fltkRegularStepGradientDescent
      fltkRegularStepGradientDescentGUI
      fltkSlice3DDrawerGUI

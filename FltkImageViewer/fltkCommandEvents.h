@@ -19,7 +19,7 @@
 #ifndef fltkCOMMANDEVENTS
 #define fltkCOMMANDEVENTS
 
-#include <itkCommand.h>
+#include "itkEventObject.h"
 
 
 namespace fltk {
@@ -27,12 +27,9 @@ namespace fltk {
 /**
  *  List of the events expected in this domain
  */
-enum EventIds 
-{
-  RedrawEvent = itk::Command::UserEvent+1,
-  GlDrawEvent,
-  VolumeReslicedEvent
-};
+itkEventMacro( RedrawEvent,            itk::UserEvent );
+itkEventMacro( GlDrawEvent,            itk::UserEvent );
+itkEventMacro( VolumeReslicedEvent,    itk::UserEvent );
 
 
   

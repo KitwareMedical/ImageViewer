@@ -43,7 +43,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __fltk_LightButton_h
 #define __fltk_LightButton_h
 
-#include <fltkLightButtonRedrawCommand.h>
+#include "itkCommand.h"
+#include "fltkCommandEvents.h"
+#include <Fl/Fl_Light_Button.h>
 
 
 namespace fltk {
@@ -60,7 +62,7 @@ public:
   /**
    * Command Class invoked for button redraw
    */
-  typedef LightButtonRedrawCommand  RedrawCommandType;
+  typedef itk::MemberCommand< LightButton >  RedrawCommandType;
 
 
   /**
@@ -68,8 +70,8 @@ public:
    */
   LightButton(int x, int y, int w, int h, char * label=0):
     Fl_Light_Button( x, y, w, h, label ) {
-      m_Command = RedrawCommandType::New();
-      m_Command->SetWidget( this );
+      m_RedrawCommand = RedrawCommandType::New();
+      m_RedrawCommand->SetCallbackFunction( this, &LightButton::ProcessEvent );
     }
 
 
@@ -79,12 +81,48 @@ public:
    */
   RedrawCommandType::Pointer GetRedrawCommand( void ) const
   {
-    return m_Command.GetPointer();
+    return m_RedrawCommand.GetPointer();
   }
+
+  /**
+   * Manage a Progress event
+   */
+  void ProcessEvent( const itk::Object *caller, const itk::EventObject & event )
+  {
+  if( typeid( event ) == typeid( itk::StartEvent ) )
+    {
+    this->selection_color( FL_YELLOW );
+    this->value( 1 );
+    }
+  else if ( typeid( event ) == typeid( itk::EndEvent ) )
+    {
+    this->selection_color( FL_GREEN );
+    this->value( 1 );
+    }
+  else if  ( typeid( event ) == typeid( itk::ModifiedEvent ) )
+    {
+    this->selection_color( FL_RED );
+    this->value( 1 );
+    }
+
+  this->redraw();
+  }
+  
+
+  /**
+   * Manage a Progress event
+   */
+  void Observe( itk::Object *caller )
+  {
+    caller->AddObserver(  itk::StartEvent(), m_RedrawCommand.GetPointer() );
+    caller->AddObserver(  itk::ModifiedEvent(), m_RedrawCommand.GetPointer() );
+    caller->AddObserver(  itk::EndEvent(), m_RedrawCommand.GetPointer() );
+  }
+
 
 private:
 
-  RedrawCommandType::Pointer m_Command;
+  RedrawCommandType::Pointer m_RedrawCommand;
   
 };
 

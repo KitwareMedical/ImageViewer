@@ -41,10 +41,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-#include <fltkGlWindowInteractive.h>
+#include "fltkGlWindowInteractive.h"
 #include <GL/glu.h>
 #include <math.h>
 #include <FL/Fl.H>
+#include "fltkCommandEvents.h"
 
 
 namespace fltk {
@@ -371,7 +372,7 @@ void GlWindowInteractive::draw(void)
   glEnable(GL_NORMALIZE);
   glEnable(GL_DEPTH_TEST);
 
-  GetNotifier()->InvokeEvent( fltk::GlDrawEvent );
+  GetNotifier()->InvokeEvent( fltk::GlDrawEvent() );
 
 }
 

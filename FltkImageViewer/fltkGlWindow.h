@@ -45,7 +45,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <FL/gl.h> 
 #include <FL/Fl_Gl_Window.H>
 #include <fltkWidgetRedrawCommand.h>
-#include <fltkCommandEvents.h>
 #include <vector>
 
 namespace fltk {

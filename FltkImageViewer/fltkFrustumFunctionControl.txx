@@ -103,7 +103,7 @@ FrustumFunctionControl<ImagePixelType>
   m_AngleZ = angle;
   m_SpatialFunction->SetAngleZ( angle );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 
@@ -121,7 +121,7 @@ FrustumFunctionControl<ImagePixelType>
   m_Shape->SetApertureAngleX( angle );
   m_SpatialFunction->SetApertureAngleX( angle );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 
@@ -138,7 +138,7 @@ FrustumFunctionControl<ImagePixelType>
   m_Shape->SetApertureAngleY( angle );
   m_SpatialFunction->SetApertureAngleY( angle );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 
@@ -156,7 +156,7 @@ FrustumFunctionControl<ImagePixelType>
   m_Shape->SetBottomPlane( bottomPlane );
   m_SpatialFunction->SetBottomPlane( bottomPlane );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 
@@ -175,7 +175,7 @@ FrustumFunctionControl<ImagePixelType>
   m_Shape->SetTopPlane( topPlane );
   m_SpatialFunction->SetTopPlane( topPlane );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 
@@ -199,7 +199,7 @@ FrustumFunctionControl<ImagePixelType>
   this->fltkFrustumFunctionControlGUI::SetApexY( y );
   this->fltkFrustumFunctionControlGUI::SetApexZ( z );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 

@@ -44,7 +44,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <fltkSlice3DDrawerGUI.h>
 #include <itkImage.h>
-#include "fltkCommandEvents.h"
 #include "itkCommand.h"
 #include <FL/gl.h>
 

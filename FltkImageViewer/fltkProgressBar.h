@@ -43,7 +43,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __fltk_ProgressBar_h
 #define __fltk_ProgressBar_h
 
-#include <fltkProgressBarRedrawCommand.h>
+#include "itkCommand.h"
+#include "fltkCommandEvents.h"
+#include <Fl/Fl_Slider.h>
 
 
 namespace fltk {
@@ -62,7 +64,7 @@ public:
   /**
    * Command Class invoked for button redraw
    */
-  typedef ProgressBarRedrawCommand  RedrawCommandType;
+  typedef itk::MemberCommand< ProgressBar >  RedrawCommandType;
 
 
   /**
@@ -71,7 +73,7 @@ public:
   ProgressBar(int x, int y, int w, int h, char * label=0):
     Fl_Slider( x, y, w, h, label ) {
       m_RedrawCommand = RedrawCommandType::New();
-      m_RedrawCommand->SetWidget( this );
+      m_RedrawCommand->SetCallbackFunction( this, &ProgressBar::ProcessEvent );
     }
 
 
@@ -82,6 +84,30 @@ public:
   RedrawCommandType::Pointer GetRedrawCommand( void ) const
   {
     return m_RedrawCommand.GetPointer();
+  }
+
+  
+  /**
+   * Manage a Progress event
+   */
+  void ProcessEvent( const itk::Object *caller, const itk::EventObject & event )
+  {
+    if( typeid( event ) == typeid( itk::ProgressEvent ) ) 
+      {
+      itk::ProcessObject::ConstPointer  process = 
+                 dynamic_cast< const itk::ProcessObject *>( caller );
+      this->value( process->GetProgress() );
+      this->redraw();
+      }
+  }
+  
+
+  /**
+   * Manage a Progress event
+   */
+  void Observe( itk::Object *caller )
+  {
+    caller->AddObserver(  itk::ProgressEvent(), m_RedrawCommand.GetPointer() );
   }
 
 private:

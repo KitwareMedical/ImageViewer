@@ -101,7 +101,7 @@ SphereFunctionControl<ImagePixelType>
   m_Shape->SetRadius( radius );
   m_SpatialFunction->SetRadius( radius );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 
@@ -126,7 +126,7 @@ SphereFunctionControl<ImagePixelType>
   this->fltkSphereFunctionControlGUI::SetCenterY( y );
   this->fltkSphereFunctionControlGUI::SetCenterZ( z );
 
-  this->InvokeEvent( fltk::RedrawEvent );
+  this->InvokeEvent( fltk::RedrawEvent() );
 
 }
 

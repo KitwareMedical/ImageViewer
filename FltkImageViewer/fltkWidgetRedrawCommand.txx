@@ -100,7 +100,7 @@ WidgetRedrawCommand<TWidget>
 template <class TWidget>
 void
 WidgetRedrawCommand<TWidget>
-::Execute( itk::Object * , unsigned long event )
+::Execute( itk::Object *, const itk::EventObject & event )
 {
 
   if( !m_Widget )
@@ -124,7 +124,7 @@ WidgetRedrawCommand<TWidget>
 template <class TWidget>
 void
 WidgetRedrawCommand<TWidget>
-::Execute( const itk::Object * , unsigned long event )
+::Execute( const itk::Object * ,  const itk::EventObject & event )
 {
 
   if( !m_Widget )

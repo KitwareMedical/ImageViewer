@@ -96,7 +96,7 @@ Image2DViewer<ImagePixelType>
   if(m_Image->GetSource())
   {
     m_Tag = m_Image->GetSource()->AddObserver( 
-      itk::Command::EndEvent, m_RedrawCommand );
+      itk::EndEvent(), m_RedrawCommand );
   }
  
   Update();

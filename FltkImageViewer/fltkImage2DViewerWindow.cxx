@@ -41,7 +41,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
-#include <fltkImage2DViewerWindow.h>
+#include "fltkImage2DViewerWindow.h"
+#include "fltkCommandEvents.h"
 #include <GL/glu.h>
 #include <math.h>
 #include <FL/Fl.H>
@@ -359,7 +360,7 @@ void Image2DViewerWindow::draw(void)
   glEnable(GL_DEPTH_TEST);
 
   // Call other drawers
-  GetNotifier()->InvokeEvent( fltk::GlDrawEvent );
+  GetNotifier()->InvokeEvent( fltk::GlDrawEvent() );
 
 }
 

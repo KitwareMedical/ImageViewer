@@ -315,7 +315,7 @@ public:
   /**
    * Invoke events recursively
    */
-  void InvokeEvent( unsigned long event ) const;
+  void InvokeEvent( const itk::EventObject & event ) const;
 
   
   /**

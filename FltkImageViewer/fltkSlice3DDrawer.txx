@@ -321,7 +321,7 @@ Slice3DDrawer<ImagePixelType>
 {
     xValueOutput->value( xScrollBar->value() );
     BindTextureX();
-    InvokeEvent( fltk::VolumeReslicedEvent );
+    InvokeEvent( fltk::VolumeReslicedEvent() );
 }
 
 
@@ -339,7 +339,7 @@ Slice3DDrawer<ImagePixelType>
 {
     yValueOutput->value( yScrollBar->value() );
     BindTextureY();
-    InvokeEvent( fltk::VolumeReslicedEvent );
+    InvokeEvent( fltk::VolumeReslicedEvent() );
 }
 
 
@@ -356,7 +356,7 @@ Slice3DDrawer<ImagePixelType>
 {
     zValueOutput->value( zScrollBar->value() );
     BindTextureZ();
-    InvokeEvent( fltk::VolumeReslicedEvent );
+    InvokeEvent( fltk::VolumeReslicedEvent() );
 }
 
 

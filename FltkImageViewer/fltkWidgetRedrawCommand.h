@@ -97,15 +97,8 @@ public:
   /**
    * Execute method will call redraw in the Widget
    */
-  void Execute(itk::Object *caller, unsigned long event);
-  void Execute(const itk::Object *caller, unsigned long event);
-
-  // all the currently defined events
-  // developers can use -- Command::UserEvent + int to
-  // specify their own events. 
-  enum GLEventIds {
-    RedrawEvent = itk::Command::UserEvent+1,
-  };
+  void Execute(itk::Object *caller, const itk::EventObject & event);
+  void Execute(const itk::Object *caller, const itk::EventObject & event );
 
 
   /** 

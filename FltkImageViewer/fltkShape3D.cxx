@@ -522,7 +522,7 @@ void Shape3D::DrawGeometry(void) const
 //--------------------------------------------------
 void Shape3D::Redraw(void) const
 {
-    InvokeEvent( RedrawEvent );
+    InvokeEvent( RedrawEvent() );
 }
 
 
@@ -532,7 +532,7 @@ void Shape3D::Redraw(void) const
 //    Invoke an event in the top of the hierarchy
 //
 //--------------------------------------------------
-void Shape3D::InvokeEvent( unsigned long event ) const
+void Shape3D::InvokeEvent( const itk::EventObject & event ) const
 {
   
   const itk::Object * super = this;
