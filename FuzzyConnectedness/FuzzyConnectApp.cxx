@@ -230,7 +230,7 @@ FuzzyConnectApp
 {
 
   m_Filter->SetInput( m_InputImage );
-  m_Filter->SetSeed( m_Seed );
+  m_Filter->SetObjectsSeed( m_Seed );
 
   m_ObjectMean = double( m_InputImage->GetPixel( m_Seed ) );
 

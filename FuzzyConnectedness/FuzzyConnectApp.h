@@ -18,7 +18,7 @@
 #define __FuzzyConnectApp_h
 
 #include "itkImage.h"
-#include "itkFuzzyConnectednessImageFilter.h"
+#include "itkSimpleFuzzyConnectednessScalarImageFilter.h"
 #include <string>
 
 /** \class FuzzyConnectApp
@@ -50,7 +50,7 @@ public:
   typedef InputImageType::IndexType IndexType;
 
   /** Fuzzy connectedness filter type. */
-  typedef itk::FuzzyConnectednessImageFilter<InputImageType,InputImageType>
+  typedef itk::SimpleFuzzyConnectednessScalarImageFilter<InputImageType,InputImageType>
           FilterType;
   typedef FilterType::Pointer FilterPointer;
 
