@@ -42,7 +42,7 @@ ShapeDetectionLevelSetBase
   m_TrialPoints = NodeContainer::New();
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
-  m_FastMarchingFilter->SetSpeedImage( m_ExpNegativeFilter->GetOutput() );
+  m_FastMarchingFilter->SetInput( m_ExpNegativeFilter->GetOutput() );
   m_FastMarchingFilter->SetTrialPoints( m_TrialPoints );
 
   m_AddImageFilter = AddImageFilterType::New();
@@ -118,7 +118,7 @@ ShapeDetectionLevelSetBase
 //  speedImage->SetRegions( region );
 //  speedImage->Allocate();
 //  speedImage->FillBuffer( 1.0 );
-//  m_FastMarchingFilter->SetSpeedImage( speedImage );
+//  m_FastMarchingFilter->SetInput( speedImage );
 
 
   m_FastMarchingFilter->SetOutputSize( region.GetSize() );

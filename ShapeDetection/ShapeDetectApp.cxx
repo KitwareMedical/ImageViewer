@@ -225,7 +225,7 @@ ShapeDetectApp
 {
 
   // connect edge potential map
-  m_DetectionFilter->SetSpeedImage( m_EdgePotentialImage );
+  m_DetectionFilter->SetInput( m_EdgePotentialImage );
   
   // setup trial points
   typedef DetectionFilterType::NodeType NodeType;
