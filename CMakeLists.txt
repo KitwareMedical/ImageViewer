@@ -1,5 +1,8 @@
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
+#Build the fltk gui for AnisotropicDiffusionImageFilters
+SUBDIRS (AnisotropicDiffusionFltkGui)
+
 #Build the example of how to do simple scalar anisotropic diffusion
 #on a PNG image
 SUBDIRS (AnisotropicDiffusionImageFilter)
