@@ -1,26 +1,26 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    ImageCorrector.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Program:   Insight Segmentation & Registration Toolkit
+Module:    ImageCorrector.cxx
+Language:  C++
+Date:      $Date$
+Version:   $Revision$
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright (c) 2002 Insight Consortium. All rights reserved.
+See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #include <string>
 #include <vector>
 #include <vnl/vnl_math.h>
 
-#include "mydefs.h"
 #include "imageutils.h"
 #include "OptionList.h"
+#include "itkWriteMetaImage.h"
 #include "itkMultivariateLegendrePolynomial.h"
 
 typedef itk::MultivariateLegendrePolynomial BiasField ;
@@ -89,6 +89,7 @@ void correctBias(ImagePointer input, MaskPointer mask,
   itk::ImageRegionIteratorWithIndex<ImageType> iIter(input, region) ;
   
   BiasField::SimpleForwardIterator bIter(&biasField) ;
+  bIter.Begin() ;
 
   itk::ImageRegionIteratorWithIndex<ImageType> oIter(output, region) ;
 
@@ -105,16 +106,24 @@ void correctBias(ImagePointer input, MaskPointer mask,
           if (mIter.Get() > 0.0)
             {
               if (useLog)
-                oIter.Set( (Pixel) ( exp(diff) - 1 )) ;
+                {
+                  oIter.Set( (Pixel) ( exp(diff) - 1 )) ;
+                }
               else
-                oIter.Set( (Pixel) diff) ;
+                {
+                  oIter.Set( (Pixel) diff) ;
+                }
             }
           else
             {
               if (useLog)
-                oIter.Set( (Pixel) ( exp(inputPixel) - 1) ) ;
+                {
+                  oIter.Set( (Pixel) ( exp(inputPixel) - 1) ) ;
+                }
               else
-                oIter.Set( (Pixel) inputPixel) ;
+                {
+                  oIter.Set( (Pixel) inputPixel) ;
+                }
             }
           ++mIter ;
           ++oIter ;
@@ -128,12 +137,16 @@ void correctBias(ImagePointer input, MaskPointer mask,
         {
           double diff = iIter.Get() - bIter.Get() ;
           if (useLog)
-            oIter.Set( (Pixel) ( exp(diff) - 1)) ;
+            {
+              oIter.Set( (Pixel) ( exp(diff) - 1)) ;
+            }
           else
-            oIter.Set( (Pixel) diff) ;
-          ++oIter ;
-          ++bIter ;
-          ++iIter ;
+            {
+              oIter.Set( (Pixel) diff) ;
+              ++oIter ;
+              ++bIter ;
+              ++iIter ;
+            }
         }
     }
 
@@ -183,17 +196,26 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
   
-
+  itk::MetaImageIOFactory::RegisterOneFactory();
   // load images
-  ImagePointer input = ImageType::New() ;
-  MaskPointer outputMask = MaskType::New() ;
-  
+  ImagePointer input ;
+  MaskPointer outputMask ;
+
+  ImageReaderType::Pointer imageReader = ImageReaderType::New() ;
+  MaskReaderType::Pointer maskReader = MaskReaderType::New() ;
+
   try
     {
       std::cout << "Loading images..." << std::endl ;
-      loadImage(inputFileName, input) ;
+      imageReader->SetFileName(inputFileName.c_str()) ;
+      imageReader->Update() ;
+      input = imageReader->GetOutput() ;
       if (outputMaskFileName != "")
-        loadMask(outputMaskFileName, outputMask) ;
+        {
+          maskReader->SetFileName(outputMaskFileName.c_str()) ;
+          maskReader->Update() ;
+          outputMask = maskReader->GetOutput() ;
+        }
       std::cout << "Images loaded." << std::endl ;
     }
   catch (ImageIOError e)
@@ -245,8 +267,13 @@ int main(int argc, char* argv[])
   ImagePointer output = ImageType::New() ;
   correctBias(input, outputMask, biasField, output, useLog) ;
 
+  // writes the corrected image
   std::cout << "Writing corrected image..." << std::endl ;
-  writeImage(outputFileName, output) ;
+  typedef itk::WriteMetaImage<ImageType> Writer ;
+  Writer::Pointer writer = Writer::New() ;
+  writer->SetInput(output) ;
+  writer->SetFileName(outputFileName.c_str()) ;
+  writer->GenerateData() ;
   std::cout << "Corrected image created." << std::endl ;
 
   return 0 ;

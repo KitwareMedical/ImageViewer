@@ -1,26 +1,26 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    BiasImageGenerator.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Program:   Insight Segmentation & Registration Toolkit
+Module:    BiasImageGenerator.cxx
+Language:  C++
+Date:      $Date$
+Version:   $Revision$
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright (c) 2002 Insight Consortium. All rights reserved.
+See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #include <string>
 #include <vector>
 #include <vnl/vnl_math.h>
 
-
-#include "mydefs.h"
+//#include "mydefs.h"
 #include "imageutils.h"
+#include "itkWriteMetaImage.h"
 #include "OptionList.h"
 #include "itkMultivariateLegendrePolynomial.h"
 
@@ -59,50 +59,6 @@ void print_usage()
 }
 
     
-void generateBiasImage(BiasField& biasField, ImagePointer output) 
-{
-  typedef ImageType::PixelType Pixel ;
-
-  ImageType::IndexType index ;
-  ImageType::SizeType size ;
-  ImageType::RegionType region ;
-
-  BiasField::DomainSizeType biasSize = biasField.GetDomainSize() ;
-  for (unsigned int i = 0 ; i < ImageType::ImageDimension ; i++)
-    {
-      if (i < biasField.GetDimension())
-        {
-        size[i] = biasSize[i] ;
-        }
-      else
-        {
-        size[i] = 0 ;
-        }
-
-      index[i] = 0 ;
-    }
-
-  region.SetSize(size) ;
-  region.SetIndex(index) ;
-
-  output->SetLargestPossibleRegion(region) ;
-  output->SetBufferedRegion(region) ;
-  output->Allocate() ;
-
-  BiasField::SimpleForwardIterator bIter(&biasField) ;
-  bIter.Begin() ;
-
-  itk::ImageRegionIteratorWithIndex<ImageType> oIter(output, region) ;
-
-  while (!oIter.IsAtEnd())
-    {
-      oIter.Set( (Pixel) bIter.Get()) ;
-
-      ++oIter ;
-      ++bIter ;
-    }
-}
-
 int main(int argc, char* argv[])
 {
 
@@ -120,7 +76,6 @@ int main(int argc, char* argv[])
   int degree ;
   itk::Array<double> coefficientVector ;
   BiasField::DomainSizeType biasSize ;
-  int biasDimension = 0  ;
   try
     {
       options.GetStringOption("output", &outputFileName, true) ;
@@ -143,14 +98,10 @@ int main(int argc, char* argv[])
           exit(0) ;
         }
 
+      biasSize = BiasField::DomainSizeType(sizes.size()) ;
       for (unsigned int i = 0 ; i < sizes.size() ; i++)
         {
-        if (i < 3)
-          {
-          biasSize.resize(biasDimension + 1) ;
-          biasSize[biasDimension] = sizes[i] ;
-          biasDimension++ ;
-          }
+          biasSize[i] = sizes[i] ;
         }
     }
   catch(OptionList::RequiredOptionMissing e)
@@ -162,9 +113,8 @@ int main(int argc, char* argv[])
     }
   
   
-  
   BiasField biasField(biasSize.size(), degree, biasSize) ;
-  //biasField.IsMultiplicative(useLog) ;
+  
   try
     {
       biasField.SetCoefficients(coefficientVector) ;
@@ -180,20 +130,55 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
   
+  itk::MetaImageIOFactory::RegisterOneFactory();
+
+  // generates the bias field image
   ImagePointer output = ImageType::New() ;
-  generateBiasImage(biasField, output) ;
+  typedef ImageType::PixelType Pixel ;
 
-  try
+  ImageType::IndexType index ;
+  ImageType::SizeType size ;
+  ImageType::RegionType region ;
+
+  BiasField::DomainSizeType biasSize2 = biasField.GetDomainSize() ;
+  for (unsigned int i = 0 ; i < ImageType::ImageDimension ; i++)
     {
-      writeImage(outputFileName, output) ;
-    }
-  catch (ImageIOError e)
-    {
-      std::cout << "Error: " << e.Operation << " file name:" 
-                << e.FileName << std::endl ;
-      exit(0) ;
+      if (i < biasField.GetDimension())
+        {
+          size[i] = biasSize2[i] ;
+        }
+      else
+        {
+          size[i] = 0 ;
+        }
+      index[i] = 0 ;
     }
 
+  region.SetSize(size) ;
+  region.SetIndex(index) ;
+
+  output->SetLargestPossibleRegion(region) ;
+  output->SetBufferedRegion(region) ;
+  output->Allocate() ;
+
+  BiasField::SimpleForwardIterator bIter(&biasField) ;
+  bIter.Begin() ;
+
+  itk::ImageRegionIterator<ImageType> oIter(output, region) ;
+  oIter.GoToBegin() ;
+  while (!bIter.IsAtEnd())
+    {
+      oIter.Set( (Pixel) bIter.Get()) ;
+      ++oIter ;
+      ++bIter ;
+    }
+
+  // writes the bias field image
+  typedef itk::WriteMetaImage<ImageType> Writer ;
+  Writer::Pointer writer = Writer::New() ;
+  writer->SetInput(output) ;
+  writer->SetFileName(outputFileName.c_str()) ;
+  writer->GenerateData() ;
 
   return 0 ;
 }
