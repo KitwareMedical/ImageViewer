@@ -170,6 +170,10 @@ ITKBasicFilters
 )
 
 IF(UNIX)
+  IF (NOT ITK_USE_SYSTEM_STDLIB)
+  LINK_LIBRARIES (
+  -lCio
+  )
   LINK_LIBRARIES (
   -lm
   )
