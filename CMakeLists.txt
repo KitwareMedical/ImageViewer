@@ -46,6 +46,13 @@ SUBDIRS(MIValidation)
 # Build the IBSR Validation applications
 SUBDIRS(IBSRValidation)
 
+# Build the RawImageReadWrite example
+SUBDIRS(RawImageReadWrite)
+
+
+# Build the RawImageReaderViewer example
+SUBDIRS(RawImageReaderViewer)
+
 # Test the conditions for building the Gaussian Filter GUI example
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
