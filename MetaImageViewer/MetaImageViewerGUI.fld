@@ -1,12 +1,12 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0100 
+version 1.0011 
 header_name {.h} 
 code_name {.cpp}
 Function {make_window()} {open
 } {
   Fl_Window tkMain {
     label SimpleMetaImageViewer open selected
-    xywh {435 23 520 520} resizable visible
+    xywh {435 32 520 520} resizable visible
   } {
     Fl_Box tkWin {
       label label
