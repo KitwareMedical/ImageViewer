@@ -44,6 +44,19 @@ puts [ wrap::ListMethods [ $imagePointer ->] ]
 
 puts "--- End of Image Methods ------------------\n"
 
+
+#
+#  Print all the methods available for "Size"
+# 
+puts "These are the methos available for the Size class"
+puts [ wrap::ListMethods $size  ]
+
+puts "--- End of Size Methods ------------------\n"
+
+
+
+
+
 # Use the methods on the image
 #
 # NOTE: The Smart Pointer to the image is dereferenced
@@ -52,6 +65,17 @@ puts "--- End of Image Methods ------------------\n"
 #       [ $imagePointer -> ] 
 #
 [ $imagePointer -> ] GetBufferPointer
+
+
+
+
+#
+#  Typical allocation for an image
+#
+[ $imagePointer -> ] SetLargestPossibleRegion $imageRegion 
+[ $imagePointer -> ] SetRequestedRegion       $imageRegion 
+[ $imagePointer -> ] SetBufferedRegion        $imageRegion 
+[ $imagePointer -> ] Allocate
 
 
 
