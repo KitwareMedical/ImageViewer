@@ -32,7 +32,7 @@ void WatershedSegmentTreeWriter<TScalarType>
 
   typename SegmentTreeType::Pointer input = this->GetInput();
 
-  std::ofstream out(m_FileName.c_str(), ios::trunc);
+  std::ofstream out(m_FileName.c_str(), std::ios::trunc);
   if (!out)
     {
       throw ExceptionObject(__FILE__, __LINE__);

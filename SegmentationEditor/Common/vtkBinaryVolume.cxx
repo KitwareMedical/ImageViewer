@@ -24,6 +24,7 @@ vtkBinaryVolume::vtkBinaryVolume()
   this->paint_radius = 0;
   this->SetNumberOfScalarComponents(1);
   this->SetScalarType(VTK_UNSIGNED_CHAR);
+  this->m_LabelValue = 1;
 }
 
 vtkBinaryVolume* vtkBinaryVolume::New()

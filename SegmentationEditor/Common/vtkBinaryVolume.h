@@ -35,9 +35,14 @@ public:
 
   void SetWithRadius(int x, int y, int z);
   void UnsetWithRadius(int x, int y, int z);
+
+  void SetLabelValue(int v)
+  { this->m_LabelValue = (unsigned char) v; }
+  void SetLabelValue(unsigned char v)
+  { this->m_LabelValue = v; }
   
   void  Set(int x, int y, int z)
-    { *( (unsigned char *)( GetScalarPointer(x, y, z) )) = 1;}
+  {    *( (unsigned char *)( GetScalarPointer(x, y, z) )) = m_LabelValue;}
   void Unset(int x, int y, int z)
     { *( (unsigned char *)( GetScalarPointer(x, y, z) )) = 0;}
   bool   Get(int x, int y, int z)
@@ -60,6 +65,8 @@ public:
   
 protected:
   int paint_radius;
+
+  unsigned char m_LabelValue;
   
   vtkBinaryVolume();
   ~vtkBinaryVolume() {}

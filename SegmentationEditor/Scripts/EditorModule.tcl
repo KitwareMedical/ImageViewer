@@ -55,6 +55,7 @@ set EditorGlobals(help_file) "EditorHelp.txt"
 set EditorGlobals(help_text) "Sorry, could not find the file $EditorGlobals(help_file)"
 set EditorGlobals(binary_volume_tag) "mask"
 
+
 proc ConstructEditorFrame {f} {
     global Options EditorGlobals DataGlobals
 
@@ -256,10 +257,28 @@ proc EditorCreateEditorConsole {f} {
         -width 256 -height 256 
     button $f.renderWindow.hide -text "hide window" -command EditorHideRenderWindow
 
+    checkbutton $f.renderWindow.antialias  -indicatoron t \
+        -text "toggle antialiasing" -command  "EditorToggleAntialiasing"  \
+        -variable EditorGlobals(antialiasing_on) -onvalue 1 -offvalue 0
+    set EditorGlobals(antialiasing_on) 0
+
+    checkbutton $f.renderWindow.antialias2  -indicatoron t \
+        -text "toggle vtk antialiasing" -command  "EditorToggleVTKAntialiasing"  \
+        -variable EditorGlobals(vtk_antialiasing_on) -onvalue 1 -offvalue 0
+    set EditorGlobals(vtk_antialiasing_on) 0
+
+    entry $f.renderWindow.addrenentry -width 5 -justify r
+    set EditorGlobals(addrenentry) $f.renderWindow.addrenentry
+    button $f.renderWindow.addrenentryButton -text "add renderer" -command EditorAddRenderer
+
     set EditorGlobals(render_widget) $f.renderWindow.windowsFrame.r1
 
     pack $f.renderWindow.windowsFrame     -padx 3 -pady 3 -fill both -expand t
     pack $f.renderWindow.windowsFrame.r1  -padx 3 -pady 3 -fill both -expand t
+    pack $f.renderWindow.antialias        -padx 3 -pady 3
+    pack $f.renderWindow.antialias2        -padx 3 -pady 3
+    pack $f.renderWindow.addrenentry      -padx 3 -pady 3
+    pack $f.renderWindow.addrenentryButton -pady 3 
     pack $f.renderWindow.hide             -padx 3 -pady 3
 
     # Set up the viewer windows.
@@ -412,17 +431,23 @@ proc EditorCreateEditorConsole {f} {
     # Some uncategorized buttons
     frame  $f.console.miscFrame
 
-    button $f.console.miscFrame.render  -text "3D Render" -command EditorRenderIsoSurface
+    button $f.console.miscFrame.render  -text "3D Render" -command EditorToggleAntialiasing ;#EditorRenderIsoSurface
     scale $f.console.miscFrame.paintRadius  -from 0.0 -to 20.0 -resolution 1 \
         -orient horizontal  -variable EditorGlobals(paintRadiusValue) \
         -command EditorSetPaintRadius -label "paint radius"
+    entry $f.console.miscFrame.paintValue -width 4 -justify r
+    set EditorGlobals(paintColorEntry) $f.console.miscFrame.paintValue
+    button $f.console.miscFrame.changePaintValue -text "change paint value" \
+        -command EditorChangePaintValue
     button $f.console.miscFrame.displayInfo -text "show help" -command EditorDisplayInfo
     button $f.console.miscFrame.hideInfo -text "hide help"  -command EditorHideInfo
 
     pack $f.console.miscFrame.render $f.console.miscFrame.displayInfo \
-        $f.console.miscFrame.hideInfo $f.console.miscFrame.paintRadius \
+        $f.console.miscFrame.hideInfo $f.console.miscFrame.paintRadius $f.console.miscFrame.paintValue $f.console.miscFrame.changePaintValue \
         -side top -pady 3
 
+    
+    $f.console.miscFrame.paintValue insert 0 1
 
     # File operation buttons (save, load, clear, quit, etc)
     frame $f.console.fileops
@@ -641,7 +666,7 @@ proc EditorStartEditor {} {
     $EditorGlobals(viewerSeg) SetInput [$EditorGlobals(mapToRGBA) GetOutput]
     $EditorGlobals(viewerBin) SetInput [$EditorGlobals(colorMapBin) GetOutput]
     $EditorGlobals(overlayMapper) SetInput [$EditorGlobals(colorMapBin) GetOutput]
-    $EditorGlobals(map) SetInput [$EditorGlobals(marcher) GetOutput]
+    $EditorGlobals(map1) SetInput [$EditorGlobals(marcher1) GetOutput]
     $EditorGlobals(renWin) AddRenderer $EditorGlobals(ren1)
     
     #
@@ -687,6 +712,7 @@ proc EditorStartEditor {} {
     $EditorGlobals(binaryVolume) AllocateScalars
 
     $EditorGlobals(resamplerBin) SetInput $EditorGlobals(binaryVolume)
+    $EditorGlobals(antialias_caster) SetInput $EditorGlobals(binaryVolume)
     
     #
     # Initialize bounding boxes
@@ -728,6 +754,7 @@ proc EditorRecoverFailedEditor {} {
     wm withdraw $EditorGlobals(render_window)
 }
 
+
 proc EditorInitialize {} {
     global EditorGlobals Options
 
@@ -751,6 +778,7 @@ proc EditorInitialize {} {
     vtkBinaryVolume binaryVolume
     binaryVolume SetExtent 0 1 0 1 0 1
     binaryVolume SetUpdateExtent 0 1 0 1 0 1
+    binaryVolume SetLabelValue 1
     set EditorGlobals(binaryVolume) binaryVolume
     
 
@@ -798,9 +826,13 @@ proc EditorInitialize {} {
     # Lookup table for the binary volume
     #
     vtkLookupTable lutBin
-    lutBin SetNumberOfTableValues 3
-    lutBin SetTableValue 2 0.0 1.0 1.0 0.2
+    lutBin SetNumberOfTableValues 256
+    lutBin SetTableRange 0 255
     lutBin SetTableValue 0 0.0 0.0 0.0 0.0
+    lutBin SetTableValue 1 1.0 0.0 0.0 0.3
+    lutBin SetTableValue 2 0.0 1.0 0.0 0.3
+    lutBin SetTableValue 3 0.0 0.0 1.0 0.3
+
     set EditorGlobals(lutBin) lutBin
 
     #
@@ -869,8 +901,8 @@ proc EditorInitialize {} {
     # Viewer for binary data
     #
     set EditorGlobals(viewerBin) [$EditorGlobals(binary_widget) GetImageViewer]
-    $EditorGlobals(viewerBin) SetColorWindow 1.0
-    $EditorGlobals(viewerBin) SetColorLevel 1.0
+    $EditorGlobals(viewerBin) SetColorWindow 255.0
+    $EditorGlobals(viewerBin) SetColorLevel 127.0
     $EditorGlobals(viewerBin) SetZSlice 0
  #   $EditorGlobals(viewerBin) SetInput [colorMapBin GetOutput]
 
@@ -913,33 +945,6 @@ proc EditorInitialize {} {
     set EditorGlobals(logic) logic
 
 
-    #### Set up the surface renderer
-
-    #
-    # Marching cubes algorithm
-    #
-    vtkMarchingCubes marcher
-    marcher SetNumberOfContours 1
-    marcher SetValue 0 1.0
-    marcher SetInput binaryVolume
-    set EditorGlobals(marcher) marcher
-    
-    #
-    # Polygon mapper for surface rendering
-    #
-    vtkOpenGLPolyDataMapper map
-    map ScalarVisibilityOff
-    map ImmediateModeRenderingOn
-#    map SetInput [marcher GetOutput]
-    set EditorGlobals(map) map
-
-    #
-    # Create a 3D renderer
-    #
-    vtkRenderer ren1
-    ren1 SetViewport 0 0 1 1
-    set EditorGlobals(ren1) ren1
-
     #
     # Create a render window
     #
@@ -948,13 +953,37 @@ proc EditorInitialize {} {
     $EditorGlobals(renWin) SetSize 256 256
     ExitRegisterViewer $EditorGlobals(renWin)
 
+   #
+    # Create a 3D renderer
     #
-    # Create an actor for the surface
+    vtkRenderer ren1
+    ren1 SetViewport 0 0 1 1
+    set EditorGlobals(ren1) ren1
+
+
+
+    #### Set up the surface renderer
+    AddSurfaceRenderer 1 0.5 0.5 0.0;
+
     #
-    vtkActor blob
-    blob SetMapper map
-    eval [blob GetProperty] SetColor 1.0 0.2 1.0
-    ren1 AddActor blob
+    # Alternative vtk antialiasing filter
+    #
+    vtkWindowedSincPolyDataFilter EditorWindowedSincFilter
+    EditorWindowedSincFilter SetNumberOfIterations 20
+    set EditorGlobals(vtk_antialiaser) EditorWindowedSincFilter 
+ 
+
+    #
+    # Set up an antialiasing filter for the surface
+    #
+    vtkImageCast EditorAntialiasCaster
+    EditorAntialiasCaster SetOutputScalarTypeToFloat
+    set EditorGlobals(antialias_caster) EditorAntialiasCaster
+
+    vtkITKAntiAliasBinaryImageFilter EditorAntialiaser
+    EditorAntialiaser SetMaximumRMSError 0.02
+    EditorAntialiaser SetMaximumIterations 20
+    set EditorGlobals(antialiaser) EditorAntialiaser
 }
 
 proc ActivateEditorModule {} {
@@ -1066,12 +1095,17 @@ proc EditorHideRenderWindow { } {
 }
 
 proc EditorRenderIsoSurface { } {
-    global EditorGlobals
+#    global EditorGlobals
 
-    wm deiconify $EditorGlobals(render_window)
+#    wm deiconify $EditorGlobals(render_window)
+
+    #render the antialiased volume
+#    EditorToggleAntialiasing
+
+    #render the rest 
+
     
-    $EditorGlobals(renWin) Render
-    $EditorGlobals(ren1)   ResetCamera
+    
 }
 
 proc EditorAddSelectedRegion { } {
@@ -1240,4 +1274,155 @@ proc EditorReadBinaryVolume {} {
 
     $EditorGlobals(viewerBin) Render
     $EditorGlobals(viewerCol) Render
+}
+
+
+proc EditorToggleAntialiasing {} {
+    global EditorGlobals
+
+    ConstructProgressWindow antialiasProgressWindow
+
+    wm withdraw $EditorGlobals(render_window)
+
+    if {$EditorGlobals(antialiasing_on) == 1} {
+        if { $EditorGlobals(vtk_antialiasing_on) == 1 } {
+            $EditorGlobals(thresher1) SetInput $EditorGlobals(binaryVolume)
+            $EditorGlobals(marcher1) SetInput [$EditorGlobals(thresher1) GetOutput]
+            $EditorGlobals(vtk_antialiaser) SetInput [$EditorGlobals(marcher1) GetOutput]
+            
+            $EditorGlobals(vtk_antialiaser) SetProgressMethod \
+                "ProgressProc $EditorGlobals(vtk_antialiaser) .antialiasProgressWindow"
+
+            $EditorGlobals(map1) SetInput [$EditorGlobals(vtk_antialiaser) GetOutput]
+            [$EditorGlobals(blob1) GetProperty] SetInterpolationToFlat
+
+        } else {
+            $EditorGlobals(map1) SetInput [$EditorGlobals(marcher1) GetOutput]
+            $EditorGlobals(thresher1) SetInput $EditorGlobals(binaryVolume)
+            $EditorGlobals(antialias_caster) SetInput [$EditorGlobals(thresher1) GetOutput]
+            $EditorGlobals(antialias_caster) SetProgressMethod \
+                "ProgressProc $EditorGlobals(antialias_caster) .antialiasProgressWindow"
+            $EditorGlobals(antialias_caster) Update
+            $EditorGlobals(antialiaser) SetInput [$EditorGlobals(antialias_caster) GetOutput]
+            $EditorGlobals(antialiaser) SetProgressMethod \
+               "ProgressProc $EditorGlobals(antialiaser) .antialiasProgressWindow"
+            $EditorGlobals(antialiaser) Update
+        
+            $EditorGlobals(marcher1) SetInput [$EditorGlobals(antialiaser) GetOutput]
+            $EditorGlobals(marcher1) SetProgressMethod \
+                "ProgressProc $EditorGlobals(marcher1) .antialiasProgressWindow"
+            [$EditorGlobals(blob1) GetProperty] SetInterpolationToGouraud
+
+        }
+    } else {
+        $EditorGlobals(thresher1) SetInput $EditorGlobals(binaryVolume)
+        
+        $EditorGlobals(marcher1) SetInput [$EditorGlobals(thresher1) GetOutput]
+        $EditorGlobals(map1) SetInput [$EditorGlobals(marcher1) GetOutput]
+        $EditorGlobals(marcher1) SetProgressMethod \
+            "ProgressProc $EditorGlobals(marcher1) .antialiasProgressWindow"
+    }
+
+    $EditorGlobals(renWin) Render
+
+    $EditorGlobals(antialias_caster) SetProgressMethod " "
+    $EditorGlobals(antialiaser) SetProgressMethod " "
+    $EditorGlobals(marcher1) SetProgressMethod " "
+    $EditorGlobals(vtk_antialiaser) SetProgressMethod " "
+
+    destroy .antialiasProgressWindow
+
+    wm deiconify $EditorGlobals(render_window)
+}
+
+proc AddSurfaceRenderer {isovalue r g b} {
+    global EditorGlobals
+    #### Set up the surface renderer
+    
+    set marchername "marcher"
+    set mapname "map"
+    set threshname "thresher"
+    set blobname "blob"
+    append blobname $isovalue
+    append marchername $isovalue
+    append mapname $isovalue
+    append threshname $isovalue
+    
+
+    #
+    # Threshold filter to remove other isovalues
+    #
+    vtkImageThreshold $threshname
+    $threshname ThresholdBetween [expr $isovalue - 0.9] [expr $isovalue + 0.9]
+#    $threshname SetReplaceOut 1
+    $threshname SetOutValue 0.0
+ #   $threshname SetReplaceIn 1
+ #   $threshname SetInValue $isovalue
+    set EditorGlobals($threshname) $threshname
+    
+    $threshname SetInput binaryVolume
+
+    #
+    # Marching cubes algorithm
+    #
+    vtkMarchingCubes $marchername
+    $marchername SetNumberOfContours 1
+    $marchername SetValue 0 $isovalue
+   # $marchername SetInput binaryVolume
+    set EditorGlobals($marchername) $marchername
+    
+    $marchername SetInput [$threshname GetOutput]
+
+    #
+    # Polygon mapper for surface rendering
+    #
+    vtkOpenGLPolyDataMapper $mapname
+    $mapname ScalarVisibilityOff
+    $mapname ImmediateModeRenderingOn
+#    $mapname SetInput [$marchername GetOutput]
+    set EditorGlobals($mapname) $mapname
+
+ 
+    #
+    # Create an actor for the surface
+    #
+    vtkActor $blobname
+    $blobname SetMapper $mapname
+    eval [$blobname GetProperty] SetColor $r $g $b
+    $EditorGlobals(ren1) AddActor $blobname
+    set EditorGlobals($blobname) $blobname
+
+}
+
+proc EditorAddRenderer {} {
+    global EditorGlobals
+
+    set isovalue [$EditorGlobals(addrenentry) get]
+    set r  0.5; #[expr rand(1.0)]
+    set g  0.2; #[expr rand(1.0)]
+    set b  0.3; #[expr rand(1.0)]
+    AddSurfaceRenderer $isovalue $r $g $b
+    
+    set marchername "marcher"
+    set mapname "map"
+    set threshname "thresher"
+    append marchername $isovalue
+    append mapname $isovalue
+    append threshname $isovalue
+    
+    $EditorGlobals($threshname) SetInput $EditorGlobals(binaryVolume)
+    $EditorGlobals($marchername) SetInput [$EditorGlobals($threshname) GetOutput]
+    $EditorGlobals($mapname) SetInput [$EditorGlobals($marchername) GetOutput]
+    
+    EditorToggleAntialiasing
+}
+
+proc EditorToggleVTKAntialiasing {} {
+    global EditorGlobals
+    EditorToggleAntialiasing
+}
+
+proc EditorChangePaintValue {} {
+    global EditorGlobals
+    $EditorGlobals(binaryVolume) SetLabelValue [$EditorGlobals(paintColorEntry) get]    
 }
