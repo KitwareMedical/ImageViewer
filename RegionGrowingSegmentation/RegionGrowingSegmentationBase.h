@@ -46,7 +46,7 @@ public:
   enum { ImageDimension = 3 };
 
   /** Pixel type used for reading the input image */
-  typedef   unsigned char                         InputPixelType;
+  typedef   unsigned short                         InputPixelType;
 
   /** Pixel type to be used internally */
   typedef   float                                 InternalPixelType;
