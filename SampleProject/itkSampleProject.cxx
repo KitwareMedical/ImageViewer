@@ -40,16 +40,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 // This is a sample project that can be built outside of the Insight source
-// tree.  You can use this project as a model for how to build project that
+// tree.  You can use this project as a model for how to build a project that
 // "uses" Insight (instead of a project that is within Insight).
 //
 // To build this project on Windows:
 //     1) Copy the contents of this directory somewhere outside the Insight
 //             source tree
 //     2) Run a copy of CMakeSetup
-//     3) Inform CMakeSetup where this project's source tree and build tree
+//     3) Locate this project's source tree and build tree
 //     4) Build the project files
 //     5) Edit the cache values for ITK_SOURCE_DIR and ITK_BINARY_DIR
+//
+// Unix directions coming soon.
 //
 
 
