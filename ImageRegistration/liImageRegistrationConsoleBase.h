@@ -18,14 +18,20 @@
 #define liIMAGEREGISTRATIONCONSOLEBASE
 
 #include <itkImage.h>
-#include <itkImageAdaptor.h>
-#include <itkFileIOToImageFilter.h>
+#include <itkImageFileReader.h>
 #include <itkWriteMetaImage.h>
-#include <itkImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration.h>
-#include <itkImageToImageAffinePatternIntensityRegularStepGradientDescentRegistration.h>
-#include <itkImageToImageAffineNormalizedCorrelationRegularStepGradientDescentRegistration.h>
-#include <itkImageToImageAffineMutualInformationGradientDescentRegistration.h>
-#include <itkPixelAccessor.h>
+#include <itkResampleImageFilter.h>
+#include <itkImageRegistrationMethod.h>
+
+#include <itkMutualInformationImageToImageMetric.h>
+#include <itkMeanSquaresImageToImageMetric.h>
+#include <itkNormalizedCorrelationImageToImageMetric.h>
+#include <itkPatternIntensityImageToImageMetric.h>
+
+#include <itkGradientDescentOptimizer.h>
+#include <itkRegularStepGradientDescentOptimizer.h>
+#include <itkConjugateGradientOptimizer.h>
+
 
 /**
  * \brief ImageRegistrationConsoleBase class that instantiate
@@ -36,126 +42,120 @@ class liImageRegistrationConsoleBase
 {
 public:
 
-  enum { ImageDimension = 3 };
 
   typedef enum {
     mutualInformation,
     normalizedCorrelation,
     patternIntensity,
     meanSquares
-  } RegistrationMethodType;
+  } MetricIdentifier;
   
-  /** Type of the image as it is read from a file */
-  typedef   unsigned short     InputPixelType;
+ typedef enum {
+    gradientDescent,
+    regularStepGradientDescent,
+    conjugateGradient
+  } OptimizerIdentifier;
+
+  /** Dimension of the images to be registered */ 
+  enum { ImageDimension = 3 };
 
   /** Pixel type to be used internally during registration */
-  typedef   float              PixelType;
+  typedef   unsigned char                         PixelType;
   
-  /** Type of the image to be read from the file */
-  typedef   itk::Image<InputPixelType,ImageDimension> InputImageType;
+  /** Type of the Moving image */
+  typedef   itk::Image<PixelType,ImageDimension>  MovingImageType;
 
-  /** Data Accessor to convert image pixels from 
-   * the type in the file to the internal type */
-  typedef   itk::PixelAccessor<InputPixelType,PixelType> PixelAccessorType;                                
-  /** ImageAdaptor that will simulate that the input image
-   * is an image with pixels of internal type */
-  typedef   itk::ImageAdaptor<InputImageType,PixelAccessorType>  TargetType;
-
-  /** Type of the Reference image */
-  typedef   itk::Image<PixelType,ImageDimension>  ReferenceType;
-
-  /** Type of the Mapped Reference image */
-  typedef   itk::Image<PixelType,ImageDimension>  MappedReferenceType;
+  /** Type of the Fixed image */
+  typedef   itk::Image<PixelType,ImageDimension>  FixedImageType;
  
   /**  Registration methods to use */
-  typedef   itk::ImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration<
-                                                ReferenceType,
-                                                TargetType> 
-                                                  MeanSquaresRegistrationMethodType;
+  typedef   itk::ImageRegistrationMethod< MovingImageType,
+                                          FixedImageType > 
+                                                  ImageRegistrationMethodType;
 
-  typedef   itk::ImageToImageAffineNormalizedCorrelationRegularStepGradientDescentRegistration<
-                                                ReferenceType,
-                                                TargetType> 
-                                                  NormalizedCorrelationRegistrationMethodType;
+  typedef   itk::ImageFileReader< FixedImageType >    FixedImageReaderType;
 
-  typedef   itk::ImageToImageAffinePatternIntensityRegularStepGradientDescentRegistration<
-                                                ReferenceType,
-                                                TargetType> 
-                                                  PatternIntensityRegistrationMethodType;
+  typedef   itk::ImageFileReader< MovingImageType >   MovingImageReaderType;
 
-  typedef   itk::ImageToImageAffineMutualInformationGradientDescentRegistration<
-                                                ReferenceType,
-                                                TargetType> 
-                                                  MutualInformationRegistrationMethodType;
+  typedef   itk::Transform< double,
+                            ImageDimension,
+                            ImageDimension >          TransformBaseType;
 
-  typedef   itk::FileIOToImageFilter< 
-                            InputImageType >             ImageReaderType;
-
-  typedef   itk::Point< double, ImageDimension * (ImageDimension + 1) >   TransformParametersType;
-
-  typedef   itk::AffineTransform< 
-                                      double,
-                                      ImageDimension,
-                                      TransformParametersType 
-                                      >                TransformType;
-
-  typedef   itk::ImageMapper< TargetType, 
-                              TransformType > TargetMapperType;
+  typedef   TransformBaseType::ParametersType         TransformParametersType;
 
 
-  typedef   itk::ImageMapper< ReferenceType, 
-                              TransformType > ReferenceMapperType;
+  typedef   itk::AffineTransform< double,
+                                  ImageDimension >    TransformType;
 
 
-  typedef   itk::ImageRegionIteratorWithIndex< 
-                                ReferenceType >    ReferenceIteratorType;
+  typedef   itk::MutualInformationImageToImageMetric< 
+                                  FixedImageType,
+                                  MovingImageType 
+                                         > MutualInformationMetricType;
 
+  typedef   itk::MeanSquaresImageToImageMetric< 
+                                  FixedImageType,
+                                  MovingImageType 
+                                         > MeanSquaresMetricType;
 
-  typedef  TransformType::InputPointType          PointType;
+  typedef   itk::NormalizedCorrelationImageToImageMetric< 
+                                  FixedImageType,
+                                  MovingImageType 
+                                         > NormalizedCorrelationImageMetricType;
 
+  typedef   itk::PatternIntensityImageToImageMetric< 
+                                  FixedImageType,
+                                  MovingImageType 
+                                         > PatternIntensityImageMetricType;
 
-  typedef  TransformType::ParametersType      ParametersType;
+  typedef   itk::ResampleImageFilter< MovingImageType,
+                                      MovingImageType,
+                                      TransformType 
+                                                  >  ResamplingFilterType;
 
 
 public:
   liImageRegistrationConsoleBase();
   virtual ~liImageRegistrationConsoleBase();
-  virtual void Load(void)=0;
-  virtual void Load(const char * filename);
+
+  virtual void LoadFixedImage(void)=0;
+  virtual void LoadFixedImage(const char * filename);
+  virtual void LoadMovingImage(void)=0;
+  virtual void LoadMovingImage(const char * filename);
+
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
+
   virtual void Execute(void);
   virtual void Stop(void);
-  virtual void GenerateReference(void);
-  virtual void GenerateMappedReference(void);
+
+  virtual void GenerateMovingImage(void);
+  virtual void GenerateMappedMovingImage(void);
+
   virtual void UpdateTransformParameters(void);
-  virtual void SelectRegistrationMethod( RegistrationMethodType method );
+
+  virtual void SelectMetric( MetricIdentifier metricType );
+  virtual void SelectOptimizer( OptimizerIdentifier optimizerType );
 
 protected:
-  ImageReaderType::Pointer m_Reader;
 
-  MeanSquaresRegistrationMethodType::Pointer m_MeansSquaresMethod;
+  FixedImageReaderType::Pointer           m_FixedImageReader;
+
+  MovingImageReaderType::Pointer          m_MovingImageReader;
+
+  ResamplingFilterType::Pointer           m_ResamplingInputMovingImageFilter;
+
+  ResamplingFilterType::Pointer           m_ResamplingMovingImageFilter;
+
+  ImageRegistrationMethodType::Pointer    m_ImageRegistrationMethod;
   
-  MutualInformationRegistrationMethodType::Pointer m_MutualInformationMethod;
-
-  PatternIntensityRegistrationMethodType::Pointer  m_PatternIntensityMethod;
+  TransformType::Pointer                  m_Transform;
   
-  NormalizedCorrelationRegistrationMethodType::Pointer
-                                               m_NormalizedCorrelationMethod;
-  
-  TargetType::Pointer                             m_TargetImage;
+  bool                                    m_ImageIsLoaded;
 
-  ReferenceType::Pointer                          m_ReferenceImage;
+  MetricIdentifier                        m_SelectedMetric;
 
-  MappedReferenceType::Pointer                    m_MappedReferenceImage;
-
-  TargetMapperType::Pointer                       m_TargetMapper;
-
-  ReferenceMapperType::Pointer                    m_ReferenceMapper;
-
-  bool                                            m_ImageLoaded;
-
-  RegistrationMethodType                          m_SelectedMethod;
+  OptimizerIdentifier                     m_SelectedOptimizer;
 
 };
 

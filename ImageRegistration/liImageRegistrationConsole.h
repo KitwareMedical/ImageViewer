@@ -29,35 +29,46 @@ public:
   typedef fltk::ImageViewer< PixelType,
                              OverlayPixelType > ImageViewerType;
 
-  typedef fltk::ImageViewer< InputPixelType,     
-                             OverlayPixelType > InputImageViewerType;
 
 public:
+
   liImageRegistrationConsole();
   virtual ~liImageRegistrationConsole();
+
   virtual void Show(void);
   virtual void Hide(void);
-  virtual void Load(void);
+
+  virtual void LoadFixedImage(void);
+  virtual void LoadMovingImage(void);
+
   virtual void Quit(void);
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
-  virtual void ShowTarget(void);
-  virtual void ShowReference(void);
-  virtual void ShowMappedReference(void);
-  virtual void ShowAbout(void);
+
+  virtual void ShowFixedImage(void);
+  virtual void ShowMovingImage(void);
+  virtual void ShowInputMovingImage(void);
+  virtual void ShowMappedMovingImage(void);
+
   virtual void Execute(void);
   virtual void UpdateTransformParameters(void);
-  virtual void GenerateReference(void);
-  virtual void GenerateMappedReference(void);
+
+  virtual void GenerateMovingImage(void);
+  virtual void GenerateMappedMovingImage(void);
+
 
 private:
 
-  InputImageViewerType      * m_InputViewer;
-  ImageViewerType           * m_ReferenceViewer;
-  ImageViewerType           * m_MappedReferenceViewer;
+  ImageViewerType            m_InputMovingImageViewer;
+  ImageViewerType            m_MovingImageViewer;
+  ImageViewerType            m_FixedImageViewer;
+  ImageViewerType            m_MappedMovingImageViewer;
 
 };
 
 
 
 #endif
+
+
+

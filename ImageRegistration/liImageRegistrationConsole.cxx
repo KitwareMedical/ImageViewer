@@ -35,19 +35,18 @@ liImageRegistrationConsole
   ObjectFactoryBase * factoryBase = static_cast<ObjectFactoryBase *>( factory );
   ObjectFactoryBase::RegisterFactory( factoryBase );  
 
-  m_InputViewer           = new InputImageViewerType;
-  m_ReferenceViewer       = new ImageViewerType;
-  m_MappedReferenceViewer = new ImageViewerType;
+  m_MovingImageViewer.SetLabel( "Moving Image" );
+  m_FixedImageViewer.SetLabel( "Fixed Image" );
+  m_InputMovingImageViewer.SetLabel( "Input Moving Image" );
+  m_MappedMovingImageViewer.SetLabel( "Mapped Moving Image" );
 
-  m_InputViewer->SetLabel( "Target Image" );
-  m_ReferenceViewer->SetLabel( "Reference Image" );
-  m_MappedReferenceViewer->SetLabel( "Mapped Reference Image" );
-
-  m_Reader->AddObserver( itk::StartEvent(), targetButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::EndEvent(), targetButton->GetRedrawCommand().GetPointer() );
-
-  m_Reader->AddObserver( itk::ModifiedEvent(), targetButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), targetButton->GetRedrawCommand().GetPointer() );
+  m_FixedImageReader->AddObserver( itk::StartEvent(),    fixedImageButton->GetRedrawCommand().GetPointer() );
+  m_FixedImageReader->AddObserver( itk::EndEvent(),      fixedImageButton->GetRedrawCommand().GetPointer() );
+  m_FixedImageReader->AddObserver( itk::ModifiedEvent(), fixedImageButton->GetRedrawCommand().GetPointer() );
+  
+  m_MovingImageReader->AddObserver( itk::StartEvent(),    movingImageButton->GetRedrawCommand().GetPointer() );
+  m_MovingImageReader->AddObserver( itk::EndEvent(),      movingImageButton->GetRedrawCommand().GetPointer() );
+  m_MovingImageReader->AddObserver( itk::ModifiedEvent(), movingImageButton->GetRedrawCommand().GetPointer() );
   
   this->ShowStatus("Let's start by loading an image...");
 
@@ -65,25 +64,6 @@ liImageRegistrationConsole
 ::~liImageRegistrationConsole()
 {
 
-  if( m_InputViewer ) 
-  {
-    delete m_InputViewer;
-    m_InputViewer = 0;
-  }
-
-  if( m_ReferenceViewer ) 
-  {
-    delete m_ReferenceViewer;
-    m_ReferenceViewer = 0;
-  }
-
-  if( m_MappedReferenceViewer ) 
-  {
-    delete m_MappedReferenceViewer;
-    m_MappedReferenceViewer = 0;
-  }
-
-
 }
 
 
@@ -91,25 +71,25 @@ liImageRegistrationConsole
  
 /************************************
  *
- *  Load
+ *  Load Moving Image
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::Load( void )
+::LoadMovingImage( void )
 {
 
-  const char * filename = fl_file_chooser("Image filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Moving Image filename","*.mh[da]","");
   if( !filename )
   {
     return;
   }
 
-  this->ShowStatus("Loading image file...");
+  this->ShowStatus("Loading fixed image file...");
   
   try 
   {
-    liImageRegistrationConsoleBase::Load( filename );
+    liImageRegistrationConsoleBase::LoadMovingImage( filename );
   }
   catch( ... ) 
   {
@@ -119,7 +99,45 @@ liImageRegistrationConsole
   }
 
 
-  this->ShowStatus("File Loaded");
+  this->ShowStatus("Moving Image Loaded");
+
+  controlsGroup->activate();
+
+}
+
+
+ 
+/************************************
+ *
+ *  Load Fixed Image
+ *
+ ***********************************/
+void
+liImageRegistrationConsole
+::LoadFixedImage( void )
+{
+
+  const char * filename = fl_file_chooser("Fixed Image filename","*.mh[da]","");
+  if( !filename )
+  {
+    return;
+  }
+
+  this->ShowStatus("Loading fixed image file...");
+  
+  try 
+  {
+    liImageRegistrationConsoleBase::LoadFixedImage( filename );
+  }
+  catch( ... ) 
+  {
+    this->ShowStatus("Problems reading file format");
+    controlsGroup->deactivate();
+    return;
+  }
+
+
+  this->ShowStatus("Fixed Image Loaded");
 
   controlsGroup->activate();
 
@@ -151,12 +169,11 @@ void
 liImageRegistrationConsole
 ::Hide( void )
 {
-
   consoleWindow->hide();
-  m_InputViewer->Hide();
-  m_ReferenceViewer->Hide();
-  m_MappedReferenceViewer->Hide();
-  aboutWindow->hide();
+  m_FixedImageViewer.Hide();
+  m_MovingImageViewer.Hide();
+  m_InputMovingImageViewer.Hide();
+  m_MappedMovingImageViewer.Hide();
 }
 
 
@@ -218,46 +235,30 @@ liImageRegistrationConsole
  
 /************************************
  *
- *  Show Target Image
+ *  Show Fixed Image
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::ShowTarget( void )
+::ShowFixedImage( void )
 {
-
-  if( !(m_ImageLoaded ) )
-  {
-    ShowStatus("Please load an image first");
-    return;
-  }
-
-  m_InputViewer->SetImage( m_Reader->GetOutput() );  
-  m_InputViewer->Show();
-
+  m_FixedImageViewer.SetImage( m_FixedImageReader->GetOutput() );  
+  m_FixedImageViewer.Show();
 }
 
 
  
 /************************************
  *
- *  Show Reference Image
+ *  Show Input Moving Image
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::ShowReference( void )
+::ShowInputMovingImage( void )
 {
-
-  if( !(m_ImageLoaded ) )
-  {
-    ShowStatus("Please load an image first");
-    return;
-  }
-
-  m_ReferenceViewer->SetImage( m_ReferenceImage );  
-  m_ReferenceViewer->Show();
-
+  m_InputMovingImageViewer.SetImage( m_ResamplingMovingImageFilter->GetOutput() );  
+  m_InputMovingImageViewer.Show();
 }
 
 
@@ -265,42 +266,33 @@ liImageRegistrationConsole
  
 /************************************
  *
- *  Show Mapped Reference Image
+ *  Show Moving Image
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::ShowMappedReference( void )
+::ShowMovingImage( void )
 {
-
-  if( !(m_ImageLoaded ) )
-  {
-    ShowStatus("Please load an image first");
-    return;
-  }
-
-  m_MappedReferenceViewer->SetImage( m_MappedReferenceImage );
-  m_MappedReferenceViewer->Show();
-
+  m_MovingImageViewer.SetImage( m_ResamplingMovingImageFilter->GetOutput() );  
+  m_MovingImageViewer.Show();
 }
-
 
 
 
  
 /************************************
  *
- *  Show About Window
+ *  Show Mapped Moving Image
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::ShowAbout( void )
+::ShowMappedMovingImage( void )
 {
-
-  aboutWindow->show();
-
+  m_MappedMovingImageViewer.SetImage( m_ResamplingMovingImageFilter->GetOutput() );
+  m_MappedMovingImageViewer.Show();
 }
+
 
 
 
@@ -318,17 +310,9 @@ liImageRegistrationConsole
 ::Execute( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
-  {
-    this->ShowStatus("Please load an image first");
-    return;
-  }
-
-
-  this->ShowStatus("Registering Reference against Target ...");
+  this->ShowStatus("Registering Moving Image against Fixed Image ...");
 
   liImageRegistrationConsoleBase::Execute();
-
 
   this->ShowStatus("Registration done ");
   
@@ -377,7 +361,10 @@ liImageRegistrationConsole
   std::cout << "Matrix = " << matrix << std::endl;
   std::cout << "Offset = " << offset << std::endl;
 
-  ParametersType transformationParameters;
+  const unsigned long numberOfParamenters = 
+                             affineTransform->GetNumberOfParameters();
+
+  TransformParametersType  transformationParameters( numberOfParamenters );
 
   unsigned int counter = 0;
 
@@ -394,8 +381,6 @@ liImageRegistrationConsole
     transformationParameters[counter++] = offset[k];
   }
 
-  m_TargetMapper->GetTransform()->SetParameters(
-                                              transformationParameters);
 
 
 }
@@ -406,25 +391,25 @@ liImageRegistrationConsole
  
 /************************************
  *
- *  Generate Reference Image
+ *  Generate Moving Image
  *  Modify button colors and then
  *  delegate to base class
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::GenerateReference( void )
+::GenerateMovingImage( void )
 {
   
-  referenceButton->selection_color( FL_RED );
-  referenceButton->value( 1 );
-  referenceButton->redraw();
+  movingImageButton->selection_color( FL_RED );
+  movingImageButton->value( 1 );
+  movingImageButton->redraw();
   
-  liImageRegistrationConsoleBase::GenerateReference();
+  liImageRegistrationConsoleBase::GenerateMovingImage();
   
-  referenceButton->selection_color( FL_GREEN );
-  referenceButton->value( 1 );
-  referenceButton->redraw();
+  movingImageButton->selection_color( FL_GREEN );
+  movingImageButton->value( 1 );
+  movingImageButton->redraw();
 
 }
 
@@ -434,25 +419,25 @@ liImageRegistrationConsole
  
 /************************************
  *
- *  Generate Mapped Reference Image
+ *  Generate Mapped Moving Image
  *  Modify button colors and then
  *  delegate to base class
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::GenerateMappedReference( void )
+::GenerateMappedMovingImage( void )
 {
   
-  mappedReferenceButton->selection_color( FL_RED );
-  mappedReferenceButton->value( 1 );
-  mappedReferenceButton->redraw();
+  mappedMovingImageButton->selection_color( FL_RED );
+  mappedMovingImageButton->value( 1 );
+  mappedMovingImageButton->redraw();
   
-  liImageRegistrationConsoleBase::GenerateMappedReference();
+  liImageRegistrationConsoleBase::GenerateMappedMovingImage();
   
-  mappedReferenceButton->selection_color( FL_GREEN );
-  mappedReferenceButton->value( 1 );
-  mappedReferenceButton->redraw();
+  mappedMovingImageButton->selection_color( FL_GREEN );
+  mappedMovingImageButton->value( 1 );
+  mappedMovingImageButton->redraw();
 
 }
 

@@ -40,12 +40,15 @@ liImageRegistrationConsoleGUI.fl
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
+ITKNumerics
+VXLNumerics
 ITKBasicFilters 
 MetaImageIO
 IView
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
+${GLU_LIBRARY}
 )
 
 IF(WIN32)

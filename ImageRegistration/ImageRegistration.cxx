@@ -21,16 +21,20 @@
 int main()
 {
 
-  liImageRegistrationConsole * console = new liImageRegistrationConsole();
+  try 
+    {
+    liImageRegistrationConsole * console = new liImageRegistrationConsole();
+    console->Show();
+    Fl::run();
+    delete console;
+    }
+  catch(...)
+    {
+    std::cerr << "Exception caught in main" << std::endl;
+    }
 
-  console->Show();
-  console->ShowAbout();
-
-  Fl::run();
-
-  delete console;
-  
   return 0;
+
 }
 
 
