@@ -8,8 +8,6 @@ ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${InsightApplications_BINARY_DIR}/Auxiliary/VtkFltk
 ${ThresholdSegmentationLevelSet_SOURCE_DIR}
 ${ThresholdSegmentationLevelSet_BINARY_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
 )
 
 
@@ -36,9 +34,6 @@ vtkImaging
 vtkIO
 vtkFiltering
 vtkCommon
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
 )
 
 

@@ -39,51 +39,21 @@ ABSTRACT
 
 ADD_LIBRARY ( vtkVTKITKCommon ${VTKITKCommon_SRCS} )
 
-# Link in with ITK
+# Configure Tcl wrappers.
+VTK_WRAP_TCL2(vtkVTKITKCommonTCL VTKITKCommonTCL_SRCS ${VTKITKCommon_SRCS})
+ADD_LIBRARY ( vtkVTKITKCommonTCL ${VTKITKCommonTCL_SRCS} )
+TARGET_LINK_LIBRARIES(vtkVTKITKCommonTCL vtkFilteringTCL vtkCommonTCL)
 
-# if we are wrapping into Tcl then add the library and extra 
-# source files
-#
-  VTK_WRAP_TCL(vtkVTKITKCommonTCL VTKITKCommonTCL_SRCS ${VTKITKCommon_SRCS})
-  ADD_LIBRARY ( vtkVTKITKCommonTCL ${VTKITKCommonTCL_SRCS} )
-  TARGET_LINK_LIBRARIES (vtkVTKITKCommonTCL 
-                         vtkFilteringTCL 
-                         vtkCommonTCL 
-                         ${TCL_LIBRARY})
-# if we are wrapping into Python then add the library and extra 
-# source files
-#
+# Configure Python wrappers.
 IF (VTK_WRAP_PYTHON)
-  VTK_WRAP_PYTHON(vtkVTKITKCommonPython VTKITKCommonPython_SRCS ${VTKITKCommon_SRCS})
+  VTK_WRAP_PYTHON2(vtkVTKITKCommonPython VTKITKCommonPython_SRCS
+                   ${VTKITKCommon_SRCS})
   ADD_LIBRARY(vtkVTKITKCommonPython SHARED ${VTKITKCommonPython_SRCS})
   TARGET_LINK_LIBRARIES (vtkVTKITKCommonPython 
                          vtkVTKITKCommon
                          vtkFilteringPython 
                          vtkCommonPython)
-  IF(WIN32)
-    TARGET_LINK_LIBRARIES (vtkVTKITKCommonPython 
-                           debug ${PYTHON_DEBUG_LIBRARY} 
-                           optimized ${PYTHON_LIBRARY})
-  ELSE(WIN32)
-    TARGET_LINK_LIBRARIES (vtkVTKITKCommonPython ${PYTHON_LIBRARY})
-  ENDIF(WIN32)
-
 ENDIF (VTK_WRAP_PYTHON)
 
-
-TARGET_LINK_LIBRARIES (
-vtkVTKITKCommon
-vtkCommon 
-vtkFiltering
-vtkImaging
-vtkVTKITKCommon 
-vtkexpat
-vtkftgl
-vtkfreetype
-VXLNumerics
-ITKCommon
-ITKBasicFilters
-ITKNumerics
-ITKBasicFilters
-)
-
+TARGET_LINK_LIBRARIES(vtkVTKITKCommon vtkImaging
+                      ITKIO ITKNumerics ITKBasicFilters)

@@ -8,8 +8,6 @@ ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${InsightApplications_BINARY_DIR}/Auxiliary/VtkFltk
 ${ShapeDetectionLevelSet_SOURCE_DIR}
 ${ShapeDetectionLevelSet_BINARY_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
 )
 
 
@@ -36,9 +34,6 @@ vtkFiltering
 vtkCommon
 ITKFltkImageViewer
 ITKVtkFltk
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
 )
 
 ADD_EXECUTABLE(ShapeDetectionLevelSet ${ShapeDetectionLevelSet_SRCS})

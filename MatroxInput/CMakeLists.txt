@@ -51,9 +51,6 @@ LINK_LIBRARIES (
   vtkCommon
   ITKCommon
   VXLNumerics
-  ${FLTK_LIBRARY}
-  ${OPENGL_LIBRARY}
-  ${GLU_LIBRARY}
 )
 
 SET(MatroxInput_SRCS

@@ -1,12 +1,13 @@
 PROJECT(SampleProject)
 
-# Find ITK
-INCLUDE (${CMAKE_ROOT}/Modules/FindITK.cmake)
-
-# Use ITK.  This sets up include/link directories for us.
-IF (USE_ITK_FILE)
-  INCLUDE(${USE_ITK_FILE})
-ENDIF(USE_ITK_FILE)
+# Find ITK.
+FIND_PACKAGE(ITK)
+IF(ITK_FOUND)
+  INCLUDE(${ITK_USE_FILE})
+ELSE(ITK_FOUND)
+  MESSAGE(FATAL_ERROR
+          "Cannot build without ITK.  Please set ITK_DIR.")
+ENDIF(ITK_FOUND)
 
 # Add the executable with our source file.
 ADD_EXECUTABLE(itkSampleProject itkSampleProject.cxx)

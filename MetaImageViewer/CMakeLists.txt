@@ -5,17 +5,12 @@ SET ( MetaImageViewer_SRCS
 
 INCLUDE_DIRECTORIES (
   ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
-  ${FLTK_INCLUDE_PATH}
-  ${OPENGL_INCLUDE_PATH}
 )
 
 LINK_LIBRARIES (
   ITKBasicFilters
   ITKIO
   ITKFltkImageViewer
-  ${FLTK_LIBRARY}
-  ${OPENGL_LIBRARY}
-  ${GLU_LIBRARY}
 )
 
 IF(WIN32)
@@ -30,6 +25,4 @@ SET(MetaImageViewer_GUI_SRCS
   MetaImageViewerGUI.fld
   )
 
-IF(HAS_FLTK)
-  FLTK_WRAP_UI( MetaImageViewer ${MetaImageViewer_GUI_SRCS} )
-ENDIF(HAS_FLTK)
+FLTK_WRAP_UI( MetaImageViewer ${MetaImageViewer_GUI_SRCS} )

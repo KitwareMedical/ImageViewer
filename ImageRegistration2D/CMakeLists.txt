@@ -1,37 +1,12 @@
-PROJECT( ImageRegistration2D )
-
 INCLUDE_DIRECTORIES(
-${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ImageRegistration2D_SOURCE_DIR}
-${ImageRegistration2D_BINARY_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
+  ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+  ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
+  ${InsightApplications_SOURCE_DIR}/ImageRegistration2D
+  ${InsightApplications_BINARY_DIR}/ImageRegistration2D
 )
 
-SET(ImageRegistration2D_SRCS
-ImageRegistrationConsole.cxx
-ImageRegistrationConsoleBase.cxx
-ImageRegistration2D.cxx
-)
-
-SET(ImageRegistration2D_GUI_SRCS
-ImageRegistrationConsoleGUI.fl
-)
-
-LINK_LIBRARIES (
-ITKCommon
-ITKNumerics
-ITKBasicFilters 
-ITKIO
-ITKFltkImageViewer
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
-)
-
-
-ADD_EXECUTABLE(ImageRegistration2D ${ImageRegistration2D_SRCS})
-
-FLTK_WRAP_UI( ImageRegistration2D ${ImageRegistration2D_GUI_SRCS} )
-
+ADD_EXECUTABLE(ImageRegistration2D ImageRegistrationConsole.cxx
+               ImageRegistrationConsoleBase.cxx ImageRegistration2D.cxx)
+FLTK_WRAP_UI(ImageRegistration2D ImageRegistrationConsoleGUI.fl)
+TARGET_LINK_LIBRARIES(ImageRegistration2D ITKFltkImageViewer ITKIO
+                      ITKNumerics ITKBasicFilters)

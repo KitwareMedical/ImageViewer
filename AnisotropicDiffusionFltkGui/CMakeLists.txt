@@ -1,24 +1,8 @@
-PROJECT( AnisotropicDiffusionFltkGui )
-
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
-${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
-${AnisotropicDiffusionFltkGui_SOURCE_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
-)
-
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${AnisotropicDiffusionFltkGui_BINARY_DIR}
+  ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+  ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
+  ${InsightApplications_SOURCE_DIR}/AnisotropicDiffusionFltkGui
+  ${InsightApplications_BINARY_DIR}/AnisotropicDiffusionFltkGui
 )
 
 SET(AnisotropicDiffusionFltkGui3D_SRCS
@@ -41,26 +25,13 @@ SET(AnisotropicDiffusionFltkGui2D_GUI_SRCS
 liFilterConsole2DGUI.fl
 )
 
-LINK_LIBRARIES (
-ITKBasicFilters 
-ITKIO
-ITKFltkImageViewer
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
-)
-
-IF(WIN32)
-  LINK_LIBRARIES(
-  wsock32
-  )
-ENDIF(WIN32)
-
 ADD_EXECUTABLE(AnisotropicDiffusionFltkGui3D ${AnisotropicDiffusionFltkGui3D_SRCS})
 ADD_EXECUTABLE(AnisotropicDiffusionFltkGui2D ${AnisotropicDiffusionFltkGui2D_SRCS})
 
 FLTK_WRAP_UI(AnisotropicDiffusionFltkGui3D   ${AnisotropicDiffusionFltkGui3D_GUI_SRCS})
 FLTK_WRAP_UI(AnisotropicDiffusionFltkGui2D   ${AnisotropicDiffusionFltkGui2D_GUI_SRCS})
 
-
-
+TARGET_LINK_LIBRARIES(AnisotropicDiffusionFltkGui2D ITKFltkImageViewer ITKIO
+                      ITKBasicFilters)
+TARGET_LINK_LIBRARIES(AnisotropicDiffusionFltkGui3D ITKFltkImageViewer ITKIO
+                      ITKBasicFilters)

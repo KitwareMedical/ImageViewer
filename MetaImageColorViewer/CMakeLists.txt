@@ -5,8 +5,6 @@ SET ( MetaImageColorViewer_SRCS
 
 INCLUDE_DIRECTORIES (
   ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
-  ${FLTK_INCLUDE_PATH}
-  ${OPENGL_INCLUDE_PATH}
 )
 
 
@@ -21,16 +19,10 @@ TARGET_LINK_LIBRARIES (MetaImageColorViewer
   ITKBasicFilters
   ITKFltkImageViewer
   ITKIO
-  ${FLTK_LIBRARY}
-  ${OPENGL_LIBRARY}
-  ${GLU_LIBRARY}
 )
 
 SET(MetaImageColorViewer_GUI_SRCS
   MetaImageColorViewerGUI.fld
   )
 
-IF(HAS_FLTK)
-  FLTK_WRAP_UI( MetaImageColorViewer ${MetaImageColorViewer_GUI_SRCS} )
-ENDIF(HAS_FLTK)
-
+FLTK_WRAP_UI( MetaImageColorViewer ${MetaImageColorViewer_GUI_SRCS} )

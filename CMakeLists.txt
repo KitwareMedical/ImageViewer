@@ -1,55 +1,71 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 1.6)
 PROJECT(InsightApplications)
-
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
+# Tell CMake's FIND_PACKAGE command where to look for our Find<pkg>
+# modules.
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${InsightApplications_SOURCE_DIR})
 
-INCLUDE (${CMAKE_ROOT}/Modules/FindITK.cmake)
-IF (USE_ITK_FILE)
-  INCLUDE (${USE_ITK_FILE})
-ENDIF (USE_ITK_FILE)
+# Don't build anything unless the version of CMake is high enough.
+# The matching ELSE/ENDIF should be the last lines in the file.
+IF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 1.5)
+
+FIND_PACKAGE(ITK)
+IF(ITK_FOUND)
+  INCLUDE(${ITK_USE_FILE})
+ELSE(ITK_FOUND)
+  MESSAGE(FATAL_ERROR
+          "Cannot build InsightApplications without ITK.  Please set ITK_DIR.")
+ENDIF(ITK_FOUND)
+
+#-----------------------------------------------------------------------------
+# Configure Dart testing support.
+INCLUDE(${CMAKE_ROOT}/Modules/Dart.cmake)
+MARK_AS_ADVANCED(TCL_TCLSH)
+IF(BUILD_TESTING)
+  ENABLE_TESTING()
+ENDIF(BUILD_TESTING)
 
 # Determine what packages are available
 # Add an option to use or not use VTK
-OPTION(USE_VTK "Use VTK (The Visualization Toolkit) (some applications need this)" 0)
+OPTION(USE_VTK "Use VTK (The Visualization Toolkit) (some applications need this)" OFF)
 IF(USE_VTK)
-  INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
-  IF (USE_VTK_FILE)
-    INCLUDE (${USE_VTK_FILE})
-      SET(HAS_VTK 1)
+  FIND_PACKAGE(VTK)
+  IF (VTK_FOUND)
+    INCLUDE (${VTK_USE_FILE})
+
     # Test for VTK using std libs
     IF(NOT VTK_USE_ANSI_STDLIB)
-      MESSAGE(
-	"Warning. Your VTK was not built with the VTK_USE_ANSI_STDLIB option ON.\n"
-        "Link errors may occur.  Consider re-building VTK with this option ON.\n"
-        "For MSVC 6, you MUST turn on the VTK option.  ITK will not link otherwise.")
+      MESSAGE("Warning.  Your VTK was not built with the VTK_USE_ANSI_STDLIB "
+              "option ON.  Link errors may occur.  Consider re-building VTK "
+              "with this option ON.  For MSVC 6, you MUST turn on the VTK "
+              "option.  ITK will not link otherwise.")
     ENDIF(NOT VTK_USE_ANSI_STDLIB)
+
     # Test for VTK building Hybrid
-    IF(VTK_USE_HYBRID)
-      SET(HAS_VTK_HYBRID 1 CACHE INTERNAL "VTK Hybrid libraries are available")
-    ELSE( VTK_USE_HYBRID )
-      MESSAGE ("Warning. Your VTK was not built with the VTK_USE_HYBRID option ON. \nPlease reconfigure and recompile VTK with this option before trying to use it with ITK.")
-    ENDIF( VTK_USE_HYBRID )
-  ELSE (USE_VTK_FILE)
-    MESSAGE("The UseVTK.cmake file was not found. You will not be able to build code requiring VTK")
-    SET(HAS_VTK 0 CACHE INTERNAL "Use VTK: The Visualization Toolkit, this is required for some applications but not for the ITK toolkit")
-  ENDIF (USE_VTK_FILE)
-ELSE(USE_VTK)
-  SET(HAS_VTK 0)
+    IF(NOT VTK_USE_HYBRID)
+      MESSAGE("Your VTK was not built with the VTK_USE_HYBRID option ON.  "
+              "Please reconfigure and recompile VTK with this option before "
+              "trying to use it with ITK.")
+      SET(VTK_FOUND 0)
+    ENDIF(NOT VTK_USE_HYBRID)
+  ENDIF (VTK_FOUND)
 ENDIF(USE_VTK)
 
-# Look for OpenGL
-INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
+# Look for OpenGL.
+FIND_PACKAGE(OpenGL)
 
+IF(OPENGL_INCLUDE_PATH)
+  INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_PATH})
+ENDIF(OPENGL_INCLUDE_PATH)
 
 # Add an option to use or not use FLTK (http://www.fltk.org)
-OPTION(USE_FLTK "Use FLTK (The Fast Light Toolkit) for GUI (some applications need this)" 0)
+OPTION(USE_FLTK "Use FLTK (The Fast Light Toolkit) for GUI (some applications need this)" OFF)
 IF(USE_FLTK)
-  INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
-  IF(FLTK_VERSION_1.0.11)
-    MESSAGE(SEND_ERROR "FLTK Version 1.0.11 is no longer supported in ITK. Please upgrade to FLTK version 1.1.3")
-  ENDIF(FLTK_VERSION_1.0.11)
-ELSE(USE_FLTK)
-  SET (HAS_FLTK 0)
+  FIND_PACKAGE(FLTK)
+  IF(FLTK_FOUND)
+    INCLUDE_DIRECTORIES(${FLTK_INCLUDE_DIR})
+  ENDIF(FLTK_FOUND)
 ENDIF(USE_FLTK)
 
 #Build the Auxiliary directory on which many applications depend
@@ -123,40 +139,38 @@ SUBDIRS(DICOMApp)
 IF(GLUT_FOUND)
   SUBDIRS(ImageViewer)
 ENDIF(GLUT_FOUND)
-  
+
 # Applications requiring MetaImages and Fltk GUI 
-IF(HAS_FLTK)
-  IF(HAS_FLTKIMAGEVIEWER)
-    IF(WIN32)
-      ADD_DEFINITIONS(-DWIN32)
-    ENDIF(WIN32)
-    SUBDIRS(AnisotropicDiffusionFltkGui)
-    SUBDIRS(DistanceMapFilter)
-    SUBDIRS(DicomImageViewer)
-    SUBDIRS(GaussianFilter)
-    SUBDIRS(GradientRecursiveGaussianFilter)
-    SUBDIRS(Curves2DExtractor)
-    SUBDIRS(Morphogenesis)
-    SUBDIRS(MutualInformationEuler2DRegistration)
-    SUBDIRS(ImageRegistration)
-    SUBDIRS(ImageRegistration2D)
-    SUBDIRS(RawImageReaderViewer)
-    SUBDIRS(VoronoiSegmentation)
-    SUBDIRS(SimpleFuzzyConnectedness)
-#   SUBDIRS(OperatingRoom)
-    IF(HAS_VTK)
-      SUBDIRS(TripleTKImageDisplay)
-      SUBDIRS(RegionGrowingSegmentation)
-      SUBDIRS(ThresholdSegmentationLevelSet)
-      SUBDIRS(FastMarchingLevelSet)
-      SUBDIRS(ShapeDetectionLevelSet)
-      SUBDIRS(GeodesicActiveContour)
-    ENDIF(HAS_VTK)
-    SUBDIRS(MetaImageViewer)
-    SUBDIRS(MetaImageColorViewer)
-    SUBDIRS(SurfaceGenerator)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_FLTK)
+IF(FLTK_FOUND)
+  IF(WIN32)
+    ADD_DEFINITIONS(-DWIN32)
+  ENDIF(WIN32)
+  SUBDIRS(AnisotropicDiffusionFltkGui)
+  SUBDIRS(DistanceMapFilter)
+  SUBDIRS(DicomImageViewer)
+  SUBDIRS(GaussianFilter)
+  SUBDIRS(GradientRecursiveGaussianFilter)
+  SUBDIRS(Curves2DExtractor)
+  SUBDIRS(Morphogenesis)
+  SUBDIRS(MutualInformationEuler2DRegistration)
+  SUBDIRS(ImageRegistration)
+  SUBDIRS(ImageRegistration2D)
+  SUBDIRS(RawImageReaderViewer)
+  SUBDIRS(VoronoiSegmentation)
+  SUBDIRS(SimpleFuzzyConnectedness)
+  #SUBDIRS(OperatingRoom)
+  IF(VTK_FOUND)
+    SUBDIRS(TripleTKImageDisplay)
+    SUBDIRS(RegionGrowingSegmentation)
+    SUBDIRS(ThresholdSegmentationLevelSet)
+    SUBDIRS(FastMarchingLevelSet)
+    SUBDIRS(ShapeDetectionLevelSet)
+    SUBDIRS(GeodesicActiveContour)
+  ENDIF(VTK_FOUND)
+  SUBDIRS(MetaImageViewer)
+  SUBDIRS(MetaImageColorViewer)
+  SUBDIRS(SurfaceGenerator)
+ENDIF(FLTK_FOUND)
 
 # MetaImage Utilities
 SUBDIRS(MetaImageImporter)
@@ -164,7 +178,6 @@ SUBDIRS(MetaImageReadWrite)
 
 # Test the conditions for building the MRIBiasCorrection example
 SUBDIRS(MRIBiasCorrection)
-
 
 # Add an option to build FEM applications
 SUBDIRS(FEM)
@@ -174,11 +187,6 @@ SUBDIRS(FuzzyConnectedness)
 
 # Add an option to build or not build the ShapeDetection example
 SUBDIRS(ShapeDetection)
-
-# The MRI Registration example needs VTK with tcl wrapping turned on.
-IF (HAS_VTK)
-  SUBDIRS(MRIRegistration)
-ENDIF (HAS_VTK)
 
 # Add an option to build or not build the
 # GaussianMinimumErrorClassifier example
@@ -190,29 +198,16 @@ SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 # Add an option to build or not build the SymmetricEllipsoidInteriorExteriorSpatialFunction example
 SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
 
-
-
 # Test the conditions for building the ThinPlateSplines example
-IF(HAS_VTK)
-  IF(HAS_FLTK)
-    IF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
-      SUBDIRS(ThinPlateSplines)
-    ENDIF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
-  ENDIF(HAS_FLTK)
-ENDIF(HAS_VTK)
+IF(VTK_FOUND)
+  IF(FLTK_FOUND)
+    SUBDIRS(ThinPlateSplines)
+  ENDIF(FLTK_FOUND)
 
-IF(HAS_VTK)
-  IF (VTK_WRAP_TCL)
-    SUBDIRS(vtkITK)
-  ENDIF (VTK_WRAP_TCL)
-ENDIF(HAS_VTK)
-
-
-IF(HAS_VTK)
-  IF (VTK_WRAP_TCL)
-    SUBDIRS(SegmentationEditor)
-  ENDIF (VTK_WRAP_TCL)
-ENDIF(HAS_VTK)
+  IF(VTK_WRAP_TCL)
+    SUBDIRS(MRIRegistration vtkITK SegmentationEditor)
+  ENDIF(VTK_WRAP_TCL)
+ENDIF(VTK_FOUND)
 
 LINK_LIBRARIES (
 ITKAlgorithms
@@ -221,3 +216,10 @@ ITKCommon
 ITKBasicFilters 
 )
 
+# If the version of CMake was too old, complain and build nothing.
+# These should be the last lines in this file.
+ELSE("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 1.5)
+  MESSAGE(SEND_ERROR
+          "This version of CMake is too old to build InsightApplications.  "
+          "Please upgrade to CMake 1.6.")
+ENDIF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 1.5)

@@ -5,9 +5,6 @@ ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${OperatingRoom_SOURCE_DIR}
 ${OperatingRoom_BINARY_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
-${GLU_INCLUDE_PATH}
 )
 
 SET(OperatingRoom_SRCS

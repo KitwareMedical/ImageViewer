@@ -4,17 +4,12 @@ INCLUDE_DIRECTORIES(
 ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${RawImageReaderViewer_SOURCE_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
 )
 
 LINK_LIBRARIES (
 ITKBasicFilters 
 ITKIO
 ITKFltkImageViewer
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
 )
 
 
@@ -30,5 +25,3 @@ itkRawImageReaderViewerGUI.fl
 ADD_EXECUTABLE(RawImageReaderViewer   ${RawImageReaderViewer_SRCS})
 
 FLTK_WRAP_UI(RawImageReaderViewer   ${RawImageReaderViewer_GUI_SRCS})
-
-

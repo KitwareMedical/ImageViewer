@@ -8,8 +8,6 @@ ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${InsightApplications_BINARY_DIR}/Auxiliary/VtkFltk
 ${RegionGrowingSegmentation_SOURCE_DIR}
 ${RegionGrowingSegmentation_BINARY_DIR}
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
 )
 
 SET(RegionGrowingSegmentation2D_SRCS
@@ -45,9 +43,6 @@ vtkImaging
 vtkIO
 vtkFiltering
 vtkCommon
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
 )
 
 

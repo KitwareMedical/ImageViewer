@@ -3,8 +3,6 @@ PROJECT (VoronoiSegmentation)
 INCLUDE_DIRECTORIES(
 ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
-${FLTK_INCLUDE_PATH}
-${OPENGL_INCLUDE_PATH}
 ${VoronoiSegmentation_SOURCE_DIR}
 )
 
@@ -14,9 +12,6 @@ ITKNumerics
 ITKBasicFilters 
 ITKIO
 ITKFltkImageViewer
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
 
 )
 
@@ -31,8 +26,4 @@ VDSegGrayUI.fl
 )
 
 ADD_EXECUTABLE(VoronoiSegmentation   ${Project_SRCS})
-
-IF(HAS_FLTK)
 FLTK_WRAP_UI(VoronoiSegmentation ${Project_FLTK_SRCS})
-ENDIF(HAS_FLTK)
-
