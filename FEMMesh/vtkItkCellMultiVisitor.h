@@ -23,10 +23,12 @@
 
 #include "vtkVertex.h"
 #include "vtkLine.h"
+#include "vtkTriangle.h"
 
 
 #include "itkVertexCell.h"
 #include "itkLineCell.h"
+#include "itkTriangleCell.h"
 
 
 
@@ -52,8 +54,9 @@ public:
 
 
   // typedef the itkCells we are interested in
-  typedef itk::LineCell<CellPixelType,CellTraits>     LineCellType;
-  typedef itk::VertexCell<CellPixelType,CellTraits>   VertexCellType;
+  typedef itk::VertexCell<CellPixelType,CellTraits>     VertexCellType;
+  typedef itk::LineCell<CellPixelType,CellTraits>       LineCellType;
+  typedef itk::TriangleCell<CellPixelType,CellTraits>   TriangleCellType;
 
 
   // Set the vtkCellArray that will be constructed
@@ -94,6 +97,15 @@ public:
       m_TypeArray[*m_LastCell] = VTK_LINE;
       (*m_LastCell)++;
     }
+
+  // Visit a line and create the VTK_TRIANGLE cell 
+  void Visit(unsigned long cellId, TriangleCellType * t)
+    {
+      m_Cells->InsertNextCell(2,  (vtkIdType*)t->PointIdsBegin());
+      m_TypeArray[*m_LastCell] = VTK_TRIANGLE;
+      (*m_LastCell)++;
+    }
+
 
 };
   
