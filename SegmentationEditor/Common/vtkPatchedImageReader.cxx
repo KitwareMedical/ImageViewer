@@ -804,7 +804,7 @@ static void vtkPatchedImageReaderUpdate2(vtkPatchedImageReader *self, vtkImageDa
                                << ", Read = " << streamRead
                                << ", Skip0 = " << streamSkip0
                                << ", Skip1 = " << streamSkip1
-                               << ", FilePos = " << self->GetFile()->tellg());
+                               << ", FilePos = " << static_cast<unsigned long>(self->GetFile()->tellg()));
         delete [] buf;
         return;
         }
