@@ -35,12 +35,16 @@ FastMarchingModule<TInputPixelType>
     m_FastMarchingFilter->SetTrialPoints( m_NodeContainer );
     m_FastMarchingFilter->SetNormalizationFactor( 255.0 );
 
+    m_SigmoidFilter->SetOutputMinimum(   0 );
+    m_SigmoidFilter->SetOutputMaximum( 255 );
+
     m_CurrentNumberOfSeeds    = 0;
 
     // Set up the pipeline
     m_GradientMagnitudeFilter->SetInput(  m_ImportFilter->GetOutput()             );
     m_SigmoidFilter->SetInput(            m_GradientMagnitudeFilter->GetOutput()  );
     m_FastMarchingFilter->SetInput(       m_SigmoidFilter->GetOutput()            );
+
 }
 
 
@@ -130,6 +134,47 @@ FastMarchingModule<TInputPixelType>
 
 
 
+/*
+ *  Set the Sigma value for the Gradient Magnitude filter
+ */
+template <class TInputPixelType >
+void 
+FastMarchingModule<TInputPixelType>
+::SetSigma( float value )
+{
+  m_GradientMagnitudeFilter->SetSigma( value );
+}
+
+
+
+
+/*
+ *  Set the lowest value of the basin to be segmented
+ */
+template <class TInputPixelType >
+void 
+FastMarchingModule<TInputPixelType>
+::SetLowestBasinValue( float value )
+{
+  m_LowestBasinValue = value;
+}
+
+
+
+
+
+/*
+ *  Set the lowest value of the gradient magnitude in the border of the region to be segmented
+ */
+template <class TInputPixelType >
+void 
+FastMarchingModule<TInputPixelType>
+::SetLowestBorderValue( float value )
+{
+  m_LowestBorderValue = value;
+}
+
+
 
 
 
@@ -153,6 +198,9 @@ FastMarchingModule<TInputPixelType>
   size[2]     =  m_Info->InputVolumeDimensions[2];
 
   m_FastMarchingFilter->SetOutputSize( size );
+
+  m_SigmoidFilter->SetBeta(   (m_LowestBorderValue + m_LowestBasinValue ) / 2.0 );
+  m_SigmoidFilter->SetAlpha( -(m_LowestBorderValue - m_LowestBasinValue ) / 3.0 );
 
   for(unsigned int i=0; i<3; i++)
     {

@@ -92,6 +92,9 @@ public:
     void ClearSeeds();
     void AddSeed( float x, float y, float z );
     void SetStoppingValue( float value );
+    void SetSigma( float value );
+    void SetLowestBorderValue( float value );
+    void SetLowestBasinValue(  float value );
 
     void ProcessData( const vtkVVProcessDataStruct * pds );
     void ProgressUpdate( itk::Object * caller, const itk::EventObject & event );
@@ -115,6 +118,9 @@ private:
 
     std::string                                     m_UpdateMessage;
   
+    float                                          m_LowestBasinValue;
+    float                                          m_LowestBorderValue;
+
 };
 
 } // end of namespace PlugIn
