@@ -62,7 +62,7 @@ definition */
   const OverlayPointer & GetInputOverlay(void) const;
 
   /*! Turn on/off the viewing of the overlay */
-  void	ViewOverlayData(bool newViewOverlayData);
+  void  ViewOverlayData(bool newViewOverlayData);
   
   /*! Status of the overlay - viewed /not viewed */
   bool  ViewOverlayData(void);
@@ -568,7 +568,7 @@ tempval2;
                       cWinZBuffer[m] = 0;
           for(l=0; l<(int)cDimSize[cWinOrder[2]]; l++) 
           {
-            pointX[cWinOrder[2]] = l;				
+            pointX[cWinOrder[2]] = l;        
             ind[0] = pointX[0];
             ind[1] = pointX[1];
             ind[2] = pointX[2];
@@ -735,18 +735,18 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
 {
   if( !valid() )
   {
-		glClearColor((float)0.0, (float)0.0, (float)0.0, (float)0.0);					
-		glShadeModel(GL_FLAT);
+    glClearColor((float)0.0, (float)0.0, (float)0.0, (float)0.0);          
+    glShadeModel(GL_FLAT);
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);  //if you don't include this
-											    //image size differences distort
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);  //if you don't include this
+                          //image size differences distort
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
   }
-	else
+  else
   {
-    glClear(GL_COLOR_BUFFER_BIT);		//this clears and paints to black
+    glClear(GL_COLOR_BUFFER_BIT);    //this clears and paints to black
 
-    glMatrixMode(GL_MODELVIEW);		//clear previous 3D draw params
+    glMatrixMode(GL_MODELVIEW);    //clear previous 3D draw params
     glLoadIdentity();
 
     glMatrixMode(GL_PROJECTION);
@@ -794,28 +794,32 @@ GL_UNSIGNED_BYTE, cWinOverlayData);
 
       if( !cFlipX )
       {
+        const int y = static_cast<int>(  cH/2-gl_height()/2  );
         gl_draw( cAxisLabelX[cWinOrientation],
                  cW-(gl_width(cAxisLabelX[cWinOrientation])+10), 
-                 cH/2-gl_height()/2 );
+                 y );
       }
       else
       {
+        const int y = static_cast<int>( cH/2-gl_height()/2  );
         gl_draw( cAxisLabelX[cWinOrientation],
                  (gl_width(cAxisLabelX[cWinOrientation])+10),
-                 cH/2-gl_height()/2 );
+                 y );
       }
 
       if(!cFlipY)
       {
+        const int y = static_cast<int>( cH-gl_height()-10 ) ;
         gl_draw( cAxisLabelY[cWinOrientation],
                  cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
-                 cH-gl_height()-10 );
+                 y );
       }
       else
       {
+        const int y = static_cast<int>( gl_height()+10 );
         gl_draw( cAxisLabelY[cWinOrientation], 
                  cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
-                 gl_height()+10 );
+                 y);
       }
 
       glDisable(GL_BLEND);
