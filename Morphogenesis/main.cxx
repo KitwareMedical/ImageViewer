@@ -3,6 +3,7 @@
 #include "BacterialColonyRedrawCommand.h"
 #include "CellsViewer.h"
 #include "CommandEvents.h"
+#include "CellsViewerCommand.h"
 
 
 int main()
@@ -10,24 +11,29 @@ int main()
 
 
 
-  bio::CellsViewer               viewer;
+  bio::CellsViewer * viewer = new bio::CellsViewer;
 
   bio::BacterialColony::Pointer  colony = bio::BacterialColony::New();
 
 
-  itk::Command::Pointer redraw = viewer.GetRedrawCommand();
-  colony->AddObserver( bio::TimeStepEvent, redraw );
+  bio::CellsViewerCommand::Pointer viewerCommand = 
+                                          bio::CellsViewerCommand::New();
 
+  viewerCommand->SetCellsViewer( viewer );
 
-  viewer.SetCellsAggregate( colony );
+  itk::Command::Pointer redrawCommand = viewer->GetRedrawCommand();
+  colony->AddObserver( bio::TimeStepEvent, redrawCommand );
+
+  colony->AddObserver( bio::TimeStepEvent, viewerCommand );
+
+  viewer->SetCellsAggregate( colony );
   
   bio::BacterialColonyRedrawCommand::Pointer colonyRedrawCommand =
                                     bio::BacterialColonyRedrawCommand::New();
 
   colonyRedrawCommand->SetBacterialColony( colony );
 
-  viewer.GetNotifier()->AddObserver( fltk::GlDrawEvent, colonyRedrawCommand );
-
+  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent, colonyRedrawCommand );
 
   colony->SetGrowthRadiusIncrement( 0.01 );
 
@@ -36,10 +42,11 @@ int main()
 
   colony->Add( first );
 
-  viewer.Show();
+  viewer->Show();
   
   Fl::run();
 
+  delete viewer;
 
   return 0;
 

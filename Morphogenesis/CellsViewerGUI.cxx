@@ -39,26 +39,27 @@ void CellsViewerGUI::cb_(Fl_Button* o, void* v) {
 
 CellsViewerGUI::CellsViewerGUI() {
   Fl_Window* w;
-  { Fl_Window* o = controlWindow = new Fl_Window(282, 114, "Control Panel");
+  { Fl_Window* o = controlWindow = new Fl_Window(172, 192, "Control Panel");
     w = o;
     o->user_data((void*)(this));
-    { Fl_Menu_Bar* o = new Fl_Menu_Bar(0, 0, 280, 25);
+    { Fl_Menu_Bar* o = new Fl_Menu_Bar(0, 0, 170, 25);
       o->menu(menu_);
     }
-    { Fl_Button* o = new Fl_Button(15, 40, 35, 20, "@-3>");
+    { Fl_Button* o = new Fl_Button(15, 40, 45, 20, "@-3>");
       o->labeltype(FL_SYMBOL_LABEL);
       o->callback((Fl_Callback*)cb_3);
     }
-    { Fl_Button* o = new Fl_Button(50, 40, 35, 20, "@#-4square");
+    { Fl_Button* o = new Fl_Button(60, 40, 45, 20, "@#-4square");
       o->labeltype(FL_SYMBOL_LABEL);
       o->callback((Fl_Callback*)cb_4square);
     }
-    timeValueOutput = new Fl_Value_Output(190, 40, 60, 25, "Time : ");
-    cellsValueOutput = new Fl_Value_Output(190, 70, 60, 25, "Cells : ");
-    { Fl_Button* o = new Fl_Button(85, 40, 35, 20, "@#|<");
+    iterationValueOutput = new Fl_Value_Output(85, 70, 60, 25, "Iteration : ");
+    numberOfCellsValueOutput = new Fl_Value_Output(85, 100, 60, 25, "Cells : ");
+    { Fl_Button* o = new Fl_Button(105, 40, 45, 20, "@#|<");
       o->labeltype(FL_SYMBOL_LABEL);
       o->callback((Fl_Callback*)cb_);
     }
+    timeValueOutput = new Fl_Value_Output(85, 130, 60, 25, "Time : ");
     o->end();
   }
 }

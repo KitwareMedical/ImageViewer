@@ -73,29 +73,7 @@ BacterialColonyRedrawCommand
 }
 
 
-  
-//--------------------------------------------------
-//
-//    Execute
-//
-//--------------------------------------------------
-void
-BacterialColonyRedrawCommand
-::Execute( itk::LightObject * caller, unsigned long event )
-{
-
-  if( event == fltk::GlDrawEvent )
-    {
-    if( m_BacterialColony )
-      {
-      m_BacterialColony->Draw();
-      }
-    }
-}
-
-
-
-
+ 
 //--------------------------------------------------
 //
 //    Execute
@@ -115,6 +93,24 @@ BacterialColonyRedrawCommand
     }
 
 }
+
+
+
+
+//--------------------------------------------------
+//
+//    Execute
+//
+//--------------------------------------------------
+void
+BacterialColonyRedrawCommand
+::Execute( itk::LightObject * caller, unsigned long event )
+{
+  const itk::LightObject * constcaller = caller;
+  Execute( constcaller, event );
+}
+
+
 
 
 

@@ -28,6 +28,7 @@ Cell
 CellsViewerBase
 CellsViewerGUI
 CellsViewer
+CellsViewerCommand
 CellularAggregate
 Bacteria
 BacterialColony

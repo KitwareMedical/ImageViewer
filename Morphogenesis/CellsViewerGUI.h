@@ -22,12 +22,13 @@ private:
   inline void cb_4square_i(Fl_Button*, void*);
   static void cb_4square(Fl_Button*, void*);
 public:
-  Fl_Value_Output *timeValueOutput;
-  Fl_Value_Output *cellsValueOutput;
+  Fl_Value_Output *iterationValueOutput;
+  Fl_Value_Output *numberOfCellsValueOutput;
 private:
   inline void cb__i(Fl_Button*, void*);
   static void cb_(Fl_Button*, void*);
 public:
+  Fl_Value_Output *timeValueOutput;
   virtual ~CellsViewerGUI();
 };
 #endif

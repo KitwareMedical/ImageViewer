@@ -12,6 +12,7 @@ CellsViewerBase
 {
   m_Display.SetBackground( 0.8, 0.8, 0.9 );
   m_Stop = true;
+  m_StartTime = 0;
 }
 
 
@@ -71,6 +72,7 @@ CellsViewerBase
 ::Run(void)
 {
 	m_Stop = false;
+  m_StartTime = clock();
   while( !m_Stop )
     {
     m_Cells->AdvanceTimeStep();
@@ -140,6 +142,16 @@ CellsViewerBase
 	return m_Display.GetNotifier().GetPointer();
 }
 
+
+/**
+ *    Return the time from the start of the simulation
+ */ 
+clock_t
+CellsViewerBase
+::GetStartTime(void) const
+{
+	return m_StartTime;
+}
 
 }; // end namespace bio
 

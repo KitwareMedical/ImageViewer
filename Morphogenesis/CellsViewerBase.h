@@ -5,6 +5,8 @@
 #include "itkLightObject.h"
 #include "fltkDisplayGlWindowFlatGUI.h"
 #include "CellularAggregate.h"
+#include <ctime>
+
 
 namespace bio {
 
@@ -34,6 +36,7 @@ public:
   virtual void ShowDisplay(void);
   virtual void HideDisplay(void);
   virtual void SetCellsAggregate( CellularAggregate * );
+  virtual clock_t GetStartTime(void) const;
 
   itk::Command::Pointer GetRedrawCommand(void);
   itk::LightObject::Pointer GetNotifier(void);
@@ -41,11 +44,13 @@ public:
 
 private:
   
-	bool     m_Stop;
+	bool      m_Stop;
 
   fltkDisplayGlWindowFlatGUI  m_Display;
 
   CellularAggregate::Pointer  m_Cells;
+
+  clock_t   m_StartTime;
 
 };
 
