@@ -57,7 +57,7 @@ FEMRegistrator<TFixedImage,TMovingImage,TFieldValue>
 
  
   m_Registration.SetConfigFileName(m_FEMConfigurationFileName.c_str());
-  if (!m_Registration.ReadConfigFile(m_Registration.GetConfigFileName())) { return ; }
+  if (!m_Registration.ReadConfigFile(  (m_Registration.GetConfigFileName()).c_str())) { return ; }
  
    // Setup the registrator
   m_Registration.SetReferenceImage(  m_MovingImage);
