@@ -19,7 +19,9 @@
 #include "itkReadMetaImage.h"
 #include "itkWriteMetaImage.h"
 #include "itkImageRegionIterator.h"
+#include "itkScalarToArrayCastImageFilter.h"
 
+#include "itkFixedArray.h"
 #include "vnl/vnl_matrix.h"
 
 #include "itkImageToListAdaptor.h"
@@ -33,6 +35,7 @@
 #include "itkDecisionRuleBase.h"
 #include "MaximumLikelihoodRatioDecisionRule.h"
 #include "itkStatisticsAlgorithm.h"
+
 
 void print_usage()
 {
@@ -142,10 +145,15 @@ int main(int argc, char* argv[])
   std::cout << "Target image loaded." << std::endl ;
 
   /* ================================================== */
+  // convert image's pixel type from scalar to one dimensional array 
+  typedef itk::FixedArray< ImageType::PixelType, 1 > ArrayPixelType ;
+  typedef itk::Image< ArrayPixelType, 3 > ArrayPixelImageType ;
+  typedef itk::ScalarToArrayCastImageFilter< ImageType, ArrayPixelImageType >
+    CastFilterType ;
+  
   std::cout << "Importing the images to samples..."
             << std::endl ;
-  typedef stat::ImageToListAdaptor< ImageType, stat::ScalarImageAccessor< ImageType > > 
-    ImageListSampleType;
+  typedef stat::ImageToListAdaptor< ArrayPixelImageType > ImageListSampleType;
 
   ImageListSampleType::Pointer sample =
     ImageListSampleType::New() ;
@@ -156,9 +164,23 @@ int main(int argc, char* argv[])
   ImageListSampleType::Pointer targetSample =
     ImageListSampleType::New() ;
 
-  sample->SetImage(training);
-  mask->SetImage(classMask) ;
-  targetSample->SetImage(target) ;
+  CastFilterType::Pointer castFilter = CastFilterType::New() ;
+  castFilter->SetInput(training) ;
+  castFilter->Update() ;
+  ArrayPixelImageType::Pointer castedTraining = castFilter->GetOutput() ;
+  sample->SetImage(castedTraining);
+
+  CastFilterType::Pointer castFilter2 = CastFilterType::New() ;
+  castFilter2->SetInput(classMask) ;
+  castFilter2->Update() ;
+  ArrayPixelImageType::Pointer castedClassMask = castFilter2->GetOutput() ;
+  mask->SetImage(castedClassMask) ;
+
+  CastFilterType::Pointer castFilter3 = CastFilterType::New() ;
+  castFilter3->SetInput(target) ;
+  castFilter3->Update() ;
+  ArrayPixelImageType::Pointer castedTarget = castFilter3->GetOutput() ;
+  targetSample->SetImage(castedTarget) ;
   /* ==================================================== */
   std::cout << "Creating the membership sample for training.." << std::endl ;
   typedef stat::MembershipSampleGenerator< ImageListSampleType, 
@@ -190,11 +212,10 @@ int main(int argc, char* argv[])
     MeanCalculatorType ;
   typedef stat::CovarianceCalculator< ClassSampleType >
     CovarianceCalculatorType ;
-  MeanCalculatorType::Pointer meanCalculator = MeanCalculatorType::New() ;
-  CovarianceCalculatorType::Pointer covarianceCalculator = 
-    CovarianceCalculatorType::New() ;
-  vnl_vector< double > mean ;
-  vnl_matrix< double > covariance ;
+  std::vector< MeanCalculatorType::Pointer > meanCalculatorVector ;
+  meanCalculatorVector.resize(numberOfClasses) ;
+  std::vector< CovarianceCalculatorType::Pointer > covarianceCalculatorVector ;
+  covarianceCalculatorVector.resize(numberOfClasses) ;
 
   typedef MaximumLikelihoodRatioDecisionRule DecisionRuleType ;
   DecisionRuleType::Pointer rule = DecisionRuleType::New() ;
@@ -213,23 +234,23 @@ int main(int argc, char* argv[])
 
       ClassSampleType::Pointer subSample = 
         membershipSample->GetClassSample(i) ;
-      meanCalculator->SetSample(subSample) ;
-      meanCalculator->Update() ;
-      mean = meanCalculator->GetOutput() ;
+      meanCalculatorVector[i] = MeanCalculatorType::New() ;
+      meanCalculatorVector[i]->SetSample(subSample) ;
+      meanCalculatorVector[i]->Update() ;
       
-      covarianceCalculator->SetSample(subSample) ;
-      covarianceCalculator->SetMean(mean) ;
-      covarianceCalculator->Update() ;
-      covariance = covarianceCalculator->GetOutput() ;
+      covarianceCalculatorVector[i] = CovarianceCalculatorType::New() ;
+      covarianceCalculatorVector[i]->SetSample(subSample) ;
+      covarianceCalculatorVector[i]->SetMean(meanCalculatorVector[i]->GetOutput()) ;
+      covarianceCalculatorVector[i]->Update() ;
 
       densityFunctions[i] = DensityFunctionType::New() ;
-      (densityFunctions[i])->SetMean(mean) ;
-      (densityFunctions[i])->SetCovariance(covariance) ;
+      (densityFunctions[i])->SetMean(meanCalculatorVector[i]->GetOutput()) ;
+      (densityFunctions[i])->
+        SetCovariance(covarianceCalculatorVector[i]->GetOutput() ) ;
       std::cout << "  mean = " << (densityFunctions[i])->GetMean()
                 << std::endl ;
       std::cout << "  covariance = " << std::endl ;
-      (densityFunctions[i])->GetCovariance().print(std::cout) ;
-      
+      (densityFunctions[i])->GetCovariance()->GetVnlMatrix().print(std::cout) ;
     }
   
   /* =================================================== */
