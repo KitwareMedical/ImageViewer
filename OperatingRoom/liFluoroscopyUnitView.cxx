@@ -371,8 +371,13 @@ void FluoroscopyUnitView::draw(void)
     const GLint level  = 0;  // Level-of-Detail (sub-sampling...)
     const GLint border = 0;  // Texture image border
 
-    GLint textureNx = (GLint)pow(2, floor( log(m_ImageBackgroundWidth )/log(2.0)+1 ) );
-    GLint textureNy = (GLint)pow(2, floor( log(m_ImageBackgroundHeight)/log(2.0)+1 ) );
+    GLint textureNx = (GLint)pow(2, floor( 
+          log(static_cast<float>(m_ImageBackgroundWidth) ) / 
+          log(2.0f)+1 ) );
+
+    GLint textureNy = (GLint)pow(2, floor( 
+          log(static_cast<float>(m_ImageBackgroundHeight)) / 
+          log(2.0f)+1 ) );
     
     if( m_TextureScaled )
     {
