@@ -170,7 +170,7 @@ void RawImageSequenceReader<TOutputImage, ConvertPixelTraits>::GenerateData()
 
   signed int offset = output->GetOffsetTable()[2];
   int numPixelsPerSilce = dimSize[0] * dimSize[1];
-  int k = 0;
+  int k;
 
   char nameBuffer[100];
   std::string fileName;
