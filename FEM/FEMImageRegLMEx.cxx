@@ -224,7 +224,7 @@ void ImageRegLMEx::WarpImage()
 
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        tindex[ii]+=(long int)(disp[ii]+0.5);
+        tindex[ii]+=(long int)(disp[ii]);  //+0.5);
         if (tindex[ii] >=0 && tindex[ii] < m_FieldSize[ii]) InImage=true;
           else 
           {
@@ -297,7 +297,7 @@ int ImageRegLMEx::GenRegMesh()
   vnl_vector<double> ElementsPerDimension;  ElementsPerDimension.resize(ImageDimension); 
   for (unsigned int i=0; i<ImageDimension; i++)
   { 
-    MeshSize[i]=(double)m_Nx-1; // FIX ME make more general
+    MeshSize[i]=(double)m_Nx-1; // FIX ME  make more general
     MeshOrigin[i]=(double)0.0;// FIX ME make more general
     ElementsPerDimension[i]=(double)m_MeshResolution;
   }
@@ -496,8 +496,6 @@ void ImageRegLMEx::GetVectorField()
         rindex[ii]=(long int) (Gpt[ii]+0.5);
         disp[ii] =(Float) 1.*Sol[ii];
       }
-    
-      std::cout << rindex << std::endl;
       m_Field->SetPixel(rindex, disp );
     }    
   }
