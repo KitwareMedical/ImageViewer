@@ -51,7 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "myutils.h"
 
 
-class ImageIOError : public ExceptionObject
+class ImageIOError : public itk::ExceptionObject
 {
  public:
   ImageIOError() : ExceptionObject() {}
@@ -62,7 +62,7 @@ class ImageIOError : public ExceptionObject
     Operation = operation ;
   }
 
-  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(file, line)
+  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(fileName, line)
   {
     FileName = fileName ;
     Operation = operation ;
