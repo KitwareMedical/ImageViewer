@@ -24,14 +24,14 @@
   */
 
 
-#include "ThinPlateSplinesApplicationGUI.h"
+#include "ThinPlateSplinesApplication.h"
 
 
 
 int main(int, char**)
 {
 
-  ThinPlateSplinesApplicationGUI  application;
+  ThinPlateSplinesApplication  application;
 
   application.Show();
 
