@@ -158,7 +158,7 @@ public:
   void CreateMesh(ImageSizeType MeshOrigin, ImageSizeType MeshSize, 
                               double ElementsPerSide, Solver& S);
   /** The loads are entered into the solver. */
-  void ApplyLoads(SolverType& S); 
+  void ApplyLoads(SolverType& S,unsigned int MeshResolution); 
   /**  Builds the itpack linear system wrapper with appropriate parameters. */
   void CreateLinearSystemSolver();
   /** The solution loop */
@@ -205,14 +205,15 @@ public:
   const char* m_LandmarkFileName;
   const char* m_ResultsFileName;
 
-  unsigned int m_MeshResolution; // determines resolution of mesh
-  unsigned int m_NumberOfIntegrationPoints;
+  unsigned int m_MeshResolution; // determines maximum resolution of regular mesh
+  unsigned int m_NumberOfIntegrationPoints;// resolution of integration
   unsigned int m_MetricWidth;
   unsigned int m_Maxiters; // max iterations
   unsigned int m_TotalIterations;
-  unsigned int m_NumLevels; // max smoothing
-  float m_MinSmoothing; // min smoothing
-  float m_SmoothingStep;// smoothing step size
+  unsigned int m_NumLevels; // Number of Resolution Levels
+  unsigned int m_MaxLevel;  // Maximum Level (NumLevels is original resolution).
+  unsigned int m_MeshLevels;// Number of Mesh Resolutions ( should be >= 1)
+  unsigned int m_MeshStep;  // Ratio Between Mesh Resolutions ( currently set to 2, should be >= 1)
   Float m_dT; // time step
   Float m_E;  // elasticity 
   ImageSizeType m_ImageSize; // image size

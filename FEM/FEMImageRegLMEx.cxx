@@ -49,8 +49,9 @@ ImageRegLMEx::ImageRegLMEx( )
   m_LineSearchStep=0.025;
 
   m_NumLevels=1;
-  m_MinSmoothing=1;
-  m_SmoothingStep=2;
+  m_MaxLevel=1;
+  m_MeshStep=2;
+  m_MeshLevels=1;
   m_DoMultiRes=false;
   m_UseLandmarks=false;
 
@@ -83,7 +84,7 @@ void ImageRegLMEx::RunRegistration()
   {
     
     CreateMesh(m_ImageOrigin,m_ImageSize,(double)m_MeshResolution,m_Solver); 
-    ApplyLoads(m_Solver);
+    ApplyLoads(m_Solver,m_MeshResolution);
 
     m_Solver.GenerateGFN(); 
 
@@ -318,12 +319,12 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
       this->m_NumLevels = (unsigned int) ibuf;
 
       FEMLightObject::SkipWhiteSpace(f);
-      f >> fbuf;
-      this->m_MinSmoothing = fbuf;
+      f >> ibuf;
+      this->m_MaxLevel = ibuf;
     
       FEMLightObject::SkipWhiteSpace(f);
-      f >> fbuf;
-      this->m_SmoothingStep = fbuf;
+      f >> ibuf;
+      this->m_MeshLevels = ibuf;
     }
     else { this->DoMultiRes(false); }
 
@@ -457,7 +458,7 @@ void ImageRegLMEx::CreateMesh(ImageSizeType MeshOrigin, ImageSizeType MeshSize,
 
 }
 
-void ImageRegLMEx::ApplyLoads(SolverType& mySolver)
+void ImageRegLMEx::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
 {
  //
   // Apply the boundary conditions.  We pin the image corners.
@@ -468,9 +469,9 @@ void ImageRegLMEx::ApplyLoads(SolverType& mySolver)
 
   // elements for the corner of the image only valid if nx=ny
   unsigned int ind0=0; 
-  unsigned int ind1=(unsigned int)(m_MeshResolution-1.0);
-  unsigned int ind2=m_MeshResolution*(m_MeshResolution-1); 
-  unsigned int ind3=m_MeshResolution*m_MeshResolution-1; 
+  unsigned int ind1=(unsigned int)(Resolution-1.0);
+  unsigned int ind2=Resolution*(Resolution-1); 
+  unsigned int ind3=Resolution*Resolution-1; 
  
 
   l1=LoadBC::New();
@@ -641,8 +642,8 @@ void ImageRegLMEx::GetVectorField(SolverType& mySolver)
     unsigned int sfsz= (*elt)->GetNumberOfNodes();
     vnl_vector<double> shapeF( sfsz );
 // FIXME this code should work for arbitrary dimension
-    for (double r=-1.0; r <= 1.0; r=r+ 1./(1.5* (double)m_ImageSize[0] / (double)m_MeshResolution) )
-    for (double s=-1.0; s <= 1.0; s=s+ 1./(1.5* (double)m_ImageSize[1] / (double)m_MeshResolution) )
+    for (double r=-1.0; r <= 1.0; r=r+ 1./(1.0* (double)m_ImageSize[0] / (double)m_MeshResolution) )
+    for (double s=-1.0; s <= 1.0; s=s+ 1./(1.0* (double)m_ImageSize[1] / (double)m_MeshResolution) )
     {
       Pos[0]=r; 
       Pos[1]=s;
@@ -793,80 +794,82 @@ void ImageRegLMEx::MultiResSolve()
   writer->SetImageIO(io);
   writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");*/
 
-  for (unsigned int i=0; i<numLevels; i++)
+  for (unsigned int i=0; i<m_MaxLevel; i++)
   {
     pyramidR->GetOutput( i )->Update();
     pyramidT->GetOutput( i )->Update();
 
-    Rcaster2 = CasterType2::New();// Weird - don't know why but this worked
-    Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
- 
 //  Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update(); writer->SetInput(Tcaster2->GetOutput()); writer->Write();
     
     ImageType::SizeType Isz=pyramidT->GetOutput( i )->GetLargestPossibleRegion().GetSize();
-    m_MeshResolution=m_MeshResolution*(Float)(i+1);
 
     for (unsigned int d=0; d < ImageDimension; d++)
     {
       m_ImageScaling[d]=m_ImageSize[d]/Isz[d];
     }
-    
-    CreateMesh(m_ImageOrigin,Isz,(double)m_MeshResolution,m_Solver); 
-    ApplyLoads(m_Solver);
 
-    m_Solver.GenerateGFN(); 
-
-    LinearSystemWrapperItpack itpackWrapper; 
-    itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
-    itpackWrapper.SetMaximumNumberIterations(m_Solver.GetNGFN()); 
-    itpackWrapper.SetTolerance(1.e-6);
-    itpackWrapper.JacobianSemiIterative(); 
-    m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
-
-    m_Load=LMClass2::New();
-
-    Rcaster2->SetInput(pyramidR->GetOutput(i)); Rcaster2->Update();
-    m_Load->SetReferenceImage(Rcaster2->GetOutput()); 
-    //m_Load->SetReferenceImage(m_RefImg);  
-
-    Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update();
-    m_Load->SetTargetImage(Tcaster2->GetOutput());  
-    //m_Load->SetTargetImage(m_TarImg);  
-
-    MetricType::Pointer msqp=MetricType::New();
-    msqp->SetScaleGradient(1.0); // this is the default(?)
-    m_Load->SetMetric(msqp.GetPointer());
-    m_Load->InitializeMetric();
-    ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
-    m_Load->SetMetricRadius(r);
-    m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
-    m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
-    m_Load->SetSign((Float)m_DescentDirection);
-    m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
-    m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
-   
-    m_Solver.AssembleKandM();
- 
-    if ( i > 0) 
+    for (unsigned int m=0; m < m_MeshLevels; m++) // mesh resolution loop
     {
-      SampleVectorFieldAtNodes(m_Solver);
-      LastScaleEnergy=ThisScaleEnergy;
-      ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
-    }
+      double MeshResolution=m_MeshResolution/pow((double)m_MeshStep,(double)m_MeshLevels-1.0-(double)m);
+
+      Rcaster2 = CasterType2::New();// Weird - don't know why but this worked
+      Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
+ 
+      CreateMesh(m_ImageOrigin,Isz,MeshResolution,m_Solver); 
+      ApplyLoads(m_Solver,MeshResolution);
+
+      m_Solver.GenerateGFN(); 
+
+      LinearSystemWrapperItpack itpackWrapper; 
+      itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
+      itpackWrapper.SetMaximumNumberIterations(m_Solver.GetNGFN()); 
+      itpackWrapper.SetTolerance(1.e-6);
+      itpackWrapper.JacobianSemiIterative(); 
+      m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
+
+      m_Load=LMClass2::New();
+
+      Rcaster2->SetInput(pyramidR->GetOutput(i)); Rcaster2->Update();
+      m_Load->SetReferenceImage(Rcaster2->GetOutput()); 
+
+      Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update();
+      m_Load->SetTargetImage(Tcaster2->GetOutput());  
+
+      MetricType::Pointer msqp=MetricType::New();
+      msqp->SetScaleGradient(1.0); // this is the default(?)
+      m_Load->SetMetric(msqp.GetPointer());
+      m_Load->InitializeMetric();
+      ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+      m_Load->SetMetricRadius(r);
+      m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
+      m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
+      m_Load->SetSign((Float)m_DescentDirection);
+      m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
+      m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+   
+      m_Solver.AssembleKandM();
+ 
+      if ( i > 0) 
+      {
+        SampleVectorFieldAtNodes(m_Solver);
+        LastScaleEnergy=ThisScaleEnergy;
+        ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
+      }
 //    m_Solver.PrintDisplacements();
 
-    IterativeSolve(m_Solver);
+      IterativeSolve(m_Solver);
 
-    ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
+      ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
 
-    GetVectorField(m_Solver);
-
-    if ( i == numLevels-1 ) 
-    { 
-    //  m_RefImg=Tcaster2->GetOutput(); // //FIXME for testing
-      WarpImage();     
-    }
-  }
+      GetVectorField(m_Solver);
+      if ( i == m_MaxLevel-1) 
+      { 
+      //  m_RefImg=Tcaster2->GetOutput(); // //FIXME for testing
+        WarpImage();     
+      } 
+      
+    }// end mesh resolution loop
+  }// end image resolution loop
 
   //LinearSystemSolverType* temp=
   //    dynamic_cast<LinearSystemSolverType*>(mySolver.GetLinearSystemWrapper());
@@ -955,7 +958,7 @@ void ImageRegLMEx::MultiResSolve()
   CreateLinearSystemSolver();
   m_Solver.AssembleKandM();
   
-  for (smoothing=m_NumLevels; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
+  for (smoothing=m_NumLevels; smoothing >= m_MaxLevel; smoothing/=m_SmoothingStep)
   {
     smoothfilter->SetVariance(smoothing);
     edgefilter->SetVariance(smoothing);
@@ -985,7 +988,7 @@ void ImageRegLMEx::MultiResSolve()
   m_Load->SetMetricTargetImage(m_TarImg); 
   m_Load->SetMetricReferenceImage(m_RefImg);
   IterativeSolve();
-  //if (smoothing <= m_MinSmoothing) m_RefImg=caster2->GetOutput(); // //FIXME for testing
+  //if (smoothing <= m_MaxLevel) m_RefImg=caster2->GetOutput(); // //FIXME for testing
 
   return;
 }

@@ -4,7 +4,7 @@
 0	% DescentDirection
 0	% DoLineSearch
 490000	% Elasticity
-7	% MaximumIterations
+2	% MaximumIterations
 1.	% TimeStep
 1.e3	% Rho
 E:\\Avants\\MetaImages\\brain_slice1smth.im	% ReferenceFileName
@@ -15,13 +15,13 @@ E:\\Avants\\MetaImages\\result	% ResultsFileName
 128	% Nx (image x dimension)
 128	% Ny (image y dimension)
 4	% MeshResolution
-8	% NumberOfIntegrationPoints
+4	% NumberOfIntegrationPoints
 1	% WidthOfMetricRegion
 1	% DoMultiRes - read the parameters below if this is true
 1	% DoSearchForMinAtEachResolution
 2	% Number of levels in the multi-res pyramid
-0.5	% MinSmoothing
-2.0	% SmoothingStep
+2	% Maximum Level to use in the pyramid 
+2	% Number of mesh resolution levels
 
 END
 
