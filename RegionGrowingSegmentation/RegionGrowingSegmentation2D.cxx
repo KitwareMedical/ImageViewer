@@ -30,6 +30,7 @@
   ::RegionGrowingSegmentation2D()
   {
 
+    m_BilateralImageViewer                      = InternalImageViewerType::New();
     m_CurvatureFlowImageViewer                  = InternalImageViewerType::New();
     m_GradientAnisotropicDiffusionImageViewer   = InternalImageViewerType::New();
     m_CurvatureAnisotropicDiffusionImageViewer  = InternalImageViewerType::New();
@@ -40,6 +41,7 @@
     m_ComposedImageViewer                       = InternalImageViewerType::New();
     m_InputImageViewer                          = InputImageViewerType::New();
 
+    m_BilateralImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
     m_CurvatureFlowImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
     m_GradientAnisotropicDiffusionImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
     m_CurvatureAnisotropicDiffusionImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
@@ -51,6 +53,9 @@
     m_InputImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
 
     m_InputImageViewer->SetLabel("Input Image");
+
+    m_BilateralImageViewer->SetLabel("Bilateral Image");
+    m_BilateralImageViewer->SetImage( m_BilateralImageFilter->GetOutput() );  
 
     m_CurvatureFlowImageViewer->SetLabel("Curvature Flow Image");
     m_CurvatureFlowImageViewer->SetImage( m_CurvatureFlowImageFilter->GetOutput() );  
@@ -85,6 +90,10 @@
 
     m_ConnectedThresholdImageFilter->SetUpper( 
         static_cast<InputPixelType>( upperThresholdCounter->value() ) );
+
+    m_BilateralImageFilter->SetRangeSigma( bilateralRangeSigmaValueInput->value());
+
+    m_BilateralImageFilter->SetDomainSigma( bilateralDomainSigmaValueInput->value());
 
     m_CurvatureFlowImageFilter->SetNumberOfIterations(
            static_cast<unsigned int>(curvatureFlowIterationsValueInput->value()) );
@@ -128,6 +137,7 @@
     composedImageButton->Observe( m_SobelImageFilter.GetPointer() );
     composedImageButton->Observe( m_MaximumImageFilter.GetPointer() );
     fuzzyConnectedImageButton->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
+    bilateralImageButton->Observe( m_BilateralImageFilter.GetPointer() );
     curvatureFlowImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
     gradientAnisotropicDiffusionImageButton->Observe( m_GradientAnisotropicDiffusionImageFilter.GetPointer() );
     curvatureAnisotropicDiffusionImageButton->Observe( m_CurvatureAnisotropicDiffusionImageFilter.GetPointer() );
@@ -135,6 +145,7 @@
     progressSlider->Observe( m_CastImageFilter.GetPointer() );
     progressSlider->Observe( m_NullImageFilter.GetPointer() );
     progressSlider->Observe( m_ImageReader.GetPointer() );
+    progressSlider->Observe( m_BilateralImageFilter.GetPointer() );
     progressSlider->Observe( m_CurvatureFlowImageFilter.GetPointer() );
     progressSlider->Observe( m_CurvatureAnisotropicDiffusionImageFilter.GetPointer() );
     progressSlider->Observe( m_GradientAnisotropicDiffusionImageFilter.GetPointer() );
@@ -187,6 +198,7 @@
   ::Quit(void)
   {
     m_InputImageViewer->Hide();
+    m_BilateralImageViewer->Hide();
     m_CurvatureFlowImageViewer->Hide();
     m_GradientAnisotropicDiffusionImageViewer->Hide();
     m_CurvatureAnisotropicDiffusionImageViewer->Hide();
@@ -429,6 +441,21 @@
   }
 
 
+ 
+  /************************************
+   *
+   *  Show Curvature Flow Image
+   *
+   ***********************************/
+  void
+  RegionGrowingSegmentation2D
+  ::ShowBilateralImage( void )
+  {
+    m_BilateralImageFilter->Update();
+    m_BilateralImageViewer->SetImage( m_BilateralImageFilter->GetOutput() );  
+    m_BilateralImageViewer->Show();
+
+  }
 
 
 
@@ -514,4 +541,32 @@ int main()
 }
 
 
+
+/************************************
+ *
+ *  Select Smoothing Filter
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation2D
+::SelectSmoothingFilter( unsigned int choice )
+{
+  RegionGrowingSegmentationBase2D::SelectSmoothingFilter( choice );
+  switch(choice)
+    {
+    case 0:
+      bilateralImageFilterGroup->show();
+      break;
+    case 1:
+      curvatureFlowImageFilterGroup->show();
+      break;
+    case 2:
+      gradientAnisotropicDiffusionImageFilterGroup->show();
+      break;
+    case 3:
+      curvatureAnisotropicDiffusionImageFilterGroup->show();
+      break;
+    }
+
+}
 

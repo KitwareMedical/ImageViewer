@@ -70,10 +70,12 @@ public:
   virtual void ShowConfidenceConnectedImage(void);
   virtual void ShowFuzzyConnectedImage(void);
   virtual void ShowHomogeneousImage(void);
+  virtual void ShowBilateralImage(void);
   virtual void ShowCurvatureFlowImage(void);
   virtual void ShowGradientAnisotropicDiffusionImage(void);
   virtual void ShowCurvatureAnisotropicDiffusionImage(void);
   virtual void ShowComposedImage(void);
+  virtual void SelectSmoothingFilter( unsigned int );
 
   virtual void Quit(void);
 
@@ -83,6 +85,7 @@ public:
 
 private:
 
+  InternalImageViewerPointer     m_BilateralImageViewer;
   InternalImageViewerPointer     m_CurvatureFlowImageViewer;
   InternalImageViewerPointer     m_GradientAnisotropicDiffusionImageViewer;
   InternalImageViewerPointer     m_CurvatureAnisotropicDiffusionImageViewer;

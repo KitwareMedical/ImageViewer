@@ -38,6 +38,9 @@ RegionGrowingSegmentationBase2D
   m_CastImageFilter = CastImageFilterType::New();
   m_CastImageFilter->SetInput( m_ImageReader->GetOutput() );
 
+  m_BilateralImageFilter = BilateralImageFilterType::New();
+  m_BilateralImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+
   m_CurvatureFlowImageFilter = CurvatureFlowImageFilterType::New();
   m_CurvatureFlowImageFilter->SetInput( m_CastImageFilter->GetOutput() );
 
@@ -136,12 +139,15 @@ RegionGrowingSegmentationBase2D
   switch(choice)
     {
     case 0:
-      m_NullImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+      m_NullImageFilter->SetInput( m_BilateralImageFilter->GetOutput() );
       break;
     case 1:
-      m_NullImageFilter->SetInput( m_GradientAnisotropicDiffusionImageFilter->GetOutput() );
+      m_NullImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
       break;
     case 2:
+      m_NullImageFilter->SetInput( m_GradientAnisotropicDiffusionImageFilter->GetOutput() );
+      break;
+    case 3:
       m_NullImageFilter->SetInput( m_CurvatureAnisotropicDiffusionImageFilter->GetOutput() );
       break;
     }

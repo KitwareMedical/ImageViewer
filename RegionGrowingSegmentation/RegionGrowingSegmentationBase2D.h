@@ -27,6 +27,7 @@
 #include <itkConfidenceConnectedImageFilter.h>
 #include <itkSimpleFuzzyConnectednessScalarImageFilter.h>
 
+#include <itkBilateralImageFilter.h>
 #include <itkCurvatureFlowImageFilter.h>
 #include <itkGradientAnisotropicDiffusionImageFilter.h>
 #include <itkCurvatureAnisotropicDiffusionImageFilter.h>
@@ -74,6 +75,10 @@ public:
                  InternalImageType >     NullImageFilterType;
 
 
+  /** Curvature flow image filter for producing homogeneous regions */
+  typedef   itk::BilateralImageFilter< 
+                 InternalImageType, 
+                 InternalImageType >     BilateralImageFilterType;
 
   /** Curvature flow image filter for producing homogeneous regions */
   typedef   itk::CurvatureFlowImageFilter< 
@@ -142,6 +147,8 @@ protected:
   CastImageFilterType::Pointer                m_CastImageFilter;
 
   NullImageFilterType::Pointer                m_NullImageFilter;
+
+  BilateralImageFilterType::Pointer           m_BilateralImageFilter;
 
   CurvatureFlowImageFilterType::Pointer       m_CurvatureFlowImageFilter;
 
