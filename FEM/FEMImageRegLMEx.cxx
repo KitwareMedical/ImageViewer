@@ -786,22 +786,20 @@ void ImageRegLMEx::MultiResSolve()
   pyramidR->Update();
   pyramidT->Update();
 
-  itk::RawImageIO<unsigned char,2>::Pointer io;
+/*  itk::RawImageIO<unsigned char,2>::Pointer io;
   itk::ImageFileWriter<ImageType>::Pointer writer;
   io = itk::RawImageIO<unsigned char,2>::New();
   writer = itk::ImageFileWriter<ImageType>::New();
   writer->SetImageIO(io);
-  writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");
+  writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");*/
 
   for (unsigned int i=0; i<numLevels; i++)
   {
     pyramidR->GetOutput( i )->Update();
     pyramidT->GetOutput( i )->Update();
 
-    Rcaster1 = CasterType1::New(); // Weird - don't know why but this worked
-    Tcaster1 = CasterType1::New(); // and declaring the casters outside the loop did not.
-    Rcaster2 = CasterType2::New();
-    Tcaster2 = CasterType2::New();
+    Rcaster2 = CasterType2::New();// Weird - don't know why but this worked
+    Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
  
 //  Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update(); writer->SetInput(Tcaster2->GetOutput()); writer->Write();
     
