@@ -74,7 +74,7 @@ public:
   virtual void ShowMappedReference(void);
   virtual void ShowAbout(void);
   virtual void Execute(void);
-  virtual void UpdateTransformationParameters(void);
+  virtual void UpdateTransformParameters(void);
   virtual void GenerateReference(void);
   virtual void GenerateMappedReference(void);
 
