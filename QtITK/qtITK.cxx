@@ -1,6 +1,8 @@
 
 #include <qapplication.h>
 #include <qpushbutton.h>
+#include <qslider.h>
+#include <qvbox.h>
 
 #include "itkImage.h"
 #include "itkImageFileReader.h"
@@ -32,8 +34,23 @@ int main(int argc, char **argv)
 
   reader->SetFileName( argv[1] );
 
-  QPushButton  bb( "Start", 0 );
+  QVBox qb;
+  qb.resize(120,200);
+
+  QPushButton  bb( "Start", &qb );
   bb.resize( 100, 30 );
+
+  QPushButton  cc( "State", &qb );
+  cc.resize( 100, 30 );
+
+  QPushButton  qt( "Quit", &qb );
+  qt.resize( 100, 30 );
+
+  QSlider qs( QSlider::Horizontal, &qb, "Progress");
+  qs.resize( 100, 30 );
+  qs.setRange(0,100);
+  qs.setValue(0);
+  
 
   typedef itk::QtSlotAdaptor<FilterType> SlotAdaptorType;
   SlotAdaptorType slotAdaptor;
@@ -52,14 +69,18 @@ int main(int argc, char **argv)
   filter->AddObserver( itk::StartEvent(),  signalAdaptor.GetCommand() );
 
   // Connect the adaptor's Signal to the Qt Widget Slot
-//  QObject::connect( &signalAdaptor, SIGNAL(Signal()), &bb, SLOT(Slot()) );
+  QObject::connect( &signalAdaptor, SIGNAL(Signal()), &cc, SLOT(toggle()) );
+
+
+
+  // Connect the Quit button signal to the quit slot of the application
+  QObject::connect( &qt, SIGNAL(clicked()), &app, SLOT(quit()) );
 
 
 
 
-
-  app.setMainWidget( &bb );
-  bb.show();
+  app.setMainWidget( &qb );
+  qb.show();
 
   return app.exec();
 
