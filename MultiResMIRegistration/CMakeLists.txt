@@ -13,9 +13,12 @@ ${ITK_BINARY_DIR}/Code/Common
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
-
 )
 
+SOURCE_FILES( MIRegistration_SRCS
+MIRegistrationApp
+MultiResMIRegistration )
 
-ADD_EXECUTABLE(MultiResMIRegistration MultiResMIRegistration )
+
+ADD_EXECUTABLE(MultiResMIRegistration MIRegistration_SRCS )
 
