@@ -38,15 +38,16 @@ protected:
   ColorTableType::Pointer      cColorTable;
 
 public:
-  /*! FLTK required constructor - must use imData() to complete definition */
+  /*! FLTK required constructor - must use imData() to complete 
+definition */
   GLSliceView(int x, int y, int w, int h, const char *l);
 
   /*! Specify the 3D image to view slice by slice */
-  void SetInputImage(ImageType * newImData);
+  void SetInputImage(ImageType::Pointer newImData);
   const ImageType::Pointer & GetInputImage(void) const;
 
   /*! Specify the 3D image to view as an overlay */
-  void SetInputOverlay(OverlayType * newOverlayData);
+  void SetInputOverlay(OverlayType::Pointer newOverlayData);
 
   /*! Return a pointer to the overlay data */
   const OverlayType::Pointer & GetInputOverlay(void) const;
@@ -104,19 +105,21 @@ SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::
-SetInputImage(ImageType * newImData)
+SetInputImage(ImageType::Pointer newImData)
 {
  
   if( cValidOverlayData )
   {
-   ImageType::RegionType region = newImData->GetLargestPossibleRegion();
+   ImageType::RegionType region = 
+newImData->GetLargestPossibleRegion();
    ImageType::SizeType   size   = region.GetSize();
    unsigned long *newdimsize = new unsigned long[3] ; 
    newdimsize[0]=size[0];
    newdimsize[1]=size[1];
    newdimsize[2]=size[2];
 
-   ImageType::RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
+   ImageType::RegionType overlay_region = 
+cOverlayData->GetLargestPossibleRegion();
    ImageType::SizeType   overlay_size   = overlay_region.GetSize();
    unsigned long *overlaydimsize = new unsigned long [3] ; 
    overlaydimsize[0]=overlay_size[0];
@@ -134,7 +137,8 @@ SetInputImage(ImageType * newImData)
   cImData = newImData;
 
   //calculating cDataMax and cDataMin
-  ImageType::RegionType cImData_region = cImData->GetLargestPossibleRegion();
+  ImageType::RegionType cImData_region = 
+cImData->GetLargestPossibleRegion();
   ImageType::SizeType   cImData_size   = cImData_region.GetSize();
 
    cDimSize = new unsigned long[3];
@@ -260,10 +264,12 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay( 
-                              OverlayType * newOverlayData)
-{ImageType::RegionType newoverlay_region = newOverlayData->GetLargestPossibleRegion();
+												OverlayType::Pointer newOverlayData)
+{ImageType::RegionType newoverlay_region = 
+newOverlayData->GetLargestPossibleRegion();
  ImageType::SizeType   newoverlay_size   = newoverlay_region.GetSize();
- ImageType::RegionType cImData_region = cImData->GetLargestPossibleRegion();
+ ImageType::RegionType cImData_region = 
+cImData->GetLargestPossibleRegion();
  ImageType::SizeType   cImData_size   = cImData_region.GetSize();
     if( !cValidImData ||
          newoverlay_size[2]==cImData_size[2] 
@@ -280,7 +286,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay(
           delete [] cWinOverlayData;
         }
 
-        const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY * 4;
+        const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY 
+* 4;
         cWinOverlayData = new unsigned char[ bufferSize ];
         update();
     }
@@ -291,8 +298,10 @@ GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay(
 
 
 template <class ImagePixelType, class OverlayPixelType>
-const typename GLSliceView<ImagePixelType, OverlayPixelType>::OverlayType::Pointer &
-GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) const
+const typename GLSliceView<ImagePixelType, 
+OverlayPixelType>::OverlayType::Pointer &
+GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) 
+const
 {
   return cOverlayData;
 }
@@ -305,7 +314,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) const
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::ViewOverlayData(
-                                                bool newViewOverlayData)
+                                                bool 
+newViewOverlayData)
 {
 
   cViewOverlayData = newViewOverlayData;
@@ -332,7 +342,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::ViewOverlayData(void)
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::ViewOverlayCallBack(
-                                  void (* newViewOverlayCallBack)(void) )
+                                  void (* newViewOverlayCallBack)(void) 
+)
 {
   cViewOverlayCallBack = newViewOverlayCallBack;
 }
@@ -372,7 +383,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::OverlayOpacity(void)
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-typename GLSliceView<ImagePixelType, OverlayPixelType>::ColorTableType * 
+typename GLSliceView<ImagePixelType, OverlayPixelType>::ColorTableType 
+* 
 GLSliceView<ImagePixelType, OverlayPixelType>::GetColorTable(void)
 {
   return &cColorTable;
@@ -406,11 +418,13 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   {
     ti = cDimSize[ cWinOrder[0] ]-1;
     cWinCenter[ cWinOrder[0] ] = (unsigned int)
-      ( cDimSize[cWinOrder[0]]-1-cDimSize[ cWinOrder[0] ]/( 2*cWinZoom ));
+      ( cDimSize[cWinOrder[0]]-1-cDimSize[ cWinOrder[0] ]/( 2*cWinZoom 
+));
   }
   cWinMinX = ti;
   
-  ti = (int)((int)cWinCenter[ cWinOrder[1] ] - cDimSize[ cWinOrder[1] ]/( 2*cWinZoom ));
+  ti = (int)((int)cWinCenter[ cWinOrder[1] ] - cDimSize[ cWinOrder[1] 
+]/( 2*cWinZoom ));
   if( ti < 0 ) {
     ti = 0;
     cWinCenter[ cWinOrder[1] ] = (unsigned int)
@@ -420,13 +434,16 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   if( ti >= (int)cDimSize[ cWinOrder[1] ] ) {
     ti = cDimSize[ cWinOrder[1] ]-1;
     cWinCenter[ cWinOrder[1] ] = (unsigned int)
-      ( cDimSize[ cWinOrder[1] ] - 1 - cDimSize[ cWinOrder[1] ]/( 2*cWinZoom ));
+      ( cDimSize[ cWinOrder[1] ] - 1 - cDimSize[ cWinOrder[1] ]/( 
+2*cWinZoom ));
   }
 
   cWinMinY = ti;
           
-  cWinSizeX = ( ((int)( cDimSize[ cWinOrder[0] ] / cWinZoom )) / 2 ) * 2;
-  cWinSizeY = ( ((int)( cDimSize[ cWinOrder[1] ] / cWinZoom )) / 2 ) * 2;
+  cWinSizeX = ( ((int)( cDimSize[ cWinOrder[0] ] / cWinZoom )) / 2 ) * 
+2;
+  cWinSizeY = ( ((int)( cDimSize[ cWinOrder[1] ] / cWinZoom )) / 2 ) * 
+2;
 
   cWinMaxX = cWinMinX + cWinSizeX - 1;
   if( cWinMaxX >= cDimSize[ cWinOrder[0] ] )
@@ -469,32 +486,40 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
       {
         default:
         case IMG_VAL:
-          tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+          tf = 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
           break;
         case IMG_LOG:
-          tf = (float)(log(cImData->GetPixel(ind)-cIWMin+0.00000001)/log(cIWMax-cIWMin+0.00000001)*255);
+          tf = 
+(float)(log(cImData->GetPixel(ind)-cIWMin+0.00000001)/log(cIWMax-cIWMin+0.00000001)*255);
           break;
         case IMG_DX:
           if(pointX[0]>0) {
-            tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
-            tf -= (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf = 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf -= 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             tf += 128;
           } else
             tf = 128;
           break;
         case IMG_DY:
           if(pointX[1]>0) {
-            tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
-            tf -= (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf = 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf -= 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             tf += 128;
           } else
             tf = 128;
           break;
         case IMG_DZ:
           if(pointX[2]>0) {
-            tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf = 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[2]--;
-            tf -= (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf -= 
+(float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             tf += 128;
           } else
             tf = 128;
@@ -516,7 +541,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
           
           const int tempval1 = (int)cDimSize[cWinOrder[2]]-1;
           const int tempval2 = (int)cWinCenter[cWinOrder[2]]+1;
-          pointX[cWinOrder[2]] = (tempval1 < tempval2 ) ? tempval1 : tempval2;
+          pointX[cWinOrder[2]] = (tempval1 < tempval2 ) ? tempval1 : 
+tempval2;
           ind[0] = pointX[0];
           ind[1] = pointX[1];
           ind[2] = pointX[2];
@@ -595,7 +621,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
         l = l * 4;
         if(cImageMode == IMG_MIP)
         {
-          pointX[cWinOrder[2]] = cWinZBuffer[(j-cWinMinX) + (k-cWinMinY)*cWinDataSizeX];
+          pointX[cWinOrder[2]] = cWinZBuffer[(j-cWinMinX) + 
+(k-cWinMinY)*cWinDataSizeX];
           ind[0] = pointX[0];
           ind[1] = pointX[1];
           ind[2] = pointX[2];
@@ -606,10 +633,14 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
           m = (int)*((unsigned char *)&(cOverlayData->GetPixel(ind)));
           if( m > 0 ) {
             m = m - 1;
-            cWinOverlayData[l+0] = (unsigned char)(cColorTable->color(m)->GetRed()*255);
-            cWinOverlayData[l+1] = (unsigned char)(cColorTable->color(m)->GetGreen()*255);
-            cWinOverlayData[l+2] = (unsigned char)(cColorTable->color(m)->GetBlue()*255);
-            cWinOverlayData[l+3] = (unsigned char)(cOverlayOpacity*255);
+            cWinOverlayData[l+0] = (unsigned 
+char)(cColorTable->color(m)->GetRed()*255);
+            cWinOverlayData[l+1] = (unsigned 
+char)(cColorTable->color(m)->GetGreen()*255);
+            cWinOverlayData[l+2] = (unsigned 
+char)(cColorTable->color(m)->GetBlue()*255);
+            cWinOverlayData[l+3] = (unsigned 
+char)(cOverlayOpacity*255);
           }
         }
         else 
@@ -620,20 +651,29 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
           {
             if( sizeof( OverlayPixelType ) == 3 )
             {
-              cWinOverlayData[l+0] = ((unsigned char *)&(cOverlayData->GetPixel(ind)))[0];
-              cWinOverlayData[l+1] = ((unsigned char *)&(cOverlayData->GetPixel(ind)))[1];
-              cWinOverlayData[l+2] = ((unsigned char *)&(cOverlayData->GetPixel(ind)))[2];
-              cWinOverlayData[l+3] = (unsigned char)(cOverlayOpacity*255);
+              cWinOverlayData[l+0] = ((unsigned char 
+*)&(cOverlayData->GetPixel(ind)))[0];
+              cWinOverlayData[l+1] = ((unsigned char 
+*)&(cOverlayData->GetPixel(ind)))[1];
+              cWinOverlayData[l+2] = ((unsigned char 
+*)&(cOverlayData->GetPixel(ind)))[2];
+              cWinOverlayData[l+3] = (unsigned 
+char)(cOverlayOpacity*255);
             }
             else 
             {
               if( sizeof( OverlayPixelType ) == 4 ) 
               {
-                cWinOverlayData[l+0] = ((unsigned char *)&(cOverlayData->GetPixel(ind)))[0];
-                cWinOverlayData[l+1] = ((unsigned char *)&(cOverlayData->GetPixel(ind)))[1];
-                cWinOverlayData[l+2] = ((unsigned char *)&(cOverlayData->GetPixel(ind)))[2];
-                cWinOverlayData[l+3] = (unsigned char)(((unsigned char *)
-                                        &(cOverlayData->GetPixel(ind)))[3]*cOverlayOpacity);
+                cWinOverlayData[l+0] = ((unsigned char 
+*)&(cOverlayData->GetPixel(ind)))[0];
+                cWinOverlayData[l+1] = ((unsigned char 
+*)&(cOverlayData->GetPixel(ind)))[1];
+                cWinOverlayData[l+2] = ((unsigned char 
+*)&(cOverlayData->GetPixel(ind)))[2];
+                cWinOverlayData[l+3] = (unsigned char)(((unsigned char 
+*)
+                                        
+&(cOverlayData->GetPixel(ind)))[3]*cOverlayOpacity);
               }
             }
           }
@@ -664,7 +704,8 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::size(int w, int h)
 
 
 template <class ImagePixelType, class OverlayPixelType>
-void GLSliceView<ImagePixelType, OverlayPixelType>::resize(int x, int y, int w, int h)
+void GLSliceView<ImagePixelType, OverlayPixelType>::resize(int x, int 
+y, int w, int h)
 {
   SliceView<ImagePixelType>::resize(x, y, w, h);
   Fl_Gl_Window::resize(x, y, w, h);
@@ -707,8 +748,10 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
     
     const double *spacing = cImData->GetSpacing();
     
-    float scale0 = cW/(float)cDimSize[0]*cWinZoom*spacing[cWinOrder[0]]/spacing[0];
-    float scale1 = cW/(float)cDimSize[0]*cWinZoom*spacing[cWinOrder[1]]/spacing[1];
+    float scale0 = 
+cW/(float)cDimSize[0]*cWinZoom*spacing[cWinOrder[0]]/spacing[0];
+    float scale1 = 
+cW/(float)cDimSize[0]*cWinZoom*spacing[cWinOrder[1]]/spacing[1];
 
    
     glRasterPos2i((cFlipX)?cW:0, (cFlipY)?cH:0);  
@@ -725,7 +768,8 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
     {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glDrawPixels(cWinDataSizeX, cWinDataSizeY, GL_RGBA, GL_UNSIGNED_BYTE, cWinOverlayData);
+      glDrawPixels(cWinDataSizeX, cWinDataSizeY, GL_RGBA, 
+GL_UNSIGNED_BYTE, cWinOverlayData);
       glDisable(GL_BLEND);
     }
 
@@ -842,3 +886,4 @@ int GLSliceView<ImagePixelType, OverlayPixelType>::handle(int event)
 
 }; //namespace
 #endif
+
