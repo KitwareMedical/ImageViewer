@@ -57,8 +57,8 @@ template < typename TFEMMesh >
 void 
 FEMElementQuadrilateral< TFEMMesh >
 ::ComputePositionAt( const ParametricPointType & parametricPoint,
-                           PointType           & globalPoint,
-                     const PointsContainer     & points       ) const
+                     const PointsContainer     & points,
+                           PointType           & globalPoint  ) const
 {
 
 }
@@ -74,8 +74,48 @@ template < typename TFEMMesh >
 void 
 FEMElementQuadrilateral< TFEMMesh >
 ::ComputeJacobianMatrixAt( const ParametricPointType & parametricPoint,
+                           const PointsContainer     & points,
                                  JacobianMatrixType  & jacobian ) const
 {
+  JacobianMatrixType & J = jacobian;
+
+  /**
+   * Get the derivatives of the shape functions at given
+   * point x
+   */
+  ShapeFunctionsDerivativesType shapeFunctionsDerivatives;
+  this->ComputeShapeFunctionDerivativesAt( parametricPoint, 
+                                           shapeFunctionsDerivatives );
+
+  PointIdConstIterator pts = this->GetCell().PointIdsBegin();
+  const PointType & p0 = points->ElementAt( *pts++ );
+  const PointType & p1 = points->ElementAt( *pts++ );
+  const PointType & p2 = points->ElementAt( *pts++ );
+  const PointType & p3 = points->ElementAt( *pts++ );
+   
+  /**
+   * Compute the elements of the Jacobian matrix
+   * for each coordinate of a node w.r.t. global coordinate system
+   */
+  J[0][0] = (shapeD[0][0] * m_node1->X)
+          + (shapeD[1][0] * m_node2->X)
+          + (shapeD[2][0] * m_node3->X)
+          + (shapeD[3][0] * m_node4->X);
+
+  J[0][1] = (shapeD[0][1] * m_node1->X)
+          + (shapeD[1][1] * m_node2->X)
+          + (shapeD[2][1] * m_node3->X)
+          + (shapeD[3][1] * m_node4->X);
+
+  J[1][0] = (shapeD[0][0] * m_node1->Y)
+          + (shapeD[1][0] * m_node2->Y)
+          + (shapeD[2][0] * m_node3->Y)
+          + (shapeD[3][0] * m_node4->Y);
+    
+  J[1][1] = (shapeD[0][1] * m_node1->Y)
+          + (shapeD[1][1] * m_node2->Y)
+          + (shapeD[2][1] * m_node3->Y)
+          + (shapeD[3][1] * m_node4->Y);
 
 }
 
@@ -93,6 +133,22 @@ FEMElementQuadrilateral< TFEMMesh >
 ::ComputeShapeFunctionsAt( const ParametricPointType & parametricPoint,
                                  ShapeFunctionsArrayType & shapeFunctions ) const
 {
+ 
+  /** given local point x=(r,s), where -1 <= r,s <= 1 and */
+  const CoordinateRepresentationType & r = parametricPoint[0];
+  const CoordinateRepresentationType & s = parametricPoint[1];
+
+  /** shape function 1: (node 1) */
+  shapeFunctions[0] = ( 1 - r ) * ( 1 - s ) * .25;
+
+  /** shape function 2: (node 2) */
+  shapeFunctions[1] = ( 1 + r ) * ( 1 - s ) * .25;
+
+  /** shape function 3: (node 3) */
+  shapeFunctions[2] = ( 1 + r ) * ( 1 + s ) * .25;
+
+  /** shape function 1: (node 4) */
+  shapeFunctions[3] = ( 1 - r ) * ( 1 + s ) * .25;
 
 }
 
@@ -110,7 +166,33 @@ FEMElementQuadrilateral< TFEMMesh >
                                 const ParametricPointType & parametricPoint,
                                 ShapeFunctionsDerivativesType & shapeDerivative ) const
 {
+  /** functions at directions r and s.  */
+  const CoordinateRepresentationType & r = parametricPoint[0];
+  const CoordinateRepresentationType & s = parametricPoint[1];
 
+  /** Derivative w.r.t r for shape function 1 (node 1) */
+  shapeDerivative[0][0] = -( 1 - s ) * .25;
+
+  /** Derivative w.r.t s for shape function 1 (node 1) */
+  shapeDerivative[0][1] = -( 1 - r ) * .25;
+
+  /** Derivative w.r.t r for shape function 2 (node 2) */
+  shapeDerivative[1][0] = +( 1 - s ) * .25;
+
+  /** Derivative w.r.t s for shape function 2 (node 2) */
+  shapeDerivative[1][1] = -( 1 + r ) * .25;
+
+  /** Derivative w.r.t r for shape function 3 (node 3) */
+  shapeDerivative[2][0] = +( 1 + s ) * .25;
+
+  /** Derivative w.r.t s for shape function 3 (node 3) */
+  shapeDerivative[2][1] = +( 1 + r ) * .25;
+
+  /** Derivative w.r.t r for shape function 4 (node 4) */
+  shapeDerivative[3][0] = -( 1 + s ) * .25;
+
+  /** Derivative w.r.t s for shape function 4 (node 4) */
+  shapeDerivative[3][1] = +( 1 - r ) * .25;
 }
 
 

@@ -70,30 +70,31 @@ public:
    * system corresponding to a given point in the master element.
    */
   void ComputePositionAt( const ParametricPointType & parametricPoint,
-                                PointType           & globalPoint,
-                          const PointsContainer     & points       ) const;
+                          const PointsContainer     & points,
+                                PointType           & globalPoint  ) const;
 
   /** 
    * Function that computes the Jacobian matrix of the
    * transformation from the master element.
    */
-  void ComputeJacobianMatrixAt( const ParametricPointType &,
-                                      JacobianMatrixType  &  ) const;
+  void ComputeJacobianMatrixAt( const ParametricPointType & parametricPoint,
+                                const PointsContainer     & points,
+                                      JacobianMatrixType  & jacobian ) const;
 
   /** 
    * Function that computes the shape functions defining
    * the geometry of this finite element at a given point.
    */
-  void ComputeShapeFunctionsAt( const ParametricPointType &,
-                                      ShapeFunctionsArrayType & ) const;
+  void ComputeShapeFunctionsAt( const ParametricPointType & parametricPoint,
+                                      ShapeFunctionsArrayType & shapeFunctions ) const;
 
   /**
    * Function that computes the derivatives of the shape
    * functions of this element at a given point.
    */
   void ComputeShapeFunctionDerivativesAt( 
-                                const ParametricPointType &,
-                                ShapeFunctionsDerivativesType & ) const;
+                    const ParametricPointType & parametricPoint,
+                          ShapeFunctionsDerivativesType & shapeFunctions ) const;
 
 
 

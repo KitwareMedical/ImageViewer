@@ -57,8 +57,8 @@ template < typename TFEMMesh >
 void 
 FEMElementTriangle< TFEMMesh >
 ::ComputePositionAt( const ParametricPointType & parametricPoint,
-                           PointType           & globalPoint,
-                     const PointsContainer     & points       ) const
+                     const PointsContainer     & points,
+                           PointType           & globalPoint  ) const
 {
 
 }
@@ -74,6 +74,7 @@ template < typename TFEMMesh >
 void 
 FEMElementTriangle< TFEMMesh >
 ::ComputeJacobianMatrixAt( const ParametricPointType & parametricPoint,
+                           const PointsContainer     & points,
                                  JacobianMatrixType  & jacobian ) const
 {
 

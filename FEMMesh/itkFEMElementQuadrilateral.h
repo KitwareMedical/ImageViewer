@@ -73,14 +73,15 @@ public:
    * system corresponding to a given point in the master element.
    */
   void ComputePositionAt( const ParametricPointType & parametricPoint,
-                                PointType           & globalPoint,
-                          const PointsContainer     & points       ) const;
+                          const PointsContainer     & points,
+                                PointType           & globalPoint  ) const;
 
   /** 
    * Function that computes the Jacobian matrix of the
    * transformation from the master element.
    */
   void ComputeJacobianMatrixAt( const ParametricPointType &,
+                                const PointsContainer     & points,
                                       JacobianMatrixType  &  ) const;
 
   /** 
