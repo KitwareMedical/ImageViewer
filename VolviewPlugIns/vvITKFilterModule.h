@@ -1,8 +1,8 @@
 /** Generic interface for protocol communication between an ITK filter
     and the VolView Plugin Interface */
 
-#ifndef _itkVVFilterModule_h
-#define _itkVVFilterModule_h
+#ifndef _vvITKFilterModule_h
+#define _vvITKFilterModule_h
 
 #include "vtkVVPluginAPI.h"
 
@@ -14,6 +14,11 @@
 #include "itkImageRegionConstIterator.h"
 #include "itkCommand.h"
 
+namespace VolView
+{
+
+namespace PlugIn
+{
 
 template <class TFilterType >
 class FilterModule {
@@ -186,11 +191,14 @@ public:
 private:
     typename ImportFilterType::Pointer    m_ImportFilter;
     typename FilterType::Pointer          m_Filter;
-    typename CommandType::Pointer         m_CommandObserver    ;
+    typename CommandType::Pointer         m_CommandObserver;
     vtkVVPluginInfo                     * m_Info;
     std::string                           m_UpdateMessage;
 };
 
 
+} // end namespace PlugIn
+
+} // end namespace VolView
 
 #endif

@@ -15,6 +15,11 @@
 #include "itkImageRegionConstIterator.h"
 #include "itkCommand.h"
 
+namespace VolView 
+{
+
+namespace PlugIn
+{
 
 template <class TPixelType, class TFilterType >
 class FilterModuleWithCasting {
@@ -217,6 +222,8 @@ private:
   
 };
 
+} // end of namespace PlugIn
 
+} // end of namespace Volview
 
 #endif

@@ -1,6 +1,6 @@
 /* perform segmentation using the confidence connected image filter */
 
-#include "itkVVFilterModule.h"
+#include "vvITKFilterModule.h"
 
 #include "itkConfidenceConnectedImageFilter.h"
 
@@ -22,7 +22,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       typedef  ImageType::IndexType                 IndexType;
       typedef  itk::ConfidenceConnectedImageFilter< ImageType,  ImageType >   FilterType;
       IndexType seed;
-      FilterModule< FilterType > module;
+      VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
@@ -46,7 +46,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       typedef  ImageType::IndexType                 IndexType;
       typedef  itk::ConfidenceConnectedImageFilter< ImageType,  ImageType >   FilterType;
       IndexType seed;
-      FilterModule< FilterType > module;
+      VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
@@ -137,12 +137,12 @@ static int UpdateGUI(void *inf)
 
 extern "C" {
   
-void VV_PLUGIN_EXPORT vvConfidenceConnectedInit(vtkVVPluginInfo *info)
+void VV_PLUGIN_EXPORT vvITKConfidenceConnectedInit(vtkVVPluginInfo *info)
 {
   // setup information that never changes
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
-  info->Name = "Confidence Connected Segmentation ";
+  info->Name = "Confidence Connected (ITK) ";
   info->TerseDocumentation = "Confidence Connected Segmentation";
   info->FullDocumentation = 
     "This filter applies an region growing algorithm for segmentation. The criterion for including new pixels in the region is defined by an intensity range around the mean value of the pixels existing in the region. The extent of the intensity interval is computed as the product of the variance and a multiplier provided by the user. The coordinates of a seed point are used as the initial position for start growing the region.";

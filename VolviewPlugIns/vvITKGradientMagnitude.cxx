@@ -1,9 +1,9 @@
-/* Computes the gradient magnitude after convolving with a gaussian kernel
-   The implementation uses IIR filter in order to improve performance    */
+/* Computes the gradient magnitude using finite differences localy */
 
-#include "itkVVFilterModule.h"
+#include "vvITKFilterModule.h"
 
-#include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
+#include "itkGradientMagnitudeImageFilter.h"
+
 
 static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
@@ -20,12 +20,12 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       {
       typedef  unsigned char                        PixelType;
       typedef  itk::Image< PixelType, Dimension >   ImageType; 
-      typedef  itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType,  ImageType >   FilterType;
-      FilterModule< FilterType > module;
+      typedef  itk::GradientMagnitudeImageFilter< ImageType,  ImageType >   FilterType;
+      VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Computing the gradient magnitude...");
-      // Set the parameters on it
-      module.GetFilter()->SetSigma(  atof( info->GUIItems[ 0 ].CurrentValue) );
+      // No parameters to set..
+
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -34,12 +34,12 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       {
       typedef  unsigned short                       PixelType;
       typedef  itk::Image< PixelType, Dimension >   ImageType; 
-      typedef  itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType,  ImageType >   FilterType;
-      FilterModule< FilterType > module;
+      typedef  itk::GradientMagnitudeImageFilter< ImageType,  ImageType >   FilterType;
+      VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Computing the gradient magnitude...");
-      // Set the parameters on it
-      module.GetFilter()->SetSigma(  atof( info->GUIItems[ 0 ].CurrentValue) );
+      // No parameters to set..
+
       // Execute the filter
       module.ProcessData( pds );
       break; 
@@ -59,12 +59,6 @@ static int UpdateGUI(void *inf)
 {
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
-  info->GUIItems[0].Label = "Sigma";
-  info->GUIItems[0].GUIType = VV_GUI_SCALE;
-  info->GUIItems[0].Default = "1.0";
-  info->GUIItems[0].Help = "Standard deviation of the Gaussian kernel used to smooth the image before computing the gradient";
-  info->GUIItems[0].Hints = "0 20 0.1";
-
   info->RequiredZOverlap = 0;
   
   info->OutputVolumeScalarType = info->InputVolumeScalarType;
@@ -80,27 +74,28 @@ static int UpdateGUI(void *inf)
   return 1;
 }
 
+
 extern "C" {
   
-void VV_PLUGIN_EXPORT vvGradientMagnitudeRecursiveGaussianInit(vtkVVPluginInfo *info)
+void VV_PLUGIN_EXPORT vvITKGradientMagnitudeInit(vtkVVPluginInfo *info)
 {
   // setup information that never changes
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
-  info->Name = "Gradient Magnitude IIR";
-  info->TerseDocumentation = "Gradient Magnitude IIR";
+  info->Name = "Gradient Magnitude (ITK)";
+  info->TerseDocumentation = "Gradient Magnitude";
   info->FullDocumentation = 
-    "This filter applies IIR filters to compute the equivalent of convolving the input image with the derivatives of a Gaussian kernel and then computing the magnitude of the resulting gradient.";
+    "This filter computes the magnitude if the gradient using finite differences. Basically by convolving with masks of type [-1,0,1].";
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
 
   // Number of bytes required in intermediate memory per voxel
-  info->PerVoxelMemoryRequired = 16; 
+  info->PerVoxelMemoryRequired = 1; // actually x the pixel size of the output image. 
   
   /* setup the GUI components */
-  info->NumberOfGUIItems = 1;
-  info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));
+  info->NumberOfGUIItems = 0;
+//  info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));
 }
 
 }

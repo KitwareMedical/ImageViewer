@@ -1,8 +1,8 @@
 /* perform smoothing using an anisotropic diffusion filter */
 
-#include "itkVVFilterModuleWithCasting.h"
+#include "vvITKFilterModuleWithCasting.h"
 
-#include "itkCurvatureAnisotropicDiffusionImageFilter.h"
+#include "itkCurvatureFlowImageFilter.h"
 
 static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
@@ -14,7 +14,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
   typedef   float       InternalPixelType;
   typedef   itk::Image< InternalPixelType,Dimension > InternalImageType; 
 
-  typedef   itk::CurvatureAnisotropicDiffusionImageFilter< 
+  typedef   itk::CurvatureFlowImageFilter< 
                                 InternalImageType,  
                                 InternalImageType >   FilterType;
  
@@ -24,26 +24,24 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
     {
     case VTK_UNSIGNED_CHAR:
       {
-      FilterModuleWithCasting< unsigned char, FilterType > module;
+      VolView::PlugIn::FilterModuleWithCasting< unsigned char, FilterType > module;
       module.SetPlugInfo( info );
-      module.SetUpdateMessage("Smoothing with Curvature Anisotropic Diffusion...");
+      module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
-      module.GetFilter()->SetNumberOfIterations(     atoi( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetTimeStep(               atof( info->GUIItems[ 1 ].CurrentValue) );
-      module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 2 ].CurrentValue) );
+      module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
       }
     case VTK_UNSIGNED_SHORT:
       {
-      FilterModuleWithCasting< unsigned short, FilterType > module;
+      VolView::PlugIn::FilterModuleWithCasting< unsigned short, FilterType > module;
       module.SetPlugInfo( info );
-      module.SetUpdateMessage("Smoothing with Curvature Anisotropic Diffusion...");
+      module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
-      module.GetFilter()->SetNumberOfIterations(     atoi( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetTimeStep(               atof( info->GUIItems[ 1 ].CurrentValue) );
-      module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 2 ].CurrentValue) );
+      module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
       // Execute the filter
       module.ProcessData( pds );
       break; 
@@ -75,12 +73,6 @@ static int UpdateGUI(void *inf)
   info->GUIItems[1].Help = "Discretization of time for approximating the diffusion process.";
   info->GUIItems[1].Hints = "0.01 1.0 0.005";
 
-  info->GUIItems[2].Label = "Conductance";
-  info->GUIItems[2].GUIType = VV_GUI_SCALE;
-  info->GUIItems[2].Default = "3.0";
-  info->GUIItems[2].Help = "Factor that multiplies the image gradient in order to compute the effective conductance locally. The higher the value of this parameter, the stronger the diffusion will be";
-  info->GUIItems[2].Hints = "0.1 10.0 0.1";
-
   info->RequiredZOverlap = 0;
   
   info->OutputVolumeScalarType = info->InputVolumeScalarType;
@@ -96,25 +88,27 @@ static int UpdateGUI(void *inf)
   return 1;
 }
 
+
 extern "C" {
   
-void VV_PLUGIN_EXPORT vvCurvatureAnisotropicDiffusionInit(vtkVVPluginInfo *info)
+void VV_PLUGIN_EXPORT vvITKCurvatureFlowInit(vtkVVPluginInfo *info)
 {
   // setup information that never changes
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
-  info->Name = "Curvature Anisotropic Diffusion";
+  info->Name = "Curvature Flow (ITK)";
   info->TerseDocumentation = "Anisotropic diffusion smoothing";
   info->FullDocumentation = 
-    "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of the image iso-contours. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
+    "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of iso-contours in the image. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
+  
   // Number of bytes required in intermediate memory per voxel
-  info->PerVoxelMemoryRequired = 8;
+  info->PerVoxelMemoryRequired = 8; // actually depends on the input pixel size
   
   /* setup the GUI components */
-  info->NumberOfGUIItems = 3;
+  info->NumberOfGUIItems = 2;
   info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));
 }
 

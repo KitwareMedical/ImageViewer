@@ -1,6 +1,6 @@
 /* perform a pixel-wise intensity transformation using a Sigmoid function */
 
-#include "itkVVFilterModule.h"
+#include "vvITKFilterModule.h"
 
 #include "itkSigmoidImageFilter.h"
 
@@ -20,7 +20,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       typedef  unsigned char                        PixelType;
       typedef  itk::Image< PixelType, Dimension >   ImageType; 
       typedef  itk::SigmoidImageFilter< ImageType,  ImageType >   FilterType;
-      FilterModule< FilterType > module;
+      VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Transforming intensities with a Sigmoid function...");
       // Set the parameters on it
@@ -37,7 +37,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       typedef  unsigned short                       PixelType;
       typedef  itk::Image< PixelType, Dimension >   ImageType; 
       typedef  itk::SigmoidImageFilter< ImageType,  ImageType >   FilterType;
-      FilterModule< FilterType > module;
+      VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Transforming intensities with a Sigmoid function...");
       // Set the parameters on it
@@ -103,14 +103,15 @@ static int UpdateGUI(void *inf)
   return 1;
 }
 
+
 extern "C" {
   
-void VV_PLUGIN_EXPORT vvSigmoidInit(vtkVVPluginInfo *info)
+void VV_PLUGIN_EXPORT vvITKSigmoidInit(vtkVVPluginInfo *info)
 {
   // setup information that never changes
   info->ProcessData = ProcessData;
-  info->UpdateGUI = UpdateGUI;
-  info->Name = "Sigmoid";
+  info->UpdateGUI   = UpdateGUI;
+  info->Name = "Sigmoid (ITK)";
   info->TerseDocumentation = "Simoid Intensity Transform";
   info->FullDocumentation = 
     "This filters applies a pixel-wise intensity transform by using a Sigmoid function";
