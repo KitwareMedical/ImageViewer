@@ -160,6 +160,7 @@ public:
 
   liImageRegistrationConsoleBase();
   virtual ~liImageRegistrationConsoleBase();
+  virtual void Load(void)=0;
   virtual void Load(const char * filename);
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
