@@ -60,7 +60,7 @@ void FEMElement::LinkDOFs(void)
           // Yes. Copy the DOFs from the neighboring cell's point
           // since they have to be the same. Note that neighboring point
           // may contain more or less DOFs. If it has more, we simply ignore
-          // the rest, if it has less, we'll get invalid DOF id from GetDOF
+          // the rest, if it has less, we'll get invalid DOF id from GetDOFatPoint
           // function.
           for(unsigned int d=0;d<this->NumberOfDegreesOfFreedom();d++)
           {
