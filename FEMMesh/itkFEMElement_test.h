@@ -157,6 +157,11 @@ public:
   virtual DOFType GetDOFatPoint( unsigned int pt, unsigned int dof ) = 0;
 
   /**
+   * Return number of DOFs present at each point within a cell.
+   */
+  virtual int NumberOfDegreesOfFreedomAtPoint(void) = 0;
+
+  /**
    * Links the DOFs in a current element with the elements
    * in the neighborhood. The basic implementation of this
    * function is provided here with the base class. If the

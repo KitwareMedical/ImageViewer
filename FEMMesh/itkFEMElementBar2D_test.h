@@ -120,6 +120,8 @@ public:
     return GetDOF(pt2dof[pt][i]);
   }
 
+  virtual int NumberOfDegreesOfFreedomAtPoint(void) { return 2; }
+
   /** 
    * Array that stores mapping between points in cell and corresponding DOFs.
    * This array is used by function GetDOFatPoint.
