@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __ShapeDetectApp_h
 #define __ShapeDetectApp_h
 
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkCovariantVector.h"
 #include "itkGradientRecursiveGaussianImageFilter.h"
 #include "itkFastMarchingImageFilter.h"
