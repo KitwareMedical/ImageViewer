@@ -1,3 +1,5 @@
+FIND_INCLUDE( FLTK_INCLUDE_DIR H:/usr/local/fltk )
+
 LIBRARY(
 FltkImageViewer
 )
