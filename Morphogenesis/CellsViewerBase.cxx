@@ -10,6 +10,7 @@ namespace bio {
 CellsViewerBase
 ::CellsViewerBase()
 {
+  m_Display.SetBackground( 0.8, 0.8, 0.9 );
   m_Stop = true;
 }
 
@@ -34,6 +35,7 @@ CellsViewerBase
 void CellsViewerBase
 ::Quit(void)
 {
+  this->Stop();
 	this->HideDisplay();
 }
 
@@ -69,6 +71,11 @@ CellsViewerBase
 ::Run(void)
 {
 	m_Stop = false;
+  while( !m_Stop )
+    {
+    m_Cells->AdvanceTimeStep();
+    Fl::check();
+    }
 }
 
 
@@ -101,7 +108,7 @@ void CellsViewerBase
  *    Connect the cellular aggregate
  */ 
 void CellsViewerBase
-::SetCellsAggregate( Cell::CellsListType * cells )
+::SetCellsAggregate( CellularAggregate * cells )
 {
 	m_Cells = cells;
 }

@@ -19,6 +19,17 @@ Bacteria
 
 
 
+/**
+ *    Constructor
+ */ 
+Bacteria
+::Bacteria(Cell::CellsListType * cells):Cell( cells )
+{
+}
+
+
+
+
 
 
 /**
@@ -56,7 +67,8 @@ Bacteria
 ::Divide(void) 
 {
 
-    Bacteria * sibling = new Bacteria;
+
+    Bacteria * sibling = new Bacteria( GetAggregate() );
 
     m_Radius            = m_Radius/sqrt(2.0);
     sibling->m_Radius   = m_Radius;
@@ -67,13 +79,14 @@ Bacteria
                    atan(1) * 4.0;
 
     Cell::VectorType PerturbationVector;
-    double PerturbationLength = m_Radius * 0.5;
+    double PerturbationLength = m_Radius * 0.75;
 
     PerturbationVector[0] = PerturbationLength * cos( angle );
     PerturbationVector[1] = PerturbationLength * sin( angle );
 
-    m_Position    	+= PerturbationVector;
-    sibling->m_Position -= PerturbationVector; 
+    sibling->m_Position = m_Position - PerturbationVector; 
+    
+    m_Position    	   += PerturbationVector;
 
 }
 

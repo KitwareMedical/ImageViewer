@@ -33,8 +33,8 @@ CellsViewer
 void CellsViewer
 ::Quit(void)
 {
-  CellsViewerBase::Quit();
 	this->HideControls();
+  CellsViewerBase::Quit();
 }
 
 

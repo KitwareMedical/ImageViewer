@@ -40,8 +40,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 
-#include <BacterialColonyRedrawCommand.h>
-#include <itkProcessObject.h>
+#include "BacterialColonyRedrawCommand.h"
+#include "itkProcessObject.h"
+#include "fltkCommandEvents.h"
 
 
 namespace bio {
@@ -61,7 +62,7 @@ BacterialColonyRedrawCommand
 
 //--------------------------------------------------
 //
-//    Execute
+//    Connect the Bacterial Colony
 //
 //--------------------------------------------------
 void
@@ -83,9 +84,9 @@ BacterialColonyRedrawCommand
 ::Execute( itk::LightObject * caller, unsigned long event )
 {
 
-  if( event == RedrawEvent )
+  if( event == fltk::GlDrawEvent )
     {
-      if( m_BacterialColony )
+    if( m_BacterialColony )
       {
       m_BacterialColony->Draw();
       }
@@ -105,9 +106,9 @@ BacterialColonyRedrawCommand
 ::Execute( const itk::LightObject * caller, unsigned long event )
 {
 
-  if( event == RedrawEvent )
+  if( event == fltk::GlDrawEvent )
     {
-      if( m_BacterialColony )
+    if( m_BacterialColony )
       {
       m_BacterialColony->Draw();
       }

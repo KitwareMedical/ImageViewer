@@ -28,6 +28,7 @@ Cell
 CellsViewerBase
 CellsViewerGUI
 CellsViewer
+CellularAggregate
 Bacteria
 BacterialColony
 BacterialColonyRedrawCommand

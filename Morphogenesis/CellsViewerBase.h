@@ -4,7 +4,7 @@
 
 #include "itkLightObject.h"
 #include "fltkDisplayGlWindowFlatGUI.h"
-#include "Cell.h"
+#include "CellularAggregate.h"
 
 namespace bio {
 
@@ -33,7 +33,7 @@ public:
 	virtual void Resume(void);
   virtual void ShowDisplay(void);
   virtual void HideDisplay(void);
-  virtual void SetCellsAggregate( Cell::CellsListType * );
+  virtual void SetCellsAggregate( CellularAggregate * );
 
   itk::Command::Pointer GetRedrawCommand(void);
   itk::LightObject::Pointer GetNotifier(void);
@@ -45,7 +45,7 @@ private:
 
   fltkDisplayGlWindowFlatGUI  m_Display;
 
-  Cell::CellsListType * m_Cells;
+  CellularAggregate::Pointer  m_Cells;
 
 };
 

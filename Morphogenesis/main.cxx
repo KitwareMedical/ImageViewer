@@ -12,17 +12,19 @@ int main()
 
   bio::CellsViewer      viewer;
 
-  viewer.SetCellsAggregate( colony->GetCellsAggregate() );
+  viewer.SetCellsAggregate( colony );
 
   colony->AddObserver( itk::Command::ModifiedEvent, 
                        viewer.GetRedrawCommand()    );
 
   bio::BacterialColonyRedrawCommand::Pointer colonyRedrawCommand =
-    bio::BacterialColonyRedrawCommand::New();
+                                    bio::BacterialColonyRedrawCommand::New();
 
   colonyRedrawCommand->SetBacterialColony( colony );
 
-  viewer.GetNotifier()->AddObserver( bio::RedrawEvent, colonyRedrawCommand );
+  viewer.GetNotifier()->AddObserver( fltk::GlDrawEvent, colonyRedrawCommand );
+
+  colony->SetGrowthRadiusIncrement( 0.01 );
 
   viewer.Show();
   

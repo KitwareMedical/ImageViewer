@@ -93,9 +93,20 @@ void
 Cell
 ::Draw(void) const
 {
-  glBegin( GL_TRIANGLE_FAN );
+
+  const unsigned int NumberOfSides = 12;
+  const double PI = 4.0 * atan(1.0);
+  const double sectorAngle = 2.0 * PI / static_cast<double>( NumberOfSides );
+
+  glBegin( GL_LINE_LOOP );
     glColor3f( m_Color.GetRed(), m_Color.GetGreen(), m_Color.GetBlue() );
-    glVertex3d(m_Position[0],m_Position[1],m_Position[2]);
+    for(unsigned int side=0; side < NumberOfSides; side++)
+      {
+      const double angle = static_cast<double>( side ) * sectorAngle;
+      double x = m_Radius * cos( angle ) + m_Position[0];
+      double y = m_Radius * sin( angle ) + m_Position[1];
+      glVertex2d( x, y );
+      }
   glEnd(); 
 }
 
@@ -147,6 +158,18 @@ Cell
 {
   return m_Radius;
 }
+
+
+/**
+ *    Return the Color 
+ */ 
+Cell::ColorType
+Cell
+::GetColor(void) const
+{
+  return m_Color;
+}
+
 
 
 

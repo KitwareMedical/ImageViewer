@@ -43,6 +43,8 @@ public:
   virtual void AdvanceTimeStep(void);
   virtual void EnergyIntake(void);
   virtual void NutrientsIntake(void);
+
+  virtual ColorType GetColor(void) const;
   
   const PointType & GetPosition(void) const;
   CellsListType   * GetAggregate(void);
