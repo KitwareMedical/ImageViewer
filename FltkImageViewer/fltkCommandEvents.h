@@ -30,6 +30,7 @@ namespace fltk {
 itkEventMacro( RedrawEvent,            itk::UserEvent );
 itkEventMacro( GlDrawEvent,            itk::UserEvent );
 itkEventMacro( VolumeReslicedEvent,    itk::UserEvent );
+itkEventMacro( ClippingPlaneEvent,     itk::UserEvent );
 
 
   
