@@ -26,6 +26,8 @@ ${FLTK_LIB_PATH}
 # here if we didn't find VTK.
 INCLUDE(${USE_VTK_FILE})
 LINK_LIBRARIES( 
+  ITKFltkImageViewer
+  ITKVtkFltk
   vtkRendering
   vtkGraphics	  
   vtkHybrid	  
@@ -33,8 +35,6 @@ LINK_LIBRARIES(
   vtkIO
   vtkFiltering
   vtkCommon
-  FltkImageViewer
-  vtkFltk
 )
 
 SET(ThinPlateSplinesApplication_SRCS
