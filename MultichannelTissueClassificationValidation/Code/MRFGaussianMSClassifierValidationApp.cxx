@@ -16,6 +16,7 @@
 =========================================================================*/
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
 
 #include "MRFGaussianMSClassifierValidationApp.h"
 #include "itkImage.h"

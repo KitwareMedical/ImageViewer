@@ -57,7 +57,7 @@ public:
   typedef TImage ImageType;
   
   /** Enumeration of the image dimension. */
-  enum { ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension,, unsigned int, TImage::ImageDimension);
 
   /** Set the input image. */
   itkSetObjectMacro( Image, ImageType );

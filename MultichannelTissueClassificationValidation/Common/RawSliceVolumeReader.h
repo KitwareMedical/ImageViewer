@@ -65,13 +65,13 @@ public:
   /** Image Type. */
   typedef TImage ImageType;
   typedef typename ImageType::SizeType SizeType;
-  enum { ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** File format pixel type. */
   typedef TPixel PixelType;
 
   /** Spacing type. */
-  typedef FixedArray<double,ImageDimension> SpacingType;
+  typedef FixedArray<double,itkGetStaticConstMacro(ImageDimension)> SpacingType;
 
   /** Set the file name prefix. */
   itkSetStringMacro( FilePrefix );

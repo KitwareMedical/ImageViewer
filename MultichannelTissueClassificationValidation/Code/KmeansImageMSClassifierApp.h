@@ -108,7 +108,7 @@ public:
   typedef typename ClassifiedImageType::PixelType ClassifiedImagePixelType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TVectorInputImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TVectorInputImage::ImageDimension);
 
   /** Set the input fixed image. */
   itkSetObjectMacro( VectorInputImage, VectorInputImageType );
