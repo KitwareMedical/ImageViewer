@@ -29,9 +29,9 @@ integer.  (But see below for hooks to change these parameters.)
 
 #include "itkAffineTransform.h"
 #include "itkImage.h"
-#include "itkImageMoments.h"
-#include "itkImageRegionSimpleIterator.h"
-#include "itkLinearInterpolateFunction.h"
+#include "itkImageMomentsCalculator.h"
+#include "itkSimpleImageRegionIterator.h"
+#include "itkLinearInterpolateImageFunction.h"
 
 
 enum {NDimensions = 3};
@@ -43,9 +43,9 @@ typedef ImageType::SizeType                 ImageSizeType;
 typedef ImageType::AffineTransformType      AffineTransformType;
 
 typedef itk::Index<NDimensions>                    ImageIndexType;
-typedef itk::ImageRegionSimpleIterator<ImageType>  ImageIteratorType;
-typedef itk::ImageMoments<PixelType, NDimensions>  ImageMomentsType;
-typedef itk::LinearInterpolateFunction<ImageType>  InterpolatorType;
+typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
+typedef itk::ImageMomentsCalculator<PixelType, NDimensions>  ImageMomentsCalculatorType;
+typedef itk::LinearInterpolateImageFunction<ImageType>  InterpolatorType;
 typedef itk::Point<double, NDimensions>            PointType;
 
 
@@ -140,7 +140,7 @@ main(int argc, char *argv[])
 
     /* Compute principal moments and axes */
     std::cout << "Computing moments and transformation." << std::endl;
-    ImageMomentsType moments(image);
+    ImageMomentsCalculatorType moments(image);
     double ctm = moments.GetTotalMass();
     vnl_vector_fixed<double,3>
         ccg = moments.GetCenterOfGravity();
