@@ -6,13 +6,6 @@ vtkPatchedImageReader.cxx
 vtkPatchedLookupTable.cxx
 vtkWSBoundingBoxManager.cxx
 vtkWSLookupTableManager.cxx
-vtkBinaryVolume.h
-vtkBinaryVolumeLogic.h
-vtkBoundingBox.h
-vtkPatchedImageReader.h
-vtkPatchedLookupTable.h
-vtkWSBoundingBoxManager.h
-vtkWSLookupTableManager.h
 vtkLookupTableEquivalencyHash.cxx
 vtkITKWatershedFilterAndWriter.h
 )
