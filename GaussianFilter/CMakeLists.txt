@@ -34,8 +34,18 @@ liFilterConsoleBase
 GaussianFilter
 )
 
+SOURCE_FILES(GaussianFilter2D_SRCS
+liFilterConsole2D
+liFilterConsole2DBase
+GaussianFilter2D
+)
+
 SOURCE_FILES(GaussianFilter_GUI_SRCS
 liFilterConsoleGUI.fl
+)
+
+SOURCE_FILES(GaussianFilter2D_GUI_SRCS
+liFilterConsole2DGUI.fl
 )
 
 LINK_LIBRARIES (
@@ -43,6 +53,8 @@ ITKCommon
 ITKBasicFilters 
 ITKIO
 IView
+itkpng
+itkzlib
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
@@ -61,8 +73,10 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(GaussianFilter GaussianFilter_SRCS)
+ADD_EXECUTABLE(GaussianFilter   GaussianFilter_SRCS)
+ADD_EXECUTABLE(GaussianFilter2D GaussianFilter2D_SRCS)
 
-FLTK_WRAP_UI(GaussianFilter GaussianFilter_GUI_SRCS)
+FLTK_WRAP_UI(GaussianFilter     GaussianFilter_GUI_SRCS)
+FLTK_WRAP_UI(GaussianFilter2D   GaussianFilter2D_GUI_SRCS)
 
 
