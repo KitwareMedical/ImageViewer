@@ -308,12 +308,13 @@ liFilterConsole
 ::ShowInput( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
-  {
-    this->ShowStatus("Please load an image first");
+  if( ! (m_ImageFileNameAvailable) ) 
+    {
+    this->ShowStatus("Please provide an image filename first");
     return;
-  }
+    }
 
+  m_Reader->Update();
   m_InputViewer->SetImage( m_Reader->GetOutput() );  
   m_InputViewer->Show();
 
@@ -483,9 +484,9 @@ liFilterConsole
 ::Execute( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
+  if( ! (m_ImageFileNameAvailable) ) 
   {
-    this->ShowStatus("Please load an image first");
+    this->ShowStatus("Please provide an image filename first");
     return;
   }
 

@@ -103,7 +103,7 @@ protected:
   AddFilterType::Pointer                         m_Add;
   ModulusFilterType::Pointer                 m_Modulus;
 
-  bool                                   m_ImageLoaded;
+  bool                        m_ImageFileNameAvailable;
 
   /*
   VolumeWriterType::Pointer         m_Writer_Laplacian;

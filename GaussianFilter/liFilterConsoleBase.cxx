@@ -30,7 +30,7 @@ liFilterConsoleBase
 ::liFilterConsoleBase()
 {
 
-  m_ImageLoaded = false;
+  m_ImageFileNameAvailable = false;
 
   m_Reader     = VolumeReaderType::New();
   
@@ -164,9 +164,8 @@ liFilterConsoleBase
   }
 
   m_Reader->SetFileName( filename );
-  m_Reader->Update();
 
-  m_ImageLoaded = true;
+  m_ImageFileNameAvailable = true;
 
 }
 
@@ -244,7 +243,7 @@ liFilterConsoleBase
 ::Execute( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
+  if( ! (m_ImageFileNameAvailable) ) 
   {
     ShowStatus("Please load an image first");
     return;
