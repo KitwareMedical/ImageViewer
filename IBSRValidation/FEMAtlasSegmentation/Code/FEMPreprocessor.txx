@@ -110,8 +110,8 @@ OutputImagePointer & output)
   calculator->SetInputSample(sample.GetPointer()) ;
   calculator->Update();
 */
-  typedef BinaryThresholdImageFilter<OutputImageType,RealImageType> InputThresholderType;
-  typename InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
+  typedef BinaryThresholdImageFilter<OutputImageType,OutputImageType> InputThresholderType;
+  InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
 
   inputThresholder->SetInput( input );
   inputThresholder->SetInsideValue( 1.0 );
@@ -121,7 +121,7 @@ OutputImagePointer & output)
 
   // Declare the type for the MULTIPLY filter
   typedef itk::MultiplyImageFilter<OutputImageType,
-                                RealImageType,OutputImageType >  MultFilterType;
+                                OutputImageType,OutputImageType >  MultFilterType;
  // Create an MULTIPLY Filter                                
   MultFilterType::Pointer filter = MultFilterType::New();
 
