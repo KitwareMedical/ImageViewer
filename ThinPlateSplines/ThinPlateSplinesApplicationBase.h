@@ -43,7 +43,7 @@ public:
 
   enum { PointsDimension              = 3 };
 
-  typedef float       CoordinateRepresentationType;
+  typedef double       CoordinateRepresentationType;
 
   typedef itk::Point< CoordinateRepresentationType,
                                   PointsDimension >  PointType;
