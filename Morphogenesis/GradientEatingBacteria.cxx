@@ -16,7 +16,7 @@
 =========================================================================*/
 
 
-
+#include <fstream>
 #include "GradientEatingBacteria.h"
 #include "CellularAggregate.h"
 
