@@ -33,7 +33,6 @@ LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
 ITKBasicFilters 
-ImageRegistrationLib
 MetaImageIO
 IView
 FltkImageViewer

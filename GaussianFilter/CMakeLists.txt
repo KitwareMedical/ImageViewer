@@ -33,7 +33,6 @@ GaussianFilter
 LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
-GaussianFilterLib
 MetaImageIO
 IView
 FltkImageViewer
