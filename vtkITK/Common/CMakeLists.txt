@@ -1,4 +1,5 @@
 SOURCE_FILES( VTKITKCommon_SRCS
+vtkITKMutualInformationTransform.cxx
 vtkITKWatershedImageFilter.cxx
 vtkITKNormalizeImageFilter.cxx
 vtkITKConnectedThresholdImageFilter.cxx
