@@ -135,7 +135,7 @@ CellsViewerBase
 /**
  *    Return and object that accept observers
  */ 
-itk::LightObject::Pointer
+itk::Object::Pointer
 CellsViewerBase
 ::GetNotifier(void)
 {

@@ -81,7 +81,7 @@ CellsViewerCommand
 //--------------------------------------------------
 void
 CellsViewerCommand
-::Execute( const itk::LightObject * caller, unsigned long event )
+::Execute( const itk::Object * caller, unsigned long event )
 {
 
   CellularAggregate::ConstPointer aggregate(
@@ -110,9 +110,9 @@ CellsViewerCommand
 //--------------------------------------------------
 void
 CellsViewerCommand
-::Execute( itk::LightObject * caller, unsigned long event )
+::Execute( itk::Object * caller, unsigned long event )
 {
-  const itk::LightObject * constcaller = caller;
+  const itk::Object * constcaller = caller;
   Execute( constcaller, event );
 }
 

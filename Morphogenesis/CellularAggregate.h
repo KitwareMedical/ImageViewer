@@ -21,7 +21,7 @@ namespace bio {
  * This class is the base for different types of cellular groups
  * including bacterial colonies and pluricellular organisms 
  */
-class CellularAggregate : public itk::LightObject
+class CellularAggregate : public itk::Object
 {
 
 public:
@@ -33,7 +33,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef itk::LightObject  Superclass;
+  typedef itk::Object  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -45,7 +45,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(CellularAggregate, itk::LightObject);
+  itkTypeMacro(CellularAggregate, itk::Object);
 
   /**
    * Method for creation through the object factory.

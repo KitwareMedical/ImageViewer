@@ -2,7 +2,7 @@
 #ifndef __CellsViewerBase_H
 #define __CellsViewerBase_H
 
-#include "itkLightObject.h"
+#include "itkObject.h"
 #include "fltkDisplayGlWindowFlatGUI.h"
 #include "CellularAggregate.h"
 #include <ctime>
@@ -39,7 +39,7 @@ public:
   virtual clock_t GetStartTime(void) const;
 
   itk::Command::Pointer GetRedrawCommand(void);
-  itk::LightObject::Pointer GetNotifier(void);
+  itk::Object::Pointer GetNotifier(void);
   
 
 private:
