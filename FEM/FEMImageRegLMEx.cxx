@@ -723,14 +723,14 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
      */
     mySolver.Solve();  
   
-    Float cure=0.0,mint=1.0,tstep=m_LineSearchStep;
-
-   if (m_DoLineSearchOnImageEnergy) 
+  
+   if (m_DoLineSearchOnImageEnergy && iters > 0) 
    {
      std::cout << " line search " ;
    mySolver.GoldenSection(1.e-1);
    std::cout << " line search done " << std::endl;
-  /*
+  /* 
+     Float mint;
      for (Float t=tstep; t <= 1.0; t=t+tstep) 
      {
         cure=m_Load->EvaluateMetricGivenSolution(&(mySolver.el), t);
@@ -745,8 +745,7 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
    LastE=mySolver.EvaluateResidual(1.0);
    deltE=fabs(LastE-m_MinE);
    if (LastE <= m_MinE  || minct < NumMins )
-   {
-     mint=iters;   
+   {  
      mySolver.AddToDisplacements();  
      if (LastE >= m_MinE) minct++; else m_MinE=LastE;
    } //else iters=m_Maxiters;
@@ -756,7 +755,7 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
      minct=NumMins;
    }
    
-   std::cout << " min E " << m_MinE << " Cur E " << LastE << "  t " << mint << " iter " << iters << std::endl;
+   std::cout << " min E " << m_MinE << " Cur E " << LastE <<  " iter " << iters << std::endl;
    iters++;
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere.
    //GetVectorField();
@@ -934,7 +933,7 @@ template<class TReference,class TTarget>
 void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
 {
 
-  Float LastScaleEnergy=0.0, ThisScaleEnergy=0.0;
+//  Float LastScaleEnergy=0.0, ThisScaleEnergy=0.0;
   vnl_vector<Float> LastResolutionSolution;
 //   Setup a multi-resolution pyramid
   typedef itk::RecursiveMultiResolutionPyramidImageFilter<FloatImageType,FloatImageType>
@@ -1029,7 +1028,7 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
       m_Load->SetMetric(m_Metric);
       m_Load->InitializeMetric();
       ImageSizeType r;
-      for (unsigned int i=0; i<ImageDimension; i++) r[i]=m_MetricWidth;
+      for (unsigned int dd=0; dd<ImageDimension; dd++) r[dd]=m_MetricWidth;
       m_Load->SetMetricRadius(r);
       m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
       m_Load->GN=SSS.load.size()+1; //NOTE SETTING GN FOR FIND LATER
@@ -1042,15 +1041,15 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
       if ( i > 0) 
       {
         SampleVectorFieldAtNodes(SSS);
-        LastScaleEnergy=ThisScaleEnergy; ThisScaleEnergy=LastScaleEnergy; // need to resolve this
-        ThisScaleEnergy=SSS.EvaluateResidual(0.0);
+//        LastScaleEnergy=ThisScaleEnergy; ThisScaleEnergy=LastScaleEnergy; // need to resolve this
+//        ThisScaleEnergy=SSS.EvaluateResidual(0.0);
       }
 //    SSS.PrintDisplacements();
 
       IterativeSolve(SSS);
 
-      ThisScaleEnergy=SSS.EvaluateResidual(0.0);
-      std::cout << " E " << ThisScaleEnergy << std::endl;
+//      ThisScaleEnergy=SSS.EvaluateResidual(0.0);
+//      std::cout << " E " << ThisScaleEnergy << std::endl;
 
       GetVectorField(SSS);
       if ( i == m_MaxLevel-1) 
@@ -1110,17 +1109,17 @@ void ImageRegLMEx<TReference,TTarget>::CreateLinearSystemSolver()
 // explicitly template the load implementation type.
 
 
-//#define TWOD
-#define THREED
+#define TWOD
+//#define THREED
 #ifdef TWOD
 typedef itk::Image< unsigned char, 2 >                     fileImageType;
-typedef itk::Image< float, 2 >                     ImageType;
+typedef itk::Image< unsigned char, 2 >                     ImageType;
 // We now declare an element type and load implementation pointer for the visitor class.
 typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
 #endif 
 #ifdef THREED
 typedef itk::Image< unsigned char, 3 >                     fileImageType;
-typedef itk::Image< float, 3 >                     ImageType;
+typedef itk::Image< unsigned char, 3 >                     ImageType;
 typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
 #endif
 typedef itk::fem::ImageMetricLoad<ImageType,ImageType>     ImageLoadType;
@@ -1206,10 +1205,10 @@ void ReadRawImageFiles( RegistrationType&  X )
   IntensityEqualizeFilter->ThresholdAtMeanIntensityOn();
   IntensityEqualizeFilter->Update();
 
-  X.SetReferenceImage(refrescalefilter->GetOutput());
-  X.SetTargetImage(IntensityEqualizeFilter->GetOutput());
-//  X.SetReferenceImage(reffilter->GetOutput());
-//  X.SetTargetImage(tarfilter->GetOutput());
+//  X.SetReferenceImage(refrescalefilter->GetOutput());
+//  X.SetTargetImage(IntensityEqualizeFilter->GetOutput());
+  X.SetReferenceImage(reffilter->GetOutput());
+  X.SetTargetImage(tarfilter->GetOutput());
 }
 
 int main() 
