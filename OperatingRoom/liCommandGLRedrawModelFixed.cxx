@@ -14,7 +14,7 @@
 
 #include <liShape3D.h>
 #include <liCommandGLRedrawModelFixed.h>
-#include <FL/Fl.h>
+#include <FL/Fl.H>
 
 namespace li {
 

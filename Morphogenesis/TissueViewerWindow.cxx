@@ -1,6 +1,6 @@
 #include "TissueViewerWindow.h"
 
-#include <Fl/fl_draw.H>
+#include <FL/fl_draw.H>
 
 
 namespace bio  {
