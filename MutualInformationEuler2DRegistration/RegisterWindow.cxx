@@ -35,6 +35,10 @@ RegisterWindow::RegisterWindow()
   menuRegisteredImageDisplay->deactivate() ;
   menuMixedChannel->deactivate() ;
 
+  m_IterationObserver = IterationObserverType::New();
+  m_IterationObserver->SetOptimizer( m_Registrator->GetOptimizer() );
+  m_IterationObserver->SetBrowser( iterationsBrowser );
+
   this->ShowStatus("Let's start by loading an image...");
 }
 
@@ -248,6 +252,10 @@ void RegisterWindow::ShowMixedChannel(void)
 
 void RegisterWindow::Execute(void)
 {
+
+  iterationsWindow->show();
+  Fl::check();
+
   clock_t time_begin ;
   clock_t time_end ;
 

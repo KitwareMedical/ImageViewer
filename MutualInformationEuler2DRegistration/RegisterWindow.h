@@ -2,9 +2,10 @@
 #define __RegisterWindow_h
 
 #include "itkRGBPixel.h"
-#include <fltkImage2DViewer.h>
-#include <fltkRGBImage2DViewer.h>
-#include <registerGUI.h>
+#include "fltkImage2DViewer.h"
+#include "fltkRGBImage2DViewer.h"
+#include "registerGUI.h"
+#include "CommandIterationUpdate.h"
 
 class RegisterWindow : public RegisterGUI
 {
@@ -15,6 +16,8 @@ public:
   typedef itk::RGBPixel< PixelType > MixedChannelPixelType ;
   typedef fltk::Image2DViewer< PixelType > ImageViewerType ;
   typedef fltk::RGBImage2DViewer< PixelType > MixedChannelViewerType ;
+  typedef CommandIterationUpdate< 
+            RegistratorType::OptimizerType > IterationObserverType;
 
   RegisterWindow() ;
   virtual ~RegisterWindow() ;
@@ -52,6 +55,7 @@ private:
   ImageViewerType::Pointer m_DebugViewer ;
   itk::FixedArray< ChannelSourceIdentifierType, 3 > m_ChannelSources ;
   fltk::Image2DViewerWindow::SelectionBoxType m_TempBox ;
+  IterationObserverType::Pointer   m_IterationObserver;
 } ; // end of class
 
 #endif
