@@ -1,9 +1,11 @@
 INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 )
 
 LINK_DIRECTORIES(
+${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
@@ -93,6 +95,11 @@ IF(BUILD_TRIPLETKID)
   ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_TRIPLETKID)
 
+# Add an option to build or not build the EllipsoidInteriorExteriorSpatialFunction example
+OPTION(BUILD_ELLIPSOID_SPATIAL_FUNCTION "Build the Ellipsoid Interior Exterior Spatial Function example")
+IF(BUILD_ELLIPSOID_SPATIAL_FUNCTION)
+SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
+ENDIF(BUILD_ELLIPSOID_SPATIAL_FUNCTION)
 
 LINK_LIBRARIES (
 VXLNumerics
