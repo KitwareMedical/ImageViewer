@@ -11,11 +11,11 @@ FileIOMetaImageFactory::FileIOMetaImageFactory()
   int i;
 
   for (i = 0; i < extensionsList.size(); i++)
-  {
+    {
     RegisterOverride(m_MyProduct->GetSupportedFileExtensions()[i].c_str(),
                      "FileIOMetaImage", "Create FileIOMetaImage", true,
                      CreateObjectFunction<FileIOMetaImage>::New());
-  }
+    }
 }
 
 const char* FileIOMetaImageFactory::GetITKSourceVersion()
@@ -251,18 +251,13 @@ FileIOMetaImage::GetSupportedFileExtensions() const
   return fileExtensionsList;
 }
 
-void FileIOMetaImage::Print(itk::Ofstream& os)
-{
-  ImageIO::Print(os);
-}
-
 void FileIOMetaImage::CopyAcquisitionParamsToImageIO (MetaImage* fromHere)
 {
   SetComment(fromHere->Comment());
   SetDate(fromHere->Date());
   SetModality(fromHere->Modality());
   SetOrientation(fromHere->Orientation());
-  SetImagePosition(fromHere->Position());
+  SetImageOrigin(fromHere->Position());
   SetPatientPosition(fromHere->PatPosition());
   SetSequenceID(fromHere->SequenceID());
   SetElementSize(fromHere->ElemSize());
@@ -276,7 +271,7 @@ void FileIOMetaImage::CopyAcquisitionParamsToMetaImage (MetaImage* toHere)
   toHere->Modality(GetModality());
   toHere->Orientation(GetOrientation());
   toHere->PatPosition(GetPatientPosition());
-  toHere->Position(GetImagePosition());
+  toHere->Position(GetImageOrigin());
   toHere->SequenceID(GetSequenceID());
   toHere->ElemSize(GetElementSize());
   toHere->ElemSpacing(GetElementSpacing());
@@ -388,7 +383,7 @@ float* FileIOMetaImage::GetOrientation() const
   return (float*) m_Orientation;
 }
 
-void FileIOMetaImage::SetImagePosition(const float* newValue)
+void FileIOMetaImage::SetImageOrigin(const float* newValue)
 {
   int i;
 
@@ -405,7 +400,7 @@ void FileIOMetaImage::SetImagePosition(const float* newValue)
   }
 }
 
-float* FileIOMetaImage::GetImagePosition() const
+float* FileIOMetaImage::GetImageOrigin() const
 {
   return (float*) m_ImagePosition;
 }

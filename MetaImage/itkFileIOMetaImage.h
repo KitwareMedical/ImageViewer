@@ -110,12 +110,12 @@ public:
   /**
    * Specify the image position
    */
-  void SetImagePosition(const float* newValue);
+  void SetImageOrigin(const float* newValue);
 
   /**
    * Get the image position
    */
-  float* GetImagePosition() const;
+  float* GetImageOrigin() const;
 
   /**
    * Get the image spacing
@@ -171,11 +171,6 @@ public:
    * Get the element spacing
    */
   float* GetElementSpacing() const;
-
-  /**
-   * Print information about myself
-   */
-  void Print(itk::Ofstream& os);
 
 protected:
   std::string m_Comment;
