@@ -7,6 +7,7 @@
 #include "fltkSlice3DDrawer.h"
 #include "fltkDisplayGlWindowGUI.h"
 #include "CellularAggregate.h"
+#include <map>
 #include <time.h>
 
 
@@ -36,6 +37,11 @@ class CellsViewerBase
   typedef fltk::Slice3DDrawer<ImageType>              SliceDrawerType;
   typedef SliceDrawerType::Pointer                    SliceDrawerPointer;
 
+  typedef std::map< std::string, ImagePointer >       SubstratesType;
+
+  typedef std::map< std::string, SliceDrawerPointer > SubstratesDrawersType;
+
+
 public:
 
 	CellsViewerBase();
@@ -54,11 +60,19 @@ public:
   virtual void HideCellularAggregateControls(void);
   virtual void SetCellsAggregate( CellularAggregate * );
   virtual clock_t GetStartTime(void) const;
-  virtual void LoadImage(void);
+  virtual void LoadSubstrate(void);
+  virtual void ShowSubstrate( const char * name );
 
   itk::Command::Pointer GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
   
+
+protected:
+  
+  SubstratesType                      m_Substrates;
+
+  SubstratesDrawersType               m_SubstrateSliceDrawer;
+
 
 private:
   
@@ -66,15 +80,7 @@ private:
 
   fltkDisplayGlWindowGUI              m_Display;
 
-  ImagePointer                        m_Image;
-
-  ImageReaderPointer                  m_ImageReader;
-
-  SliceDrawerPointer                  m_SliceDrawer;
-
   CellularAggregate::Pointer          m_Cells;
-
-  bool                                m_ImageIsLoaded;
 
   clock_t   m_StartTime;
 

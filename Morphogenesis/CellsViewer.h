@@ -32,6 +32,7 @@ public:
   virtual void Show(void);
   virtual void ShowControls(void);
   virtual void HideControls(void);
+  virtual void LoadSubstrate(void);
 
 private:
   

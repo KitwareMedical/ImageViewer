@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0010 
+version 1.0009 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -7,15 +7,14 @@ gridy 5
 snap 3
 class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
-  Function {CellsViewerGUI()} {open
-  } {
+  Function {CellsViewerGUI()} {} {
     Fl_Window controlWindow {
-      label {Control Panel} open selected
+      label {Control Panel} open
       xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
       Fl_Button {} {
-        label {/usr/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif}
         xywh {10 75 110 75} box FLAT_BOX labeltype image
       }
       Fl_Menu_Bar {} {
@@ -26,8 +25,8 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
           xywh {0 0 100 20}
         } {
           menuitem {} {
-            label {Load Image}
-            callback {LoadImage();}
+            label {Load Substrate}
+            callback {LoadSubstrate();}
             xywh {0 0 100 20}
           }
           menuitem {} {
@@ -46,8 +45,8 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
             xywh {0 0 100 20}
           }
           menuitem {} {
-            label {Image 3D controls}
-            callback {ShowSlicerControls();}
+            label {Substrates Controls}
+            callback {substratesWindow->show();}
             xywh {10 10 100 20}
           }
         }
@@ -78,6 +77,15 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       Fl_Value_Output timeValueOutput {
         label {Time : }
         xywh {180 120 60 25}
+      }
+    }
+    Fl_Window substratesWindow {
+      label Substrates open
+      xywh {852 76 249 146} visible
+    } {
+      Fl_Browser substratesBrowser {
+        callback {ShowSubstrate( o->text( o->value() ) );} selected
+        xywh {15 15 220 115} type Select
       }
     }
   }

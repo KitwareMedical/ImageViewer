@@ -17,25 +17,6 @@ CellsViewerBase
   m_Display.GetGlWindow()->SetBackground( 0.8, 0.8, 0.9 );
   m_Stop =            true;
   m_StartTime =          0;
-  m_ImageIsLoaded =  false;
-
-  m_SliceDrawer = SliceDrawerType::New();
-
-  m_ImageReader = ImageReaderType::New();
-    
-  m_Image = m_ImageReader->GetOutput();
-
-  m_SliceDrawer->SetInput( m_Image.GetPointer() );
-
-  m_Display.GetNotifier()->AddObserver( fltk::GlDrawEvent,
-                             m_SliceDrawer->GetDrawCommand().GetPointer() );
-
-  m_SliceDrawer->AddObserver( fltk::VolumeReslicedEvent,
-                               m_Display.GetRedrawCommand() );
-  
-  m_ImageReader->AddObserver( itk::Command::EndEvent,
-                              m_Display.GetRedrawCommand() );
-                               
 
 }
 
@@ -65,6 +46,17 @@ void CellsViewerBase
   this->HideSlicerControls();
   this->HideCellularAggregateControls();
 	this->HideDisplay();
+
+  // Hide the substrate controls
+  SubstratesDrawersType::const_iterator slicer = 
+                            m_SubstrateSliceDrawer.begin();
+
+  while ( slicer != m_SubstrateSliceDrawer.end() )
+    {
+    slicer->second->Hide();
+    ++slicer;
+    }
+
 }
 
 
@@ -97,9 +89,9 @@ void CellsViewerBase
 void CellsViewerBase
 ::ShowSlicerControls(void)
 {
-  if( m_ImageIsLoaded && Cell::Dimension==3 )
+  if( Cell::Dimension==3 )
     {
-  	m_SliceDrawer->Show();
+  	//m_SliceDrawer->Show();
     }
 }
 
@@ -111,7 +103,7 @@ void CellsViewerBase
 void CellsViewerBase
 ::HideSlicerControls(void)
 {
-  m_SliceDrawer->Hide();
+  //m_SliceDrawer->Hide();
 }
 
 
@@ -232,24 +224,44 @@ CellsViewerBase
 
 
 /**
+ *    Show the substrate controls
+ */ 
+void
+CellsViewerBase
+::ShowSubstrate( const char * name )
+{
+  std::string substrateName = name;
+  SliceDrawerPointer slice = m_SubstrateSliceDrawer[ substrateName ];
+  if( slice )
+    {
+    slice->Show();
+    }
+
+}
+
+
+
+/**
  *    Load an Image representing the substrate
  */ 
 void
 CellsViewerBase
-::LoadImage()
+::LoadSubstrate()
 {
   const char * filename = fl_file_chooser("","","");
   if( !filename )
   {
     return;
   }
-  m_ImageReader->SetFileName( filename );
+
+  ImageReaderPointer imageReader = ImageReaderType::New();
+
+  imageReader->SetFileName( filename );
   try {
-    m_ImageReader->Update();
+    imageReader->Update();
   }
   catch ( itk::ExceptionObject & ex )
   {
-    m_ImageIsLoaded = false;
     std::string message;
     message = "Problem found while reading image ";
     message += filename;
@@ -261,9 +273,43 @@ CellsViewerBase
     return;
   }
   
-  m_SliceDrawer->SetInput( m_Image.GetPointer() );
+  char buff[500];
+  sprintf( buff,"Substrate%03d",m_Substrates.size() );
+  std::string substrateName = buff;
 
-  m_ImageIsLoaded = true;
+  const char * useranswer = fl_input( "Substrate Name", 
+                                    substrateName.c_str() );
+
+  if( !useranswer ) 
+    {
+    return;
+    } 
+
+  substrateName = useranswer;
+
+  SliceDrawerPointer substrateSliceDrawer = SliceDrawerType::New();
+    
+  substrateSliceDrawer->SetInput( imageReader->GetOutput().GetPointer() );
+
+  m_Display.GetNotifier()->AddObserver( 
+             fltk::GlDrawEvent,
+             substrateSliceDrawer->GetDrawCommand().GetPointer() );
+
+  substrateSliceDrawer->AddObserver( 
+                           fltk::VolumeReslicedEvent,
+                           m_Display.GetRedrawCommand() );
+ 
+  
+  m_Substrates[ substrateName ] 
+                  = imageReader->GetOutput().GetPointer();
+  
+  m_SubstrateSliceDrawer[ substrateName ] 
+                  = substrateSliceDrawer.GetPointer();
+
+
+  substrateSliceDrawer->SetLabel( substrateName.c_str() );
+  substrateSliceDrawer->Show();
+  
 }
 
   

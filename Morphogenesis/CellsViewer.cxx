@@ -34,6 +34,7 @@ void CellsViewer
 ::Quit(void)
 {
 	this->HideControls();
+  substratesWindow->hide();
   CellsViewerBase::Quit();
 }
 
@@ -109,6 +110,25 @@ void CellsViewer
 
 
 
+/**
+ *    Load an Image representing the substrate
+ */ 
+void
+CellsViewer
+::LoadSubstrate()
+{
+  CellsViewerBase::LoadSubstrate();
+  substratesBrowser->clear();
+  SubstratesType::const_iterator substrate = m_Substrates.begin();
+  while ( substrate != m_Substrates.end() )
+    {
+    substratesBrowser->add( substrate->first.c_str() );
+    ++substrate;
+    }
+}
+
+
+ 
 }; // end namespace bio
 
 

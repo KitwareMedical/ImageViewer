@@ -14,16 +14,16 @@ namespace bio {
   
 Cell::ColorType    Cell::DefaultColor;
 
-double             Cell::DefaultRadius         =       10; // microns
+double             Cell::DefaultRadius         =       1.0; // microns
 
-double             Cell::GrowthRadiusIncrement =      0.1; // 0.001 microns
-double             Cell::GrowthRadiusLimit     =       20; // microns
+double             Cell::GrowthRadiusIncrement =       0.1; // 0.001 microns
+double             Cell::GrowthRadiusLimit     =       2.0; // microns
 
-double             Cell::NutrientSelfRepairLevel  =     0; 
-double             Cell::EnergySelfRepairLevel    =     0; 
+double             Cell::NutrientSelfRepairLevel  =      0; 
+double             Cell::EnergySelfRepairLevel    =      0; 
 
-double             Cell::DefaultEnergyIntake      =     1; 
-double             Cell::DefaultNutrientsIntake   =     1; 
+double             Cell::DefaultEnergyIntake      =      1; 
+double             Cell::DefaultNutrientsIntake   =      1; 
 
 
 unsigned long      Cell::Counter = 0; // number of cells created
