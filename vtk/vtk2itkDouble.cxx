@@ -31,6 +31,7 @@
 #include "vtkDataSetReader.h"
 #include "vtkUnstructuredGrid.h"
 #include "vtkDataSet.h"
+#include "vtkCellArray.h"
 
 typedef itk::Mesh<double, 3,
   itk::DefaultStaticMeshTraits< double, 3, 3, double, double > > doubleMesh;
