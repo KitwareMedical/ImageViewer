@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.00 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -28,7 +28,7 @@ removeCB = NULL;
 saveCB = NULL;} {}
     Fl_Window iviewWindow {
       label IView open
-      xywh {1236 66 315 430} labelsize 10 resizable
+      xywh {592 127 315 430} labelsize 10 resizable
       code0 {\#include<itkImageRegionIteratorWithIndex.h>} visible
     } {
       Fl_Box sliceView {
@@ -37,7 +37,7 @@ saveCB = NULL;} {}
         code0 {\#include <GLSliceView.h>}
         class {GLSliceView<float, unsigned char>}
       }
-      Fl_Menu_Bar {} {open selected
+      Fl_Menu_Bar {} {open
         xywh {0 0 275 25}
         code0 {addMenuBarOptions();}
       } {
@@ -70,9 +70,9 @@ saveCB = NULL;} {}
           }
         }
         submenu {} {
-          label Filter
+          label Filter selected
           xywh {0 0 100 20}
-          code0 {addFilterMenuOptions();}
+          code0 {if( o ) addFilterMenuOptions();}
         } {
           menuitem {} {
             label Value

@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.00 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -30,7 +30,7 @@ removeCB = NULL;
 saveCB = NULL;} {}
     Fl_Window iviewWindow {
       label IView open
-      xywh {961 562 315 430} labelsize 10 resizable
+      xywh {704 283 315 430} labelsize 10 resizable
       code0 {\#include<itkImageRegionIterator.h>} visible
     } {
       Fl_Menu_Bar {} {open
@@ -66,9 +66,9 @@ saveCB = NULL;} {}
           }
         }
         submenu {} {
-          label Filter
+          label Filter selected
           xywh {0 0 100 20}
-          code0 {addFilterMenuOptions();}
+          code0 {if( o ) addFilterMenuOptions();}
         } {
           menuitem {} {
             label Value
@@ -257,6 +257,6 @@ saveCB = NULL;} {}
   } {}
   Function {Orientation(unsigned int)} {return_type {virtual void}
   } {}
-  Function {setOverlay(const Image<unsigned char,3>::Pointer img)} {selected return_type {virtual void}
+  Function {setOverlay(const Image<unsigned char,3>::Pointer img)} {return_type {virtual void}
   } {}
 } 
