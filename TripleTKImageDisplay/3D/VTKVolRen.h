@@ -24,7 +24,7 @@
 #include <vtkPiecewiseFunction.h>
 #include <vtkUnsignedCharArray.h>
 #include "itkImage.h"
-#include "itkSimpleImageRegionIterator.h"
+#include "itkImageRegionIterator.h"
 
 /** \class VTKVolRen
  * \brief Class of vtk convenience functions painful to work out.
@@ -314,7 +314,7 @@ bool VTKVolRen<T>::SetInputImage(ImageType * image)
   //double imRange = mImData->dataMax()-imMin;
 
   
-  itk::SimpleImageRegionIterator<ImageType> it(mImData, mImData->GetLargestPossibleRegion());
+  itk::ImageRegionIterator<ImageType> it(mImData, mImData->GetLargestPossibleRegion());
   it = it.Begin();
   
   double imMin = 100000 ;
@@ -421,8 +421,8 @@ void VTKVolRen<T>::update(void)
   //spacing to 1,1,1. The caller must scale the actor by
   //(xstep, ystep, zstep).
   
-  itk::SimpleImageRegionIterator<ImageType> it(mImData,mImData->GetRequestedRegion());
-  itk::SimpleImageRegionIterator<OverlayType> itMask(mMask,mMask->GetRequestedRegion());
+  itk::ImageRegionIterator<ImageType> it(mImData,mImData->GetRequestedRegion());
+  itk::ImageRegionIterator<OverlayType> itMask(mMask,mMask->GetRequestedRegion());
   it = it.Begin();
   
   double imMin = 100000 ;
