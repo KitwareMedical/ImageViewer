@@ -27,7 +27,6 @@ MetaImageIO
 
 SOURCE_FILES (GaussianMinimumErrorClassifier_SRCS
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection/OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/Statistics/itkMaxDecisionRule
 MaximumLikelihoodRatioDecisionRule
 GaussianMinimumErrorClassifier
 )
