@@ -120,7 +120,7 @@ protected:
   ~WriteMetaImage() {}
   WriteMetaImage(const Self&) {}
   void operator=(const Self&) {}
-  void PrintSelf(std::ofstream& os, Indent indent);
+  void PrintSelf(std::ofstream& os, Indent indent) const;
 
 private:
   std::string m_FileName;
