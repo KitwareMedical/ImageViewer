@@ -153,6 +153,29 @@ Image2DViewer<ImagePixelType>
 
 
 
+template <class ImagePixelType>
+void
+Image2DViewer<ImagePixelType>
+::SetClickCallBack(void* ptrObject,
+                   void (*clickCallBack)(void* ptrObject,
+                                      int & px, int & py ))
+{
+  imageViewer->SetClickCallBack( ptrObject, clickCallBack );
+}
+
+
+
+template <class ImagePixelType>
+void
+Image2DViewer<ImagePixelType>
+::SetSelectionCallBack(void* ptrObject,
+                   void (*selectionCallBack)(void* ptrObject,
+                   fltk::Image2DViewerWindow::SelectionBox*))
+{
+  imageViewer->SetSelectionCallBack( ptrObject, selectionCallBack );
+}
+
+
 
 
 } // end namespace itk

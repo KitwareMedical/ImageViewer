@@ -80,8 +80,13 @@ public:
                             void (*selectionCallBack)
                             (void* ptrObject, 
                              SelectionBoxType* box)) ;
+  void SetClickCallBack(void* ptrObject, 
+                            void (*clickCallBack)
+                            (void* ptrObject, 
+                             int & x, int & y )) ;
 
-  void SetClickCallBack( void (*clickCallBack)( int & px, int & py)) ;
+
+  void (*clickCallBack)( void *ptrObject, int & px, int & py);
 
 
   typedef enum { 
@@ -111,8 +116,9 @@ private:
 
   SelectionBoxType m_Box ;
   void* m_SelectionCallBackTargetObject ;
+  void* m_ClickCallBackTargetObject ;
   void (*m_SelectionCallBack)(void* ptrObject, SelectionBoxType* box) ;
-  void (*m_ClickCallBack)( int & px, int & py) ;
+  void (*m_ClickCallBack)(void* ptrObject, int & px, int & py) ;
 };
 
 

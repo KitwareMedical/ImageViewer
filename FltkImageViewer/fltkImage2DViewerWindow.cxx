@@ -589,6 +589,18 @@ Image2DViewerWindow
 }
 
 
+void 
+Image2DViewerWindow
+::SetClickCallBack(void* ptrObject,
+                   void (*clickCallBack)(void* ptrObject,
+                                      int & px, int & py ))
+{
+  m_ClickCallBackTargetObject = ptrObject ;
+  m_ClickCallBack = clickCallBack ;
+}
+
+
+
 //------------------------------------------
 //
 //    Click Event Handling 
@@ -601,7 +613,7 @@ Image2DViewerWindow
   
   if (m_ClickCallBack != 0)
     {
-      m_ClickCallBack( px, py ) ;
+      m_ClickCallBack( m_ClickCallBackTargetObject, px, py ) ;
     }
 
   redraw();

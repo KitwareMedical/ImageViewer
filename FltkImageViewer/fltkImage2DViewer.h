@@ -87,10 +87,16 @@ public:
    */
   itkGetObjectMacro( RedrawCommand, ObserverCommandType );
 
-//    void SetSelectionCallBack(void* ptrObject, 
-//                              void (*selectionCallBack)
-//                              (void* ptrObject, 
-//                               Image2DViewerWindow::SelectionBoxType* box)) ;
+   void SetSelectionCallBack(void* ptrObject, 
+                             void (*selectionCallBack)
+                             (void* ptrObject, 
+                             Image2DViewerWindow::SelectionBoxType* box)) ;
+
+   void SetClickCallBack(void* ptrObject, 
+                             void (*selectionCallBack)
+                             (void* ptrObject, 
+                             int & px, int & y));
+
 
   itkSetMacro(FlipY, bool) ;
 
