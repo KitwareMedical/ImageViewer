@@ -58,7 +58,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           }
         }
       }
-      Fl_Group {} {
+      Fl_Group {} {open
         xywh {15 40 800 485} box DOWN_FRAME
       } {
         Fl_Box m_FlRenderWindowInteractor {
@@ -126,7 +126,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
         xywh {855 500 125 25}
       }
       Fl_Group {} {
-        label {Spline Kernels}
+        label {Spline Kernels} open
         xywh {830 65 165 80} box ENGRAVED_FRAME
       } {
         Fl_Choice splineKernelVTKChoice {
@@ -143,7 +143,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           }
         }
         Fl_Choice splineKernelITKChoice {
-          label {ITK  } selected
+          label {ITK  } open
           xywh {875 75 110 25}
         } {
           menuitem {} {
@@ -157,6 +157,10 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           menuitem {} {
             label {Elastic Body}
             xywh {15 15 100 20}
+          }
+          menuitem {} {
+            label {Elastic Body Reciprocal} selected
+            xywh {25 25 100 20}
           }
           menuitem {} {
             label Volume

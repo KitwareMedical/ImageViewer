@@ -63,6 +63,8 @@ ThinPlateSplinesApplicationBase
 
   m_ElasticBodySplineTransformITK = ElasticBodySplineTransformType::New();
 
+  m_ElasticBodyReciprocalSplineTransformITK = ElasticBodyReciprocalSplineTransformType::New();
+
   m_VolumeSplineTransformITK = VolumeSplineTransformType::New();
 
   m_ThinPlateSplineTransformVTK = vtkThinPlateSplineTransform::New();
@@ -464,6 +466,37 @@ ThinPlateSplinesApplicationBase
 
 }
 
+
+
+void
+ThinPlateSplinesApplicationBase
+::MapPointsElasticBodyReciprocalSplineITK(void)
+{
+ 
+  m_ElasticBodyReciprocalSplineTransformITK->SetSourceLandmarks( m_SourceLandMarks.GetPointer() );
+  m_ElasticBodyReciprocalSplineTransformITK->SetTargetLandmarks( m_TargetLandMarks.GetPointer() );
+  m_ElasticBodyReciprocalSplineTransformITK->ComputeWMatrix();
+
+  PointArrayType::iterator point = m_PointsToTransform.begin();
+  PointArrayType::iterator end   = m_PointsToTransform.end();
+
+  m_PointsTransformedByITK.clear();
+
+  m_TimeCollector.Start("ITK Elastic Body Reciprocal Spline");
+
+  while( point != end )
+    {
+    m_PointsTransformedByITK.push_back( 
+      m_ElasticBodyReciprocalSplineTransformITK->TransformPoint( *point )
+                  );
+    ++point;
+    }
+
+  m_TimeCollector.Stop("ITK Elastic Body Reciprocal Spline");
+
+  this->ConvertITKMappedPointsToVTK();
+
+}
 
 
 void

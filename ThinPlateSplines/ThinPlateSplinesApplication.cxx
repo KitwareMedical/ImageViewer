@@ -82,6 +82,9 @@ ThinPlateSplinesApplication
     this->MapPointsElasticBodySplineITK();
     break;
   case 3:
+    this->MapPointsElasticBodyReciprocalSplineITK();
+    break;
+  case 4:
     this->MapPointsVolumeSplineITK();
     break;
   }

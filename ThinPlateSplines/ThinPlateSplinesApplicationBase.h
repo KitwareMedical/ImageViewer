@@ -28,6 +28,7 @@
 #include "itkThinPlateSplineKernelTransform.h"
 #include "itkThinPlateR2LogRSplineKernelTransform.h"
 #include "itkElasticBodySplineKernelTransform.h"
+#include "itkElasticBodyReciprocalSplineKernelTransform.h"
 #include "itkVolumeSplineKernelTransform.h"
 #include "vtkThinPlateSplineTransform.h"
 
@@ -73,8 +74,14 @@ public:
                               CoordinateRepresentationType,
                               PointsDimension >  ElasticBodySplineTransformType;
 
+  typedef itk::ElasticBodyReciprocalSplineKernelTransform< 
+                              CoordinateRepresentationType,
+                              PointsDimension >  ElasticBodyReciprocalSplineTransformType;
+
   typedef ElasticBodySplineTransformType::Pointer  ElasticBodySplineTransformPointer;
 
+  typedef ElasticBodyReciprocalSplineTransformType::Pointer  
+                                          ElasticBodyReciprocalSplineTransformPointer;
 
   typedef itk::VolumeSplineKernelTransform< 
                               CoordinateRepresentationType,
@@ -134,6 +141,7 @@ protected:
   virtual void    MapPoints(void);
   virtual void    MapPointsITK(void);
   virtual void    MapPointsElasticBodySplineITK(void);
+  virtual void    MapPointsElasticBodyReciprocalSplineITK(void);
   virtual void    MapPointsThinPlateSplineITK(void);
   virtual void    MapPointsThinPlateR2LogRSplineITK(void);
   virtual void    MapPointsVolumeSplineITK(void);
@@ -147,6 +155,9 @@ protected:
   ThinPlateR2LogRSplineTransformPointer m_ThinPlateR2LogRSplineTransformITK;
 
   ElasticBodySplineTransformPointer   m_ElasticBodySplineTransformITK;
+
+  ElasticBodyReciprocalSplineTransformPointer   
+                                 m_ElasticBodyReciprocalSplineTransformITK;
 
   VolumeSplineTransformPointer        m_VolumeSplineTransformITK;
 
