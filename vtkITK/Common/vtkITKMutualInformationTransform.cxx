@@ -48,9 +48,6 @@
 
 #include "itkImage.h"
 #include "itkImageRegionIterator.h"
-#include "itkNormalizeImageFilter.h"
-#include "itkChangeInformationImageFilter.h"
-#include "itkShrinkImageFilter.h"
 #include "itkQuaternionRigidTransform.h"
 #include "itkQuaternionRigidTransformGradientDescentOptimizer.h"
 #include "itkMutualInformationImageToImageMetric.h"
@@ -59,7 +56,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------
@@ -71,9 +68,9 @@ vtkITKMutualInformationTransform::vtkITKMutualInformationTransform()
   this->TargetStandardDeviation = 2.0;
   this->LearningRate = .005;
   this->TranslateScale = 64;
-  this->NumberOfResolutions = 4;
   this->NumberOfIterations = 500;  
   this->NumberOfSamples = 50;
+  this->Matrix->Identity();
 }
 
 //----------------------------------------------------------------------------
@@ -98,7 +95,6 @@ void vtkITKMutualInformationTransform::PrintSelf(ostream& os, vtkIndent indent)
   os << "TargetStandardDeviation: " << this->SourceStandardDeviation  << endl;
   os << "LearningRate: " << this->LearningRate  << endl;
   os << "TranslateScale: " << this->TranslateScale  << endl;
-  os << "NumberOfResolutions: " << this->NumberOfResolutions  << endl;
   os << "NumberOfSamples: " << this->NumberOfSamples  << endl;
   os << "NumberOfIterations: " << this->NumberOfIterations  << endl;
 
@@ -116,22 +112,16 @@ void vtkITKMutualInformationTransform::PrintSelf(ostream& os, vtkIndent indent)
 
 //----------------------------------------------------------------------------
 // This templated function executes the filter for any type of data.
-template <class TInput, class TOutput>
+template <class T>
 static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *self,
                                vtkImageData *source,
                                vtkImageData *target,
-                               TInput  *vtkNotUsed(dummy1),
-                               TOutput *vtkNotUsed(dummy2))
+                               vtkMatrix4x4 *matrix,
+                               T vtkNotUsed(dummy2))
                                
 {
   // Declare the input and output types
-  typedef itk::Image<TInput,3> InputType;
-  typedef itk::Image<TOutput,3> OutputType;
-
-  // Declare all the filters
-  typedef itk::NormalizeImageFilter<InputType,OutputType> NormalizeFilter;
-  typedef itk::ShrinkImageFilter<OutputType,OutputType> ShrinkFilter;
-  typedef itk::ChangeInformationImageFilter<OutputType> ChangeInformationFilter;
+  typedef itk::Image<T,3> OutputType;
 
   // Declare the registration types
   typedef itk::QuaternionRigidTransform<double> TransformType;
@@ -144,53 +134,95 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   vtkImageExport *movingVtkExporter = vtkImageExport::New();
     movingVtkExporter->SetInput(source);
 
-  typedef itk::VTKImageImport<InputType> ImageImportType;
+  typedef itk::VTKImageImport<OutputType> ImageImportType;
+
   ImageImportType::Pointer movingItkImporter = ImageImportType::New();
-
   ConnectPipelines(movingVtkExporter, movingItkImporter);
-
-  NormalizeFilter::Pointer movingNormalize = NormalizeFilter::New();
-    movingNormalize->SetInput(movingItkImporter->GetOutput());
-
-  unsigned int sf[3];
-  sf[0] = 4;
-  sf[1] = 4;
-  sf[2] = 1;
-
-  ShrinkFilter::Pointer movingShrink = ShrinkFilter::New();
-    movingShrink->SetInput(movingNormalize->GetOutput());
-    movingShrink->SetShrinkFactors(sf);
-
-  ChangeInformationFilter::Pointer movingChange = ChangeInformationFilter::New();
-    movingChange->SetInput(movingShrink->GetOutput());
-    movingChange->CenterImageOn();
 
   // Target
   vtkImageExport *fixedVtkExporter = vtkImageExport::New();
     fixedVtkExporter->SetInput(target);
 
   ImageImportType::Pointer fixedItkImporter = ImageImportType::New();
-
   ConnectPipelines(fixedVtkExporter, fixedItkImporter);
 
-  NormalizeFilter::Pointer fixedNormalize = NormalizeFilter::New();
-    fixedNormalize->SetInput(fixedItkImporter->GetOutput());
+//-----------------------------------------------------------
+// Set up the registrator
+//-----------------------------------------------------------
+  MetricType::Pointer         metric        = MetricType::New();
+  TransformType::Pointer      transform     = TransformType::New();
+  OptimizerType::Pointer      optimizer     = OptimizerType::New();
+  InterpolatorType::Pointer   interpolator  = InterpolatorType::New();
+  RegistrationType::Pointer   registration  = RegistrationType::New();
+  RegistrationType::ParametersType guess(transform->GetNumberOfParameters() );
+  guess.Fill(0); guess[3] = 1.0;
 
-  sf[0] = 4;
-  sf[1] = 4;
-  sf[2] = 1;
+  // The guess is: a quaternion followed by a translation
+  registration->SetInitialTransformParameters (guess);
+  
+  // Set translation scale
+  typedef OptimizerType::ScalesType ScaleType;
 
-  ShrinkFilter::Pointer fixedShrink = ShrinkFilter::New();
-    fixedShrink->SetInput(fixedNormalize->GetOutput());
-    fixedShrink->SetShrinkFactors(sf);
+  ScaleType scales(transform->GetNumberOfParameters());
+  scales.Fill( 1.0 );
+  for( unsigned j = 4; j < 7; j++ )
+    {
+    scales[j] = 1.0 / vnl_math_sqr(self->GetTranslateScale());
+    }
 
-  ChangeInformationFilter::Pointer fixedChange = ChangeInformationFilter::New();
-    fixedChange->SetInput(fixedShrink->GetOutput());
-    fixedChange->CenterImageOn();
+  // Set metric related parameters
+  metric->SetMovingImageStandardDeviation( self->GetSourceStandardDeviation() );
+  metric->SetFixedImageStandardDeviation( self->GetTargetStandardDeviation() );
+  metric->SetNumberOfSpatialSamples( self->GetNumberOfSamples() );
 
-    fixedChange->Update();
-    movingChange->Update();
+  fixedItkImporter->Update();
+  cout << "Fixed is done!" << endl;
+  movingItkImporter->Update();
 
+  // Connect up the components
+  registration->SetMetric(metric);
+  registration->SetOptimizer(optimizer);
+  registration->SetTransform(transform);
+  registration->SetInterpolator(interpolator);
+  registration->SetFixedImage(fixedItkImporter->GetOutput());
+  registration->SetMovingImage(movingItkImporter->GetOutput());
+  cout << "Moving is done!" << endl;
+  // Setup the optimizer
+  optimizer->SetScales(scales);
+  optimizer->MaximizeOn();
+
+  optimizer->SetNumberOfIterations( self->GetNumberOfIterations() );
+  optimizer->SetLearningRate( self->GetLearningRate() );
+
+  // Start registration
+
+  registration->StartRegistration();
+  cout << "All done!" << endl;
+
+  // Get the results
+  RegistrationType::ParametersType solution = 
+    registration->GetLastTransformParameters();
+
+  vnl_quaternion<double> quat(solution[0],solution[1],solution[2],solution[3]);
+  vnl_matrix_fixed<double,3,3> mat = quat.rotation_matrix();
+  
+  // Convert the vnl matrix to a vtk mtrix
+  matrix->Element[0][0] = mat(0,0);
+  matrix->Element[0][1] = mat(0,1);
+  matrix->Element[0][2] = mat(0,2);
+  matrix->Element[0][3] = solution[4];
+  matrix->Element[1][0] = mat(1,0);
+  matrix->Element[1][1] = mat(1,1);
+  matrix->Element[1][2] = mat(1,2);
+  matrix->Element[1][3] = solution[5];
+  matrix->Element[2][0] = mat(2,0);
+  matrix->Element[2][1] = mat(2,1);
+  matrix->Element[2][2] = mat(2,2);
+  matrix->Element[2][3] = solution[6];
+  matrix->Element[3][0] = 0;
+  matrix->Element[3][1] = 0;
+  matrix->Element[3][2] = 0;
+  matrix->Element[3][3] = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -213,24 +245,31 @@ void vtkITKMutualInformationTransform::InternalUpdate()
     return;
     }
 
+  float dummy = 0.0;
+  vtkITKMutualInformationExecute(this,
+                                 this->SourceImage,
+                                 this->TargetImage,
+                                 this->Matrix,
+                                 dummy);
+#if 0
   switch (this->SourceImage->GetScalarType())
     {
-    vtkTemplateMacro5(vtkITKMutualInformationExecute, this,
+    vtkTemplateMacro4(vtkITKMutualInformationExecute, this,
                  this->SourceImage, this->TargetImage,
-                 static_cast<VTK_TT *>(0),
-                 static_cast<VTK_TT *>(0));
+                 static_cast<VTK_TT>(0));
                  
     default:
       vtkGenericWarningMacro("InternalUpdate: Unknown input ScalarType");
       return;
     }
+#endif
 }
 
 //------------------------------------------------------------------------
 unsigned long vtkITKMutualInformationTransform::GetMTime()
 {
   unsigned long result = this->vtkLinearTransform::GetMTime();
-  unsigned long mtime = result;
+  unsigned long mtime;
 
   if (this->SourceImage)
     {
@@ -312,7 +351,6 @@ void vtkITKMutualInformationTransform::InternalDeepCopy(vtkAbstractTransform *tr
   this->SetTargetStandardDeviation(t->TargetStandardDeviation);
   this->SetLearningRate(t->LearningRate);
   this->SetTranslateScale(t->TranslateScale);
-  this->SetNumberOfResolutions(t->NumberOfResolutions);
   this->SetNumberOfSamples(t->NumberOfSamples);    
 
   this->Modified();

@@ -62,11 +62,6 @@ public:
   vtkGetMacro(TargetStandardDeviation, double);
 
   // Description:
-  // Set the number of subsamplings to perform
-  vtkSetMacro(NumberOfResolutions, int);
-  vtkGetMacro(NumberOfResolutions, int);
-
-  // Description:
   // Set the number of iterations
   vtkSetMacro(NumberOfIterations, int);
   vtkGetMacro(NumberOfIterations, int);
@@ -113,7 +108,6 @@ protected:
   double TargetStandardDeviation;
   double TranslateScale;
   
-  int NumberOfResolutions;
   int NumberOfIterations;
   int NumberOfSamples;
   
