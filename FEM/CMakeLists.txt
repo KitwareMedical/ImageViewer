@@ -1,5 +1,5 @@
 LINK_LIBRARIES (
-  FEM
+  ITKFEM
   ITKCommon
   ITKNumerics
   ITKBasicFilters 
