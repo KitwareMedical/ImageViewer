@@ -72,7 +72,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef fltk::WidgetRedrawCommand  Superclass;
+  typedef WidgetRedrawCommand< Fl_Light_Button >  Superclass;
 
 
   /**
