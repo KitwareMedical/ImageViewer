@@ -94,7 +94,7 @@ volume.
 
 VIII.  SAMPLE DATA AND PARAMETER FILE
 
-The executable "itkGenerateSampleData" built in this directory can be used to
+The executable "itkSampleDataGenerator" built in this directory can be used to
 create a sample input file for this application.  The sample input is a
 64x64x64 image containing a low-resolution binary sphere.  The sample parameter
 file "sample.parameter" can be used to process this data.
