@@ -24,6 +24,7 @@
 #include "itkExceptionObject.h"
 #include "itkResampleImageFilter.h"
 #include "itkLinearInterpolateImageFunction.h"
+#include "itkNormalizeImageFilter.h"
 
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_quaternion.h"
@@ -306,65 +307,19 @@ void
 MIRegistrationApp
 ::NormalizeImage(
 InputImageType * input,
-ImageType * output )
+ImageType::Pointer & output )
 {
 
-  InputImageType::RegionType region = input->GetBufferedRegion();
+  // Setup normalizer
+  typedef itk::NormalizeImageFilter<InputImageType,ImageType> NormalizerType;
+  
+  NormalizerType::Pointer normalizer = NormalizerType::New();
+  
+  normalizer->SetInput( input );
+  normalizer->Update();
 
-  // make output the same size as the input
-  output->SetLargestPossibleRegion(
-    input->GetLargestPossibleRegion() );
-
-  output->SetBufferedRegion( region );
-  output->Allocate();
-
-  // make output have the same spacing/origin;
-  output->SetSpacing( input->GetSpacing() );
-  output->SetOrigin( input->GetOrigin() );
-
-  typedef itk::ImageRegionIterator<InputImageType>
-    InputIterator;
-  typedef itk::ImageRegionIterator<ImageType>
-    OutputIterator;
-
-  // walk the input to collect sums
-  double sum = 0.0;
-  double sumsq = 0.0;
-
-  InputIterator inIter( input, region );
-
-  while( !inIter.IsAtEnd() )
-    {
-    sum += inIter.Get();
-    sumsq += vnl_math_sqr( inIter.Get() );
-    ++inIter;
-    }
-
-  // compute mean and standard deviation
-  double numPixels = (double) region.GetNumberOfPixels();
-  double mean =  sum / numPixels;
-  double stddev  = vnl_math_sqrt( 
-    (sumsq - numPixels * vnl_math_sqr( mean )) / (numPixels - 1 ) );
-
-  std::cout << "Mean: " << mean << " StdDev: " << stddev << std::endl;
-
-  // walk both the input and output
-  OutputIterator outIter( output, region );
-
-  inIter.GoToBegin();
-  outIter.GoToBegin();
-
-  while( !inIter.IsAtEnd() )
-    {
-    double value = double( inIter.Get() );
-    value -= mean;
-    value /= stddev;
-    
-    outIter.Set( value );
-    
-    ++inIter;
-    ++outIter;
-    }
+  output = normalizer->GetOutput();
+  
 
 }
 

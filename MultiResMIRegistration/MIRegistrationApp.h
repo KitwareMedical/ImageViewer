@@ -169,7 +169,7 @@ private:
    void WriteImage( InputImageType *, const char *, bool );
 
    /*** Normalize image to have mean of zero and variance of one.  */
-   void NormalizeImage( InputImageType *, ImageType * );
+   void NormalizeImage( InputImageType *, ImageType::Pointer & );
 
    /*** Initialize  */
    void Initialize();
