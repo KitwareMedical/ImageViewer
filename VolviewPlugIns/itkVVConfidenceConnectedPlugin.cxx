@@ -1,4 +1,4 @@
-/* perform smoothing using an anisotropic diffusion filter */
+/* perform segmentation using the confidence connected image filter */
 
 #include "itkVVFilterModule.h"
 
@@ -11,7 +11,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 
   const unsigned int Dimension = 3;
 
-  typedef   float       InternalPixelType;
+  typedef   unsigned short      InternalPixelType;
   typedef   itk::Image< InternalPixelType,Dimension > InternalImageType; 
 
   typedef   itk::ConfidenceConnectedImageFilter< 
@@ -145,10 +145,10 @@ void VV_PLUGIN_EXPORT vvConfidenceConnectedInit(vtkVVPluginInfo *info)
   // setup information that never changes
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
-  info->Name = "Curvature Flow Anisotropic Diffusion";
-  info->TerseDocumentation = "Anisotropic diffusion smoothing";
+  info->Name = "Confidence Connected Segmentation ";
+  info->TerseDocumentation = "Confidence Connected Segmentation";
   info->FullDocumentation = 
-    "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of iso-contours in the image. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
+    "This filter applies an region growing algorithm for segmentation. The criterion for including new pixels in the region is defined by an intensity range around the mean value of the pixels existing in the region. The extent of the intensity interval is computed as the product of the variance and a multiplier provided by the user. The coordinates of a seed point are used as the initial position for start growing the region.";
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
