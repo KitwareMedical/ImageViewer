@@ -64,16 +64,16 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-SOURCE_FILES(register_SRCS
+SOURCE_FILES(MutualInformationEuler2DRegistration_SRCS
 RegisterApplication
 RegisterWindow
 register
 )
 
-SOURCE_FILES(register_GUI_SRCS
+SOURCE_FILES(MutualInformationEuler2DRegistration_GUI_SRCS
 registerGUI.fl
 )
 
-ADD_EXECUTABLE(register register_SRCS)
+ADD_EXECUTABLE(MutualInformationEuler2DRegistration MutualInformationEuler2DRegistration_SRCS)
 
-FLTK_WRAP_UI(register register_GUI_SRCS)
+FLTK_WRAP_UI(MutualInformationEuler2DRegistration MutualInformationEuler2DRegistration_GUI_SRCS)
