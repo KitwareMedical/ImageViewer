@@ -185,7 +185,7 @@ public:
   void  WarpImage();      
 
   /** Writes the displacement field to a file. */
-  void WriteDisplacementField(unsigned int index);
+  int WriteDisplacementField(unsigned int index);
 
   /** Set the following parameters to run the example */
   void SetReferenceFile(const char* r) {m_ReferenceFileName=r;}

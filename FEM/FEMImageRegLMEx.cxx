@@ -352,7 +352,7 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
   }  
 }
 
-void ImageRegLMEx::WriteDisplacementField(unsigned int index)
+int ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Outputs the displacement field for the index provided (0=x,1=y,2=z)
 {
   // Initialize the caster to the displacement field
@@ -368,20 +368,28 @@ void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Set up the output filename
   char* outfile = new char[strlen(m_DisplacementsFileName+10)];
   sprintf(outfile, "%s%c.raw", m_DisplacementsFileName, 'x'+index);
-  std::cout << "Writing displacements to " << outfile;
+  std::cout << "Writing displacements (" << fieldCaster->GetIndex() << ") to " << outfile;
 
   // Write the single-index field to a file
-  //   itk::ImageRegionIteratorWithIndex<FloatImageType> it( fieldImage, fieldImage->GetLargestPossibleRegion() );
-  //   for (; !it.IsAtEnd(); ++it) { std::cout << it.Get() << "\t"; }
+  //itk::ImageRegionIteratorWithIndex<FloatImageType> it( fieldImage, fieldImage->GetLargestPossibleRegion() );
+  //for (; !it.IsAtEnd(); ++it) { std::cout << it.Get() << "\t"; }
 
-  itk::RawImageIO<Float,2>::Pointer io = itk::RawImageIO<Float,2>::New();
-  itk::ImageFileWriter<FloatImageType>::Pointer writer = itk::ImageFileWriter<FloatImageType>::New();
-  writer->SetInput(fieldImage);
-  writer->SetImageIO(io);
-  writer->SetFileName(outfile);
-  writer->Write();
+  try {
+    itk::RawImageIO<Float,2>::Pointer io = itk::RawImageIO<Float,2>::New();
+    itk::ImageFileWriter<FloatImageType>::Pointer writer = itk::ImageFileWriter<FloatImageType>::New();
+    writer->SetImageIO(io);
+    writer->SetFileName(outfile);
+    writer->SetInput(fieldImage);
+    writer->Write();
+  }
+  catch (::itk::ExceptionObject &err) {
+    std::cerr << "ITK exception detected: "  << err;
+    
+    return -1;
+  }
 
   std::cout << "...done" << std::endl;
+  return 0;
 }
 
 
@@ -944,7 +952,7 @@ int main()
   X.RunRegistration();
   X.WriteWarpedImage(X.m_ResultsFileName);
 
-  X.m_WriteDisplacementField=false;
+  //X.m_WriteDisplacementField=false;
   if (X.m_WriteDisplacementField) {
     X.WriteDisplacementField(0);
     X.WriteDisplacementField(1);
