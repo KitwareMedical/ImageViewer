@@ -14,10 +14,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <list>
-#include <fstream>
 
 int main(int argc, char **argv)
   {
