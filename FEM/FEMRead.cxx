@@ -105,9 +105,10 @@ char* filename;
   {
     S.Read(f);
   }
-  catch (std::runtime_error)
+  catch (::itk::fem::FEMException e)
   {
-    std::cout<<"Error reading FEM problem from file: "<<filename<<"!\n";
+    std::cout<<"Error reading FEM problem: "<<filename<<"!\n";
+    e.Print(std::cout);
     return 1;
   }
 
