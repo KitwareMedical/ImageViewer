@@ -24,7 +24,9 @@ ENDIF(BUILD_MULTIRESOLUTION)
 # Add an option to build or not build the Gaussian Filter GUI example
 OPTION(BUILD_GAUSSIANFILTER "Build the Gaussian filter example")
 IF(BUILD_GAUSSIANFILTER)
-SUBDIRS(GaussianFilter)
+  IF(HAS_METAIMAGE)
+    SUBDIRS(GaussianFilter)
+  ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_GAUSSIANFILTER)
 
 # Add an option to build or not build the Image Guided Intervention example
