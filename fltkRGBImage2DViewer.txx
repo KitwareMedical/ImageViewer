@@ -361,7 +361,10 @@ RGBImage2DViewer<ImagePixelType>
       while( !it.IsAtEndOfLine() ) 
         {
         OverlayType::PixelType value = it.Get();
-        value = (unsigned char) (value - min)/(max-min);
+        if((max-min != 0.0))
+          {
+            value = (unsigned char) (value - min)/(max-min);
+          }
         *dest++ = m_ColorTable->color(value-1)->GetRed()*255;
         *dest++ = m_ColorTable->color(value-1)->GetGreen()*255;
         *dest++ = m_ColorTable->color(value-1)->GetBlue()*255;
@@ -380,7 +383,10 @@ RGBImage2DViewer<ImagePixelType>
       while( !it.IsAtEndOfLine() ) 
         {
         OverlayType::PixelType value = it.Get();
-        value = (unsigned char) (value - min)/(max-min);
+        if((max-min != 0.0))
+          {
+            value = (unsigned char) (value - min)/(max-min);
+          }
         *dest++ = m_ColorTable->color(value-1)->GetRed()*255;
         *dest++ = m_ColorTable->color(value-1)->GetGreen()*255;
         *dest++ = m_ColorTable->color(value-1)->GetBlue()*255;
