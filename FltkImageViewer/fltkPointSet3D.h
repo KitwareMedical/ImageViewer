@@ -87,18 +87,23 @@ public:
   /** 
    * PointSet Type
    */
-   typedef  ImageType   PointSetType;
+   typedef           TPointSet                    PointSetType;
+   typedef  typename PointSetType::Pointer        PointSetPointer;
+   typedef  typename PointSetType::ConstPointer   PointSetConstPointer;
+   typedef  typename PointSetType::PointType      PointType;
 
 
   /** 
    * Points Container Type
    */
-  typedef PointSetType::PointsContainer     PointsContainerType;
+  typedef typename PointSetType::PointsContainer     PointsContainerType;
+  typedef typename PointsContainerType::Pointer      PointsContainerPointer;
 
   /** 
    * Point Data Container Type
    */
-  typedef PointSetType::PointDataContainer     PointDataContainerType;
+  typedef typename PointSetType::PointDataContainer     PointDataContainerType;
+  typedef typename PointDataContainerType::Pointer      PointDataContainerPointer;
 
 
   /**
@@ -124,7 +129,7 @@ public:
   /**
    * Return a mesh
    */
-  PointSetType::ConstPointer GetPointSet( void );
+  PointSetConstPointer GetPointSet( void ) const;
 
 
 protected:
@@ -139,7 +144,7 @@ private:
    /**
    * PointSet that contains all the data
    */
-   PointSetType::Pointer                  m_PointSet;
+   PointSetPointer                  m_PointSet;
 
 };
 

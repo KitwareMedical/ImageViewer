@@ -74,7 +74,7 @@ PointSet3D<TPointSet>
 template <class TPointSet>
 typename PointSet3D<TPointSet>::PointSetType::ConstPointer
 PointSet3D<TPointSet>
-::GetPointSet(void)  
+::GetPointSet(void) const 
 {
   return m_PointSet.GetPointer(); 
 }
@@ -125,40 +125,50 @@ PointSet3D<TPointSet>
     if( GetDrawingMode()== points ) 
     {
 
-      PointsContainerType::Pointer    meshPoints = m_PointSet->GetPoints();
-      PointDataContainerType::Pointer meshData   = m_PointSet->GetPointData();
+      PointsContainerPointer    meshPoints = m_PointSet->GetPoints();
+      PointDataContainerPointer meshData   = m_PointSet->GetPointData();
 
-      if( !meshPoints || !meshData )
+      if( !meshPoints )
       {
         return;
       }
 
-      typedef PointsContainerType::ConstIterator      PointIteratorType;   
-      typedef PointDataContainerType::ConstIterator   DataIteratorType;   
+      typedef typename PointsContainerType::ConstIterator      PointIteratorType;   
+      typedef typename PointDataContainerType::ConstIterator   DataIteratorType;   
 
       glDisable(GL_LIGHTING);
       glBegin(GL_POINTS);
 
       PointIteratorType p = meshPoints->Begin();
-      DataIteratorType  d = meshData->Begin();
+
+      DataIteratorType  d;
+      bool pointDataValuesExist = false;
+      if( meshData )
+        {
+        d = meshData->Begin();
+        pointDataValuesExist = true;
+        }
 
       while( p != meshPoints->End() )
       {
         
-        const PointSetType::PointType point = p.Value();
+        const PointType point = p.Value();
        
-        if( d.Value() > 0 ) 
-        { // color in blue
-          glColor3f( (GLfloat)0.0, (GLfloat)0.0, (GLfloat)1.0 ); 
-        }
-        else 
-        { // color in red
-          glColor3f( (GLfloat)1.0, (GLfloat)0.0, (GLfloat)0.0 ); 
+        if( pointDataValuesExist )
+        {
+          if( d.Value() > 0 ) 
+          { // color in blue
+            glColor3f( (GLfloat)0.0, (GLfloat)0.0, (GLfloat)1.0 ); 
+          }
+          else 
+          { // color in red
+            glColor3f( (GLfloat)1.0, (GLfloat)0.0, (GLfloat)0.0 ); 
+          }
+          ++d;
         }
         
         glVertex3d( point[0], point[1], point[2] );
         ++p;
-        ++d;
       }
 
       glEnd();
@@ -171,3 +181,4 @@ PointSet3D<TPointSet>
 } // end namespace fltk
 
 
+#endif
