@@ -189,7 +189,7 @@ template <class imType>
     double cDataMax, cDataMin;
     
     /* list of points clicked and maximum no. of points to be stored*/
-    std::list< ClickPoint * > cClickedPoints;
+    std::list< ClickPoint > cClickedPoints;
     unsigned int maxClickPoints;
     int cX, cY, cW, cH;
     int fastMovVal; //fast moving pace
@@ -317,7 +317,7 @@ template <class imType>
       /*! Returns the last ith clicked point - ie. to get the last point
       * i = 0, to get the 2nd last point i = 1, and so on
     */
-    ClickPoint*  getClickedPoint(unsigned int i=0);
+    ClickPoint   getClickedPoint(unsigned int i=0);
     float*       getClickedPointCoordinates(unsigned int i=0);
     int numClickedPointsStored(){ return cClickedPoints.size();}
     
@@ -831,9 +831,9 @@ void SliceView<imType>::clickSelect(float newX, float newY, float newZ)
   /*if length of list is equal to max, remove the earliest point stored */
   if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
     cClickedPoints.pop_back();
-  
-  cClickedPoints.push_front(new ClickPoint(cClickSelect[0],
-    cClickSelect[1], cClickSelect[2], cClickSelectV));
+
+  ClickPoint clickedPoint(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
+  cClickedPoints.push_front( clickedPoint ); 
   
   if(cClickSelectCallBack != NULL)
     cClickSelectCallBack(cClickSelect[0], cClickSelect[1], 
@@ -893,13 +893,13 @@ float SliceView<imType>::clickSelectZ(void)
 
 
 template <class imType>
-ClickPoint* SliceView<imType>::getClickedPoint(unsigned int index)
+ClickPoint SliceView<imType>::getClickedPoint(unsigned int index)
   {
   if(index >= cClickedPoints.size())
     {
-    return ((ClickPoint*)0);
+    return ClickPoint();
     }
-  std::list<ClickPoint*>::const_iterator j = cClickedPoints.begin();
+  std::list<ClickPoint>::const_iterator j = cClickedPoints.begin();
   
   for(int i=0;i<static_cast<int>(index);i++,j++);
   
@@ -916,7 +916,7 @@ getClickedPointCoordinates(unsigned int index)
   if(index>= cClickedPoints.size())
     return (float*)0;
   float *p = new float[3];
-  std::list<ClickPoint*>::const_iterator j = cClickedPoints.begin();
+  std::list<ClickPoint>::const_iterator j = cClickedPoints.begin();
   for(int i=0;i<index;i++,j++);
   p[0] = (*j)->x;
   p[1] = (*j)->y;
