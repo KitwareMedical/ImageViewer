@@ -21,6 +21,7 @@
 #include "itkFEM.h"
 
 #include "../../AtlasSegmentation/Code/ApplicationBase.h"
+#include "itkResampleImageFilter.h"
 #include "FEMValidationInputParser.h"
 #include "FEMPreprocessor.h"
 #include "FEMRegistrator.h"
