@@ -66,6 +66,7 @@ int main(int argc, char **argv)
   fileSource->SetFileName( inputFileName );
 
   RawReaderType::Pointer  rawReader  = RawReaderType::New();
+  rawReader->SetFileDimensionality( 3 );
   rawReader->SetDimensions( 0, nx );
   rawReader->SetDimensions( 1, ny );
   rawReader->SetDimensions( 2, nz );
@@ -85,11 +86,6 @@ int main(int argc, char **argv)
   
   std::cout << "File succesfully read ! " << std::endl;
 
-  // Print information about the image 
-  ImageType::Pointer  image = fileSource->GetOutput();
-  image->Print( std::cout );
-  
-
 
   // Write a Raw File
   typedef  itk::ImageFileWriter< ImageType >      FileSinkType;
@@ -101,7 +97,7 @@ int main(int argc, char **argv)
 
   fileSink->SetImageIO( rawWriter );
   fileSink->SetFileName( outputFileName );
-  fileSink->SetInput( image );
+  fileSink->SetInput( fileSource->GetOutput() );
 
   
   try
