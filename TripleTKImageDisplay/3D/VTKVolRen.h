@@ -21,6 +21,7 @@
 #include <vtkVolume.h>
 #include <vtkVolumeProperty.h>
 #include <vtkStructuredPoints.h>
+#include <vtkPointData.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkUnsignedCharArray.h>
 #include "itkImage.h"
