@@ -1,0 +1,21 @@
+This directory and its subdirectories contain code to perform streaming
+watershed segmentation of multidimensional image data.
+
+Directory                  Contents
+---------                  ----------------
+./                         I/O and application code
+./ParameterFileParser/     Parser for parameter files used by the application
+                           code.
+./VolumeChunker/           Code for creating the volume chunks that the application
+                           code processes.
+
+
+
+EXTENSIVE DOCUMENTATION COMING SOON  (after 12/15/01) jc
+
+
+
+
+
+
+
