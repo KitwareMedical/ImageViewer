@@ -50,7 +50,7 @@ CommandGLRedrawModel::SetModel( fltk::GlDrawer * model )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModel::Execute( itk::LightObject *, unsigned long )
+CommandGLRedrawModel::Execute( itk::Object *, unsigned long )
 {
   if( m_Model )
   {
@@ -67,7 +67,7 @@ CommandGLRedrawModel::Execute( itk::LightObject *, unsigned long )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModel::Execute(const itk::LightObject * , unsigned long )
+CommandGLRedrawModel::Execute(const itk::Object * , unsigned long )
 {
   if( m_Model )
   {

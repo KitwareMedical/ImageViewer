@@ -48,7 +48,7 @@ CommandGLRedrawModelFixed::SetModelShape( Shape3D * model )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelFixed::Execute( itk::LightObject *, unsigned long )
+CommandGLRedrawModelFixed::Execute( itk::Object *, unsigned long )
 {
   if( m_ModelShape )
   {
@@ -68,7 +68,7 @@ CommandGLRedrawModelFixed::Execute( itk::LightObject *, unsigned long )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelFixed::Execute(const itk::LightObject * , unsigned long )
+CommandGLRedrawModelFixed::Execute(const itk::Object * , unsigned long )
 {
   if( m_ModelShape )
   {

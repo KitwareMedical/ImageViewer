@@ -51,7 +51,7 @@ CommandUpdateImageIntensifier::SetFluoroscopyUnitView(
 //
 //--------------------------------------------------
 void
-CommandUpdateImageIntensifier::Execute( itk::LightObject * unit, unsigned long event )
+CommandUpdateImageIntensifier::Execute( itk::Object * unit, unsigned long event )
 {
   if( event == FluoroscopyUnitMovedEvent )
   {
@@ -86,7 +86,7 @@ CommandUpdateImageIntensifier::Execute( itk::LightObject * unit, unsigned long e
 //
 //--------------------------------------------------
 void
-CommandUpdateImageIntensifier::Execute(const itk::LightObject * unit, unsigned long event )
+CommandUpdateImageIntensifier::Execute(const itk::Object * unit, unsigned long event )
 {
 
   if( event == FluoroscopyUnitMovedEvent )

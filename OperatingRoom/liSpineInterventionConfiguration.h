@@ -47,7 +47,7 @@ namespace li {
  *  a number of vertebral segments.
  */
 
-class ITK_EXPORT SpineInterventionConfiguration : public itk::LightObject
+class ITK_EXPORT SpineInterventionConfiguration : public itk::Object
 {
 public:
   /**
@@ -58,7 +58,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef ::itk::LightObject  Superclass;
+  typedef ::itk::Object  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -105,7 +105,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( SpineInterventionConfiguration, ::itk::LightObject );
+  itkTypeMacro( SpineInterventionConfiguration, ::itk::Object );
 
 
   /**

@@ -22,7 +22,7 @@
 #endif
 
 #include <itkRGBPixel.h>
-#include <itkLightObject.h>
+#include <itkObject.h>
 #include <itkObjectFactory.h>
 #include <itkPoint.h>
 #include <fltkGlDrawer.h>
@@ -43,7 +43,7 @@ namespace li {
  *  complex structures.
  * 
  */
-class ITK_EXPORT Shape3D : public itk::LightObject, 
+class ITK_EXPORT Shape3D : public itk::Object, 
                   public fltk::GlDrawer {
 
 public:
@@ -55,7 +55,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef itk::LightObject  Superclass;
+  typedef itk::Object  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -70,7 +70,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(Shape3D, LightObject);
+  itkTypeMacro(Shape3D, Object);
 
 
   /** 

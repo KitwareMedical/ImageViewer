@@ -50,7 +50,7 @@ CommandUpdateRegistratorFieldOfView::SetRegistrator( RegistratorType * unit )
 //
 //--------------------------------------------------
 void
-CommandUpdateRegistratorFieldOfView::Execute( itk::LightObject * unit, unsigned long event )
+CommandUpdateRegistratorFieldOfView::Execute( itk::Object * unit, unsigned long event )
 {
 
   if( event == FieldOfViewChangedEvent )
@@ -94,7 +94,7 @@ CommandUpdateRegistratorFieldOfView::Execute( itk::LightObject * unit, unsigned 
 //
 //--------------------------------------------------
 void
-CommandUpdateRegistratorFieldOfView::Execute(const itk::LightObject * unit, unsigned long event )
+CommandUpdateRegistratorFieldOfView::Execute(const itk::Object * unit, unsigned long event )
 {
 
   if( event == FieldOfViewChangedEvent )

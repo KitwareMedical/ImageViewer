@@ -51,7 +51,7 @@ CommandUpdateSpineModelGUI::SetSpineModelGUI(
 //
 //--------------------------------------------------
 void
-CommandUpdateSpineModelGUI::Execute( itk::LightObject * unit, unsigned long event )
+CommandUpdateSpineModelGUI::Execute( itk::Object * unit, unsigned long event )
 {
 
   if( event == li::SpineChangedEvent )
@@ -74,7 +74,7 @@ CommandUpdateSpineModelGUI::Execute( itk::LightObject * unit, unsigned long even
 //
 //--------------------------------------------------
 void
-CommandUpdateSpineModelGUI::Execute(const itk::LightObject * unit, unsigned long event )
+CommandUpdateSpineModelGUI::Execute(const itk::Object * unit, unsigned long event )
 {
 
   if( event == FluoroscopyUnitMovedEvent )

@@ -429,7 +429,7 @@ void Shape3D::Redraw(void) const
 void Shape3D::InvokeEvent( EventIds event ) const
 {
   
-  LightObject::InvokeEvent( event );
+  Object::InvokeEvent( event );
 
   if( m_Father ) 
   {

@@ -34,7 +34,7 @@ OperatingRoomView
   SetBackground( 0.9f, 0.9f, 0.9f );
   SetAzimuth( 150.0f );
   SetAltitude( 30.0f );
-  m_Notifier = itk::LightObject::New();
+  m_Notifier = itk::Object::New();
 }
 
 
@@ -44,7 +44,7 @@ OperatingRoomView
 //		Get the Notifier
 //
 //--------------------------------------------
-itk::LightObject::Pointer
+itk::Object::Pointer
 OperatingRoomView::GetNotifier(void) 
 {
   return m_Notifier;

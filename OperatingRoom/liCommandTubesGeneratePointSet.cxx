@@ -36,7 +36,7 @@ CommandTubesGeneratePointSet::CommandTubesGeneratePointSet(void)
 //
 //--------------------------------------------------
 void
-CommandTubesGeneratePointSet::Execute( itk::LightObject * unit, unsigned long event )
+CommandTubesGeneratePointSet::Execute( itk::Object * unit, unsigned long event )
 {
   
   if( event == FluoroscopyUnitMovedEvent ||
@@ -69,7 +69,7 @@ CommandTubesGeneratePointSet::Execute( itk::LightObject * unit, unsigned long ev
 //
 //--------------------------------------------------
 void
-CommandTubesGeneratePointSet::Execute(const itk::LightObject * unit, unsigned long event )
+CommandTubesGeneratePointSet::Execute(const itk::Object * unit, unsigned long event )
 {
 
   if( event == FluoroscopyUnitMovedEvent   ||

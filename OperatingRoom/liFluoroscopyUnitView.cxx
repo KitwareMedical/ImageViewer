@@ -34,7 +34,7 @@ FluoroscopyUnitView
 :fltk::GlWindow(x,y,w,h,label) 
 {
   m_Zoom = 1.0;
-  m_Notifier = itk::LightObject::New();
+  m_Notifier = itk::Object::New();
   m_ImageBackground   = 0;
   m_TextureBackground = 0;
   m_TextureScaled     = 0;
@@ -230,7 +230,7 @@ FluoroscopyUnitView
 //    Get the Notifier
 //
 //--------------------------------------------
-itk::LightObject::Pointer
+itk::Object::Pointer
 FluoroscopyUnitView::GetNotifier(void) 
 {
   return m_Notifier;

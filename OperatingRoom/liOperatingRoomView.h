@@ -15,7 +15,7 @@
 #define liOPERATINGROOMVIEWCLASS
 
 #include <itkWin32Header.h>
-#include <itkLightObject.h>
+#include <itkObject.h>
 #include <fltkGlWindowInteractive.h>
 
 
@@ -39,7 +39,7 @@ public:
 	
   void draw(void);
 
-  typedef itk::LightObject lightObject;
+  typedef itk::Object lightObject;
 
   lightObject::Pointer  GetNotifier(void);
 

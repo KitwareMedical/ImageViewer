@@ -16,7 +16,7 @@
 
 #include <fltkGlWindow.h>
 #include <itkPoint.h>
-#include <itkLightObject.h>
+#include <itkObject.h>
 #include <itkImage.h>
 
 
@@ -141,7 +141,7 @@ public:
   /**
    *  Get the Notifier, a holder for Observers
    */
-  itk::LightObject::Pointer  GetNotifier(void);
+  itk::Object::Pointer  GetNotifier(void);
 
 
   /**
@@ -193,7 +193,7 @@ private:
    *  correspond to commands that will redraw objects
    *  in OpenGL.
    */
-  itk::LightObject::Pointer  m_Notifier;
+  itk::Object::Pointer  m_Notifier;
 
 
   /**
