@@ -268,7 +268,7 @@ void vtkWSLookupTableManager::Initialize()
 
 void vtkWSLookupTableManager::LoadTreeFile(const char* fn)
 {
-  ifstream in(fn);
+  ifstream in(fn, ios::binary);
   if (!in)
     {
       vtkErrorMacro (<<"Bad file name: " << fn);
