@@ -165,28 +165,56 @@ Image2DViewer<ImagePixelType>
 
   fltk::Image2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
 
-  unsigned char * dest = buffer + totalSize - totalWidth;
-  it.GoToBegin();
-  while( !it.IsAtEnd() )  
+  if(!m_FlipY)
+   {
+    unsigned char * dest = buffer + totalSize - totalWidth;
+    it.GoToBegin();
+    while( !it.IsAtEnd() )  
+      {
+        while( !it.IsAtEndOfLine() ) 
+          {
+            double ivalue = it.Get();
+            if( ivalue > selectedMax )
+              {
+              ivalue = selectedMax;
+              }
+            else if( ivalue < selectedMin )
+              {
+              ivalue = selectedMin;
+              }
+            const double value = ( ivalue - selectedMin ) * factor;
+            const unsigned char valuec = static_cast<unsigned char>( value );
+            *dest++ = valuec;
+            ++it;
+          }
+        it.NextLine();
+        dest -= 2 * totalWidth;
+      }
+    }
+  else
     {
-      while( !it.IsAtEndOfLine() ) 
-        {
-          double ivalue = it.Get();
-          if( ivalue > selectedMax )
-            {
-            ivalue = selectedMax;
-            }
-          else if( ivalue < selectedMin )
-            {
-            ivalue = selectedMin;
-            }
-          const double value = ( ivalue - selectedMin ) * factor;
-          const unsigned char valuec = static_cast<unsigned char>( value );
-          *dest++ = valuec;
-          ++it;
-        }
-      it.NextLine();
-      dest -= 2 * totalWidth;
+    unsigned char * dest = buffer;
+    it.GoToBegin();
+    while( !it.IsAtEnd() )  
+      {
+        while( !it.IsAtEndOfLine() ) 
+          {
+            double ivalue = it.Get();
+            if( ivalue > selectedMax )
+              {
+              ivalue = selectedMax;
+              }
+            else if( ivalue < selectedMin )
+              {
+              ivalue = selectedMin;
+              }
+            const double value = ( ivalue - selectedMin ) * factor;
+            const unsigned char valuec = static_cast<unsigned char>( value );
+            *dest++ = valuec;
+            ++it;
+          }
+        it.NextLine();
+      }
     }
 
   imageViewer->redraw();
