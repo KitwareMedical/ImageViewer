@@ -79,7 +79,7 @@ FEMRegistrator<TFixedImage,TMovingImage,TFieldValue>
   itk::fem::MaterialLinearElasticity::Pointer m;
   m=itk::fem::MaterialLinearElasticity::New();
   m->GN=0;       // Global number of the material ///
-  m->E=m_Registration.GetElasticity();  // Young modulus -- used in the membrane ///
+  m->E=m_Registration.GetElasticity(0);  // Young modulus -- used in the membrane ///
   m->A=1.0;     // Crossection area ///
   m->h=1.0;     // Crossection area ///
   m->I=1.0;    // Moment of inertia ///
@@ -91,6 +91,7 @@ FEMRegistrator<TFixedImage,TMovingImage,TFieldValue>
   ElementType::Pointer e1=ElementType::New();
   e1->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
   m_Registration.SetElement(e1);
+  m_Registration.SetMaterial(m);
 
   try
     {
