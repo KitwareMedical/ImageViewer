@@ -110,13 +110,13 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Counter lowerThresholdCounter {
           label Lower
           callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );}
-          xywh {643 61 121 25} labelsize 12 align 4 minimum 0 maximum 255 step 1 value 100 textsize 12
+          xywh {643 61 121 25} labelsize 12 align 4 minimum 0 maximum 65535 step 1 value 100 textsize 12
           code0 {o->lstep(10.0);}
         }
         Fl_Counter upperThresholdCounter {
           label Upper
           callback {m_ConnectedThresholdImageFilter->SetUpper( static_cast<InputPixelType>( o->value() ) );}
-          xywh {643 86 121 25} labelsize 12 align 4 minimum 0 maximum 255 step 1 value 200 textsize 12
+          xywh {643 86 121 25} labelsize 12 align 4 minimum 0 maximum 65535 step 1 value 200 textsize 12
           code0 {o->lstep( 10.0 );}
         }
         Fl_Group seedGroup {
