@@ -30,16 +30,19 @@ ${ITK_BINARY_DIR}/Examples/Morphogenesis
 )
 
 SOURCE_FILES(Morphogenesis_SRCS
+Bacteria
+BacterialColony
+BacterialColonyGUI
 Cell
 CellsViewerBase
 CellsViewerGUI
 CellsViewer
 CellsViewerCommand
 CellularAggregate
-Bacteria
-BacterialColony
-BacterialColonyRedrawCommand
-BacterialColonyGUI
+Eukariote
+GradientEatingBacteria
+PressureSensitiveBacteria
+Prokariote
 main
 )
 
