@@ -407,8 +407,10 @@ vtkUnsignedCharArray * VTKVolRen<T>::scalars(void)
 template <class T>
 void VTKVolRen<T>::update(void)
   {
-  if(mImData == NULL)
+  if( !mImData )
+    {
     return;
+    }
 
   //create a structured points dataset with
   //scalar values equal to the vals in the MRA. Set the
