@@ -67,11 +67,11 @@ liImageRegistrationConsole
   m_ReferenceViewer->SetLabel( "Reference Image" );
   m_MappedReferenceViewer->SetLabel( "Mapped Reference Image" );
 
-  m_Reader->AddObserver( itk::Command::StartEvent, targetButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::EndEvent, targetButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::StartEvent(), targetButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::EndEvent(), targetButton->GetRedrawCommand().GetPointer() );
 
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), targetButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), targetButton->GetRedrawCommand().GetPointer() );
   
   this->ShowStatus("Let's start by loading an image...");
 
