@@ -197,7 +197,7 @@ MSClassifierValidationInputParser<TVectorInputImage,TMaskImage>
   //Pack the input image to a vector image
   //------------------------------------------------------
   // setup the iterators
-  typedef VectorInputImageType::PixelType VectorInputImagePixelType;
+  typedef typename VectorInputImageType::PixelType VectorInputImagePixelType;
   VectorInputImagePixelType vectorSample;
 
   for ( vectorImageIt.GoToBegin(); ! vectorImageIt.IsAtEnd(); ++vectorImageIt ) 
