@@ -10,6 +10,8 @@ ${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
 ${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/GaussianFilter
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${ITK_BINARY_DIR}/Examples/GaussianFilter
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
