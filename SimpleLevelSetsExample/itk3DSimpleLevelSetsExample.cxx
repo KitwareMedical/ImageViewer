@@ -45,8 +45,8 @@ float torus_full_signed(unsigned x, unsigned y, unsigned z)
   float t_dis, dis;
   t_dis = (x - (float)V_WIDTH/2.0)*(x - (float)V_WIDTH/2.0) +
     (y - (float)V_HEIGHT/2.0)*(y - (float)V_HEIGHT/2.0);
-  t_dis = vnl_math_sqrt(t_dis);
-  dis = vnl_math_sqrt((t_dis - XY_RADIUS)*(t_dis - XY_RADIUS) +
+  t_dis = vcl_sqrt(t_dis);
+  dis = vcl_sqrt((t_dis - XY_RADIUS)*(t_dis - XY_RADIUS) +
     (z - (float)V_DEPTH/2.0)*(z - (float)V_DEPTH/2.0));
   return(0.0001f*(T_RADIUS - dis));
 }
@@ -102,8 +102,8 @@ float the_torus(unsigned x, unsigned y, unsigned z)
 {
   float t_dis, dis;
   t_dis = (x - T_CENTER_X)*(x - T_CENTER_X) + (y - T_CENTER_Y)*(y - T_CENTER_Y);
-  t_dis = vnl_math_sqrt(t_dis);
-  dis = vnl_math_sqrt((t_dis - XY_RADIUS)*(t_dis - XY_RADIUS)
+  t_dis = vcl_sqrt(t_dis);
+  dis = vcl_sqrt((t_dis - XY_RADIUS)*(t_dis - XY_RADIUS)
                       + (z - T_CENTER_Z)*(z - T_CENTER_Z));
   return(T_RADIUS - dis);
 }
@@ -112,8 +112,8 @@ float the_torus(float x, float y, float z)
 {
   float t_dis, dis;
   t_dis = (x - T_CENTER_X)*(x - T_CENTER_X) + (y - T_CENTER_Y)*(y - T_CENTER_Y);
-  t_dis = vnl_math_sqrt(t_dis);
-  dis = vnl_math_sqrt((t_dis - XY_RADIUS)*(t_dis - XY_RADIUS)
+  t_dis = vcl_sqrt(t_dis);
+  dis = vcl_sqrt((t_dis - XY_RADIUS)*(t_dis - XY_RADIUS)
                       + (z - T_CENTER_Z)*(z - T_CENTER_Z));
   return(T_RADIUS - dis);
 }
@@ -131,7 +131,7 @@ float box(unsigned x, unsigned y, unsigned z)
     }
   else
     {
-      dis = -vnl_math_sqrt((X - XY_RADIUS)*(X - XY_RADIUS)
+      dis = -vcl_sqrt((X - XY_RADIUS)*(X - XY_RADIUS)
                            +(Y - XY_RADIUS)*(Y - XY_RADIUS)
                            + (Z - XY_RADIUS)*(Z - XY_RADIUS));
     }
@@ -385,7 +385,7 @@ int main(int argc, char** argv)
     // Squash level sets everywhere but near the zero set.
     for (itr = itr.Begin(); ! itr.IsAtEnd(); ++itr)
       {
-        itr.Value() = itr.Value() /vnl_math_sqrt((5.0f +vnl_math_sqr(itr.Value())));
+        itr.Value() = itr.Value() /vcl_sqrt((5.0f +vnl_math_sqr(itr.Value())));
         
       }
     
