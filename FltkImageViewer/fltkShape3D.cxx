@@ -432,7 +432,7 @@ const Shape3D::PointType &
 Shape3D::GetCurrentPosition(void) const
 {
   PointType here;
-  here = 0.0, 0.0, 0.0;
+  here.Fill( 0.0 ); // replace by NumericTraits<PointType>::Zero(); 
   m_CurrentPosition = ComputeCurrentPosition( here );
   return m_CurrentPosition;
 }
