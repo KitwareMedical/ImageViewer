@@ -26,6 +26,7 @@ namespace fltk
 TimeProbesCollector
 ::TimeProbesCollector()
 {
+ timeResolution->value( 1.0f / CLOCKS_PER_SEC );
 }
 
 
@@ -42,7 +43,7 @@ TimeProbesCollector
 ::Clear(void) 
 {
   TimeProbesCollectorBase::Clear();
-  probesBrowser->clear();
+  probesPack->clear();
   controlPanel->redraw();
   Fl::check();
 }
@@ -86,34 +87,26 @@ TimeProbesCollector
 ::Report(void) const
 {
 
-  probesBrowser->clear();
-  
-  MapType::const_iterator pb  = m_Probes.begin();
-  MapType::const_iterator end = m_Probes.end();
+  probesPack->clear();
+  probesPack->begin();  
+  MapType::const_iterator probe  = m_Probes.begin();
+  MapType::const_iterator end    = m_Probes.end();
 
-  while( pb != end )
+  while( probe != end )
     {
-    *pb;
-    const unsigned int len = 1000;
-    char buffer[ len ];
-    ostrstream text( buffer, len );
-    text.width(20);
-    text <<  pb->first.c_str() << "  ";
-    text.width(10);
-    text <<  pb->second.GetNumberOfCalls() <<  "   ";
-    text.width(15);
-    text <<  pb->second.GetMeanTime();
-    text << '\0';
-    probesBrowser->add( text.str() );
-    ++pb;
+    TimeProbeGUI * gui = new TimeProbeGUI();
+    gui->SetName( probe->first );
+    gui->SetNumberOfStarts( probe->second.GetNumberOfStarts() );
+    gui->SetNumberOfStops( probe->second.GetNumberOfStops() );
+    gui->SetMeanTime( probe->second.GetMeanTime() );
+    ++probe;
 
     }
-  
-  probesBrowser->redraw();
+  probesPack->end();  
+  probesPack->redraw();
   Fl::check();
 
 }
-
 
 
 

@@ -18,7 +18,7 @@
 #define __fltkTimeProbeGUI_h
 
 #include <FL/Fl_Tile.H>
-#include <FL/Fl_Button.H>
+#include <FL/Fl_Output.H>
 #include <FL/Fl_Value_Output.H>
 #include <string>
 
@@ -31,19 +31,22 @@ class TimeProbeGUI : public Fl_Tile
 {
 
   public:
-    TimeProbeGUI(unsigned int line);
+    TimeProbeGUI();
     ~TimeProbeGUI();
     void SetName( const std::string & );
-    void SetNumberOfCalls( unsigned int );
+    void SetNumberOfStarts( unsigned int );
+    void SetNumberOfStops( unsigned int );
     void SetMeanTime( double );
 
   private:
-    Fl_Button        * m_NameButton;
+    Fl_Output        * m_Name;
     Fl_Value_Output  * m_MeanTime;
-    Fl_Value_Output  * m_NumberOfCalls;
+    Fl_Value_Output  * m_NumberOfStarts;
+    Fl_Value_Output  * m_NumberOfStops;
+
 
 };
 
-};
+}  //end namespace fltk
 
 #endif
