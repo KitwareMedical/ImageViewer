@@ -16,7 +16,6 @@ TARGET_LINK_LIBRARIES (WSTITK
   vtkImaging
   vtkFiltering 
   vtkCommon 
-  ITKIO
 )
 
 #  vtktiff
@@ -102,7 +101,7 @@ IF (VTK_USE_PARALLEL)
   ENDIF (VTK_USE_MPI)
 ENDIF (VTK_USE_PARALLEL)
 
-TARGET_LINK_LIBRARIES(WSTITK vtkWSTCommonTCL vtkWSTCommon vtkVTKITKCommonTCL vtkVTKITKCommon ITKNumerics)
+TARGET_LINK_LIBRARIES(WSTITK vtkWSTCommonTCL vtkWSTCommon vtkVTKITKCommonTCL vtkVTKITKCommon ITKNumerics ITKIO)
 
 #
 # link in the PNG library if it was found
