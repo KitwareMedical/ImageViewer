@@ -59,7 +59,7 @@ public:
 
   // note that we cannot use "CellType" here because there 
   // is already an enum called "CellType" defined in CellInterface<>
-  typedef typename LineCell< PixelType, CellTraits >  BaseCellType;
+  typedef LineCell< PixelType, CellTraits >       BaseCellType;
   typedef typename BaseCellType::PointIdIterator      PointIdIterator;
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
 
