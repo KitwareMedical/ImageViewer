@@ -10,15 +10,17 @@ if {$argc == 1} {
 # Read the two studies. Only short data is supported by th example
 vtkImageReader reader1
   reader1 SetFilePrefix $study1Prefix
-  reader1 SetDataByteOrderToBigEndian
+  if {$study1ByteOrder == "BigEndian"} {reader1 SetDataByteOrderToBigEndian}
+  if {$study1ByteOrder == "LittleEndian"} {reader1 SetDataByteOrderToLittleEndian}
 eval reader1 SetDataExtent $study1Extent
 eval reader1 SetDataSpacing $study1Spacing
   reader1 SetDataScalarTypeToShort
 vtkImageReader reader2
   reader2 SetFilePrefix $study2Prefix
+  if {$study2ByteOrder == "BigEndian"} {reader2 SetDataByteOrderToBigEndian}
+  if {$study2ByteOrder == "LittleEndian"} {reader2 SetDataByteOrderToLittleEndian}
 eval reader2 SetDataExtent $study2Extent
 eval reader2 SetDataSpacing $study2Spacing
-  reader2 SetDataByteOrderToBigEndian
   reader2 SetDataScalarTypeToShort
 
 if {[lindex $study1Extent 1] == "511" } {

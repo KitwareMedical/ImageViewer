@@ -110,6 +110,7 @@ int main(int argc, char **argv)
   vtkImageReader *movingReader = vtkImageReader::New();
     movingReader->SetDataScalarTypeToUnsignedShort();
     movingReader->SetFilePrefix(study1Prefix.c_str());
+    movingReader->SetDataMask(0x7fff);
     if (study1ByteOrder == "BigEndian")
       {
       movingReader->SetDataByteOrderToBigEndian();
@@ -157,6 +158,7 @@ int main(int argc, char **argv)
    vtkImageReader *fixedReader = vtkImageReader::New();
     fixedReader->SetDataScalarTypeToUnsignedShort();
     fixedReader->SetFilePrefix(study2Prefix.c_str());
+    fixedReader->SetDataMask(0x7fff);
     if (study2ByteOrder == "BigEndian")
       {
       fixedReader->SetDataByteOrderToBigEndian();
@@ -314,6 +316,8 @@ int main(int argc, char **argv)
   std::ofstream fptr("reg.tcl", ios::out);
   fptr << "set study1Prefix \""
         << study1Prefix.c_str() << "\"" << std::endl;
+  fptr << "set study1ByteOrder \""
+        << study2ByteOrder.c_str() << "\"" << std::endl;
   fptr << "set study1Extent \""
         << 0 << " " << study1Resolution[0] - 1 << " "
         << 0 << " " << study1Resolution[1] - 1 << " "
@@ -325,6 +329,8 @@ int main(int argc, char **argv)
 
   fptr << "set study2Prefix \""
         << study2Prefix.c_str() << "\"" << std::endl;
+  fptr << "set study2ByteOrder \""
+        << study2ByteOrder.c_str() << "\"" << std::endl;
   fptr << "set study2Extent \""
         << 0 << " " << study2Resolution[0] - 1 << " "
         << 0 << " " << study2Resolution[1] - 1 << " "
@@ -351,7 +357,7 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.2 $  $Date: 2002-12-30 16:15:15 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.3 $  $Date: 2003-01-07 15:00:54 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
