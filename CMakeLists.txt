@@ -12,7 +12,11 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 # Add an option to build or not build the Image Registration example
 OPTION(BUILD_IMAGE_REGISTRATION "Build the image registration example")
 IF(BUILD_IMAGE_REGISTRATION)
-SUBDIRS(ImageRegistration)
+  IF(HAS_METAIMAGE)
+    IF(HAS_FLTKIMAGEVIEWER)
+      SUBDIRS(ImageRegistration)
+    ENDIF(HAS_FLTKIMAGEVIEWER)
+  ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_IMAGE_REGISTRATION)
 
 # Add an option to build or not build the Multiresolution Registration example
@@ -25,14 +29,20 @@ ENDIF(BUILD_MULTIRESOLUTION)
 OPTION(BUILD_GAUSSIANFILTER "Build the Gaussian filter example")
 IF(BUILD_GAUSSIANFILTER)
   IF(HAS_METAIMAGE)
-    SUBDIRS(GaussianFilter)
+    IF(HAS_FLTKIMAGEVIEWER)
+      SUBDIRS(GaussianFilter)
+    ENDIF(HAS_FLTKIMAGEVIEWER)
   ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_GAUSSIANFILTER)
 
 # Add an option to build or not build the Image Guided Intervention example
 OPTION(BUILD_IMAGE_GUIDED_INTERVENTION "Build the image guided intervention example")
 IF(BUILD_IMAGE_GUIDED_INTERVENTION)
-SUBDIRS(OperatingRoom)
+  IF(HAS_METAIMAGE)
+    IF(HAS_FLTKIMAGEVIEWER)
+      SUBDIRS(OperatingRoom)
+    ENDIF(HAS_FLTKIMAGEVIEWER)
+  ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_IMAGE_GUIDED_INTERVENTION)
 
 # Add an option to build or not build the PrincipalAxes example
@@ -50,7 +60,11 @@ ENDIF(BUILD_MORPHOGENESIS)
 # Add an option to build or not build the MRIBiasCorrection example
 OPTION(BUILD_MRI_BIAS_CORRECTION "Build the MRI bias correction example")
 IF(BUILD_MRI_BIAS_CORRECTION)
-SUBDIRS(MRIBiasCorrection)
+  IF(HAS_METAIMAGE)
+    IF(HAS_FLTKIMAGEVIEWER)
+      SUBDIRS(MRIBiasCorrection)
+    ENDIF(HAS_FLTKIMAGEVIEWER)
+  ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_MRI_BIAS_CORRECTION)
 
 # Add an option to build or not build the FuzzyConnectedness example
