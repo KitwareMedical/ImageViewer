@@ -5,8 +5,14 @@ FltkImageViewer
 )
 
 SOURCE_FILES(
-fltkImageViewerGUI 
+fltkGlWindow
+fltkGlWindowInter
+fltkGlWindowInterFlat
+fltkImageViewerGUI
+fltkLightButtonRedrawCommand
+fltkProgressBarRedrawCommand
 fltkSlice3DDrawerGUI
+fltkWindowInter
 )
 
 INCLUDE_DIRECTORIES(
