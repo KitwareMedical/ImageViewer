@@ -1,7 +1,7 @@
 #ifndef Bacteria_H
 #define Bacteria_H
 
-#include "Cell.h"
+#include "Prokariote.h"
 
 
 namespace bio {
@@ -11,37 +11,24 @@ namespace bio {
  * \class Bacteria 
  * \brief This class implements the basic behavior of Prokariote cells.
  */
-class Bacteria  : public Cell
+class Bacteria  : public Prokariote
 {
 
 
 public:
 
-  typedef  Cell  SuperClass;
+  typedef  Prokariote  SuperClass;
 
   Bacteria();
-  ~Bacteria();
+  virtual ~Bacteria();
 
-  virtual void Grow(void);
-  virtual void Divide(void);
-  virtual void Apoptosis(void);
+  static  Cell * CreateEgg(void);
 
-  virtual bool CheckPointGrowth(void);
-  virtual bool CheckPointDivision(void);
-  virtual bool CheckPointApoptosis(void);
-
-  virtual Cell * CreateNew(void);
-
-  static void SetGrowthLatencyTime( unsigned long );
-  static void SetDivisionLatencyTime( unsigned long );
-
+  static const char * GetSpeciesName(void) 
+                          { return "Primitive Bacteria"; }
 private:
   
-  unsigned long m_GrowthLatencyTime;
-  unsigned long m_DivisionLatencyTime;
-
-  static unsigned long GrowthMaxLatency;
-  static unsigned long DivisionMaxLatency;
+  virtual Cell * CreateNew(void);
 
 };
 
