@@ -160,11 +160,7 @@ protected:
    * Destructor
    */
   virtual ~Shape3D();
-
-
-  Shape3D(const Self&) {}
-  void operator=(const Self&) {}
-
+  
   virtual void PrintSelf(std::ostream& os, itk::Indent indent) const;
 
 public:
@@ -434,7 +430,9 @@ private:
    */ 
   DisplayListUpdateCommandPointer   m_DisplayListUpdateCommand;
 
-
+private:
+  Shape3D(const Self&); // Purposely not implemented.
+  void operator=(const Self&); // Purposely not implemented.
 };
 
 } // end namespace fltk
