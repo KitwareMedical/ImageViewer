@@ -31,6 +31,7 @@ class ImageIOError : public itk::ExceptionObject
 {
  public:
   ImageIOError() : itk::ExceptionObject() {}
+  virtual ~ImageIOError() throw () {}
   
   ImageIOError(const char *file, unsigned int line, std::string fileName, std::string operation) : itk::ExceptionObject(file, line)
   {
