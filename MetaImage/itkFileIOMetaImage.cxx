@@ -76,7 +76,7 @@ void FileIOMetaImage::Reset ()
   m_MetaImage = NULL;
 }
 
-void FileIOMetaImage::Load()
+void FileIOMetaImage::Update()
 {
   ReadHeader();
 
@@ -91,7 +91,7 @@ void FileIOMetaImage::Load()
 
 void FileIOMetaImage::Load2D(const std::string fileName)
 {
-  FileIOMetaImage::Load();
+  FileIOMetaImage::Update();
 }
 
 void FileIOMetaImage::Load2DSlice(const std::string fileName,

@@ -32,7 +32,7 @@ public:
   /**
    * Default load; do whatever is appropriate for the filetype.
    */
-  virtual void Load ();
+  virtual void Update();
 
   /**
    * Load a 2D image. If fileName="" (the default), will read from m_FileName

@@ -50,7 +50,7 @@ int main ()
   /*
    * Now tell the filter which file to load
    */
-	filter->SetFileToLoad("TestInput.mhd");
+	filter->SetFileName("TestInput.mhd");
   /*
    * This call forces the filter to update itself, which in this case causes
    * the file to be loaded from disk.
