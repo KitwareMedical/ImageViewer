@@ -1157,16 +1157,10 @@ void SliceView<imType>::iwCallBack(void (* newIWArgCallBack)(void *),
 template <class imType>
 void SliceView<imType>::winZoom(float newWinZoom)
   {
-  cWinZoom = newWinZoom;
-  
-  if(cWinZoom<1)
-    cWinZoom = 1;
-  
-  if(cWinZoom>cDimSize[cWinOrder[0]])
-    cWinZoom = (float)cDimSize[cWinOrder[0]]/2;
-  
-  if(cWinZoom>cDimSize[cWinOrder[1]])
-    cWinZoom = (float)cDimSize[cWinOrder[1]]/2;
+  if(newWinZoom>0.1 && newWinZoom<cDimSize[cWinOrder[0]])
+    {
+    cWinZoom = newWinZoom;
+    }
   }
 
 
@@ -1422,16 +1416,23 @@ int SliceView<imType>::handle(int event)
         {
         if(cClickMode == CM_SELECT || cClickMode == CM_BOX) 
           {
+          double oX = 0;
+          double oY = 0;
+          if(cWinZoom < 1)
+            {
+            oX = (int)((cW-scale0*cDimSize[cWinOrder[0]])/2.0);
+            oY = (int)((cH-scale1*cDimSize[cWinOrder[1]])/2.0);
+            }
           float p[3];
-          p[cWinOrder[0]] = cWinMinX + ( (1-cFlipX[cWinOrientation])*(x) 
-            + (cFlipX[cWinOrientation])*(cW-x) ) 
+          p[cWinOrder[0]] = cWinMinX + ( (1-cFlipX[cWinOrientation])*(x-oX) 
+            + (cFlipX[cWinOrientation])*(cW-x-oX) ) 
             / scale0;
           if(p[cWinOrder[0]]<cWinMinX) 
             p[cWinOrder[0]] = cWinMinX;
           if(p[cWinOrder[0]]>cWinMaxX) 
             p[cWinOrder[0]] = cWinMaxX;
-          p[cWinOrder[1]] = cWinMinY + (cFlipY[cWinOrientation]*y 
-            + (1-cFlipY[cWinOrientation])*(cH-y)) 
+          p[cWinOrder[1]] = cWinMinY + (cFlipY[cWinOrientation]*(y-oY) 
+            + (1-cFlipY[cWinOrientation])*(cH-y-oY)) 
             / scale1;
           if(p[cWinOrder[1]]<cWinMinY) 
             p[cWinOrder[1]] = cWinMinY;
@@ -1458,17 +1459,24 @@ int SliceView<imType>::handle(int event)
     case FL_RELEASE:
       if(cClickMode == CM_BOX)
         {
+        double oX = 0;
+        double oY = 0;
+        if(cWinZoom < 1)
+          {
+          oX = (int)((cW-scale0*cDimSize[cWinOrder[0]])/2.0);
+          oY = (int)((cH-scale1*cDimSize[cWinOrder[1]])/2.0);
+          }
         float p[3];
-        p[cWinOrder[0]] = cWinMinX + (cFlipX[cWinOrientation]*(cW-x) 
-          + (1-cFlipX[cWinOrientation])*x) 
+        p[cWinOrder[0]] = cWinMinX + (cFlipX[cWinOrientation]*(cW-x-oX) 
+          + (1-cFlipX[cWinOrientation])*(x-oX)) 
           / scale0;
         if(p[cWinOrder[0]]<cWinMinX) 
           p[cWinOrder[0]] = cWinMinX;
         if(p[cWinOrder[0]]>cWinMaxX) 
           p[cWinOrder[0]] = cWinMaxX;
         
-        p[cWinOrder[1]] = cWinMinY + (cFlipY[cWinOrientation]*y 
-          + (1-cFlipY[cWinOrientation])*(cH-y)) 
+        p[cWinOrder[1]] = cWinMinY + (cFlipY[cWinOrientation]*(y-oY) 
+          + (1-cFlipY[cWinOrientation])*(cH-y-oY)) 
           / scale1;
         if(p[cWinOrder[1]]<cWinMinY) 
           p[cWinOrder[1]] = cWinMinY;
@@ -1566,7 +1574,15 @@ int SliceView<imType>::handle(int event)
           return 1;
           break;
         case 'r':
-          winZoom(1);
+          {
+          double zm = 1;
+          if(cDimSize[cWinOrder[0]]*cSpacing[cWinOrder[0]]<
+              cDimSize[cWinOrder[1]]*cSpacing[cWinOrder[1]])
+            {
+            zm = (cDimSize[cWinOrder[0]]*cSpacing[cWinOrder[0]]) 
+                 / (cDimSize[cWinOrder[1]]*cSpacing[cWinOrder[1]]);
+            }
+          winZoom(zm);
           winCenter();
           imageMode(IMG_VAL);
           iwMax(cDataMax);
@@ -1574,6 +1590,7 @@ int SliceView<imType>::handle(int event)
           this->update();
           return 1;
           break;
+          }
         case '+':
         case '=':
           winZoom(cWinZoom*2);
@@ -1582,7 +1599,7 @@ int SliceView<imType>::handle(int event)
           break;
         case '-':
         case '_':
-          winZoom(cWinZoom/2);
+          winZoom(cWinZoom*0.5);
           this->update();
           return 1;
           break;
