@@ -14,10 +14,10 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
       Fl_Button {} {
-        label {C:/cygwin/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif} selected
+        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.xpm}
         xywh {10 75 110 75} box FLAT_BOX labeltype image
       }
-      Fl_Menu_Bar {} {
+      Fl_Menu_Bar {} {open
         xywh {0 0 250 25}
       } {
         submenu {} {
@@ -36,7 +36,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
           }
         }
         submenu {} {
-          label View open
+          label View
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -48,6 +48,16 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
             label {Substrates Controls}
             callback {substratesWindow->show();}
             xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label Cells
+            callback {ShowDisplay();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Species
+            callback {ShowSpecies()}
+            xywh {0 0 100 20}
           }
         }
       }
@@ -70,9 +80,9 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
         xywh {180 93 60 25}
       }
       Fl_Button {} {
-        label {@\#|<}
-        callback {Restart();}
-        xywh {140 35 60 20} labeltype SYMBOL_LABEL
+        label {@\#7+}
+        callback {// ClearAggregate();}
+        xywh {140 35 60 20} labeltype SYMBOL_LABEL deactivate
       }
       Fl_Value_Output timeValueOutput {
         label {Time : }
@@ -80,12 +90,32 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       }
     }
     Fl_Window substratesWindow {
-      label Substrates open
-      xywh {771 76 249 146} visible
+      label Substrates
+      xywh {235 20 249 146} resizable visible
     } {
       Fl_Browser substratesBrowser {
         callback {ShowSubstrate( o->text( o->value() ) );}
-        xywh {15 15 220 115} type Select
+        xywh {10 10 230 125} type Select
+      }
+    }
+    Fl_Window speciesWindow {
+      label Species
+      xywh {418 247 278 193} resizable visible
+    } {
+      Fl_Browser speciesBrowser {
+        callback {createEggButton->activate();}
+        xywh {10 10 260 140} type Hold
+      }
+      Fl_Button createEggButton {
+        label {Create Egg}
+        callback {SelectSpecies( speciesBrowser->value()-1 );
+speciesWindow->hide();} selected
+        xywh {25 160 100 25} deactivate
+      }
+      Fl_Button {} {
+        label Close
+        callback {speciesWindow->hide();}
+        xywh {150 160 100 25}
       }
     }
   }

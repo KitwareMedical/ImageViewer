@@ -24,6 +24,10 @@ private:
   static void cb_Cellular(Fl_Menu_*, void*);
   inline void cb_Substrates_i(Fl_Menu_*, void*);
   static void cb_Substrates(Fl_Menu_*, void*);
+  inline void cb_Cells_i(Fl_Menu_*, void*);
+  static void cb_Cells(Fl_Menu_*, void*);
+  inline void cb_Species_i(Fl_Menu_*, void*);
+  static void cb_Species(Fl_Menu_*, void*);
   inline void cb_3_i(Fl_Button*, void*);
   static void cb_3(Fl_Button*, void*);
   inline void cb_4square_i(Fl_Button*, void*);
@@ -32,8 +36,8 @@ public:
   Fl_Value_Output *iterationValueOutput;
   Fl_Value_Output *numberOfCellsValueOutput;
 private:
-  inline void cb__i(Fl_Button*, void*);
-  static void cb_(Fl_Button*, void*);
+  inline void cb_7_i(Fl_Button*, void*);
+  static void cb_7(Fl_Button*, void*);
 public:
   Fl_Value_Output *timeValueOutput;
   Fl_Window *substratesWindow;
@@ -41,6 +45,19 @@ public:
 private:
   inline void cb_substratesBrowser_i(Fl_Browser*, void*);
   static void cb_substratesBrowser(Fl_Browser*, void*);
+public:
+  Fl_Window *speciesWindow;
+  Fl_Browser *speciesBrowser;
+private:
+  inline void cb_speciesBrowser_i(Fl_Browser*, void*);
+  static void cb_speciesBrowser(Fl_Browser*, void*);
+public:
+  Fl_Button *createEggButton;
+private:
+  inline void cb_createEggButton_i(Fl_Button*, void*);
+  static void cb_createEggButton(Fl_Button*, void*);
+  inline void cb_Close_i(Fl_Button*, void*);
+  static void cb_Close(Fl_Button*, void*);
 public:
   virtual ~CellsViewerGUI();
 };
