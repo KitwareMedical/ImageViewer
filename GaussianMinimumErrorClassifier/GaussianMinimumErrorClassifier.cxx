@@ -225,11 +225,11 @@ int main(int argc, char* argv[])
       ClassSampleType::Pointer subSample = 
         membershipSample->GetClassSample(i) ;
       meanCalculatorVector[i] = MeanCalculatorType::New() ;
-      meanCalculatorVector[i]->SetSample(subSample) ;
+      meanCalculatorVector[i]->SetInputSample(subSample.GetPointer()) ;
       meanCalculatorVector[i]->Update() ;
       
       covarianceCalculatorVector[i] = CovarianceCalculatorType::New() ;
-      covarianceCalculatorVector[i]->SetSample(subSample) ;
+      covarianceCalculatorVector[i]->SetInputSample(subSample.GetPointer()) ;
       covarianceCalculatorVector[i]->SetMean(meanCalculatorVector[i]->GetOutput()) ;
       covarianceCalculatorVector[i]->Update() ;
 
