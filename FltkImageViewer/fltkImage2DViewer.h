@@ -73,15 +73,18 @@ public:
    */
   itkNewMacro(Self);  
 
-
-
  
   typedef itk::Image< ImagePixelType, 2 >   ImageType;
-    
-  Image2DViewer();
-  virtual ~Image2DViewer();
+  
   virtual void SetImage(ImageType * image);
   virtual void Update(void);
+
+
+protected:
+  
+  Image2DViewer();
+  virtual ~Image2DViewer();
+
 
 private:
   ImageType::Pointer  m_Image;
