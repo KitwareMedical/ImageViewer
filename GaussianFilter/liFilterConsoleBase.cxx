@@ -17,7 +17,6 @@
 
 
 #include <liFilterConsoleBase.h>
-#include <itkMetaImageIO.h>
 
 
 /************************************
@@ -115,12 +114,6 @@ liFilterConsoleBase
   m_Writer_Gradient_Y       = VolumeWriterType::New();
   m_Writer_Gradient_Z       = VolumeWriterType::New();
   m_Writer_Laplacian        = VolumeWriterType::New();
-
-  m_Writer_Gradient_Modulus->SetImageIO( itk::MetaImageIO::New() );
-  m_Writer_Gradient_X->SetImageIO( itk::MetaImageIO::New() );
-  m_Writer_Gradient_Y->SetImageIO( itk::MetaImageIO::New() );
-  m_Writer_Gradient_Z->SetImageIO( itk::MetaImageIO::New() );
-  m_Writer_Laplacian->SetImageIO(  itk::MetaImageIO::New() );
 
   m_Writer_Gradient_X->SetInput( m_H1x->GetOutput() );
   m_Writer_Gradient_Y->SetInput( m_H1y->GetOutput() );

@@ -26,7 +26,7 @@
  *    It includes:
  *
  *     - GUI using FLTK from http://www.fltk.org
- *     - Input/Output using the MetaImage file format
+ *     - Input/Output using any file format registered with factories
  *
  **********************************************************/
 

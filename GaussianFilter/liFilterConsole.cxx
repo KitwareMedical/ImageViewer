@@ -17,7 +17,6 @@
 
 
 #include <liFilterConsole.h>
-#include <itkMetaImageIO.h>
 #include <FL/fl_file_chooser.H>
  
 
@@ -60,11 +59,6 @@ liFilterConsole
   
   m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
-  itk::MetaImageIO::Pointer metaImageIO = itk::MetaImageIO::New();
-  
-  m_Reader->SetImageIO( metaImageIO );
-
-  progressSlider->Observe( metaImageIO.GetPointer() );
   progressSlider->Observe( m_Hx.GetPointer() );
   progressSlider->Observe( m_Hy.GetPointer() );
   progressSlider->Observe( m_Hz.GetPointer() );
@@ -199,7 +193,7 @@ liFilterConsole
 ::Load( void )
 {
 
-  const char * filename = fl_file_chooser("Image filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Image filename","*.*","");
   if( !filename )
   {
     return;
@@ -520,7 +514,7 @@ liFilterConsole
 ::WriteLaplacian(void)
 {
 
-  const char * filename = fl_file_chooser("Laplacian filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Laplacian filename","*.*","");
   if( !filename )
   {
     return;
@@ -545,7 +539,7 @@ liFilterConsole
 ::WriteGradientX(void)
 {
 
-  const char * filename = fl_file_chooser("Gradient X filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Gradient X filename","*.*","");
   if( !filename )
   {
     return;
@@ -571,7 +565,7 @@ liFilterConsole
 ::WriteGradientY(void)
 {
 
-  const char * filename = fl_file_chooser("Gradient Y filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Gradient Y filename","*.*","");
   if( !filename )
   {
     return;
@@ -600,7 +594,7 @@ liFilterConsole
 ::WriteGradientZ(void)
 {
 
-  const char * filename = fl_file_chooser("Gradient Z filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Gradient Z filename","*.*","");
   if( !filename )
   {
     return;
@@ -629,7 +623,7 @@ liFilterConsole
 ::WriteGradientModulus(void)
 {
 
-  const char * filename = fl_file_chooser("Gradient Modulus filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Gradient Modulus filename","*.*","");
   if( !filename )
   {
     return;
