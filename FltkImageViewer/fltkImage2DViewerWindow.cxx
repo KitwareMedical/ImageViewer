@@ -490,7 +490,7 @@ Image2DViewerWindow
     case FL_PUSH:
       {
       const int state = Fl::event_state();
-      if( state == FL_BUTTON1 )
+      if( state & FL_BUTTON1 )
         {
         p1x = Fl::event_x();
         p1y = Fl::event_y();
@@ -506,11 +506,10 @@ Image2DViewerWindow
           }
 
         }
-      else if( state == FL_BUTTON2 )
+      else if( state & FL_BUTTON2 )
         {
-          std::cout << "Button2 " << std::endl;
         } 
-      else if( state == FL_BUTTON3 )
+      else if( state & FL_BUTTON3 )
         {
           handlePopUpMenu();
         }
