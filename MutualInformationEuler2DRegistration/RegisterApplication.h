@@ -8,6 +8,7 @@
 
 #include "Preprocessor.h"
 #include "MIEuler2DRegistrator.h"
+#include "MISimilarity2DRegistrator.h"
 #include "MIAffine2DRegistrator.h"
 #include "OutputGenerator.h"
 
@@ -27,8 +28,9 @@ public:
 
   typedef Preprocessor< InputImageType, OutputImageType > PreprocessorType ;
 
-  typedef MIEuler2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+//  typedef MIEuler2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 //  typedef MIAffine2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+  typedef MISimilarity2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 
   typedef PreprocessorType::AffineTransformType TransformType ;
   typedef OutputGenerator< InputImageType > GeneratorType ;
