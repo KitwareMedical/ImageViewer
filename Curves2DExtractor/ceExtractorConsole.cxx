@@ -41,7 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #include "ceExtractorConsole.h"
-#include "fltkLightButtonRedrawCommand.h"
 #include "itkMetaImageIOFactory.h"
 #include "itkPNGImageIOFactory.h"
 #include <FL/fl_file_chooser.H>
@@ -59,9 +58,7 @@ ceExtractorConsole
  
   itk::PNGImageIOFactory::RegisterOneFactory();
   itk::MetaImageIOFactory::RegisterOneFactory();
-
   
-  typedef fltk::LightButtonRedrawCommand  CommandButton;
 
   m_InputViewer = InputImageViewerType::New();
 
@@ -125,134 +122,70 @@ ceExtractorConsole
   m_ExtractedParametricSpaceSamplesShape->SetPointSet( 
                           m_SpatialFunctionFilter->GetOutput().GetPointer() );
 
-  
 
-  fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
-                            progressSlider->GetRedrawCommand().GetPointer();
+  progressSlider->Observe( m_Reader.GetPointer() );
+  progressSlider->Observe( m_H1x.GetPointer() );
+  progressSlider->Observe( m_H1y.GetPointer() );
+  progressSlider->Observe( m_H2x.GetPointer() );
+  progressSlider->Observe( m_H2y.GetPointer() );
+  progressSlider->Observe( m_Hx.GetPointer() );
+  progressSlider->Observe( m_Hy.GetPointer() );
+  progressSlider->Observe( m_Hxy.GetPointer() );
+  progressSlider->Observe( m_H1xy.GetPointer() );
+  progressSlider->Observe( m_Add.GetPointer() );
+  progressSlider->Observe( m_Modulus.GetPointer() );
+  progressSlider->Observe( m_Eigen.GetPointer() );
+  progressSlider->Observe( m_Gradient.GetPointer() );
+  progressSlider->Observe( m_ScalarProduct.GetPointer() );
+  progressSlider->Observe( m_ParametricSpace.GetPointer() );
+  progressSlider->Observe( m_SpatialFunctionFilter.GetPointer() );
+  progressSlider->Observe( m_InverseParametricFilter.GetPointer() );
 
-  m_Reader->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H1x->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H1y->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H2x->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H2y->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hx->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Hxy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_H1xy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Add->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Modulus->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Eigen->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_Gradient->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_ScalarProduct->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_ParametricSpace->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_SpatialFunctionFilter->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-  m_InverseParametricFilter->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
-                              
-  m_Reader->AddObserver( itk::Command::StartEvent, loadButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Hx->AddObserver(  itk::Command::StartEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Hy->AddObserver(  itk::Command::StartEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Hxy->AddObserver( itk::Command::StartEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::StartEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::StartEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::StartEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::StartEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::StartEvent, H1xyButton->GetRedrawCommand().GetPointer() );
-  m_Add->AddObserver( itk::Command::StartEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Modulus->AddObserver( itk::Command::StartEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_Eigen->AddObserver( itk::Command::StartEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Eigen->AddObserver( itk::Command::StartEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Eigen->AddObserver( itk::Command::StartEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_ScalarProduct->AddObserver( itk::Command::StartEvent, 
-                                gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_ParametricSpace->AddObserver(  itk::Command::StartEvent, 
-                              parametricSpaceButton->GetRedrawCommand().GetPointer() );
-  m_SpatialFunctionFilter->AddObserver(  itk::Command::StartEvent, 
-                              extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
-  m_InverseParametricFilter->AddObserver(  itk::Command::StartEvent, 
-                              curve2DPointsButton->GetRedrawCommand().GetPointer() );
+  loadButton->Observe( m_Reader.GetPointer() );
+  inputButton->Observe( m_Reader.GetPointer() );
+  HxButton->Observe( m_Hx.GetPointer() );
+  HyButton->Observe( m_Hy.GetPointer() );
+  HxyButton->Observe( m_Hxy.GetPointer() );
+  H1xButton->Observe( m_H1x.GetPointer() );
+  H1yButton->Observe( m_H1y.GetPointer() );
+  H2xButton->Observe( m_H2x.GetPointer() );
+  H2yButton->Observe( m_H2y.GetPointer() );
+  H1xyButton->Observe( m_H1xy.GetPointer() );
+  laplacianButton->Observe( m_Add.GetPointer() );
+  modulusButton->Observe( m_Modulus.GetPointer() );
+  maxEigenValueButton->Observe( m_Eigen.GetPointer() );
+  minEigenValueButton->Observe( m_Eigen.GetPointer() );
+  maxEigenVectorButton->Observe( m_Eigen.GetPointer() );
+  gradientOnEigenVectorButton->Observe( m_ScalarProduct.GetPointer() );
+  parametricSpaceButton->Observe( m_ParametricSpace.GetPointer() );
+  extractedParametricPointsButton->Observe( m_SpatialFunctionFilter.GetPointer() );
+  curve2DPointsButton->Observe( m_InverseParametricFilter.GetPointer() );
 
-  m_Reader->AddObserver( itk::Command::EndEvent, loadButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Hx->AddObserver(  itk::Command::EndEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Hy->AddObserver(  itk::Command::EndEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Hxy->AddObserver( itk::Command::EndEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::EndEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::EndEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::EndEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::EndEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::EndEvent, H1xyButton->GetRedrawCommand().GetPointer() );
-  m_Add->AddObserver( itk::Command::EndEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Modulus->AddObserver( itk::Command::EndEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_Eigen->AddObserver( itk::Command::EndEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Eigen->AddObserver( itk::Command::EndEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Eigen->AddObserver( itk::Command::EndEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_ScalarProduct->AddObserver( itk::Command::EndEvent, 
-                                gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
-                         parametricSpaceButton->GetRedrawCommand().GetPointer() );
-  m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
-                         m_ParametricSpaceSamplesShape->GetDisplayListUpdateCommand().GetPointer() );
-  m_SpatialFunctionFilter->AddObserver(  itk::Command::EndEvent, 
-                         extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
-  m_SpatialFunctionFilter->AddObserver(  itk::Command::EndEvent, 
-                 m_ExtractedParametricSpaceSamplesShape->GetDisplayListUpdateCommand().GetPointer() );
-  m_InverseParametricFilter->AddObserver(  itk::Command::EndEvent, 
-                              curve2DPointsButton->GetRedrawCommand().GetPointer() );
-  
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, loadButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
-  m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Hy->AddObserver(  itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Hxy->AddObserver( itk::Command::ModifiedEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::ModifiedEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::ModifiedEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::ModifiedEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::ModifiedEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_H1x->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_H1y->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_H2x->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_H2y->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::ModifiedEvent, H1xyButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::ModifiedEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::ModifiedEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_H1xy->AddObserver( itk::Command::ModifiedEvent, 
-                                gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_ParametricSpace->AddObserver(  itk::Command::ModifiedEvent, 
-                                   parametricSpaceButton->GetRedrawCommand().GetPointer() );
-  m_SpatialFunctionFilter->AddObserver(  itk::Command::ModifiedEvent, 
-                                   extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
-  m_InverseParametricFilter->AddObserver(  itk::Command::ModifiedEvent, 
-                                    curve2DPointsButton->GetRedrawCommand().GetPointer() );
-
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, HxyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H2xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H2yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, H1xyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, parametricSpaceButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, curve2DPointsButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxyButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xyButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), maxEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), minEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), maxEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), parametricSpaceButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), curve2DPointsButton->GetRedrawCommand().GetPointer() );
 
 
   // Register the PointSet as a Drawer in the OpenGL window
   m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
-                                         fltk::GlDrawEvent, 
-                                         m_ParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
+                         fltk::GlDrawEvent(), 
+                         m_ParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
 
   // Notify the OpenGL window when the set of points changes
-  m_ParametricSpace->AddObserver( itk::Command::EndEvent,
-                                  m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+  m_ParametricSpace->AddObserver( itk::EndEvent(),
+                        m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
 
 
   fltk::Shape3D::ColorType  parametricSpacePointsColor;
@@ -280,20 +213,21 @@ ceExtractorConsole
                   m_InverseParametricFilter->GetOutput().GetPointer() );
 
   m_Viewer_Extracted_Points->GetNotifier()->AddObserver(
-                  fltk::GlDrawEvent, 
+                  fltk::GlDrawEvent(), 
                   m_ImageSpaceSamplesShape->GetDrawCommand().GetPointer() );
   
   m_InverseParametricFilter->AddObserver( 
-                  itk::Command::EndEvent,
+                  itk::EndEvent(),
                   m_Viewer_Extracted_Points->GetRedrawCommand().GetPointer() );
 
   // Register the SpatialFunctionControl as a Drawer in the OpenGL window
   m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
-                  fltk::GlDrawEvent, 
+                  fltk::GlDrawEvent(), 
                   m_SpatialFunctionControl->GetDrawCommand().GetPointer() );
 
   // Notify the OpenGL window when the spatial function changes
-  m_SpatialFunctionControl->AddObserver( fltk::RedrawEvent,
+  m_SpatialFunctionControl->AddObserver( 
+                  fltk::RedrawEvent(),
                   m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
 
 
@@ -303,11 +237,12 @@ ceExtractorConsole
   m_ExtractedParametricSpaceViewer.SetLabel("Filtered Parametric Space");
   
   
-  m_SpatialFunctionControl->AddObserver( fltk::RedrawEvent,
-                           m_ExtractedParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+  m_SpatialFunctionControl->AddObserver( 
+                  fltk::RedrawEvent(),
+                  m_ExtractedParametricSpaceViewer.GetRedrawCommand().GetPointer() );
 
   m_ExtractedParametricSpaceViewer.GetNotifier()->AddObserver( 
-                  fltk::GlDrawEvent, 
+                  fltk::GlDrawEvent(), 
                   m_ExtractedParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
 
   m_SpatialFunctionControl->SetParametersFromGUI();

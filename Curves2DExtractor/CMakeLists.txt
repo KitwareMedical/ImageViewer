@@ -1,7 +1,6 @@
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindX11.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -14,7 +13,6 @@ ${ITK_SOURCE_DIR}/Utilities/png
 ${ITK_SOURCE_DIR}/Examples/Curves2DExtractor
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
-${X11_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
@@ -26,7 +24,6 @@ ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/Curves2DExtractor
 ${ITK_BINARY_DIR}/Utilities/png
 ${ITK_BINARY_DIR}/Utilities/zlib
-${X11_LIBRARY}
 )
 
 SOURCE_FILES(Curves2DExtractor_SRCS
@@ -45,7 +42,6 @@ FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}
-${X11_LIBRARY}
 )
 
 IF(WIN32)
@@ -56,7 +52,6 @@ ENDIF(WIN32)
 
 IF(UNIX)
   LINK_LIBRARIES (
-  -lXext  
   -lm
   )
 ENDIF(UNIX)
