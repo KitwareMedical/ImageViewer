@@ -10,6 +10,9 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+# Some examples need VTK.
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindVTK.cmake)
+
 # Add an option to build or not build the Watershed example
 OPTION(BUILD_WATERSHED_REGISTRATION "Build the watershed segmentation" OFF)
 IF(BUILD_WATERSHED_SEGMENTATION)
@@ -76,18 +79,20 @@ SUBDIRS(FuzzyConnectedness)
 SUBDIRS(ShapeDetection)
 
 # The MRI Registration example needs VTK
-INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
 IF (USE_VTK_FILE)
   SUBDIRS(MRIRegistration)
 ENDIF (USE_VTK_FILE)
 
-# Add an option to build or not build the TripleTKImageDisplay example
+# Add an option to build or not build the TripleTKImageDisplay example.
+# It needs VTK.
 IF(HAS_METAIMAGE)
-  SUBDIRS(TripleTKImageDisplay)
+  IF(USE_VTK_FILE)
+    SUBDIRS(TripleTKImageDisplay)
+  ENDIF(USE_VTK_FILE)
 ENDIF(HAS_METAIMAGE)
 
-# Add an option to build or not build 
-# the GaussianMinimumErrorClassifier example
+# Add an option to build or not build the
+# GaussianMinimumErrorClassifier example
 IF(HAS_METAIMAGE)
   SUBDIRS(GaussianMinimumErrorClassifier)
 ENDIF(HAS_METAIMAGE)
