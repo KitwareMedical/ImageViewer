@@ -325,11 +325,11 @@ InputImageType * imgPtr
   // swap bytes if neccessary
   if( bigEndian )
     {
-    itk::ByteSwapper<InputPixelType>::SwapRangeBE( buffer, numPixels );
+    itk::ByteSwapper<InputPixelType>::SwapRangeFromSystemToBigEndian( buffer, numPixels );
     }
   else
     {
-    itk::ByteSwapper<InputPixelType>::SwapRangeLE( buffer, numPixels );
+    itk::ByteSwapper<InputPixelType>::SwapRangeFromSystemToLittleEndian( buffer, numPixels );
     }
 
   return true;
