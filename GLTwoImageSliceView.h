@@ -74,7 +74,12 @@ class GLTwoImageSliceView
     float         cClickSelectB;
 
     ImagePointer  cIm2Data;
-    bool cValidIm2Data;
+    bool          cValidIm2Data;
+
+    unsigned long cIm2DimSize[3];
+
+    double        cIm2DataMin;
+    double        cIm2DataMax;
   };
   
 template <class ImagePixelType, class OverlayPixelType>
@@ -86,6 +91,8 @@ GLTwoImageSliceView(int x, int y, int w, int h, const char *l)
   cClickSelectG = 0;
   cClickSelectB = 0;
   cIm2Data = NULL;
+  cIm2DataMin = 0;
+  cIm2DataMax = 0;
   cValidIm2Data = false;
   }
   
@@ -114,6 +121,46 @@ SetSecondInputImage(ImageType * newImData)
   {
   cIm2Data = newImData;
   cValidIm2Data = true;
+
+  SizeType imSize = cIm2Data->GetLargestPossibleRegion().GetSize();
+  cIm2DimSize[0] = imSize[0];
+  cIm2DimSize[1] = imSize[1];
+  cIm2DimSize[2] = imSize[2];
+
+  IndexType ind;
+  ind[0] = 0; 
+  ind[1] = 0; 
+  ind[2] = 0;
+  
+  cIm2DataMax = cIm2Data->GetPixel(ind);
+  cIm2DataMin = cIm2DataMax;
+  ImagePixelType tf;
+  
+  for( unsigned int i=0; i<cIm2DimSize[0]; i++ )
+    {
+    ind[0] = i;
+    for(unsigned int j=0; j<cIm2DimSize[1]; j++ )
+      {
+      ind[1] = j;
+      for( unsigned int k=0; k<cIm2DimSize[2]; k++ )
+        {
+        ind[2] = k;
+        tf = cIm2Data->GetPixel(ind);
+        if(tf > cIm2DataMax) 
+          {
+          cIm2DataMax = tf;
+          }
+        else 
+          {
+          if(tf < cIm2DataMin)
+            {
+            cIm2DataMin = tf;
+            }
+          }
+        }
+      }
+    }
+
   }
 
 //
@@ -335,7 +382,13 @@ update()
         cImData->TransformIndexToPhysicalPoint(ind, pnt);
         if(cIm2Data->TransformPhysicalPointToIndex(pnt, ind2))
           {
-          tfv[1] = cIm2Data->GetPixel(ind2);
+          tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                   / (cIm2DataMax-cIm2DataMin);
+          tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
+          }
+        else
+          {
+          tfv[1] = cDataMin;
           }
         }
       else
@@ -372,8 +425,14 @@ update()
               cImData->TransformIndexToPhysicalPoint(ind, pnt);
               if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
                 {
-                tfv[1] = cIm2Data->GetPixel(ind2);
+                tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                         / (cIm2DataMax-cIm2DataMin);
+                tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
                 }
+               else
+                 {
+                 tfv[1] = cDataMin;
+                 }
               }
             tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
             tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
@@ -399,8 +458,14 @@ update()
               cImData->TransformIndexToPhysicalPoint(ind, pnt);
               if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
                 {
-                tfv[1] = cIm2Data->GetPixel(ind2);
+                tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                         / (cIm2DataMax-cIm2DataMin);
+                tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
                 }
+               else
+                 {
+                 tfv[1] = cDataMin;
+                 }
               }
             tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
             tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
@@ -426,7 +491,13 @@ update()
               cImData->TransformIndexToPhysicalPoint(ind, pnt);
               if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
                 {
-                tfv[1] = cIm2Data->GetPixel(ind2);
+                tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                         / (cIm2DataMax-cIm2DataMin);
+                tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
+                }
+              else
+                {
+                tfv[1] = cDataMin;
                 }
               }
             tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
@@ -452,7 +523,13 @@ update()
             cImData->TransformIndexToPhysicalPoint(ind, pnt);
             if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
               {
-              tfv[1] = cIm2Data->GetPixel(ind2);
+              tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                       / (cIm2DataMax-cIm2DataMin);
+              tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
+              }
+            else
+              {
+              tfv[1] = cDataMin;
               }
             }
           tf[0] = (float)(tfv[0]);
@@ -465,7 +542,13 @@ update()
             cImData->TransformIndexToPhysicalPoint(ind, pnt);
             if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
               {
-              tfv[1] = cIm2Data->GetPixel(ind2);
+              tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                       / (cIm2DataMax-cIm2DataMin);
+              tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
+              }
+            else
+              {
+              tfv[1] = cDataMin;
               }
             }
           tf[0] += (float)(tfv[0])*2;
@@ -480,7 +563,13 @@ update()
             cImData->TransformIndexToPhysicalPoint(ind, pnt);
             if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
               {
-              tfv[1] = cIm2Data->GetPixel(ind2);
+              tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                       / (cIm2DataMax-cIm2DataMin);
+              tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
+              }
+            else
+              {
+              tfv[1] = cDataMin;
               }
             }
           tf[0] += (float)(tfv[0]);
@@ -508,7 +597,13 @@ update()
               cImData->TransformIndexToPhysicalPoint(ind, pnt);
               if( cIm2Data->TransformPhysicalPointToIndex(pnt, ind2) )
                 {
-                tfv[1] = cIm2Data->GetPixel(ind2);
+                tfv[1] = (cIm2Data->GetPixel(ind2)-cIm2DataMin)
+                         / (cIm2DataMax-cIm2DataMin);
+                tfv[1] = tfv[1] * (cDataMax-cDataMin) + cDataMin;
+                }
+              else
+                {
+                tfv[1] = cDataMin;
                 }
               }
             tfp = (float)tfv[0] + tfv[1] ;
