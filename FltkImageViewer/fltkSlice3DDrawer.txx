@@ -385,6 +385,13 @@ Slice3DDrawer<ImagePixelType>
     return;
   }
 
+
+  RegionType region = m_Image->GetRequestedRegion();
+  if( region.GetNumberOfPixels() == 0 )
+  {
+    return;
+  }
+
   glDisable( GL_LIGHTING );
 
   glPushMatrix();
