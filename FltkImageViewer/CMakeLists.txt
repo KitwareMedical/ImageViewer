@@ -19,6 +19,7 @@ IF(FLTK_LIBRARY)
      fltkRegularStepGradientDescent
      fltkRegularStepGradientDescentGUI
      fltkSlice3DDrawerGUI
+     fltkShape3D
      fltkWindowInteractive
      )
 
