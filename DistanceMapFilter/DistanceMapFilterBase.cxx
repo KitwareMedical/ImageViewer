@@ -37,6 +37,7 @@ DistanceMapFilterBase
   m_Display.SetLabel("Distance Filter");
 
 
+  // Slice Drawer for the input image
   m_ImageSliceDrawer = ImageSliceDrawerType::New();
 
   m_ImageSliceDrawer->SetInput( m_Reader->GetOutput() );
@@ -51,6 +52,21 @@ DistanceMapFilterBase
  
   m_ImageSliceDrawer->SetLabel("Input Image");
 
+
+  // Slice Drawer for the distance map image
+  m_DistanceImageSliceDrawer = ImageSliceDrawerType::New();
+
+  m_DistanceImageSliceDrawer->SetInput( m_DistanceFilter->GetOutput() );
+
+  m_Display.GetNotifier()->AddObserver( 
+             fltk::GlDrawEvent(),
+             m_DistanceImageSliceDrawer->GetDrawCommand().GetPointer() );
+
+  m_DistanceImageSliceDrawer->AddObserver( 
+                         fltk::VolumeReslicedEvent(),
+                         m_Display.GetRedrawCommand() );
+ 
+  m_DistanceImageSliceDrawer->SetLabel("Input Image");
 
   // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
@@ -88,6 +104,8 @@ DistanceMapFilterBase
 ::HideDisplay(void)
 {
   m_Display.Hide();
+  m_ImageSliceDrawer->Hide();
+  m_DistanceImageSliceDrawer->Hide();
 }
 
 
@@ -193,6 +211,9 @@ DistanceMapFilterBase
     }
 
   m_DistanceFilter->Update();
+
+  m_DistanceImageSliceDrawer->SetInput( 
+               m_DistanceFilter->GetOutput() );
 
   m_Display.Redraw();
 

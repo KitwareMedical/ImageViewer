@@ -93,9 +93,13 @@ public:
   typedef   VolumeReaderType::Pointer                    VolumeReaderPointer;
 
 
-  /** Slice Drawer   */
+  /** Slice Drawer for Input Image  */
   typedef fltk::Slice3DDrawer< ImageType >               ImageSliceDrawerType;
   typedef ImageSliceDrawerType::Pointer                  ImageSliceDrawerPointer;
+
+  /** Slice Drawer for Distance Image  */
+  typedef fltk::Slice3DDrawer< DistanceImageType >  DistanceImageSliceDrawerType;
+  typedef DistanceImageSliceDrawerType::Pointer     DistanceImageSliceDrawerPointer;
 
   
 
@@ -125,6 +129,7 @@ protected:
   DistanceFilterPointer               m_DistanceFilter;
 
   ImageSliceDrawerPointer             m_ImageSliceDrawer;
+  DistanceImageSliceDrawerPointer     m_DistanceImageSliceDrawer;
 
   fltkDisplayGlWindowGUI              m_Display;
 
