@@ -28,20 +28,18 @@
 #undef itkExceptionMacro  
 #define itkExceptionMacro(x) \
   { \
-  std::ostrstream message; \
-  itk::ExceptionMacroDetail::OStrStreamCleanup messageCleanup(message); \
+  ::itk::OStringStream message; \
   message << "itk::ERROR: " << this->GetNameOfClass() \
-          << "(" << this << "): " x << std::ends; \
-  std::cerr << message.str() << std::endl; \
+          << "(" << this << "): " x; \
+  std::cerr << message.str().c_str() << std::endl; \
   }
 
 #undef itkGenericExceptionMacro  
 #define itkGenericExceptionMacro(x) \
   { \
-  std::ostrstream message; \
-  itk::ExceptionMacroDetail::OStrStreamCleanup messageCleanup(message); \
-  message << "itk::ERROR: " x << std::ends; \
-  std::cerr << message.str() << std::endl; \
+  ::itk::OStringStream message; \
+  message << "itk::ERROR: " x; \
+  std::cerr << message.str().c_str() << std::endl; \
   }
 
 // itk classes
@@ -56,7 +54,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.6 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.7 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------

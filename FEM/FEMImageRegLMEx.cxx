@@ -21,7 +21,6 @@
 #endif
 
 #include "FEMImageRegLMEx.h"
-#include <strstream>
 
 namespace itk {
 namespace fem {
@@ -515,11 +514,9 @@ void ImageRegLMEx::WriteWarpedImage(const char* fname)
   std::string fnum;
   m_FileCount++;
 
-  std::ostrstream buf;
-  buf.clear();
-  buf<<(m_FileCount+10)<<'\0';
-  fnum=std::string(buf.str());
-  buf.freeze(false);
+  OStringStream buf;
+  buf<<(m_FileCount+10);
+  fnum=std::string(buf.str().c_str());
 
   std::string fullfname=(fname+fnum+exte);
 

@@ -71,16 +71,15 @@ public:
       }    
     else if( typeid( event ) == typeid( itk::IterationEvent ) )
       {
-      std::ostrstream text;
+      itk::OStringStream text;
       text << m_Optimizer->GetCurrentIteration() << " = ";
       text << m_Optimizer->GetValue() << " : ";
       text << m_Optimizer->GetCurrentPosition() << std::endl;
-      text << std::ends;
-      m_Browser->add( text.str() );
+      m_Browser->add( text.str().c_str() );
       }
     else if( typeid( event ) == typeid( itk::EndEvent ) )
       {
-      std::ostrstream text;
+      itk::OStringStream text;
       text << std::endl << std::endl;
       text << "After " << m_Optimizer->GetCurrentIteration();
       text << "  iterations " << std::endl;
@@ -90,8 +89,7 @@ public:
       text << std::endl;
       text << "Stop condition = " << m_Optimizer->GetStopCondition();
       text << std::endl;
-      text << std::ends;
-      m_Browser->add( text.str() );
+      m_Browser->add( text.str().c_str() );
       }
     m_Browser->bottomline( m_Browser->size() );
     m_Browser->redraw();

@@ -14,19 +14,17 @@
 #undef itkExceptionMacro  
 #define itkExceptionMacro(x) \
   { \
-  std::ostrstream message; \
-  itk::ExceptionMacroDetail::OStrStreamCleanup messageCleanup(message); \
+  ::itk::OStringStream message; \
   message << "itk::ERROR: " << this->GetNameOfClass() \
-          << "(" << this << "): " x << std::ends; \
-  std::cerr << message.str() << std::endl; \
+          << "(" << this << "): "; \
+  std::cerr << message.str().c_str() << std::endl; \
   }
 
 #undef itkGenericExceptionMacro  
 #define itkGenericExceptionMacro(x) \
   { \
-  std::ostrstream message; \
-  itk::ExceptionMacroDetail::OStrStreamCleanup messageCleanup(message); \
-  message << "itk::ERROR: " x << std::ends; \
+  ::itk::OStringStream message; \
+  message << "itk::ERROR: " x; \
   std::cerr << message.str() << std::endl; \
   }
 
@@ -190,7 +188,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.7 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.8 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);

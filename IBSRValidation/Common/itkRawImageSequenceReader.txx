@@ -99,13 +99,13 @@ void RawImageSequenceReader<TOutputImage, ConvertPixelTraits>::GenerateData()
   if( m_ImageIO->GetNumberOfDimensions() < TOutputImage::ImageDimension )
     {
     RawImageSequenceReaderException e(__FILE__, __LINE__);
-    std::ostrstream msg;
+    OStringStream msg;
     msg << "Number of dimensions in file ("
         << m_ImageIO->GetNumberOfDimensions()
         << ") does not match number of dimensions in output ("
         << TOutputImage::ImageDimension
-        << ")" << std::ends;
-    e.SetDescription(msg.str());
+        << ")";
+    e.SetDescription(msg.str().c_str());
     throw e;
     }
   
@@ -253,22 +253,22 @@ RawImageSequenceReader<TOutputImage, ConvertPixelTraits>
   else
     {
     RawImageSequenceReaderException e(__FILE__, __LINE__);
-    std::ostrstream msg;
+    OStringStream msg;
     msg <<"Couldn't convert pixel type: "
-        << std::ends << "    " << m_ImageIO->GetPixelType().name()
-        << std::ends << "to one of: "
-        << std::ends << "    " << typeid(unsigned char).name()
-        << std::ends << "    " << typeid(char).name()
-        << std::ends << "    " << typeid(unsigned short).name()
-        << std::ends << "    " << typeid(short).name()
-        << std::ends << "    " << typeid(unsigned int).name()
-        << std::ends << "    " << typeid(int).name()
-        << std::ends << "    " << typeid(unsigned long).name()
-        << std::ends << "    " << typeid(long).name()
-        << std::ends << "    " << typeid(float).name()
-        << std::ends << "    " << typeid(double).name()
-        << std::ends;
-    e.SetDescription(msg.str());
+        << std::endl << "    " << m_ImageIO->GetPixelType().name()
+        << std::endl << "to one of: "
+        << std::endl << "    " << typeid(unsigned char).name()
+        << std::endl << "    " << typeid(char).name()
+        << std::endl << "    " << typeid(unsigned short).name()
+        << std::endl << "    " << typeid(short).name()
+        << std::endl << "    " << typeid(unsigned int).name()
+        << std::endl << "    " << typeid(int).name()
+        << std::endl << "    " << typeid(unsigned long).name()
+        << std::endl << "    " << typeid(long).name()
+        << std::endl << "    " << typeid(float).name()
+        << std::endl << "    " << typeid(double).name()
+        << std::endl;
+    e.SetDescription(msg.str().c_str());
     throw e;
     return;
     }
