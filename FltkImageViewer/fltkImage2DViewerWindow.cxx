@@ -70,6 +70,8 @@ Image2DViewerWindow(int x,int y,int w,int h, const char * label)
   m_ShiftY =   0;
   m_Zoom   = 1.0;
 
+  m_NumberOfBytesPerPixel = 1; // change by 4 in case of RGBA
+
 }
 
 
@@ -157,7 +159,7 @@ Allocate(unsigned int nx,unsigned int ny)
 
   this->size(nx,ny);
 
-  m_Buffer = new unsigned char[ nx * ny * 4 ]; // *4 for RGBA
+  m_Buffer = new unsigned char[ nx * ny * m_NumberOfBytesPerPixel ]; 
   
   this->SetWidth( nx );
   this->SetHeight( ny );
@@ -289,10 +291,11 @@ void Image2DViewerWindow::draw(void)
   {
     return;
   }
+
   if(!valid())
   {
     
-    glViewport( 0, 0, w(), h() );
+    glViewport( 0, 0, m_Width, m_Height );
 
     glClearColor(
       m_Background.GetRed(),
@@ -309,19 +312,55 @@ void Image2DViewerWindow::draw(void)
   const GLdouble width  = static_cast<GLdouble>( m_Width );
   const GLdouble height = static_cast<GLdouble>( m_Height );
 
-  glOrtho( -width, width, -height, height, -20000, 10000 );
+//  glOrtho( -width, width, -height, height, -20000, 10000 );
+  gluOrtho2D( -width, width, -height, height );  
   
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
-  
 
+  glPixelStorei( GL_UNPACK_ALIGNMENT,        1 );
+  glPixelStorei( GL_UNPACK_ROW_LENGTH, m_Width );
+  glPixelStorei( GL_UNPACK_SKIP_ROWS,        0 );
+  glPixelStorei( GL_UNPACK_SKIP_PIXELS,      0 );
+  
   glRasterPos2i( m_ShiftX, m_ShiftY );
 
   glPixelZoom( m_Zoom, m_Zoom );
 
   glDrawPixels( m_Width, m_Height, 
-                GL_RGBA, GL_UNSIGNED_BYTE, 
+                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
                 static_cast<void *>(m_Buffer) );
+
+  //
+  // Prepare for drawing other objects
+  //
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  glEnable(GL_LIGHT2);
+
+  GLfloat diffuse1[]  = {   1.0f, 1.0f, 1.0f, 1.0f };
+  GLfloat diffuse2[]  = {   0.5f, 0.5f, 0.5f, 1.0f };
+  GLfloat diffuse3[]  = {   0.5f, 0.5f, 0.5f, 1.0f };
+
+  glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse1);
+  glLightfv(GL_LIGHT1,GL_DIFFUSE,diffuse2);
+  glLightfv(GL_LIGHT2,GL_DIFFUSE,diffuse3);
+  
+  GLfloat position_0[]  = { 200.0, 200.0, 200.0, 0.0};
+  glLightfv(GL_LIGHT0,GL_POSITION,position_0);
+  
+  GLfloat position_1[]  = {-200.0,   0.0, -100.0, 0.0};
+  glLightfv(GL_LIGHT1,GL_POSITION,position_1);
+  
+  GLfloat position_2[]  = {   0.0,-200.0, -100.0, 0.0};
+  glLightfv(GL_LIGHT2,GL_POSITION,position_2);
+
+  glEnable(GL_NORMALIZE);
+  glEnable(GL_DEPTH_TEST);
+
+  // Call other drawers
+  GetNotifier()->InvokeEvent( fltk::GlDrawEvent );
+
 }
 
   

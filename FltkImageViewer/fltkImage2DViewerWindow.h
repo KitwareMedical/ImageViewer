@@ -75,6 +75,9 @@ public:
   ValueType * GetBuffer(void) 
   { return m_Buffer; }
 
+  unsigned int GetNumberOfBytesPerPixel(void) const
+  { return m_NumberOfBytesPerPixel; }
+
   unsigned int GetWidth(void) const;
   unsigned int GetHeight(void) const;
   void SetWidth(unsigned int);
@@ -90,7 +93,7 @@ public:
 private:
 
   ColorType          m_Background;
-  ValueType        *  m_Buffer;
+  ValueType       *  m_Buffer;
   unsigned int       m_Width;
   unsigned int       m_Height;
   double             m_Zoom;
@@ -98,6 +101,7 @@ private:
   int                m_ShiftY;
   Fl_Window       *  m_IntensityWindow;
   Fl_Window       *  m_ParentWindow;
+  unsigned int       m_NumberOfBytesPerPixel;
 
 };
 
