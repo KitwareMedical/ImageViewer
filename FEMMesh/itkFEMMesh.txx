@@ -30,7 +30,7 @@ template<class TMesh>
 FEMMesh<TMesh>
 ::FEMMesh()
 {
-  m_Elements = ElementsContainer::New();
+  m_ElementsContainer = ElementsContainer::New();
 }
 
 
@@ -43,6 +43,35 @@ FEMMesh<TMesh>
 }
 
 
+
+
+/**
+ * Dynamically build the links from points back to their using cells.  This
+ * information is stored in the cell links container, not in the points.
+ */
+template <typename TMesh>
+void
+FEMMesh<TMesh>
+::Accept(CellMultiVisitorType* mv)
+{
+  if(!m_ElementsContainer)
+    {
+    return;
+    }
+  for(ElementsContainerIterator i = m_ElementsContainer->Begin();
+      i != m_ElementsContainer->End(); ++i)
+    {
+//    if(i->Value().GetPointer())
+    if( i->Value() )
+      {
+      i->Value()->Accept(i->Index(), mv);
+      }
+    else
+      {
+      itkDebugMacro("Null cell at " << i->Index());
+      }
+    }
+}
 
 
 

@@ -74,9 +74,17 @@ public:
   typedef FEMElementBase< Self >                                  ElementBaseType;
   typedef ElementBaseType::Pointer                                ElementBasePointer;
   typedef VectorContainer< CellIdentifier , ElementBasePointer  > ElementsContainer;
+  typedef ElementsContainer::Iterator                             ElementsContainerIterator;
  
-  itkGetObjectMacro( Elements, ElementsContainer );
-  itkSetObjectMacro( Elements, ElementsContainer );
+  itkGetObjectMacro( ElementsContainer, ElementsContainer );
+  itkSetObjectMacro( ElementsContainer, ElementsContainer );
+
+
+  /** This method iterates over all the cells in the mesh and has
+   *  each cell Accept the MultiVisitor. See MultiVisitor for more 
+   *  information.  (Note, this follows the Visitor Design Pattern.) */
+  virtual void Accept(CellMultiVisitorType* mv);
+
 
 protected:
 
@@ -89,7 +97,7 @@ private:
   FEMMesh(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
           
-  ElementsContainer::Pointer      m_Elements;
+  ElementsContainer::Pointer      m_ElementsContainer;
 
 };
 
