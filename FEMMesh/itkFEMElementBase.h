@@ -23,6 +23,7 @@
 #include "itkMatrix.h"
 #include "itkFEMElementVisitor.h"
 #include "itkFEMMaterialStandard.h"
+#include "itkFixedArray.h"
 
 
 // Define a macro for ElementsBase sub-classes to use
@@ -55,6 +56,7 @@
   typedef typename BaseCellType::PointIdIterator      PointIdIterator;      \
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;   \
   typedef FEMElement< BaseCellType, FEMMeshType >         Superclass;     \
+  typedef typename Superclass::RealType                   RealType;     \
   typedef typename Superclass::MatrixType                 MatrixType;     \
   typedef typename Superclass::LoadsVectorType            LoadsVectorType;    \
   typedef typename Superclass::PointsContainer            PointsContainer;    \
@@ -68,6 +70,10 @@
                       NumberOfDisplacementComponents >    ShapeFunctionsArrayType; \
   typedef Matrix< RealType, NumberOfDisplacementComponents,                  \
                         ParametricSpaceDimension   >  ShapeFunctionsDerivativesType; \
+  typedef FixedArray< ParametricPointType,                                            \
+                      NumberOfGaussIntegrationPoints > ParametricPointsArrayType; \
+  typedef FixedArray< RealType,                                                     \
+                      NumberOfGaussIntegrationPoints > IntegrationWeightsArrayType; \
 
 
 
