@@ -26,6 +26,8 @@
 #include "itkDefaultDynamicMeshTraits.h"
 #include "itkLineCell.h"
 
+#include "itkFEMHeatConduction2D.h"
+
 // This is the base classe for the Application
 
 class FEMMeshApplicationBase 
@@ -95,6 +97,9 @@ public:
   typedef  itk::LineCell< PointDataType, CellTraits >   LineCellType;
 
 
+  typedef itk::fem::FEMHeatConduction2D        HeatSolverType;
+  typedef HeatSolverType::FEMMeshType          HeatMeshType;
+
 public:
 
   FEMMeshApplicationBase();
@@ -104,7 +109,9 @@ public:
   virtual void CreateSphere(void);
   virtual void CreateTriangle(void);
   virtual void CreateFEMMesh(void);
+  virtual void CreateFEMMesh2(void);
   virtual void DisplayFEMMesh(void);
+  virtual void DisplayFEMMesh2(void);
   virtual void DisplayAxes(void);
 
 protected:
@@ -113,7 +120,9 @@ protected:
   vtkRenderer         * m_Renderer;
 
 
-  FEMMeshType::Pointer  m_FEMMesh;
+  FEMMeshType::Pointer    m_FEMMesh;
+
+  HeatSolverType::Pointer m_HeatSolver;
 
 };
 

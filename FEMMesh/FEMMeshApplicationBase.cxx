@@ -37,6 +37,11 @@
 #include "itkFEMElementBar2D.h"
 
 
+#include "itkFEMElementTriangle.h"
+
+
+
+
 FEMMeshApplicationBase
 ::FEMMeshApplicationBase()
 {
@@ -49,6 +54,8 @@ FEMMeshApplicationBase
   m_Renderer->SetBackground( 1, 1, 1 );
 
   m_FEMMesh = FEMMeshType::New();
+
+  m_HeatSolver = HeatSolverType::New();
 
 }
 
@@ -181,7 +188,7 @@ FEMMeshApplicationBase
 
 void
 FEMMeshApplicationBase
-::DisplayFEMMesh(void)
+::DisplayFEMMesh2(void)
 {
  
   typedef vtkItkCellMultiVisitor< 
@@ -297,7 +304,7 @@ FEMMeshApplicationBase
 
 void
 FEMMeshApplicationBase
-::CreateFEMMesh(void)
+::CreateFEMMesh2(void)
 {
 
   // Create the FEMMesh that will hold both the Geometric 
@@ -460,3 +467,195 @@ FEMMeshApplicationBase
 
 
 
+void
+FEMMeshApplicationBase
+::CreateFEMMesh(void)
+{
+
+  // Create the FEMMesh that will hold both the Geometric 
+  // and the Physical representation of the problem 
+  HeatMeshType::Pointer  heatMesh = HeatMeshType::New();
+  m_HeatSolver->SetMesh( heatMesh );
+
+  const unsigned int degreesOfFreedomPerPoint = 1;
+  typedef itk::fem::FEMElementTriangle< 
+                        HeatMeshType, 
+                        degreesOfFreedomPerPoint >  HeatCellType;
+  
+  const unsigned int nx = 10;
+  const unsigned int ny = 10;
+
+  const double dx = 1.5;
+  const double dy = 1.0;
+
+  // Create the points
+  typedef HeatMeshType::PointType         HeatPointType;
+  typedef HeatMeshType::PointsContainer   HeatPointsContainer;
+  HeatPointsContainer::Pointer points = HeatPointsContainer::New();
+  points->Reserve( ( nx + 1 ) * ( ny + 1 ) );
+
+  typedef HeatMeshType::PointIdentifier   HeatPointIdentifier;
+  HeatPointIdentifier pointId = itk::NumericTraits< HeatPointIdentifier >::Zero;
+
+  for(unsigned int y=0; y<=ny; y++) 
+    {
+    HeatPointType point;
+    point[1] = y * dy;
+    for(unsigned int x=0; x<=nx; x++) 
+      {
+      point[0] = x * dx;
+      points->SetElement( pointId++, point );
+      }
+    }
+
+  heatMesh->SetPoints( points.GetPointer() );
+
+  // Create the points
+  typedef HeatMeshType::CellsContainer  HeatCellsContainer;
+  HeatCellsContainer::Pointer cells = HeatCellsContainer::New();
+  cells->Reserve( 2 * nx * ny );
+
+  typedef HeatMeshType::CellIdentifier  HeatCellIdentifier;
+  HeatCellIdentifier cellId = itk::NumericTraits< HeatCellIdentifier >::Zero;
+
+  for(unsigned int y=0; y<ny; y++) 
+    {
+    for(unsigned int x=0; x<nx; x++) 
+      {
+      HeatCellType::Pointer cell = HeatCellType::New();
+      cells->SetElement( cellId++, cell.GetPointer() );
+      }
+    }
+
+
+  heatMesh->SetCells( cells.GetPointer() );
+
+  std::cout << "Number of Points = " << heatMesh->GetNumberOfPoints() << std::endl;
+  std::cout << "Number of Cells  = " << heatMesh->GetNumberOfCells()  << std::endl;
+
+  m_HeatSolver->AssembleMasterEquation();
+
+
+}
+
+
+
+
+void
+FEMMeshApplicationBase
+::DisplayFEMMesh(void)
+{
+
+  const unsigned int degreesOfFreedomPerPoint = 1;
+  typedef itk::fem::FEMElementTriangle< 
+                        HeatMeshType, 
+                        degreesOfFreedomPerPoint >  HeatCellType;
+ 
+  typedef vtkItkCellMultiVisitor< 
+                              HeatSolverType::DisplacementType, 
+                              HeatMeshType::CellTraits 
+                                            > 
+                                              HeatVisitorType;
+
+  
+
+  // Define the Cell Visitor Types
+  typedef itk::CellInterfaceVisitorImplementation<
+                                              HeatSolverType::DisplacementType,
+                                              HeatCellType::CellTraits,
+                                              HeatCellType,
+                                              HeatVisitorType  
+                                                      >  HeatTriangleVisitorType;
+
+  // Get the number of points in the mesh
+  HeatMeshType::Pointer heatMesh = m_HeatSolver->GetMesh();
+
+  const unsigned int numPoints = heatMesh->GetNumberOfPoints();
+  if( numPoints == 0 )
+    {
+    itkGenericExceptionMacro(<<"Attempt to display a Mesh with no points !");
+    }
+    
+  // Create a vtkUnstructuredGrid
+  vtkUnstructuredGrid * vgrid = vtkUnstructuredGrid::New();
+
+  // Create the vtkPoints object and set the number of points
+  vtkPoints * vpoints = vtkPoints::New();
+  vpoints->SetNumberOfPoints(numPoints);
+
+  // iterate over all the points in the itk mesh filling in
+  // the vtkPoints object as we go
+  HeatMeshType::PointsContainer::Pointer points = heatMesh->GetPoints();
+
+  for(HeatMeshType::PointsContainer::Iterator i = points->Begin();
+      i != points->End(); ++i)
+    {
+    // Get the point index from the point container iterator
+    int idx = i->Index();
+    // Set the vtk point at the index with the the coord array from itk
+    // itk returns a const pointer, but vtk is not const correct, so
+    // we have to use a const cast to get rid of the const
+    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetDataPointer()));
+    }
+  // Set the points on the vtk grid
+  vgrid->SetPoints(vpoints);
+  
+  // Now create the cells using the MulitVisitor
+  // 1. Create a MultiVisitor
+  typedef HeatMeshType::CellMultiVisitorType       HeatCellMultiVisitorType;
+  HeatCellMultiVisitorType::Pointer multiVisitor = HeatCellMultiVisitorType::New();
+
+  // 2. Create a LineCell visitor
+  HeatTriangleVisitorType::Pointer triangleVisitor = HeatTriangleVisitorType::New();
+
+
+  // 3. Set up the visitors
+  int vtkCellCount = 0; // running counter for current cell being inserted into vtk
+  int numCells = heatMesh->GetNumberOfCells();
+
+  int *types = new int[numCells]; // type array for vtk 
+
+  // create vtk cells and estimate the size
+  vtkCellArray* cells = vtkCellArray::New();
+  cells->EstimateSize(numCells, 4);
+
+  // Set the TypeArray CellCount and CellArray for both visitors
+  triangleVisitor->SetTypeArray( types );
+  triangleVisitor->SetCellCounter( &vtkCellCount );
+  triangleVisitor->SetCellArray( cells );
+
+  // add the visitors to the multivisitor
+//  multiVisitor->AddVisitor( triangleVisitor );
+
+  // Now ask the mesh to accept the multivisitor which
+  // will Call Visit for each cell in the mesh that matches the
+  // cell types of the visitors added to the MultiVisitor
+  heatMesh->Accept( multiVisitor );
+  
+  // Now set the cells on the vtk grid with the type array and cell array
+  vgrid->SetCells( types, cells );
+  
+  // Clean up vtk objects (no vtkSmartPointer ... )
+  cells->Delete();
+  vpoints->Delete();
+
+
+  // connect the vtkUnstructuredGrid to a visualization Pipeline
+
+  // map to graphics library
+  vtkDataSetMapper * mapper = vtkDataSetMapper::New();
+  mapper->SetInput( vgrid  );
+
+  // actor coordinates geometry, properties, transformation
+  vtkActor * actor = vtkActor::New();
+  actor->SetMapper( mapper );
+  actor->GetProperty()->SetColor(0,0,1); // color blue
+
+  // add the actor to the scene
+  m_Renderer->AddActor( actor );
+
+  vgrid->Delete();
+  mapper->Delete();
+  actor->Delete();
+
+}
