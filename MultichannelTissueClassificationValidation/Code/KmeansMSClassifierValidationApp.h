@@ -87,8 +87,8 @@ public:
   typedef TMaskImage                             MaskImageType;
   typedef TMaskImage                             TruthImageType;
   typedef Array<unsigned int>                    IntegerArrayType;
-  typedef typename std::string                   StringType; 
-  typedef typename std::vector< StringType >     StringVectorType; 
+  typedef std::string                            StringType; 
+  typedef std::vector< StringType >              StringVectorType; 
 
   /** Set the input image directory path. */
   itkSetStringMacro( ImageDirectoryName );
