@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
   std::string classMaskFileName ;
   std::string targetFileName ;
   std::string outputFileName ;
-  int numberOfClasses ;
+  unsigned int numberOfClasses ;
   try
     {
       // get image file options
