@@ -24,7 +24,7 @@
 #include "itkCastImageFilter.h"
 #include "itkFastMarchingImageFilter.h"
 #include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
-#include "itkExpNegativeImageFilter.h"
+#include "itkSigmoidImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 
 
@@ -41,7 +41,7 @@ public:
   enum { ImageDimension = 3 };
 
   /** Pixel type used for reading the input image */
-  typedef   unsigned char                                InputPixelType;
+  typedef   signed short                                 InputPixelType;
 
   /** Pixel type to be used internally */
   typedef   float                                        InternalPixelType;
@@ -80,9 +80,9 @@ public:
                  InternalImageType >     FastMarchingFilterType;
 
   /** Filter to compute negative exponential of the gradient magnitude */
-  typedef   itk::ExpNegativeImageFilter< 
+  typedef   itk::SigmoidImageFilter< 
                     InternalImageType,
-                    InternalImageType >                   ExpNegativeFilterType;
+                    InternalImageType >                   SigmoidFilterType;
  
   /** Threshold filter used to select a time from the time map */
   typedef   itk::BinaryThresholdImageFilter< 
@@ -127,7 +127,7 @@ protected:
 
   DerivativeFilterType::Pointer               m_DerivativeFilter;
 
-  ExpNegativeFilterType::Pointer              m_ExpNegativeFilter;
+  SigmoidFilterType::Pointer                  m_SigmoidFilter;
 
   ThresholdFilterType::Pointer                m_ThresholdFilter;
   

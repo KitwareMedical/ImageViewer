@@ -36,11 +36,11 @@ FastMarchingLevelSetBase
   m_DerivativeFilter   = DerivativeFilterType::New();
   m_DerivativeFilter->SetInput( m_CastImageFilter->GetOutput() );
 
-  m_ExpNegativeFilter  = ExpNegativeFilterType::New();
-  m_ExpNegativeFilter->SetInput( m_DerivativeFilter->GetOutput() );
+  m_SigmoidFilter  = SigmoidFilterType::New();
+  m_SigmoidFilter->SetInput( m_DerivativeFilter->GetOutput() );
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
-  m_FastMarchingFilter->SetInput( m_ExpNegativeFilter->GetOutput() );
+  m_FastMarchingFilter->SetInput( m_SigmoidFilter->GetOutput() );
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_FastMarchingFilter->GetOutput() );
@@ -168,7 +168,7 @@ FastMarchingLevelSetBase
 {
   this->ComputeGradientMagnitude();
   this->ShowStatus("Computing Edge Potential Image");
-  m_ExpNegativeFilter->Update();
+  m_SigmoidFilter->Update();
 }
 
 

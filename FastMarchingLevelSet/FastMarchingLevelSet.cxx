@@ -57,6 +57,11 @@ FastMarchingLevelSet
 
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
 
+  m_SigmoidFilter->SetAlpha( alphaValueInput->value() );
+  m_SigmoidFilter->SetBeta(  betaValueInput->value()  );
+
+  m_FastMarchingFilter->SetStoppingValue( stoppingValueInput->value() );
+
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
 
@@ -69,12 +74,12 @@ FastMarchingLevelSet
   thresholdedImageVTKButton->Observe( m_ThresholdFilter.GetPointer() );
   timeCrossingButton->Observe( m_FastMarchingFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
-  edgePotentialButton->Observe( m_ExpNegativeFilter.GetPointer() );
+  edgePotentialButton->Observe( m_SigmoidFilter.GetPointer() );
 
   progressSlider->Observe( m_CastImageFilter.GetPointer() );
   progressSlider->Observe( m_DerivativeFilter.GetPointer() );
   progressSlider->Observe( m_ThresholdFilter.GetPointer() );
-  progressSlider->Observe( m_ExpNegativeFilter.GetPointer() );
+  progressSlider->Observe( m_SigmoidFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_FastMarchingFilter.GetPointer() );
   
@@ -320,7 +325,7 @@ FastMarchingLevelSet
     return;
     }
   this->ComputeEdgePotential();
-  m_EdgePotentialImageViewer.SetImage( m_ExpNegativeFilter->GetOutput() );  
+  m_EdgePotentialImageViewer.SetImage( m_SigmoidFilter->GetOutput() );  
   m_EdgePotentialImageViewer.Show();
 
 }

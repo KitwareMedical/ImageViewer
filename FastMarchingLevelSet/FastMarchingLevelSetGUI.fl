@@ -6,7 +6,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
 } {
   Function {FastMarchingLevelSetGUI()} {} {
     Fl_Window consoleWindow {
-      label {Fast Marching Segmentation Level Set}
+      label {Fast Marching Segmentation Level Set} open
       xywh {259 69 830 280}
       code0 {\#include <FastMarchingLevelSetBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
@@ -48,7 +48,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
           xywh {65 45 10 95} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {360 80 10 70} box UP_BOX color 4
+          xywh {360 80 10 100} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {325 79 80 11} box UP_BOX color 4
@@ -121,18 +121,18 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
         Fl_Light_Button gradientMagnitudeButton {
           label Display
           callback {ShowGradientMagnitudeImage();}
-          xywh {210 131 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {180 147 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
-          label {Negative Exponential}
+          label {Linear + Sigmoid}
           callback {this->ComputeEdgePotential();}
           xywh {257 61 95 49} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button edgePotentialButton {
           label Display
           callback {ShowEdgePotentialImage();}
-          xywh {332 129 67 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {315 171 67 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Value_Input sigmaValueInput {
@@ -145,6 +145,21 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
           callback {this->ShowSegmentedImage();}
           xywh {715 26 90 31} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
+        }
+        Fl_Value_Input betaValueInput {
+          label Beta
+          callback {m_SigmoidFilter->SetBeta( o->value() );}
+          xywh {300 135 35 25} labelsize 12 maximum 100 step 0.1 value 5 textsize 12
+        }
+        Fl_Value_Input alphaValueInput {
+          label Alpha
+          callback {m_SigmoidFilter->SetAlpha( o->value() );}
+          xywh {300 110 35 25} labelsize 12 minimum -20 maximum 20 step 0.01 value -1 textsize 12
+        }
+        Fl_Value_Input stoppingValueInput {
+          label Stopping
+          callback {m_FastMarchingFilter->SetStoppingValue( o->value()  );} selected
+          xywh {425 15 55 25} labelsize 12 maximum 50000 step 1 value 500 textsize 12
         }
       }
       Fl_Slider progressSlider {
@@ -191,6 +206,6 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
   } {}
   Function {ShowEdgePotentialImage( void )} {return_type {virtual void}
   } {}
-  Function {ShowSegmentedImage( void )} {selected return_type {virtual void}
+  Function {ShowSegmentedImage( void )} {return_type {virtual void}
   } {}
 } 
