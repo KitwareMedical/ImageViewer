@@ -71,7 +71,7 @@ public:
   /**
    *  Return the optimizer
    */
-  TOptimizer::Pointer & GetOptimizer( void )
+  typename TOptimizer::Pointer & GetOptimizer( void )
   { return m_Optimizer; }
       
 
