@@ -17,7 +17,8 @@
 3     % dimension of images
 128	% Nx (image x dimension)
 128	% Ny (image y dimension)
-91      % Nz (image z dimension - not used if 2D)G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain10.buchar %brain_slice1smth.im % 	% ReferenceFileName
+91      % Nz (image z dimension - not used if 2D)
+G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain10.buchar %brain_slice1smth.im % 	% ReferenceFileName
 G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain11.buchar %brain_slice2smth.im % 		% TargetFileName
 0	% UseLandmarks - read the file name below if this is true
 /mnt/data/tessa/temp/e15326s16i1_2.regLM	% LandmarkFileName
