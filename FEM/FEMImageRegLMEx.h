@@ -20,7 +20,6 @@
 #include "itkFEMLinearSystemWrapperDenseVNL.h"
 
 #include "itkImage.h"
-#include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h" 
 #include "itkCastImageFilter.h"
 #include "itkRecursiveMultiResolutionPyramidImageFilter.h"
