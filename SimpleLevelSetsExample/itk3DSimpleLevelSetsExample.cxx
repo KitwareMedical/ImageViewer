@@ -222,12 +222,6 @@ private:
     return m_DistanceTransform->GetPixel( neighborhood.GetIndex() );
   }
   
-  virtual ScalarValueType PropagationSpeed(const BoundaryNeighborhoodType
-                                           &neighborhood, const FloatOffsetType &
-                                           ) const
-  {
-    return m_DistanceTransform->GetPixel( neighborhood.GetIndex() );
-  }
 };
 
 class MorphFilter : public
