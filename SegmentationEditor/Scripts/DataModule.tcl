@@ -467,10 +467,12 @@ proc LoadCacheList {} {
 
     while { ! [eof $file_handle] } {
         gets $file_handle buf
+
         set tag [ lindex [split $buf] 0 ]
-        set entry [lrange $buf 1 [llength $buf]] 
-            
-        AddDataCacheEntry $tag $entry
+        set entry [lrange [split $buf] 1 [llength [split $buf]]] 
+	regsub -all \{ $entry "" entry
+	regsub -all \} $entry "" entry
+       AddDataCacheEntry $tag $entry
     }
 
     
