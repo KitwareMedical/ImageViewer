@@ -50,11 +50,6 @@ SUBDIRS(PNGImageReadWrite)
 # Build the ExtractImageRegion example
 SUBDIRS(ExtractImageRegion)
 
-# Build the simple ImageViewer example. This requires GLUT to be installed
-IF(GLUT_FOUND)
-  SUBDIRS(ImageViewer)
-ENDIF(GLUT_FOUND)
-  
 # Examples requiring MetaImages and Fltk GUI 
 IF(HAS_FLTK)
   IF(HAS_FLTKIMAGEVIEWER)
