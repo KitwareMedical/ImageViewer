@@ -47,7 +47,7 @@ inline std::ostream& operator<<(std::ostream& s, const Exception &f)
 class strhash : public itk::hash<const char *>
 {
 public:
-  static itk::hash<const char *> hasher;
+  itk::hash<const char *> hasher;
   ::size_t operator()(const std::string &s) const
   {
     //    return itk::hash<const char *>::operator()(s.c_str());
