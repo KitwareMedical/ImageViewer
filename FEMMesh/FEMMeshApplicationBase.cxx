@@ -35,8 +35,6 @@
 #include "itkNumericTraits.h"
 #include "itkCellInterfaceVisitor.h"
 
-#include "itkFEMElementBar2D.h"
-
 
 // Headers for the Heat Conduction problem
 #include "itkFEMElementTriangleHeat.h"
