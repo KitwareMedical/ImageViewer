@@ -121,6 +121,30 @@ WriteMetaImage<Image<float,3> >
 
 
 /**
+ *   Type Code for double
+ */
+template <>
+MET_Type
+WriteMetaImage<Image<double,2> >
+::GetTypeCode(void) const
+{
+  return MET_DOUBLE;
+}
+
+/**
+ *   Type Code for double
+ */
+template <>
+MET_Type
+WriteMetaImage<Image<double,3> >
+::GetTypeCode(void) const
+{
+  return MET_DOUBLE;
+}
+
+
+
+/**
  *   Type Code for unsigned short
  */
 template <>
