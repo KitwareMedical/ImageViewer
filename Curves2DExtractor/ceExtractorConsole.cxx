@@ -17,8 +17,6 @@
 
 
 #include "ceExtractorConsole.h"
-#include "itkMetaImageIOFactory.h"
-#include "itkPNGImageIOFactory.h"
 #include <FL/fl_file_chooser.H>
 #include <FL/fl_ask.H>
  
@@ -32,10 +30,6 @@
 ceExtractorConsole
 ::ceExtractorConsole()
 {
- 
-  itk::PNGImageIOFactory::RegisterOneFactory();
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  
 
   m_InputViewer = InputImageViewerType::New();
 

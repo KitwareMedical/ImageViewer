@@ -196,7 +196,6 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
   
-  itk::MetaImageIOFactory::RegisterOneFactory();
   // load images
   ImagePointer input ;
   MaskPointer outputMask ;

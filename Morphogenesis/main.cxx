@@ -26,18 +26,10 @@
 #include "CellsViewer.h"
 #include "CommandEvents.h"
 #include "CellsViewerCommand.h"
-#include "itkMetaImageIOFactory.h"
-#include "itkPNGImageIOFactory.h"
 
 
 int main()
 {
-
-
-  // Register factories for expected image file formats
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  itk::PNGImageIOFactory::RegisterOneFactory();
-
 
 
   bio::CellsViewer * viewer = new bio::CellsViewer;

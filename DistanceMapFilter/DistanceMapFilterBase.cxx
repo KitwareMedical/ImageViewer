@@ -14,7 +14,6 @@
 
 #include <iostream>  
 #include "itkImageRegionIteratorWithIndex.h"
-#include <itkMetaImageIOFactory.h>
 
 
 
@@ -75,10 +74,6 @@ DistanceMapFilterBase
   m_DistanceImageViewer = new DistanceImageViewerType;
   m_DistanceImageViewer->SetLabel("Distance Map");
   m_DistanceImageViewer->SetImage( m_DistanceFilter->GetOutput() );
-
-
-  // Register a producer of MetaImage readers
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
 }
 

@@ -73,7 +73,6 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
 
-  itk::MetaImageIOFactory::RegisterOneFactory();
   
   std::cout << "Loading image..." << std::endl ;
   ImageReaderType::Pointer imageReader = ImageReaderType::New() ;

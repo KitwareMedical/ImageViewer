@@ -20,7 +20,6 @@
 #include <itkImageFileWriter.h>
 #include <itkImageFileReader.h>
 #include <itkMetaImageIO.h>
-#include <itkMetaImageIOFactory.h>
 
 #include <itkSimpleImageRegionIterator.h>
 
@@ -79,9 +78,6 @@ int main(int argc, char **argv)
   // Declare a reader
   typedef itk::ImageFileReader< ImageType > VolumeReaderType;
   VolumeReaderType::Pointer reader = VolumeReaderType::New();
-
-  // Register the MetaImage format with the reader via Object factory
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
   // Set the name of the file to read
   reader->SetFileName( "test.mha" );

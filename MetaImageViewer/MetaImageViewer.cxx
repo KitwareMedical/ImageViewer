@@ -19,8 +19,6 @@
 #include <itkImage.h>
 #include <itkImageFileReader.h>
 
-#include <itkMetaImageIO.h>
-#include <itkMetaImageIOFactory.h>
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
@@ -75,7 +73,6 @@ int main(int argc, char **argv)
   typedef itk::ImageFileReader< ImageType > VolumeReaderType;
   VolumeReaderType::Pointer reader = VolumeReaderType::New();
 
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
   reader->SetFileName(fName);
 

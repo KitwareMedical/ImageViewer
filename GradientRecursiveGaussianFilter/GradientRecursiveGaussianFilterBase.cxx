@@ -14,8 +14,6 @@
 
 #include <iostream>  
 #include "itkImageRegionIteratorWithIndex.h"
-#include <itkMetaImageIOFactory.h>
-
 
 
 GradientRecursiveGaussianFilterBase
@@ -77,9 +75,6 @@ GradientRecursiveGaussianFilterBase
   vectorColor.SetBlue(  0.2 );
 
   m_ImageGradientDrawer->SetColor( vectorColor );
-
-  // Register a producer of MetaImage readers
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
 }
 

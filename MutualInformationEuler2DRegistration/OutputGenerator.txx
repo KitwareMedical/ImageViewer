@@ -63,8 +63,8 @@ OutputGenerator<TImage>
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( m_MovingImage );
 
-  resampler->SetTransform( m_Transform );
-  resampler->SetInterpolator( interpolator );
+  resampler->SetTransform( m_Transform.GetPointer() );
+  resampler->SetInterpolator( interpolator.GetPointer() );
   resampler->SetSize( m_FixedImage->GetLargestPossibleRegion().GetSize() );
   resampler->SetOutputOrigin( m_FixedImage->GetOrigin() );
   resampler->SetOutputSpacing( m_FixedImage->GetSpacing() );

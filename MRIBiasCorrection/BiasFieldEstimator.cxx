@@ -200,7 +200,6 @@ int main(int argc, char* argv[])
                 << std::endl ;
     }
 
-  itk::MetaImageIOFactory::RegisterOneFactory();
       
   // load images
   ImagePointer input ;

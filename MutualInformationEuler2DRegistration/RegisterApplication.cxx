@@ -1,6 +1,4 @@
 #include "RegisterApplication.h"
-#include "itkMetaImageIOFactory.h"
-#include "itkPNGImageIOFactory.h"
 
 RegisterApplication::RegisterApplication()
 {
@@ -46,9 +44,6 @@ RegisterApplication::RegisterApplication()
   m_TranslationScale = 0.00001 ;
   m_RotationScale = 1 ;
 
-  // Register a producer of MetaImage and PNG readers
-  itk::MetaImageIOFactory::RegisterOneFactory();
-  itk::PNGImageIOFactory::RegisterOneFactory();
 
 }
 

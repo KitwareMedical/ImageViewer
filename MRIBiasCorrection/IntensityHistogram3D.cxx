@@ -21,7 +21,6 @@ PURPOSE.  See the above copyright notices for more information.
 #include <map>
 
 #include <itkImage.h>
-#include <itkMetaImageIOFactory.h>
 #include <itkImageRegionIteratorWithIndex.h>
 
 #include "imageutils.h"
@@ -108,7 +107,6 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
   
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
   ImagePointer image ;
   MaskPointer mask ;
