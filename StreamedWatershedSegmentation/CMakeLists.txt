@@ -21,17 +21,25 @@ ${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/VolumeChunker
 )
 
 
-ADD_EXECUTABLE(itkTreeGeneratorApp itkTreeGeneratorApp 
-ITKBasicFilters ITKCommon VXLNumerics param chunks )
+ADD_EXECUTABLE(itkTreeGeneratorApp itkTreeGeneratorApp)
+ADD_EXECUTABLE(itkSegmenterApp itkSegmenterApp)
+ADD_EXECUTABLE(itkResolverApp itkResolverApp)
+ADD_EXECUTABLE(itkEquivalenceRelabelerApp itkEquivalenceRelabelerApp)
+ADD_EXECUTABLE(itkRelabelerApp itkRelabelerApp)
 
-ADD_EXECUTABLE(itkSegmenterApp itkSegmenterApp
-ITKBasicFilters ITKCommon VXLNumerics param chunks )
 
-ADD_EXECUTABLE(itkResolverApp itkResolverApp
-ITKBasicFilters ITKCommon VXLNumerics param chunks )
+TARGET_LINK_LIBRARIES (itkTreeGeneratorApp ITKBasicFilters ITKCommon
+VXLNumerics param chunks)
 
-ADD_EXECUTABLE(itkEquivalenceRelabelerApp itkEquivalenceRelabelerApp
-ITKBasicFilters ITKCommon VXLNumerics param chunks )
+TARGET_LINK_LIBRARIES (itkSegmenterApp ITKBasicFilters ITKCommon
+VXLNumerics param chunks)
 
-ADD_EXECUTABLE(itkRelabelerApp itkRelabelerApp
-ITKBasicFilters ITKCommon VXLNumerics param chunks )
+TARGET_LINK_LIBRARIES (itkResolverApp ITKBasicFilters ITKCommon
+VXLNumerics param chunks)
+
+TARGET_LINK_LIBRARIES (itkEquivalenceRelabelerApp ITKBasicFilters ITKCommon
+VXLNumerics param chunks)
+
+TARGET_LINK_LIBRARIES (itkRelabelerApp ITKBasicFilters ITKCommon
+VXLNumerics param chunks)
+
