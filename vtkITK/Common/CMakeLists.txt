@@ -1,5 +1,6 @@
 SET( VTKITKCommon_SRCS
 vtkITKAntiAliasBinaryImageFilter.h
+vtkITKBilateralImageFilter.h
 vtkITKGradientAnisotropicDiffusionImageFilter.h
 vtkITKCurvatureAnisotropicDiffusionImageFilter.h
 vtkITKGradientMagnitudeImageFilter.h
