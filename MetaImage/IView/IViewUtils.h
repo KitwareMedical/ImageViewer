@@ -3,21 +3,21 @@
 
 
 #include<MetaImageLib.h>
-#include<itkPhysicalImage.h>
+#include<itkImage.h>
 #include<itkProcessObject.h>
 #include<itkSimpleImageRegionIterator.h>
 
 
 template <class T>
-PhysicalImage<T, 3>::Pointer loadImage(char *fname)
+Image<T, 3>::Pointer loadImage(char *fname)
 {
  MetaImage *imIO = new MetaImage();
  imIO->OpenMetaFile(fname);
  imIO->PrintMetaInfo();
 
- itk::PhysicalImage<T,3>::Pointer image = itk::PhysicalImage<T,3>::New();
+ itk::Image<T,3>::Pointer image = itk::Image<T,3>::New();
 
- itk::PhysicalImage<T,3>::SizeType size;
+ itk::Image<T,3>::SizeType size;
 
  double spacing[3];
 
@@ -46,7 +46,7 @@ PhysicalImage<T, 3>::Pointer loadImage(char *fname)
  image->Allocate();
 
 
- itk::SimpleImageRegionIterator< itk::PhysicalImage<T,3> > it(image, region);
+ itk::SimpleImageRegionIterator< itk::Image<T,3> > it(image, region);
  int i;
  for(i = 0, it.Begin(); !it.IsAtEnd(); i++, ++it)
    it.Set(imIO->Get(i));

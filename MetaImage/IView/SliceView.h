@@ -1,7 +1,7 @@
 #ifndef _SLICEVIEW_H
 #define _SLICEVIEW_H
 
-#include<itkPhysicalImage.h>
+#include<itkImage.h>
 #include<FL/fl_draw.H>
 #include<list>
 
@@ -63,7 +63,7 @@ protected:
 
   bool                     cValidImData;
   bool                     cViewImData;
-  PhysicalImage<imType,3>::Pointer cImData;
+  Image<imType,3>::Pointer cImData;
   void                    (* cViewImDataCallBack)(void);
   void                     * cViewImDataArg;
   void                    (* cViewImDataArgCallBack)(void 
@@ -151,16 +151,16 @@ public:
   virtual ~SliceView(void);
 
   /*! Specify the 3D image to view in slices - pure virtual function*/
-  virtual void  SetInputImage(PhysicalImage<imType,3>::Pointer 
+  virtual void  SetInputImage(Image<imType,3>::Pointer 
 newImData) = 0;
 
   /*! Return a pointer to the image data */
   
-  const PhysicalImage<imType,3>::ConstPointer & GetInputImage(void) 
+  const Image<imType,3>::ConstPointer & GetInputImage(void) 
 const;
   
   /*! Dammit, give me a pointer to the image that's not const! */
-  PhysicalImage<imType,3>::Pointer GetInputImage(void);
+  Image<imType,3>::Pointer GetInputImage(void);
   
   /*! Return a pointer to the pixels being displayed */
   unsigned char *         winImData(void);
@@ -411,7 +411,7 @@ SliceView<imType>::~SliceView()
 //
 //
 template <class imType>
-const PhysicalImage<imType,3>::ConstPointer & 
+const Image<imType,3>::ConstPointer & 
 SliceView<imType>
 ::GetInputImage(void) const
 {
@@ -422,9 +422,9 @@ SliceView<imType>
 
 
 template <class imType>
-PhysicalImage<imType,3>::Pointer SliceView<imType>::GetInputImage(void)
+Image<imType,3>::Pointer SliceView<imType>::GetInputImage(void)
 {
-	return (PhysicalImage<imType,3>::Pointer)cImData;
+	return (Image<imType,3>::Pointer)cImData;
 }
 
 
@@ -574,9 +574,9 @@ bool SliceView<imType>::flipZ()
 template <class imType>
 unsigned int SliceView<imType>::numSlices(void)
 {
-PhysicalImage<imType,3>::RegionType cregion = 
+Image<imType,3>::RegionType cregion = 
 cImData->GetLargestPossibleRegion();
-PhysicalImage<imType,3>::SizeType   size   = cregion.GetSize();
+Image<imType,3>::SizeType   size   = cregion.GetSize();
 unsigned long *s=new unsigned long[3];
 s[0]=size[0];
 s[1]=size[1];
@@ -700,7 +700,7 @@ void SliceView<imType>::clickSelect(float newX, float newY, float newZ)
     if(cClickSelectZ >= cDimSize[2])
         cClickSelectZ = cDimSize[2]-1;
 
-	itk::PhysicalImage<imType,3>::IndexType ind;
+	itk::Image<imType,3>::IndexType ind;
     ind[0] = (unsigned long)cClickSelectX;
     ind[1] = (unsigned long)cClickSelectY;
     ind[2] = (unsigned long)cClickSelectZ;
@@ -845,7 +845,7 @@ void SliceView<imType>::clickUser(float newX, float newY, float newZ)
     if(cClickUserZ>=cDimSize[2])
         cClickUserZ = cDimSize[2]-1;
 
-    PhysicalImage<imType,3>::IndexType ind;
+    Image<imType,3>::IndexType ind;
     ind[0] = (unsigned long)cClickUserX;
     ind[1] = (unsigned long)cClickUserY;
     ind[2] = (unsigned long)cClickUserZ;

@@ -8,7 +8,7 @@
  *
  */
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkFileIOMetaImage.h>
 #include <itkFileIOToImageFilter.h>
 #include <IView.h>
@@ -18,7 +18,7 @@ void main()
 {
  
   /*Define the Image type*/
-  typedef itk::PhysicalImage<unsigned short,3>  myImageType;
+  typedef itk::Image<unsigned short,3>  myImageType;
   myImageType::Pointer m_input_image = myImageType::New();
   
   /* Load the image*/
@@ -35,7 +35,7 @@ void main()
   std::cout << "Image loaded..." << std::endl;
   
   /*Define the Overlay type*/
-  typedef itk::PhysicalImage<unsigned char,3>  myOverlayType;
+  typedef itk::Image<unsigned char,3>  myOverlayType;
   myOverlayType::Pointer m_overlay_image = myOverlayType::New();
 
   typedef FileIOToImageFilter<myOverlayType> myOverlayLoaderType;
