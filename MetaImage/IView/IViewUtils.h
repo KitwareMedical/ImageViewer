@@ -9,7 +9,7 @@
 
 
 template <class T>
-itk::Image<T, 3>::Pointer 
+typename itk::Image<T, 3>::Pointer 
 loadImage(char *fname)
 {
  MetaImage *imIO = new MetaImage();
