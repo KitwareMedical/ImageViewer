@@ -9,45 +9,45 @@ ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
 )
 
 SOURCE_FILES(ImageCorrector_SRCS
-OptionList
-ImageCorrector
+OptionList.cxx
+ImageCorrector.cxx
 )
  
 
 SOURCE_FILES(BiasImageGenerator_SRCS
-OptionList
-BiasImageGenerator
+OptionList.cxx
+BiasImageGenerator.cxx
 )
  
 SOURCE_FILES(BiasFieldEstimator_SRCS
-OptionList
-BiasFieldEstimator
+OptionList.cxx
+BiasFieldEstimator.cxx
 )
 
 SOURCE_FILES(InterSliceIntensityCorrector_SRCS
-OptionList
-InterSliceIntensityCorrector
+OptionList.cxx
+InterSliceIntensityCorrector.cxx
 )
 
 SOURCE_FILES(IntensityHistogram3D_SRCS
-OptionList
-IntensityHistogram3D
+OptionList.cxx
+IntensityHistogram3D.cxx
 )
 
 SOURCE_FILES(SlabIdentifier_SRCS
-OptionList
-SlabIdentifier
+OptionList.cxx
+SlabIdentifier.cxx
 )
 
 SOURCE_FILES(EnergyTablePlotter_SRCS
-OptionList
-EnergyTablePlotter
+OptionList.cxx
+EnergyTablePlotter.cxx
 )
 
 
 SOURCE_FILES(BiasCorrector_SRCS
-OptionList
-BiasCorrector
+OptionList.cxx
+BiasCorrector.cxx
 )
 
 LINK_DIRECTORIES(

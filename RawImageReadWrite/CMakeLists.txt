@@ -12,11 +12,11 @@ LINK_DIRECTORIES(${ITK_BINARY_DIR}/Utilities/png)
 LINK_DIRECTORIES(${ITK_BINARY_DIR}/Utilities/zlib)
 
 SOURCE_FILES(RawImageReadWrite_SRCS
-itkRawImageReadWrite
+itkRawImageReadWrite.cxx
 )
 
 SOURCE_FILES(RawImageReadWritePNG_SRCS
-itkRawImageReadWritePNG
+itkRawImageReadWritePNG.cxx
 )
 
 

@@ -31,9 +31,9 @@ ${ITK_BINARY_DIR}/Examples/DistanceMapFilter
 )
 
 SOURCE_FILES(DistanceMapFilter_SRCS
-DistanceMapFilterBase
-DistanceMapFilter
-main
+DistanceMapFilterBase.cxx
+DistanceMapFilter.cxx
+main.cxx
 )
 
 SOURCE_FILES(DistanceMapFilter_GUI_SRCS

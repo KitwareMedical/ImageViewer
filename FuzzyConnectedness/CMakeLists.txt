@@ -18,8 +18,9 @@ ITKIO
 )
 
 SOURCE_FILES( FuzzyConnect_SRCS
-FuzzyConnectApp
-FuzzyConnectedness )
+FuzzyConnectApp.cxx
+FuzzyConnectedness.cxx
+)
 
 
 ADD_EXECUTABLE(FuzzyConnectedness FuzzyConnect_SRCS )

@@ -23,15 +23,15 @@ ${ITK_BINARY_DIR}/Examples/GaussianFilter
 )
 
 SOURCE_FILES(GaussianFilter_SRCS
-liFilterConsole
-liFilterConsoleBase
-GaussianFilter
+liFilterConsole.cxx
+liFilterConsoleBase.cxx
+GaussianFilter.cxx
 )
 
 SOURCE_FILES(GaussianFilter2D_SRCS
-liFilterConsole2D
-liFilterConsole2DBase
-GaussianFilter2D
+liFilterConsole2D.cxx
+liFilterConsole2DBase.cxx
+GaussianFilter2D.cxx
 )
 
 SOURCE_FILES(GaussianFilter_GUI_SRCS

@@ -29,9 +29,9 @@ ${ITK_BINARY_DIR}/Examples/GradientRecursiveGaussianFilter
 )
 
 SOURCE_FILES(GradientRecursiveGaussianFilter_SRCS
-GradientRecursiveGaussianFilterBase
-GradientRecursiveGaussianFilter
-main
+GradientRecursiveGaussianFilterBase.cxx
+GradientRecursiveGaussianFilter.cxx
+main.cxx
 )
 
 SOURCE_FILES(GradientRecursiveGaussianFilter_GUI_SRCS

@@ -1,5 +1,5 @@
 SOURCE_FILES ( MetaImageImporter_SRCS
-  MetaImageImporter
+  MetaImageImporter.cxx
   )
 
 ADD_EXECUTABLE( MetaImageImporter MetaImageImporter_SRCS )

@@ -49,8 +49,8 @@ ENDIF(UNIX)
 
 
 SOURCE_FILES(RawImageReaderViewer_SRCS
-itkRawImageReaderViewer
-RawImageReaderViewer
+itkRawImageReaderViewer.cxx
+RawImageReaderViewer.cxx
 )
 
 SOURCE_FILES(RawImageReaderViewer_GUI_SRCS

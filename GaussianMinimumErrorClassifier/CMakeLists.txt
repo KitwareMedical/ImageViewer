@@ -25,9 +25,9 @@ MetaIO
 )
 
 SOURCE_FILES (GaussianMinimumErrorClassifier_SRCS
-${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection/OptionList
-MaximumLikelihoodRatioDecisionRule
-GaussianMinimumErrorClassifier
+${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection/OptionList.cxx
+MaximumLikelihoodRatioDecisionRule.cxx
+GaussianMinimumErrorClassifier.cxx
 )
 
 ADD_EXECUTABLE(GaussianMinimumErrorClassifier GaussianMinimumErrorClassifier_SRCS)

@@ -18,8 +18,9 @@ ITKIO
 )
 
 SOURCE_FILES( ShapeDetect_SRCS
-ShapeDetectApp
-ShapeDetection )
+ShapeDetectApp.cxx
+ShapeDetection.cxx
+)
 
 
 ADD_EXECUTABLE( ShapeDetection ShapeDetect_SRCS )

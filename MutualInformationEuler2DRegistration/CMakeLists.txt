@@ -59,9 +59,9 @@ IF(UNIX)
 ENDIF(UNIX)
 
 SOURCE_FILES(MutualInformationEuler2DRegistration_SRCS
-RegisterApplication
-RegisterWindow
-register
+RegisterApplication.cxx
+RegisterWindow.cxx
+register.cxx
 )
 
 SOURCE_FILES(MutualInformationEuler2DRegistration_GUI_SRCS

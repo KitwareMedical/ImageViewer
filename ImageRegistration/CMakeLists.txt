@@ -23,9 +23,9 @@ ${ITK_BINARY_DIR}/Examples/ImageRegistration
 )
 
 SOURCE_FILES(ImageRegistration_SRCS
-liImageRegistrationConsole
-liImageRegistrationConsoleBase
-ImageRegistration
+liImageRegistrationConsole.cxx
+liImageRegistrationConsoleBase.cxx
+ImageRegistration.cxx
 )
 
 SOURCE_FILES(ImageRegistration_GUI_SRCS

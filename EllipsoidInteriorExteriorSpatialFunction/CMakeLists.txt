@@ -12,7 +12,7 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 )
 
 SOURCE_FILES(ELLIPSOID_SPATIAL_FUNCTION_SRCS
-itkEllipsoidInteriorExteriorSpatialFunctionExample
+itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx
 )
 
 LINK_LIBRARIES (

@@ -34,10 +34,10 @@ LINK_LIBRARIES(
 )
 
 SOURCE_FILES(FEMMeshApplication_SRCS
-itkFEMHeatConduction2D
-FEMMeshApplicationBase
-FEMMeshApplication
-main
+itkFEMHeatConduction2D.cxx
+FEMMeshApplicationBase.cxx
+FEMMeshApplication.cxx
+main.cxx
 )
 
 SOURCE_FILES(FEMMeshApplication_GUI_SRCS

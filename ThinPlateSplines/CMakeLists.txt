@@ -38,9 +38,9 @@ LINK_LIBRARIES(
 )
 
 SOURCE_FILES(ThinPlateSplinesApplication_SRCS
-ThinPlateSplinesApplicationBase
-ThinPlateSplinesApplication
-main
+ThinPlateSplinesApplicationBase.cxx
+ThinPlateSplinesApplication.cxx
+main.cxx
 )
 
 SOURCE_FILES(ThinPlateSplinesApplication_GUI_SRCS

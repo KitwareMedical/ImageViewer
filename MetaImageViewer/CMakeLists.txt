@@ -3,7 +3,7 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 
 SOURCE_FILES ( MetaImageViewer_SRCS
-  MetaImageViewer
+  MetaImageViewer.cxx
   )
 
 INCLUDE_DIRECTORIES (

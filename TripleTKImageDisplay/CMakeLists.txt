@@ -34,12 +34,12 @@ LINK_LIBRARIES(
 )
 
 SOURCE_FILES(TripleTKID_SRCS
-3D/FLVTKWin
-TripleTKMain
-TripleTK2D
-TripleTK3D
-TripleTKGUI
-TripleTKGUI_CB
+3D/FLVTKWin.cxx
+TripleTKMain.cxx
+TripleTK2D.cxx
+TripleTK3D.cxx
+TripleTKGUI.cxx
+TripleTKGUI_CB.cxx
 )
 
 LINK_LIBRARIES (

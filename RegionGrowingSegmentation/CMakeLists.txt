@@ -23,8 +23,8 @@ ${ITK_BINARY_DIR}/Examples/RegionGrowingSegmentation
 )
 
 SOURCE_FILES(RegionGrowingSegmentation_SRCS
-RegionGrowingSegmentationBase
-RegionGrowingSegmentation
+RegionGrowingSegmentationBase.cxx
+RegionGrowingSegmentation.cxx
 )
 
 SOURCE_FILES(RegionGrowingSegmentation_GUI_SRCS

@@ -31,8 +31,8 @@ ${ITK_BINARY_DIR}/Utilities/MetaIO
 
 
 SOURCE_FILES(Curves2DExtractor_SRCS
-ceExtractorConsole
-ceExtractorConsoleBase
+ceExtractorConsole.cxx
+ceExtractorConsoleBase.cxx
 )
 
 SOURCE_FILES(FLTK_GUI_Files_SRCS

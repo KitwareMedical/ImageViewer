@@ -23,9 +23,9 @@ ${ITK_BINARY_DIR}/Examples/ImageRegistration2D
 )
 
 SOURCE_FILES(ImageRegistration2D_SRCS
-ImageRegistrationConsole
-ImageRegistrationConsoleBase
-ImageRegistration2D
+ImageRegistrationConsole.cxx
+ImageRegistrationConsoleBase.cxx
+ImageRegistration2D.cxx
 )
 
 SOURCE_FILES(ImageRegistration2D_GUI_SRCS

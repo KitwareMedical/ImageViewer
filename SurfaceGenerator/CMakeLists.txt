@@ -29,10 +29,10 @@ ${ITK_BINARY_DIR}/Examples/SurfaceGenerator
 )
 
 SOURCE_FILES(SurfaceGenerator_SRCS
-CriticalPoint
-SurfaceGeneratorBase    
-SurfaceGenerator
-main
+CriticalPoint.cxx
+SurfaceGeneratorBase.cxx
+SurfaceGenerator.cxx
+main.cxx
 )
 
 SOURCE_FILES(SurfaceGenerator_GUI_SRCS
