@@ -49,7 +49,7 @@ public:
 public:
 
   ThinPlateSplinesApplicationBase();
-  ~ThinPlateSplinesApplicationBase();
+  virtual ~ThinPlateSplinesApplicationBase();
   
   virtual void DisplayAxes(void);
   virtual void CreateSpline(void);
