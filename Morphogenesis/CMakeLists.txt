@@ -9,8 +9,8 @@ ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Utilities/zlib
 ${ITK_SOURCE_DIR}/Utilities/png
-${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
-${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
+${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
+${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/Morphogenesis
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
@@ -24,18 +24,16 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Utilities/png
 ${ITK_BINARY_DIR}/Utilities/zlib
-${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
-${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/Morphogenesis
 )
 
 SOURCE_FILES(Morphogenesis_SRCS
 Bacteria
 BacterialColony
-BacterialColonyGUI
 Cell
 CellsViewerBase
-CellsViewerGUI
 CellsViewer
 CellsViewerCommand
 CellularAggregate
@@ -44,6 +42,11 @@ GradientEatingBacteria
 PressureSensitiveBacteria
 Prokariote
 main
+)
+
+SOURCE_FILES(Morphogenesis_GUI_SRCS
+BacterialColonyGUI.fl
+CellsViewerGUI.fl
 )
 
 LINK_LIBRARIES (
@@ -72,4 +75,6 @@ IF(UNIX)
 ENDIF(UNIX)
 
 ADD_EXECUTABLE(Morphogenesis Morphogenesis_SRCS)
+
+FLTK_WRAP_UI(Morphogenesis  Morphogenesis_GUI_SRCS)
 
