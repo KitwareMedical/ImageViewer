@@ -264,7 +264,7 @@ void VectorTubes3D::Load( const char * filename )
   ifs.open( filename );
   if( ifs.fail() ) 
   {
-    throw itk::ExceptionObject();
+    throw itk::ExceptionObject(__FILE__, __LINE__);
   }
 
   char field[200];
@@ -306,7 +306,7 @@ void VectorTubes3D::Read(Shape3D::IfstreamType & is)
   { 
     std::cerr << "Problem reading VectorTubes3D, missing '{'";
     std::cerr << std::endl;
-    throw itk::ExceptionObject();
+    throw itk::ExceptionObject(__FILE__, __LINE__);
   }
 
   while( !endOfGroup ) 
@@ -318,14 +318,14 @@ void VectorTubes3D::Read(Shape3D::IfstreamType & is)
     {
       std::cerr << "Unexpected end of file reading VectorTubes3D";
       std::cerr << std::endl;
-      throw itk::ExceptionObject();
+      throw itk::ExceptionObject(__FILE__, __LINE__);
     }
       
     if( is.fail() ) 
     {
       std::cerr << "Error found reading VectorTubes3D";
       std::cerr << std::endl;
-      throw itk::ExceptionObject();
+      throw itk::ExceptionObject(__FILE__, __LINE__);
     }
 
     if( strcmp(field,"Dimensions"    )==0 ) { is >> nx >> ny >> nz; continue; }

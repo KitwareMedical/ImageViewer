@@ -68,7 +68,7 @@ const char * filename )
  
   if ( !this->ParseInputFile( filename ) )
    {
-    itk::ExceptionObject err;
+    itk::ExceptionObject err(__FILE__, __LINE__);
     err.SetLocation( "MIRegistrationApp" );
     err.SetDescription( "Error while parsing input parameter file" );
     throw err;

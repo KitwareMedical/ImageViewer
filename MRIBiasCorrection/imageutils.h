@@ -51,15 +51,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "myutils.h"
 
 
-class ImageIOError
+class ImageIOError : public ExceptionObject
 {
-public:
-  ImageIOError(std::string fileName, std::string operation) 
+ public:
+  ImageIOError() : ExceptionObject() {}
+  
+  ImageIOError(const char *file, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(file, line)
   {
     FileName = fileName ;
     Operation = operation ;
   }
 
+  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(file, line)
+  {
+    FileName = fileName ;
+    Operation = operation ;
+  }
+  
   std::string FileName ;
   std::string Operation ;
 } ;
@@ -73,7 +81,7 @@ int readMetaImageHeader(std::string fileName,
   bool ret = metaImage.OpenMetaFile(fileName.c_str(), false);
   if (metaImage.Error()) 
     {
-      throw ImageIOError(fileName, "Reading header: can't open the file") ;
+      throw ImageIOError(__FILE__, __LINE__, fileName, "Reading header: can't open the file") ;
     }
   
   dimension = metaImage.NDims() ;
@@ -90,7 +98,7 @@ void loadImage(std::string fileName, ImagePointer image)
 {
   if (fileName == "")
     {
-      throw ImageIOError("", "Reading meta image: file name not specified") ;
+      throw ImageIOError(__FILE__, __LINE__, "", "Reading meta image: file name not specified") ;
     }
 
   try
@@ -104,7 +112,7 @@ void loadImage(std::string fileName, ImagePointer image)
     }
   catch (itk::ExceptionObject)
     {
-      throw ImageIOError(fileName, "Reading meta image: failed to read") ;
+      throw ImageIOError(__FILE__, __LINE__, fileName, "Reading meta image: failed to read") ;
     }
 }
 
@@ -113,7 +121,7 @@ void loadMask(std::string fileName, MaskPointer mask)
 {
   if (fileName == "")
     {
-      throw ImageIOError("", "Reading meta image: file name not specified") ;
+      throw ImageIOError(__FILE__, __LINE__, "", "Reading meta image: file name not specified") ;
     }
 
   try
@@ -127,7 +135,7 @@ void loadMask(std::string fileName, MaskPointer mask)
     }
   catch (itk::ExceptionObject)
     {
-      throw ImageIOError(fileName, "Reading meta image: failed to read") ;
+      throw ImageIOError(__FILE__, __LINE__, fileName, "Reading meta image: failed to read") ;
     }
 }
 
@@ -136,7 +144,7 @@ void writeImage(std::string fileName, ImagePointer image)
 {
   if (fileName == "")
     {
-      throw ImageIOError("", "Writing meta image: file name not specified") ;
+      throw ImageIOError(__FILE__, __LINE__, "", "Writing meta image: file name not specified") ;
     }
 
   try
@@ -150,7 +158,7 @@ void writeImage(std::string fileName, ImagePointer image)
     }
   catch (itk::ExceptionObject)
     {
-      throw ImageIOError(fileName, "Writing meta image: failed to write") ;
+      throw ImageIOError(__FILE__, __LINE__, fileName, "Writing meta image: failed to write") ;
     }
 
 }
