@@ -57,6 +57,20 @@ MIMApplicationBase<TInputImage,TImage,TParser,TPreprocessor,
     this->InitializeParser();
     m_Parser->Execute();
     }
+  catch(itk::ExceptionObject & eo)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "itk::ExceptionObject caught" << std::endl;
+    std::cout << eo << std::endl;
+    throw;
+    }
+  catch(std::exception & e)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "std::exception caught" << std::endl;
+    std::cout << e.what() << std::endl;
+    throw;
+    }
   catch(...)
    {
    std::cout << "Error occurred during input parsing." << std::endl;
@@ -74,6 +88,20 @@ MIMApplicationBase<TInputImage,TImage,TParser,TPreprocessor,
     this->InitializePreprocessor();
     m_Preprocessor->Execute();
     }
+  catch(itk::ExceptionObject & eo)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "itk::ExceptionObject caught" << std::endl;
+    std::cout << eo << std::endl;
+    throw;
+    }
+  catch(std::exception & e)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "std::exception caught" << std::endl;
+    std::cout << e.what() << std::endl;
+    throw;
+    }
   catch(...)
     {
     std::cout << "Error occured during preprocessing." << std::endl;
@@ -90,6 +118,20 @@ MIMApplicationBase<TInputImage,TImage,TParser,TPreprocessor,
     {
     this->InitializeRegistrator();
     m_Registrator->Execute();
+    }
+  catch(itk::ExceptionObject & eo)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "itk::ExceptionObject caught" << std::endl;
+    std::cout << eo << std::endl;
+    throw;
+    }
+  catch(std::exception & e)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "std::exception caught" << std::endl;
+    std::cout << e.what() << std::endl;
+    throw;
     }
   catch(...)
     {
@@ -126,6 +168,20 @@ MIMApplicationBase<TInputImage,TImage,TParser,TPreprocessor,
     {
     this->InitializeGenerator();
     m_Generator->Execute();
+    }
+  catch(itk::ExceptionObject & eo)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "itk::ExceptionObject caught" << std::endl;
+    std::cout << eo << std::endl;
+    throw;
+    }
+  catch(std::exception & e)
+    {
+    std::cout << "Error occured during registration" << std::endl;
+    std::cout << "std::exception caught" << std::endl;
+    std::cout << e.what() << std::endl;
+    throw;
     }
   catch(...)
    {
