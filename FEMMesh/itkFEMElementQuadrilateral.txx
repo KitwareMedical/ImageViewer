@@ -57,9 +57,26 @@ template < typename TFEMMesh >
 void 
 FEMElementQuadrilateral< TFEMMesh >
 ::ComputePositionAt( const ParametricPointType & parametricPoint,
-                     const PointsContainer     & points,
+                     const PointsContainer     & meshPoints,
                            PointType           & globalPoint  ) const
 {
+
+  PointIdConstIterator pts = this->GetCell().PointIdsBegin();
+  const PointType & p0 = meshPoints.ElementAt( *pts++ );
+  const PointType & p1 = meshPoints.ElementAt( *pts++ );
+  const PointType & p2 = meshPoints.ElementAt( *pts++ );
+  const PointType & p3 = meshPoints.ElementAt( *pts++ );
+
+  ShapeFunctionsArrayType shapeFunctions;
+  this->ComputeShapeFunctionsAt( parametricPoint, shapeFunctions );
+
+  for(unsigned int i=0; i<PointDimension; i++ )
+    {
+    globalPoint[i] = shapeFunctions[0] * p0[i] +
+                     shapeFunctions[1] * p1[i] +
+                     shapeFunctions[2] * p2[i] +
+                     shapeFunctions[3] * p3[i];
+    }
 
 }
 
@@ -74,7 +91,7 @@ template < typename TFEMMesh >
 void 
 FEMElementQuadrilateral< TFEMMesh >
 ::ComputeJacobianMatrixAt( const ParametricPointType & parametricPoint,
-                           const PointsContainer     & points,
+                           const PointsContainer     & meshPoints,
                                  JacobianMatrixType  & jacobian ) const
 {
   JacobianMatrixType & J = jacobian;
@@ -88,10 +105,10 @@ FEMElementQuadrilateral< TFEMMesh >
                                            shapeFunctionsDerivatives );
 
   PointIdConstIterator pts = this->GetCell().PointIdsBegin();
-  const PointType & p0 = points->ElementAt( *pts++ );
-  const PointType & p1 = points->ElementAt( *pts++ );
-  const PointType & p2 = points->ElementAt( *pts++ );
-  const PointType & p3 = points->ElementAt( *pts++ );
+  const PointType & p0 = meshPoints.ElementAt( *pts++ );
+  const PointType & p1 = meshPoints.ElementAt( *pts++ );
+  const PointType & p2 = meshPoints.ElementAt( *pts++ );
+  const PointType & p3 = meshPoints.ElementAt( *pts++ );
    
   /**
    * Compute the elements of the Jacobian matrix

@@ -80,15 +80,15 @@ public:
    * Function that computes the Jacobian matrix of the
    * transformation from the master element.
    */
-  void ComputeJacobianMatrixAt( const ParametricPointType &,
+  void ComputeJacobianMatrixAt( const ParametricPointType & parametricPoint,
                                 const PointsContainer     & points,
-                                      JacobianMatrixType  &  ) const;
+                                      JacobianMatrixType  & jacobian ) const;
 
   /** 
    * Function that computes the shape functions defining
    * the geometry of this finite element at a given point.
    */
-  void ComputeShapeFunctionsAt( const ParametricPointType &,
+  void ComputeShapeFunctionsAt( const ParametricPointType & parametricPoint,
                                       ShapeFunctionsArrayType & ) const;
 
   /**
@@ -96,7 +96,7 @@ public:
    * functions of this element at a given point.
    */
   void ComputeShapeFunctionDerivativesAt( 
-                                const ParametricPointType &,
+                                const ParametricPointType & parametricPoint,
                                 ShapeFunctionsDerivativesType & ) const;
 
 
