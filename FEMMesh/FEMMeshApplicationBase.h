@@ -22,11 +22,43 @@
 #include "itkMacro.h"
 
 #include "vtkRenderWindow.h"
+#include "itkFEMMesh.h"
+#include "itkDefaultDynamicMeshTraits.h"
 
 // This is the base classe for the Application
 
 class FEMMeshApplicationBase 
 {
+
+public:
+
+  enum { PointsDimension              = 3 };
+  enum { MaximumTopologicalDimension  = 3 };
+
+  typedef float     CoordinateRepresentationType;
+
+  typedef double    InterpolationWeightsType;
+
+  // These two types are provided here but 
+  // not used because the additional data is
+  // added through derivation of the itk::CellInterface
+  // class and polymorphism.
+  typedef char      PointDataType;
+  typedef char      CellDataType;
+
+  typedef itk::DefaultDynamicMeshTraits<
+                                PointDataType,
+                                PointsDimension,
+                                MaximumTopologicalDimension,
+                                CoordinateRepresentationType,
+                                InterpolationWeightsType,
+                                CellDataType
+                                                  >  MeshTraits;
+
+  typedef itk::Mesh< MeshTraits > MeshType;
+
+  typedef itk::fem::FEMMesh< MeshType >   FEMMeshType;
+
 
 public:
 
@@ -40,6 +72,8 @@ protected:
  
   vtkRenderWindow * m_RenderWindow;
   vtkRenderer     * m_Renderer;
+
+  FEMMeshType::Pointer  * m_FEMMesh;
 
 };
 
