@@ -272,10 +272,15 @@ vtkUnstructuredGrid* MeshToUnstructuredGrid(floatMesh* mesh)
 
 int main(int ac, char** av)
 {
-  if(ac < 1)
-    return -1;
+  const char* fname = "f:/vtkdata/blow.vtk";
+  if(ac > 1 )
+    {
+    fname = av[1];
+    }
+  
+  
   vtkDataSetReader* reader = vtkDataSetReader::New();
-  reader->SetFileName("f:/vtkdata/blow.vtk");
+  reader->SetFileName(fname);
   reader->SetScalarsName("thickness9");
   reader->SetVectorsName("displacement9");
   std::cerr << "Begin reading vtk data " << std::endl;
