@@ -2,7 +2,7 @@
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
+${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
 )
 
 LINK_DIRECTORIES(

@@ -26,6 +26,9 @@ ENDIF(HAS_METAIMAGE)
 # Build the Multiresolution Registration example
 SUBDIRS(MultiResMIRegistration)
 
+# Build the IBSR Validation applications
+SUBDIRS(IBSRValidation)
+
 # Test the conditions for building the Gaussian Filter GUI example
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)

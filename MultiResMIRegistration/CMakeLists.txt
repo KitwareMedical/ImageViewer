@@ -5,6 +5,7 @@ SUBDIRS( SampleInputs )
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
 ${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/VanderbiltValdiation
+${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Code/BasicFilters
