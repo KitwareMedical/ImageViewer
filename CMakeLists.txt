@@ -6,6 +6,10 @@ INCLUDE_REGULAR_EXPRESSION("^.*$")
 # modules.
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${InsightApplications_SOURCE_DIR})
 
+IF(NOT WIN32)
+  OPTION(BUILD_SHARED_LIBS "Build Insight-Applications with shared libraries." OFF)
+ENDIF(NOT WIN32)
+
 # Don't build anything unless the version of CMake is high enough.
 # The matching ELSE/ENDIF should be the last lines in the file.
 IF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 1.5)
