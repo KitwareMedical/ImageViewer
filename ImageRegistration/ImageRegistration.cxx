@@ -23,6 +23,7 @@ int main()
   liImageRegistrationConsole * console = new liImageRegistrationConsole();
 
   console->Show();
+  console->ShowAbout();
 
   Fl::run();
 
