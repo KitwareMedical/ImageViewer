@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
   app->SetAppendOutputFile( true );
 
   
-  // get the FEM config filename
+  /* get the FEM config filename
   inputStream.getline( lineBuffer, maxChar, '\n' );
    
   if ( sscanf( lineBuffer, "%s", buffer ) != 1 )
@@ -121,17 +121,17 @@ int main(int argc, char *argv[])
     std::cout << "Can't find FEM config file name. " << std::endl;
     return -1;
     }
-  app->SetFEMConfigurationFileName( buffer );
+  app->SetFEMConfigurationFileName( buffer );*/
 
   signed int startSlice;
-  unsigned int numberOfSlices,xsize,ysize;
+  unsigned int numberOfSlices,xsize,ysize,matchpoints,histbins;
   char patientID[maxChar];
 
   // get altas information
   inputStream.getline( lineBuffer, maxChar, '\n' );
 
-  if ( sscanf( lineBuffer, "%s %d %d %d %u", 
-    patientID, &xsize, &ysize, &startSlice, &numberOfSlices ) != 5 )
+  if ( sscanf( lineBuffer, "%s %d %d %d %d %d %u", 
+    patientID, &xsize, &ysize, &startSlice, &numberOfSlices, &histbins, &matchpoints ) != 7 )
     {
     std::cout << "Problem with atlas specification: " << lineBuffer << std::endl;
     std::cout << "Usage: ";
@@ -144,7 +144,8 @@ int main(int argc, char *argv[])
   app->SetAtlasNumberOfSlices( numberOfSlices );
   app->SetImageXSize(xsize);
   app->SetImageYSize(ysize);
-
+  app->SetNumberOfHistogramLevels(histbins);  
+  app->SetNumberOfMatchPoints(matchpoints);
   
   // run registration cases one at a time
   while ( !inputStream.eof() )
@@ -157,7 +158,7 @@ int main(int argc, char *argv[])
       {
       std::cout << "Problem with subject specification: " << lineBuffer << std::endl;
       std::cout << "Usage: ";
-      std::cout << "patientID startSlice numberOfSlices parameterFileName";
+      std::cout << "patientID xdim ydim startSlice numberOfSlices parameterFileName";
       std::cout << std::endl;
       continue;
       }
@@ -165,7 +166,7 @@ int main(int argc, char *argv[])
     app->SetSubjectPatientID( patientID );
     app->SetSubjectStartSliceNumber( startSlice );
     app->SetSubjectNumberOfSlices( numberOfSlices );
-    app->SetParameterFileName( buffer );
+    app->SetFEMConfigurationFileName( buffer );
 
     std::cout << "Running case: ";
     std::cout << " atlas = " << app->GetAtlasPatientID();

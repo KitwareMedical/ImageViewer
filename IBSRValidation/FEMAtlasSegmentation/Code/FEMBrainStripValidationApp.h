@@ -101,6 +101,18 @@ public:
   /** Set the IBSR "20Nomrals_T1_brain" directory path. */
   itkSetStringMacro( BrainSegmentationDirectoryName );
 
+  /** Set the number of histogram levels to use. */
+  itkSetMacro( NumberOfHistogramLevels, unsigned long );
+
+  /** Set the number of match points to use. */
+  itkSetMacro( NumberOfMatchPoints, unsigned long );
+
+  /** Get the number of histogram levels to use. */
+  itkGetMacro( NumberOfHistogramLevels, unsigned long );
+
+  /** Get the number of match points to use. */
+  itkGetMacro( NumberOfMatchPoints, unsigned long );
+
   /** Set the atlas patient ID. */
   itkSetStringMacro( AtlasPatientID );
   itkGetStringMacro( AtlasPatientID );
@@ -178,6 +190,8 @@ private:
   unsigned long                 m_AtlasNumberOfSlices;
   unsigned long                 m_SubjectNumberOfSlices;
 
+  unsigned long                          m_NumberOfHistogramLevels;
+  unsigned long                          m_NumberOfMatchPoints;
   std::string                   m_ParameterFileName;
   std::string                   m_OutputFileName;
   bool                          m_AppendOutputFile;
