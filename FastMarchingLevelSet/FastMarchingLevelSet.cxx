@@ -61,7 +61,6 @@ FastMarchingLevelSet
   m_SigmoidFilter->SetBeta(  betaValueInput->value()  );
 
   m_FastMarchingFilter->SetStoppingValue( stoppingValueInput->value() );
-  m_FastMarchingFilter->SetLargeValue( stoppingValueInput->value() + 1.0 );
 
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
