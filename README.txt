@@ -1,4 +1,4 @@
-Description of Directory Code/Interfaces/
+Description of Directory Insight/Auxiliary:
 
 This directory is meant for code that interfaces packages
 to Insight. The interface code typically requires external
