@@ -1,0 +1,6 @@
+E:/Insight-clean/WorkDirData/MultichannelTissueClassificationValidation
+_FLw.raw
+_T2w.raw
+E:/Insight-clean/WorkDir/MultichannelTissueClassificationValidation/Results/MRFKmeansMSoutput.txt
+2
+phantom 11 NoParamFile.txt
