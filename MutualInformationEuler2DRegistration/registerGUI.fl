@@ -12,7 +12,8 @@ class RegisterGUI {open : {public RegisterApplication}
     Fl_Window winMain {
       label {Mutual Information 2D Registration} open
       xywh {302 69 430 289} labeltype NORMAL_LABEL
-      code0 {\#include <RegisterApplication.h>} visible
+      code0 {\#if defined(_MSC_VER)\n\#pragma warning ( disable : 4786 )\n\#endif}
+      code1 {\#include <RegisterApplication.h>} visible
     } {
       Fl_Group grpControls {open
         xywh {15 15 400 210}

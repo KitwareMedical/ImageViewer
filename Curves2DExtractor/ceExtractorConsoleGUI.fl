@@ -11,8 +11,9 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
     Fl_Window consoleWindow {
       label {2D Curves Extractor Console} open
       xywh {5 23 1012 391}
-      code0 {\#include <ceExtractorConsoleBase.h>}
-      code1 {\#include <fltkLightButton.h>} visible
+      code0 {\#if defined(_MSC_VER)\n\#pragma warning ( disable : 4786 )\n\#endif}
+      code1 {\#include <ceExtractorConsoleBase.h>}
+      code2 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
         xywh {5 5 995 255}
