@@ -5,7 +5,7 @@ MetaFileLib
 MetaImageLib
 itkWriteMetaImage 
 MetaUtils
-itkImageIOMetaImageCommon
-itkImageIOMetaImage
+itkFileIOMetaImageCommon
+itkFileIOMetaImage
 )
 
