@@ -160,7 +160,6 @@ void logImage(ImagePointer source, ImagePointer target)
   
   ImageType::PixelType pixel ;
   float log_pixel ;
-  int count = 0 ;
   while (!s_iter.IsAtEnd())
     {
       pixel = s_iter.Get() ;

@@ -68,12 +68,16 @@ void generateBiasImage(BiasField& biasField, ImagePointer output)
   ImageType::RegionType region ;
 
   BiasField::DomainSizeType biasSize = biasField.GetDomainSize() ;
-  for (int i = 0 ; i < ImageType::ImageDimension ; i++)
+  for (unsigned int i = 0 ; i < ImageType::ImageDimension ; i++)
     {
       if (i < biasField.GetDimension())
+        {
         size[i] = biasSize[i] ;
+        }
       else
+        {
         size[i] = 0 ;
+        }
 
       index[i] = 0 ;
     }
@@ -139,14 +143,14 @@ int main(int argc, char* argv[])
           exit(0) ;
         }
 
-      for (int i = 0 ; i < sizes.size() ; i++)
+      for (unsigned int i = 0 ; i < sizes.size() ; i++)
         {
-          if (i < 3)
-            {
-              biasSize.resize(biasDimension + 1) ;
-              biasSize[biasDimension] = sizes[i] ;
-              biasDimension++ ;
-            }
+        if (i < 3)
+          {
+          biasSize.resize(biasDimension + 1) ;
+          biasSize[biasDimension] = sizes[i] ;
+          biasDimension++ ;
+          }
         }
     }
   catch(OptionList::RequiredOptionMissing e)

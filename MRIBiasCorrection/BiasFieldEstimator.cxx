@@ -100,8 +100,10 @@ void printResult(Corrector::Pointer filter, OptionList& options)
   Corrector::BiasFieldType::DomainSizeType sizes = 
                                         filter->GetBiasFieldDomainSize() ;
   std::cout << " --size " ;
-  for (int i = 0 ; i < sizes.size() ; i++)
+  for (unsigned int i = 0 ; i < sizes.size() ; i++)
+    {
     std::cout << sizes[i] << " " ;
+    }
   
   std::cout << "--grow " << filter->GetOptimizerGrowthFactor() ;
   std::cout << " --shrink " << filter->GetOptimizerShrinkFactor() ;

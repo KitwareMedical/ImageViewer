@@ -137,7 +137,6 @@ int main(int argc, char* argv[])
   int pixelCount = 0 ;
   int sliceNo = 0 ;
   ImageType::PixelType pixelValue ;
-  double middle = binSize / 2.0 ;
 
   std::cout << "Slice\tIntensity\tFrequency" << std::endl ;
 

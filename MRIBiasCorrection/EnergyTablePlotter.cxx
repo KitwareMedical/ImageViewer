@@ -96,11 +96,11 @@ int main(int argc, char* argv[])
   
   if (useLog)
     { 
-      for (int i = 0 ; i < classMeans.size() ; i++) 
-        {
-          classSigmas[i] = log(1.0 + classSigmas[i] / (classMeans[i] + 1.0)) ;
-          classMeans[i] = log(classMeans[i] + 1.0) ;
-        }
+    for (unsigned int i = 0 ; i < classMeans.size() ; i++) 
+      {
+      classSigmas[i] = log(1.0 + classSigmas[i] / (classMeans[i] + 1.0)) ;
+      classMeans[i] = log(classMeans[i] + 1.0) ;
+      }
     }
 
   EnergyFunction energy(classMeans, classSigmas) ;
