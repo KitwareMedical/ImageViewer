@@ -94,6 +94,19 @@ IF( ITK_WRAP_TCL )
 ENDIF( ITK_WRAP_TCL )
 
 
+# Add an option to build the Tcl Wrap for the itk::Image class
+IF( ITK_WRAP_TCL )
+  IF( GCCXML )
+    IF( CABLE )
+      IF( TCL_TCLSH )
+        SUBDIRS(TclWrappedImage)
+      ENDIF( TCL_TCLSH )
+    ENDIF( CABLE )
+  ENDIF( GCCXML )
+ENDIF( ITK_WRAP_TCL )
+
+
+
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
