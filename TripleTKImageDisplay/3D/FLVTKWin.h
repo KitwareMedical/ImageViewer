@@ -9,7 +9,7 @@ Limitations:
 #ifndef _FLVTKWin_h
 #define _FLVTKWin_h
 
-#include <vtkrenderwindow.h> 
+#include <vtkRenderWindow.h> 
 #include <FL/Fl_Box.H>
 
 class FLVTKWin:public Fl_Box
