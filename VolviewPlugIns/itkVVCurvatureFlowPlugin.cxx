@@ -6,6 +6,8 @@
 
 #include "itkImage.h"
 #include "itkCurvatureFlowImageFilter.h"
+#include "itkImportImageFilter.h"
+#include "itkCastImageFilter.h"
 
 
 
@@ -30,8 +32,71 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
   int *dim = info->InputVolumeDimensions;
 
   // Instantiate the image types
-  typedef itk::Image< unsigned char, 3 > InputImageType;
-  typedef itk::Image< float,         3 > InternalImageType;
+  typedef unsigned char                  InputPixelType;
+  typedef float                          InternalPixelType;
+
+  const unsigned int Dimension = 3;
+
+  typedef itk::Image< InputPixelType,    Dimension > InputImageType;
+  typedef itk::Image< InternalPixelType, Dimension > InternalImageType;
+
+
+  // Instantiate the ImportImageFilter
+  // This filter is used for building an ITK image using 
+  // the data passed in a buffer.
+  typedef itk::ImportImageFilter< InputPixelType, 
+                                  Dimension       > ImportFilterType;
+
+  ImportFilterType::Pointer importFilter = ImportFilterType::New();
+
+  typedef ImportFilterType::SizeType      SizeType;
+  typedef ImportFilterType::IndexType     IndexType;
+
+  SizeType   size;
+  IndexType  start;
+
+  double     origin[3];
+  double     spacing[3];
+
+  for(unsigned int i=0; i<3; i++)
+    {
+    size[i]     =  info->InputVolumeDimensions[i];
+    origin[i]   =  info->InputVolumeOrigin[i];
+    spacing[i]  =  info->InputVolumeSpacing[i];
+    start[i]    =  0;
+    }
+
+  typedef ImportFilterType::RegionType    RegionType;
+
+  RegionType region;
+
+  region.SetIndex( start );
+  region.SetSize(  size  );
+ 
+  importFilter->SetSpacing( spacing );
+  importFilter->SetOrigin(  origin  );
+  importFilter->SetRegion(  region  );
+
+  const unsigned int totalNumberOfPixels = region.GetNumberOfPixels();
+
+  const bool         importFilterWillNotDeleteTheBuffer = true;
+
+  importFilter->SetImportPointer( static_cast< InputPixelType * >( pds->inData ), 
+                                  totalNumberOfPixels,
+                                  importFilterWillNotDeleteTheBuffer );
+
+  // Instantiate the CastImageFilter
+  // This filter is used for converting the pixel type from the input
+  // data buffer into 'float' pixel types. This is required because
+  // the CurvatureFlowImageFilter only operates on float and double
+  // pixel types.
+  typedef itk::CastImageFilter< InputImageType, 
+                                InternalImageType > CastFilterType;
+
+  CastFilterType::Pointer castFilter = CastFilterType::New();
+
+  castFilter->SetInput( importFilter->GetOutput() );
+
 
   // Instantiate the filter type
   typedef itk::CurvatureFlowImageFilter< 
@@ -44,7 +109,9 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
     atoi(info->GUIItems[0].CurrentValue));
   curvaturFlowFilter->SetTimeStep(
     atof(info->GUIItems[1].CurrentValue));
+  curvaturFlowFilter->SetInput( castFilter->GetOutput() );
 
+  curvaturFlowFilter->Update();
 
 /*
   // setup progress
@@ -139,9 +206,9 @@ void VV_PLUGIN_EXPORT vvCurvatureFlowInit(vtkVVPluginInfo *info)
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
   info->Name = "Curvature Flow Anisotropic Diffusion";
-  info->TerseDocumentation = "Smooth the volume by computing anisotropic diffusion regulated by Curvature";
+  info->TerseDocumentation = "Anisotropic diffusion smoothing";
   info->FullDocumentation = 
-    "This filter applies a edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of iso-contours in the image. This process the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
+    "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of iso-contours in the image. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
