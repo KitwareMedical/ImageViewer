@@ -1,25 +1,25 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    InterSliceIntensityCorrector.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Program:   Insight Segmentation & Registration Toolkit
+Module:    InterSliceIntensityCorrector.cxx
+Language:  C++
+Date:      $Date$
+Version:   $Revision$
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright (c) 2002 Insight Consortium. All rights reserved.
+See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #include <string>
 #include <vector>
 #include <vnl/vnl_math.h>
 
-#include "mydefs.h"
 #include "imageutils.h"
+#include "itkWriteMetaImage.h"
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
 
@@ -33,7 +33,8 @@ void print_usage()
   print_line("       --class-sigma sigma(1) ... sigma(i)" ) ;
   print_line("       --use-log [yes|no]") ;
   print_line("       [--input-mask file]  [--output-mask file]" ) ;
-  print_line("       [--grow double] [--shrink double] [--max-iteration int]");
+  print_line("       [--grow double] [--shrink double]") ;
+  print_line("       [--inter-slice-max-iteration int]");
   print_line("       [--init-step-size double] [--slice-direction [0 - 2]]");
 
   print_line("");
@@ -61,8 +62,8 @@ void print_usage()
   print_line("--shrink double") ;
   print_line("        stepsize shrink factor ") ;
   print_line("        [default grow^(-0.25)]" ) ; 
-  print_line("--max-iteration int") ;
-  print_line("        maximal number of iterations") ;
+  print_line("--inter-slice-max-iteration int") ;
+  print_line("        maximal number of iterations for inter-slice intensity correction") ;
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
   print_line("        inital step size [default 1.02]" );
@@ -94,7 +95,7 @@ int main(int argc, char* argv[])
 
   OptionList options(argc, argv) ;
 
-  typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType> Corrector ;
+  typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> Corrector ;
   Corrector::Pointer filter = Corrector::New() ;
 
   std::string inputFileName ;
@@ -129,7 +130,7 @@ int main(int argc, char* argv[])
       options.GetMultiDoubleOption("class-sigma", &classSigmas, true) ;
 
       // get optimizer options
-      maximumIteration = options.GetIntOption("max-iteration", 20, false) ;
+      maximumIteration = options.GetIntOption("inter-slice-max-iteration", 20, false) ;
       grow = options.GetDoubleOption("grow", 1.05, false) ;
       shrink = pow(grow, -0.25) ;
       shrink = options.GetDoubleOption("shrink", shrink, false) ;
@@ -145,30 +146,40 @@ int main(int argc, char* argv[])
 
 
   // load images
-  ImagePointer input = ImageType::New() ;
-  MaskPointer inputMask = MaskType::New() ;
-  MaskPointer outputMask = MaskType::New() ;
-
+  ImagePointer input ;
+  MaskPointer inputMask ;
+  MaskPointer outputMask ;
+  
+  ImageReaderType::Pointer imageReader = ImageReaderType::New() ;
+  MaskReaderType::Pointer maskReader = MaskReaderType::New() ;
+  MaskReaderType::Pointer maskReader2 = MaskReaderType::New() ;
   try
     {
       std::cout << "Loading images..." << std::endl ;
-      loadImage(inputFileName, input) ;
+      imageReader->SetFileName(inputFileName.c_str()) ;
+      imageReader->Update() ;
+      input = imageReader->GetOutput() ;
       filter->SetInput(input) ;
+      std::cout << "Input image loaded." << std::endl ;
       if (inputMaskFileName != "")
         {
-          loadMask(inputMaskFileName, inputMask) ;
+          maskReader->SetFileName(inputMaskFileName.c_str()) ;
+          maskReader->Update() ;
+          inputMask = maskReader->GetOutput() ;
           filter->SetInputMask(inputMask) ;
+          std::cout << "Input mask image loaded." << std::endl ;
         }
-
       if (outputMaskFileName != "")
         {
-          loadMask(outputMaskFileName, outputMask) ;
+          maskReader2->SetFileName(outputMaskFileName.c_str()) ;
+          maskReader2->Update() ;
+          outputMask = maskReader2->GetOutput() ;
           filter->SetOutputMask(outputMask) ;
+          std::cout << "Output mask image loaded." << std::endl ;
         }
-
       std::cout << "Images loaded." << std::endl ;
     }
-  catch (ImageIOError &e)
+  catch (ImageIOError e)
     {
       std::cout << "Error: " << e.Operation << " file name:" 
                 << e.FileName << std::endl ;
@@ -187,7 +198,7 @@ int main(int argc, char* argv[])
   // setting standard optimizer parameters 
   filter->SetOptimizerGrowthFactor(grow) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
-  filter->SetOptimizerMaximumIteration(maximumIteration) ;
+  filter->SetInterSliceCorrectionMaximumIteration(maximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;
   // this member function call is not necessary since the filter's internal
   // InterSliceIntensityCorrection() member sets the bias field degree to
@@ -206,16 +217,11 @@ int main(int argc, char* argv[])
   filter->Update() ;
 
   std::cout << "Writing the output image..." << std::endl ;
-  try
-    {
-      writeImage(outputFileName, output) ;
-    }
-  catch(ImageIOError &e)
-    {
-      std::cout << "Error: " << e.Operation << " file name:" 
-                << e.FileName << std::endl ;
-      exit(0) ;
-    }
+  typedef itk::WriteMetaImage<ImageType> Writer ;
+  Writer::Pointer writer = Writer::New() ;
+  writer->SetInput(output) ;
+  writer->SetFileName(outputFileName.c_str()) ;
+  writer->GenerateData() ;
 
   return 0 ;
 }
