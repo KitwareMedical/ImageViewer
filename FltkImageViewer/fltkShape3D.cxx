@@ -68,6 +68,14 @@ Shape3D::Shape3D()
   m_AutoSensing       = true;
   m_RestoreTransform  = false;
   
+  m_DrawCommand = DrawCommandType::New();
+  m_DrawCommand->SetCallbackFunction( this, &(Self::glDraw) );
+
+  m_DisplayListUpdateCommand = DisplayListUpdateCommandType::New();
+  m_DisplayListUpdateCommand->SetCallbackFunction( 
+                                  this, 
+                                  &(Self::ScheduleToUpdateDisplayList) );
+        
 }
 
 
@@ -82,16 +90,17 @@ Shape3D::~Shape3D()
 {
 
   if( m_Father ) 
-  {
+    {
     m_Father->RemoveComponent( this );
-  }
+    }
 
   ContainerType::iterator it = m_Components.begin();
   while( it != m_Components.end() )
-  {
+    {
     (*it)->m_Father = 0;
     ++it;
-  }
+    }
+
   m_Components.clear();
 
   // The only secure way to destroy the 
@@ -99,7 +108,10 @@ Shape3D::~Shape3D()
   // schedule its removal and force a 
   // last and slow redraw
   // ... before calling the destructor
-  RemoveDisplayList();
+  // So maybe the GL windows should be
+  // observers of the DestroyEvent of 
+  // this object.
+  ScheduleToRemoveDisplayList();
 
 }
 
@@ -147,7 +159,7 @@ Shape3D
 //    during the next redraw
 //
 //--------------------------------------------------
-void Shape3D::ScheduleToUpdateDisplayList( void )
+void Shape3D::ScheduleToUpdateDisplayList( void ) const
 {
   m_ScheduledToUpdateDisplayList = true;
   if( m_Father )
@@ -179,6 +191,31 @@ void Shape3D::SetDrawingMode(enum drawingModes newmode)
   {
     ScheduleToUpdateDisplayList();
   }
+}
+
+
+//--------------------------------------------------
+//
+//    Get Draw Command
+//
+//--------------------------------------------------
+Shape3D::DrawCommandPointer
+Shape3D::GetDrawCommand(void) 
+{
+  return m_DrawCommand.GetPointer();
+}
+
+
+//--------------------------------------------------
+//
+//    Get Command for scheduling the 
+//    update of the display list
+//
+//--------------------------------------------------
+Shape3D::DisplayListUpdateCommandPointer
+Shape3D::GetDisplayListUpdateCommand(void) 
+{
+  return m_DisplayListUpdateCommand.GetPointer();
 }
 
 
@@ -336,7 +373,7 @@ void Shape3D::glMaterialColor(void) const
 //      Remove display list
 //
 //--------------------------------------------------
-void Shape3D::RemoveDisplayList(void)
+void Shape3D::ScheduleToRemoveDisplayList(void) const
 {
   m_ScheduledToRemoveDisplayList = true;
 }

@@ -54,8 +54,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkObject.h"
 #include "itkObjectFactory.h"
 #include "itkPoint.h"
-#include "fltkGlDrawer.h"
 #include "fltkCommandEvents.h"
+#include "itkCommand.h"
 #include <list>
 #include <FL/gl.h>
 
@@ -72,8 +72,8 @@ namespace fltk {
  *  complex structures.
  * 
  */
-class ITK_EXPORT Shape3D :  public itk::Object, 
-                            public fltk::GlDrawer 
+class ITK_EXPORT Shape3D :  public itk::Object 
+ 
                            
 {
 
@@ -133,6 +133,19 @@ public:
   typedef itk::Vector< double, 3 >    VectorType;
   
 
+  /**
+   * Command that will draw the object
+   */
+  typedef itk::SimpleMemberCommand< const Self >   DrawCommandType;
+  typedef DrawCommandType::Pointer                 DrawCommandPointer;
+
+  /**
+   * Command that will schedule the Display list for an Update
+   */
+  typedef itk::SimpleMemberCommand< const Self >   DisplayListUpdateCommandType;
+  typedef DisplayListUpdateCommandType::Pointer    DisplayListUpdateCommandPointer;
+
+ 
   /**
    *   Output stream type
    */ 
@@ -220,6 +233,18 @@ public:
    */
   drawingModes GetDrawingMode(void) const { return m_DrawingMode; }
 
+
+  /**
+   * Get the Observer/Command that will redraw the object
+   */
+  DrawCommandPointer GetDrawCommand(void);
+
+   /**
+   * Get the Observer/Command that will redraw the object
+   */
+  DisplayListUpdateCommandPointer GetDisplayListUpdateCommand(void);
+
+  
   /**
    * Returns the OpenGL displayList compile mode 
    */
@@ -315,12 +340,12 @@ public:
   /**
    * Schedule the display list to be modified in the next redraw
    */
-  void ScheduleToUpdateDisplayList(void);
+  void ScheduleToUpdateDisplayList(void) const;
 
   /**
    * Schedule the display list to be removed in the next redraw
    */
-  void RemoveDisplayList(void);
+  void ScheduleToRemoveDisplayList(void) const;
   
   /**
    * Adds another shape as components. 
@@ -422,6 +447,16 @@ private:
    */
   mutable PointType   m_CurrentPosition;
 
+
+  /** 
+   *  Observer/Command to be passed to OpenGl windows
+   */ 
+  DrawCommandPointer   m_DrawCommand;
+
+  /** 
+   *  Observer/Command to be passed to modifiers of the point set
+   */ 
+  DisplayListUpdateCommandPointer   m_DisplayListUpdateCommand;
 
 
 };
