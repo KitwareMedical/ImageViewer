@@ -58,13 +58,8 @@ protected:
   //Default value is 0, which isn't a very useful
   //value for MIP projections anyway.
 
-
-
-
   ImagePointer     mImData;
-   
   OverlayPointer   mMask;
-
   bool             mUseMask;
 
   vtkStructuredPoints      *mVol;
@@ -112,7 +107,7 @@ public:
   vtkVolumeProperty       * property(void);
   vtkVolumeRayCastMapper  * mapper(void);
   vtkStructuredPoints     * volume(void);
-  vtkScalars              * scalars(void);
+  vtkUnsignedCharArray    * scalars(void);
 
   void update(void);
 };
@@ -404,7 +399,7 @@ vtkStructuredPoints * VTKVolRen<T>::volume(void)
   }
 
 template <class T>
-vtkScalars * VTKVolRen<T>::scalars(void)
+vtkUnsignedCharArray * VTKVolRen<T>::scalars(void)
   {
   return mScalars;
   }
