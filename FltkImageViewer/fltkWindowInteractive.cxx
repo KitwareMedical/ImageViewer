@@ -36,13 +36,13 @@ WindowInteractive
   :Fl_Window(x,y,w,h,label) 
 {
 
-  m_Zoom     = 1.0;
+  m_Zoom     = 1.0f;
 
-  m_Offset.Fill( 0.0 );
-  m_OffsetVariation.Fill( 0.0 );
+  m_Offset.Fill(  itk::NumericTraits<OffsetType::ValueType>::Zero );
+  m_OffsetVariation.Fill( itk::NumericTraits<OffsetVariationType::ValueType>::Zero );
 
-  m_Mouse_a.Fill( 0.0 );
-  m_Mouse_b.Fill( 0.0 );
+  m_Mouse_a.Fill( itk::NumericTraits<ScreenPointType::ValueType>::Zero );
+  m_Mouse_b.Fill( itk::NumericTraits<ScreenPointType::ValueType>::Zero );
 
 }
 
@@ -135,8 +135,8 @@ void
 WindowInteractive
 ::ClearOffset(void) 
 {
-  m_Offset.Fill( 0.0 );  
-  m_OffsetVariation.Fill( 0.0 );
+  m_Offset.Fill(  itk::NumericTraits<OffsetType::ValueType>::Zero );
+  m_OffsetVariation.Fill( itk::NumericTraits<OffsetVariationType::ValueType>::Zero );
 }
 
 
