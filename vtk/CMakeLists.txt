@@ -8,6 +8,6 @@ IF (HAS_VTK)
   FOREACH(exe vtk2itk vtk2itkDouble itkCurvatureFlowToVTK
               itkVTKtoITKtoVTK itkPNGVTKtoITKtoVTK)
     ADD_EXECUTABLE(${exe} ${exe}.cxx)
-    TARGET_LINK_LIBRARIES(${exe} ITKBasicFilters vtkRendering)
+    TARGET_LINK_LIBRARIES(${exe} ITKBasicFilters vtkRendering vtkImaging vtkIO)
   ENDFOREACH(exe)
 ENDIF (HAS_VTK)
