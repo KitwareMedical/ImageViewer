@@ -53,9 +53,11 @@ int main(int argc, char **argv)
   // Process Options
   OptionList options(argc, argv) ;
   std::string study1Prefix;
+  std::string study1ByteOrder("BigEndian");
   std::vector<int> study1Resolution(3);
   std::vector<double> study1Spacing(3);
   std::string study2Prefix;
+  std::string study2ByteOrder("BigEndian");
   std::vector<int> study2Resolution(3);
   std::vector<double> study2Spacing(3);
   std::vector<int> shrinkFactors;
@@ -67,9 +69,11 @@ int main(int argc, char **argv)
   try
     {
     options.GetStringOption("study1Prefix", &study1Prefix, true);
+    options.GetStringOption("study1ByteOrder", &study1ByteOrder, false);
     options.GetMultiDoubleOption("study1Spacing", &study1Spacing, true);
     options.GetMultiIntOption("study1Resolution", &study1Resolution, true);
     options.GetStringOption("study2Prefix", &study2Prefix, true);
+    options.GetStringOption("study2ByteOrder", &study2ByteOrder, false);
     options.GetMultiDoubleOption("study2Spacing", &study2Spacing, true);
     options.GetMultiIntOption("study2Resolution", &study2Resolution, true);
     options.GetMultiIntOption("shrink", &shrinkFactors, true);
@@ -106,7 +110,21 @@ int main(int argc, char **argv)
   vtkImageReader *movingReader = vtkImageReader::New();
     movingReader->SetDataScalarTypeToUnsignedShort();
     movingReader->SetFilePrefix(study1Prefix.c_str());
-    movingReader->SetDataByteOrderToBigEndian();
+    if (study1ByteOrder == "BigEndian")
+      {
+      movingReader->SetDataByteOrderToBigEndian();
+      }
+    else if (study1ByteOrder == "LittleEndian")
+      {
+      movingReader->SetDataByteOrderToLittleEndian() ;
+      }
+    else
+      {
+      std::cerr << "Error: study1ByteOrder is " << study1ByteOrder
+                << " but must be BigEndian or LittleEndian." 
+                << std::endl ;
+      exit(0) ;
+      }
     movingReader->SetDataExtent(0, study1Resolution[0] - 1,
                                 0, study1Resolution[1] - 1,
                                 1, study1Resolution[2]);
@@ -139,7 +157,21 @@ int main(int argc, char **argv)
    vtkImageReader *fixedReader = vtkImageReader::New();
     fixedReader->SetDataScalarTypeToUnsignedShort();
     fixedReader->SetFilePrefix(study2Prefix.c_str());
-    fixedReader->SetDataByteOrderToBigEndian();
+    if (study2ByteOrder == "BigEndian")
+      {
+      fixedReader->SetDataByteOrderToBigEndian();
+      }
+    else if (study2ByteOrder == "LittleEndian")
+      {
+      fixedReader->SetDataByteOrderToLittleEndian() ;
+      }
+    else
+      {
+      std::cerr << "Error: study2ByteOrder is " << study2ByteOrder
+                << " but must be BigEndian or LittleEndian." 
+                << std::endl ;
+      exit(0) ;
+      }
     fixedReader->SetDataExtent(0, study2Resolution[0] - 1,
                                0, study2Resolution[1] - 1,
                                1, study2Resolution[2]);
@@ -319,14 +351,16 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.1 $  $Date: 2002-05-30 02:05:56 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.2 $  $Date: 2002-12-30 16:15:15 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
   std::cerr <<  "    --study1Resolution x y z" << std::endl;
+  std::cerr <<  "    --study1ByteOrder BigEndian | LittleEndian" << std::endl;
   std::cerr <<  "    --study1Spacing x y z" << std::endl;
   std::cerr <<  "    --study2Prefix prefix" << std::endl;
   std::cerr <<  "    --study2Resolution x y z" << std::endl;
+  std::cerr <<  "    --study2ByteOrder BigEndian | LittleEndian" << std::endl;
   std::cerr <<  "    --study2Spacing x y z" << std::endl;
   std::cerr <<  "    --shrink i j k" << std::endl;
   std::cerr <<  "    --translateScale s" << std::endl;
