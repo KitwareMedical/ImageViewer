@@ -54,27 +54,27 @@ vvGradientAnisotropicDiffusion
 vvCurvatureAnisotropicDiffusion
 vvConfidenceConnected
 vvSigmoid
+vvGradientMagnitudeRecursiveGaussian
 )
 
 # probably could be cleaned up...
 ADD_LIBRARY(vvCurvatureFlow MODULE itkVVCurvatureFlowPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvCurvatureFlow ITKCommon ITKBasicFilters)
 
-# probably could be cleaned up...
 ADD_LIBRARY(vvGradientAnisotropicDiffusion MODULE itkVVGradientAnisotropicDiffusionPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvGradientAnisotropicDiffusion ITKCommon ITKBasicFilters)
 
-# probably could be cleaned up...
 ADD_LIBRARY(vvCurvatureAnisotropicDiffusion MODULE itkVVCurvatureAnisotropicDiffusionPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvCurvatureAnisotropicDiffusion ITKCommon ITKBasicFilters)
 
-# probably could be cleaned up...
 ADD_LIBRARY(vvConfidenceConnected MODULE itkVVConfidenceConnectedPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvConfidenceConnected ITKCommon ITKBasicFilters)
 
-# probably could be cleaned up...
 ADD_LIBRARY(vvSigmoid MODULE itkVVSigmoidPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvSigmoid ITKCommon ITKBasicFilters)
+
+ADD_LIBRARY(vvGradientMagnitudeRecursiveGaussian MODULE itkVVGradientMagnitudeRecursiveGaussianPlugin.cxx)
+TARGET_LINK_LIBRARIES(vvGradientMagnitudeRecursiveGaussian ITKCommon ITKBasicFilters)
 
 
 # copy the plugins to a plugin directory
