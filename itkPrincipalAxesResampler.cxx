@@ -29,7 +29,7 @@ integer.  (But see below for hooks to change these parameters.)
 
 #include "itkAffineTransform.h"
 #include "itkPhysicalImage.h"
-#include "itkPhysicalImageMomentsCalculator.h"
+#include "itkImageMomentsCalculator.h"
 #include "itkSimpleImageRegionIterator.h"
 #include "itkLinearInterpolateImageFunction.h"
 
@@ -44,7 +44,7 @@ typedef ImageType::AffineTransformType      AffineTransformType;
 
 typedef itk::Index<NDimensions>                    ImageIndexType;
 typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
-typedef itk::PhysicalImageMomentsCalculator<PixelType, NDimensions>  ImageMomentsCalculatorType;
+typedef itk::ImageMomentsCalculator<PixelType, NDimensions>  ImageMomentsCalculatorType;
 typedef itk::LinearInterpolateImageFunction<ImageType>  InterpolatorType;
 typedef itk::Point<double, NDimensions>            PointType;
 
