@@ -144,7 +144,7 @@ vtkImageMapper mapDiff
 vtkActor2D imgCheckers
   imgCheckers SetMapper mapCheckers
 
-set label1 [lrange [file split $study1Prefix] 3 end]
+set label1 [lrange [file split $study1Prefix] 4 end]
 vtkTextMapper mapText1
   mapText1 SetInput "Study: $label1"
   mapText1 SetFontSize 12
@@ -157,7 +157,7 @@ vtkActor2D text1
 vtkActor2D img1
   img1 SetMapper map1
 
-set label2 [lrange [file split $study2Prefix] 3 end]
+set label2 [lrange [file split $study2Prefix] 4 end]
 vtkTextMapper mapText2
 mapText2 SetInput "Study: $label2"
   mapText2 SetFontSize 12
@@ -183,19 +183,19 @@ vtkActor2D summary
   summary SetPosition 5 20
  [summary GetProperty] SetColor 0 1 0
 
-vtkImager imagerCheckers
+vtkRenderer imagerCheckers
   imagerCheckers AddActor2D imgCheckers
   imagerCheckers AddActor2D summary
 
-vtkImager imager1
+vtkRenderer imager1
   imager1 AddActor2D img1
   imager1 AddActor2D text1
 
-vtkImager imager2
+vtkRenderer imager2
   imager2 AddActor2D img2
   imager2 AddActor2D text2
 
-vtkImager imagerDiff
+vtkRenderer imagerDiff
   imagerDiff AddActor2D imgDiff
 
 imager1 SetViewport 0 0 .5 .5
@@ -203,14 +203,14 @@ imager2 SetViewport .5 0 1 .5
 imagerCheckers SetViewport 0 .5 .5 1
 imagerDiff SetViewport .5 .5 1 1
 
-vtkImageWindow imgWin
-  imgWin AddImager imagerCheckers
-  imgWin AddImager imager1
-  imgWin AddImager imager2
-  imgWin AddImager imagerDiff
+vtkRenderWindow renWin
+  renWin AddRenderer imagerCheckers
+  renWin AddRenderer imager1
+  renWin AddRenderer imager2
+  renWin AddRenderer imagerDiff
 
-imgWin SetSize 512 512
-imgWin Render
+renWin SetSize 512 512
+renWin Render
 
 #make interface
 source [file join [file dirname [info script]] WindowLevelInterface2.tcl]
