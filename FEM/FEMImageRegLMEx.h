@@ -123,6 +123,7 @@ public:
   typedef unsigned char ImageDataType;
   typedef Image< unsigned char, 2 > ImageType;
   typedef Image< float, 2 > FloatImageType;
+  typedef ImageType::SizeType ImageSizeType;
   enum { ImageDimension = 2 };
   typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
   typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType;
@@ -154,9 +155,8 @@ public:
   /** Helper functions */
   /** Reads images from m_ReferenceFileName and m_TargetFileName */
   void  ReadImages();  
-  /** This function generates a rectangular mesh of MeshResolution size */
-  void  CreateMesh(); 
-  void  CreateMesh(double SquareMeshOrigin, double SquareMeshSize, 
+  /** This function generates a rectangular mesh of ElementsPerSide^D size */
+  void CreateMesh(ImageSizeType MeshOrigin, ImageSizeType MeshSize, 
                               double ElementsPerSide, Solver& S);
   /** The loads are entered into the solver. */
   void ApplyLoads(); 
@@ -171,6 +171,8 @@ public:
   Float EvaluateEnergy();
   /** Interpolates the vector field over the domain */
   void  GetVectorField(); 
+  /** This is used for changing between mesh resolutions */
+  void SampleVectorFieldAtNodes();
   /** Applies the warp to the reference image */
   void  WarpImage();      
 
@@ -191,7 +193,7 @@ public:
   void SetRho(Float r) { m_Rho=r;} /** Mass matrix weight */  
   void SetDescentDirectionMinimize() { m_DescentDirection=positive;} /** Tries to minimize energy */
   void SetDescentDirectionMaximize() { m_DescentDirection=negative;} /** Tries to maximize energy */
-  void DoLineSearch(bool b) { m_DoLineSearch=b; } /** Finds the minimum energy between the current and next solution by linear search.*/
+  void DoLineSearch(bool b) { m_DoLineSearchOnImageEnergy=b; } /** Finds the minimum energy between the current and next solution by linear search.*/
   void DoMultiRes(bool b) { m_DoMultiRes=b; } 
   void DoSearchForMinAtEachResolution(bool b) { m_SearchForMinAtEachLevel=b; } 
   void UseLandmarks(bool b) {m_UseLandmarks=b;}
@@ -211,11 +213,14 @@ public:
   float m_SmoothingStep;// smoothing step size
   Float m_dT; // time step
   Float m_E;  // elasticity 
-  ImageType::SizeType ImageSize; // image size
+  ImageSizeType m_ImageSize; // image size
+  ImageSizeType m_ImageOrigin; // image size
+  /** Gives the ratio of original image size to current image size - for dealing with multi-res.*/
+  ImageSizeType m_ImageScaling; 
   Float m_Energy; // current value of energy
   Float m_MinE;  // minimum recorded energy
   Float m_Rho;   // mass matrix weight
-  bool  m_DoLineSearch;  
+  bool  m_DoLineSearchOnImageEnergy;  
   bool  m_DoMultiRes;
   bool  m_SearchForMinAtEachLevel;
   bool  m_UseLandmarks;
