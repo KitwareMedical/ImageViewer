@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
   int n;
   if (argc < 2)
     {
-      cout << "Usage: LevelSetFunctionTest no_of_iterations\n" << endl;
+      std::cout << "Usage: LevelSetFunctionTest no_of_iterations\n" << std::endl;
       exit(-1);
     }
   sscanf(argv[1],"%d",&n);
