@@ -73,7 +73,7 @@ public:
    * Currently only a single string is returned, but can be modified
    * so that a whole list of strings is returned.
    */
-  virtual FileExtensionsListType GetSupportedFileExtensions () const;
+  virtual FileExtensionsListType& GetSupportedFileExtensions () const;
 
   /**
    * Specify the comment string

@@ -235,7 +235,7 @@ void FileIOMetaImage::ReadHeader(const std::string fileName)
   m_MetaImage = NULL;
 }
 
-FileIOMetaImage::FileExtensionsListType 
+FileIOMetaImage::FileExtensionsListType& 
 FileIOMetaImage::GetSupportedFileExtensions() const
 {
   static FileExtensionsListType fileExtensionsList;
