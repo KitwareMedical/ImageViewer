@@ -50,6 +50,7 @@ public:
 
 protected:
   virtual void MapPoints(void);
+  virtual void MapPointsITK(void);
   virtual void CreateSourcePoints(void);
 
 private:

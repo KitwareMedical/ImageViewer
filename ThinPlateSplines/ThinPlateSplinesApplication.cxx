@@ -65,6 +65,28 @@ ThinPlateSplinesApplication
 
 
 
+void
+ThinPlateSplinesApplication
+::MapPointsITK(void)
+{
+  const int splineType = splineKernelITKChoice->value();
+  switch( splineType )
+  {
+  case 0:
+    this->MapPointsThinPlateSplineITK();
+    break;
+  case 1:
+    this->MapPointsElasticBodySplineITK();
+    break;
+  case 2:
+    this->MapPointsVolumeSplineITK();
+    break;
+  }
+}
+  
+
+
+
 void 
 ThinPlateSplinesApplication
 ::CreateSourcePoints()

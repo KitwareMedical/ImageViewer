@@ -59,6 +59,10 @@ ThinPlateSplinesApplicationBase
 
   m_ThinPlateSplineTransformITK = ThinPlateSplineTransformType::New();
 
+  m_ElasticBodySplineTransformITK = ElasticBodySplineTransformType::New();
+
+  m_VolumeSplineTransformITK = VolumeSplineTransformType::New();
+
   m_ThinPlateSplineTransformVTK = vtkThinPlateSplineTransform::New();
 
 }
@@ -364,7 +368,7 @@ ThinPlateSplinesApplicationBase
 
   m_VTKPointsTransformedByVTK->SetNumberOfPoints( m_PointsToTransform.size() );
 
-  m_TimeCollector.Start("VTK TPS");
+  m_TimeCollector.Start("VTK Thin Plate Spline");
 
   vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
   while( point != end )
@@ -376,7 +380,7 @@ ThinPlateSplinesApplicationBase
     ++pointCounter;
     }
 
-  m_TimeCollector.Stop("VTK TPS");
+  m_TimeCollector.Stop("VTK Thin Plate Spline");
 
   pointCounter = itk::NumericTraits< vtkIdType >::Zero;
   for( unsigned int i=0; i<m_PointsToTransform.size(); i++ )
@@ -390,10 +394,18 @@ ThinPlateSplinesApplicationBase
  
 
 
-
 void
 ThinPlateSplinesApplicationBase
 ::MapPointsITK(void)
+{
+  // overloaded in the derived class
+}
+  
+
+
+void
+ThinPlateSplinesApplicationBase
+::MapPointsThinPlateSplineITK(void)
 {
  
   m_ThinPlateSplineTransformITK->SetSourceLandmarks( m_SourceLandMarks.GetPointer() );
@@ -405,7 +417,7 @@ ThinPlateSplinesApplicationBase
 
   m_PointsTransformedByITK.clear();
 
-  m_TimeCollector.Start("ITK TPS");
+  m_TimeCollector.Start("ITK Thin Plate Spline");
 
   while( point != end )
     {
@@ -415,7 +427,7 @@ ThinPlateSplinesApplicationBase
     ++point;
     }
 
-  m_TimeCollector.Stop("ITK TPS");
+  m_TimeCollector.Stop("ITK Thin Plate Spline");
 
   // Convert transformed point to a VTK structure for visualization
   m_VTKPointsTransformedByITK->Delete();
@@ -440,6 +452,101 @@ ThinPlateSplinesApplicationBase
 
 
 }
+
+
+void
+ThinPlateSplinesApplicationBase
+::MapPointsElasticBodySplineITK(void)
+{
+ 
+  m_ElasticBodySplineTransformITK->SetSourceLandmarks( m_SourceLandMarks.GetPointer() );
+  m_ElasticBodySplineTransformITK->SetTargetLandmarks( m_TargetLandMarks.GetPointer() );
+  m_ElasticBodySplineTransformITK->ComputeWMatrix();
+
+  PointArrayType::iterator point = m_PointsToTransform.begin();
+  PointArrayType::iterator end   = m_PointsToTransform.end();
+
+  m_PointsTransformedByITK.clear();
+
+  m_TimeCollector.Start("ITK Elastic Body Spline");
+
+  while( point != end )
+    {
+    m_PointsTransformedByITK.push_back( 
+                  m_ElasticBodySplineTransformITK->TransformPoint( *point )
+                  );
+    ++point;
+    }
+
+  m_TimeCollector.Stop("ITK Elastic Body Spline");
+
+  this->ConvertITKMappedPointsToVTK();
+
+}
+
+
+
+void
+ThinPlateSplinesApplicationBase
+::MapPointsVolumeSplineITK(void)
+{
+ 
+  m_VolumeSplineTransformITK->SetSourceLandmarks( m_SourceLandMarks.GetPointer() );
+  m_VolumeSplineTransformITK->SetTargetLandmarks( m_TargetLandMarks.GetPointer() );
+  m_VolumeSplineTransformITK->ComputeWMatrix();
+
+  PointArrayType::iterator point = m_PointsToTransform.begin();
+  PointArrayType::iterator end   = m_PointsToTransform.end();
+
+  m_PointsTransformedByITK.clear();
+
+  m_TimeCollector.Start("ITK Volume Spline");
+
+  while( point != end )
+    {
+    m_PointsTransformedByITK.push_back( 
+                  m_VolumeSplineTransformITK->TransformPoint( *point )
+                  );
+    ++point;
+    }
+
+  m_TimeCollector.Stop("ITK Volume Spline");
+
+  this->ConvertITKMappedPointsToVTK();
+
+}
+
+
+void
+ThinPlateSplinesApplicationBase
+::ConvertITKMappedPointsToVTK(void)
+{
+  // Convert ITK transformed points to a VTK structure for visualization
+  m_VTKPointsTransformedByITK->Delete();
+  m_VTKPointsTransformedByITK = vtkPoints::New();
+
+  m_VTKLinesTransformedByITK->Delete();
+  m_VTKLinesTransformedByITK = vtkCellArray::New();
+
+  m_VTKPointsTransformedByITK->SetNumberOfPoints( m_PointsTransformedByITK.size() );
+
+  PointArrayType::iterator point = m_PointsToTransform.begin();
+  PointArrayType::iterator end   = m_PointsToTransform.end();
+
+  vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
+
+  while( point != end )
+    {
+    const PointType p = *point;
+    m_VTKPointsTransformedByITK->SetPoint( pointCounter, p[0], p[1], p[2] );
+    m_VTKLinesTransformedByITK->InsertNextCell( VTK_VERTEX, &pointCounter );
+    ++point;
+    ++pointCounter;
+    }
+
+
+}
+
 
 
  

@@ -26,6 +26,8 @@
 #include "vtkPoints.h"
 #include "fltkTimeProbesCollector.h"
 #include "itkThinPlateSplineKernelTransform.h"
+#include "itkElasticBodySplineKernelTransform.h"
+#include "itkVolumeSplineKernelTransform.h"
 #include "vtkThinPlateSplineTransform.h"
 
 #include <set>
@@ -56,6 +58,22 @@ public:
 
   typedef ThinPlateSplineTransformType::PointSetType      PointSetType;
   typedef PointSetType::Pointer                           PointSetPointer;
+
+
+  typedef itk::ElasticBodySplineKernelTransform< 
+                              CoordinateRepresentationType,
+                              PointsDimension >  ElasticBodySplineTransformType;
+
+  typedef ElasticBodySplineTransformType::Pointer  ElasticBodySplineTransformPointer;
+
+
+  typedef itk::VolumeSplineKernelTransform< 
+                              CoordinateRepresentationType,
+                              PointsDimension >  VolumeSplineTransformType;
+
+  typedef VolumeSplineTransformType::Pointer  VolumeSplineTransformPointer;
+
+
 
 public:
 
@@ -106,11 +124,19 @@ protected:
 
   virtual void    MapPoints(void);
   virtual void    MapPointsITK(void);
+  virtual void    MapPointsElasticBodySplineITK(void);
+  virtual void    MapPointsThinPlateSplineITK(void);
+  virtual void    MapPointsVolumeSplineITK(void);
   virtual void    MapPointsVTK(void);
   virtual void    CreateSourcePoints(void);
+  virtual void    ConvertITKMappedPointsToVTK(void);
   virtual void    RemoveActors(void);
 
-  ThinPlateSplineTransformPointer  m_ThinPlateSplineTransformITK;
+  ThinPlateSplineTransformPointer     m_ThinPlateSplineTransformITK;
+
+  ElasticBodySplineTransformPointer   m_ElasticBodySplineTransformITK;
+
+  VolumeSplineTransformPointer        m_VolumeSplineTransformITK;
 
   vtkThinPlateSplineTransform   *  m_ThinPlateSplineTransformVTK;
 
