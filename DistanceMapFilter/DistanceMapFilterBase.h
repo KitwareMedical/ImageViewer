@@ -147,6 +147,7 @@ protected:
 
   fltkDisplayGlWindowGUI              m_Display;
 
+  bool    ImageHasBeenLoaded( void ) { return m_ImageLoaded; }
 
 private:
   

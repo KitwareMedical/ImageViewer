@@ -43,6 +43,8 @@ public:
   typedef DistanceMapFilterBase::DistanceImageType    DistanceImageType;
 
 
+  virtual void ComputeDistance(void);
+
 protected:
 
   DistanceMapFilter();

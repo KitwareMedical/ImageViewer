@@ -117,6 +117,8 @@ DistanceMapFilterBase
   m_Display.Hide();
   m_ImageSliceDrawer->Hide();
   m_DistanceImageSliceDrawer->Hide();
+  m_ImageViewer->Hide();
+  m_DistanceImageViewer->Hide();
 }
 
 

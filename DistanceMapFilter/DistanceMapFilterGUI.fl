@@ -10,7 +10,7 @@ class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
   Function {DistanceMapFilterGUI()} {open
   } {
     Fl_Window controlWindow {
-      label {Surface Generator} open
+      label {Surface Generator}
       xywh {599 70 238 117}
       code0 {\#include "DistanceMapFilterBase.h"} visible
     } {
@@ -63,7 +63,7 @@ class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
           }
           menuitem {} {
             label {Distance Map Viewer}
-            callback {m_DistanceImageViewer->Show();} selected
+            callback {m_DistanceImageViewer->Show();}
             xywh {40 40 100 20}
           }
         }
@@ -72,6 +72,19 @@ class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
         label {Compute Distance}
         callback {this->ComputeDistance();}
         xywh {40 45 155 45} box ROUND_UP_BOX
+      }
+    }
+    Fl_Window progressWindow {selected
+      xywh {456 359 483 100} visible
+    } {
+      Fl_Box {} {
+        label {Computing the Distance Map...}
+        xywh {45 20 395 25}
+      }
+      Fl_Box {} {
+        xywh {25 50 435 25}
+        code0 {\#include <fltkProgressBar.h>}
+        class {fltk::ProgressBar}
       }
     }
   }
