@@ -3,6 +3,7 @@
 
 #include "MetaUtils.h"
 #include "MetaFileLib.h"
+#include <fstream>
 
 /*!
  *   Just a reminder of the dimension ordering in memory
@@ -65,13 +66,13 @@ extern char *        MET_ModToString(MET_ModType _mType);
  *    MetaFileLib.h
  */
 class MetaImage
-	{
+  {
    ////
    //
    // PROTECTED
    //
    ////
-	protected:
+  protected:
 
       char           errorMessage[800];
 
@@ -80,24 +81,24 @@ class MetaImage
       char           iDataFilePath[800];
       bool           iFreeEData;
 
-      bool			   iReadFileOpen;
-      FILE *	      iReadFilePointer;
+      bool           iReadFileOpen;
+      std::ifstream  iReadFilePointer;
       bool           iWriteFileOpen;
-      FILE *	      iWriteFilePointer;
+      std::ofstream  iWriteFilePointer;
 
       //
-      int	         iNDims;
+      int           iNDims;
 
-      int 	         iDimSize[10];
-      int	         iQuantity;
-      int 	         iSubQuantity[10];
+      int            iDimSize[10];
+      int           iQuantity;
+      int            iSubQuantity[10];
 
 
       // Image Element Variables
-      MET_Type			eType;
-      int	         eNBytes;
+      MET_Type      eType;
+      int           eNBytes;
 
-      void *		   eData;
+      void *       eData;
 
       // Optional Variables
       int            iHeaderSize;
@@ -118,13 +119,13 @@ class MetaImage
 
       float          seqID[4];
 
-      int      	   eNBits;
+      int           eNBits;
 
-      bool			   eByteOrderMSB;
+      bool         eByteOrderMSB;
 
       float          eMin, eMax;
 
-      float 			eSize[10];
+      float       eSize[10];
 
       float          eSpacing[10];
 
@@ -139,7 +140,7 @@ class MetaImage
    // PUBLIC
    //
    ////
-	public:
+  public:
 
       ////
       //
@@ -184,24 +185,24 @@ class MetaImage
 
       //    FieldExists(...)
       //       Returns true if the filed is defined within the metaFile
-		//       Only available if the file was opened with _read_and_close=false
+    //       Only available if the file was opened with _read_and_close=false
       bool           FieldExists(const char *_fieldName);
 
       //    GetFieldValue(...)
       //       Returns the value stored in a particular field
       //       Enables the reading of non-pre-define fields (see below)
-		//       Only available if the file was opened with _read_and_close=false
-      void * 		   GetFieldValue(const char *_fieldName, MF_ValType _fieldType, int _nDims=-1);
+    //       Only available if the file was opened with _read_and_close=false
+      void *        GetFieldValue(const char *_fieldName, MF_ValType _fieldType, int _nDims=-1);
 
       //    ReadImageData()
       //       Reads the pixel data of a MetaImage.
       //       Only necessary to call this function is file was opened with _read_and_close=false
-      bool     		ReadImageData();
+      bool         ReadImageData();
 
       //    ReadFileClose()
       //       Closes a MetaImage file.
       //       Only necessary to call this function is file was opened with _read_and_close=false
-      bool     		ReadFileClose();
+      bool         ReadFileClose();
 
 
       ////
@@ -238,18 +239,18 @@ class MetaImage
       //    NDims()
       //       REQUIRED Field
       //       Number of dimensions to the image
-      int	         NDims();
+      int           NDims();
 
       //    DimSize(...)
       //       REQUIRED Field
       //       Number of elements along each dimension
-      int *	         DimSize();           // returns array of size of each dim - do not create or delete mem; use empty ptr
+      int *           DimSize();           // returns array of size of each dim - do not create or delete mem; use empty ptr
       int            DimSize(int i);      // returns size of dim (0 for x; 1 for y; ...)
 
       //    Quantity()
       //       Not a field in file
       //       Total number of elements in image (Prod(dimSize[i]))
-      int	         Quantity();
+      int           Quantity();
 
       //    SubQuantity(...)
       //       Not a field in file
@@ -279,13 +280,13 @@ class MetaImage
       //    SequenceID(...)
       //       Optional Field
       //       DICOM designation of this image relative to other images acquired at the same time
-      float *		   SequenceID(const float *_seqID=NULL);
+      float *       SequenceID(const float *_seqID=NULL);
       float          SequenceID(int i);
 
       //    ElemSize(...)
       //       Optional Field
       //       Physical size (in MM) of each element in the image (0 = xSize, 1 = ySize, 2 = zSize)
-      float *		   ElemSize(const float *_eSize=NULL);
+      float *       ElemSize(const float *_eSize=NULL);
       float          ElemSize(int i);
 
       //    ElemSpacing(...)
@@ -298,17 +299,17 @@ class MetaImage
       //       Optional Field
       //       The type (e.g., MET_USHORT, MET_CHAR, MET_FLOAT) of the elements' data
       //       Enumerated type is defined in MetaUtils.h
-      MET_Type			ElemType(MET_Type _eType=MET_DEFAULT);
+      MET_Type      ElemType(MET_Type _eType=MET_DEFAULT);
 
       //    ElemNBytes()
       //       Optional Field
       //       The number of bytes per element (defined as sizeof(ElemType))
-      int	         ElemNBytes();
+      int           ElemNBytes();
 
       //    ElemNBits(...)
       //       Optional Field
       //       The number of bits used per element (may be less than 8*ElemNBytes, e.g., 12 bit images stored using 2 bytes per element)
-      int	         ElemNBits(int _eBits=0);
+      int           ElemNBits(int _eBits=0);
 
       //    ElemByteOrderMSB()
       //       REQUIRED Field
@@ -323,8 +324,8 @@ class MetaImage
 
       //    ElemMakeByteOrderMSB(), ElemMakeByteOrderLSB(), ElemByteOrderSwap(), ElemByteOrderFix()
       //       The following functions are available only after ReadImageData() or if _read_and_close=TRUE when read
-      bool		      ElemMakeByteOrderMSB();             // Make image data bytes MSB
-      bool		      ElemMakeByteOrderLSB();             // Make image data bytes LSB
+      bool          ElemMakeByteOrderMSB();             // Make image data bytes MSB
+      bool          ElemMakeByteOrderLSB();             // Make image data bytes LSB
       void           ElemByteOrderSwap();                // Swap image data bytes
       bool           ElemByteOrderFix();                 // Match local system's byte order
 
@@ -345,17 +346,17 @@ class MetaImage
       //    Really slow element access
       //
       ////
-		void *         operator()();                       // returns pointer to image data
-      float 			operator()(int _x);                 // returns value of a particular element
-		float 			operator()(int _x, int _y);
-		float 			operator()(int _x, int _y, int _z);
-		float 			operator()(const int * _x);
+    void *         operator()();                       // returns pointer to image data
+      float       operator()(int _x);                 // returns value of a particular element
+    float       operator()(int _x, int _y);
+    float       operator()(int _x, int _y, int _z);
+    float       operator()(const int * _x);
 
       void *         Get();                              // returns pointer to image data
-		float 			Get(int _x);                        // returns value of a particular element
-		float 			Get(int _x, int _y);
-		float 			Get(int _x, int _y, int _z);
-		float 			Get(const int * _x);
+    float       Get(int _x);                        // returns value of a particular element
+    float       Get(int _x, int _y);
+    float       Get(int _x, int _y, int _z);
+    float       Get(const int * _x);
 
       bool           Set(float _v);                      // replaces all element data with this value
       bool           Set(int _x, float _v);              // replace individual element's data
@@ -364,7 +365,7 @@ class MetaImage
       bool           Set(const int *_x, float _v);
 
 
-		////
+    ////
       //
       // Write a MetaImage file
       //
@@ -374,7 +375,7 @@ class MetaImage
       //       Saves info of pre-defined fields and image data
       //       If only one filename is given, a single (combined header and data) file is written, otherwise separate files are written
       //       If _write_and_close = false, non-standard (not pre-defined) fields can be written.
-      bool     		Save(const char *_headFname, const char *_dataFname=NULL, bool _write_and_close=true);
+      bool         Save(const char *_headFname, const char *_dataFname=NULL, bool _write_and_close=true);
 
       //    SetFieldValue(...)
       //       Only available if _write_and_close=false
@@ -387,7 +388,7 @@ class MetaImage
       //       Must be called if Save with _write_and_close=false was called - forces element data to be written
       bool           WriteFileClose();
 
-	};
+  };
 
 
 #endif

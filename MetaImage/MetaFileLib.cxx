@@ -10,164 +10,194 @@
 char sepChar = '=';
 
 //
-bool MF_SkipToVal(FILE *fp)
-	{
-	char c;
-   if(feof(fp))
-      return false;
+bool MF_SkipToVal(istream &fp)
+  {
+  char c;
+  if( fp.eof() )
+  {
+    return false;
+  }
+  fp.get( c );
+  while( c != sepChar && !fp.eof() )
+  {
+    fp.get( c );
+  }
 
-	fscanf(fp, "%c", &c);
-	while(c != sepChar && !feof(fp))
-		fscanf(fp, "%c", &c);
-
-	if(feof(fp))
-		{
-		std::cout << "Incomplete file record definition" << std::endl;
-		return false;
-		}
-	while((c == sepChar || c == ' ' || c == '\t') && !feof(fp))
-		fscanf(fp, "%c", &c);
-	fseek(fp, -1, SEEK_CUR);
-	if(feof(fp))
-		{
-		std::cout << "Incomplete file record definition" << std::endl;
-		return false;
-		}
-	return true;
-	}
+  if( fp.eof() )
+    {
+    std::cout << "Incomplete file record definition" << std::endl;
+    return false;
+    }
+  while( (c == sepChar || c == ' ' || c == '\t') && !fp.eof() )
+  {
+    fp.get( c );
+  }
+  fp.unget();
+  if( fp.eof() )
+    {
+    std::cout << "Incomplete file record definition" << std::endl;
+    return false;
+    }
+  return true;
+  }
 
 //
 bool MF_IsComplete(int nFields, MF_FieldRec *field)
    {
    int i;
    for(i=0; i<nFields; i++)
-		if(field[i].required && !field[i].defined)
-			{
-			std::cout << field[i].name << " required and not defined." << std::endl;
-			return false;
-			}
+    if(field[i].required && !field[i].defined)
+      {
+      std::cout << field[i].name << " required and not defined." << std::endl;
+      return false;
+      }
    return true;
    }
 
 //
-bool MF_Read(FILE *fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopOfFile, char _sepChar)
-	{
-	char s[255];
-	char c;
-	int i, j;
-	for(i=0; i<nFields; i++)
-		field[i].defined = false;
+//bool MF_Read(FILE *fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopOfFile, char _sepChar)
+bool MF_Read(istream &fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopOfFile, char _sepChar)
+  {
+  char s[255];
+  char c;
+  int i, j;
+  for(i=0; i<nFields; i++)
+  {
+    field[i].defined = false;
+  }
 
    sepChar = _sepChar;
 
-	int found;
+  int found;
 
-   if(fromTopOfFile)
-      fseek(fp, 0, SEEK_SET);
+   if(fromTopOfFile) 
+   {
+     fp.seekg( 0, ios::beg ); //      fseek(fp, 0, SEEK_SET);
+   }
 
-	while(1)
-		{
-		c = ' ';
-		while((c == ' ' || c == '\t' || c == '\n') && !feof(fp))
-			fscanf(fp, "%c", &c);
-		if(feof(fp))
-			return MF_IsComplete(nFields, field);
-		fseek(fp, -1, SEEK_CUR);
 
-      i = 0;
-      fscanf(fp, " %c", &s[i]);
-      while(i<255 && s[i]!=sepChar && !feof(fp))
-         s[++i] = getc(fp);
-      if(i>=255)
-         return MF_IsComplete(nFields, field);
-      while((s[i] == sepChar || s[i] == ' ' || s[i] == '\t' || s[i] == '\n') && i>0)
-         s[i--] = '\0';
-      if(feof(fp))
-         return MF_IsComplete(nFields, field);
-		fseek(fp, -1, SEEK_CUR);
+  while(1)
+    {
+    c = ' ';
+    while((c == ' ' || c == '\t' || c == '\n') && !fp.eof() )
+    {
+      fp.get( c );
+    }
+    if( fp.eof() )
+    {
+      return MF_IsComplete(nFields, field);
+    }
+    fp.unget();
 
-		found = 0;
-		for(i=0; i<nFields; i++)
-			if(!strcmp(field[i].name, s))
-				{
-				if(field[i].dependsOn >= 0)
-					if(!field[field[i].dependsOn].defined)
-						{
-						std::cout << field[i].name << " defined prior to defining " << field[field[i].dependsOn].name << std::endl;
-						return false;
-						}
-				switch(field[i].type)
-					{
-					case MF_NONE:
-						if(!feof(fp))
-                     fscanf(fp, "%c", &c);
-						break;
-					case MF_CHAR:
-                  char c;
-						MF_SkipToVal(fp);
-						fscanf(fp, "%c", &c);
-                  field[i].val[0] = (float)c;
-						break;
-					default:
-					case MF_INT:
-					case MF_FLOAT:
-						MF_SkipToVal(fp);
-						fscanf(fp, " %e ", field[i].val);
-						break;
-					case MF_CHAR_ARRAY:
-						MF_SkipToVal(fp);
-						if(field[i].dependsOn >= 0)
+    i = 0;
+    fp.get( s[i] );
+    while(i<255 && s[i]!=sepChar && !fp.eof())
+    {
+      fp.get( s[++i] );
+    }
+    if(i>=255)
+    {
+      return MF_IsComplete(nFields, field);
+    }
+    while((s[i] == sepChar || s[i] == ' ' || s[i] == '\t' || s[i] == '\n') && i>0)
+    {
+      s[i--] = '\0';
+    }
+    if( fp.eof() )
+    {
+      return MF_IsComplete(nFields, field);
+    }
+    fp.unget();
+
+    found = 0;
+    for(i=0; i<nFields; i++)
+      if(!strcmp(field[i].name, s))
+        {
+        if(field[i].dependsOn >= 0)
+          if(!field[field[i].dependsOn].defined)
+            {
+            std::cout << field[i].name << " defined prior to defining " << field[field[i].dependsOn].name << std::endl;
+            return false;
+            }
+        switch(field[i].type)
+          {
+          case MF_NONE:
+            if( !fp.eof() )
+            {
+              char c;
+              fp.get( c );
+            }
+            break;
+          case MF_CHAR:
+            char c;
+            MF_SkipToVal(fp);
+            fp.get( c );
+            field[i].val[0] = (float)c;
+            break;
+          default:
+          case MF_INT:
+          case MF_FLOAT:
+            MF_SkipToVal(fp);
+            fp >> field[i].val[0];
+            break;
+          case MF_CHAR_ARRAY:
+            MF_SkipToVal(fp);
+            if(field[i].dependsOn >= 0)
                      {
                      field[i].length = (int)(field[field[i].dependsOn].val[0]);
-                     fgets((char *)field[i].val, field[i].length+1, fp);
+                     fp.read( (char *)field[i].val, field[i].length+1 );
                      }
-						  else
+              else
                      {
-                     fgets((char *)field[i].val, 800, fp);
+                     char * str = (char *)field[i].val;
+                     fp.getline(str,500);
                      int j = 0;
-                     while(isprint(((char *)field[i].val)[j]))
-                        j++;
-                     while(isspace(((char *)field[i].val)[j]))
-                        j--;
-                     ((char *)(field[i].val))[j+1] = '\0';
-                     field[i].length = strlen((char *)field[i].val);
+                     field[i].length = strlen( str );
                      }
-						break;
-					case MF_INT_ARRAY:
-					case MF_FLOAT_ARRAY:
-						MF_SkipToVal(fp);
-						if(field[i].dependsOn >= 0)
-                     {
-                     field[i].length = (int)field[field[i].dependsOn].val[0];
-							for(j=0; j<field[i].length; j++)
-								fscanf(fp, " %e ", &field[i].val[j]);
-                     }
-						  else
-							{
-                     if(field[i].length <= 0)
-                        {
-							   std::cout << "Float and Int arrays must have dependency" << std::endl;
-						      return false;
-                        }
-							for(j=0; j<field[i].length; j++)
-								fscanf(fp, " %e ", &field[i].val[j]);
-							}
-						break;
-					}
-				found = 1;
-				field[i].defined = true;
-				if((int)i == fTerm)
-					return MF_IsComplete(nFields, field);
-				}
-		if(!found)
-         fgets(s, 255, fp);
-		}
+            break;
+          case MF_INT_ARRAY:
+          case MF_FLOAT_ARRAY:
+            MF_SkipToVal(fp);
+            if(field[i].dependsOn >= 0)
+             {
+              field[i].length = (int)field[field[i].dependsOn].val[0];
+              for(j=0; j<field[i].length; j++) 
+              {
+                fp >> field[i].val[j];
+              }
+             }
+             else
+             {
+               if(field[i].length <= 0)
+               {
+                 std::cout << "Float and Int arrays must have dependency" << std::endl;
+                 return false;
+               }
+               for(j=0; j<field[i].length; j++)
+               {
+                 fp >> field[i].val[j];
+               }
+              }
+            break;
+          }
+          found = 1;
+          field[i].defined = true;
+          if((int)i == fTerm)
+          {
+            return MF_IsComplete(nFields, field);
+          }
+        }
+      if(!found)
+      {
+         fp.getline( s,500 );
+      }
+    }
 
-	return true;
-	}
+  return true;
+  }
 
 //
-bool MF_Write(FILE *fp, int nFields, MF_FieldRec *field, char _sepChar)
+bool MF_Write(ostream &fp, int nFields, MF_FieldRec *field, char _sepChar)
    {
    sepChar = _sepChar;
 
@@ -177,44 +207,59 @@ bool MF_Write(FILE *fp, int nFields, MF_FieldRec *field, char _sepChar)
       switch(field[i].type)
          {
          case MF_NONE:
-            fprintf(fp, "%s\n", field[i].name);
+            fp << field[i].name << std::endl;
             break;
          case MF_CHAR:
-            fprintf(fp, "%s %c %c\n", field[i].name, sepChar, (char)field[i].val[0]);
+            fp << field[i].name << " " << sepChar << " " << (char)field[i].val[0] << std::endl;
             break;
          case MF_INT:
-            fprintf(fp, "%s %c %d\n", field[i].name, sepChar, (int)field[i].val[0]);
+            fp << field[i].name << " " << sepChar << " " << (int)field[i].val[0] << std::endl;
             break;
          case MF_FLOAT:
-            fprintf(fp, "%s %c %e\n", field[i].name, sepChar, field[i].val[0]);
+            fp << field[i].name << " " << sepChar << " " << (float)field[i].val[0] << std::endl;
             break;
          case MF_CHAR_ARRAY:
-            fprintf(fp, "%s %c ", field[i].name, sepChar);
-            if(field[i].dependsOn >= 0)
+            fp << field[i].name << " " << sepChar;
+            if(field[i].dependsOn >= 0) 
+            {
                if(field[i].length != field[field[i].dependsOn].val[0])
+               {
                   std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
-            for(j=0; j<field[i].length; j++)
-               fprintf(fp, "%c", (char)field[i].val[j]);
-            fprintf(fp, "\n");
+               }
+            }
+            fp.write( field[i].val, field[i].length );
+            fp << std::endl;
             break;
          case MF_INT_ARRAY:
-            fprintf(fp, "%s %c", field[i].name, sepChar);
+            fp << field[i].name << " " << sepChar;
             if(field[i].dependsOn >= 0)
+            {
                if(field[i].length != field[field[i].dependsOn].val[0])
+               {
                   std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
+               }
+            }
             for(j=0; j<field[i].length; j++)
-               fprintf(fp, " %d", (int)field[i].val[j]);
-            fprintf(fp, "\n");
+            {
+              fp << " " << (int)field[i].val[j];
+            }
+            fp << std::endl;
             break;
-			case MF_FLOAT_ARRAY:
-            fprintf(fp, "%s %c", field[i].name, sepChar);
+      case MF_FLOAT_ARRAY:
+            fp << field[i].name << " " << sepChar;
             if(field[i].dependsOn >= 0)
+            {
                if(field[i].length != field[field[i].dependsOn].val[0])
+               {
                   std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
+               }
+            }
             for(j=0; j<field[i].length; j++)
-               fprintf(fp, " %e", (float)field[i].val[j]);
-            fprintf(fp, "\n");
-				break;
+            {
+              fp << " " << (float)field[i].val[j];
+            }
+            fp << std::endl;
+        break;
          }
       }
    return true;
@@ -251,8 +296,8 @@ bool MF_ParseStringToCHAR_ARRAY(char *s, int *n, char ***val)
 
 }
 
-bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
-              	 			MF_ValType _pType, int _n, const void *_v)
+bool WriteFieldToFile(ostream & _fp, const char *_fieldName,
+                       MF_ValType _pType, int _n, const void *_v)
 {
   int i;
   MF_FieldRec f;
@@ -295,8 +340,8 @@ bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
   return true;
 }
 
-bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
-											MF_ValType _pType, float _v)
+bool WriteFieldToFile(ostream & _fp, const char *_fieldName,
+                      MF_ValType _pType, float _v)
 {
   MF_FieldRec f;
 

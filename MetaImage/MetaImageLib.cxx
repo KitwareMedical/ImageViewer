@@ -406,8 +406,8 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
    
    InitMetaMem();
    
-   iReadFilePointer = fopen(_fname, "r+b");
-   if(iReadFilePointer == NULL)
+   iReadFilePointer.open(_fname,ios::binary);
+   if( iReadFilePointer.fail() )
       {
       std::cout << "Error: Cannot open file: " << _fname << std::endl;
       strcpy(errorMessage, "Error: Cannot open file: ");
@@ -707,24 +707,29 @@ bool MetaImage::
 ReadImageData()
    {
    bool localData = false;
-   FILE *fp;
+   ifstream *fp;
 
    char fName[800];
    if(!strcmp("LOCAL", iDataFileName))
       {
       localData = true;
-      fp = iReadFilePointer;
+      fp = &iReadFilePointer;
       }
      else
       {
-      //FILE PATH FIX
-      if(!MET_GetFilePath(iDataFileName, fName))
+        //FILE PATH FIX
+        if(!MET_GetFilePath(iDataFileName, fName))
+        {
           sprintf(fName, "%s%s", iDataFilePath, iDataFileName);
-      else
+        }
+        else
+        {
           sprintf(fName, "%s", iDataFileName);
-      fp = fopen(fName, "r+b");
+        }
+        fp = new ifstream;
+        fp->open(fName, ios::binary );
       }
-   if(fp == NULL)
+   if( fp->fail() )
       {
       strcpy(errorMessage, "Error: cannot open element data file: ");
       strcat(errorMessage, fName);
@@ -737,8 +742,8 @@ ReadImageData()
       {
       iHeader = (unsigned char *)MET_Alloc(MET_UCHAR, iHeaderSize);
       iFreeHeader = true;
-      n = fread(iHeader, sizeof(unsigned char), iHeaderSize, fp);
-      if(n != iHeaderSize)
+      fp->read( iHeader, iHeaderSize );
+      if( fp->gcount() != iHeaderSize)
          {
          sprintf(errorMessage, "Error: read header %d but expected %d", n, iHeaderSize);
          std::cout << "Error: read header " << n << " but expecting " << iHeaderSize << std::endl;
@@ -754,21 +759,26 @@ ReadImageData()
       return false;
       }
    iFreeEData = true;
-
-   n = fread(eData, eNBytes, iQuantity, fp);
-   if(n != iQuantity)
+   fp->read( eData, eNBytes * iQuantity );
+   if( fp->gcount() != eNBytes * iQuantity )
       {
       sprintf(errorMessage, "Error: read %i but expected %i", n, iQuantity);
       std::cout << "Error: read " << n << " but expecting " << iQuantity << std::endl;
       return false;
       }
 
-   fclose(fp);
+   fp->close();
    if(localData)
-      iReadFileOpen = false;
+   {
+     iReadFileOpen = false;
+   }
 
    ElemByteOrderFix();
 
+   if( strcmp("LOCAL", iDataFileName) )
+      {
+        delete fp;
+      }
    return true;
    }
 
@@ -779,7 +789,7 @@ ReadFileClose()
    if(iReadFileOpen == true)
       {
       iReadFileOpen = false;
-      fclose(iReadFilePointer);
+      iReadFilePointer.close();
       return true;
       }
    return false;
@@ -1384,7 +1394,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
    {
    char pName[255];
 
-   iWriteFilePointer = fopen(_headname, "w+b");
+   iWriteFilePointer.open(_headname, ios::binary );
    if(iWriteFilePointer == NULL)
       {
       strcpy(errorMessage, "Error: cannot write to file: ");
@@ -1496,7 +1506,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
       {
       sprintf(s, "LOCAL");
       SetFieldValue("ElementDataFile", MF_CHAR_ARRAY, strlen(s), (void *)s);
-      fwrite(eData, eNBytes, iQuantity, (FILE *)iWriteFilePointer);
+      iWriteFilePointer.write( eData, eNBytes * iQuantity );
       WriteFileClose();
       return true;
       }
@@ -1612,7 +1622,7 @@ WriteFileClose()
    if(iWriteFileOpen)
       {
       iWriteFileOpen = false;
-      fclose(iWriteFilePointer);
+      iWriteFilePointer.close();
       return true;
       }
    return false;

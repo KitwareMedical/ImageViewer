@@ -24,7 +24,8 @@
 #ifndef METAFILELIB_H
 #define METAFILELIB_H
 
-#include <stdio.h>
+#include <cstdio>
+#include <iostream>
 
 #include "MetaUtils.h"     // Generic Memory/IO/Debug/Misc Routines
 
@@ -35,7 +36,8 @@
 //    fromTopOfFile indicates whether the File pointer fp should be reset
 //       to topOfFile before parsing begins
 
-extern bool MF_Read(FILE *fp,
+//extern bool MF_Read(FILE *fp,
+extern bool MF_Read(istream &fp,
                     int nFields,
                     MF_FieldRec *field,
                     int fTerm=-1,
@@ -43,7 +45,8 @@ extern bool MF_Read(FILE *fp,
                     char _sepChar='=');
 
 // Given an array of fieldRecs, creates a metaFile.
-extern bool MF_Write(FILE *fp,
+//extern bool MF_Write(FILE *fp,
+extern bool MF_Write(ostream &fp,
                      int nFields,
                      MF_FieldRec *field,
                      char _sepChar='=');
