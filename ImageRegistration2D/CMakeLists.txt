@@ -51,6 +51,18 @@ ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}
 )
 
+IF(WIN32)
+  LINK_LIBRARIES(
+  wsock32
+  )
+ENDIF(WIN32)
+
+IF(UNIX)
+  LINK_LIBRARIES (
+  ${CMAKE_X_LIBS} -lm
+  )
+ENDIF(UNIX)
+
 ADD_EXECUTABLE(ImageRegistration2D ImageRegistration2D_SRCS)
 
 FLTK_WRAP_UI( ImageRegistration2D ImageRegistration2D_GUI_SRCS )
