@@ -31,3 +31,21 @@ www.itk.org website.
 
 
 4. Report any problems to the Insight-users list (see www.itk.org).
+
+
+KNOWN BUGS
+
+During the build process, you may need to provide CMake with the VTK_WRAP_HINTS
+variable.  To do this, edit the CMakeCache.txt file in your ITK build directory
+and change the line
+
+VTK_WRAP_HINTS:FILEPATH=NOTFOUND 
+
+to
+
+VTK_WRAP_HINTS:FILEPATH=/path/to/your/vtk/source/Wrapping
+
+where "/path/to/your/vtk/source/" depends on where you have installed
+VTK on your machine.
+
+
