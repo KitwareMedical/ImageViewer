@@ -76,7 +76,7 @@ public:
 
   /** Affine transform type. */
   typedef AffineTransform<double,ImageDimension> AffineTransformType;
-  typedef AffineTransformType::Pointer AffineTransformPointer;
+  typedef typename AffineTransformType::Pointer AffineTransformPointer;
 
   /** Modality type. */
   typedef VanderbiltModality::ModalityType ModalityType;
