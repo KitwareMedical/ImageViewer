@@ -16,6 +16,7 @@
 =========================================================================*/
 
 #include "itkFEM.h"
+#include "itkFEMGenerateMesh.h"
 //#include "itkFEMLoadLandmark.h"
 #include "itkFEMLinearSystemWrapperItpack.h"
 #include "itkFEMLinearSystemWrapperDenseVNL.h"
@@ -24,7 +25,7 @@
 #include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h" 
 #include "itkCastImageFilter.h"
-
+#include "itkMultiResolutionPyramidImageFilter.h"
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
 #include "itkRawImageIO.h"
@@ -73,10 +74,10 @@ namespace fem {
      follows the gradient of the potential energy (the force) we define.  The potential
      energies we may choose from are given by the itk image-to-image metrics. 
      The choices and the associated direction of descent are : 
-        Mean Squares (negative), 
-        Normalized Cross-Correlation (positive)
-        Pattern Intensity (positive)
-        Mutual Information (negative?).
+        Mean Squares (minimize), 
+        Normalized Cross-Correlation (maximize)
+        Pattern Intensity  (maximize)
+        Mutual Information (maximize).
      Note that we have to set the direction (SetDescentDirection) when we choose a metric. 
      The forces driving the problem may also be given by user-supplied landmarks.  
      The corners of the image, in this example, are always pinned.  This example is 
@@ -101,6 +102,15 @@ namespace fem {
      Change the ImageDataType typedef to output your type or keep it the same
      to always output unsigned char.
 
+I am no longer using the old (non-LM) example, but added a UseLandmarks 
+boolean to this one.  I've also changed the Load so that the metric can be set.
+Still have to recompile to make that change, but nonetheless a step forward.
+The multi-res option is improving.  Some parameters I've been
+using :   E = (7000, 4000) , iters=(5,10), dt (1.e-6, 1), rho=(1.e-4,50),
+
+The first in the pair is for single res, the 2nd for multi-res.  I've also
+begun using alpha = 1.0 as it privileges the new forces more than the old,
+making the registration more flexible (less "memory".)  
 */
 class ImageRegLMEx
 {

@@ -79,6 +79,7 @@ void ImageRegLMEx::RunRegistration()
     m_Load->SetReferenceImage(m_RefImg);
     m_Load->SetTargetImage(m_TarImg);
     MetricType::Pointer msqp=MetricType::New();
+    msqp->SetScaleGradient(1.0); // this is the default(?)
     m_Load->SetMetric(msqp.GetPointer());
     m_Load->InitializeMetric();
     ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
@@ -206,7 +207,7 @@ void ImageRegLMEx::WarpImage()
 
    // -------------------------------------------------------
   std::cout << "Warping image" << std::endl;
-  bool InverseWarp=false;
+  bool InverseWarp=true;
 
 
   if (InverseWarp)
@@ -238,7 +239,7 @@ void ImageRegLMEx::WarpImage()
 
       if (InImage)
       {
-        ImageDataType t =  m_RefImg->GetPixel(tindex);
+        ImageDataType t = (ImageDataType) m_RefImg->GetPixel(tindex);
         m_WarpedImage->SetPixel(rindex, t );
       }
       else m_WarpedImage->SetPixel(rindex,1);
@@ -276,7 +277,25 @@ void ImageRegLMEx::WarpImage()
 int ImageRegLMEx::GenRegMesh()
 {
 
-  
+  /*
+   * Create the materials that will define
+   * the elementm_Solver.  Only E is used in the membrane.
+   */
+  MaterialLinearElasticity::Pointer m;
+  m=MaterialLinearElasticity::New();
+  m->GN=0;       /* Global number of the material */
+  m->E=m_E;  /* Young modulus -- used in the membrane */
+  m->A=1.0;     /* Crossection area */
+  m->h=1.0;     /* Crossection area */
+  m->I=1.0;    /* Momemt of inertia */
+  m->nu=0.; //.0;    /* poissons -- DONT CHOOSE 1.0!!*/
+  m->RhoC=1.0;
+  m_Solver.mat.push_back( FEMP<Material>(&*m) ); 
+
+  ElementType::Pointer e1;
+  e1=ElementType::New();
+  e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*m_Solver.mat.Find(0) );
+
   /* We'll need these pointers to create and initialize the objectm_Solver. */
   Node::Pointer n1;
   
@@ -295,29 +314,6 @@ int ImageRegLMEx::GenRegMesh()
   }
   }
  
-  /*
-   * Then we have to create the materials that will define
-   * the elementm_Solver.  Only E is used in the membrane.
-   */
-  MaterialLinearElasticity::Pointer m;
-  m=MaterialLinearElasticity::New();
-  m->GN=0;       /* Global number of the material */
-  m->E=m_E;  /* Young modulus -- used in the membrane */
-  m->A=1.0;     /* Crossection area */
-  m->h=1.0;     /* Crossection area */
-  m->I=1.0;    /* Momemt of inertia */
-  m->nu=0.; //.0;    /* poissons -- DONT CHOOSE 1.0!!*/
-  m->RhoC=1.0;
-  m_Solver.mat.push_back( FEMP<Material>(&*m) );
-
- 
-
-  /*
-   * Next we create the finite elements that use the above
-   * created nodem_Solver. 
-   */
-//  MembraneC02D::Pointer e1;
-  ElementType::Pointer e1;
   
   unsigned int ctGN=0,jct=0,ict=0;
     for (unsigned int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
@@ -339,7 +335,19 @@ int ImageRegLMEx::GenRegMesh()
       
     }
 
-    
+
+  vnl_vector<double> MeshOrigin; MeshOrigin.resize(ImageDimension); 
+  vnl_vector<double> MeshSize;   MeshSize.resize(ImageDimension); 
+  vnl_vector<double> ElementsPerDimension;  ElementsPerDimension.resize(ImageDimension); 
+  for (unsigned int i=0; i<ImageDimension; i++)
+  { 
+    MeshSize[i]=(double)m_Nx; // FIX ME
+    MeshOrigin[i]=(double)0.0;// FIX ME
+    ElementsPerDimension[i]=(double)m_MeshResolution;
+  }
+
+  //GenerateMesh<Element2DC0LinearQuadrilateral>::Rectangular(e1,m_Solver,MeshOrigin,MeshSize,ElementsPerDimension);   
+
  /*
   * Apply the boundary conditions.  We pin the image corners.
   * First compute which elements these will be.
@@ -595,15 +603,31 @@ void ImageRegLMEx::MultiResSolve()
 {
 
   
- /**
-  * Setup a multi-resolution pyramid
-  typedef itk::MultiResolutionPyramidImageFilter<InputImageType,OutputImageType>
+ 
+//   Setup a multi-resolution pyramid
+  typedef itk::MultiResolutionPyramidImageFilter<ImageType,ImageType>
     PyramidType;
   typedef PyramidType::ScheduleType ScheduleType;
   PyramidType::Pointer pyramid = PyramidType::New();
 
-  pyramid->SetInput( imgTarget );
-  */
+  pyramid->SetInput( m_RefImg );
+   // set schedule by specifying the number of levels;
+  unsigned int numLevels = 3;
+  itk::Vector<unsigned int,ImageDimension> factors;
+  factors.Fill( 1 << (numLevels - 1) );
+  pyramid->SetNumberOfLevels( numLevels );
+
+  pyramid->Print( std::cout );
+
+//  update pyramid at a particular level
+  unsigned int testLevel = 0;
+  pyramid->Update();
+  pyramid->GetOutput( testLevel )->Update();
+
+  // check the output image information  
+  ImageType::SizeType outputSize =
+    pyramid->GetOutput( testLevel )->GetLargestPossibleRegion().GetSize();
+  std::cout << " size at level " << testLevel << outputSize << std::endl;
 
   typedef itk::CastImageFilter<ImageType,FloatImageType> CasterType1;
   CasterType1::Pointer caster1 = CasterType1::New();
@@ -622,10 +646,10 @@ void ImageRegLMEx::MultiResSolve()
   edgefilter->SetVariance(1.0f);
   edgefilter->SetMaximumError(.01f);
 
-  ImageType::SizeType neighRadius;
-  neighRadius[0] = 1;
-  neighRadius[1] = 1;
-  //filter->SetRadius(neighRadius);
+//  ImageType::SizeType neighRadius;
+  //neighRadius[0] = 1;
+  //neighRadius[1] = 1;
+  //smoothfilter->SetRadius(neighRadius);
 
   // run the algorithm
   smoothfilter->SetVariance(1.0f);
@@ -636,29 +660,29 @@ void ImageRegLMEx::MultiResSolve()
   for (smoothing=m_MaxSmoothing; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
   {
 
-//    neighRadius[0] =(unsigned long) smoothing;
-//    neighRadius[1] =(unsigned long) smoothing;
-//    filter->SetRadius(neighRadius);
+  //  neighRadius[0] =(unsigned long) smoothing;
+  //  neighRadius[1] =(unsigned long) smoothing;
+  //  smoothfilter->SetRadius(neighRadius);
 
     smoothfilter->SetVariance(smoothing);
     edgefilter->SetVariance(smoothing);
 
     // take care of target image filtering 
-    caster1->SetInput(m_TarImg);
+    caster1->SetInput(m_TarImg); caster1->Update();
     smoothfilter->SetInput(caster1->GetOutput());
     smoothfilter->Update();
     edgefilter->SetInput(m_TarImg);
     edgefilter->Update();    
-    caster2->SetInput(smoothfilter->GetOutput());
+    caster2->SetInput(smoothfilter->GetOutput()); caster2->Update();
     m_Load->SetMetricTargetImage(caster2->GetOutput());  
 
     // take care of ref image filtering  
-    caster1->SetInput(m_RefImg);
+    caster1->SetInput(m_RefImg); caster1->Update();
     smoothfilter->SetInput(caster1->GetOutput());
     smoothfilter->Update();
     edgefilter->SetInput(m_RefImg);
     edgefilter->Update();    
-    caster2->SetInput(smoothfilter->GetOutput());
+    caster2->SetInput(smoothfilter->GetOutput()); caster2->Update();
     m_Load->SetMetricReferenceImage(caster2->GetOutput());
     IterativeSolve();
   }
@@ -666,7 +690,7 @@ void ImageRegLMEx::MultiResSolve()
   m_Load->SetMetricTargetImage(m_TarImg); 
   m_Load->SetMetricReferenceImage(m_RefImg);
   IterativeSolve();
-  //if (smoothing <= m_MinSmoothing) m_TarImg=edgefilter->GetOutput(); // //FIXME for testing
+  //if (smoothing <= m_MinSmoothing) m_RefImg=caster2->GetOutput(); // //FIXME for testing
 
   return;
 }
@@ -684,7 +708,7 @@ int main()
 
   itk::fem::ImageRegLMEx X; // Declare the registration clasm_Solver.
  
-  X.m_Solver.SetAlpha(0.5);
+  X.m_Solver.SetAlpha(1.0);
   X.SetDescentDirectionMinimize();// for Mean Squares
   X.DoLineSearch(true);// Perform line search at each iteration
 
@@ -727,13 +751,13 @@ int main()
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
-  X.SetNumberOfIntegrationPoints(6);// Resolution of energy integration
-  X.SetWidthOfMetricRegion(2);
+  X.SetNumberOfIntegrationPoints(8);// Resolution of energy integration
+  X.SetWidthOfMetricRegion(1);
   X.DoMultiRes(true);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
-  X.m_MaxSmoothing=12.0; // set multi-res parameters
-  X.m_MinSmoothing=12.;
-  X.m_SmoothingStep=4.0;
+  X.m_MaxSmoothing=2.0; // set multi-res parameters
+  X.m_MinSmoothing=0.5;
+  X.m_SmoothingStep=2.0;
   X.RunRegistration();
   X.WriteWarpedImage(ResultsFileName);
 
