@@ -37,14 +37,7 @@ class FEMElement : public FEMElementBase< TFEMMesh >
 
 public:
 
-  // this type is used to represent components of the load
-  // and the Stiffness matrix
   typedef FEMElementBase<TFEMMesh>                  ElementBaseType;
-  typedef ElementBaseType::RealType                 RealType;
-  typedef ElementBaseType::MatrixType               MatrixType;
-  typedef ElementBaseType::LoadsVectorType          LoadsVectorType;
-  typedef ElementBaseType::DisplacementType         DisplacementType;
-
   typedef TFEMMesh                                  FEMMeshType;
   typedef typename FEMMeshType::CellTraits          CellTraits;
 
@@ -60,27 +53,19 @@ public:
   typedef typename FEMMeshType::PointIdentifier     PointIdentifier;
   
 
-  /**
-   *  The Cell return the displacement associated with the ith point
-   *  of its list of points
-   */
-  const DisplacementType & 
-     GetDisplacement(unsigned int i,FEMMeshType *mesh ) const
-      { const PointIdentifier Id = *( m_Cell.GetPointIds() + i );
-        return mesh->GetPointData()->ElementAt( Id ); }
-
   /** Return a reference to the internal cell of the Element 
       Note that the Element *has* a Cell as an ivar 
       \sa GetCellPointer   */
   BaseCellType & GetCell(void) 
       { return m_Cell; }
+
   const BaseCellType & GetCell(void) const
       { return m_Cell; }
 
   /** Return a pointer to the internal cell of the Element 
       Note that the Element *has* a Cell as an ivar not just a pointer    
       \sa GetCell                                  */
-  BaseCellType * GetCellPointer(void) 
+  const BaseCellType * GetCellPointer(void) const
       { return & m_Cell; }
 
 protected:

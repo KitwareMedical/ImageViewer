@@ -22,6 +22,7 @@
 
 #include "vnl/vnl_matrix.h"
 #include "itkFEMElementVisitor.h"
+#include "itkFEMMaterialStandard.h"
 
 
 // Define a macro for ElementsBase sub-classes to use
@@ -86,32 +87,7 @@ public:
         QUADRILATERAL_ELEMENT, POLYGON_ELEMENT, TETRAHEDRON_ELEMENT, 
         HEXAHEDRON_ELEMENT, LAST_ITK_ELEMENT, MAX_ITK_ELEMENTS=255};
 
-  /**
-   * Return the number of components of the Displacement field
-   * also known as degrees of freedom (DOF) for a derived element class
-   */
-  virtual unsigned int GetNumberOfDisplacementComponents( void ) const = 0;
 
-
-  /**
-   *  The Cell return the displacement associated with the ith point
-   *  of its list of points
-   */
-  virtual const DisplacementType & 
-     GetDisplacement(unsigned int i, FEMMeshType *mesh ) const = 0;
-
-  /**
-   * Compute and return element stiffnes matrix in global coordinate system
-   */
-  virtual MatrixType GetStiffnessMatrix( const FEMMeshType * ) const = 0;
-
-  /**
-   * Compute and return element mass matrix in global coordinate system.
-   * This is needed if dynamic problems (parabolic or hyperbolix d.e.)
-   * need to be solved.
-   */
-  virtual MatrixType GetMassMatrix( void ) const 
-    { return MatrixType(); }
 
   /** \brief A visitor that can visit different cell types in a mesh.
    * CellInterfaceVisitor instances can be registered for each
@@ -179,6 +155,14 @@ public:
   virtual void Accept(unsigned long cellId, MultiVisitor * )= 0; 
   
 
+  /** Set the Material  */
+  virtual void SetMaterial( const MaterialStandard * material )
+                                          {   m_Material = material; }    
+
+  MaterialStandard::ConstPointer GetMaterial( void ) const
+                                  { return m_Material.GetPointer();   }
+
+
 protected:
 
   /** Constructor */
@@ -188,6 +172,9 @@ protected:
   virtual ~FEMElementBase() {};
 
 
+private:
+   
+  MaterialStandard::ConstPointer  m_Material;
 
 };
 
