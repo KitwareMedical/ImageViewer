@@ -355,7 +355,7 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
 void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Outputs the displacement field for the index provided (0=x,1=y,2=z)
 {
-  // Initialize the caster to the displacement field
+/*  // Initialize the caster to the displacement field
   IndexSelectCasterType::Pointer fieldCaster = IndexSelectCasterType::New();
   fieldCaster->SetInput( m_Field );
   fieldCaster->SetIndex( index );
@@ -381,7 +381,7 @@ void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   writer->SetFileName(outfile);
   writer->Write();
 
-  std::cout << "...done" << std::endl;
+  std::cout << "...done" << std::endl;*/
 }
 
 
@@ -827,19 +827,20 @@ void ImageRegLMEx::MultiResSolve()
   pyramidR->Update();
   pyramidT->Update();
 
-/*  itk::RawImageIO<unsigned char,2>::Pointer io;
+/*
+  itk::RawImageIO<unsigned char,2>::Pointer io;
   itk::ImageFileWriter<ImageType>::Pointer writer;
   io = itk::RawImageIO<unsigned char,2>::New();
   writer = itk::ImageFileWriter<ImageType>::New();
   writer->SetImageIO(io);
-  writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");*/
-
+  writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");
+*/
   for (unsigned int i=0; i<m_MaxLevel; i++)
   {
     pyramidR->GetOutput( i )->Update();
     pyramidT->GetOutput( i )->Update();
 
-//  Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update(); writer->SetInput(Tcaster2->GetOutput()); writer->Write();
+//    Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update(); writer->SetInput(Tcaster2->GetOutput()); writer->Write();
     
     ImageType::SizeType Isz=pyramidT->GetOutput( i )->GetLargestPossibleRegion().GetSize();
 
@@ -848,9 +849,9 @@ void ImageRegLMEx::MultiResSolve()
       m_ImageScaling[d]=m_ImageSize[d]/Isz[d];
     }
 
-    for (unsigned int m=0; m < m_MeshLevels; m++) // mesh resolution loop
+    //for (unsigned int m=0; m < m_MeshLevels; m++) // mesh resolution loop
     {
-      double MeshResolution=m_MeshResolution/pow((double)m_MeshStep,(double)m_MeshLevels-1.0-(double)m);
+      double MeshResolution=m_MeshResolution/ m_ImageScaling[0]; //pow((double)m_MeshStep,(double)m_MeshLevels-1.0-(double)m);
 
       Rcaster2 = CasterType2::New();// Weird - don't know why but this worked
       Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
