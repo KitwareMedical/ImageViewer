@@ -69,34 +69,84 @@ void
 FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 ::InitializePreprocessor()
 {
- /* bool Resample=false;
+  bool Resample=true;
 
   if ( Resample){  
   
   typedef typename ImageType::SizeType                 ImageSizeType;
   typedef itk::AffineTransform<double,ImageDimension>   AffineTransformType;
-  typedef itk::LinearInterpolateImageFunction<ImageType,double>  InterpolatorType;
 
   // Create an affine transformation
+  itk::ResampleImageFilter< ImageType, ImageType >::Pointer resample;
   AffineTransformType::Pointer aff = AffineTransformType::New();
-  aff->Scale(1.);
+  aff->Scale(0.90);
 
   // Create a linear interpolation image function
-  InterpolatorType::Pointer interp = InterpolatorType::New();
-  interp->SetInputImage(m_Parser->GetSubjectImage());
+  typedef itk::LinearInterpolateImageFunction<ImageType,double>  InterpolatorType;
+  InterpolatorType::Pointer interp;
   
-  // Create and configure a resampling filter
-  itk::ResampleImageFilter< ImageType, LabelImageType >::Pointer resample;
-  resample = itk::ResampleImageFilter< ImageType, LabelImageType >::New();
-  resample->SetInput(m_Parser->GetSubjectImage());
+  
+  interp = InterpolatorType::New();
+  resample = itk::ResampleImageFilter< ImageType, ImageType >::New();
   ImageSizeType size={{128,128,91}};
   resample->SetSize(size);
   resample->SetTransform(aff.GetPointer());
   resample->SetInterpolator(interp.GetPointer());
 
   // Run the resampling filter
+  
+  interp->SetInputImage(m_Parser->GetSubjectImage());
+  resample->SetInput(m_Parser->GetSubjectImage());
   resample->Update();
+  m_Parser->SetSubjectImage(resample->GetOutput());
+  
+  interp = InterpolatorType::New();
+  resample = itk::ResampleImageFilter< ImageType, ImageType >::New();
+  resample->SetSize(size);
+  resample->SetTransform(aff.GetPointer());
+  resample->SetInterpolator(interp.GetPointer());
+  
 
+  interp->SetInputImage(m_Parser->GetAtlasImage());
+  resample->SetInput(m_Parser->GetAtlasImage());
+  resample->Update();
+  m_Parser->SetAtlasImage(resample->GetOutput());
+
+
+
+  // Create a linear interpolation image function
+  typedef itk::LinearInterpolateImageFunction<LabelImageType,double>  InterpolatorType2;
+  InterpolatorType2::Pointer interp2;
+  // Create and configure a resampling filter
+  itk::ResampleImageFilter<  LabelImageType, LabelImageType >::Pointer resample2;
+  
+  
+  interp2 = InterpolatorType2::New();
+  resample2 = itk::ResampleImageFilter<  LabelImageType,  LabelImageType >::New();
+  resample2->SetSize(size);
+  resample2->SetTransform(aff.GetPointer());
+  resample2->SetInterpolator(interp2.GetPointer());
+
+  // Run the resampling filter
+  
+  interp2->SetInputImage(m_Parser->GetSubjectLabelImage());
+  resample2->SetInput(m_Parser->GetSubjectLabelImage());
+  resample2->Update();
+  m_Parser->SetSubjectLabelImage(resample2->GetOutput());
+  
+  
+  interp2 = InterpolatorType::New();
+  resample2 = itk::ResampleImageFilter<  LabelImageType,  LabelImageType >::New();
+  resample2->SetSize(size);
+  resample2->SetTransform(aff.GetPointer());
+  resample2->SetInterpolator(interp2.GetPointer());
+
+  interp2->SetInputImage(m_Parser->GetAtlasLabelImage());
+  resample2->SetInput(m_Parser->GetAtlasLabelImage());
+  resample2->Update();
+  m_Parser->SetAtlasLabelImage(resample2->GetOutput());
+  
+  /*
   typedef typename LabelImageType::PixelType PType;
   itk::RawImageIO<PType,ImageDimension>::Pointer io;
   itk::ImageFileWriter<LabelImageType>::Pointer writer;
@@ -109,20 +159,14 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   writer->Write();
 
 
-  InterpolatorType::Pointer interp2 = InterpolatorType::New();
-  interp2->SetInputImage(m_Parser->GetSubjectLabelImage());
-  resample->SetInterpolator(interp2.GetPointer());
-  resample->SetInput(m_Parser->GetSubjectLabelImage());
-   // Run the resampling filter
-  resample->Update();
-
   std::string fn2=m_ImageDirectoryName+"/SmallAIR/brain"+m_SubjectPatientID+".img";
   writer->SetFileName(fn2.c_str());
   writer->SetInput(resample->GetOutput() ); 
   writer->Write();
 
   return;
-  }*/
+  */
+  }
 
   m_Preprocessor->SetInputFixedImage( m_Parser->GetSubjectImage() );
   m_Preprocessor->SetInputMovingImage( m_Parser->GetAtlasImage() );
