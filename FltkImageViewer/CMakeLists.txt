@@ -6,6 +6,7 @@ IF(FLTK_LIBRARY)
 
    SOURCE_FILES(FltkImageViewer_SRCS
      fltkDisplayGlWindowGUI
+     fltkDisplayGlWindowFlatGUI
      fltkGlWindow
      fltkGlWindowInteractive
      fltkGlWindowInteractiveFlat
