@@ -352,7 +352,7 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
   }  
 }
 
-void ImageRegLMEx::WriteDisplacementField(unsigned int index)
+int ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Outputs the displacement field for the index provided (0=x,1=y,2=z)
 {
   // Initialize the caster to the displacement field
@@ -382,6 +382,7 @@ void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   writer->Write();
 
   std::cout << "...done" << std::endl;
+  return 0;
 }
 
 
@@ -611,7 +612,7 @@ void ImageRegLMEx::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
 void ImageRegLMEx::IterativeSolve(SolverType& mySolver)
 {
 
-  unsigned int minct=0,NumMins=0;
+  unsigned int minct=0,NumMins=2;
   if (!m_DoMultiRes) NumMins=1;
   if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
   m_MinE=10.e9;
