@@ -141,7 +141,7 @@ float ellipse(unsigned int x, unsigned int y, unsigned int z)
 {
   float dis;
   float cx = V_WIDTH/2, cy = V_HEIGHT/2, cz=V_DEPTH/2;
-  float r1 = V_WIDTH/3, r2 = V_HEIGHT/3, r3=V_DEPTH/4;
+  float r1 = V_WIDTH/3;  //r2 = V_HEIGHT/3, r3=V_DEPTH/4;
   
   dis=r1-sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy)+(z-cz)*(z-cz));
   
