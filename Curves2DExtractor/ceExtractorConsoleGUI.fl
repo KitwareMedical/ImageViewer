@@ -9,8 +9,8 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
 } {
   Function {ceExtractorConsoleGUI()} {} {
     Fl_Window consoleWindow {
-      label {Gaussian Filter Console} open
-      xywh {254 516 878 391}
+      label {2D Curves Extractor Console} open
+      xywh {286 278 878 391}
       code0 {\#include <ceExtractorConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -237,18 +237,18 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         }
         Fl_Light_Button parametricSpaceButton {
           label {Parametric Space}
-          callback {ShowParametricSpace();} selected
+          callback {ShowParametricSpace();}
           xywh {745 35 115 35} type Normal value 1 selection_color 1 align 148
           class {fltk::LightButton}
         }
       }
       Fl_Slider progressSlider {
-        xywh {5 324 865 15} type {Horz Fill} selection_color 2
+        xywh {5 324 755 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 349 865 25}
+        xywh {5 349 755 25}
       }
       Fl_Light_Button loadButton {
         label Load
@@ -259,12 +259,16 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
       Fl_Button {} {
         label Quit
         callback {Quit();}
-        xywh {125 280 80 30} box ROUND_UP_BOX
+        xywh {145 280 80 30} box ROUND_UP_BOX
       }
       Fl_Button {} {
         label Execute
         callback {Execute();}
         xywh {25 280 80 30} box ROUND_UP_BOX
+      }
+      Fl_Button {} {
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.xpm} selected
+        xywh {765 312 110 75} box FLAT_BOX labeltype image
       }
     }
   }

@@ -103,8 +103,15 @@ ceExtractorConsole
 
   m_Viewer_Gradient_On_EigenVector->SetLabel( "Gradient Projected on EigenVector" );
 
+  m_ParametricSpaceSamplesShape = PointSetShapeType::New();
+
+  m_ParametricSpaceSamplesShape->SetPointSet( m_ParametricSpace->GetOutput() );
+  
+  // OpenGL display list mode
+  m_ParametricSpaceSamplesShape->SetCompileMode( fltk::Shape3D::compileExecute ); 
 
   m_ParametricSpaceViewer.SetLabel("Parametric Space");
+
 
   fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
                             progressSlider->GetRedrawCommand().GetPointer();
@@ -163,7 +170,11 @@ ceExtractorConsole
   m_ScalarProduct->AddObserver( itk::Command::EndEvent, 
                                 gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
-                                   parametricSpaceButton->GetRedrawCommand().GetPointer() );
+                         parametricSpaceButton->GetRedrawCommand().GetPointer() );
+  m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
+                         m_ParametricSpaceSamplesShape->GetDisplayListUpdateCommand().GetPointer() );
+  m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
+                         m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::ModifiedEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
@@ -202,6 +213,30 @@ ceExtractorConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, parametricSpaceButton->GetRedrawCommand().GetPointer() );
+
+
+  // Register the PointSet as a Drawer in the OpenGL window
+  m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
+                                                fltk::GlDrawEvent, 
+                                                m_ParametricSpaceSamplesShape->GetDrawCommand() );
+
+  // Notify the OpenGL window when the set of points change
+  m_ParametricSpace->AddObserver( itk::Command::EndEvent,
+                                  m_ParametricSpaceViewer.GetRedrawCommand() );
+
+
+  fltk::Shape3D::ColorType  parametricSpacePointsColor;
+  parametricSpacePointsColor.SetRed(   0.0 );
+  parametricSpacePointsColor.SetGreen( 0.0 );
+  parametricSpacePointsColor.SetBlue(  0.0 );
+  m_ParametricSpaceSamplesShape->SetColor( parametricSpacePointsColor );
+
+  fltk::GlWindowInteractive::ColorType  parametricSpaceBackgroundColor;
+  parametricSpaceBackgroundColor.SetRed(   1.0 );
+  parametricSpaceBackgroundColor.SetGreen( 1.0 );
+  parametricSpaceBackgroundColor.SetBlue(  1.0 );
+  m_ParametricSpaceViewer.GetGlWindow()->SetBackground( 
+                                           parametricSpaceBackgroundColor );
 
   this->ShowStatus("Let's start by loading an image...");
 

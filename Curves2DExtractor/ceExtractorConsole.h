@@ -45,9 +45,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ce_ExtractorConsole_h
 #define ce_ExtractorConsole_h
 
-#include <ceExtractorConsoleGUI.h>
-#include <fltkImage2DViewer.h>
-#include <fltkDisplayGlWindowGUI.h>
+#include "ceExtractorConsoleGUI.h"
+#include "fltkImage2DViewer.h"
+#include "fltkDisplayGlWindowGUI.h"
+#include "fltkPointSet3D.h"
+#include "itkPointSet.h"
 
 
 
@@ -61,6 +63,10 @@ public:
   typedef ImageViewerType::Pointer              ImageViewerPointer;
   typedef InputImageViewerType::Pointer         InputImageViewerPointer;
   typedef fltkDisplayGlWindowGUI                GlDisplayType;
+  
+  typedef ceExtractorConsoleBase::MeshType      PointSetType;
+  typedef fltk::PointSet3D< PointSetType >      PointSetShapeType;
+  typedef PointSetShapeType::Pointer            PointSetShapePointer;
 
 public:
   ceExtractorConsole();
@@ -110,6 +116,8 @@ private:
   ImageViewerPointer           m_Viewer_Gradient_On_EigenVector;
 
   GlDisplayType                m_ParametricSpaceViewer;
+
+  PointSetShapePointer         m_ParametricSpaceSamplesShape;
 
 };
 
