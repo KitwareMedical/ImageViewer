@@ -49,7 +49,6 @@ liImageRegistrationConsoleBase
 
   m_ResampleInputMovingImageFilter->SetTransform( m_InputTransform );
 
-
   m_ImageRegistrationMethod     = ImageRegistrationMethodType::New();
 
   m_ImageRegistrationMethod->SetFixedImage(  m_FixedImageReader->GetOutput() );
@@ -57,7 +56,6 @@ liImageRegistrationConsoleBase
 
   m_MovingImageWriter->SetInput( m_ResampleInputMovingImageFilter->GetOutput() );
 
-  m_SelectedMetric = meanSquares;
 
   itk::MetaImageIOFactory::RegisterOneFactory();
 
@@ -67,6 +65,10 @@ liImageRegistrationConsoleBase
   m_FixedImageIsLoaded  = false;
   m_MovingImageIsLoaded = false;
 
+  this->SelectMetric( meanSquares );
+  this->SelectTransform( translationTransform );
+  this->SelectOptimizer( regularStepGradientDescent );
+  this->SelectInterpolator( nearestNeighborInterpolator );
 
 }
 
@@ -404,14 +406,14 @@ liImageRegistrationConsoleBase
 
   switch( m_SelectedInterpolator )
   {
-  case linearInterpolation:
+  case linearInterpolator:
     {
     m_ImageRegistrationMethod->SetInterpolator( 
         itk::LinearInterpolateImageFunction<MovingImageType, 
                                             double >::New() );
     break;
     }
-  case nearestNeighborInterpolation:
+  case nearestNeighborInterpolator:
     {
     m_ImageRegistrationMethod->SetInterpolator( 
         itk::NearestNeighborInterpolateImageFunction<MovingImageType, 
@@ -447,7 +449,19 @@ liImageRegistrationConsoleBase
   case translationTransform:
     {
     m_ImageRegistrationMethod->SetTransform( 
-        itk::TranslationTransform<double,3>::New() );
+        itk::TranslationTransform<double,ImageDimension>::New() );
+    break;
+    }
+  case scaleTransform:
+    {
+    m_ImageRegistrationMethod->SetTransform( 
+        itk::ScaleTransform<double,ImageDimension>::New() );
+    break;
+    }
+  case affineTransform:
+    {
+    m_ImageRegistrationMethod->SetTransform( 
+        itk::AffineTransform<double,ImageDimension>::New() );
     break;
     }
   case rigidTransform:
@@ -456,7 +470,6 @@ liImageRegistrationConsoleBase
         itk::Rigid3DTransform<double>::New() );
     break;
     }
-
   default:
     fl_alert("Unkown type of optimizer was selected");
     return;

@@ -32,12 +32,13 @@
 #include <itkRegularStepGradientDescentOptimizer.h>
 #include <itkConjugateGradientOptimizer.h>
 
-
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
 
 #include "itkTranslationTransform.h"
+#include "itkScaleTransform.h"
 #include "itkRigid3DTransform.h"
+#include "itkAffineTransform.h"
 
 
 /**
@@ -67,7 +68,6 @@ public:
  /** Identifiers of the different types of Transforms */
  typedef enum {
     translationTransform,
-    rotationTransform,
     scaleTransform,
     rigidTransform,
     affineTransform
@@ -75,8 +75,8 @@ public:
 
  /** Identifiers of the different types of Interpolators */
  typedef enum {
-    linearInterpolation,
-    nearestNeighborInterpolation
+    linearInterpolator,
+    nearestNeighborInterpolator
   } InterpolatorIdentifier;
 
 
@@ -180,11 +180,10 @@ protected:
 
   ImageRegistrationMethodType::Pointer    m_ImageRegistrationMethod;
   
-  AffineTransformType::Pointer            m_Transform;
-  
   AffineTransformType::Pointer            m_InputTransform;
 
   bool                                    m_FixedImageIsLoaded;
+
   bool                                    m_MovingImageIsLoaded;
 
   MetricIdentifier                        m_SelectedMetric;

@@ -7,166 +7,185 @@ gridy 5
 snap 3
 class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBase}
 } {
-  Function {liImageRegistrationConsoleGUI()} {} {
+  Function {liImageRegistrationConsoleGUI()} {open
+  } {
     Fl_Window consoleWindow {
-      label {Image Registration Console} selected
-      xywh {55 252 830 405}
+      label {Image Registration Console} open selected
+      xywh {329 273 830 428}
       code0 {\#include <liImageRegistrationConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {10 15 815 330}
+        xywh {0 0 825 357}
       } {
         Fl_Box {} {
-          xywh {179 96 8 135} box UP_BOX color 4
+          xywh {179 108 8 135} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {210 49 124 9} box UP_BOX color 4
+          xywh {210 71 124 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {364 231 190 10} box UP_BOX color 4
+          xywh {546 203 8 50} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {425 90 160 10} box UP_BOX color 4
+          xywh {364 243 190 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {324 165 8 71} box UP_BOX color 4
+          xywh {454 123 149 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {383 50 8 95} box UP_BOX color 4
+          xywh {324 177 8 71} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {449 136 105 10} box UP_BOX color 4
+          xywh {383 49 8 108} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {629 176 75 10} box UP_BOX color 4
+          xywh {546 148 8 39} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {424 90 8 64} box UP_BOX color 4
+          xywh {470 148 84 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {64 49 85 9} box UP_BOX color 4
+          xywh {629 188 75 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {64 92 85 9} box UP_BOX color 4
+          xywh {454 123 8 43} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {326 49 8 101} box UP_BOX color 4
+          xywh {64 72 85 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {546 136 8 39} box UP_BOX color 4
+          xywh {64 104 85 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {234 234 50 9} box UP_BOX color 4
+          xywh {326 71 8 90} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {72 186 85 9} box UP_BOX color 4
+          xywh {149 198 9 45} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {72 287 85 9} box UP_BOX color 4
+          xywh {234 246 50 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {149 251 9 45} box UP_BOX color 4
+          xywh {149 263 9 45} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {149 186 9 45} box UP_BOX color 4
+          xywh {72 198 85 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {546 191 8 50} box UP_BOX color 4
+          xywh {72 299 85 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {325 235 8 60} box UP_BOX color 4
+          xywh {325 247 8 60} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {504 43 8 39} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {404 72 108 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {404 72 8 87} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {606 45 8 58} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {428 93 186 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {428 93 8 66} box UP_BOX color 4
         }
       }
       Fl_Group controlsGroup {
-        xywh {5 16 810 329}
+        xywh {5 5 820 352}
       } {
         Fl_Light_Button fixedImageButton {
           label {Fixed Image}
           callback {ShowFixedImage();}
-          xywh {129 38 109 25} type Normal value 1 selection_color 1 labelsize 12
+          xywh {129 63 109 25} type Normal value 1 selection_color 1 labelsize 12
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label Quit
           callback {this->Quit();}
-          xywh {610 290 65 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {596 288 65 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button movingImageButton {
           label {Moving Image}
           callback {this->ShowMovingImage();}
-          xywh {279 224 105 25} type Normal value 1 selection_color 1 labelsize 12
+          xywh {279 236 105 25} type Normal value 1 selection_color 1 labelsize 12
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Resample Filter}
           callback {this->GenerateMovingImage();}
-          xywh {134 216 120 42} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {134 228 120 42} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button registrationMethodButton {
           label {Registration Method}
-          xywh {279 129 205 56} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {279 141 205 56} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Resample Filter}
           callback {this->GenerateMappedMovingImage();}
-          xywh {530 161 125 49} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {530 173 125 49} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button mappedMovingImageButton {
           label {Registered Image}
           callback {this->ShowMappedMovingImage();}
-          xywh {686 165 94 35} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {686 177 94 35} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Group rotationParameters {
           label Rotation
-          xywh {19 136 90 102} box ENGRAVED_BOX labelsize 12 align 17
+          xywh {19 148 90 102} box ENGRAVED_BOX labelsize 12 align 17
         } {
           Fl_Value_Input xRotation {
             label {X : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {51 172 50 19} labelsize 12 textsize 12
+            xywh {51 184 50 19} labelsize 12 textsize 12
           }
           Fl_Value_Input yRotation {
             label {Y : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {51 192 50 19} labelsize 12 textsize 12
+            xywh {51 204 50 19} labelsize 12 textsize 12
           }
           Fl_Value_Input zRotation {
             label {Z : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {51 213 50 18} labelsize 12 value 1 textsize 12
+            xywh {51 225 50 18} labelsize 12 value 1 textsize 12
           }
           Fl_Value_Input angleRotation {
             label {A : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {51 153 50 19} labelsize 12 textsize 12
+            xywh {51 165 50 19} labelsize 12 textsize 12
           }
         }
         Fl_Group translationParameters {
           label Translation
-          xywh {19 244 90 87} box ENGRAVED_BOX labelsize 12 align 17
+          xywh {19 256 90 87} box ENGRAVED_BOX labelsize 12 align 17
         } {
           Fl_Value_Input xTranslation {
             label {X : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {52 262 50 20} labelsize 12 textsize 12
+            xywh {52 274 50 20} labelsize 12 textsize 12
           }
           Fl_Value_Input yTranslation {
             label {Y : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {52 283 50 19} labelsize 12 textsize 12
+            xywh {52 295 50 19} labelsize 12 textsize 12
           }
           Fl_Value_Input zTranslation {
             label {Z : }
             callback {m_ResampleInputMovingImageFilter->Modified();}
-            xywh {52 304 50 20} labelsize 12 textsize 12
+            xywh {52 316 50 20} labelsize 12 textsize 12
           }
         }
         Fl_Choice {} {
           label Metric
-          xywh {355 35 165 30} labelsize 12 align 1 textsize 12
+          xywh {261 32 165 30} labelsize 12 align 1 textsize 12
         } {
           menuitem {} {
             label {Mean Squares}
@@ -191,7 +210,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         }
         Fl_Choice {} {
           label Optimizer
-          xywh {555 80 165 30} labelsize 12 align 1 textsize 12
+          xywh {588 117 165 30} labelsize 12 align 1 textsize 12
         } {
           menuitem {} {
             label {Gradient Descent}
@@ -212,48 +231,88 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         Fl_Button {} {
           label Stop
           callback {Stop();}
-          xywh {525 290 66 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {511 288 66 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button inputMovingImageButton {
           label {Moving Image}
           callback {this->ShowInputMovingImage();}
-          xywh {129 84 109 25} type Normal value 1 selection_color 1 labelsize 12
+          xywh {129 96 109 25} type Normal value 1 selection_color 1 labelsize 12
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label Start
           callback {Execute();}
-          xywh {440 290 65 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {426 288 65 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Button {} {
           label {../../Documentation/Art/itkLogoSmall.gif}
-          xywh {698 256 100 67} box DOWN_FRAME labeltype image
+          xywh {698 268 100 67} box DOWN_FRAME labeltype image
+        }
+        Fl_Choice {} {
+          label Transform
+          xywh {470 33 99 30} labelsize 12 align 1 textsize 12
+        } {
+          menuitem {} {
+            label Translation
+            callback {this->SelectTransform( translationTransform );}
+            xywh {10 10 100 20} labelsize 12
+          }
+          menuitem {} {
+            label Scale
+            callback {this->SelectTransform( scaleTransform );}
+            xywh {20 20 100 20} labelsize 12
+          }
+          menuitem {} {
+            label Rigid
+            callback {this->SelectTransform( rigidTransform );}
+            xywh {30 30 100 20} labelsize 12
+          }
+          menuitem {} {
+            label Affine
+            callback {this->SelectTransform( affineTransform );}
+            xywh {40 40 100 20} labelsize 12
+          }
+        }
+        Fl_Choice {} {
+          label Interpolator
+          xywh {590 32 132 30} labelsize 12 align 1 textsize 12
+        } {
+          menuitem {} {
+            label {Nearest Neighbor}
+            callback {this->SelectInterpolator( nearestNeighborInterpolator );}
+            xywh {20 20 100 20} labelsize 12
+          }
+          menuitem {} {
+            label Linear
+            callback {this->SelectInterpolator( linearInterpolator );}
+            xywh {30 30 100 20} labelsize 12
+          }
         }
       }
       Fl_Slider progressSlider {
-        xywh {10 345 810 15} type {Horz Fill} selection_color 2
+        xywh {10 363 810 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {10 368 810 25}
+        xywh {10 386 810 25}
       }
       Fl_Light_Button loadFixedImageButton {
         label Load
         callback {this->LoadFixedImage();}
-        xywh {29 37 65 25} type Normal value 1 selection_color 1 labelsize 12
+        xywh {29 63 65 25} type Normal value 1 selection_color 1 labelsize 12
         class {fltk::LightButton}
       }
       Fl_Light_Button loadMovingImageButton {
         label Load
         callback {this->LoadMovingImage();}
-        xywh {29 84 65 25} type Normal value 1 selection_color 1 labelsize 12
+        xywh {29 98 65 25} type Normal value 1 selection_color 1 labelsize 12
         class {fltk::LightButton}
       }
       Fl_Light_Button saveMovingImageButton {
         label Save
         callback {this->SaveMovingImage();}
-        xywh {295 275 65 25} type Normal value 1 selection_color 1 labelsize 12
+        xywh {295 290 65 25} type Normal value 1 selection_color 1 labelsize 12
         class {fltk::LightButton}
       }
     }
