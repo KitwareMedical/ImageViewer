@@ -377,7 +377,7 @@ CellularAggregate
     this->GetVoronoi( newcellparentId, parentVoronoi );
     CellAutoPointer parentClone;
     parentVoronoi->MakeCopy( parentClone );
-    TransferAutoPointer( selfVoronoi, parentClone );
+    itk::TransferAutoPointer( selfVoronoi, parentClone );
     }
 
   position += perturbation;
