@@ -22,7 +22,8 @@
 #include <FL/Fl_Multiline_Input.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Widget.H>
-#include <FL/Fl_Multiline_Output.H>
+#include <FL/Fl_Text_Buffer.H>
+#include <FL/Fl_Text_Display.H>
 
 #include "fltkUtils.h"
 
@@ -32,7 +33,7 @@
 /*
  *
  */
-int ifuGetString(int n, char **mesg, char **buffer)
+int ifuGetString(int n, const char **mesg, char **buffer)
   {
   int i;
   int l = strlen(mesg[0]);
@@ -80,7 +81,7 @@ int ifuGetString(int n, char **mesg, char **buffer)
 /*
  *
  */
-int ifuGetString(char *mesg, char *buffer)
+int ifuGetString(const char *mesg, char *buffer)
   {
   int l = strlen(mesg);
   Fl_Window window(270+l*8,75);
@@ -117,7 +118,7 @@ int ifuGetString(char *mesg, char *buffer)
 /*
  *
  */
-int ifuGetString(char *mesg1, char *buffer1, char *mesg2, char *buffer2)
+int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buffer2)
   {
   int l = strlen(mesg1);
   if(strlen(mesg2)>l)
@@ -159,8 +160,8 @@ int ifuGetString(char *mesg1, char *buffer1, char *mesg2, char *buffer2)
 /*
  *
  */
-int ifuGetString(char *mesg1, char *buffer1, char *mesg2, char *buffer2,
-     char *mesg3, char *buffer3)
+int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buffer2,
+     const char *mesg3, char *buffer3)
   {
   int l = strlen(mesg1);
   if(strlen(mesg2)>l)
@@ -212,8 +213,8 @@ int ifuGetString(char *mesg1, char *buffer1, char *mesg2, char *buffer2,
 /*
  *
  */
-int ifuGetString(char *mesg1, char *buffer1, char *mesg2, char *buffer2,
-     char *mesg3, char *buffer3, char *mesg4, char *buffer4)
+int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buffer2,
+     const char *mesg3, char *buffer3, const char *mesg4, char *buffer4)
   {
   int l = strlen(mesg1);
   if(strlen(mesg2)>l)
@@ -272,7 +273,7 @@ int ifuGetString(char *mesg1, char *buffer1, char *mesg2, char *buffer2,
 /*
  *
  */
-int ifuGetText(char *mesg, char *buffer)
+int ifuGetText(const char *mesg, char *buffer)
   {
   int l = strlen(mesg);
   Fl_Window window(520, 560);
@@ -309,16 +310,18 @@ int ifuGetText(char *mesg, char *buffer)
 /*
  *
  */
-int ifuShowText(char *mesg)
+int ifuShowText(const char *mesg)
   {
   Fl_Window window(532,577);
-  Fl_Multiline_Output txt(10, 10, 512, 512);
-  txt.value(mesg);
+  Fl_Text_Display txt(10, 10, 512, 512);
   Fl_Return_Button ok(150, 540, 80, 25, "OK");
   window.hotspot(&ok);
   window.end();
   window.set_modal();
   window.show();
+  Fl_Text_Buffer txtbuf;
+  txtbuf.text(mesg);
+  txt.buffer(txtbuf);
   for (;;)
     {
     Fl::wait();

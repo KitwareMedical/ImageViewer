@@ -24,7 +24,7 @@
  * Results will be stored in the corresponding buffer.
  * Returns 0 if cancel is hit. Returns 1 if okay is hit.
  **/
-extern int ifuGetString(int n, char **mesg, char **buffer);
+extern int ifuGetString(int n, const char **mesg, char **buffer);
 
 /**
  * Display an FLTK window that has one text field. That field
@@ -34,7 +34,7 @@ extern int ifuGetString(int n, char **mesg, char **buffer);
  * Returns 0 if cancel is hit. 
  * Returns 1 if okay is hit.
  **/
-extern int ifuGetString(char *mesg, char *buffer);
+extern int ifuGetString(const char *mesg, char *buffer);
 
 /**
  * Display an FLTK window that has 2 text fields. Each field
@@ -43,8 +43,8 @@ extern int ifuGetString(char *mesg, char *buffer);
  * Results will be stored in the corresponding buffer.
  * Returns 0 if cancel is hit. Returns 1 if okay is hit.
  **/
-extern int ifuGetString(char *mesg1, char *buffer1,
-                        char *mesg2, char *buffer2);
+extern int ifuGetString(const char *mesg1, char *buffer1,
+                        const char *mesg2, char *buffer2);
 
 /**
  * Display an FLTK window that has 3 text fields. Each field
@@ -53,9 +53,9 @@ extern int ifuGetString(char *mesg1, char *buffer1,
  * Results will be stored in the corresponding buffer.
  * Returns 0 if cancel is hit. Returns 1 if okay is hit.
  **/
-extern int ifuGetString(char *mesg1, char *buffer1,
-                        char *mesg2, char *buffer2,
-                        char *mesg3, char *buffer3);
+extern int ifuGetString(const char *mesg1, char *buffer1,
+                        const char *mesg2, char *buffer2,
+                        const char *mesg3, char *buffer3);
 
 /**
  * Display an FLTK window that has 4 text fields. Each field
@@ -64,10 +64,10 @@ extern int ifuGetString(char *mesg1, char *buffer1,
  * Results will be stored in the corresponding buffer.
  * Returns 0 if cancel is hit. Returns 1 if okay is hit.
  **/
-extern int ifuGetString(char *mesg1, char *buffer1,
-                        char *mesg2, char *buffer2,
-                        char *mesg3, char *buffer3,
-                        char *mesg4, char *buffer4);
+extern int ifuGetString(const char *mesg1, char *buffer1,
+                        const char *mesg2, char *buffer2,
+                        const char *mesg3, char *buffer3,
+                        const char *mesg4, char *buffer4);
 
 /**
  * Display an FLTK window that has a large text box. That box
@@ -77,14 +77,14 @@ extern int ifuGetString(char *mesg1, char *buffer1,
  * Returns 0 if cancel is hit. 
  * Returns 1 if okay is hit.
  **/
-extern int ifuGetText(char *mesg, char *buffer);
+extern int ifuGetText(const char *mesg, char *buffer);
 
 /**
  * Display an FLTK window that has a large text buffer. The
  * textg given will be displayed in that buffer.
  * Returns 0 if cancel is hit. Returns 1 if okay is hit.
  **/
-extern int ifuShowText(char *mesg);
+extern int ifuShowText(const char *mesg);
 
 #endif
 
