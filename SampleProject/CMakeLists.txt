@@ -3,14 +3,10 @@ PROJECT(SampleProject)
 # 
 # Find ITK
 #
-FIND_PATH( ITK_BINARY_DIR itkConfigure.h )
-
-# Load in the values from ITK if found
-IF ( ITK_BINARY_DIR )
-  LOAD_CACHE(${ITK_BINARY_DIR})
-  INCLUDE (${ITK_SOURCE_DIR}/itkCMakeOptions.cmake)
-ENDIF (ITK_BINARY_DIR )
-
+INCLUDE (${CMAKE_ROOT}/Modules/FindITK.cmake)
+IF (USE_ITK_FILE)
+  INCLUDE(${USE_ITK_FILE})
+ENDIF(USE_ITK_FILE)
 
 LINK_LIBRARIES (
 VXLNumerics
