@@ -94,9 +94,9 @@ SUBDIRS(FuzzyConnectedness)
 SUBDIRS(ShapeDetection)
 
 # The MRI Registration example needs VTK
-#IF (HAS_VTK)
-#  SUBDIRS(MRIRegistration)
-#ENDIF (HAS_VTK)
+IF (HAS_VTK)
+  SUBDIRS(MRIRegistration)
+ENDIF (HAS_VTK)
 
 # Add an option to build or not build the TripleTKImageDisplay example.
 # It needs VTK.
@@ -166,6 +166,9 @@ IF(HAS_VTK)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_VTK)
 
+IF(HAS_VTK)
+  SUBDIRS(vtkITK)
+ENDIF(HAS_VTK)
 
 # Add an option to build the Tcl Wrap for the stl string class
 IF( ITK_WRAP_TCL )
