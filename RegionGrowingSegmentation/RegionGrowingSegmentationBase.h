@@ -22,6 +22,7 @@
 #include <itkImageFileWriter.h>
 
 #include <itkConnectedThresholdImageFilter.h>
+#include <itkCurvatureFlowImageFilter.h>
 
 
 /**
@@ -51,10 +52,15 @@ public:
   /** Filter for reading the input image */
   typedef   itk::ImageFileReader< InputImageType >       ImageReaderType;
 
+  /** Curvature flow image filter for producing homogeneous regions */
+  typedef   itk::CurvatureFlowImageFilter< 
+                 InputImageType, 
+                 InternalImageType >     CurvatureFlowImageFilterType;
+
   /** Threshold Connected Image Filter */
   typedef   itk::ConnectedThresholdImageFilter< 
-                 InputImageType, InternalImageType >     ConnectedThresholdImageFilterType;
-
+                 InternalImageType, 
+                 InternalImageType >     ConnectedThresholdImageFilterType;
 
 public:
   RegionGrowingSegmentationBase();
@@ -72,6 +78,8 @@ protected:
   ImageReaderType::Pointer                    m_ImageReader;
 
   bool                                        m_InputImageIsLoaded;
+
+  CurvatureFlowImageFilterType::Pointer       m_CurvatureFlowImageFilter;
 
   ConnectedThresholdImageFilterType::Pointer  m_ConnectedThresholdImageFilter;
 

@@ -36,11 +36,11 @@ RegionGrowingSegmentation
 
   m_ConnectedThresholdImageViewer.SetLabel("Connected Threshold Image");
 
-  m_ConnectedThresholdImageFilter = ConnectedThresholdImageFilterType::New();
+  m_HomogeneousImageViewer.SetLabel("Curvature Flow Image");
 
   m_ConnectedThresholdImageViewer.SetImage( m_ConnectedThresholdImageFilter->GetOutput() );  
 
-  m_ConnectedThresholdImageFilter->SetInput( m_ImageReader->GetOutput() );
+  m_HomogeneousImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );
 
   // Initialize ITK filter with GUI values
   m_ConnectedThresholdImageFilter->SetLower( 
@@ -51,9 +51,12 @@ RegionGrowingSegmentation
 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   loadInputImageButton->Observe(  m_ImageReader.GetPointer() );
+  homogeneousImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
+  thresholdConnectedImageButton->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
 
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
+  progressSlider->Observe( m_CurvatureFlowImageFilter.GetPointer() );
 
 }
 
@@ -99,6 +102,7 @@ RegionGrowingSegmentation
 {
   m_InputImageViewer.Hide();
   m_ConnectedThresholdImageViewer.Hide();
+  m_HomogeneousImageViewer.Hide();
   consoleWindow->hide();
 }
 
@@ -201,6 +205,24 @@ RegionGrowingSegmentation
   m_ConnectedThresholdImageFilter->Update();
   m_ConnectedThresholdImageViewer.SetImage( m_ConnectedThresholdImageFilter->GetOutput() );  
   m_ConnectedThresholdImageViewer.Show();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Show Homogeneous Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowHomogeneousImage( void )
+{
+  m_CurvatureFlowImageFilter->Update();
+  m_HomogeneousImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );  
+  m_HomogeneousImageViewer.Show();
 
 }
 

@@ -19,16 +19,28 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         xywh {0 0 825 357}
       } {
         Fl_Box {} {
-          xywh {210 71 124 9} box UP_BOX color 4
+          xywh {195 191 110 9} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {64 72 85 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {465 72 108 10} box UP_BOX color 4
+          xywh {490 68 108 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {170 77 9 53} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {170 142 9 53} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {300 67 9 257} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {300 67 108 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {170 202 9 48} box UP_BOX color 4
         }
       }
       Fl_Group controlsGroup {
@@ -58,8 +70,8 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         }
         Fl_Button {} {
           label {Connected Threshold}
-          callback {m_ConnectedThresholdImageFilter->Update();} selected
-          xywh {330 54 170 37} box ROUND_UP_BOX labelsize 12 align 128
+          callback {m_ConnectedThresholdImageFilter->Update();}
+          xywh {370 54 170 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Button {} {
           label {../../Documentation/Art/itkLogoSmall.gif}
@@ -68,31 +80,42 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Counter lowerThresholdCounter {
           label Lower
           callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );}
-          xywh {348 91 134 25} align 4 minimum 0 maximum 255 step 1 value 100
+          xywh {388 91 134 25} align 4 minimum 0 maximum 255 step 1 value 100
           code0 {o->lstep(10.0);}
         }
         Fl_Counter upperThresholdCounter {
           label Upper
           callback {m_ConnectedThresholdImageFilter->SetUpper( static_cast<InputPixelType>( o->value() ) );}
-          xywh {348 116 134 25} align 4 minimum 0 maximum 255 step 1 value 200
+          xywh {388 116 134 25} align 4 minimum 0 maximum 255 step 1 value 200
           code0 {o->lstep( 10.0 );}
         }
         Fl_Group seedGroup {
           label {Seed Point} open
-          xywh {128 113 95 115} box ENGRAVED_BOX align 17
+          xywh {123 232 95 115} box ENGRAVED_BOX align 17
         } {
           Fl_Value_Output xSeedPointValueOutput {
             label {X }
-            xywh {156 138 55 25}
+            xywh {151 257 55 25}
           }
           Fl_Value_Output ySeedPointValueOutput {
             label {Y }
-            xywh {156 165 55 25}
+            xywh {151 284 55 25}
           }
           Fl_Value_Output zSeedPointValueOutput {
             label {Z }
-            xywh {156 192 55 25}
+            xywh {151 311 55 25}
           }
+        }
+        Fl_Button {} {
+          label {Curvature Flow}
+          callback {m_CurvatureFlowImageFilter->Update();}
+          xywh {110 116 130 37} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Light_Button homogeneousImageButton {
+          label {Homogeneous Image}
+          callback {ShowHomogeneousImage();}
+          xywh {115 175 120 40} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
         }
       }
       Fl_Slider progressSlider {
@@ -124,5 +147,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   Function {ShowConnectedThresholdImage( void )} {return_type {virtual void}
   } {}
   Function {ShowConsole( void )} {return_type {virtual void}
+  } {}
+  Function {ShowHomogeneousImage( void )} {selected return_type {virtual void}
   } {}
 } 

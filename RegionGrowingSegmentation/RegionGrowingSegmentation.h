@@ -71,6 +71,8 @@ public:
 
   virtual void ShowConnectedThresholdImage(void);
 
+  virtual void ShowHomogeneousImage(void);
+
   virtual void Quit(void);
 
   virtual void SelectSeedPoint( float x, float y, float z );
@@ -80,6 +82,7 @@ public:
 private:
 
   InternalImageViewerType     m_ConnectedThresholdImageViewer;
+  InternalImageViewerType     m_HomogeneousImageViewer;
 
   InputImageViewerType        m_InputImageViewer;
 
