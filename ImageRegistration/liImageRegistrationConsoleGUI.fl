@@ -1,0 +1,163 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBase}
+} {
+  Function {liImageRegistrationConsoleGUI()} {} {
+    Fl_Window consoleWindow {
+      label {Image Registration Console}
+      xywh {330 39 757 391}
+      code0 {\#include <liImageRegistrationConsoleBase.h>}
+      code1 {\#include <liLightButton.h>} visible
+    } {
+      Fl_Menu_Bar {} {
+        xywh {0 0 760 25}
+      } {
+        submenu {} {
+          label File
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Load
+            callback {Load();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Quit
+            callback {Quit();}
+            xywh {10 10 100 20}
+          }
+        }
+        submenu {} {
+          label Help
+          xywh {5 5 100 20}
+        } {
+          menuitem {} {
+            label {About...}
+            callback {ShowAbout();}
+            xywh {0 0 100 20}
+          }
+        }
+      }
+      Fl_Group Connectors {open
+        xywh {0 25 755 365}
+      } {
+        Fl_Box {} {
+          xywh {65 90 8 90} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {212 170 8 90} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {108 85 215 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {325 250 160 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {212 250 55 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {320 183 8 76} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {315 85 8 90} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {346 170 105 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {478 185 8 75} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {495 170 100 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {65 170 55 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {165 170 55 10} box UP_BOX color 4
+        }
+      }
+      Fl_Group controlsGroup {
+        xywh {0 25 755 365} deactivate
+      } {
+        Fl_Light_Button targetButton {
+          label Target
+          callback {ShowTarget();}
+          xywh {20 75 105 30} type Normal value 1 selection_color 1
+          class {li::LightButton}
+        }
+        Fl_Button {} {
+          label {Start Regisration}
+          callback {Execute();}
+          xywh {585 255 105 45} box ROUND_UP_BOX align 128
+        }
+        Fl_Light_Button referenceButton {
+          label Reference
+          callback {ShowReference();}
+          xywh {235 240 105 30} type Normal value 1 selection_color 1
+          class {li::LightButton}
+        }
+        Fl_Button {} {
+          label {Apply Known Transformation}
+          callback {GenerateReference();}
+          xywh {85 150 115 55} box ROUND_UP_BOX align 128
+        }
+        Fl_Light_Button registrationMethodButton {
+          label {Registration Method}
+          xywh {285 148 130 51} type Normal box ROUND_UP_BOX value 1 selection_color 1 align 148
+          class {li::LightButton}
+        }
+        Fl_Button {} {
+          label {Estimated Transformation}
+          callback {GenerateMappedReference();}
+          xywh {438 151 125 49} box ROUND_UP_BOX align 128
+        }
+        Fl_Light_Button mappedReferenceButton {
+          label {Mapped Reference}
+          callback {ShowMappedReference();} selected
+          xywh {585 155 105 40} type Normal value 1 selection_color 1 align 148
+          class {li::LightButton}
+        }
+      }
+      Fl_Slider progressSlider {
+        xywh {5 324 735 15} type {Horz Fill} selection_color 2
+      }
+      Fl_Output statusTextOutput {
+        xywh {5 349 735 25}
+      }
+    }
+    Fl_Window aboutWindow {
+      label {About ...} open
+      xywh {149 482 392 254} box UP_BOX hide
+    } {
+      Fl_Button {} {
+        label {../Documents/Art/itkLogo.xpm}
+        xywh {20 50 355 180} box DOWN_BOX color 7
+      }
+      Fl_Box {} {
+        label {This program uses the INSIGHT Toolkit}
+        xywh {20 15 340 35} labelsize 18
+      }
+    }
+  }
+  Function {~liImageRegistrationConsoleGUI()} {return_type virtual
+  } {}
+  Function {Quit( void )} {return_type {virtual void}
+  } {}
+  Function {Load( void )} {return_type {virtual void}
+  } {}
+  Function {ShowTarget( void )} {return_type {virtual void}
+  } {}
+  Function {ShowReference( void )} {return_type {virtual void}
+  } {}
+  Function {ShowAbout( void )} {return_type {virtual void}
+  } {}
+  Function {ShowMappedReference( void )} {return_type {virtual void}
+  } {}
+} 
