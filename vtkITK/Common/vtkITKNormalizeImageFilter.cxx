@@ -14,7 +14,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef _vtkITKWatershedImageFilter_txx
-#define _vtkITKWatershedImageFilter_txx
-#include "vtkITKWatershedImageFilter.h"
+#ifndef _vtkITKNormalizeImageFilter_txx
+#define _vtkITKNormalizeImageFilter_txx
+#include "vtkITKNormalizeImageFilter.h"
 #endif
