@@ -1,12 +1,13 @@
 % Configuration file for ITK FEM registration example
 
-1.0	% Alpha
-0	% DescentDirection
-1	% DoLineSearch
-490000	% Elasticity
-19	% MaximumIterations
+1.	% Alpha
+1	% DescentDirection
+1	% DoLineSearch : 0 = none, 1 = Golden Section, 2 = Brent's method
+190000 %1.e4	% Elasticity
+15	% MaximumIterations
 1.	% TimeStep
-1.e3	% Rho
+1.e12  % Energy Reduction Factor
+1.e3  %2.e2	% Rho
 E:\\Avants\\MetaImages\\brain_slice1smth.im % brain3D64x64x31a.raw %	% ReferenceFileName
 E:\\Avants\\MetaImages\\brain_slice2smth.im % brain3D64x64x31b.raw %		% TargetFileName
 0	% UseLandmarks - read the file name below if this is true
@@ -22,12 +23,11 @@ E:\\Avants\\MetaImages\\result	% ResultsFileName
 0	% WriteDisplacementField
 /mnt/data/tessa/temp/disp	% DisplacementsFileName
 1	% DoMultiRes - read the parameters below if this is true
-0	% DoSearchForMinAtEachResolution
+1	% Line search frequency - 1 = every iteration, 2 = every other iteration, etc.
 2	% Number of levels in the multi-res pyramid
 2	% Maximum Level to use in the pyramid 
-4 	% elements per dimension of mesh at 1st level
-4 	% elements per dimension of mesh at 2nd level
-
+4
+8
 
 END
 
