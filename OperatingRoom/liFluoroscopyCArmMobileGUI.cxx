@@ -311,5 +311,5 @@ m_Unit->SetSourceToFilmDistance( stfd );
 m_Unit->SetDetectorRadius( vps / 2.0 );
 m_Unit->InvokeEvent( li::FieldOfViewChangedEvent );
 const double angle = atan2( vps/2.0, stfd );
-fieldOfViewValueOutput->value( 2.0 * angle * 45.0 / atan(1) );
+fieldOfViewValueOutput->value( 2.0 * angle * 45.0 / atan(1.0f) );
 }
