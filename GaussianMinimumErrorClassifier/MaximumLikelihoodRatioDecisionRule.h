@@ -41,7 +41,7 @@ class MaximumLikelihoodRatioDecisionRule :
   /** Standard New() method support */
   itkNewMacro(Self) ;
   
-  unsigned int Evaluate(const std::vector< double > &discriminantScores) const ;
+  unsigned int Evaluate(std::vector< double > &discriminantScores) const ;
   void AddClassSampleSize(unsigned int size) ;
 
  protected:
@@ -56,7 +56,7 @@ class MaximumLikelihoodRatioDecisionRule :
 } ; // end of class
 
 inline unsigned int 
-MaximumLikelihoodRatioDecisionRule::Evaluate(const std::vector< double > &discriminantScores) const
+MaximumLikelihoodRatioDecisionRule::Evaluate(std::vector< double > &discriminantScores) const
 {
   unsigned int maxIndex = 0 ;
   double maxScore = 0.0 ;
