@@ -30,6 +30,7 @@
 #include "itkMeanCalculator.h"
 #include "itkCovarianceCalculator.h"
 #include "itkTableLookupSampleClassifier.h"
+#include "itkDecisionRuleBase.h"
 #include "MaximumLikelihoodRatioDecisionRule.h"
 #include "itkStatisticsAlgorithm.h"
 
@@ -39,6 +40,7 @@ void print_usage()
 
   std::cout << "usage: GaussianMinimumErrorClassifier --training file"  << std::endl ;
   std::cout << "       --class-mask file" << std::endl ;
+  std::cout << "       --number-of-classes int" << std::endl ;
   std::cout << "       --target file"  << std::endl ;
   std::cout << "       --output file"  << std::endl ;
 
@@ -49,6 +51,9 @@ void print_usage()
     << std::endl ;
   std::cout << "--class-mask file" << std::endl ;
   std::cout << "        image file name with class labels [meta image format]"  
+    << std::endl ;
+  std::cout << "--number-of-classes int" << std::endl ;
+  std::cout << "        the number of classes in the training image."
     << std::endl ;
   std::cout << "--target file" << std::endl ;
   std::cout << "        target image file name with intensity values [meta image format]" 
@@ -62,6 +67,7 @@ void print_usage()
 
   std::cout << "example: GaussianMinimumErrorClassifier --training train.mhd" << std::endl ;
   std::cout << "         --class-mask class_mask.mhd" << std::endl ;
+  std::cout << "         --number-of-classes 10" << std::endl ;
   std::cout << "         --target target.mhd" << std::endl ;
   std::cout << "         --output output.mhd" << std::endl ;
 }
@@ -84,7 +90,7 @@ int main(int argc, char* argv[])
   std::string classMaskFileName ;
   std::string targetFileName ;
   std::string outputFileName ;
-
+  int numberOfClasses ;
   try
     {
       // get image file options
@@ -95,6 +101,8 @@ int main(int argc, char* argv[])
       options.GetStringOption("target", &targetFileName, true) ;
       // get image file options
       options.GetStringOption("output", &outputFileName, true) ;
+      // get the number of classes
+      numberOfClasses = options.GetIntOption("number-of-classes", 10, true) ;
     }
   catch(OptionList::RequiredOptionMissing e)
     {
@@ -160,11 +168,10 @@ int main(int argc, char* argv[])
 
   generator->SetInput(sample) ;
   generator->SetClassMask(mask) ;
-  generator->SetNumberOfClasses(10) ;
+  generator->SetNumberOfClasses(numberOfClasses) ;
   generator->GenerateData() ;
   MembershipSampleGeneratorType::OutputPointer membershipSample = 
     generator->GetOutput() ;
-  unsigned int numberOfClasses = membershipSample->GetNumberOfClasses() ;
   
   /* =================================================== */
   std::cout << "Inducing the gaussian density function parameters and apriori probabilities..." 
@@ -194,7 +201,6 @@ int main(int argc, char* argv[])
 
   unsigned int sampleSize = 0 ;
   std::cout << "Inducing the gaussian density function parameters and apriori probabilities..." << std::endl ;
-  std::cout << "number of classes = " << numberOfClasses << std::endl ;
   for (unsigned int i = 0 ; i < numberOfClasses ; i++)
     {
       std::cout << "gaussian [" << i << "]" << std::endl ;
@@ -229,16 +235,18 @@ int main(int argc, char* argv[])
   /* =================================================== */
   std::cout << "Classifying..." << std::endl ;
   
-  typedef stat::TableLookupSampleClassifier< ImageListSampleType, DensityFunctionType, DecisionRuleType > ClassifierType ;
+  typedef stat::TableLookupSampleClassifier< ImageListSampleType >
+    ClassifierType ;
 
   ClassifierType::Pointer classifier = ClassifierType::New() ;
+  classifier->SetNumberOfClasses(numberOfClasses) ;
   classifier->SetSample(targetSample) ;
   for (unsigned int i = 0 ; i < numberOfClasses ; i++)
     {
-      classifier->AddMembershipCalculator(densityFunctions[i]) ;
+      classifier->AddMembershipFunction(densityFunctions[i]) ;
     }
 
-  classifier->SetDecisionRule(rule) ;
+  classifier->SetDecisionRule((itk::DecisionRuleBase::Pointer)rule) ;
   ImageListSampleType::MeasurementVectorType upper ;
   ImageListSampleType::MeasurementVectorType lower ;
   
@@ -249,7 +257,7 @@ int main(int argc, char* argv[])
 
   classifier->SetLookupTableLowerBound(lower) ;
   classifier->SetLookupTableUpperBound(upper) ;
-  classifier->GenerateData() ;
+  classifier->Update() ;
   
   ClassifierType::OutputPointer result = classifier->GetOutput() ;
 
@@ -279,7 +287,4 @@ int main(int argc, char* argv[])
 
   return 0 ;
 }
-
-
-
 
