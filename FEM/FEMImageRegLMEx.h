@@ -112,24 +112,34 @@ The first in the pair is for single res, the 2nd for multi-res.  I've also
 begun using alpha = 1.0 as it privileges the new forces more than the old,
 making the registration more flexible (less "memory".)  
 */
-class ImageRegLMEx
+
+template<class TReference,class TTarget,class TElement> 
+class ImageRegLMEx //: public ImageToImageFilter<TReference, TTarget>
 {
 public:
+  typedef ImageRegLMEx Self;
+//  typedef ImageToImageFilter<TReference, TTarget> Superclass;
+  
+  /** Run-time type information (and related methods) */
+//  itkTypeMacro(ImageRegLMEx, ImageToImageFilter );
   
   typedef LinearSystemWrapperItpack LinearSystemSolverType;
   typedef SolverCrankNicolson SolverType;
   enum Sign { positive = 1, negative = -1 };
   typedef double Float;
-  typedef unsigned char ImageDataType;
-  typedef Image< unsigned char, 2 > ImageType;
-  typedef Image< float, 2 > FloatImageType;
+//  typedef Image< unsigned char, 2 > ImageType;
+//  typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
+//  enum { ImageDimension = 2 };
+  /** Dimensionality of input and output data is assumed to be the same.
+   * It is inherited from the superclass. */
+  typedef TReference ImageType;
+  enum { ImageDimension = ImageType::ImageDimension };
+  typedef typename ImageType::PixelType ImageDataType;
+  typedef TElement ElementType;
+  typedef Image< float, ImageDimension > FloatImageType;
   typedef ImageType::SizeType ImageSizeType;
-  enum { ImageDimension = 2 };
-  typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
-  typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType;
-  typedef itk::NormalizedCorrelationImageToImageMetric<ImageType,ImageType> MetricType1;
-  typedef itk::PatternIntensityImageToImageMetric<ImageType,ImageType> MetricType2;
-  typedef itk::MutualInformationImageToImageMetric<ImageType,ImageType> MetricType3;
+  typedef   ImageToImageMetric<TTarget,TReference > MetricBaseType;
+  typedef typename MetricBaseType::Pointer             MetricBaseTypePointer;
   typedef itk::Vector<Float,ImageDimension> VectorType;
   typedef itk::Image<VectorType,ImageDimension> FieldType;
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType; 
@@ -141,6 +151,9 @@ public:
    
 /** Instantiate the load class with the correct image type. */
   typedef  ImageMetricLoad<ImageType,ImageType> ImageMetricLoadType;
+  // Register load class.
+  template class itk::fem::ImageMetricLoadImplementation<ImageMetricLoadType>;
+
   /**
    * Easy access to the FEMObjectFactory. We create a new class
    * whose name is shorter and it's not templated...
@@ -209,20 +222,33 @@ public:
   void DoMultiRes(bool b) { m_DoMultiRes=b; } 
   void DoSearchForMinAtEachResolution(bool b) { m_SearchForMinAtEachLevel=b; } 
   void UseLandmarks(bool b) {m_UseLandmarks=b;}
-  void WriteDisplacements(bool b) {m_WriteDisplacementField=b;}
+  void SetWriteDisplacements(bool b) {m_WriteDisplacementField=b;}
+  bool GetWriteDisplacements() {return m_WriteDisplacementField;}
   SolverType* GetSolver(){return &m_Solver;}
+  void SetConfigFileName (const char* f){m_ConfigFileName=f;}
+  const char* GetConfigFileName () {return m_ConfigFileName; }
+  void SetResultsFileName (const char* f){m_ResultsFileName=f;}
+  const char* GetResultsFileName () {return m_ResultsFileName;} 
+  /** Set/Get the Metric.  */
+  void SetMetric(MetricBaseTypePointer MP) { m_Metric=MP; }; 
+  
 
 
   ImageRegLMEx( ); 
 
+  ~ImageRegLMEx(); 
 
-  const char* ConfigFileName;
-  bool  m_WriteDisplacementField;
-  const char* m_ResultsFileName;
+
   SolverType m_Solver; // Defines the solver to use
 
-  private :
+private :
 
+  const char* m_ConfigFileName;
+  bool  m_WriteDisplacementField;
+  const char* m_ResultsFileName;
+  ImageRegLMEx(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
+    
   const char* m_ReferenceFileName;  
   const char* m_TargetFileName;
   const char* m_LandmarkFileName;
@@ -278,6 +304,7 @@ public:
 
   ElementType::Pointer e1;
 
+  MetricBaseTypePointer                               m_Metric;
  
 
 };
