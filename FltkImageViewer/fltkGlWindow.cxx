@@ -39,7 +39,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
 
+#if    defined(_WIN32)
 #include <itkWindows.h>
+#endif
+
 #include <fltkGlWindow.h>
 #include <fstream>
 #include <FL/fl_ask.H>
