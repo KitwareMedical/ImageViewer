@@ -57,9 +57,67 @@ public:
   void Visit( unsigned long cellId, ElementType * t )
     {
     ElementType & element = *t;
-    ElementType::ShapeFunctionsDerivativesType shapeFunctionsDerivatives;
-    ElementType::ParametricPointType gaussPoint;
-    element.ComputeShapeFunctionDerivativesAt( gaussPoint, shapeFunctionsDerivatives );
+    ElementType::ParametricPointsArrayType        gaussPoints;
+    ElementType::IntegrationWeightsArrayType      gaussWeights;
+    ElementType::ShapeFunctionsDerivativesType    shapeFunctionsDerivatives;
+    ElementType::JacobianMatrixType               jacobian;
+
+    const CellType           & cell   = t->GetCell();
+    PointIdConstIterator       pts    = cell.PointIdsBegin();
+    const PointIdentifier    & id0 = *pts++;
+    const PointIdentifier    & id1 = *pts++;
+    const PointIdentifier    & id2 = *pts++;
+    const PointIdentifier    & id3 = *pts++;
+
+    const unsigned int numberOfDisplacementComponents = 
+                          ElementType::NumberOfDisplacementComponents;
+
+    StiffnessMatrixType   localStiffnessMatrix(
+                                  numberOfDisplacementComponents, 
+                                  numberOfDisplacementComponents    );
+
+    element.GetGaussIntegrationPoints( gaussPoints );
+    element.GetGaussIntegrationWeights( gaussWeights );
+
+    const ElementType::PointsContainer & meshPoints = *(m_Points.GetPointer());
+    const unsigned int numberOfIntegrationPoints = gaussPoints.Size();
+
+    for(unsigned int p=0; p<numberOfIntegrationPoints; p++)
+      {
+      element.ComputeShapeFunctionDerivativesAt( 
+                       gaussPoints[p], shapeFunctionsDerivatives );
+
+      element.ComputeJacobianMatrixAt( gaussPoints[p], meshPoints, jacobian );
+
+      for(unsigned int i=0; i<numberOfDisplacementComponents; i++)
+        {
+        for(unsigned int j=0; j<numberOfDisplacementComponents; j++)
+          {
+          localStiffnessMatrix[i][j] += gaussWeights[p] *
+            ( shapeFunctionsDerivatives[i][0] * shapeFunctionsDerivatives[j][0] +
+              shapeFunctionsDerivatives[i][1] * shapeFunctionsDerivatives[j][1] );
+          }
+        }
+      }
+
+    // add the contributions to the stiffness matrix
+    StiffnessMatrixType & globalStiffnessMatrix = *(m_StiffnessMatrix);
+    globalStiffnessMatrix[ id0 ][ id0 ] += localStiffnessMatrix[0][0];
+    globalStiffnessMatrix[ id0 ][ id1 ] += localStiffnessMatrix[0][1];
+    globalStiffnessMatrix[ id0 ][ id2 ] += localStiffnessMatrix[0][2];
+    globalStiffnessMatrix[ id0 ][ id3 ] += localStiffnessMatrix[0][3];
+    globalStiffnessMatrix[ id1 ][ id0 ] += localStiffnessMatrix[1][0];
+    globalStiffnessMatrix[ id1 ][ id1 ] += localStiffnessMatrix[1][1];
+    globalStiffnessMatrix[ id1 ][ id2 ] += localStiffnessMatrix[1][2];
+    globalStiffnessMatrix[ id1 ][ id3 ] += localStiffnessMatrix[1][3];
+    globalStiffnessMatrix[ id2 ][ id0 ] += localStiffnessMatrix[2][0];
+    globalStiffnessMatrix[ id2 ][ id1 ] += localStiffnessMatrix[2][1];
+    globalStiffnessMatrix[ id2 ][ id2 ] += localStiffnessMatrix[2][2];
+    globalStiffnessMatrix[ id2 ][ id3 ] += localStiffnessMatrix[2][3];
+    globalStiffnessMatrix[ id3 ][ id0 ] += localStiffnessMatrix[3][0];
+    globalStiffnessMatrix[ id3 ][ id1 ] += localStiffnessMatrix[3][1];
+    globalStiffnessMatrix[ id3 ][ id2 ] += localStiffnessMatrix[3][2];
+    globalStiffnessMatrix[ id3 ][ id3 ] += localStiffnessMatrix[3][3];
     }
 };
   
