@@ -18,10 +18,10 @@ PURPOSE.  See the above copyright notices for more information.
 #include <vector>
 #include <vnl/vnl_math.h>
 
-#include "imageutils.h"
-#include "metaITKUtils.h"
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
+#include "imageutils.h"
+#include "metaITKUtils.h"
 
 
 void print_usage()
