@@ -140,6 +140,11 @@ protected:
    */
 	Cone3D();
 
+  /**
+   * Destructor
+   */
+	~Cone3D();
+
 private:
   /**
    *  Radius of the base
