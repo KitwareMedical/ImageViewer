@@ -13,11 +13,6 @@ LINK_LIBRARIES (
   ITKFltkImageViewer
 )
 
-IF(WIN32)
-  LINK_LIBRARIES(
-    wsock32
-  )
-ENDIF(WIN32)
 
 ADD_GUI_EXECUTABLE( ImageViewer "${ImageViewer_SRCS}" )
 
