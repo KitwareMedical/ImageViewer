@@ -24,7 +24,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       IndexType seed;
       VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
-      module.SetUpdateMessage("Smoothing with Curvature Flow...");
+      module.SetUpdateMessage("Confidence Connected Region Growing...");
       // Set the parameters on it
       module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
       module.GetFilter()->SetMultiplier(         atof( info->GUIItems[ 1 ].CurrentValue) );
@@ -48,7 +48,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       IndexType seed;
       VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
-      module.SetUpdateMessage("Smoothing with Curvature Flow...");
+      module.SetUpdateMessage("Confidence Connected Region Growing...");
       // Set the parameters on it
       module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
       module.GetFilter()->SetMultiplier(         atof( info->GUIItems[ 1 ].CurrentValue) );
