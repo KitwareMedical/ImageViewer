@@ -928,7 +928,8 @@ int main()
 {
   itk::fem::ImageRegLMEx X; // Declare the registration class
 
-  X.ConfigFileName="U://itk//Insight//Examples//FEM//FEMregLMparams.txt";
+  //X.ConfigFileName="U://itk//Insight//Examples//FEM//FEMregLMparams.txt";
+  X.ConfigFileName="c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt";
   if (!X.ReadConfigFile(X.ConfigFileName,X.m_Solver)) { return -1; }
 
   X.RunRegistration();
