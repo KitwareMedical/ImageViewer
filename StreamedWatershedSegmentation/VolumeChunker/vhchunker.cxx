@@ -114,7 +114,7 @@ inline void die(const char *s)
 
 int main(int argc, char * argv[])
 {
-  unsigned int n[3], v[3], rem[3], pad[3], a[3], e[3],
+  unsigned int n[3], v[3], pad[3], a[3], e[3],
     pixel_size, i, j, k, extent[6], cropped_size[3];
   unsigned int a1, a2, a3;
   std::string fn, vh_dataset;
@@ -217,8 +217,8 @@ int main(int argc, char * argv[])
   std::ofstream cfo;
   cfo.open(cfn.c_str());
   //write the number of chunks to follow
-  cfo.write((unsigned char *)&chunknumber, sizeof(int));
-  cfo.write((unsigned char *)chunk_list, chunknumber *
+  cfo.write((char *)&chunknumber, sizeof(int));
+  cfo.write((char *)chunk_list, chunknumber *
             sizeof(ctk::chunk_info_struct));
   cfo.close();
 
@@ -291,15 +291,15 @@ int main(int argc, char * argv[])
                 vf_filename_map(zz) << std::endl;
               ::exit(1);
             }
-          in.seekg(start_offset, ios::beg);
+          in.seekg(start_offset, std::ios::beg);
           for (unsigned yy = 0; yy < y_max; yy++)
             {
-              in.read((unsigned char *)scanline, scanlen);
+              in.read((char *)scanline, scanlen);
               pos = in.tellg();
-              in.seekg(z_stride - scanlen, ios::cur);
-              in.read((unsigned char *)scanline2, scanlen);
-              in.seekg(z_stride - scanlen, ios::cur);
-              in.read((unsigned char *)scanline3, scanlen);
+              in.seekg(z_stride - scanlen, std::ios::cur);
+              in.read((char *)scanline2, scanlen);
+              in.seekg(z_stride - scanlen, std::ios::cur);
+              in.read((char *)scanline3, scanlen);
 
               for (ggg = 0, fff = 0; ggg < scanlen; ++ggg)
                 {
@@ -311,10 +311,10 @@ int main(int argc, char * argv[])
                   fff++;
                 }
 
-              out.write((unsigned char *)interlaced_scanline, scanlen *3);
+              out.write((char *)interlaced_scanline, scanlen *3);
               
               in.seekg(pos);
-              in.seekg(y_scan_offset,ios::cur);
+              in.seekg(y_scan_offset, std::ios::cur);
             }
           in.close();
         }

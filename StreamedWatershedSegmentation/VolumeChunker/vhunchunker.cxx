@@ -92,7 +92,7 @@ public:
   virtual void open(const char *fn) = 0;
   
   virtual void write(long x, long y, long z,
-                     unsigned char *buf, long sz) = 0;
+                     char *buf, long sz) = 0;
   virtual void close() { m_ostream.close(); }
 
   void size(const long x,
@@ -139,27 +139,27 @@ class volume_ra_file : public ra_file
 public:
   volume_ra_file() {}
   virtual void write(long x, long y, long z,
-                     unsigned char *buf, long sz);
+                     char *buf, long sz);
   virtual void open(const char *fn);
 };
 
 void volume_ra_file::open(const char *fn)
 {
   ra_file::calculate_strides();
-  unsigned char *buf;
+  char *buf;
 
   long counter = 0;
   long filelen = m_sz[0] * m_sz[1] * m_sz[2]
     * m_pixel_size * m_components; 
 
   // Create and pad file to proper size
-  m_ostream.open(fn, ios::trunc);
+  m_ostream.open(fn, std::ios::trunc);
   if (!m_ostream)
     {
       std::cerr << "Cannot open file " << fn << std::endl;
       ::exit(1);
     }
-  buf = new unsigned char[bufsz];
+  buf = new char[bufsz];
   ::memset((void *)buf, 0, bufsz);
   while (counter < (filelen - bufsz))
     {
@@ -170,10 +170,10 @@ void volume_ra_file::open(const char *fn)
 }
 
 void volume_ra_file::write(long x, long y, long z,
-                           unsigned char *buf, long sz)
+                           char *buf, long sz)
 {
   long offset = x*m_x_stride + y*m_y_stride + z*m_z_stride;
-  m_ostream.seekp(offset, ios::beg);
+  m_ostream.seekp(offset, std::ios::beg);
   m_ostream.write(buf, sz);
 }
 
@@ -182,7 +182,7 @@ class slice_ra_file : public ra_file
 public:
   slice_ra_file() {m_closed = true;}
   virtual void write(long x, long y, long z,
-                     unsigned char *buf, long sz);
+                     char *buf, long sz);
   virtual void open(const char *fn);
 protected:
   bool m_closed;
@@ -191,7 +191,7 @@ protected:
 };
 
 void slice_ra_file::write(long x, long y, long z,
-                          unsigned char *buf, long sz)
+                          char *buf, long sz)
 {
   std::string name;
   char nmbuf[255];
@@ -201,7 +201,9 @@ void slice_ra_file::write(long x, long y, long z,
       if (m_closed != true) m_ostream.close();
       ::sprintf(nmbuf,"%u", z + m_z_offset);
       name = m_prefix + "." +  std::string(nmbuf);
-      m_ostream.open(name.c_str(), ios::nocreate);
+      //      m_ostream.open(name.c_str(), std::ios::nocreate);
+      m_ostream.open(name.c_str());
+     
       if (!m_ostream)
         {
           std::cerr << "File " << name
@@ -211,7 +213,7 @@ void slice_ra_file::write(long x, long y, long z,
       m_closed = false;
     }
   long offset = x*m_x_stride + y*m_y_stride;
-  m_ostream.seekp(offset, ios::beg);
+  m_ostream.seekp(offset, std::ios::beg);
   m_ostream.write(buf, sz);
 }
 
@@ -223,7 +225,7 @@ void slice_ra_file::open(const char *fn)
   long zLast  = m_z_offset + m_sz[2];
   long filelen;
   std::string name;
-  unsigned char *buf;
+  char *buf;
   char nmbuf[255];
   long counter = 0;
 
@@ -232,7 +234,7 @@ void slice_ra_file::open(const char *fn)
     {
       ::sprintf(nmbuf, "%u", i);
       name = std::string(fn) + "." + std::string(nmbuf);
-      m_ostream.open(name.c_str(), ios::trunc);
+      m_ostream.open(name.c_str(), std::ios::trunc);
       if (!m_ostream)
         {
           std::cerr << "Could not create file " << name << std::endl;
@@ -241,7 +243,7 @@ void slice_ra_file::open(const char *fn)
 
       filelen = m_sz[0] * m_sz[1] * m_pixel_size * m_components;
       
-      buf = new unsigned char[bufsz];
+      buf = new char[bufsz];
       ::memset((void *)buf, 0, bufsz);
       counter = 0;
       while (counter < (filelen - bufsz))
@@ -267,8 +269,7 @@ int main(int argc, char *argv[])
   ctk::chunk_info_struct *chunk_list;
   std::string output_name, chunk_filename, chunk_prefix;
   long pad[3], o_Xextent[2], o_Yextent[2], o_Zextent[2],
-    volume_extent[6], reassemble_extent[6],
-    pixel_size, pixel_components, i;
+    volume_extent[6], pixel_size, pixel_components, i;
   bool slices;
   int nooffset;
   ra_file *outstream;
@@ -339,24 +340,20 @@ int main(int argc, char *argv[])
                 << std::endl;
       ::exit(1);
     }
-  in.read((unsigned char *)&chunknumber, sizeof(int));
+  in.read((char *)&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
-  in.read((unsigned char *)chunk_list, chunknumber *
+  in.read((char *)chunk_list, chunknumber *
           sizeof(ctk::chunk_info_struct));
   in.close();
 
   // Some properties of the output volume that we are going to create
   long o_size[3];
-  long o_Xstride, o_Ystride, o_Zstride;
   long c_Xstride, c_Ystride, c_Zstride;
   long startX, startY, startZ, endX, endY, endZ, c_Yoffset,
     c_Zoffset, c_endX, c_endY, c_endZ, c_start;  
   o_size[0] = o_Xextent[1] - o_Xextent[0];
   o_size[1] = o_Yextent[1] - o_Yextent[0];
   o_size[2] = o_Zextent[1] - o_Zextent[0];
-  o_Xstride = pixel_size * pixel_components;
-  o_Ystride = o_size[0]  * o_Xstride;
-  o_Zstride = o_size[1]  * o_Ystride;
   
   // Create & pad the output file(s)
   if (slices == true)
@@ -375,7 +372,7 @@ int main(int argc, char *argv[])
   // cropping out padded regions.
   std::string chunk_name;
   char strbuf[255];
-  unsigned char *scanbuf;
+  char *scanbuf;
   long scanlen;
   std::cout << "Reconstructing the region (" << o_Xextent[0] << "-"
             << o_Xextent[1] << ", " << o_Yextent[0] << "-" << o_Yextent[1]
@@ -444,7 +441,7 @@ int main(int argc, char *argv[])
         + (startZ - chunk_list[i].get_padded_idx()[2]) * c_Zstride;
       
       scanlen = (endX - startX) * pixel_size * pixel_components;
-      scanbuf = new unsigned char[scanlen];
+      scanbuf = new char[scanlen];
       
       //
       std::cout << chunk_list[i] << std::endl;
@@ -460,7 +457,7 @@ int main(int argc, char *argv[])
         {
           die ("Could not open chunk file" );
         }
-      chunkin.seekg(c_start, ios::beg);
+      chunkin.seekg(c_start, std::ios::beg);
       
       long xPos, yPos, zPos;
       xPos = startX - o_Xextent[0];
@@ -470,11 +467,11 @@ int main(int argc, char *argv[])
           for (long yy = startY; yy < endY; yy++)
             {
               yPos = yy - o_Yextent[0];
-              chunkin.read((unsigned char *)scanbuf, scanlen);
+              chunkin.read((char *)scanbuf, scanlen);
               outstream->write(xPos, yPos, zPos,  scanbuf, scanlen);
-              chunkin.seekg(c_Yoffset, ios::cur);
+              chunkin.seekg(c_Yoffset, std::ios::cur);
             }
-          chunkin.seekg(c_Zoffset, ios::cur);
+          chunkin.seekg(c_Zoffset, std::ios::cur);
         }
       delete [] scanbuf;
     }

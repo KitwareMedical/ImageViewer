@@ -94,7 +94,7 @@ inline void die(const char *s)
 
 int main(int argc, char * argv[])
 {
-  unsigned int n[3], v[3], rem[3], pad[3], a[3], e[3], pixel_size, i, j, k;
+  unsigned int n[3], v[3], pad[3], a[3], e[3], pixel_size, i, j, k;
   unsigned int a1, a2, a3;
   std::string fn;
   ::div_t res;
@@ -170,8 +170,8 @@ int main(int argc, char * argv[])
   std::ofstream cfo;
   cfo.open(cfn.c_str());
   //write the number of chunks to follow
-  cfo.write((unsigned char *)&chunknumber, sizeof(int));
-  cfo.write((unsigned char *)chunk_list, chunknumber *
+  cfo.write((char *)&chunknumber, sizeof(int));
+  cfo.write((char *)chunk_list, chunknumber *
             sizeof(ctk::chunk_info_struct)); 
   cfo.close();
 
@@ -237,18 +237,18 @@ int main(int argc, char * argv[])
       // Read and write scanlines
       out.open(chunkfilename.c_str());
 
-      in.seekg(start_offset, ios::beg);
+      in.seekg(start_offset, std::ios::beg);
       unsigned z_max = chunk_list[i].get_padded_sz()[2];
       unsigned y_max = chunk_list[i].get_padded_sz()[1];
       for (unsigned zz = 0; zz < z_max; zz++)
         {
           for (unsigned yy = 0; yy < y_max; yy++)
             {
-              in.read((unsigned char *)scanline, scanlen);
-              out.write((unsigned char *)scanline, scanlen);
-              in.seekg(y_scan_offset,ios::cur);
+              in.read((char *)scanline, scanlen);
+              out.write((char *)scanline, scanlen);
+              in.seekg(y_scan_offset, std::ios::cur);
             }
-          in.seekg(z_scan_offset, ios::cur);
+          in.seekg(z_scan_offset, std::ios::cur);
         }
       out.close();
       
