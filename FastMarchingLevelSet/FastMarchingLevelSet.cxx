@@ -62,6 +62,7 @@ FastMarchingLevelSet
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   thresholdedImageButton->Observe( m_ThresholdFilter.GetPointer() );
+  thresholdedImageVTKButton->Observe( m_ThresholdFilter.GetPointer() );
   timeCrossingButton->Observe( m_FastMarchingFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
   edgePotentialButton->Observe( m_ExpNegativeFilter.GetPointer() );
