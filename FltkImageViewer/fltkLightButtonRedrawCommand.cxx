@@ -65,7 +65,7 @@ LightButtonRedrawCommand
 //--------------------------------------------------
 void
 LightButtonRedrawCommand
-::Execute( itk::LightObject * , unsigned long event )
+::Execute( itk::Object * , unsigned long event )
 {
 
   Fl_Light_Button * button = GetWidget();
@@ -114,7 +114,7 @@ LightButtonRedrawCommand
 //--------------------------------------------------
 void
 LightButtonRedrawCommand
-::Execute( const itk::LightObject * , unsigned long event )
+::Execute( const itk::Object * , unsigned long event )
 {
  
   Fl_Light_Button * button = GetWidget();

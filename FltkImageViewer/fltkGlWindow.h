@@ -73,13 +73,13 @@ public:
   void SaveImage( void );
   void SaveImage( const char * filename );
   const RedrawCommandType::Pointer & GetRedrawCommand(void);
-  itk::LightObject::Pointer & GetNotifier(void);
+  itk::Object::Pointer & GetNotifier(void);
 
 private:
 
   RedrawCommandType::Pointer   m_RedrawCommand;
     
-  itk::LightObject::Pointer    m_Notifier;
+  itk::Object::Pointer    m_Notifier;
 
 };
 

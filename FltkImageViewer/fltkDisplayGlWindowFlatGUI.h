@@ -25,7 +25,7 @@ public:
   void MakeCurrent(void);
   int IsVisible(void);
   itk::Command::Pointer GetRedrawCommand(void);
-  itk::LightObject::Pointer & GetNotifier(void);
+  itk::Object::Pointer & GetNotifier(void);
   virtual void SetBackground(GLfloat r, GLfloat g, GLfloat b);
 };
 #endif

@@ -65,7 +65,7 @@ Image2DViewerUpdateCommand
 //--------------------------------------------------
 void
 Image2DViewerUpdateCommand
-::Execute( itk::LightObject * , unsigned long event )
+::Execute( itk::Object * , unsigned long event )
 {
 
   if( !m_Viewer )
@@ -98,7 +98,7 @@ Image2DViewerUpdateCommand
 //--------------------------------------------------
 void
 Image2DViewerUpdateCommand
-::Execute( const itk::LightObject * , unsigned long event )
+::Execute( const itk::Object * , unsigned long event )
 {
  
 

@@ -25,6 +25,6 @@ public:
   void MakeCurrent(void);
   int IsVisible(void);
   const fltk::GlWindow::RedrawCommandType::Pointer & GetRedrawCommand(void);
-  itk::LightObject::Pointer & GetNotifier(void);
+  itk::Object::Pointer & GetNotifier(void);
 };
 #endif

@@ -61,6 +61,6 @@ const fltk::GlWindow::RedrawCommandType::Pointer & fltkDisplayGlWindowGUI::GetRe
   return drawWindow->GetRedrawCommand();
 }
 
-itk::LightObject::Pointer & fltkDisplayGlWindowGUI::GetNotifier(void) {
+itk::Object::Pointer & fltkDisplayGlWindowGUI::GetNotifier(void) {
   return drawWindow->GetNotifier();
 }

@@ -61,7 +61,7 @@ itk::Command::Pointer fltkDisplayGlWindowFlatGUI::GetRedrawCommand(void) {
   return drawWindow->GetRedrawCommand().GetPointer();
 }
 
-itk::LightObject::Pointer & fltkDisplayGlWindowFlatGUI::GetNotifier(void) {
+itk::Object::Pointer & fltkDisplayGlWindowFlatGUI::GetNotifier(void) {
   return drawWindow->GetNotifier();
 }
 

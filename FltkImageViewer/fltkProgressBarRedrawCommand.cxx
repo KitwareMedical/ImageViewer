@@ -65,7 +65,7 @@ ProgressBarRedrawCommand::ProgressBarRedrawCommand(void)
 //--------------------------------------------------
 void
 ProgressBarRedrawCommand
-::Execute( itk::LightObject * caller, unsigned long event )
+::Execute( itk::Object * caller, unsigned long event )
 {
 
   if( event == ProgressEvent )
@@ -97,7 +97,7 @@ ProgressBarRedrawCommand
 //--------------------------------------------------
 void
 ProgressBarRedrawCommand
-::Execute( const itk::LightObject * caller, unsigned long event )
+::Execute( const itk::Object * caller, unsigned long event )
 {
 
   if( event == ProgressEvent )
