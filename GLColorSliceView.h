@@ -94,20 +94,27 @@ SetInputImage(ImageType * newImData)
 
   SizeType   size   = region.GetSize();
 
-  if( cValidOverlayData )
-    {
-    RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
-    SizeType   overlay_size   = overlay_region.GetSize();
-      
-    for( int i=0; i<3; i++ )
-      {
-      if( size[i] != overlay_size[i] )
-        {
-        return;
-        }
-      }
-    } 
 
+  // If the overlay has been set and the size is different from the new image,
+  // it is removed.
+  if( cValidOverlayData)
+  {  
+    SizeType  overlay_size   = cOverlayData->GetLargestPossibleRegion().GetSize();
+      
+    if((overlay_size[0] != size[0])
+       ||  (overlay_size[1] != size[1])
+       ||  (overlay_size[2] != size[2])
+      )
+      {
+       if(cWinOverlayData != NULL)
+        {
+        delete [] cWinOverlayData;
+        }
+       cWinOverlayData       = NULL;
+       cValidOverlayData     = false;
+      }       
+  }
+    
   cImData = newImData;
   cDimSize[0] = size[0];
   cDimSize[1] = size[1];
