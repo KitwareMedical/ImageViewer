@@ -14,14 +14,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+#include <fstream>
 #include "itkAntiAliasBinaryImageFilter.h"
 #include "itkZeroCrossingImageFilter.h"
 #include "itkRawImageIO.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "param.h"
 #include "itkImageRegionIterator.h"
-#include <string>
+#include "param.h"
+
 
 void die(char *s)
 {
@@ -43,17 +44,22 @@ int main(int argc, char *argv[] )
   typedef itk::Image<InputDataType, 3> BinaryImageType;
   typedef itk::Image<float, 3> RealImageType;
   
+// worked to here
+
+
+  itk::ImageFileWriter<RealImageType>::Pointer writer
+    = itk::ImageFileWriter<RealImageType>::New();
+
+  itk::ImageFileReader<BinaryImageType>::Pointer reader
+    = itk::ImageFileReader<BinaryImageType>::New();
+
   itk::RawImageIO<InputDataType, 3>::Pointer input_io
     = itk::RawImageIO<InputDataType, 3>::New();
 
   itk::RawImageIO<float, 3>::Pointer output_io
     = itk::RawImageIO<float, 3>::New();
 
-  itk::ImageFileReader<BinaryImageType>::Pointer reader
-    = itk::ImageFileReader<BinaryImageType>::New();
 
-  itk::ImageFileWriter<RealImageType>::Pointer writer
-    = itk::ImageFileWriter<RealImageType>::New();
 
   unsigned long size[3];
 
@@ -141,6 +147,6 @@ int main(int argc, char *argv[] )
       std::cerr << e << std::endl;
       die ("Exception.  Abort.");
     }
-    
+
   return 0;
 }
