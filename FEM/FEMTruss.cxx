@@ -21,7 +21,7 @@
 #endif
 
 #include "itkFEM.h"
-#include "itkFEMItpackLinearSystemWrapper.h"
+#include "itkFEMLinearSystemWrapperItpack.h"
 #include <iostream>
 
 using namespace itk::fem;
@@ -46,7 +46,7 @@ int main( int argc, char *argv[] ) {
   /*
    * Set the linear system wrapper object that we wish to use.
    */
-  ItpackLinearSystemWrapper itpack;
+  LinearSystemWrapperItpack itpack;
   itpack.SetMaximumNonZeroValuesInMatrix(1000);
   S.SetLinearSystemWrapper(&itpack);
 
