@@ -12,6 +12,9 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+#Build the parameter file parser necessary for several examples that follow
+#SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
+
 # Build the StreamedWatershedSegmentation example
 #SUBDIRS(StreamedWatershedSegmentation)
 
@@ -19,7 +22,7 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 #SUBDIRS(WatershedSegmentation)
 
 # Build the AntiAliasBinaryImageFilter example
-SUBDIRS(AntiAliasBinaryImageFilter)
+#SUBDIRS(AntiAliasBinaryImageFilter)
 
 # Test the condition to build or not build the Image Registration example
 IF(HAS_METAIMAGE)
