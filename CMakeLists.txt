@@ -12,6 +12,10 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+#Build the example of how to create a static library for 
+# select filters in itk.
+SUBDIRS (ITKFilterLib)
+
 #Build the parameter file parser necessary for several examples that follow
 SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 
