@@ -401,7 +401,7 @@ void main(int argc, char** argv)
     mf->SetIterations(n);
     mf->SetInput(vol_init);
     mf->SetNumberOfLayers(3);
-    mf->SetCurvatureWeight(1.0);
+    mf->SetCurvatureWeight(0.1);
     mf->Update();
     
     writer->SetFileName("final_image_3D.raw");

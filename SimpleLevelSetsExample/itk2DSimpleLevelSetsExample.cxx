@@ -176,7 +176,7 @@ protected:
       MorphFunction::Pointer p = MorphFunction::New();
       p->SetPropagationWeight(-1.0);
       p->SetAdvectionWeight(0.0);
-      p->SetCurvatureWeight(1.0);
+      p->SetCurvatureWeight(0.1);
       this->SetDifferenceFunction(p);
 
     }
