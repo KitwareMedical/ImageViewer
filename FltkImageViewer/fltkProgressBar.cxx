@@ -26,7 +26,7 @@ namespace fltk {
 
 
 /** Constructor */
-ProgressBar::ProgressBar(int x, int y, int w, int h, char * label=0):
+ProgressBar::ProgressBar(int x, int y, int w, int h, char * label):
     Fl_Slider( x, y, w, h, label ) {
  m_RedrawCommand = RedrawCommandType::New();
  m_RedrawCommand->SetCallbackFunction( this, &ProgressBar::ProcessEvent );
