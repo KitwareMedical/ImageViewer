@@ -28,7 +28,7 @@ public:
 	virtual void Quit(void);
 	virtual void Run(void);
 	virtual void Stop(void);
-	virtual void Resume(void);
+	virtual void Restart(void);
   virtual void Show(void);
   virtual void ShowControls(void);
   virtual void HideControls(void);

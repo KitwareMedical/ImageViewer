@@ -4,20 +4,21 @@
 
 
 #include <iostream>
-#include "itkIndent.h"
-#include "itkLightObject.h"
-#include "itkObjectFactory.h"
-#include "Bacteria.h"
+#include "itkDefaultDynamicMeshTraits.h"
+#include "itkMesh.h"
+#include "Cell.h"
 
 
 
 namespace bio {
 
+
+  
 /**
  * \class CellularAggregate
  * \brief This class represent an aggregation of bio::Cell objects
  * This class is the base for different types of cellular groups
- * includeing bacterial colonies and pluricellular organisms 
+ * including bacterial colonies and pluricellular organisms 
  */
 class CellularAggregate : public itk::LightObject
 {
@@ -39,6 +40,7 @@ public:
   typedef itk::SmartPointer<Self>        Pointer;
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
+
   /** 
    * Run-time type information (and related methods).
    */
@@ -50,9 +52,42 @@ public:
   itkNewMacro(Self);  
 
 
-  typedef Cell::VectorType        VectorType;
-  typedef Cell::PointType         PointType;
 
+  /** 
+   *      Mesh type 
+   */
+  typedef itk::DefaultDynamicMeshTraits<  
+              Cell *,                   // PixelType
+              Cell::PointDimension,     // Points Dimension
+              Cell::PointDimension,     // Max.Topologycal Dimension
+              double,                   // Type for coordinates
+              double                    // Type for interpolation 
+              >  MeshTraits;
+  
+  
+  typedef itk::Mesh<  MeshTraits::PixelType,
+                      MeshTraits::PointDimension,
+                      MeshTraits  >               MeshType;
+
+  
+  typedef MeshType::Pointer                       MeshPointer;
+  typedef MeshType::ConstPointer                  MeshConstPointer;
+
+  typedef MeshType::PointType                     PointType;
+  typedef Cell::VectorType                        VectorType;
+
+
+  typedef MeshType::PointsContainer               PointsContainer;
+  typedef MeshType::PointDataContainer            PointDataContainer;
+
+  typedef PointsContainer::Iterator               PointsIterator;
+  typedef PointDataContainer::Iterator            CellsIterator;
+
+  typedef PointsContainer::ConstIterator          PointsConstIterator;
+  typedef PointDataContainer::ConstIterator       CellsConstIterator;
+
+  typedef MeshType::PointIdentifier               CellIdentifierType;
+  
 
 public:
 
@@ -61,14 +96,17 @@ public:
   void Draw(void) const;
   void SetGrowthRadiusLimit( double value );
   void SetGrowthRadiusIncrement( double value );
-  Cell::CellsListType * GetCells(void);
-  const Cell::CellsListType * GetCells(void) const;
-  void SetCells( Cell::CellsListType * );
-
-
-public:
   
+  MeshPointer         GetCells(void);
+  MeshConstPointer    GetCells(void) const;
+
   virtual void AdvanceTimeStep(void);
+
+  virtual void Add( Cell * cell, const VectorType & perturbation );
+  virtual void Add( Cell * cell );
+  virtual void Remove( Cell * cell );
+
+  void DumpContent(void) const;
 
 
 protected:
@@ -80,12 +118,13 @@ protected:
   void PrintSelf(std::ostream& os, itk::Indent indent) const;
 
   virtual void ComputeForces(void);
+  virtual void UpdatePositions(void);
   virtual void ClearForces(void);
   virtual void KillAll(void);
   
 private:
 
-  Cell::CellsListType    *  m_Cells;
+  MeshPointer    m_Mesh;
 
 };
 

@@ -17,10 +17,10 @@ class Bacteria  : public Cell
 
 public:
   Bacteria();
-  Bacteria( Cell::CellsListType * );
   ~Bacteria();
   virtual void Grow(void);
   virtual void Divide(void);
+  virtual Cell * CreateNew(void);
 
 private:
 

@@ -94,10 +94,10 @@ CellsViewerBase
 
 
 /**
- *    Resume a Stopped simulation
+ *    Restart a simulation
  */ 
 void CellsViewerBase
-::Resume(void)
+::Restart(void)
 {
 	m_Stop = false;
 }
@@ -121,7 +121,11 @@ itk::Command::Pointer
 CellsViewerBase
 ::GetRedrawCommand(void)
 {
-	return m_Display.GetRedrawCommand().GetPointer();
+  itk::Command::Pointer command;
+  
+  command = m_Display.GetRedrawCommand();
+
+	return command.GetPointer();
 }
 
 

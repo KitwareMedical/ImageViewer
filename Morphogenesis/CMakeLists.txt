@@ -32,10 +32,6 @@ CellularAggregate
 Bacteria
 BacterialColony
 BacterialColonyRedrawCommand
-Tissue
-TissueViewer
-TissueViewerGUI
-TissueViewerWindow
 main
 )
 

@@ -3,13 +3,13 @@
 
 #include "Cell.h"
 #include "FL/gl.h"
+#include <new>
 
 
 namespace bio {
 
 
   
-Cell::PointType    Cell::DefaultPosition;
 Cell::ColorType    Cell::DefaultColor;
 
 double             Cell::DefaultRadius         =       10; // microns
@@ -24,6 +24,7 @@ double             Cell::DefaultEnergyIntake      =     1;
 double             Cell::DefaultNutrientsIntake   =     1; 
 
 
+unsigned long      Cell::Counter = 0; // number of cells created
 
 
 /**
@@ -34,36 +35,15 @@ Cell
 {
 
 	m_Radius      = DefaultRadius;
-	m_Position    = DefaultPosition;
   m_Color       = DefaultColor;
   
-  // The first lonely cell to be created
-  // gives origin to an aggregate
-  m_Aggregate = new CellsListType;
-  m_Aggregate->push_back( this );
+  m_ParentIdentifier = 0;    // Parent cell has to write here
+
+  // The first Cell is numbered as 1
+  Counter++;
+  m_SelfIdentifier = Counter;  
 
 }
-
-
-
-/**
- *    Constructor
- */ 
-Cell
-::Cell( CellsListType * cellList )
-{
-
-	m_Radius      = DefaultRadius;
-	m_Position    = DefaultPosition;
-  m_Color       = DefaultColor;
-  
-  // Subsequent cells are registered 
-  // in the aggregate
-  m_Aggregate = cellList;
-  m_Aggregate->push_back( this );
-
-}
-
 
 
 
@@ -74,13 +54,35 @@ Cell
 Cell
 ::~Cell()
 {
-  // The last cell to die should
-  // destroy the aggregate
-  if( m_Aggregate->size() == 1 )
-  {
-    m_Aggregate->clear();
-    delete m_Aggregate;
-  }
+}
+
+
+
+/**
+ *    Cell Division
+ */ 
+void
+Cell
+::Divide(void) 
+{
+}
+
+
+
+
+/**
+ *    Create a New cell
+ *    this method behave like a factory, it is 
+ *    intended to be overloaded in any class 
+ *    deriving from Cell.
+ */ 
+Cell *
+Cell 
+::CreateNew(void) 
+{
+  Cell * cell = new Cell;
+  cell->m_ParentIdentifier = m_SelfIdentifier;
+  return cell;
 }
 
 
@@ -91,7 +93,7 @@ Cell
  */ 
 void
 Cell
-::Draw(void) const
+::Draw( const PointType & position ) const
 {
 
   const unsigned int NumberOfSides = 12;
@@ -103,11 +105,12 @@ Cell
     for(unsigned int side=0; side < NumberOfSides; side++)
       {
       const double angle = static_cast<double>( side ) * sectorAngle;
-      double x = m_Radius * cos( angle ) + m_Position[0];
-      double y = m_Radius * sin( angle ) + m_Position[1];
+      double x = m_Radius * cos( angle ) + position[0];
+      double y = m_Radius * sin( angle ) + position[1];
       glVertex2d( x, y );
       }
   glEnd(); 
+
 }
 
 
@@ -150,6 +153,81 @@ Cell
 
 
 /**
+ *    Return the cumulated force
+ */ 
+const Cell::VectorType &
+Cell
+::GetForce(void) const
+{
+  return m_Force;
+}
+
+
+
+/**
+ *    Return the ID  of this cell
+ */ 
+Cell::IdentifierType
+Cell
+::GetSelfIdentifier(void) const
+{
+  return m_SelfIdentifier;
+}
+
+
+
+/**
+ *    Return the ID  of the parent cell
+ */ 
+Cell::IdentifierType
+Cell
+::GetParentIdentifier(void) const
+{
+  return m_ParentIdentifier;
+}
+
+
+
+
+/**
+ *    Return a const pointer to the Cellular Aggregate
+ */ 
+const CellularAggregate *
+Cell
+::GetCellularAggregate(void) const
+{
+  return m_Aggregate;
+}
+
+
+
+/**
+ *    Return a pointer to the Cellular Aggregate
+ */ 
+CellularAggregate *
+Cell
+::GetCellularAggregate(void) 
+{
+  return m_Aggregate;
+}
+
+
+
+
+
+/**
+ *   Set Cellular Aggregate
+ */ 
+void
+Cell
+::SetCellularAggregate( CellularAggregate * cells ) 
+{
+  m_Aggregate = cells;
+}
+
+
+
+/**
  *    Return the radius 
  */ 
 double
@@ -184,44 +262,6 @@ Cell
 }
 
 
-
-/**
- *    Return a pointer to the static list that
- *    hold reference to all the cells
- */ 
-Cell::CellsListType *
-Cell
-::GetAggregate(void) 
-{
-  return m_Aggregate;
-}
-
-
-
-/**
- *    Get the position of the cell in space
- */ 
-const Cell::PointType &
-Cell
-::GetPosition(void) const
-{
-  return m_Position;
-}
-
-
-
-/**
- *    Update the position by applying the force
- *    a viscous medium is assumed, in which 
- *    kinetic energy is disipated, so speeds are
- *    not managed
- */ 
-void
-Cell
-::UpdatePosition(void) 
-{
-  m_Position += m_Force / 2.0;
-}
 
 
 /**

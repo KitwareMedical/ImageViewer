@@ -31,7 +31,7 @@ void CellsViewerGUI::cb_4square(Fl_Button* o, void* v) {
 }
 
 inline void CellsViewerGUI::cb__i(Fl_Button*, void*) {
-  Resume();
+  Restart();
 }
 void CellsViewerGUI::cb_(Fl_Button* o, void* v) {
   ((CellsViewerGUI*)(o->parent()->user_data()))->cb__i(o,v);

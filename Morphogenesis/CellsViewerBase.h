@@ -30,7 +30,7 @@ public:
 	virtual void Quit(void);
 	virtual void Run(void);
 	virtual void Stop(void);
-	virtual void Resume(void);
+	virtual void Restart(void);
   virtual void ShowDisplay(void);
   virtual void HideDisplay(void);
   virtual void SetCellsAggregate( CellularAggregate * );

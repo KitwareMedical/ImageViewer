@@ -2,6 +2,10 @@
 
 
 #include "Bacteria.h"
+#include "CellularAggregate.h"
+
+
+
 
 namespace bio {
 
@@ -17,15 +21,6 @@ Bacteria
 {
 }
 
-
-
-/**
- *    Constructor
- */ 
-Bacteria
-::Bacteria(Cell::CellsListType * cells):Cell( cells )
-{
-}
 
 
 
@@ -53,8 +48,25 @@ Bacteria
   m_Radius += GrowthRadiusIncrement;
   if( m_Radius > GrowthRadiusLimit )
   {
+    // Divide is a terminal operation
+    // this cell is destroyed in the 
+    // process
     this->Divide();
   }
+}
+
+
+
+/**
+ *    Cell Division
+ */ 
+Cell *
+Bacteria
+::CreateNew()
+{
+  Bacteria * bacteria = new Bacteria;
+  bacteria->m_ParentIdentifier = m_SelfIdentifier;
+  return bacteria;
 }
 
 
@@ -66,27 +78,34 @@ void
 Bacteria
 ::Divide(void) 
 {
+  Cell::Divide();
 
+  Bacteria * siblingA = dynamic_cast<Bacteria*>( this->CreateNew() );
+  Bacteria * siblingB = dynamic_cast<Bacteria*>( this->CreateNew() );
 
-    Bacteria * sibling = new Bacteria( GetAggregate() );
+  siblingA->m_Radius   = m_Radius / sqrt( 2.0f );
+  siblingB->m_Radius   = m_Radius / sqrt( 2.0f );
 
-    m_Radius            = m_Radius/sqrt(2.0);
-    sibling->m_Radius   = m_Radius;
+  // Create a perturbation for separating the daugther cells
+  double angle = static_cast<double>( rand() ) / 
+                 static_cast<double>( RAND_MAX ) *
+                 atan(1) * 4.0;
 
-    // Create a perturbation for separating the daugther cells
-    double angle = static_cast<double>( rand() ) / 
-                   static_cast<double>( RAND_MAX ) *
-                   atan(1) * 4.0;
+  Cell::VectorType perturbationVector;
+  double perturbationLength = m_Radius * 0.75;
 
-    Cell::VectorType PerturbationVector;
-    double PerturbationLength = m_Radius * 0.75;
+  perturbationVector[0] = perturbationLength * cos( angle );
+  perturbationVector[1] = perturbationLength * sin( angle );
 
-    PerturbationVector[0] = PerturbationLength * cos( angle );
-    PerturbationVector[1] = PerturbationLength * sin( angle );
+  CellularAggregate * aggregate = GetCellularAggregate();
 
-    sibling->m_Position = m_Position - PerturbationVector; 
-    
-    m_Position    	   += PerturbationVector;
+  siblingA->m_ParentIdentifier = m_SelfIdentifier;
+  siblingB->m_ParentIdentifier = m_SelfIdentifier;
+
+  aggregate->Add( siblingA,  perturbationVector );
+  aggregate->Add( siblingB, -perturbationVector );
+
+  aggregate->Remove( this ); // "this" will be destroyed here
 
 }
 

@@ -8,15 +8,19 @@
 int main()
 {
 
+
+
+  bio::CellsViewer               viewer;
+
   bio::BacterialColony::Pointer  colony = bio::BacterialColony::New();
 
-  bio::CellsViewer      viewer;
+
+  itk::Command::Pointer redraw = viewer.GetRedrawCommand();
+  colony->AddObserver( bio::TimeStepEvent, redraw );
+
 
   viewer.SetCellsAggregate( colony );
-
-  colony->AddObserver( itk::Command::ModifiedEvent, 
-                       viewer.GetRedrawCommand()    );
-
+  
   bio::BacterialColonyRedrawCommand::Pointer colonyRedrawCommand =
                                     bio::BacterialColonyRedrawCommand::New();
 
@@ -24,7 +28,13 @@ int main()
 
   viewer.GetNotifier()->AddObserver( fltk::GlDrawEvent, colonyRedrawCommand );
 
+
   colony->SetGrowthRadiusIncrement( 0.01 );
+
+
+  bio::Bacteria * first = new bio::Bacteria;
+
+  colony->Add( first );
 
   viewer.Show();
   

@@ -12,8 +12,7 @@ namespace bio {
  */
 enum EventIds 
 {
-  RedrawEvent = itk::Command::UserEvent+1,
-  GLDrawEvent,
+  TimeStepEvent= itk::Command::UserEvent+1
 };
 
 

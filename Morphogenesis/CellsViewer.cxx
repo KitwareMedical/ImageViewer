@@ -99,12 +99,12 @@ CellsViewer
 
 
 /**
- *    Resume a Stopped simulation
+ *    Restart a Simulation
  */ 
 void CellsViewer
-::Resume(void)
+::Restart(void)
 {
-  CellsViewerBase::Resume();
+  CellsViewerBase::Restart();
 }
 
 
