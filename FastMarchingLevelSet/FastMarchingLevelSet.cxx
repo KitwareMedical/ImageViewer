@@ -354,6 +354,7 @@ FastMarchingLevelSet
   m_SegmentationImageViewer.SetImage( m_CastImageFilter->GetOutput() );  
   m_SegmentationImageViewer.SetOverlay( m_ThresholdFilter->GetOutput() );
   m_SegmentationImageViewer.Show();
+  m_SegmentationImageViewer.SetOverlayOpacity( 0.5 );
 
 }
 
