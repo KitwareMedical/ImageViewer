@@ -46,7 +46,7 @@ public:
 
   
   /** Get Command */
-  RedrawCommandType::Pointer GetRedrawCommand( void ) const;
+  RedrawCommandType * GetRedrawCommand( void ) const;
 
   
   /** Manage a Progress event */

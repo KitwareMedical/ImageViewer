@@ -36,7 +36,7 @@ LightButton
 
   
 /** Get Command */
-LightButton::RedrawCommandType::Pointer 
+LightButton::RedrawCommandType *
 LightButton::GetRedrawCommand( void ) const
 {
   return m_RedrawCommand.GetPointer();

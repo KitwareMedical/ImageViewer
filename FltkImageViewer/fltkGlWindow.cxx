@@ -80,7 +80,7 @@ void GlWindow::SaveImage(void)
 //    Return Redraw Command
 //
 //------------------------------------------
-GlWindow::RedrawCommandType::Pointer  
+GlWindow::RedrawCommandType *
 GlWindow
 ::GetRedrawCommand(  void )
 {

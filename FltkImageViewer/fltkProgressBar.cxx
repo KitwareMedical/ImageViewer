@@ -36,7 +36,7 @@ ProgressBar::ProgressBar(int x, int y, int w, int h, char * label):
 
   
 /** Get Command */
-ProgressBar::RedrawCommandType::Pointer 
+ProgressBar::RedrawCommandType * 
 ProgressBar::GetRedrawCommand( void ) const
 {
   return m_RedrawCommand.GetPointer();

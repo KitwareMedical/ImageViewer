@@ -22,7 +22,7 @@
 #include "itkWriteMetaImage.h"
 #include "itkObjectFactory.h"
 #include <MetaImageLib.h>
-#include "itkImageRegionIterator.h"
+#include "itkImageRegionConstIterator.h"
 
 namespace itk
 {
@@ -68,16 +68,16 @@ WriteMetaImage<TInputImage>
   const unsigned int BitsPerPixel = 
                           8*sizeof( PixelType );
 
-  const unsigned int dimension = TInputImage::ImageDimension;
+  const unsigned int dimension = InputImageType::ImageDimension;
 
-  typename TInputImage::Pointer m_InputImage( GetInput() );
+  const InputImageType * inputImage = this->GetInput();
 
   int dimSize[ dimension ];
 
   const typename TInputImage::SizeType & size = 
-        m_InputImage->GetBufferedRegion().GetSize();
+        inputImage->GetBufferedRegion().GetSize();
         
-  const double         *spacing = m_InputImage->GetSpacing();                
+  const double         *spacing = inputImage->GetSpacing();                
   float fspacing[dimension];
 
   for(unsigned int i=0; i<dimension; i++) 
@@ -91,18 +91,17 @@ WriteMetaImage<TInputImage>
 
   try 
     {
-      yetAnotherBuffer = 
-        new PixelType[ m_InputImage->GetOffsetTable()[dimension] ];
+    yetAnotherBuffer = 
+        new PixelType[ inputImage->GetOffsetTable()[dimension] ];
     }
   catch(std::bad_alloc)
     {
-      throw ExceptionObject(__FILE__, __LINE__) ;
+    itkExceptionMacro(<<"Problem allocating memory");
     }
 
-  typedef ImageRegionIterator< TInputImage > IteratorType;
+  typedef ImageRegionConstIterator< TInputImage > IteratorType;
 
-  IteratorType it(      m_InputImage, 
-                    m_InputImage->GetBufferedRegion() );
+  IteratorType it( inputImage, inputImage->GetBufferedRegion() );
 
 
   

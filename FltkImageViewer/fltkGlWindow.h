@@ -47,7 +47,7 @@ public:
   virtual ~GlWindow();
   void SaveImage( void );
   void SaveImage( const char * filename );
-  RedrawCommandType::Pointer GetRedrawCommand(void);
+  RedrawCommandType * GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
 
 private:

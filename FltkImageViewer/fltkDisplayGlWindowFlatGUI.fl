@@ -62,9 +62,10 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->visible_r();} {}
   }
-  Function {GetRedrawCommand(void)} {return_type {itk::Command::Pointer}
+  Function {GetRedrawCommand(void)} {return_type {itk::Command *}
   } {
-    code {return drawWindow->GetRedrawCommand().GetPointer();} {}
+    code {return drawWindow->GetRedrawCommand();} {selected
+    }
   }
   Function {GetNotifier(void)} {return_type {itk::Object::Pointer}
   } {
@@ -72,7 +73,6 @@ drawWindow->size(nx,ny);} {}
   }
   Function {GetGlWindow(void)} {return_type {virtual fltk::GlWindowInteractiveFlat *}
   } {
-    code {return drawWindow;} {selected
-    }
+    code {return drawWindow;} {}
   }
 } 

@@ -52,7 +52,7 @@ public:
    * Type of pixel
    */
   typedef   typename TInputImage::PixelType      PixelType;
-
+  typedef            TInputImage                 InputImageType;
 
   /** 
    * Run-time type information (and related methods).

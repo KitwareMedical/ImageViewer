@@ -42,7 +42,7 @@ public:
   LightButton(int x, int y, int w, int h, char * label=0);
  
   /** Get Command */
-  RedrawCommandType::Pointer GetRedrawCommand( void ) const;
+  RedrawCommandType * GetRedrawCommand( void ) const;
 
   /** Manage a Progress event */
   void ProcessEvent( const itk::EventObject & event );
