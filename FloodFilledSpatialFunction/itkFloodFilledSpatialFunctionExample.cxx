@@ -31,7 +31,7 @@ the README for a more detailed description.
 #include "itkSphereSpatialFunction.h"
 #include "itkFloodFilledSpatialFunctionConditionalIterator.h"
 
-void main()
+int main()
 {
   const unsigned int dim = 2;
 
@@ -152,4 +152,6 @@ void main()
       printf("\n");
       }
   } // end loop over iterator strategies
+
+  return 0;
 }
