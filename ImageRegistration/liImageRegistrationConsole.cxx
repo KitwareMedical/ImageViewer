@@ -37,6 +37,7 @@ liImageRegistrationConsole
   m_MappedMovingImageViewer.SetLabel( "Mapped Moving Image" );
 
   progressSlider->Observe( m_ResampleMovingImageFilter.GetPointer() );
+  progressSlider->Observe( m_ResampleInputMovingImageFilter.GetPointer() );
 
   fixedImageButton->Observe(        m_FixedImageReader.GetPointer()  );
   loadFixedImageButton->Observe(    m_FixedImageReader.GetPointer()  );
