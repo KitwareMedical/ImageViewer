@@ -54,7 +54,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.8 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.9 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------
@@ -287,6 +287,12 @@ void vtkITKMutualInformationTransform::InternalUpdate()
 void vtkITKMutualInformationTransform::Identity()
 {
     this->Matrix->Identity();
+}
+
+//------------------------------------------------------------------------
+void vtkITKMutualInformationTransform::Initialize(vtkLinearTransform *initial)
+{
+  this->Matrix->DeepCopy( initial->GetMatrix());
 }
 
 //------------------------------------------------------------------------
