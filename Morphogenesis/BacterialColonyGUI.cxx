@@ -3,7 +3,7 @@
 #include "BacterialColonyGUI.h"
 
 inline void BacterialColonyGUI::cb_Division_i(Fl_Value_Slider* o, void*) {
-  bio::Bacteria::SetDivisionLatencyTime(
+  bio::Bacteria::SetDivisionMaximumLatencyTime(
   static_cast<unsigned long>( o->value() ) );
 }
 void BacterialColonyGUI::cb_Division(Fl_Value_Slider* o, void* v) {
@@ -11,7 +11,7 @@ void BacterialColonyGUI::cb_Division(Fl_Value_Slider* o, void* v) {
 }
 
 inline void BacterialColonyGUI::cb_Growth_i(Fl_Value_Slider* o, void*) {
-  bio::Bacteria::SetGrowthLatencyTime(
+  bio::Bacteria::SetGrowthMaximumLatencyTime(
   static_cast<unsigned long>( o->value() ) );
 }
 void BacterialColonyGUI::cb_Growth(Fl_Value_Slider* o, void* v) {
@@ -26,17 +26,17 @@ BacterialColonyGUI::BacterialColonyGUI() {
     { Fl_Value_Slider* o = new Fl_Value_Slider(13, 19, 300, 25, "Division Latency");
       o->type(5);
       o->minimum(1);
-      o->maximum(1000);
+      o->maximum(100);
       o->step(1);
-      o->value(100);
+      o->value(50);
       o->callback((Fl_Callback*)cb_Division);
     }
     { Fl_Value_Slider* o = new Fl_Value_Slider(13, 70, 300, 25, "Growth Latency");
       o->type(5);
       o->minimum(1);
-      o->maximum(1000);
+      o->maximum(100);
       o->step(1);
-      o->value(100);
+      o->value(50);
       o->callback((Fl_Callback*)cb_Growth);
     }
     o->end();

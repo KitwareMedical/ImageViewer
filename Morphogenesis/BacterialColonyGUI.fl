@@ -14,15 +14,15 @@ class BacterialColonyGUI {open
     } {
       Fl_Value_Slider {} {
         label {Division Latency}
-        callback {bio::Bacteria::SetDivisionLatencyTime(
+        callback {bio::Bacteria::SetDivisionMaximumLatencyTime(
   static_cast<unsigned long>( o->value() ) );}
-        xywh {13 19 300 25} type {Horz Knob} minimum 1 maximum 1000 step 1 value 100
+        xywh {13 19 300 25} type {Horz Knob} minimum 1 maximum 100 step 1 value 50
       }
       Fl_Value_Slider {} {
         label {Growth Latency}
-        callback {bio::Bacteria::SetGrowthLatencyTime(
+        callback {bio::Bacteria::SetGrowthMaximumLatencyTime(
   static_cast<unsigned long>( o->value() ) );} selected
-        xywh {13 70 300 25} type {Horz Knob} minimum 1 maximum 1000 step 1 value 100
+        xywh {13 70 300 25} type {Horz Knob} minimum 1 maximum 100 step 1 value 50
       }
     }
   }
