@@ -1,6 +1,9 @@
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
+#INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
+
+FIND_PATH(VTK_BIN_PATH vtkConfigure.h c:/vtkbin /usr/local/vtk /vtknew-vc )
+FIND_LIBRARY(VTK_LIBRARY vtkdll vtk c:/vtkbin/vtkdll /vtkbin/vtkdll /usr/local/vtk )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -24,7 +27,7 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
 ${FLTK_LIB_PATH}
-${VTK_LIB_PATH}
+${VTK_BIN_PATH}/lib
 )
 
 SOURCE_FILES(TripleTKID_SRCS
