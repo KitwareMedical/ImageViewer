@@ -135,29 +135,8 @@ public:
           }
         }
     }
-
-protected:
-  vtkITKImageToImageFilter()
-  {
-    // Need an import, export, and a ITK pipeline
-    this->vtkExporter = vtkImageExport::New();
-    this->vtkImporter = vtkImageImport::New();
-    this->m_Process = NULL;
-    this->m_ProgressCommand = MemberCommand::New();
-    this->m_ProgressCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::GetProgressFromITKFilter );
-    this->m_StartEventCommand = MemberCommand::New();
-    this->m_StartEventCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleStartEvent );
-    this->m_EndEventCommand = MemberCommand::New();
-    this->m_EndEventCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleEndEvent );
-  };
-  ~vtkITKImageToImageFilter()
-  {
-    this->vtkExporter->Delete();
-    this->vtkImporter->Delete();
-  };
-
   //BTX
-  void GetProgressFromITKFilter ()
+  void HandleProgressEvent ()
   {
     if ( this->m_Process )
       {
@@ -172,19 +151,52 @@ protected:
   {
     this->InvokeEvent(vtkCommand::EndEvent,NULL);
   };
-    
-  
+  // ETX  
+
+ protected:
+
+  // BTX
+  // Dummy ExecuteData
+  void ExecuteData (vtkDataObject *)
+  {
+    vtkWarningMacro(<< "This filter does not respond to Update(). Doing a GetOutput->Update() instead.");
+  }
+  // ETX
+
+  vtkITKImageToImageFilter()
+  {
+    // Need an import, export, and a ITK pipeline
+    this->vtkExporter = vtkImageExport::New();
+    this->vtkImporter = vtkImageImport::New();
+    this->m_Process = NULL;
+    this->m_ProgressCommand = MemberCommand::New();
+    this->m_ProgressCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleProgressEvent );
+    this->m_StartEventCommand = MemberCommand::New();
+    this->m_StartEventCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleStartEvent );
+    this->m_EndEventCommand = MemberCommand::New();
+    this->m_EndEventCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleEndEvent );
+  };
+  ~vtkITKImageToImageFilter()
+  {
+    this->vtkExporter->Delete();
+    this->vtkImporter->Delete();
+  };
+
+  // BTX  
   void LinkITKProgressToVTKProgress ( itk::ProcessObject* process )
   {
-    this->m_Process = process;
-    this->m_Process->AddObserver ( itk::ProgressEvent(), this->m_ProgressCommand );
-    this->m_Process->AddObserver ( itk::StartEvent(), this->m_StartEventCommand );
-    this->m_Process->AddObserver ( itk::EndEvent(), this->m_EndEventCommand );
+    if ( process )
+      {
+      this->m_Process = process;
+      this->m_Process->AddObserver ( itk::ProgressEvent(), this->m_ProgressCommand );
+      this->m_Process->AddObserver ( itk::StartEvent(), this->m_StartEventCommand );
+      this->m_Process->AddObserver ( itk::EndEvent(), this->m_EndEventCommand );
+      }
   };
 
   typedef itk::SimpleMemberCommand<vtkITKImageToImageFilter> MemberCommand;
   typedef MemberCommand::Pointer MemberCommandPointer;
-  
+
   itk::ProcessObject::Pointer m_Process;
   MemberCommandPointer m_ProgressCommand;
   MemberCommandPointer m_StartEventCommand;
@@ -196,21 +208,10 @@ protected:
   vtkImageExport* vtkExporter;  
   //ETX
   
-  // Dummy ExecuteData
-  void ExecuteData (vtkDataObject *)
-    {
-    vtkWarningMacro(<< "This filter does not respond to Update(). Doing a GetOutput->Update() instead.");
-    }
-  
 private:
   vtkITKImageToImageFilter(const vtkITKImageToImageFilter&);  // Not implemented.
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
-
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.11 $" );
-// template <class InputType, class OutputType >
-// template <class InputType, class OutputType >
-// vtkStandardNewMacro(vtkITKImageToImageFilter);
 
 #endif
 
