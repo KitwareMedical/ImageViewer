@@ -75,7 +75,7 @@ void
 TimeProbeGUI
 ::SetName( const std::string & name )
 {
-  m_Name->label( name.c_str() );
+  m_Name->value( name.c_str() );
 }
 
 
