@@ -119,11 +119,11 @@ RawVolumeReader<TPixel,TImage>
   // swap bytes if neccessary
   if( m_BigEndian )
     {
-    itk::ByteSwapper<PixelType>::SwapRangeBE( buffer, numPixels );
+    itk::ByteSwapper<PixelType>::SwapRangeFromSystemToBigEndian( buffer, numPixels );
     }
   else
     {
-    itk::ByteSwapper<PixelType>::SwapRangeLE( buffer, numPixels );
+    itk::ByteSwapper<PixelType>::SwapRangeFromSystemToLittleEndian( buffer, numPixels );
     }
 
 
