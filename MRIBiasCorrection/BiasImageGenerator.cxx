@@ -114,9 +114,9 @@ int main(int argc, char* argv[])
   std::string outputFileName ;
   int dimension ;
   int degree ;
-  vnl_vector<double> coefficientVector ;
+  itk::Array<double> coefficientVector ;
   BiasField::DomainSizeType biasSize ;
-
+  int biasDimension = 0  ;
   try
     {
       options.GetStringOption("output", &outputFileName, true) ;
@@ -142,7 +142,11 @@ int main(int argc, char* argv[])
       for (int i = 0 ; i < sizes.size() ; i++)
         {
           if (i < 3)
-            biasSize.push_back(sizes[i]) ;
+            {
+              biasSize.resize(biasDimension + 1) ;
+              biasSize[biasDimension] = sizes[i] ;
+              biasDimension++ ;
+            }
         }
     }
   catch(OptionList::RequiredOptionMissing e)

@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
   std::string outputFileName ;
   bool useLog ;
   int degree ;
-  vnl_vector<double> coefficientVector ;
+  itk::Array<double> coefficientVector ;
 
   try
     {
@@ -213,10 +213,16 @@ int main(int argc, char* argv[])
   ImageType::SizeType size = input->GetLargestPossibleRegion().GetSize() ;
   long dim = 0 ;
   biasSize.clear() ;
+  int biasDimension = 0  ;
+
   for(dim = 0 ; dim < ImageType::ImageDimension ; dim++)
     {
       if (size[dim] > 1)
-        biasSize.push_back(size[dim]) ;
+        {
+          biasSize.resize(biasDimension + 1) ;
+          biasSize[biasDimension] = size[dim] ;
+          biasDimension++ ;
+        }
     }
 
   BiasField biasField(biasSize.size(), degree, biasSize) ;

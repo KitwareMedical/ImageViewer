@@ -117,10 +117,10 @@ void printResult(Corrector::Pointer filter, OptionList& options)
   std::cout << " --coefficient-length " << filter->GetNoOfBiasFieldCoefficients()
             << " --coefficients " ;
 
-  Corrector::BiasFieldType::CoefficientVector coefficients = 
+  Corrector::BiasFieldType::CoefficientVectorType coefficients = 
                                   filter->GetEstimatedBiasFieldCoefficients() ;
 
-  Corrector::BiasFieldType::CoefficientVector::iterator iter =
+  Corrector::BiasFieldType::CoefficientVectorType::iterator iter =
     coefficients.begin() ;
 
   while (iter != coefficients.end()) 
@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
   std::string inputMaskFileName = "" ;
   bool useLog ;
   int degree ;
-  vnl_vector<double> coefficientVector ;
+  itk::Array<double> coefficientVector ;
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
   int maximumIteration ; 

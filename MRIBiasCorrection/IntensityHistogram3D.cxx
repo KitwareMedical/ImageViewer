@@ -127,15 +127,10 @@ int main(int argc, char* argv[])
 
 
 
-  //  double min = options.GetDoubleOption("min", true) ;
-  // double max = options.GetDoubleOption("max", true) ;
-
   Histogram bins ;
 
   itk::ImageRegionIteratorWithIndex<ImageType> 
     iter(image, image->GetLargestPossibleRegion()) ;
-  itk::ImageRegionIteratorWithIndex<MaskType>
-    mask_iter(mask, mask->GetLargestPossibleRegion()) ;
   
   ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize() ;
   int sliceSize = size[0] * size[1] ;
@@ -146,14 +141,16 @@ int main(int argc, char* argv[])
 
   std::cout << "Slice\tIntensity\tFrequency" << std::endl ;
 
-  while (!iter.IsAtEnd())
+  if (maskAvailable)
     {
-      if (pixelCount < sliceSize)
+      itk::ImageRegionIteratorWithIndex< MaskType >
+        mask_iter(mask, mask->GetLargestPossibleRegion()) ;
+      while (!iter.IsAtEnd())
         {
-          ++pixelCount ;
-          pixelValue = iter.Get() ;
-          if (maskAvailable)
+          if (pixelCount < sliceSize)
             {
+              ++pixelCount ;
+              pixelValue = iter.Get() ;
               if (mask_iter.Get() > 0)
                 {
                   addNewInstanceToHistogram(bins, binSize, pixelValue) ;
@@ -161,19 +158,36 @@ int main(int argc, char* argv[])
             }
           else
             {
+              printHistogram(bins, binSize, sliceNo) ;
+              bins.clear() ;
+              sliceNo++ ;
+              pixelCount = 0 ;
+            }
+          
+          ++iter ;
+          ++mask_iter ;
+        }
+    }
+  else
+    {
+      while (!iter.IsAtEnd())
+        {
+          if (pixelCount < sliceSize)
+            {
+              ++pixelCount ;
+              pixelValue = iter.Get() ;
               addNewInstanceToHistogram(bins, binSize, pixelValue) ;
             }
+          else
+            {
+              printHistogram(bins, binSize, sliceNo) ;
+              bins.clear() ;
+              sliceNo++ ;
+              pixelCount = 0 ;
+            }
+          
+          ++iter ;
         }
-      else
-        {
-          printHistogram(bins, binSize, sliceNo) ;
-          bins.clear() ;
-          sliceNo++ ;
-          pixelCount = 0 ;
-        }
-
-      ++iter ;
-      ++mask_iter ;
     }
 
 
