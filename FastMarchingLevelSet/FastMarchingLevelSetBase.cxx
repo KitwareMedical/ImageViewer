@@ -40,7 +40,7 @@ FastMarchingLevelSetBase
   m_ExpNegativeFilter->SetInput( m_DerivativeFilter->GetOutput() );
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
-  m_FastMarchingFilter->SetImage( m_ExpNegativeFilter->GetOutput() );
+  m_FastMarchingFilter->SetInput( m_ExpNegativeFilter->GetOutput() );
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_FastMarchingFilter->GetOutput() );
