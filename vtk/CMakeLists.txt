@@ -22,7 +22,7 @@ vtkpng
 vtkzlib
 )
 
-ADD_EXECUTABLE(vtk2itk vtk2itk)
-ADD_EXECUTABLE(itkCurvatureFlowToVTK itkCurvatureFlowToVTK)
-ADD_EXECUTABLE(itkVTKtoITKtoVTK itkVTKtoITKtoVTK)
-ADD_EXECUTABLE(itkPNGVTKtoITKtoVTK itkPNGVTKtoITKtoVTK)
+ADD_EXECUTABLE(vtk2itk vtk2itk.cxx)
+ADD_EXECUTABLE(itkCurvatureFlowToVTK itkCurvatureFlowToVTK.cxx)
+ADD_EXECUTABLE(itkVTKtoITKtoVTK itkVTKtoITKtoVTK.cxx)
+ADD_EXECUTABLE(itkPNGVTKtoITKtoVTK itkPNGVTKtoITKtoVTK.cxx)

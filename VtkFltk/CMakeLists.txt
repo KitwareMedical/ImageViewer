@@ -1,8 +1,8 @@
 
 # This directory only builds if FLTK and VTK can be found
 
-SOURCE_FILES(vtkFltk_SRCS
-  vtkFlRenderWindowInteractor
+SET(vtkFltk_SRCS
+  vtkFlRenderWindowInteractor.cxx
    )
 
 INCLUDE_DIRECTORIES(
@@ -10,6 +10,6 @@ INCLUDE_DIRECTORIES(
    ${VTK_INCLUDE_PATH}
    )
 
-ADD_LIBRARY( vtkFltk vtkFltk_SRCS )
+ADD_LIBRARY( vtkFltk ${vtkFltk_SRCS} )
 
 

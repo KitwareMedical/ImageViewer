@@ -2,29 +2,28 @@
 # Only build this if FLTK can be found
 IF(HAS_FLTK)
 
-   SOURCE_FILES(FltkImageViewer_SRCS
-     fltkBox3D
-     fltkCone3D
-     fltkClippingPlane3DDrawer
-     fltkCylinder3D
-     fltkFrustum3D
-     fltkGlWindow
-     fltkGlWindowInteractive
-     fltkGlWindowInteractiveFlat
-     fltkImage2DViewerWindow
-     fltkRGBImage2DViewerWindow
-     fltkLightButton
-     fltkProgressBar
-     fltkRegularStepGradientDescent
-     fltkShape3D
-     fltkSphere3D
-     fltkWindowInteractive
-     fltkTimeProbeGUI
-     fltkTimeProbesCollector
-     fltkUtils
+     SET(FltkImageViewer_SRCS
+     fltkBox3D.cxx
+     fltkCone3D.cxx
+     fltkClippingPlane3DDrawer.cxx
+     fltkCylinder3D.cxx
+     fltkFrustum3D.cxx
+     fltkGlWindow.cxx
+     fltkGlWindowInteractive.cxx
+     fltkGlWindowInteractiveFlat.cxx
+     fltkImage2DViewerWindow.cxx
+     fltkRGBImage2DViewerWindow.cxx
+     fltkLightButton.cxx
+     fltkProgressBar.cxx
+     fltkShape3D.cxx
+     fltkSphere3D.cxx
+     fltkWindowInteractive.cxx
+     fltkTimeProbeGUI.cxx
+     fltkTimeProbesCollector.cxx
+     fltkUtils.cxx
      )
 
-  SOURCE_FILES(FltkImageViewer_GUI_SRCS
+  SET(FltkImageViewer_GUI_SRCS
      fltkClippingPlane3DDrawerGUI.fl
      fltkDisplayGlWindowGUI.fl
      fltkDisplayGlWindowFlatGUI.fl
@@ -46,14 +45,14 @@ IF(HAS_FLTK)
      )
 
   ADD_LIBRARY(
-     FltkImageViewer FltkImageViewer_SRCS
+     FltkImageViewer ${FltkImageViewer_SRCS}
      )
 
 #
 # Take the list of GUI files, generate .cxx and .h from 
 # them and add them to the build process of the target
 #
-  FLTK_WRAP_UI(FltkImageViewer FltkImageViewer_GUI_SRCS )
+  FLTK_WRAP_UI(FltkImageViewer ${FltkImageViewer_GUI_SRCS} )
 
 ENDIF(HAS_FLTK)
 

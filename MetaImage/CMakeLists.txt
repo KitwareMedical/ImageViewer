@@ -10,37 +10,30 @@ ITKBasicFilters
 VXLNumerics
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Auxiliary/MetaImage
-${ITK_BINARY_DIR}/Code/BasicFilters
-)
 
-SOURCE_FILES(MetaImageIO_SRCS
-MetaFileLib 
-MetaImageLib
-itkWriteMetaImage 
-MetaUtils
-itkFileIOMetaImageCommon
-itkFileIOMetaImage
+SET(MetaImageIO_SRCS
+MetaFileLib.cxx
+MetaImageLib.cxx
+itkWriteMetaImage.cxx 
+MetaUtils.cxx
+itkFileIOMetaImageCommon.cxx
+itkFileIOMetaImage.cxx
 )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 )
 
 ADD_LIBRARY(
-MetaImageIO MetaImageIO_SRCS
+MetaImageIO ${MetaImageIO_SRCS}
 )
 
-SOURCE_FILES(itkFileIOMetaImageExample_SRCS
+SET(itkFileIOMetaImageExample_SRCS
 itkFileIOMetaImageExample
 )
 
 ADD_EXECUTABLE(
-itkFileIOMetaImageExample itkFileIOMetaImageExample_SRCS
+itkFileIOMetaImageExample ${itkFileIOMetaImageExample_SRCS}
 )
 
 
