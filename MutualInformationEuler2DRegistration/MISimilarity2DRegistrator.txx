@@ -126,7 +126,7 @@ MISimilarity2DRegistrator<TFixedImage,TMovingImage>
 
 template <typename TFixedImage, typename TMovingImage>
 const 
-MISimilarity2DRegistrator<TFixedImage,TMovingImage>
+typename MISimilarity2DRegistrator<TFixedImage,TMovingImage>
 ::ParametersType &
 MISimilarity2DRegistrator<TFixedImage,TMovingImage>
 ::GetTransformParameters()
@@ -136,7 +136,7 @@ MISimilarity2DRegistrator<TFixedImage,TMovingImage>
 
 
 template <typename TFixedImage, typename TMovingImage>
-MISimilarity2DRegistrator<TFixedImage,TMovingImage>
+typename MISimilarity2DRegistrator<TFixedImage,TMovingImage>
 ::AffineTransformPointer
 MISimilarity2DRegistrator<TFixedImage,TMovingImage>
 ::GetAffineTransform()

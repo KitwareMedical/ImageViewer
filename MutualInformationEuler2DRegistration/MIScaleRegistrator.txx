@@ -117,7 +117,7 @@ MIScaleRegistrator<TFixedImage,TMovingImage>
 
 template <typename TFixedImage, typename TMovingImage>
 const 
-MIScaleRegistrator<TFixedImage,TMovingImage>
+typename MIScaleRegistrator<TFixedImage,TMovingImage>
 ::ParametersType &
 MIScaleRegistrator<TFixedImage,TMovingImage>
 ::GetTransformParameters()
@@ -127,15 +127,15 @@ MIScaleRegistrator<TFixedImage,TMovingImage>
 
 
 template <typename TFixedImage, typename TMovingImage>
-MIScaleRegistrator<TFixedImage,TMovingImage>
+typename MIScaleRegistrator<TFixedImage,TMovingImage>
 ::AffineTransformPointer
 MIScaleRegistrator<TFixedImage,TMovingImage>
 ::GetAffineTransform()
 {
   m_Transform->SetParameters( m_Registration->GetLastTransformParameters() );
-  TransformType::ScaleType scales;
+  typename TransformType::ScaleType scales;
   scales = m_Transform->GetScale(); 
-  AffineTransformType::MatrixType matrix;
+  typename AffineTransformType::MatrixType matrix;
   matrix.SetIdentity();
   for(unsigned int dim=0; dim<ImageDimension; dim++)
     {

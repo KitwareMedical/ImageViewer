@@ -125,7 +125,7 @@ MIAffine2DRegistrator<TFixedImage,TMovingImage>
 
 template <typename TFixedImage, typename TMovingImage>
 const 
-MIAffine2DRegistrator<TFixedImage,TMovingImage>
+typename MIAffine2DRegistrator<TFixedImage,TMovingImage>
 ::ParametersType &
 MIAffine2DRegistrator<TFixedImage,TMovingImage>
 ::GetTransformParameters()
@@ -135,7 +135,7 @@ MIAffine2DRegistrator<TFixedImage,TMovingImage>
 
 
 template <typename TFixedImage, typename TMovingImage>
-MIAffine2DRegistrator<TFixedImage,TMovingImage>
+typename MIAffine2DRegistrator<TFixedImage,TMovingImage>
 ::AffineTransformPointer
 MIAffine2DRegistrator<TFixedImage,TMovingImage>
 ::GetAffineTransform()

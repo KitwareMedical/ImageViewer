@@ -53,14 +53,14 @@ OutputGenerator<TImage>
     }
 
   // set up the resampler
-  typedef AffineTransformType::ScalarType CoordRepType;
+  typedef typename AffineTransformType::ScalarType CoordRepType;
   typedef itk::LinearInterpolateImageFunction<ImageType,CoordRepType> 
     InterpolatorType;
   typedef itk::ResampleImageFilter<ImageType,ImageType> ResamplerType;
 
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
+  typename InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
-  ResamplerType::Pointer resampler = ResamplerType::New();
+  typename ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( m_MovingImage );
 
   resampler->SetTransform( m_Transform.GetPointer() );

@@ -118,7 +118,7 @@ MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
 
 template <typename TFixedImage, typename TMovingImage>
 const 
-MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
+typename MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
 ::ParametersType &
 MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
 ::GetTransformParameters()
@@ -128,7 +128,7 @@ MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
 
 
 template <typename TFixedImage, typename TMovingImage>
-MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
+typename MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
 ::AffineTransformPointer
 MIThinPlateSplineRegistrator<TFixedImage,TMovingImage>
 ::GetAffineTransform()
