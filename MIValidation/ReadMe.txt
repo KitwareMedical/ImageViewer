@@ -9,9 +9,7 @@
   by Dr. J. Michael Fitzpatrick at Vanderbilt University.
 
   The accompanying validation report can be found at
-  <put path here>
-  or
-  <put weblink here>
+  InsightDocuments/Validation/MIValidation/MIValidationStudy.pdf
 
 
   Code:

@@ -24,9 +24,7 @@
  of atlas-based segmentation of the whole brain volume from MR images.
 
  The accompanying validation report can be found at
- <put path here>
- or
- <put weblink here>
+ InsightDocuments/Validation/AtlasSegmentation/AtlasSegmentationStudy.pdf
 
  See also AtlasSegmentation/ReadMe.txt
 
