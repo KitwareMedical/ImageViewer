@@ -17,7 +17,6 @@
 
 #include <RegionGrowingSegmentationBase.h>
 #include <FL/fl_ask.H>
-#include <itkMetaImageIOFactory.h>
 #include <itkRawImageIO.h>
 
 
@@ -31,8 +30,6 @@ RegionGrowingSegmentationBase
 {
 
   m_ImageReader                  = ImageReaderType::New();
-
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
   itk::RawImageIOFactory< InputImageType::PixelType, 
                           InputImageType::ImageDimension >::RegisterOneFactory();
