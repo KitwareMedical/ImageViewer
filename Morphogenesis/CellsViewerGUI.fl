@@ -1,0 +1,60 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class CellsViewerGUI {open selected : {public bio::CellsViewerBase}
+} {
+  Function {CellsViewerGUI()} {} {
+    Fl_Window controlWindow {
+      label {Control Panel}
+      xywh {494 37 282 114}
+      code0 {\#include "CellsViewerBase.h"} visible
+    } {
+      Fl_Menu_Bar {} {open
+        xywh {0 0 280 25}
+      } {
+        submenu {} {
+          label File open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Quit
+            callback {Quit();}
+            xywh {0 0 100 20} shortcut 0x80071
+          }
+        }
+      }
+      Fl_Button {} {
+        label {@-3>}
+        callback {Run();}
+        xywh {15 40 35 20} labeltype SYMBOL_LABEL
+      }
+      Fl_Button {} {
+        label {@\#-4square}
+        callback {Stop();}
+        xywh {50 40 35 20} labeltype SYMBOL_LABEL
+      }
+      Fl_Value_Output timeValueOutput {
+        label {Time : }
+        xywh {190 40 60 25}
+      }
+      Fl_Value_Output cellsValueOutput {
+        label {Cells : }
+        xywh {190 70 60 25}
+      }
+      Fl_Button {} {
+        label {@\#|<}
+        callback {Resume();}
+        xywh {85 40 35 20} labeltype SYMBOL_LABEL
+      }
+    }
+    Fl_Window {} {open
+      xywh {92 111 104 100} hide
+    } {}
+  }
+  Function {~CellsViewerGUI()} {return_type virtual
+  } {}
+} 
