@@ -16,7 +16,7 @@
 #include "itkWriteMetaImage.h"
 #include "itkObjectFactory.h"
 #include <fstream>
-#include <MetaImageLib/MetaImageLib.h>
+#include <MetaImageLib.h>
 
 namespace itk
 {
