@@ -57,6 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkImageToParametricSpaceFilter.h>
 #include <itkMesh.h>
 #include <itkImageFileReader.h>
+#include <itkJoinImageFilter.h>
 
 
 class ceExtractorConsoleBase 
@@ -64,7 +65,7 @@ class ceExtractorConsoleBase
 
 public:
 
-  typedef   unsigned char                     InputPixelType;
+  typedef   double                            InputPixelType;
   typedef   double                            PixelType;
   typedef   double                            ComputationType;
 
@@ -120,13 +121,14 @@ public:
                             CovariantVectorImageType, 
                             ComputationType >           GradientFilterType;
 
-  typedef   itk::MultiplyImageFilter< CovariantVectorImageType, 
-                                      VectorImageType, 
+  typedef   itk::MultiplyImageFilter< VectorImageType,
+                                      VectorImageType,
                                       ImageType >  ScalarProductFilterType;
 
   typedef   itk::ImageToParametricSpaceFilter< ImageType, MeshType >
                                                   ParametricSpaceFilterType;
 
+  typedef   itk::JoinImageFilter< ImageType, ImageType >      JoinFilterType;
 
 
 public:
@@ -165,6 +167,8 @@ protected:
 
   ScalarProductFilterType::Pointer     m_ScalarProduct;
 
+  JoinFilterType::Pointer                       m_Join;
+    
   ParametricSpaceFilterType::Pointer m_ParametricSpace;
 
 

@@ -120,12 +120,18 @@ ceExtractorConsoleBase
   m_Eigen->SetInput3( m_H2y->GetOutput() );
       
 
+  m_Join = JoinFilterType::New();
+
+  m_Join->SetInput1( m_H1x->GetOutput() );
+  m_Join->SetInput2( m_H1y->GetOutput() );
+  
   m_ScalarProduct = ScalarProductFilterType::New();
 
-  m_ScalarProduct->SetInput1( m_Gradient->GetOutput() );
+//  m_ScalarProduct->SetInput1( m_Gradient->GetOutput() );
+//  m_ScalarProduct->SetInput2( m_Gradient->GetOutput() );
+
+  m_ScalarProduct->SetInput1( m_Join->GetOutput() );
   m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
-//  m_ScalarProduct->SetInput1( m_Eigen->GetMaxEigenVector() );
-//  m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
 
   m_ParametricSpace = ParametricSpaceFilterType::New();
 
