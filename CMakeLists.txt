@@ -60,6 +60,7 @@ IF(HAS_METAIMAGE)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
+
 # Add an option to build or not build the FuzzyConnectedness example
 SUBDIRS(FuzzyConnectedness)
 
@@ -79,6 +80,18 @@ SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 
 # Add an option to build or not build the SymmetricEllipsoidInteriorExteriorSpatialFunction example
 SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
+
+
+# Add an option to build the Tcl Wrap for the stl string class
+IF( ITK_WRAP_TCL )
+  IF( GCCXML )
+    IF( CABLE )
+      IF( TCL_TCLSH )
+        SUBDIRS(TclWrappedSTLString)
+      ENDIF( TCL_TCLSH )
+    ENDIF( CABLE )
+  ENDIF( GCCXML )
+ENDIF( ITK_WRAP_TCL )
 
 
 LINK_LIBRARIES (
