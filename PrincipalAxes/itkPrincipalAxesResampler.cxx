@@ -43,9 +43,12 @@ typedef itk::Image<PixelType, NDimensions>  ImageType;
 typedef ImageType::IndexValueType           ImageIndexValueType;
 typedef ImageType::RegionType               ImageRegionType;
 typedef ImageType::SizeType                 ImageSizeType;
-typedef ImageType::AffineTransformType      AffineTransformType;
 
-typedef AffineTransformType::ScalarType     CoordRepType;
+
+typedef ImageType::TransformType::ScalarType       CoordRepType;
+
+typedef itk::AffineTransform< CoordRepType,
+                              NDimensions >        AffineTransformType;
 
 typedef itk::Index<NDimensions>                    ImageIndexType;
 typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
@@ -166,8 +169,21 @@ main(int argc, char *argv[])
     trans->Translate(center);
     trans->Rotate(1, 0, pi/2.0);   // Rotate into radiological orientation
     trans->Rotate(2, 0, -pi/2.0);
-    AffineTransformType::Pointer pa2phys =
-        moments.GetPrincipalAxesToPhysicalAxesTransform();
+    
+    AffineTransformType::Pointer pa2phys;
+
+    try {
+      pa2phys = dynamic_cast< AffineTransformType * > (
+            moments.GetPrincipalAxesToPhysicalAxesTransform().GetPointer() );
+
+        }
+    catch(...)
+      {
+      std::cout << "This particular type of image " << std::endl;
+      std::cout << "does NOT have an AffineTransform" << std::endl;
+      return EXIT_FAILURE;
+      }
+
     if (verbose) {
         std::cout << "Principal axes to physical axes transform" << std::endl;
         pa2phys->Print( std::cout );
@@ -187,10 +203,9 @@ main(int argc, char *argv[])
       }
     catch( ... ) 
       {
-      itk::ExceptionObject ex;
-      ex.SetLocation(__FILE__);
-      ex.SetDescription(" Attempt to convert a Transform into an AffineTransform");  
-      throw ex;
+      std::cout << "This particular type of image " << std::endl;
+      std::cout << "does NOT have an AffineTransform" << std::endl;
+      return EXIT_FAILURE;
       }
 
     trans->Compose( affineTransform );
