@@ -43,7 +43,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "itkWriteMetaImage.h"
 #include "itkObjectFactory.h"
-#include <fstream>
 #include <MetaImageLib.h>
 #include <itkSimpleImageRegionIterator.h>
 
