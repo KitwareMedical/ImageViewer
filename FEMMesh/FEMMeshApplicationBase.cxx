@@ -32,6 +32,9 @@
 
 #include "itkNumericTraits.h"
 
+#include "itkFEM2DDeformationNode.h"
+#include "itkFEMLineCell.h"
+
 
 
 FEMMeshApplicationBase
@@ -44,11 +47,6 @@ FEMMeshApplicationBase
   m_RenderWindow->AddRenderer( m_Renderer );
 
   m_FEMMesh = FEMMeshType::New();
-
-  m_Points    = 0;
-  m_Nodes     = 0;
-  m_Cells     = 0;
-  m_Elements  = 0;
 
   m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
   m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
@@ -65,24 +63,13 @@ FEMMeshApplicationBase
   m_RenderWindow->Delete();
   m_Renderer->Delete();
 
-  if( m_Points )
+  PointsToBeDeletedContainer::iterator pointToBeDeleted = 
+                                m_PointsToBeDeleted.begin();
+  while( pointToBeDeleted != m_PointsToBeDeleted.end() )
     {
-    delete [] m_Points;
-    } 
-
-  if( m_Nodes )
-    {
-    delete [] m_Nodes;
-    } 
-
-  if( m_Cells )
-    {
-    delete [] m_Cells;
-    } 
-  if( m_Elements )
-    {
-    delete [] m_Elements;
-    } 
+    delete (*pointToBeDeleted);
+    ++pointToBeDeleted;
+    }
 
 
 }
@@ -262,14 +249,14 @@ FEMMeshApplicationBase
   vtkPoints * vpoints = vtkPoints::New();
   vpoints->SetNumberOfPoints(numberOfPoints);
 
+  
+
   // Transfer Points information from the FEMMesh to the vtkMesh
   vtkIdType pointId = itk::NumericTraits< vtkIdType >::Zero;
   for(unsigned int p=0; p<numberOfPoints; p++)
     {
-    const float x = m_Points[p][0];
-    const float y = m_Points[p][1];
-    const float z = m_Points[p][2];
-    vpoints->SetPoint(  pointId, x, y, z );
+    BasePointType & point = *( m_FEMMesh->GetPoint( p ) );
+    vpoints->SetPoint(  pointId, point[0], point[1], point[2] );
     pointId++;
     }
 
@@ -337,44 +324,57 @@ FEMMeshApplicationBase
   // and the Physical representation of the problem 
   m_FEMMesh = FEMMeshType::New();
 
+
+  
   // The user (we here :-) ) is responsible for allocating
   // and releasing the memory for Points, Nodes, Cells and
   // Elements. The FEMMesh can not do that because that will
   // difficult the use of polymorphism.
 
-  const unsigned int numberOfPoints = 10;
+  BasePointType * point1 = new BasePointType;
 
-  m_Points = new ActualPointType[ numberOfPoints ];
+  (*point1)[0] =   1.0;
+  (*point1)[1] =   0.2;
+  (*point1)[2] =   0.0;
 
-  m_Points[0][0] =   1.0;
-  m_Points[0][1] =   0.0;
-  m_Points[0][2] =   0.0;
+  BasePointType * point2 = new BasePointType;
 
-  m_Points[1][0] =  -1.0;
-  m_Points[1][1] =   0.0;
-  m_Points[1][2] =   0.0;
+  (*point2)[0] =  -1.0;
+  (*point2)[1] =   0.2;
+  (*point2)[2] =   0.0;
 
-  m_FEMMesh->AddPoint( &(m_Points[0]) );
-  m_FEMMesh->AddPoint( &(m_Points[1]) );
+  m_FEMMesh->AddPoint( point1 );
+  m_FEMMesh->AddPoint( point2 );
+
+  m_PointsToBeDeleted.insert( point1 );
+  m_PointsToBeDeleted.insert( point2 );
 
 
   // Note that the numberOfNodes is not necessarily equal to
   // the numberOfPoints because the geometry and the degrees
   // of freedom do not have to be represented with shape 
   // functions of the same order.
-  const unsigned int numberOfNodes = 10;
-  m_Nodes = new ActualNodeType[ numberOfNodes ];
-  m_FEMMesh->AddNode( &(m_Nodes[0]) );
-  m_FEMMesh->AddNode( &(m_Nodes[1]) );
+  typedef itk::fem::FEM2DDeformationNode Deformation2DNodeType;
+  Deformation2DNodeType * node1 = new Deformation2DNodeType;
+  Deformation2DNodeType * node2 = new Deformation2DNodeType;
+  m_FEMMesh->AddNode( node1 );
+  m_FEMMesh->AddNode( node2 );
+
+  m_NodesToBeDeleted.insert( node1 );
+  m_NodesToBeDeleted.insert( node2 );
 
 
-  const unsigned int numberOfCells = 2;
-  m_Cells = new ActualCellType[ numberOfCells ];
-  m_Cells[0].SetPoint( 0, &(m_Points[0]) );
-  m_Cells[0].SetPoint( 1, &(m_Points[1]) );
-  m_FEMMesh->AddCell( &(m_Cells[0]) );
+  typedef itk::fem::FEMLineCell< PointsDimension > LineCellType;
+  LineCellType * cell1 = new LineCellType;
+  cell1->SetPoint( 0, point1 );
+  cell1->SetPoint( 1, point2 );
 
+  m_FEMMesh->AddCell( cell1 );
+
+  m_CellsToBeDeleted.insert( cell1 );
   
+
+
   std::cout << "Number of points    = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
   std::cout << "Number of cells     = " << m_FEMMesh->GetNumberOfCells() << std::endl;
   std::cout << "Number of nodes     = " << m_FEMMesh->GetNumberOfNodes() << std::endl;

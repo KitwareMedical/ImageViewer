@@ -24,8 +24,10 @@
 #include "vtkRenderWindow.h"
 #include "itkFEMMesh.h"
 
-#include "itkFEM2DDeformationNode.h"
-#include "itkFEMLineCell.h"
+
+#include <set>
+
+
 
 // This is the base classe for the Application
 
@@ -57,18 +59,15 @@ public:
   typedef  FEMMeshType::NodeType                   BaseNodeType;
   typedef  FEMMeshType::ElementType                BaseElementType;
 
-
-  // Actual implementation types for Nodes, Cells and Elements
-  // In this simple case we are creating Nodes of the same type,
-  // Cells of the same type, Points of the same type and Elements
-  // of the same type. However the use of polymorphism allows to
-  // set any type of Node, Point, Cell or Element as long as it
-  // derives from the corresponding Node, Point, Cell or Element
-  // base class.
-  typedef itk::fem::FEM2DDeformationNode           ActualNodeType;
-  typedef itk::fem::FEMLineCell<PointsDimension>   ActualCellType;
-  typedef BasePointType                            ActualPointType;
-  typedef BaseElementType                          ActualElementType;
+  // Structures to hold pointers to objects that should be 
+  // deleted at destruction time of the application.
+  // This is needed because the FEMMesh is holding arrays of 
+  // pointers to all the objects it manages: Points, Nodes,
+  // Cells, Elements.
+  typedef  std::set< BasePointType   * >    PointsToBeDeletedContainer;
+  typedef  std::set< BaseNodeType    * >    NodesToBeDeletedContainer;
+  typedef  std::set< BaseCellType    * >    CellsToBeDeletedContainer;
+  typedef  std::set< BaseElementType * >    ElementsToBeDeletedContainer;
 
 public:
 
@@ -92,12 +91,30 @@ protected:
 private:
 
   // Internal data used to feed the MESH
-  ActualPointType       *  m_Points;
-  ActualNodeType        *  m_Nodes;
-  ActualCellType        *  m_Cells;
-  ActualElementType     *  m_Elements;
+  // This tables of pointers are keept here
+  // in order to facilitate memory release
+  // when the program is quitting.
+  // The FEMMesh itself will not release 
+  // any of the pointer that are paased to
+  // it as Point *, Node *, Cell *, Element *.
+  //
+  // std::set is used to make sure that no
+  // pointer is deleted twice.
+  //
+  // NOTE that ONLY those Points, Nodes, 
+  // Cells or Elements that are dynamically
+  // allocated should be included in these 
+  // sets.
+  //
+  PointsToBeDeletedContainer      m_PointsToBeDeleted;
+  NodesToBeDeletedContainer       m_NodesToBeDeleted;
+  CellsToBeDeletedContainer       m_CellsToBeDeleted;
+  ElementsToBeDeletedContainer    m_ElementsToBeDeleted;
+
 
 };
+
+
 
 
 #endif
