@@ -400,12 +400,12 @@ void FileIOMetaImage::SetImageOrigin(const float* newValue)
   }
 }
 
-float* FileIOMetaImage::GetImageOrigin() const
+const float* FileIOMetaImage::GetImageOrigin() const
 {
   return (float*) m_ImagePosition;
 }
 
-float* FileIOMetaImage::GetImageSpacing() const
+const float* FileIOMetaImage::GetImageSpacing() const
 {
   return (float*) m_ElementSpacing;
 }

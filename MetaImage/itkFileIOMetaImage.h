@@ -115,12 +115,12 @@ public:
   /**
    * Get the image position
    */
-  float* GetImageOrigin() const;
+  const float* GetImageOrigin() const;
 
   /**
    * Get the image spacing
    */
-  float* GetImageSpacing() const;
+  const float* GetImageSpacing() const;
 
   /**
    * Specify the patient orientation
