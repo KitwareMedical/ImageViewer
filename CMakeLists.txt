@@ -184,7 +184,6 @@ ENDIF(VTK_FOUND)
 
 LINK_LIBRARIES (
 ITKAlgorithms
-VXLNumerics
 ITKCommon
 ITKBasicFilters 
 )
