@@ -74,6 +74,8 @@ public:
     m_CommandObserver    = CommandType::New();
     m_Info               = 0;
     m_UpdateMessage      = "Processing the filter...";
+    m_CastFilter->ReleaseDataFlagOn();
+    m_Filter->ReleaseDataFlagOn();
     }
 
 

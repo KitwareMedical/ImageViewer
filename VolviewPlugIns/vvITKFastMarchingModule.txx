@@ -53,6 +53,11 @@ FastMarchingModule<TInputPixelType>
     m_FastMarchingFilter->SetInput(       m_SigmoidFilter->GetOutput()            );
     m_IntensityWindowingFilter->SetInput( m_FastMarchingFilter->GetOutput()       );
 
+    // Allow progressive release of memory as the pipeline is executed
+    m_GradientMagnitudeFilter->ReleaseDataFlagOn();
+    m_SigmoidFilter->ReleaseDataFlagOn();
+    m_FastMarchingFilter->ReleaseDataFlagOn();
+    m_IntensityWindowingFilter->ReleaseDataFlagOn();
 }
 
 
