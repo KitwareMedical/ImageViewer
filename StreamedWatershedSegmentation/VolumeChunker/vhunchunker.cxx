@@ -339,7 +339,7 @@ int main(int argc, char *argv[])
   in.read(&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
   in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
-  in.close;
+  in.close();
 
   // Some properties of the output volume that we are going to create
   long o_size[3];

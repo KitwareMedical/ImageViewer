@@ -218,7 +218,7 @@ int main(int argc, char * argv[])
   cfo.open(cfn.c_str());
   cfo.write(&chunknumber, sizeof(int)); //write the number of chunks to follow
   cfo.write(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
-  cfo.close;
+  cfo.close();
 
   
 // Now split the file into its chunks

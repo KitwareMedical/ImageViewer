@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
   in.read(&chunknumber, sizeof(int)); //read the number of chunks to follow
   chunk_list = new ctk::chunk_info_struct[chunknumber];
   in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
-  in.close;
+  in.close();
 
   LongImageType::RegionType largestReg;
   LongImageType::RegionType requestedReg;

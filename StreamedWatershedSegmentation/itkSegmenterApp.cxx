@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
   in.read(&chunknumber, sizeof(int)); //read the number of chunks to follow
   chunk_list = new ctk::chunk_info_struct[chunknumber];
   in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
-  in.close;
+  in.close();
 
   FloatImageType::RegionType largestReg;
   FloatImageType::RegionType requestedReg;
@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
   
   out.write(&chunknumber, sizeof(int)); //write the number of chunks to follow
   out.write(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
-  out.close;
+  out.close();
   
   }
   catch (itk::ExceptionObject & e)
