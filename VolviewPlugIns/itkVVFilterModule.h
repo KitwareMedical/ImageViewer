@@ -69,7 +69,6 @@ public:
     m_CommandObserver    = CommandType::New();
     m_Info               = 0;
     m_UpdateMessage      = "Processing the filter...";
-    m_NeedCasting        = true;
     }
 
 
@@ -86,10 +85,6 @@ public:
   }
 
 
-  void SetNeedCasting( bool value )
-  {
-    m_NeedCasting = value;
-  }
 
   void SetUpdateMessage( const char * message )
   {
@@ -134,14 +129,18 @@ public:
     double     origin[3];
     double     spacing[3];
 
+    size[0]     =  m_Info->InputVolumeDimensions[0];
+    size[1]     =  m_Info->InputVolumeDimensions[1];
+    size[2]     =  pds->NumberOfSlicesToProcess;
+
     for(unsigned int i=0; i<3; i++)
       {
-      size[i]     =  m_Info->InputVolumeDimensions[i];
       origin[i]   =  m_Info->InputVolumeOrigin[i];
       spacing[i]  =  m_Info->InputVolumeSpacing[i];
       start[i]    =  0;
       }
 
+    std::cout << "Size = " << size << std::endl;
 
     RegionType region;
 
@@ -156,21 +155,18 @@ public:
 
     const bool         importFilterWillDeleteTheInputBuffer = false;
 
-    m_ImportFilter->SetImportPointer( static_cast< InputPixelType * >( pds->inData ), 
-                                    totalNumberOfPixels,
-                                    importFilterWillDeleteTheInputBuffer );
+    const unsigned int numberOfPixelsPerSlice = size[0] * size[1];
 
+    InputPixelType *   dataBlockStart = 
+                          static_cast< InputPixelType * >( pds->inData )  
+                        + numberOfPixelsPerSlice * pds->StartSlice;
 
-    // Connect the pipeline
-    if( m_NeedCasting )
-      {
-      m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
-      m_Filter->SetInput( m_CastFilter->GetOutput() );
-      }
-    else 
-      {
-//      m_Filter->SetInput( m_ImportFilter->GetOutput() );
-      }
+    m_ImportFilter->SetImportPointer( dataBlockStart, 
+                                      totalNumberOfPixels,
+                                      importFilterWillDeleteTheInputBuffer );
+
+    m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
+    m_Filter->SetInput( m_CastFilter->GetOutput() );
 
     // Set the Observer for updating progress in the GUI
     m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
@@ -219,8 +215,6 @@ private:
 
     std::string                           m_UpdateMessage;
   
-    bool                                  m_NeedCasting;
-
 };
 
 
