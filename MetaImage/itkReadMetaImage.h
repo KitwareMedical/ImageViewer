@@ -109,7 +109,7 @@ protected:
   ~ReadMetaImage() {};
   ReadMetaImage(const Self&) {}; 
   void operator=(const Self&) {};
-  void PrintSelf(std::ofstream& os, Indent indent);
+  void PrintSelf(std::ofstream& os, Indent indent) const;
   
   void GenerateData();
 

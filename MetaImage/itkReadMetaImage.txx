@@ -168,9 +168,11 @@ ReadMetaImage<TOutputImage>
 template <class TOutputImage>
 void 
 ReadMetaImage<TOutputImage>
-::PrintSelf(std::ofstream& os, Indent indent)
+::PrintSelf(std::ofstream& os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
+  os << indent << "ReadMetaImage class" << std::endl;
+  os << indent << "  file name " << m_FileName << std::endl;
 
 }
 
