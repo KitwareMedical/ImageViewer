@@ -46,7 +46,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main()
 {
-
   //Allocate Images
   typedef itk::PhysicalImage<unsigned char,2>           ReferenceType;
   typedef itk::PhysicalImage<unsigned char,2>           TargetType;
@@ -128,8 +127,8 @@ int main()
   registrator->SetReference( imgReference );
   registrator->SetNumberOfLevels( 4 );
 
-  unsigned int niter[4] = { 100, 50, 50, 20 };
-  double rates[4] = { 0.25, 0.05, 0.025, 0.005 };
+  unsigned int niter[4] = { 200, 100, 100, 50 };
+  double rates[4] = { 1.0e-6, 5.0e-7, 1.0e-7, 5.0e-8 };
 
   registrator->SetNumberOfIterations( niter );
   registrator->SetLearningRates( rates );
@@ -138,22 +137,9 @@ int main()
   MRRegistrationType::RegistrationPointer method = 
     registrator->GetInternalRegistrationMethod();
 
-  //
-  // only allow translation - since the metric will allow any
-  // rotation without penalty as image is circular
-  //
-  MRRegistrationType::RegistrationType::ParametersType weights;
-
-  for( unsigned int j = 0; j < 4; j++ )
-    {
-    weights[j] = 0.0;
-    }
-  for( unsigned int j=4; j < 6; j++ )
-    {
-    weights[j] = 1.0;
-    }
-  method->SetScalingWeights( weights );
-
+  // set translation scale
+  const double transScale = 1000;
+  method->SetTranslationScale( transScale );
 
   // set metric related parameters
   method->GetMetric()->SetTargetStandardDeviation( 5.0 );
