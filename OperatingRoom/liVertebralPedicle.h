@@ -33,7 +33,7 @@
 
 namespace li {
 
-/** This class implements a 3D model of a generic Vertebral Pedicle. /
+/** This class implements a 3D model of a generic Vertebral Pedicle. */
 class ITK_EXPORT VertebralPedicle : public fltk::Shape3D 
 {
 public:
