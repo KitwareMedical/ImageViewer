@@ -272,9 +272,32 @@ int main(int argc, char **argv)
     
     if(storageList == 0)
       {
-      fp << "ElementDataFile = LIST" << std::endl;
+      fp << "ElementDataFile = LIST " ;
+        std::cout << "What is the dimension of the data stored in files?"
+        << std::endl
+        << "It must be less than or equal to nDims (" << nDims << ") Enter 2 for typical image slice data."
+        <<std::endl
+        << "  -=> ";
+        unsigned int fileImageDim;
+      std::cin >>fileImageDim;
+      std::cout << std::endl;
+      if ( (fileImageDim < 0 ) || (fileImageDim > nDims) )
+        {
+        std::cout << "    ...we'll assume you meant " << (nDims - 1) << " ..." << std::endl;
+        }
+
+      fp << fileImageDim
+        << std::endl;
+      unsigned int totalFiles = 1;
+      for (i = nDims; i > fileImageDim; i--)
+        {
+          totalFiles *= dimSize[i-1];
+        } 
+      
+        
+
       std::string str;
-      for(i=0; i<dimSize[nDims-1]; i++)
+      for(i=0; i<totalFiles; i++)
         {
         std::cout << "Filename of slice " << i << " -=> ";
         std::cin >> str;
