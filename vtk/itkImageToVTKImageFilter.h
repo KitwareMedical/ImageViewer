@@ -69,6 +69,11 @@ public:
       This is intended to facilitate users the access 
       to methods in the importer */
   vtkImageImport * GetImporter() const;
+
+  /** Return the internal ITK image exporter filter.
+      This is intended to facilitate users the access 
+      to methods in the exporter */
+  ExporterFilterType * GetExporter() const;
   
 protected:
   ImageToVTKImageFilter(); 
