@@ -1,7 +1,7 @@
 /*=========================================================================
 
  Program:   Insight Segmentation & Registration Toolkit
- Module:    GLSliceView.h
+ Module:    GLColorSliceView.h
  Language:  C++
  Date:      $Date$
  Version:   $Revision$
@@ -14,8 +14,8 @@
    PURPOSE.  See the above copyright notices for more information.
    
 =========================================================================*/
-#ifndef GLSLICEVIEW_H
-#define GLSLICEVIEW_H
+#ifndef GLCOLORSLICEVIEW_H
+#define GLCOLORSLICEVIEW_H
 
 #include <FL/gl.h>
 #include <FL/Fl.H>
@@ -23,8 +23,10 @@
 #include <FL/Fl_Gl_Window.H>
 
 #include "itkColorTable.h"
+#include "itkRGBPixel.h"
 
 #include "SliceView.h"
+#include "GLSliceView.h"
 
 #include <math.h>
 
@@ -34,160 +36,107 @@ namespace itk {
 * GLSliceView : Derived from abstract class SliceView and Fl_Gl_Window
 * See SliceView.h for details...
   **/
-  template <class ImagePixelType, class OverlayPixelType>
-    class GLSliceView : public SliceView<ImagePixelType>, 
-    public Fl_Gl_Window 
-    {
-public:
-  
-  typedef itk::Image<ImagePixelType,3>     ImageType;
-  typedef itk::Image<OverlayPixelType,3>   OverlayType;
-  typedef typename ImageType::Pointer      ImagePointer;
-  typedef typename OverlayType::Pointer    OverlayPointer;
-  typedef typename ImageType::RegionType   RegionType;
-  typedef typename ImageType::SizeType     SizeType;
-  typedef typename ImageType::IndexType    IndexType;
-  
-  
-  
-protected:
-  bool        cValidOverlayData;
-  float       cOverlayOpacity;
-  
-  OverlayPointer cOverlayData;
-  void     (* cViewOverlayCallBack)(void);
-  
-  unsigned char * cWinOverlayData;
-  
-  typedef itk::ColorTable<float>                ColorTableType;
-  typedef typename ColorTableType::Pointer      ColorTablePointer;
-  
-  ColorTablePointer      cColorTable;
-  
-public:
-/*! FLTK required constructor - must use imData() to complete 
-  definition */
-  GLSliceView(int x, int y, int w, int h, const char *l);
-  
-  /*! Specify the 3D image to view slice by slice */
-  virtual void SetInputImage(ImageType * newImData);
-  virtual const ImagePointer & GetInputImage(void) const;
-  
-  /*! Specify the 3D image to view as an overlay */
-  void SetInputOverlay(OverlayType * newOverlayData);
-  
-  /*! Return a pointer to the overlay data */
-  const OverlayPointer & GetInputOverlay(void) const;
-  
-  /*! Turn on/off the viewing of the overlay */
-  void  ViewOverlayData(bool newViewOverlayData);
-  
-  /*! Status of the overlay - viewed /not viewed */
-  bool  ViewOverlayData(void);
-  
-  /*! Specify the opacity of the overlay */
-  void  OverlayOpacity(float newOverlayOpacity);
-  
-  /*! Get the opacity of the overlay */
-  float OverlayOpacity(void);
-  
-  /*! Called when overlay is toggled or opacity is changed */
-  void  ViewOverlayCallBack(void (* newOverlayCallBack)(void));
-  
-  ColorTableType * GetColorTable(void);
-  
-  virtual void clickSelect(float x, float y, float z);
-  
-  virtual void size(int w, int h);
-  virtual void resize(int x, int y, int w, int h);
-  
-  virtual void update();
-  virtual void draw();
-  
-  virtual int  handle(int event);
+template <class ImagePixelType, class OverlayPixelType>
+class GLColorSliceView 
+  : public GLSliceView<ImagePixelType, OverlayPixelType> 
+  {
+  public:
+
+    typedef itk::Image<RGBPixel<ImagePixelType>, 3> ImageType;
+    typedef typename ImageType::Pointer ImagePointer;
+    typedef typename ImageType::ConstPointer ImageConstPointer;
+
+    /*! FLTK required constructor - must use imData() to complete 
+     *  definition */
+    GLColorSliceView(int x, int y, int w, int h, const char *l);
+    
+    /*! Specify the 3D image to view slice by slice */
+    virtual void SetInputImage(ImageType * newImData);
+
+    virtual void clickSelect(float newX, float newY, float newZ);
+    virtual void size(int w, int h);
+    
+    virtual void resize(int x, int y, int w, int h);
+
+    virtual void update();
+
+    virtual void draw();
+    
+    virtual int handle(int event);
+
+  protected:
+
+    ImagePointer  cImData;
   };
   
+template <class ImagePixelType, class OverlayPixelType>
+GLColorSliceView<ImagePixelType, OverlayPixelType>::
+GLColorSliceView(int x, int y, int w, int h, const char *l):
+  GLSliceView<ImagePixelType, OverlayPixelType>(x, y, w, h, l)
+  {
+  }
   
-  
-  template <class ImagePixelType, class OverlayPixelType>
-    GLSliceView<ImagePixelType, OverlayPixelType>::
-    GLSliceView(int x, int y, int w, int h, const char *l):
-  SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
+//
+//
+template <class ImagePixelType, class OverlayPixelType>
+void GLColorSliceView<ImagePixelType, OverlayPixelType>::
+SetInputImage(ImageType * newImData)
+  {
+  RegionType region = newImData->GetLargestPossibleRegion();
+  if( region.GetNumberOfPixels() == 0 ) 
     {
-    when(FL_WHEN_NOT_CHANGED | FL_WHEN_ENTER_KEY);
-    
-    cValidOverlayData     = false;
-    cViewOverlayData      = false;
-    cViewOverlayCallBack  = NULL;
-    cOverlayOpacity       = 0.0;
-    cWinOverlayData       = NULL;
-    cColorTable = ColorTableType::New();
-    //cColorTable.useGray();
-    cColorTable->useDiscrete();
+    return;
     }
-  
-  
-  
-  
-  //
-  //
-  template <class ImagePixelType, class OverlayPixelType>
-    void 
-    GLSliceView<ImagePixelType, OverlayPixelType>::
-    SetInputImage(ImageType * newImData)
+
+  SizeType   size   = region.GetSize();
+
+  if( cValidOverlayData )
     {
-    
-    RegionType region = newImData->GetLargestPossibleRegion();
-    if( region.GetNumberOfPixels() == 0 ) 
-      {
-      return;
-      }
-
-    SizeType   size   = region.GetSize();
-
-    if( cValidOverlayData )
-      {
-      RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
-      SizeType   overlay_size   = overlay_region.GetSize();
+    RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
+    SizeType   overlay_size   = overlay_region.GetSize();
       
-      for( int i=0; i<3; i++ )
+    for( int i=0; i<3; i++ )
+      {
+      if( size[i] != overlay_size[i] )
         {
-        if( size[i] != overlay_size[i] )
-          {
-          return;
-          }
+        return;
         }
-      } 
+      }
+    } 
 
-    cImData = newImData;
-    cDimSize[0]=size[0];
-    cDimSize[1]=size[1];
-    cDimSize[2]=size[2];
-    cSpacing[0]=cImData->GetSpacing()[0];
-    cSpacing[1]=cImData->GetSpacing()[1];
-    cSpacing[2]=cImData->GetSpacing()[2];
-      
-    //calculating cDataMax and cDataMin    
-    IndexType ind;
-    ind[0] = 0; 
-    ind[1] = 0; 
-    ind[2] = 0;
+  cImData = newImData;
+  cDimSize[0] = size[0];
+  cDimSize[1] = size[1];
+  cDimSize[2] = size[2];
+  cSpacing[0] = cImData->GetSpacing()[0];
+  cSpacing[1] = cImData->GetSpacing()[1];
+  cSpacing[2] = cImData->GetSpacing()[2];
     
-    cDataMax = cImData->GetPixel(ind);
-    cDataMin = cDataMax;
-    ImagePixelType tf;
+  //calculating cDataMax and cDataMin
+  IndexType ind;
+  ind[0] = 0; 
+  ind[1] = 0; 
+  ind[2] = 0;
+  
+  cDataMax = cImData->GetPixel(ind)[0];
+  cDataMin = cDataMax;
+  RGBPixel<ImagePixelType> tfv;
+  double tf;
     
     
-    for( unsigned int i=0; i<cDimSize[0]; i++ )
+  for( unsigned int i=0; i<cDimSize[0]; i++ )
+    {
+    ind[0] = i;
+    for(unsigned int j=0; j<cDimSize[1]; j++ )
       {
-      ind[0] = i;
-      for(unsigned int j=0; j<cDimSize[1]; j++ )
+      ind[1] = j;
+      for( unsigned int k=0; k<cDimSize[2]; k++ )
         {
-        ind[1] = j;
-        for( unsigned int k=0; k<cDimSize[2]; k++ )
+        ind[2] = k;
+        tfv = cImData->GetPixel(ind);
+        for( unsigned int l=0; l<3; l++)
           {
-          ind[2] = k;
-          tf = cImData->GetPixel(ind);
+          tf = (double)(tfv[l]);
           if(tf > cDataMax) 
             {
             cDataMax = tf;
@@ -202,221 +151,136 @@ public:
           }
         }
       }
+    }
+  
+  cIWMin      = cDataMin;
+  cIWMax      = cDataMax;
+  cIWModeMin  = IW_MIN;
+  cIWModeMax  = IW_MAX;
     
-    cIWMin      = cDataMin;
-    cIWMax      = cDataMax;
-    cIWModeMin  = IW_MIN;
-    cIWModeMax  = IW_MAX;
+  cImageMode = IMG_VAL;
     
-    cImageMode = IMG_VAL;
+  cWinZoom = 1;
+  cWinOrientation = 2;
+  cWinOrder[0] = 0;
+  cWinOrder[1] = 1;
+  cWinOrder[2] = 2;
+  
+  cWinCenter[0] = cDimSize[0]/2;
+  cWinCenter[1] = cDimSize[1]/2;
+  cWinCenter[2] = 0;
+  
+  cWinMinX  = 0;
+  cWinSizeX = cDimSize[0];
+  if(cWinSizeX<cDimSize[1])
+    {
+    cWinSizeX = cDimSize[1];
+    }
+  if(cWinSizeX<cDimSize[2])
+    {
+    cWinSizeX = cDimSize[2];
+    }
+  cWinMaxX  = cWinSizeX - 1;
+  
+  cWinMinY  = 0;
+  cWinSizeY = cWinSizeX;
+  cWinMaxY  = cWinSizeY - 1;
+  
+  cWinDataSizeX = cDimSize[0];
+  cWinDataSizeY = cDimSize[1];
+  
+  if(cWinImData != NULL)
+    {
+    delete [] cWinImData;
+    }
+  
+  cWinImData = new unsigned char[ cWinDataSizeX * cWinDataSizeY * 3 ];
+  
+  if(cWinZBuffer != NULL) 
+    {
+    delete [] cWinZBuffer;
+    }
+  
+  cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
+  
+  cViewImData  = true;
+  cValidImData = true;
     
-    cWinZoom = 1;
-    cWinOrientation = 2;
-    cWinOrder[0] = 0;
-    cWinOrder[1] = 1;
-    cWinOrder[2] = 2;
-    
-    cWinCenter[0] = cDimSize[0]/2;
-    cWinCenter[1] = cDimSize[1]/2;
-    cWinCenter[2] = 0;
-    
-    cWinMinX  = 0;
-    cWinSizeX = cDimSize[0];
-    if(cWinSizeX<cDimSize[1])
-      {
-      cWinSizeX = cDimSize[1];
-      }
-    if(cWinSizeX<cDimSize[2])
-      {
-      cWinSizeX = cDimSize[2];
-      }
-    cWinMaxX  = cWinSizeX - 1;
-    
-    cWinMinY  = 0;
-    cWinSizeY = cWinSizeX;
-    cWinMaxY  = cWinSizeY - 1;
-    
-    cWinDataSizeX = cDimSize[0];
-    cWinDataSizeY = cDimSize[1];
-    
-    if(cWinImData != NULL)
-      {
-      delete [] cWinImData;
-      }
-    
-    cWinImData = new unsigned char[ cWinDataSizeX * cWinDataSizeY ];
-    
-    if(cWinZBuffer != NULL) 
-      {
-      delete [] cWinZBuffer;
-      }
-    
-    cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
-    
-    cViewImData  = true;
-    cValidImData = true;
-    
-    this->update();
-}
-
-
-
-
-
-//
-//
-template <class ImagePixelType, class OverlayPixelType>
-const typename Image<ImagePixelType,3>::Pointer &
-GLSliceView<ImagePixelType, OverlayPixelType>
-::GetInputImage(void) const
-  {
-  return cImData;
+  update();
   }
 
-
-
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-void 
-GLSliceView<ImagePixelType, OverlayPixelType>
-::SetInputOverlay( OverlayType * newOverlayData )
-  {
-  RegionType newoverlay_region = 
-    newOverlayData->GetLargestPossibleRegion();
-  
-  SizeType   newoverlay_size   = newoverlay_region.GetSize();
-  
-  RegionType cImData_region = 
-    cImData->GetLargestPossibleRegion();
-  
-  SizeType   cImData_size   = cImData_region.GetSize();
-  
-  if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
+void GLColorSliceView<ImagePixelType, OverlayPixelType>::
+clickSelect(float newX, float newY, float newZ)
+  {    
+  cClickSelect[0] = newX;
+  if(cClickSelect[0]<0)
+      cClickSelect[0] = 0;
+  if(cClickSelect[0] >= cDimSize[0])
+      cClickSelect[0] = cDimSize[0]-1;
+
+  cClickSelect[1] = newY;
+  if(cClickSelect[1]<0)
+      cClickSelect[1] = 0;
+  if(cClickSelect[1] >= cDimSize[1])
+      cClickSelect[1] = cDimSize[1]-1;
+
+  cClickSelect[2] = newZ;
+  if(cClickSelect[2]<0)
+      cClickSelect[2] = 0;
+  if(cClickSelect[2] >= cDimSize[2])
+      cClickSelect[2] = cDimSize[2]-1;
+
+  typename ImageType::IndexType ind;
+
+  ind[0] = (unsigned long)cClickSelect[0];
+  ind[1] = (unsigned long)cClickSelect[1];
+  ind[2] = (unsigned long)cClickSelect[2];
+  cClickSelectV = cImData->GetPixel(ind)[0];
+      
+  /*if length of list is equal to max, remove the earliest point stored */
+  if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
+      cClickedPoints.pop_back();
+
+  cClickedPoints.push_front(new ClickPoint(cClickSelect[0],
+      cClickSelect[1], cClickSelect[2], cClickSelectV));
+
+  if(cClickSelectCallBack != NULL)
+      cClickSelectCallBack(cClickSelect[0], cClickSelect[1], 
+                           cClickSelect[2], cClickSelectV);
+  if(cClickSelectArgCallBack != NULL)
+      cClickSelectArgCallBack(cClickSelect[0], cClickSelect[1], 
+                              cClickSelect[2], cClickSelectV,
+                              cClickSelectArg);
+
+  if(cViewValue || cViewCrosshairs)
     {
-    cOverlayData = newOverlayData;
-    
-    cViewOverlayData  = true;
-    cValidOverlayData = true;
-    cOverlayOpacity   = (float)1.0;
-    
-    if(cWinOverlayData != NULL) 
-      {
-      delete [] cWinOverlayData;
-      }
-    
-    const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY * 4;
-    cWinOverlayData = new unsigned char[ bufferSize ];
-    this->update();
+    this->redraw();
     }
   }
 
 
-
-
-
 template <class ImagePixelType, class OverlayPixelType>
-const typename GLSliceView<ImagePixelType, 
-OverlayPixelType>::OverlayType::Pointer &
-GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) 
-const
+void GLColorSliceView<ImagePixelType, OverlayPixelType>::
+size(int w, int h)
   {
-  return cOverlayData;
+  GLSliceView<ImagePixelType, OverlayPixelType>::size(w, h);
+  }
+    
+template <class ImagePixelType, class OverlayPixelType>
+void GLColorSliceView<ImagePixelType, OverlayPixelType>::
+resize(int x, int y, int w, int h)
+  {
+  GLSliceView<ImagePixelType, OverlayPixelType>::resize(x, y, w, h);
   }
 
-
-
-
-//
 //
 template <class ImagePixelType, class OverlayPixelType>
-void 
-GLSliceView<ImagePixelType, OverlayPixelType>::
-ViewOverlayData( bool newViewOverlayData)
+void GLColorSliceView<ImagePixelType, OverlayPixelType>::
+update()
   {
-  
-  cViewOverlayData = newViewOverlayData;
-  
-  if( cViewOverlayCallBack != NULL )
-    {
-    cViewOverlayCallBack();
-    }
-  
-  this->redraw();
-  
-  }
-
-template <class ImagePixelType, class OverlayPixelType>
-bool 
-GLSliceView<ImagePixelType, OverlayPixelType>::ViewOverlayData(void)
-  {
-  
-  return cViewOverlayData;
-  
-  }
-
-
-template <class ImagePixelType, class OverlayPixelType>
-void 
-GLSliceView<ImagePixelType, OverlayPixelType>::ViewOverlayCallBack(
-                                                                   void (* newViewOverlayCallBack)(void) 
-                                                                   )
-  {
-  cViewOverlayCallBack = newViewOverlayCallBack;
-  }
-
-
-
-
-//
-//
-template <class ImagePixelType, class OverlayPixelType>
-void 
-GLSliceView<ImagePixelType, OverlayPixelType>::OverlayOpacity(
-                                                              float newOverlayOpacity)
-  {
-  cOverlayOpacity = newOverlayOpacity;
-  
-  if(cViewOverlayCallBack != NULL) 
-    {
-    cViewOverlayCallBack();
-    }
-  }
-
-
-
-
-template <class ImagePixelType, class OverlayPixelType>
-float 
-GLSliceView<ImagePixelType, OverlayPixelType>::OverlayOpacity(void)
-  {
-  return cOverlayOpacity;
-  }
-
-
-
-
-//
-//
-//
-template <class ImagePixelType, class OverlayPixelType>
-typename GLSliceView<ImagePixelType, OverlayPixelType>::ColorTableType 
-* 
-GLSliceView<ImagePixelType, OverlayPixelType>::GetColorTable(void)
-  {
-  return &cColorTable;
-  }
-
-
-
-
-//
-//
-template <class ImagePixelType, class OverlayPixelType>
-void 
-GLSliceView<ImagePixelType, OverlayPixelType>::update()
-  {
-  
   if( !cValidImData ) 
     {
     return;
@@ -442,7 +306,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   
   winWidth = static_cast<int>( cDimSize[ cWinOrder[1] ] / cWinZoom );
   cWinSizeY = ( static_cast<int>( winWidth) );
-  ti = static_cast<int>( static_cast<int>(cWinCenter[ cWinOrder[1] ]) - winWidth/2);
+  ti = static_cast<int>( static_cast<int>(cWinCenter[ cWinOrder[1] ]) 
+                         - winWidth/2);
   if( ti <= - static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
     {
     ti = -cDimSize[ cWinOrder[1] ] + 1;
@@ -452,13 +317,13 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
     ti = cDimSize[ cWinOrder[1] ] - 1;
     } 
   cWinMinY = ti;
-  cWinMaxY = cDimSize[ cWinOrder[1] ] - 1; // here
+  cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
   if( cWinMaxY >= static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
     {
     cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
     }
   
-  memset( cWinImData, 0, cWinDataSizeX*cWinDataSizeY );
+  memset( cWinImData, 0, cWinDataSizeX*cWinDataSizeY*3 );
   if( cValidOverlayData ) 
     {
     memset(cWinOverlayData, 0, cWinDataSizeX*cWinDataSizeY*4);
@@ -468,7 +333,8 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   
   int l, m;
   
-  float tf;
+  itk::RGBPixel<ImagePixelType> tfv;
+  float tf[3];
   
   ind[ cWinOrder[ 2 ] ] = cWinCenter[ cWinOrder[ 2 ] ];
   int startK = cWinMinY;
@@ -491,59 +357,95 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
       if(j-cWinMinX >= (int)cWinDataSizeX)
          continue;
 
+      tfv = cImData->GetPixel(ind);
       switch( cImageMode ) 
         {
         default:
         case IMG_VAL:
-          tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
           break;
         case IMG_INV:
-          tf = (float)((cIWMax-cImData->GetPixel(ind))/(cIWMax-cIWMin)*255);
+          tf[0] = (float)((cIWMax-(float)tfv[0])/(cIWMax-cIWMin)*255);
+          tf[1] = (float)((cIWMax-(float)tfv[1])/(cIWMax-cIWMin)*255);
+          tf[2] = (float)((cIWMax-(float)tfv[2])/(cIWMax-cIWMin)*255);
           break;
         case IMG_LOG:
-          tf = (float)(log(cImData->GetPixel(ind)-cIWMin+0.00000001)
-            /log(cIWMax-cIWMin+0.00000001)*255);
+          tf[0] = (float)(log((float)tfv[0]-cIWMin+0.00000001)
+                          /log(cIWMax-cIWMin+0.00000001)*255);
+          tf[1] = (float)(log((float)tfv[1]-cIWMin+0.00000001)
+                          /log(cIWMax-cIWMin+0.00000001)*255);
+          tf[2] = (float)(log((float)tfv[2]-cIWMin+0.00000001)
+                          /log(cIWMax-cIWMin+0.00000001)*255);
           break;
         case IMG_DX:
           if(ind[0]>0) 
             {
-            tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
             ind[0]--;
-            tf -= (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tfv = cImData->GetPixel(ind);
+            tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[2] -= (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
             ind[0]++;
-            tf += 128;
+            tf[0] += 128;
+            tf[1] += 128;
+            tf[2] += 128;
             } 
           else
             {
-            tf = 128;
+            tf[0] = 128;
+            tf[1] = 128;
+            tf[2] = 128;
             }
           break;
         case IMG_DY:
           if(ind[1]>0) 
             {
-            tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
             ind[1]--;
-            tf -= (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tfv = cImData->GetPixel(ind);
+            tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[2] -= (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
             ind[1]++;
-            tf += 128;
+            tf[0] += 128;
+            tf[1] += 128;
+            tf[2] += 128;
             }
           else
             {
-            tf = 128;
+            tf[0] = 128;
+            tf[1] = 128;
+            tf[2] = 128;
             }
           break;
         case IMG_DZ:
           if(ind[2]>0) 
             {
-            tf = (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
             ind[2]--;
-            tf -= (float)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
+            tfv = cImData->GetPixel(ind);
+            tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[2] -= (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
             ind[2]++;
-            tf += 128;
+            tf[0] += 128;
+            tf[1] += 128;
+            tf[2] += 128;
             }
           else
             {
-            tf = 128;
+            tf[0] = 128;
+            tf[1] = 128;
+            tf[2] = 128;
             }
           break;
         case IMG_BLEND:
@@ -551,93 +453,122 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
           const int tempval = (int)cWinCenter[cWinOrder[2]]-1;
           int tmpI = ind[cWinOrder[2]];
           ind[cWinOrder[2]] = (tempval < 0 ) ? 0 : tempval;
-          tf = (float)(cImData->GetPixel(ind));
+          tfv = cImData->GetPixel(ind);
+          tf[0] = (float)(tfv[0]);
+          tf[1] = (float)(tfv[1]);
+          tf[2] = (float)(tfv[2]);
           
           ind[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
-          tf += (float)(cImData->GetPixel(ind))*2;
+          tfv = cImData->GetPixel(ind);
+          tf[0] += (float)(tfv[0])*2;
+          tf[1] += (float)(tfv[1])*2;
+          tf[2] += (float)(tfv[2])*2;
           
           const int tempval1 = (int)cDimSize[cWinOrder[2]]-1;
           const int tempval2 = (int)cWinCenter[cWinOrder[2]]+1;
           ind[cWinOrder[2]] = (tempval1 < tempval2 ) ? tempval1 : tempval2;
-          tf += (float)(cImData->GetPixel(ind));
+          tfv = cImData->GetPixel(ind);
+          tf[0] += (float)(tfv[0]);
+          tf[1] += (float)(tfv[1]);
+          tf[2] += (float)(tfv[2]);
           
-          tf = (float)((tf/4-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[0] = (float)((tf[0]/4-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[1] = (float)((tf[1]/4-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[2] = (float)((tf[2]/4-cIWMin)/(cIWMax-cIWMin)*255);
           ind[cWinOrder[2]] = tmpI;
           break;
           }
         case IMG_MIP:
-          tf = cIWMin;
+          tf[0] = cIWMin;
+          tf[1] = cIWMin;
+          tf[2] = cIWMin;
           m = (j-cWinMinX) + (k-cWinMinY)*cWinDataSizeX;
           cWinZBuffer[m] = 0;
           int tmpI = ind[cWinOrder[2]];
+          float tfp = 0;
+          float tft = tf[0]+tf[1]+tf[2];
           for(l=0; l<(int)cDimSize[cWinOrder[2]]; l++) 
             {
             ind[cWinOrder[2]] = l;        
-            if(cImData->GetPixel(ind) > tf) 
+            tfv = cImData->GetPixel(ind);
+            tfp = (float)tfv[0] 
+                  + tfv[1] 
+                  + tfv[2];
+            if(tfp > tft) 
               {
-              tf = (float)(cImData->GetPixel(ind));
+              tf[0] = (float)(tfv[0]);
+              tf[1] = (float)(tfv[1]);
+              tf[2] = (float)(tfv[2]);
               cWinZBuffer[m] = (unsigned short)l;
               }
             }
-          tf = (float)((tf-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[0] = (float)((tf[0]-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[1] = (float)((tf[1]-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[2] = (float)((tf[2]-cIWMin)/(cIWMax-cIWMin)*255);
           ind[cWinOrder[2]] = tmpI;
           break;
         }
       
-      if( tf > 255 )
+      int c;
+      for(c=0; c<3; c++)
         {
-        switch(cIWModeMax) 
+        if( tf[c] > 255 )
           {
-          case IW_MIN:
-            tf = 0;
-            break;
-          default:
-          case IW_MAX:
-            tf = 255;
-            break;
-          case IW_FLIP:
-            tf = 512-tf;
-            if(tf<0) 
-              {
-              tf = 0;
-              }
-            break;
-          }
-        }
-      else 
-        {
-        if( tf < 0 )
-          {
-          switch(cIWModeMin) 
+          switch(cIWModeMax) 
             {
-            default:
             case IW_MIN:
-              tf = 0;
+              tf[c] = 0;
               break;
+            default:
             case IW_MAX:
-              tf = 255;
+              tf[c] = 255;
               break;
             case IW_FLIP:
-              tf = -tf;
-              if(tf>255)
+              tf[c] = 512-tf[c];
+              if(tf[c]<0) 
                 {
-                tf = 255;
+                tf[c] = 0;
                 }
               break;
             }
           }
+        else 
+          {
+          if( tf[c] < 0 )
+            {
+            switch(cIWModeMin) 
+              {
+              default:
+              case IW_MIN:
+                tf[c] = 0;
+                break;
+              case IW_MAX:
+                tf[c] = 255;
+                break;
+              case IW_FLIP:
+                tf[c] = -tf[c];
+                if(tf[c]>255)
+                  {
+                  tf[c] = 255;
+                  }
+                break;
+              }
+            }
+          }
         }
-      
-      l = (j-cWinMinX) + (k-cWinMinY)*cWinDataSizeX;
-      cWinImData[l] = (unsigned char)tf;
+        
+      l = (j-cWinMinX)*3 + (k-cWinMinY)*cWinDataSizeX*3;
+      cWinImData[l+0] = (unsigned char)tf[0];
+      cWinImData[l+1] = (unsigned char)tf[1];
+      cWinImData[l+2] = (unsigned char)tf[2];
       
       if( cValidOverlayData ) 
         {
-        l = l * 4;
+        l = (j-cWinMinX)*4 + (k-cWinMinY)*cWinDataSizeX*4;
         if(cImageMode == IMG_MIP)
           {
           ind[cWinOrder[2]] = cWinZBuffer[(j-cWinMinX) + 
-            (k-cWinMinY)*cWinDataSizeX];
+                              (k-cWinMinY)*cWinDataSizeX];
           }
         
         if( sizeof( OverlayPixelType ) == 1 )
@@ -690,57 +621,18 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
             }
           }
         }
+      }
     }
-  }
   
   this->redraw();
   
-  
-}
-
-
-
-
-template <class ImagePixelType, class OverlayPixelType>
-void GLSliceView<ImagePixelType, OverlayPixelType>::
-clickSelect(float x, float y, float z)
-  {
-  SliceView<ImagePixelType>::clickSelect(x, y, z);
-  if(cViewValue || cViewCrosshairs)
-    {
-    this->redraw();
-    }
   }
-
-template <class ImagePixelType, class OverlayPixelType>
-void GLSliceView<ImagePixelType, OverlayPixelType>::size(int w, int h)
-  {
-  SliceView<ImagePixelType>::size(w, h);
-  Fl_Gl_Window::size(w, h);
-  this->update();
-  this->redraw();
-  }
-
-
-
-
-template <class ImagePixelType, class OverlayPixelType>
-void GLSliceView<ImagePixelType, OverlayPixelType>::resize(int x, int 
-                                                           y, int w, int h)
-  {
-  SliceView<ImagePixelType>::resize(x, y, w, h);
-  Fl_Gl_Window::resize(x, y, w, h);
-  this->update();
-  this->redraw();
-  }
-
-
-
 
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
+void GLColorSliceView<ImagePixelType, OverlayPixelType>::
+draw()
   {
   if( !valid() )
     {
@@ -766,7 +658,6 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       return;
       }
     
-    
     float scale0 = cW/(float)cDimSize[0] * cWinZoom
       * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
     float scale1 = cW/(float)cDimSize[0] * cWinZoom
@@ -781,7 +672,7 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
     if( cValidImData && cViewImData )
       {
       glDrawPixels( cWinDataSizeX, cWinDataSizeY, 
-                    GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                    GL_RGB, GL_UNSIGNED_BYTE, 
                     cWinImData );
       }
     
@@ -930,62 +821,15 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       glDisable(GL_BLEND);
       }
     
-  }
-}
-
-
-
-
-
-//
-//
-template <class ImagePixelType, class OverlayPixelType>
-int GLSliceView<ImagePixelType, OverlayPixelType>::handle(int event)
-  {
-  int x = Fl::event_x();
-  int y = Fl::event_y();
-  int button;
-  
-  static int boxX, boxY;
-  
-  switch(event)
-    {
-    case FL_PUSH:
-    case FL_DRAG:
-    case FL_RELEASE:
-      button = Fl::event_button()-1;       
-      if(button <= 0) 
-        {
-        if(cClickMode == CM_BOX) 
-          {
-          if(event == FL_PUSH)
-            {
-            boxX = x;
-            boxY = y;
-            }
-          else
-            {
-            if(event == FL_DRAG)
-              {
-              make_current();
-              fl_overlay_clear();
-              fl_overlay_rect(boxX, boxY, x-boxY, y-boxY);
-              }
-            else
-              {
-              make_current();
-              fl_overlay_clear();
-              }
-            }
-          }
-        }
-      break;
-    default:
-      break;
     }
-  
-  return SliceView<ImagePixelType>::handle(event);
-}
+  }
+
+template <class ImagePixelType, class OverlayPixelType>
+int GLColorSliceView<ImagePixelType, OverlayPixelType>::
+handle(int event)
+  {
+  return GLSliceView<ImagePixelType, OverlayPixelType>::handle(event);
+  }
 
 }; //namespace
 #endif
