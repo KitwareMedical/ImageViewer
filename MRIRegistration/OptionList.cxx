@@ -22,7 +22,6 @@ OptionList::OptionList(int argc, char* argv[])
   std::string value ;
   
   int arg_type = 1 ;
-  int prev_arg_type = 0 ;
 
   int index = 1 ;
   while (index < argc)
