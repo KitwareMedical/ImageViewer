@@ -32,7 +32,7 @@ SimpleAppInputParser<TImage>
   m_FixedImage = NULL;
   m_MovingImage = NULL;
 
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     m_PermuteOrder[j] = j;
     }
@@ -96,7 +96,7 @@ SimpleAppInputParser<TImage>
 
   // get fixed image size
   typename ImageType::SizeType fixedImageSize;
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%d", &uNumber ) != 1 )
       {
@@ -109,7 +109,7 @@ SimpleAppInputParser<TImage>
 
   // get fixed image spacing
   SpacingType fixedImageSpacing;
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%f", &fNumber ) != 1 ) 
       {
@@ -142,7 +142,7 @@ SimpleAppInputParser<TImage>
 
   // get moving image size
   typename ImageType::SizeType movingImageSize;
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%d", &uNumber ) != 1 )
       {
@@ -155,7 +155,7 @@ SimpleAppInputParser<TImage>
 
   // get moving image spacing
   SpacingType movingImageSpacing;
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%f", &fNumber ) != 1 ) 
       {
@@ -170,7 +170,7 @@ SimpleAppInputParser<TImage>
    * Parse permute and flip parameters
    ************************************/
   // get permute order
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%d", &uNumber ) != 1 )
       {
@@ -183,7 +183,7 @@ SimpleAppInputParser<TImage>
 
 
   // get which axes to flip
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%d", &uNumber ) != 1 )
       {
@@ -208,7 +208,7 @@ SimpleAppInputParser<TImage>
   std::cout << uNumber << std::endl;
 
   // get fixed image shrink factors
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%d", &uNumber ) != 1 )
       {
@@ -220,7 +220,7 @@ SimpleAppInputParser<TImage>
   std::cout << "Fixed image shrink factors: " << m_FixedImageShrinkFactors;
  
   // get moving image shrink factors
-  for( int j = 0; j < ImageDimension; j++ )
+  for( unsigned int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%d", &uNumber ) != 1 )
       {

@@ -228,7 +228,7 @@ MIMApplicationBase<TInputImage,TImage,TParser,TPreprocessor,
 
   // permute the shrink factors
   unsigned int permutedFactors[ImageDimension];
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     permutedFactors[j] = m_Parser->GetMovingImageShrinkFactors()[
       m_Parser->GetPermuteOrder()[j] ];

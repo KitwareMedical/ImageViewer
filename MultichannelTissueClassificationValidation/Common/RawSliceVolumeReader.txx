@@ -62,7 +62,7 @@ RawSliceVolumeReader<TPixel,TImage>
     io->SetByteOrderToLittleEndian();
     }
 
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     io->SetDimensions(j, m_Size[j]);
     io->SetSpacing(j, m_Spacing[j]);

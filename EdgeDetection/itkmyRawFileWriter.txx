@@ -55,7 +55,7 @@ void myRawFileWriter<TOutputImage>::GenerateData()
   // Test the values
   //   for (i = 0; i < num; ++i)
   //           {
-  //              std::cout << input->GetBufferPointer()[i] << std::endl;
+  //              std::cout << input->GetBufferPounsigned inter()[i] << std::endl;
   //            }
 
   

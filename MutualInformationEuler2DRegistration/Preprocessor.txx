@@ -30,7 +30,7 @@ Preprocessor<TInputImage,TOutputImage>
   m_OutputFixedImage  = NULL;
   m_OutputMovingImage = NULL;
 
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     m_PermuteOrder[j] = j;
     }
@@ -74,7 +74,7 @@ Preprocessor<TInputImage,TOutputImage>
   m_OutputFixedImage = normalizer->GetOutput();
 
   m_PreTransform->SetIdentity();
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     offset[j] = centerer->GetOutput()->GetOrigin()[j];
     }
@@ -130,7 +130,7 @@ Preprocessor<TInputImage,TOutputImage>
   // Compute the affine transform
 
   m_PostTransform->SetIdentity();
-  for ( int j = 0; j < ImageDimension; j++ )
+  for ( unsigned int j = 0; j < ImageDimension; j++ )
     {
     offset[j] = - 1.0 * centerer->GetOutput()->GetOrigin()[j];
     }
@@ -145,7 +145,7 @@ Preprocessor<TInputImage,TOutputImage>
  
     PermuteOrderArrayType invOrder = permuter->GetInverseOrder();
 
-    for ( int j = 0; j < ImageDimension; j++ )
+    for ( unsigned int j = 0; j < ImageDimension; j++ )
       {
       matrix[j][invOrder[j]] = 1.0;
       }    
@@ -164,7 +164,7 @@ Preprocessor<TInputImage,TOutputImage>
     matrix.SetIdentity();
     offset.Fill( 0.0 );
 
-    for ( int j = 0; j < ImageDimension; j++ )
+    for ( unsigned int j = 0; j < ImageDimension; j++ )
       {
       if ( m_FlipAxes[j] )
           {
