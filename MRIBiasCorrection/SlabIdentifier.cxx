@@ -41,9 +41,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mydefs.h"
 #include "imageutils.h"
 #include "OptionList.h"
-#include "itkMRISlabIdentifier.h"
+#include "itkMRASlabIdentifier.h"
 
-typedef itk::MRISlabIdentifier<ImageType> SlabIdentifier ;
+typedef itk::MRASlabIdentifier<ImageType> SlabIdentifier ;
 
 void print_usage()
 {
