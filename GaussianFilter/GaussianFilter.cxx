@@ -24,7 +24,6 @@ int main()
   liFilterConsole * console = new liFilterConsole();
 
   console->Show();
-  console->ShowAbout();
 
   Fl::run();
 

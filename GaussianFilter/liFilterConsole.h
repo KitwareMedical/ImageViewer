@@ -47,7 +47,6 @@ public:
   virtual void ShowSecondDerivativeZ(void);
   virtual void ShowLaplacian(void);
   virtual void ShowGradientModulus(void);
-  virtual void ShowAbout(void);
   virtual void Execute(void);
   virtual void WriteLaplacian(void);
   virtual void WriteGradientX(void);

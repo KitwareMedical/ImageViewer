@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0010 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -10,40 +10,11 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
   Function {liFilterConsoleGUI()} {open
   } {
     Fl_Window consoleWindow {
-      label {Gaussian Filter Console}
-      xywh {329 176 757 391}
+      label {Gaussian Filter Console} open selected
+      xywh {32 286 757 391}
       code0 {\#include <liFilterConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
-      Fl_Menu_Bar {} {
-        xywh {0 0 760 25}
-      } {
-        submenu {} {
-          label File
-          xywh {0 0 100 20}
-        } {
-          menuitem {} {
-            label Load
-            callback {Load();}
-            xywh {0 0 100 20}
-          }
-          menuitem {} {
-            label Quit
-            callback {Quit();}
-            xywh {10 10 100 20}
-          }
-        }
-        submenu {} {
-          label Help
-          xywh {5 5 100 20}
-        } {
-          menuitem {} {
-            label {About...}
-            callback {ShowAbout();}
-            xywh {0 0 100 20}
-          }
-        }
-      }
       Fl_Group Connectors {
         xywh {0 25 755 365}
       } {
@@ -131,6 +102,9 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
         Fl_Box {} {
           xywh {365 53 10 153} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {60 72 10 58} box UP_BOX color 4
+        }
       }
       Fl_Group controlsGroup {
         xywh {0 25 755 365} deactivate
@@ -150,12 +124,12 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
         Fl_Button {} {
           label Execute
           callback {Execute();}
-          xywh {520 260 80 30} box ROUND_UP_BOX
+          xywh {305 258 80 30} box ROUND_UP_BOX
         }
         Fl_Counter {} {
           label Sigma
           callback {SetSigma( o->value() );}
-          xywh {225 260 160 25} align 1 minimum -100 maximum 100 value 1
+          xywh {85 255 160 25} align 1 minimum -100 maximum 100 value 1
         }
         Fl_Light_Button H1zButton {
           label {Gradient Z}
@@ -255,7 +229,7 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
           class {fltk::LightButton}
         }
       }
-      Fl_Slider progressSlider {selected
+      Fl_Slider progressSlider {
         xywh {5 324 735 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
@@ -263,19 +237,20 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
       Fl_Output statusTextOutput {
         xywh {5 349 735 25}
       }
-    }
-    Fl_Window aboutWindow {
-      label {About ...} open
-      xywh {271 470 440 323} box UP_BOX visible
-    } {
       Fl_Box {} {
-        label {This program uses the INSIGHT Toolkit}
-        xywh {53 3 340 35} labelsize 18
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        xywh {620 235 120 80} labeltype image
       }
       Fl_Button {} {
-        label {../../Documentation/Art/itkLogo.gif}
-        callback {aboutWindow->hide();}
-        xywh {15 40 410 270} box DOWN_BOX labeltype image
+        label Quit
+        callback {Quit();}
+        xywh {490 260 80 30} box ROUND_UP_BOX
+      }
+      Fl_Light_Button loadButton {
+        label Load
+        callback {Load();}
+        xywh {25 60 71 30} type Normal value 1 selection_color 1
+        class {fltk::LightButton}
       }
     }
   }
@@ -302,8 +277,6 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
   Function {ShowLaplacian( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientModulus( void )} {return_type {virtual void}
-  } {}
-  Function {ShowAbout( void )} {return_type {virtual void}
   } {}
   Function {WriteGradientX( void )} {return_type {virtual void}
   } {}

@@ -75,6 +75,7 @@ liFilterConsole
   progressSlider->Observe( m_Add.GetPointer() );
   progressSlider->Observe( m_Modulus.GetPointer() );
                               
+  loadButton->Observe( m_Reader.GetPointer() );
   inputButton->Observe( m_Reader.GetPointer() );
   HxButton->Observe( m_Hx.GetPointer() );
   HyButton->Observe( m_Hy.GetPointer() );
@@ -91,7 +92,6 @@ liFilterConsole
   laplacianButton->Observe( m_Add.GetPointer() );
   modulusButton->Observe( m_Modulus.GetPointer() );
 
-  m_Reader->AddObserver( itk::ModifiedEvent(), inputButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), HzButton->GetRedrawCommand().GetPointer() );
@@ -258,7 +258,6 @@ liFilterConsole
   m_InputViewer->Hide();
   m_Viewer_Laplacian->Hide();
   m_Viewer_Gradient_Modulus->Hide();
-  aboutWindow->hide();
 }
 
 
@@ -468,24 +467,6 @@ liFilterConsole
   m_Viewer_Gradient_Modulus->Show();
 
 }
-
-
-
- 
-/************************************
- *
- *  Show About Window
- *
- ***********************************/
-void
-liFilterConsole
-::ShowAbout( void )
-{
-
-  aboutWindow->show();
-
-}
-
 
 
 
