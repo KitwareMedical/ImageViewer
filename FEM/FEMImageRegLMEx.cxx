@@ -58,15 +58,16 @@ ImageRegLMEx::ImageRegLMEx( )
 
   m_ReferenceFileName = NULL;
   m_TargetFileName = NULL;
-  m_LandmarkFileName = NULL;
+  m_LandmarkFileName = NULL; 
+
+  m_Solver.SetDeltatT(m_dT);  
+  m_Solver.SetRho(m_Rho);    
 }
 
 
 void ImageRegLMEx::RunRegistration()
 {
-  std::cout << "beginning \n";  
-  m_Solver.SetDeltatT(m_dT);  
-  m_Solver.SetRho(m_Rho);    
+  std::cout << "beginning \n"; 
   
   ReadImages();
  
@@ -82,21 +83,20 @@ void ImageRegLMEx::RunRegistration()
     m_Solver.AssembleKandM();
 
     IterativeSolve(); 
+    GetVectorField();
+    WarpImage();
+
+    LinearSystemSolverType* temp=
+      dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+    delete temp;
   }
   else 
   {    
     MultiResPyramidSolve();
   }
 
-  GetVectorField();
-  WarpImage();
-
   std::cout<<"\n E " << m_E << " dt " << m_dT << " rho " << m_Rho << "\n";
 
-  LinearSystemSolverType* temp=
-    dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
-  delete temp;
-  
 }
 
 void ImageRegLMEx::CreateLinearSystemSolver()
@@ -276,7 +276,6 @@ void ImageRegLMEx::CreateMesh()
   m->RhoC=1.0;
   m_Solver.mat.push_back( FEMP<Material>(&*m) ); 
 
-  ElementType::Pointer e1;
   e1=ElementType::New();
   e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*m_Solver.mat.Find(0) );
 
@@ -292,6 +291,44 @@ void ImageRegLMEx::CreateMesh()
 
   GenerateMesh<Element2DC0LinearQuadrilateral>::
     Rectangular(e1,m_Solver,MeshOrigin,MeshSize,ElementsPerDimension);   
+  delete e1;
+
+}
+
+void ImageRegLMEx::CreateMesh(double SquareMeshOrigin, double SquareMeshSize, 
+                              double ElementsPerSide, Solver& S)
+{
+
+  /*
+   * Create the materials that will define
+   * the element.  Only E is used in the membrane.
+   */
+  MaterialLinearElasticity::Pointer m;
+  m=MaterialLinearElasticity::New();
+  m->GN=0;       /* Global number of the material */
+  m->E=m_E;  /* Young modulus -- used in the membrane */
+  m->A=1.0;     /* Crossection area */
+  m->h=1.0;     /* Crossection area */
+  m->I=1.0;    /* Momemt of inertia */
+  m->nu=0.; //.0;    /* poissons -- DONT CHOOSE 1.0!!*/
+  m->RhoC=1.0;
+  m_Solver.mat.push_back( FEMP<Material>(&*m) ); 
+
+  e1=ElementType::New();
+  e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*m_Solver.mat.Find(0) );
+
+  vnl_vector<double> MeshOrigin; MeshOrigin.resize(ImageDimension); 
+  vnl_vector<double> MeshSize;   MeshSize.resize(ImageDimension); 
+  vnl_vector<double> ElementsPerDimension;  ElementsPerDimension.resize(ImageDimension); 
+  for (unsigned int i=0; i<ImageDimension; i++)
+  { 
+    MeshSize[i]=(double)SquareMeshSize; // FIX ME  make more general
+    MeshOrigin[i]=(double)SquareMeshOrigin;// FIX ME make more general
+    ElementsPerDimension[i]=(double)ElementsPerSide;
+  }
+
+  GenerateMesh<Element2DC0LinearQuadrilateral>::
+    Rectangular(e1,S,MeshOrigin,MeshSize,ElementsPerDimension);   
   delete e1;
 
 }
@@ -388,19 +425,19 @@ void ImageRegLMEx::ApplyLoads()
   
   m_Load=LMClass2::New();
 
-    m_Load->SetReferenceImage(m_RefImg);
-    m_Load->SetTargetImage(m_TarImg);
-    MetricType::Pointer msqp=MetricType::New();
-    msqp->SetScaleGradient(1.0); // this is the default(?)
-    m_Load->SetMetric(msqp.GetPointer());
-    m_Load->InitializeMetric();
-    ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
-    m_Load->SetMetricRadius(r);
-    m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
-    m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
-    m_Load->SetSign((Float)m_DescentDirection);
-    m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
-    m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+  m_Load->SetReferenceImage(m_RefImg);
+  m_Load->SetTargetImage(m_TarImg);
+  MetricType::Pointer msqp=MetricType::New();
+  msqp->SetScaleGradient(1.0); // this is the default(?)
+  m_Load->SetMetric(msqp.GetPointer());
+  m_Load->InitializeMetric();
+  ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+  m_Load->SetMetricRadius(r);
+  m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
+  m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
+  m_Load->SetSign((Float)m_DescentDirection);
+  m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
+  m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
   
   return;
 }
@@ -617,8 +654,7 @@ void ImageRegLMEx::MultiResSolve()
 void ImageRegLMEx::MultiResPyramidSolve()
 {
 
-  LinearSystemSolverType* ls;
-  vnl_vector<double> LastResolutionSolution;
+  vnl_vector<Float> LastResolutionSolution;
 
 //   Setup a multi-resolution pyramid
   typedef itk::MultiResolutionPyramidImageFilter<FloatImageType,FloatImageType>
@@ -644,7 +680,7 @@ void ImageRegLMEx::MultiResPyramidSolve()
   pyramid1->SetNumberOfLevels( numLevels );
   pyramid2->SetNumberOfLevels( numLevels );
 
-  ImageType::SizeType Isz=m_RefImg->GetLargestPossibleRegion().GetSize();
+//  ImageType::SizeType Isz=m_RefImg->GetLargestPossibleRegion().GetSize();
   ScheduleType SizeReduction=pyramid1->GetSchedule();
 
   for (unsigned int i=0; i<numLevels; i++)
@@ -654,12 +690,12 @@ void ImageRegLMEx::MultiResPyramidSolve()
     pyramid2->Update();
     pyramid2->GetOutput( i )->Update();
 
-    m_Nx=Isz[0]/SizeReduction[i][0];
-    m_Ny=Isz[1]/SizeReduction[i][1];
-
+    ImageType::SizeType Isz=pyramid2->GetOutput( i )->GetLargestPossibleRegion().GetSize();
 //  m_MeshResolution=
+    m_Nx=(double) Isz[0];
 
-    CreateMesh(); 
+    if ( i == numLevels-1 ) { m_E=1.e16; m_Rho=1.e16;}
+    CreateMesh(0.0,(double) (Isz[0]-1),(double)m_MeshResolution,m_Solver); 
     m_Solver.GenerateGFN();
 
     ApplyLoads();
@@ -676,15 +712,16 @@ void ImageRegLMEx::MultiResPyramidSolve()
 
     if (i > 0)
     {
-      ls=dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
-      unsigned int TotalSolutionIndex=1; // from SolverType
+      unsigned int TotalSolutionIndex=1,SolutionTMinus1Index=3; // from SolverType
       for (unsigned int j=0; j<m_Solver.GetNGFN(); j++)
       {
         m_Solver.GetLinearSystemWrapper()->
-          AddSolutionValue(j,LastResolutionSolution[j],TotalSolutionIndex);
+          SetSolutionValue(j,LastResolutionSolution[j],TotalSolutionIndex);
+   //     m_Solver.GetLinearSystemWrapper()->
+   //       SetVectorValue(j,LastResolutionSolution[j],SolutionTMinus1Index); 
       }
-//      m_Solver.SetLinearSystemWrapper(ls);
     }
+
     IterativeSolve();
 
     if (i < numLevels-1)
@@ -692,7 +729,6 @@ void ImageRegLMEx::MultiResPyramidSolve()
       float s1=(float)SizeReduction[i][0];  
       float s2=(float)SizeReduction[i+1][0];  
       float Magnification=1.0;//s1/s2;
-//      ls=dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
       LastResolutionSolution.clear();
       LastResolutionSolution.resize(m_Solver.GetNGFN());
       unsigned int TotalSolutionIndex=1; // from SolverType
@@ -700,13 +736,17 @@ void ImageRegLMEx::MultiResPyramidSolve()
       {
         double temp=m_Solver.GetLinearSystemWrapper()->
           GetSolutionValue(j,TotalSolutionIndex);
-//        ls->SetSolutionValue(j,temp*Magnification,TotalSolutionIndex);
         LastResolutionSolution[j]=temp*Magnification;
       } 
-//      m_Solver.SetLinearSystemWrapper(ls);
     }
   }
   //m_RefImg=caster2->GetOutput(); // //FIXME for testing
+  GetVectorField();
+  WarpImage();
+
+  LinearSystemSolverType* temp=
+      dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+  delete temp;
 
   return;
 }
@@ -767,8 +807,8 @@ int main()
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
-  X.SetNumberOfIntegrationPoints(4);// Resolution of energy integration
-  X.SetWidthOfMetricRegion(2);
+  X.SetNumberOfIntegrationPoints(8);// Resolution of energy integration
+  X.SetWidthOfMetricRegion(1);
   X.DoMultiRes(true);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
   X.m_MaxSmoothing=2.0; // set multi-res parameters

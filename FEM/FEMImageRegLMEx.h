@@ -153,6 +153,8 @@ public:
   void  ReadImages();  
   /** This function generates a rectangular mesh of MeshResolution size */
   void  CreateMesh(); 
+  void  CreateMesh(double SquareMeshOrigin, double SquareMeshSize, 
+                              double ElementsPerSide, Solver& S);
   /** The loads are entered into the solver. */
   void ApplyLoads(); 
   /**  Builds the itpack linear system wrapper with appropriate parameters. */
@@ -242,6 +244,7 @@ public:
   ImageType::IndexType m_Rindex;
   ImageType::IndexType m_Tindex;
 
+  ElementType::Pointer e1;
 /** for quadrature rules, see
 "Exact Integrations of Polynomials and Symmetric 
 Quadrature Formulas over Arbitrary Polyhedral Grids", journal
