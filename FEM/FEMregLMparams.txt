@@ -1,31 +1,33 @@
 % Configuration file for ITK FEM registration example
 
-1.	% Alpha
+1.0	% Alpha
 0	% DescentDirection
-0	% DoLineSearch
+1	% DoLineSearch
 490000	% Elasticity
-0	% MaximumIterations
+19	% MaximumIterations
 1.	% TimeStep
 1.e3	% Rho
-E:\\Avants\\MetaImages\\brain_slice1smth.im	% ReferenceFileName
-E:\\Avants\\MetaImages\\brain_slice2smth.im	% TargetFileName
+E:\\Avants\\MetaImages\\brain_slice1smth.im % brain3D64x64x31a.raw %	% ReferenceFileName
+E:\\Avants\\MetaImages\\brain_slice2smth.im % brain3D64x64x31b.raw %		% TargetFileName
 0	% UseLandmarks - read the file name below if this is true
 /mnt/data/tessa/temp/e15326s16i1_2.regLM	% LandmarkFileName
 E:\\Avants\\MetaImages\\result	% ResultsFileName
 2     % dimension of images
 128	% Nx (image x dimension)
 128	% Ny (image y dimension)
-0     % Nz (image z dimension - not used if 2D)
-8	% MeshResolution
+62     % Nz (image z dimension - not used if 2D)
+8	% Elements per dimension of mesh
 8	% NumberOfIntegrationPoints
 1	% WidthOfMetricRegion
 0	% WriteDisplacementField
 /mnt/data/tessa/temp/disp	% DisplacementsFileName
-0	% DoMultiRes - read the parameters below if this is true
-1	% DoSearchForMinAtEachResolution
+1	% DoMultiRes - read the parameters below if this is true
+0	% DoSearchForMinAtEachResolution
 2	% Number of levels in the multi-res pyramid
 2	% Maximum Level to use in the pyramid 
-2	% Number of mesh resolution levels
+4 	% elements per dimension of mesh at 1st level
+4 	% elements per dimension of mesh at 2nd level
+
 
 END
 
