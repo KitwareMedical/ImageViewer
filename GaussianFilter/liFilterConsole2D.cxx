@@ -94,9 +94,9 @@ liFilterConsole2D
   m_Reader->AddObserver( itk::ModifiedEvent(), smoothedButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
 
-  m_IntensityScaleModulus->SetScale(    0.2  );
-  m_IntensityScaleSmoothed->SetScale(   0.2  );
-  m_IntensityScaleLaplacian->SetScale(  0.2  );
+  m_IntensityScaleModulus->SetScale(    1.0  );
+  m_IntensityScaleSmoothed->SetScale(   1.0  );
+  m_IntensityScaleLaplacian->SetScale(  1.0  );
 
   m_IntensityScaleModulus->SetShift(   1000  );
   m_IntensityScaleSmoothed->SetScale(  1000  );
