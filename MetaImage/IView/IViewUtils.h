@@ -15,9 +15,15 @@ Image<T, 3>::Pointer loadImage(char *fname)
  imIO->OpenMetaFile(fname);
  imIO->PrintMetaInfo();
 
- itk::Image<T,3>::Pointer image = itk::Image<T,3>::New();
+ typedef itk::Image<T,3>  ImageType;
 
- itk::Image<T,3>::SizeType size;
+ typedef typename ImageType::Pointer     ImagePointer;
+ typedef typename ImageType::SizeType    SizeType;
+ typedef typename ImageType::RegionType  RegionType;
+
+ ImagePointer image = ImageType::New();
+
+ SizeType size;
 
  double spacing[3];
 
@@ -30,13 +36,19 @@ Image<T, 3>::Pointer loadImage(char *fname)
  spacing[2] = imIO->ElemSpacing(2);
 
  if (spacing[0] == 0)
-    spacing[0] = 1;
+   {
+   spacing[0] = 1;
+   }
  if (spacing[1] == 0)
-    spacing[1] = 1;
+   {
+   spacing[1] = 1;
+   }
  if (spacing[2] == 0)
-    spacing[2] = 1;
+   {
+   spacing[2] = 1;
+   }
 
- Image<T,3>::RegionType region;
+ RegionType region;
  region.SetSize(size);
  region.SetIndex( itk::Index<3>::ZeroIndex );
  image->SetLargestPossibleRegion(region);
@@ -46,7 +58,7 @@ Image<T, 3>::Pointer loadImage(char *fname)
  image->Allocate();
 
 
- itk::SimpleImageRegionIterator< itk::Image<T,3> > it(image, region);
+ itk::SimpleImageRegionIterator< ImageType > it(image, region);
  int i;
  for(i = 0; !it.IsAtEnd(); i++, ++it)
    it.Set(imIO->Get(i));
