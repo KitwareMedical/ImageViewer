@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __itkWriteMetaImage_h
 #define __itkWriteMetaImage_h
 
-#include "itkImageWriter.h"
+#include "itkImageFileWriter.h"
 #include "MetaUtils.h"
 #include <vector>
 
@@ -54,7 +54,7 @@ namespace itk
  * WriteMetaImage writes N-D images in Meta Image file format. 
  */
 template <class TInputImage>
-class ITK_EXPORT WriteMetaImage : public ImageWriter<TInputImage>
+class ITK_EXPORT WriteMetaImage : public ImageFileWriter<TInputImage>
 {
 public:
   /**
@@ -65,7 +65,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef ImageWriter<TInputImage>   Superclass;
+  typedef ImageFileWriter<TInputImage>   Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -81,7 +81,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(WriteMetaImage,ImageWriter);
+  itkTypeMacro(WriteMetaImage,ImageFileWriter);
 
   /**
    * Method for creation through the object factory.
