@@ -4,8 +4,10 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
 ${ITK_SOURCE_DIR}/Examples/RegionGrowingSegmentation
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${ITK_BINARY_DIR}/Auxiliary/VtkFltk
 ${ITK_BINARY_DIR}/Examples/RegionGrowingSegmentation
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
@@ -35,7 +37,15 @@ ITKCommon
 ITKNumerics
 ITKBasicFilters 
 ITKIO
+vtkRendering
+vtkGraphics	  
+vtkHybrid	  
+vtkImaging
+vtkIO
+vtkFiltering
+vtkCommon
 FltkImageViewer
+vtkFltk
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}

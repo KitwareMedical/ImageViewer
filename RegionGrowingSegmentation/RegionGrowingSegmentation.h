@@ -17,9 +17,10 @@
 #ifndef REGIONGROWINGSEGMENTATION
 #define REGIONGROWINGSEGMENTATION
 
-#include <RegionGrowingSegmentationGUI.h>
-#include <fltkImageViewer.h>
+#include "RegionGrowingSegmentationGUI.h"
+#include "fltkImageViewer.h"
 
+#include "fltkVTKImageViewer.h"
 
 
 /**
@@ -55,6 +56,7 @@ public:
   typedef fltk::ImageViewer< InternalPixelType, 
                                     OverlayPixelType >          InternalImageViewerType;
 
+  typedef fltk::VTKImageViewer< InternalPixelType >             VTKImageViewerType;
 
 
 public:
@@ -80,6 +82,8 @@ public:
   virtual void ShowGradientAnisotropicDiffusionImage();
   virtual void ShowCurvatureAnisotropicDiffusionImage();
 
+  virtual void ShowHomogeneousImageWithVTK();
+
   virtual void Quit();
 
   virtual void UpdateExtract();
@@ -99,6 +103,9 @@ private:
   InternalImageViewerType     m_HomogeneousImageViewer;
 
   InputImageViewerType        m_InputImageViewer;
+
+  VTKImageViewerType::Pointer m_VTKSegmentedImageViewer;
+
 
 };
 

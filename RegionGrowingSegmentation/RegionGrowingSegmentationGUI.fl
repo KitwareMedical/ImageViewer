@@ -86,6 +86,9 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Box {} {
           xywh {55 140 9 105} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {500 287 9 48} box UP_BOX color 4
+        }
       }
       Fl_Group controlsGroup {
         xywh {5 5 952 390} deactivate
@@ -293,6 +296,12 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
             xywh {43 341 45 21} labelsize 12 textsize 12
           }
         }
+        Fl_Light_Button homogeneousImageVTKButton {
+          label {VTK Render}
+          callback {ShowHomogeneousImageWithVTK();}
+          xywh {455 320 90 40} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
+        }
       }
       Fl_Slider progressSlider {
         xywh {10 397 943 15} type {Horz Fill} selection_color 2
@@ -370,6 +379,8 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   } {}
   Function {ShowGradientAnisotropicDiffusionImage( void )} {return_type {virtual void}
   } {}
-  Function {UpdateExtract()} {open selected return_type {virtual void}
+  Function {UpdateExtract()} {open return_type {virtual void}
+  } {}
+  Function {ShowHomogeneousImageWithVTK( void )} {selected return_type {virtual void}
   } {}
 } 

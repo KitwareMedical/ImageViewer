@@ -95,6 +95,10 @@ RegionGrowingSegmentation
   m_FuzzyConnectedImageFilter->SetDiff_Mean( fuzzyDiffMeanValueInput->value() );
   m_FuzzyConnectedImageFilter->SetDiff_Variance( fuzzyDiffVarianceValueInput->value() );
 
+
+  m_VTKSegmentedImageViewer = VTKImageViewerType::New();
+  m_VTKSegmentedImageViewer->SetImage( m_ConfidenceConnectedImageFilter->GetOutput() );
+
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   homogeneousImageButton->Observe( m_NullImageFilter.GetPointer() );
@@ -164,6 +168,7 @@ RegionGrowingSegmentation
   m_ConnectedThresholdImageViewer.Hide();
   m_ConfidenceConnectedImageViewer.Hide();
   m_HomogeneousImageViewer.Hide();
+  m_VTKSegmentedImageViewer->Hide();
   consoleWindow->hide();
 }
 
@@ -339,6 +344,23 @@ RegionGrowingSegmentation
   m_HomogeneousImageViewer.Show();
 
 }
+
+
+
+
+ 
+/************************************
+ *
+ *  Show Homogeneous Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowHomogeneousImageWithVTK( void )
+{
+  m_VTKSegmentedImageViewer->Show();
+}
+
 
 
 
