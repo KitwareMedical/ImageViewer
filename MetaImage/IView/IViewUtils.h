@@ -48,7 +48,7 @@ Image<T, 3>::Pointer loadImage(char *fname)
 
  itk::SimpleImageRegionIterator< itk::Image<T,3> > it(image, region);
  int i;
- for(i = 0, it.Begin(); !it.IsAtEnd(); i++, ++it)
+ for(i = 0; !it.IsAtEnd(); i++, ++it)
    it.Set(imIO->Get(i));
 
 

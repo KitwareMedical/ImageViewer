@@ -167,7 +167,6 @@ Slice3DDrawer<TImage>
 
   IteratorType it( m_Image, m_Image->GetRequestedRegion() );
 
-  it.Begin();
   PixelType  max = it.Get();
   while( ! it.IsAtEnd() )
   {

@@ -155,7 +155,7 @@ ReadMetaImage<TOutputImage>
 
   PixelType * source = (PixelType *)metaImage.Get();
   
-  for ( it.Begin(); !it.IsAtEnd(); ++it ) 
+  for ( ; !it.IsAtEnd(); ++it ) 
     {
     it.Set( *source++ );
     }

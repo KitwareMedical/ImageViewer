@@ -122,7 +122,6 @@ WriteMetaImage<TInputImage>
 
   
   PixelType * destination = yetAnotherBuffer;
-  it.Begin();
   while( !it.IsAtEnd() ) 
   {
     *destination++ = it.Get(); 

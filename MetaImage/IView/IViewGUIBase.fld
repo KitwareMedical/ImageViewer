@@ -338,7 +338,6 @@ Function {imageMinandMax(Image<float,3>::Pointer img, float &min, float &max)} {
   code {float v;
 Image<float,3>::RegionType img_region = img->GetLargestPossibleRegion();
   ImageRegionIterator<float,3> it(img,img_region);
-  it.Begin();
 
   if(!it.IsAtEnd())
     min = max = *it;

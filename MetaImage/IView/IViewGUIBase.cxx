@@ -481,7 +481,6 @@ void imageMinandMax(Image<float,3>::Pointer img, float &min, float &max) {
   float v;
 Image<float,3>::RegionType img_region = img->GetLargestPossibleRegion();
 itk::ImageRegionIterator<itk::Image<float,3> > it(img,img_region);
-  it.Begin();
 
   if(!it.IsAtEnd())
   {
