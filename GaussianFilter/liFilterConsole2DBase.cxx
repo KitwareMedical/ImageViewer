@@ -42,22 +42,30 @@ liFilterConsole2DBase
   m_Hx->SetDirection( 0 );
   m_Hy->SetDirection( 1 );
 
+  m_Hx->SetOrder( InputGaussianFilterType::ZeroOrder );
+  m_Hy->SetOrder( InputGaussianFilterType::ZeroOrder );
+
   m_Hxy  = GaussianFilterType::New();
 
   m_Hxy->SetDirection( 1 );
 
-  m_H1x  = GaussianFirstDerivativeFilterType::New();
-  m_H1y  = GaussianFirstDerivativeFilterType::New();
+  m_H1x  = GaussianFilterType::New();
+  m_H1y  = GaussianFilterType::New();
 
   m_H1x->SetDirection( 0 );
   m_H1y->SetDirection( 1 );
 
-  m_H2x  = GaussianSecondDerivativeFilterType::New();
-  m_H2y  = GaussianSecondDerivativeFilterType::New();
+  m_H1x->SetOrder( GaussianFilterType::FirstOrder );
+  m_H1y->SetOrder( GaussianFilterType::FirstOrder );
+
+  m_H2x  = GaussianFilterType::New();
+  m_H2y  = GaussianFilterType::New();
 
   m_H2x->SetDirection( 0 );
   m_H2y->SetDirection( 1 );
 
+  m_H2x->SetOrder( GaussianFilterType::SecondOrder );
+  m_H2y->SetOrder( GaussianFilterType::SecondOrder );
 
   m_Hx->SetInputImage( m_Reader->GetOutput() );
   m_Hy->SetInputImage( m_Reader->GetOutput() );
@@ -75,10 +83,11 @@ liFilterConsole2DBase
   m_Laplacian->SetInput1( m_H2x->GetOutput() );
   m_Laplacian->SetInput2( m_H2y->GetOutput() );
 
-  m_Smoothed = SmoothingFilterType::New();
+  m_Smoothed = GaussianFilterType::New();
 
   m_Smoothed->SetInputImage( m_Hx->GetOutput() );
   m_Smoothed->SetDirection( 1 );
+  m_Smoothed->SetOrder( GaussianFilterType::ZeroOrder );
 
   m_Modulus = ModulusFilterType::New();
   m_Modulus = ModulusFilterType::New();

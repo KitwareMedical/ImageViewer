@@ -19,8 +19,6 @@
 
 #include "itkImage.h"
 #include "itkRecursiveGaussianImageFilter.h"
-#include "itkFirstDerivativeRecursiveGaussianImageFilter.h"
-#include "itkSecondDerivativeRecursiveGaussianImageFilter.h"
 #include "itkAddImageFilter.h"
 #include "itkBinaryMagnitudeImageFilter.h"
 #include "itkEigenAnalysis2DImageFilter.h"
@@ -43,7 +41,6 @@ public:
 
   typedef   double                            InputPixelType;
   typedef   double                            PixelType;
-  typedef   double                            ComputationType;
 
   typedef   itk::Vector< PixelType, 2 >           VectorType;
   
@@ -66,25 +63,11 @@ public:
 
   typedef   itk::RecursiveGaussianImageFilter<
                             InputImageType,
-                            ImageType,
-                            ComputationType  > InputGaussianFilterType;
+                            ImageType        > InputGaussianFilterType;
   
   typedef   itk::RecursiveGaussianImageFilter<
                             ImageType,
-                            ImageType,
-                            ComputationType  > GaussianFilterType;
-
-  typedef   itk::FirstDerivativeRecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > 
-                                GaussianFirstDerivativeFilterType;
-
-  typedef   itk::SecondDerivativeRecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > 
-                               GaussianSecondDerivativeFilterType;
+                            ImageType         > GaussianFilterType;
 
   typedef   itk::AddImageFilter< ImageType, 
                             ImageType, ImageType >  AddFilterType;
@@ -97,8 +80,7 @@ public:
 
   typedef   itk::GradientRecursiveGaussianImageFilter< 
                             InputImageType,
-                            CovariantVectorImageType, 
-                            ComputationType >           GradientFilterType;
+                            CovariantVectorImageType >    GradientFilterType;
 
   typedef   itk::MultiplyImageFilter< VectorImageType,
                                       VectorImageType,
@@ -145,6 +127,8 @@ public:
                                       ImageSpaceMeshType 
                                       >         InverseParametricFilterType;
 
+  typedef GaussianFilterType::RealType     RealType;
+
 public:
   ceExtractorConsoleBase();
   virtual ~ceExtractorConsoleBase();
@@ -154,26 +138,26 @@ public:
   virtual void ShowSpatialFunctionControl( void );
   virtual void HideSpatialFunctionControl( void );
   virtual void Execute(void);
-  virtual void SetSigma( ComputationType );
+  virtual void SetSigma( RealType );
 
 protected:
-  VolumeReaderType::Pointer                  m_Reader;
+  VolumeReaderType::Pointer               m_Reader;
 
-  InputGaussianFilterType::Pointer               m_Hx;
-  InputGaussianFilterType::Pointer               m_Hy;
+  InputGaussianFilterType::Pointer        m_Hx;
+  InputGaussianFilterType::Pointer        m_Hy;
 
-  GaussianFilterType::Pointer                    m_Hxy;
-  GaussianFilterType::Pointer                    m_H1xy;
+  GaussianFilterType::Pointer             m_Hxy;
+  GaussianFilterType::Pointer             m_H1xy;
 
-  GaussianFirstDerivativeFilterType::Pointer     m_H1x;
-  GaussianFirstDerivativeFilterType::Pointer     m_H1y;
+  GaussianFilterType::Pointer             m_H1x;
+  GaussianFilterType::Pointer             m_H1y;
 
-  GaussianSecondDerivativeFilterType::Pointer    m_H2x;
-  GaussianSecondDerivativeFilterType::Pointer    m_H2y;
+  GaussianFilterType::Pointer             m_H2x;
+  GaussianFilterType::Pointer             m_H2y;
 
-  AddFilterType::Pointer                         m_Add;
+  AddFilterType::Pointer                  m_Add;
 
-  ModulusFilterType::Pointer                 m_Modulus;
+  ModulusFilterType::Pointer              m_Modulus;
 
   EigenFilterType::Pointer                m_Eigen;
 

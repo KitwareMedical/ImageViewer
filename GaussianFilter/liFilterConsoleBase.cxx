@@ -42,6 +42,10 @@ liFilterConsoleBase
   m_Hy->SetDirection( 1 );
   m_Hz->SetDirection( 2 );
 
+  m_Hx->SetOrder( InputGaussianFilterType::ZeroOrder );
+  m_Hy->SetOrder( InputGaussianFilterType::ZeroOrder );
+  m_Hz->SetOrder( InputGaussianFilterType::ZeroOrder );
+
   m_Hxy  = GaussianFilterType::New();
   m_Hyz  = GaussianFilterType::New();
   m_Hzx  = GaussianFilterType::New();
@@ -50,22 +54,33 @@ liFilterConsoleBase
   m_Hyz->SetDirection( 2 );
   m_Hzx->SetDirection( 0 );
 
-  m_H1x  = GaussianFirstDerivativeFilterType::New();
-  m_H1y  = GaussianFirstDerivativeFilterType::New();
-  m_H1z  = GaussianFirstDerivativeFilterType::New();
+  m_Hxy->SetOrder( GaussianFilterType::ZeroOrder );
+  m_Hyz->SetOrder( GaussianFilterType::ZeroOrder );
+  m_Hzx->SetOrder( GaussianFilterType::ZeroOrder );
+
+  m_H1x  = GaussianFilterType::New();
+  m_H1y  = GaussianFilterType::New();
+  m_H1z  = GaussianFilterType::New();
 
   m_H1x->SetDirection( 0 );
   m_H1y->SetDirection( 1 );
   m_H1z->SetDirection( 2 );
 
-  m_H2x  = GaussianSecondDerivativeFilterType::New();
-  m_H2y  = GaussianSecondDerivativeFilterType::New();
-  m_H2z  = GaussianSecondDerivativeFilterType::New();
+  m_H1x->SetOrder( GaussianFilterType::FirstOrder );
+  m_H1y->SetOrder( GaussianFilterType::FirstOrder );
+  m_H1z->SetOrder( GaussianFilterType::FirstOrder );
+
+  m_H2x  = GaussianFilterType::New();
+  m_H2y  = GaussianFilterType::New();
+  m_H2z  = GaussianFilterType::New();
 
   m_H2x->SetDirection( 0 );
   m_H2y->SetDirection( 1 );
   m_H2z->SetDirection( 2 );
 
+  m_H2x->SetOrder( GaussianFilterType::SecondOrder );
+  m_H2y->SetOrder( GaussianFilterType::SecondOrder );
+  m_H2z->SetOrder( GaussianFilterType::SecondOrder );
 
   m_Hx->SetInputImage( m_Reader->GetOutput() );
   m_Hy->SetInputImage( m_Reader->GetOutput() );
@@ -194,7 +209,7 @@ liFilterConsoleBase
  ***********************************/
 void
 liFilterConsoleBase 
-::SetSigma( ComputationType value )
+::SetSigma( RealType value )
 {
   
   m_Hx->SetSigma( value );

@@ -55,7 +55,9 @@ public:
 
   /**  Gradient filter type  */
   typedef itk::GradientRecursiveGaussianImageFilter<
-    ImageType,ImageGradientType,float>              GradientFilterType;
+                                            ImageType,
+                                            ImageGradientType
+                                                    >  GradientFilterType;
   typedef GradientFilterType::Pointer               GradientFilterPointer; 
   typedef   itk::ImageFileReader<ImageType>         VolumeReaderType;
   typedef   VolumeReaderType::Pointer               VolumeReaderPointer;

@@ -20,8 +20,6 @@
 #include <itkImage.h>
 #include <itkImageFileReader.h>
 #include <itkRecursiveGaussianImageFilter.h>
-#include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
-#include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
 #include <itkTernaryAddImageFilter.h>
 #include <itkTernaryMagnitudeImageFilter.h>
 
@@ -31,7 +29,6 @@ class liFilterConsoleBase
 public:
   typedef   unsigned short                    InputPixelType;
   typedef   float                             PixelType;
-  typedef   float                             ComputationType;
 
   typedef   itk::Image< InputPixelType, 3 >   InputImageType;
   typedef   itk::Image< PixelType, 3 >        ImageType;
@@ -43,26 +40,12 @@ public:
 //                            ImageType >            VolumeWriterType;
 
   typedef   itk::RecursiveGaussianImageFilter<
-                            InputImageType,
-                            ImageType,
-                            ComputationType  > InputGaussianFilterType;
+                                    InputImageType,
+                                    ImageType > InputGaussianFilterType;
   
   typedef   itk::RecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > GaussianFilterType;
-
-  typedef   itk::FirstDerivativeRecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > 
-                                GaussianFirstDerivativeFilterType;
-
-  typedef   itk::SecondDerivativeRecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > 
-                               GaussianSecondDerivativeFilterType;
+                                    ImageType,
+                                    ImageType > GaussianFilterType;
 
   typedef   itk::TernaryAddImageFilter< ImageType, ImageType,
                             ImageType, ImageType >  AddFilterType;
@@ -72,6 +55,7 @@ public:
                             ImageType, ImageType >  ModulusFilterType;
 
 
+  typedef   GaussianFilterType::RealType    RealType;
 
 public:
 
@@ -82,7 +66,7 @@ public:
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
   virtual void Execute(void);
-  virtual void SetSigma( ComputationType );
+  virtual void SetSigma( RealType );
 
   virtual void WriteLaplacian(void) = 0;
   virtual void WriteGradientX(void) = 0;
@@ -108,13 +92,13 @@ protected:
   GaussianFilterType::Pointer                    m_Hyz;
   GaussianFilterType::Pointer                    m_Hzx;  
 
-  GaussianFirstDerivativeFilterType::Pointer     m_H1x;
-  GaussianFirstDerivativeFilterType::Pointer     m_H1y;
-  GaussianFirstDerivativeFilterType::Pointer     m_H1z;
+  GaussianFilterType::Pointer                    m_H1x;
+  GaussianFilterType::Pointer                    m_H1y;
+  GaussianFilterType::Pointer                    m_H1z;
 
-  GaussianSecondDerivativeFilterType::Pointer    m_H2x;
-  GaussianSecondDerivativeFilterType::Pointer    m_H2y;
-  GaussianSecondDerivativeFilterType::Pointer    m_H2z;
+  GaussianFilterType::Pointer                    m_H2x;
+  GaussianFilterType::Pointer                    m_H2y;
+  GaussianFilterType::Pointer                    m_H2z;
 
   AddFilterType::Pointer                         m_Add;
   ModulusFilterType::Pointer                 m_Modulus;

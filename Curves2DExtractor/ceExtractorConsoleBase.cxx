@@ -42,21 +42,27 @@ ceExtractorConsoleBase
 
   m_Hxy->SetDirection( 1 );
 
-  m_H1x  = GaussianFirstDerivativeFilterType::New();
-  m_H1y  = GaussianFirstDerivativeFilterType::New();
+  m_H1x  = GaussianFilterType::New();
+  m_H1y  = GaussianFilterType::New();
 
   m_H1x->SetDirection( 0 );
   m_H1y->SetDirection( 1 );
 
-  m_H1xy = GaussianFirstDerivativeFilterType::New();
+  m_H1x->SetOrder( GaussianFilterType::ZeroOrder );
+  m_H1y->SetOrder( GaussianFilterType::ZeroOrder );
+
+  m_H1xy = GaussianFilterType::New();
   m_H1xy->SetDirection( 1 );
+  m_H1xy->SetOrder( GaussianFilterType::FirstOrder );
     
-  m_H2x  = GaussianSecondDerivativeFilterType::New();
-  m_H2y  = GaussianSecondDerivativeFilterType::New();
+  m_H2x  = GaussianFilterType::New();
+  m_H2y  = GaussianFilterType::New();
 
   m_H2x->SetDirection( 0 );
   m_H2y->SetDirection( 1 );
 
+  m_H2x->SetOrder( GaussianFilterType::SecondOrder );
+  m_H2y->SetOrder( GaussianFilterType::SecondOrder );
 
   m_Hx->SetInputImage( m_Reader->GetOutput() );
   m_Hy->SetInputImage( m_Reader->GetOutput() );
@@ -221,7 +227,7 @@ ceExtractorConsoleBase
  ***********************************/
 void
 ceExtractorConsoleBase 
-::SetSigma( ComputationType value )
+::SetSigma( RealType value )
 {
   
   m_Hx->SetSigma( value );

@@ -55,7 +55,7 @@ public:
 
   /** Derivative filter type, */
   typedef itk::GradientRecursiveGaussianImageFilter<
-    InputImageType,DerivativeImageType,double>  DerivativeFilterType;
+        InputImageType,DerivativeImageType>  DerivativeFilterType;
   typedef DerivativeFilterType::Pointer DerivativeFilterPointer;
 
   /** Shape Detection filter type. */

@@ -748,7 +748,7 @@ ceExtractorConsole
  ***********************************/
 void
 ceExtractorConsole
-::SetSigma( ceExtractorConsoleBase::ComputationType value )
+::SetSigma( RealType value )
 {
   sigmaCounter->value( value );
   this->ceExtractorConsoleBase::SetSigma( value );

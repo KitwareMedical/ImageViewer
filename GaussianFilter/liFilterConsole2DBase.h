@@ -21,8 +21,6 @@
 #include <itkImageFileReader.h>
 #include <itkImageFileWriter.h>
 #include <itkRecursiveGaussianImageFilter.h>
-#include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
-#include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
 #include <itkAddImageFilter.h>
 #include <itkBinaryMagnitudeImageFilter.h>
 #include <itkShiftScaleImageFilter.h>
@@ -49,31 +47,13 @@ public:
 
 
   typedef   itk::RecursiveGaussianImageFilter<
-                            InputImageType,
-                            ImageType,
-                            ComputationType  > InputGaussianFilterType;
+                                    InputImageType,
+                                    ImageType
+                                          > InputGaussianFilterType;
 
   typedef   itk::RecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > SmoothingFilterType;
-  
-  typedef   itk::RecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > GaussianFilterType;
-
-  typedef   itk::FirstDerivativeRecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > 
-                                GaussianFirstDerivativeFilterType;
-
-  typedef   itk::SecondDerivativeRecursiveGaussianImageFilter<
-                            ImageType,
-                            ImageType,
-                            ComputationType  > 
-                               GaussianSecondDerivativeFilterType;
+                                    ImageType,
+                                    ImageType > GaussianFilterType;
 
   typedef   itk::AddImageFilter< ImageType, 
                                  ImageType, 
@@ -117,14 +97,14 @@ protected:
 
   GaussianFilterType::Pointer                    m_Hxy;
 
-  GaussianFirstDerivativeFilterType::Pointer     m_H1x;
-  GaussianFirstDerivativeFilterType::Pointer     m_H1y;
+  GaussianFilterType::Pointer                    m_H1x;
+  GaussianFilterType::Pointer                    m_H1y;
 
-  GaussianSecondDerivativeFilterType::Pointer    m_H2x;
-  GaussianSecondDerivativeFilterType::Pointer    m_H2y;
+  GaussianFilterType::Pointer                    m_H2x;
+  GaussianFilterType::Pointer                    m_H2y;
 
   AddFilterType::Pointer                      m_Laplacian;
-  SmoothingFilterType::Pointer                m_Smoothed;
+  GaussianFilterType::Pointer                 m_Smoothed;
   ModulusFilterType::Pointer                  m_Modulus;
 
   bool                                        m_ImageLoaded;

@@ -42,6 +42,7 @@ public:
   typedef ceExtractorConsoleBase::ImageSpaceMeshType ImageSpaceMeshType;
   typedef fltk::PointSet2D< ImageSpaceMeshType > ImageSpacePointSetShapeType;   
   typedef ImageSpacePointSetShapeType::Pointer   ImageSpacePointSetShapePointer;
+  typedef ceExtractorConsoleBase::RealType       RealType;
 
 public:
   ceExtractorConsole();
@@ -69,7 +70,7 @@ public:
   virtual void ShowExtractedParametricPoints(void);
   virtual void ResetViewOfParametricSpace(void);
   virtual void ResetViewOfExtractedParametricSpace(void);
-  virtual void SetSigma( ceExtractorConsoleBase::ComputationType );
+  virtual void SetSigma( RealType );
   virtual void Execute(void);
 
 private:
