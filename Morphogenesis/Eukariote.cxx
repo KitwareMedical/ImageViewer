@@ -19,6 +19,8 @@
 
 #include "Eukariote.h"
 #include "CellularAggregate.h"
+#include "vnl/vnl_sample.h"
+
 
 
 
@@ -36,7 +38,8 @@ Eukariote
 ::Eukariote()
 {
   // add a random time before starting to grow
-  m_DivisionLatencyTime = rand() % this->GetDivisionMaximumLatencyTime();
+  m_DivisionLatencyTime = 
+      vnl_sample_uniform( 0, this->GetDivisionMaximumLatencyTime() );
 }
 
 
@@ -130,12 +133,24 @@ Eukariote
 
   // Create a perturbation for separating the daugther cells
   Cell::VectorType perturbationVector;
-  double perturbationLength = m_Radius * 0.75;
   for(unsigned int d=0; d<PointDimension; d++)
     {
-    perturbationVector[d] = perturbationLength * 
-                            static_cast<double>( rand()-RAND_MAX/2.0 ) / 
-                            static_cast<double>( RAND_MAX );
+    perturbationVector[d] = 
+           vnl_sample_uniform( -1.0f, 1.0f ); 
+    }
+
+  const double perturbationLength = m_Radius * 0.75;
+
+  const double norm = perturbationVector.GetNorm();
+  if( vnl_math_abs( norm ) > 1e-10 ) 
+    {
+    perturbationVector *= perturbationLength / norm;
+    }
+  else
+    {
+    // this event should rarely happen... very rarely
+    std::cout << "Eukariote:: unlikely event happend" << std::endl;
+    perturbationVector[0] = perturbationLength;
     }
 
   CellularAggregate * aggregate = GetCellularAggregate();

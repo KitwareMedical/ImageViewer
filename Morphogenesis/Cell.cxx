@@ -19,6 +19,8 @@
 
 #include "Cell.h"
 #include "CellularAggregate.h"
+#include "vnl/vnl_math.h"
+#include "vnl/vnl_sample.h"
 #include <new>
 #include "FL/gl.h"
 
@@ -85,7 +87,8 @@ Cell
   m_EnergyReserveLevel    = EnergySelfRepairLevel   + DefaultEnergyIntake;
 
   // delay before starting to grow after Mitosis
-  m_GrowthLatencyTime   = rand() % this->GetGrowthMaximumLatencyTime();
+  m_GrowthLatencyTime   = 
+       vnl_sample_uniform( 0, this->GetGrowthMaximumLatencyTime() );
 
   // too young to die...
   m_MarkedForRemoval = false;
