@@ -94,7 +94,7 @@ main(int argc, char *argv[])
     std::cout << "Reading image file." << std::endl;
     ImageIndexType index;        // Index to current pixel
     unsigned long point[3];      // Location of current pixel
-    PixelType buff[ImageWidth];  // Input/output buffer
+    PixelType *buff = new PixelType[ImageWidth];  // Input/output buffer
     PixelType value;             // Value of pixel
     size_t count;
 #if 1       // Version using explicit loops
@@ -239,6 +239,7 @@ main(int argc, char *argv[])
         }
     }
     fclose(outfile);
-    
+
+    delete [] buff;
     return 0;
 }
