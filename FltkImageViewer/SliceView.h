@@ -57,7 +57,7 @@ const char ImageModeTypeName[8][8] =
  {'D', 'e', 'r', 'i', 'v', '-', 'X', '\0'},
  {'D', 'e', 'r', 'i', 'v', '-', 'Y', '\0'},
  {'D', 'e', 'r', 'i', 'v', '-', 'Z', '\0'},
- {'2', 'n', 'd', 'D', 'e', 'r', 'v', '\0'},
+ {'B', 'l', 'e', 'n', 'd', '\0', ' ', ' '},
  {'M', 'I', 'P', '\0', ' ', ' ', ' ', ' '}};
 
 const int NUM_IWModeTypes = 3;
@@ -171,14 +171,14 @@ protected:
   bool        cViewValue;
   bool        cViewDetails;
 
-  unsigned int   cWinMinX;
-  unsigned int   cWinMaxX;
+  int   cWinMinX;
+  int   cWinMaxX;
   unsigned int   cWinSizeX;
-  unsigned int   cWinMinY;
-  unsigned int   cWinMaxY;
+  int   cWinMinY;
+  int   cWinMaxY;
   unsigned int   cWinSizeY;
-  unsigned int   cWinDataSizeX;
-  unsigned int   cWinDataSizeY;
+  int   cWinDataSizeX;
+  int   cWinDataSizeY;
   unsigned int   inDataSizeX;
   unsigned int   inDataSizeY;
   unsigned char  *cWinImData;
@@ -253,7 +253,7 @@ public:
   float   winZoom(void);
   /*! Specify the coordinates of the center of the region of interest 
    *  to view */
-  void    winCenter(int newWinCenterX, int newWinCenterY, int newWinCenterZ=-1);
+  void    winCenter(int newWinCenterX, int newWinCenterY, int newWinCenterZ);
   /*! Default centering, center at the middle of the image */
   void    winCenter(void);
   /*! Get the coordinates of the center of the region of interest 
@@ -433,7 +433,7 @@ l)
     cSliceNumArg = NULL;
     cSliceNumArgCallBack = NULL;
 
-    cViewAxisLabel = true;
+    cViewAxisLabel = false;
     sprintf(cAxisLabelX[0], "S");
     sprintf(cAxisLabelX[1], "L");
     sprintf(cAxisLabelX[2], "L");
@@ -645,6 +645,14 @@ bool SliceView<imType>::flipZ()
 template <class imType>
 void SliceView<imType>::Transpose(bool newTranspose)
 {
+    if(cTranspose[cWinOrientation] != newTranspose)
+      {
+      int t;
+      t = cWinOrder[0];
+      cWinOrder[0] = cWinOrder[1];
+      cWinOrder[1] = t;
+      }
+
     cTranspose[cWinOrientation] = newTranspose;
 }
 
@@ -1171,25 +1179,24 @@ void SliceView<imType>::winCenter(int newWinCenterX,
                                   int newWinCenterY,
                                   int newWinCenterZ)
 {
-    if(newWinCenterX<0)
+    if(newWinCenterX < 0)
       newWinCenterX = 0;
+    if(newWinCenterX >= cDimSize[0])
+      newWinCenterX = cDimSize[0] - 1;
     cWinCenter[0] = newWinCenterX;
-    if(cWinCenter[0]>=cDimSize[0])
-        cWinCenter[0] = cDimSize[0]-1;
-
-    if(newWinCenterY<0)
+    
+    if(newWinCenterY < 0)
       newWinCenterY = 0;
+    if(newWinCenterY >= cDimSize[1])
+      newWinCenterY = cDimSize[1] - 1;
     cWinCenter[1] = newWinCenterY;
-    if(cWinCenter[1]>=cDimSize[1])
-        cWinCenter[1] = cDimSize[1]-1;
 
-    if(newWinCenterZ>=0)
-    {
-      cWinCenter[2] = newWinCenterZ;
-      if(cWinCenter[2]>=cDimSize[2])
-          cWinCenter[2] = cDimSize[2]-1;
-    }
-
+    if(newWinCenterZ < 0)
+      newWinCenterZ = 0;
+    if(newWinCenterZ >= cDimSize[2])
+      newWinCenterZ = cDimSize[2] - 1;
+    cWinCenter[2] = newWinCenterZ;
+    
     if(cWinCenterCallBack != NULL)
         cWinCenterCallBack();
     if(cWinCenterArgCallBack != NULL)
@@ -1235,8 +1242,9 @@ newWinCenterCallBack)(void))
 
 
 template <class imType>
-void SliceView<imType>::winCenterCallBack(void (* 
-newWinCenterArgCallBack)(void *), void * newWinCenterArg)
+void SliceView<imType>::winCenterCallBack(
+     void (* newWinCenterArgCallBack)(void *), 
+     void * newWinCenterArg)
 {
     cWinCenterArg = newWinCenterArg;
     cWinCenterArgCallBack = newWinCenterArgCallBack;
@@ -1246,11 +1254,14 @@ newWinCenterArgCallBack)(void *), void * newWinCenterArg)
 //
 //
 template <class imType>
-void SliceView<imType>::winShift(int newWinShiftUp, int 
-newWinShiftRight)
+void SliceView<imType>::winShift(int newWinShiftUp, 
+                                 int newWinShiftRight)
 {
-    winCenter(cWinCenter[cWinOrder[0]]+newWinShiftRight,
-        cWinCenter[cWinOrder[1]]+newWinShiftUp);
+    int winC[3];
+    winC[cWinOrder[0]] = cWinCenter[cWinOrder[0]]+newWinShiftRight;
+    winC[cWinOrder[1]] = cWinCenter[cWinOrder[1]]+newWinShiftUp;
+    winC[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
+    winCenter(winC[0], winC[1], winC[2]);
 }
 
 //
@@ -1288,6 +1299,13 @@ void SliceView<imType>::orientation(unsigned int newOrientation)
             cWinOrder[2] = 2;
             break;
     }
+
+    if(cTranspose[cWinOrientation])
+      {
+      int t = cWinOrder[0];
+      cWinOrder[0] = cWinOrder[1];
+      cWinOrder[1] = t;
+      }
 
     sliceNum((int)cClickSelect[cWinOrder[2]]);
 
@@ -1366,10 +1384,10 @@ int SliceView<imType>::handle(int event)
     imgShiftSize = 1;
   }
 
-  float scale0 = (cW/(float)cDimSize[0]*cWinZoom)*spacing[cWinOrder[0]]
-                 /spacing[0];
-  float scale1 = (cW/(float)cDimSize[0]*cWinZoom)*spacing[cWinOrder[1]]
-                 /spacing[0];
+  float scale0 = (cW/(float)cDimSize[0]*cWinZoom)
+                 *fabs(spacing[cWinOrder[0]])/fabs(spacing[0]);
+  float scale1 = (cW/(float)cDimSize[0]*cWinZoom)
+                 *fabs(spacing[cWinOrder[1]])/fabs(spacing[0]);
 
   switch(event)
   {
@@ -1382,8 +1400,15 @@ int SliceView<imType>::handle(int event)
         if(cClickMode == CM_SELECT || cClickMode == CM_BOX) 
         {
         float p[3];
-        p[cWinOrder[0]] = cWinMinX + (cFlipX[cWinOrientation]*(cW-x) 
-                                      + (1-cFlipX[cWinOrientation])*x)
+        //std::cout << "x = " << x << ", " << y << std::endl;
+        //std::cout << "cWinMinX = " << cWinMinX << ", " << cWinMinY << std::endl;
+        //std::cout << "cWinMaxX = " << cWinMaxX << ", " << cWinMaxY << std::endl;
+        //std::cout << "cWinCenterX = " << cWinCenter[cWinOrder[0]] << ", " << cWinCenter[cWinOrder[1]] << std::endl;
+        //std::cout << "cFlipX = " << cFlipX[cWinOrientation] << ", " << cFlipY[cWinOrientation] << std::endl;
+        //std::cout << "scale0 = " << scale0 << ", " << scale1 << std::endl;
+        //std::cout << "cW = " << cW << ", " << cH << std::endl;
+        p[cWinOrder[0]] = cWinMinX + ( (1-cFlipX[cWinOrientation])*(x) 
+                                      + (cFlipX[cWinOrientation])*(cW-x) ) 
                                      / scale0;
         if(p[cWinOrder[0]]<cWinMinX) 
           p[cWinOrder[0]] = cWinMinX;
@@ -1680,7 +1705,7 @@ int SliceView<imType>::handle(int event)
             break;
             }
         case 't':
-            cTranspose[cWinOrientation] = !cTranspose[cWinOrientation];
+            Transpose(!cTranspose[cWinOrientation]);
             update();
             return 1;
             break;
@@ -1714,7 +1739,7 @@ int SliceView<imType>::handle(int event)
 SliceViewer\n \
 ===========\n \
  \
-This is a multi-dimensional image viewer.  It displays one 2D slice or \
+This is a multi-dimensional image viewer.  It displays one 2D slice or \n \
 a MIP view of that data. A variety of viewing options exist...\n \
 \n \
 Options: (press a key in the window)\n \
@@ -1740,8 +1765,8 @@ e - Toggle between clipping and setting-to-black values above IW upper limit\n \
 a s - Decrease, Increase the lower limit of the intensity windowing\n \
 d - Toggle between clipping and setting-to-white values below IW lower limit\n \
 \n \
-+ = - Zoom-in by a factor of 2 \
-- _ - Zoom-out by a factor of 2 \
++ = - Zoom-in by a factor of 2 \n \
+- _ - Zoom-out by a factor of 2 \n \
 \n \
 i j k m - Shift the image in the corresponding direction\n \
 \n \
