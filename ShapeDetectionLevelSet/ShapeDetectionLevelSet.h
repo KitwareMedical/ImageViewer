@@ -108,6 +108,8 @@ private:
 
   InternalImageViewerType         m_InputImageViewer;
 
+  ThresholdedImageViewerType      m_InputThresholdImageViewer;
+
   InternalImageViewerType         m_GradientMagnitudeImageViewer;
 
   InternalImageViewerType         m_EdgePotentialImageViewer;

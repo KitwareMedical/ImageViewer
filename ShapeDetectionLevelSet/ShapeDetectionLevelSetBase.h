@@ -154,6 +154,8 @@ protected:
 
   FastMarchingFilterType::Pointer             m_FastMarchingFilter;
 
+  ThresholdFilterType::Pointer                m_InputThresholdFilter;
+  
   ShapeDetectionFilterType::Pointer           m_ShapeDetectionFilter;
 
   DerivativeFilterType::Pointer               m_DerivativeFilter;

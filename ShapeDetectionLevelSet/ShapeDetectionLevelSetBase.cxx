@@ -47,6 +47,13 @@ ShapeDetectionLevelSetBase
   m_AddImageFilter = AddImageFilterType::New();
   m_AddImageFilter->SetInput( m_FastMarchingFilter->GetOutput() );
 
+  m_InputThresholdFilter = ThresholdFilterType::New();
+  m_InputThresholdFilter->SetInput( m_AddImageFilter->GetOutput() );
+  m_InputThresholdFilter->SetUpperThreshold( itk::NumericTraits<InternalPixelType>::Zero ); 
+  m_InputThresholdFilter->SetLowerThreshold( itk::NumericTraits<InternalPixelType>::NonpositiveMin() ); 
+  m_InputThresholdFilter->SetInsideValue( 200 );
+  m_InputThresholdFilter->SetOutsideValue(  0 );
+
   m_ShapeDetectionFilter = ShapeDetectionFilterType::New();
   m_ShapeDetectionFilter->SetInput(  m_AddImageFilter->GetOutput() );
   m_ShapeDetectionFilter->SetEdgeImage( m_ExpNegativeFilter->GetOutput() );
@@ -194,6 +201,7 @@ ShapeDetectionLevelSetBase
 {
   this->ShowStatus("Computing Zero Set");
   m_AddImageFilter->Update();
+  m_InputThresholdFilter->Update();
 }
 
 

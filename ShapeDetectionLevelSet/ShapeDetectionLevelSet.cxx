@@ -35,7 +35,9 @@ ShapeDetectionLevelSet
 
   m_ThresholdedImageViewer.SetLabel("Thresholded Image");
 
-  m_ZeroSetImageViewer.SetLabel("Zero Set Image");
+  m_ZeroSetImageViewer.SetLabel("Fast Marching Outputt");
+
+  m_InputThresholdImageViewer.SetLabel("Zero Set Image");
 
   m_GradientMagnitudeImageViewer.SetLabel("Gradient Magnitude Image");
 
@@ -52,7 +54,7 @@ ShapeDetectionLevelSet
 
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
 
-  m_AddImageFilter->GetAccessor().SetValue( zeroSetValueInput->value() );
+  m_AddImageFilter->GetAccessor().SetValue( - zeroSetValueInput->value() );
 
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
@@ -75,6 +77,7 @@ ShapeDetectionLevelSet
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_ShapeDetectionFilter.GetPointer() );
   progressSlider->Observe( m_AddImageFilter.GetPointer() );
+  progressSlider->Observe( m_InputThresholdFilter.GetPointer() );
   
   typedef itk::SimpleMemberCommand< ShapeDetectionLevelSet > SimpleCommandType;
 
@@ -161,6 +164,7 @@ ShapeDetectionLevelSet
   m_GradientMagnitudeImageViewer.Hide();
   m_TimeCrossingMapViewer.Hide();
   m_ZeroSetImageViewer.Hide();
+  m_InputThresholdImageViewer.Hide();
   
   m_VTKSegmentedImageViewer->Hide();
 
@@ -294,6 +298,8 @@ ShapeDetectionLevelSet
   m_ZeroSetImageViewer.SetImage( m_AddImageFilter->GetOutput() );  
   m_ZeroSetImageViewer.Show();
 
+  m_InputThresholdImageViewer.SetImage( m_InputThresholdFilter->GetOutput() );
+  m_InputThresholdImageViewer.Show();
 }
 
 
