@@ -29,6 +29,8 @@ CellsViewerBase
 CellsViewerGUI
 CellsViewer
 Bacteria
+BacterialColony
+BacterialColonyRedrawCommand
 Tissue
 TissueViewer
 TissueViewerGUI

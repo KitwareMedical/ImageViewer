@@ -7,6 +7,10 @@
 namespace bio {
 
 
+/**
+ * \class Bacteria 
+ * \brief This class implements the basic behavior of Prokariote cells.
+ */
 class Bacteria  : public Cell
 {
 
@@ -14,7 +18,6 @@ class Bacteria  : public Cell
 public:
   Bacteria();
   ~Bacteria();
-  virtual void Draw(void) const;
   virtual void Grow(void);
   virtual void Divide(void);
 

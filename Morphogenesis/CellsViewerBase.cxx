@@ -97,6 +97,39 @@ void CellsViewerBase
 
 
 
+/**
+ *    Connect the cellular aggregate
+ */ 
+void CellsViewerBase
+::SetCellsAggregate( Cell::CellsListType * cells )
+{
+	m_Cells = cells;
+}
+
+
+/**
+ *    Return the Command assigned to redraw
+ */ 
+itk::Command::Pointer
+CellsViewerBase
+::GetRedrawCommand(void)
+{
+	return m_Display.GetRedrawCommand().GetPointer();
+}
+
+
+
+/**
+ *    Return and object that accept observers
+ */ 
+itk::LightObject::Pointer
+CellsViewerBase
+::GetNotifier(void)
+{
+	return m_Display.GetNotifier().GetPointer();
+}
+
+
 }; // end namespace bio
 
 

@@ -9,6 +9,9 @@ namespace bio {
   
 
 
+/**
+ *    Constructor
+ */ 
 Bacteria
 ::Bacteria()
 {
@@ -18,21 +21,20 @@ Bacteria
 
 
 
+/**
+ *    Destructor
+ */ 
 Bacteria
 ::~Bacteria()
 {
 }
 
 
-void
-Bacteria
-::Draw(void) const
-{
-	fl_color( m_Color );
-	fl_circle( m_Position[0], m_Position[1], m_Radius );
-}
 
 
+/**
+ *    Growth
+ */ 
 void
 Bacteria
 ::Grow(void) 
@@ -46,6 +48,9 @@ Bacteria
 
 
 
+/**
+ *    Cell Division
+ */ 
 void
 Bacteria
 ::Divide(void) 
@@ -53,7 +58,7 @@ Bacteria
 
     Bacteria * sibling = new Bacteria;
 
-    m_Radius            = GrowthRadiusLimit/sqrt(2.0);
+    m_Radius            = m_Radius/sqrt(2.0);
     sibling->m_Radius   = m_Radius;
 
     // Create a perturbation for separating the daugther cells
@@ -62,7 +67,7 @@ Bacteria
                    atan(1) * 4.0;
 
     Cell::VectorType PerturbationVector;
-    double PerturbationLength = GrowthRadiusLimit * 0.1;
+    double PerturbationLength = m_Radius * 0.5;
 
     PerturbationVector[0] = PerturbationLength * cos( angle );
     PerturbationVector[1] = PerturbationLength * sin( angle );
@@ -70,8 +75,8 @@ Bacteria
     m_Position    	+= PerturbationVector;
     sibling->m_Position -= PerturbationVector; 
 
-    m_CellCycleState  = G1;
-
 }
+
+
 
 };  // end namespace bio

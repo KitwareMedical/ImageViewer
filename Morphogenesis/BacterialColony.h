@@ -2,6 +2,11 @@
 #ifndef __BacterialColony_H
 #define __BacterialColony_H
 
+
+#include <iostream>
+#include "itkIndent.h"
+#include "itkLightObject.h"
+#include "itkObjectFactory.h"
 #include "Bacteria.h"
 
 
@@ -15,36 +20,65 @@ namespace bio {
  * level. Global coordination is also performed for growing and
  * spreading
  */
-class BacterialColony 
+class BacterialColony : public itk::LightObject
 {
 
 public:
+  /**
+   * Standard "Self" typedef.
+   */
+  typedef BacterialColony      Self;
 
-  typedef Bacteria                    BacteriaType;
-  typedef CellType::VectorType        VectorType;
-  typedef CellType::PointType         PointType;
-	typedef std::list<BacteriaType *>   BacteriaListType;
-	
+  /**
+   * Standard "Superclass" typedef.
+   */
+  typedef itk::LightObject  Superclass;
 
-	BacterialColony();
-  ~BacterialColony();
+  /** 
+   * Smart pointer typedef support.
+   */
+  typedef itk::SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  void Draw(void) const;
-  void Grow(void);
-  void Spread(void);
-  void KillAll(void);
-  
-  VectorType WellPotentialGradient( const VectorType & relativePosition) const;
-  
-  unsigned int GetNumberOfCells(void) const;
+  /** 
+   * Run-time type information (and related methods).
+   */
+  itkTypeMacro(BacterialColony, itk::LightObject);
+
+  /**
+   * Method for creation through the object factory.
+   */
+  itkNewMacro(Self);  
+
+
+  typedef Cell::VectorType        VectorType;
+  typedef Cell::PointType         PointType;
+
+
+public:
+
+	unsigned int GetNumberOfCells(void) const;
  
+  void Draw(void) const;
   void SetGrowthRadiusLimit( double value );
   void SetGrowthRadiusIncrement( double value );
+  Cell::CellsListType * GetCellsAggregate(void);
 
+
+protected:
+
+	BacterialColony();
+  virtual ~BacterialColony();
+  BacterialColony( const Self & ) {}
+  void operator=(const Self&) {}
+  void PrintSelf(std::ostream& os, itk::Indent indent) const;
+
+  void ComputeForces(void);
+  void KillAll(void);
+  
 private:
 
-	BacteriaListType   m_Bacteria;
-
+  Cell::CellsListType    *  m_Cells;
 
 };
 

@@ -2,7 +2,7 @@
 
 
 #include "Cell.h"
-#include "GL/gl.h"
+#include "FL/gl.h"
 
 
 namespace bio {
@@ -23,13 +23,11 @@ double             Cell::EnergySelfRepairLevel    =    50;
 double             Cell::DefaultEnergyIntake      =     1; 
 double             Cell::DefaultNutrientsIntake   =     1; 
 
-std::list<Cell *>  Cell::m_Aggregate;       
-
 
 
 
 /**
- *    Constructor
+ *    Constructor Lonely Cell
  */ 
 Cell
 ::Cell()
@@ -39,7 +37,30 @@ Cell
 	m_Position    = DefaultPosition;
   m_Color       = DefaultColor;
   
-  m_Aggregate.push_back( this );
+  // The first lonely cell to be created
+  // gives origin to an aggregate
+  m_Aggregate = new CellsListType;
+  m_Aggregate->push_back( this );
+
+}
+
+
+
+/**
+ *    Constructor
+ */ 
+Cell
+::Cell( CellsListType * cellList )
+{
+
+	m_Radius      = DefaultRadius;
+	m_Position    = DefaultPosition;
+  m_Color       = DefaultColor;
+  
+  // Subsequent cells are registered 
+  // in the aggregate
+  m_Aggregate = cellList;
+  m_Aggregate->push_back( this );
 
 }
 
@@ -53,6 +74,13 @@ Cell
 Cell
 ::~Cell()
 {
+  // The last cell to die should
+  // destroy the aggregate
+  if( m_Aggregate->size() == 1 )
+  {
+    m_Aggregate->clear();
+    delete m_Aggregate;
+  }
 }
 
 
@@ -110,6 +138,17 @@ Cell
 }
 
 
+/**
+ *    Return the radius 
+ */ 
+double
+Cell
+::GetRadius(void) const
+{
+  return m_Radius;
+}
+
+
 
 /**
  *    Add a force to the cumulator
@@ -131,7 +170,7 @@ Cell::CellsListType *
 Cell
 ::GetAggregate(void) 
 {
-  return & m_Aggregate;
+  return m_Aggregate;
 }
 
 

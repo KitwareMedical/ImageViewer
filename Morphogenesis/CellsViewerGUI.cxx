@@ -61,11 +61,6 @@ CellsViewerGUI::CellsViewerGUI() {
     }
     o->end();
   }
-  { Fl_Window* o = new Fl_Window(104, 100);
-    w = o;
-    o->user_data((void*)(this));
-    o->end();
-  }
 }
 
 CellsViewerGUI::~CellsViewerGUI() {

@@ -33,6 +33,7 @@ public:
 public:
 
   Cell();
+  Cell( CellsListType * );
   virtual ~Cell();
   virtual void Draw(void) const;
   virtual void Grow(void);
@@ -45,6 +46,7 @@ public:
   
   const PointType & GetPosition(void) const;
   CellsListType   * GetAggregate(void);
+  double GetRadius(void) const;
   
   static void SetGrowthRadiusLimit( double );
   static void SetGrowthRadiusIncrement( double );
@@ -62,6 +64,9 @@ protected:
    double             m_EnergyReserveLevel;
    double             m_NutrientsReserveLevel;
 
+   CellsListType   *  m_Aggregate;
+
+   // Static Members
 
    static     double      DefaultRadius;
    static     ColorType   DefaultColor;
@@ -76,7 +81,6 @@ protected:
    static     double      DefaultEnergyIntake;
    static     double      DefaultNutrientsIntake;
 
-   static     CellsListType   m_Aggregate;
 
 };
 

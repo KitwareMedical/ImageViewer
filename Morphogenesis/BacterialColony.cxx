@@ -9,6 +9,9 @@ namespace bio {
 BacterialColony
 ::BacterialColony()
 {
+  // Create the first individual
+  Bacteria * bacteria = new Bacteria;
+  m_Cells = bacteria->GetAggregate();
 }
 
 
@@ -17,6 +20,7 @@ BacterialColony
 BacterialColony
 ::~BacterialColony()
 {
+  this->KillAll();
 }
 
 
@@ -25,7 +29,7 @@ unsigned int
 BacterialColony
 ::GetNumberOfCells(void) const
 {
-  return m_Bacteria.size();
+  return m_Cells->size();
 }
 
 
@@ -34,8 +38,10 @@ void
 BacterialColony
 ::Draw(void) const
 {
-	BacteriaListType::const_iterator bacteria = m_Bacteria.begin();
-	while( bacteria != m_Bacteria.end() )
+  
+  Cell::CellsListType::iterator bacteria = m_Cells->begin();
+  Cell::CellsListType::iterator end      = m_Cells->end();
+	while( bacteria != end )
     {
 		(*bacteria)->Draw();
     bacteria++;
@@ -66,18 +72,23 @@ BacterialColony
 
 
 
-void
+Cell::CellsListType *
 BacterialColony
-::Grow(void)
+::GetCellsAggregate( void ) 
 {
-  BacteriaListType::const_iterator bacteria = m_Bacteria.begin();
-	while( bacteria != m_Bacteria.end() )
-	{
-		(*bacteria)->Grow();
-    bacteria++;
-	}
+  return m_Cells;
 }
 
+
+void
+BacterialColony
+::PrintSelf(std::ostream& os, itk::Indent indent) const
+{
+  Superclass::PrintSelf(os,indent);
+  
+  os << "Cellular aggregate " << m_Cells << std::endl;
+
+}
 
 
 
@@ -85,60 +96,55 @@ void
 BacterialColony
 ::KillAll(void)
 {
-  m_Bacteria.clear();
+  Cell::CellsListType::iterator bacteria = m_Cells->begin();
+  Cell::CellsListType::iterator end      = m_Cells->end();
+
+  while( bacteria != end )
+    {
+    delete (*bacteria);
+    ++bacteria;
+    }
 }
 
-
-
-BacterialColony::VectorType
-BacterialColony
-::WellPotentialGradient(const VectorType &  relativePosition) const
-{
-  double distance      = relativePosition.GetNorm();
-  VectorType direction = relativePosition / distance;
-  double factor        = 
-  if( distance >  )
-   {
-     factor =
-   }
-  factor *= 1e-5;
-
-  return direction * factor;
-}
 
 
 void
 BacterialColony
-::Spread(void)
+::ComputeForces(void)
 {
 
-  BacteriaListType::const_iterator bacteria1 = m_Cells->begin();
-  BacteriaListType::const_iterator end       = m_Cells->end();
+  Cell::CellsListType::const_iterator bacteria1 = m_Cells->begin();
+  Cell::CellsListType::const_iterator end       = m_Cells->end();
   
 	while( bacteria1 != end )
     {
     const Cell::PointType pA = (*bacteria1)->GetPosition();
-    BacteriaListType::const_iterator bacteria2 = bacteria1;
+    const double rA          = (*bacteria1)->GetRadius();
+    Cell::CellsListType::const_iterator bacteria2 = bacteria1;
     bacteria1++;
     
     while( bacteria2 != end )
       {
       const Cell::PointType pB = (*bacteria2)->GetPosition();
+      const double rB          = (*bacteria2)->GetRadius();
       Cell::VectorType relativePosition = pA - pB;
+
       const double distance = relativePosition.GetNorm();
+      const double factor   = 1.0/distance;
       
-      const Cell::VectorType force = WellPotentialGradient( relativePosition );
-
-      (*bacteria2)->AddForce(  force );
-      (*bacteria1)->AddForce( -force );
-
+      if( distance < rA + rB )
+        {
+        Cell::VectorType force = relativePosition * factor;
+        (*bacteria2)->AddForce(  force );
+        (*bacteria1)->AddForce( -force );
+        }
       bacteria2++;
       }
     bacteria1++;
     }
 
   
-  BacteriaListType::const_iterator bacteria   = m_Bacteria->begin();
+  Cell::CellsListType::const_iterator bacteria = m_Cells->begin();
 	while( bacteria != end )
 	{
     (*bacteria)->UpdatePosition();

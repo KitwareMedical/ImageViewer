@@ -5,9 +5,10 @@ code_name {.cxx}
 gridx 5 
 gridy 5 
 snap 3
-class CellsViewerGUI {open selected : {public bio::CellsViewerBase}
+class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
-  Function {CellsViewerGUI()} {} {
+  Function {CellsViewerGUI()} {selected
+  } {
     Fl_Window controlWindow {
       label {Control Panel}
       xywh {494 37 282 114}
@@ -51,9 +52,6 @@ class CellsViewerGUI {open selected : {public bio::CellsViewerBase}
         xywh {85 40 35 20} labeltype SYMBOL_LABEL
       }
     }
-    Fl_Window {} {open
-      xywh {92 111 104 100} hide
-    } {}
   }
   Function {~CellsViewerGUI()} {return_type virtual
   } {}
