@@ -29,13 +29,6 @@ using namespace std;
 
 
 
-/**
- * Easy access to the FEMObjectFactory. We create a new class
- * whose name is shorter and it's not templated...
- */
-class FEMOF : public FEMObjectFactory<FEMLightObject>
-{};
-
 
 /**
  * This example constructs a same problem as described in file truss.fem
