@@ -51,3 +51,15 @@ TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_glu_LIBRARY}
 # Take the list of GUI files, generate .cxx and .h from them and add
 # them to the build process of the target
 FLTK_WRAP_UI(ITKFltkImageViewer ${FltkImageViewer_GUI_SRCS} )
+
+# The fluid-generated fltk sources have many warnings.  Disable
+# warnings for the generated files on some compilers.
+IF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 1.6)
+  IF(CMAKE_COMPILER_IS_GNUCXX)
+    FOREACH(f ${FltkImageViewer_GUI_SRCS})
+      STRING(REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}")
+      SET(SRC ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
+      SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS -w)
+    ENDFOREACH(f)
+  ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ENDIF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 1.6)
