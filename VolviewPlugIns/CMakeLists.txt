@@ -56,6 +56,7 @@ vvConfidenceConnected
 vvSigmoid
 vvGradientMagnitude
 vvGradientMagnitudeRecursiveGaussian
+vvMedian
 )
 
 # probably could be cleaned up...
@@ -79,6 +80,9 @@ TARGET_LINK_LIBRARIES(vvGradientMagnitudeRecursiveGaussian ITKCommon ITKBasicFil
 
 ADD_LIBRARY(vvGradientMagnitude MODULE itkVVGradientMagnitudePlugin.cxx)
 TARGET_LINK_LIBRARIES(vvGradientMagnitude ITKCommon ITKBasicFilters)
+
+ADD_LIBRARY(vvMedian MODULE itkVVMedianPlugin.cxx)
+TARGET_LINK_LIBRARIES(vvMedian ITKCommon ITKBasicFilters)
 
 
 # copy the plugins to a plugin directory
