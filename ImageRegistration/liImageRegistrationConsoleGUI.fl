@@ -12,7 +12,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
       label {Image Registration Console}
       xywh {330 39 757 391}
       code0 {\#include <liImageRegistrationConsoleBase.h>}
-      code1 {\#include <liLightButton.h>} visible
+      code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Menu_Bar {} {
         xywh {0 0 760 25}
@@ -94,9 +94,9 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
       } {
         Fl_Light_Button targetButton {
           label Target
-          callback {ShowTarget();}
+          callback {ShowTarget();} selected
           xywh {20 75 105 30} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Start Regisration}
@@ -107,7 +107,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           label Reference
           callback {ShowReference();}
           xywh {235 240 105 30} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Apply Known Transformation}
@@ -117,7 +117,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         Fl_Light_Button registrationMethodButton {
           label {Registration Method}
           xywh {285 148 130 51} type Normal box ROUND_UP_BOX value 1 selection_color 1 align 148
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Estimated Transformation}
@@ -128,7 +128,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           label {Mapped Reference}
           callback {ShowMappedReference();}
           xywh {585 155 105 40} type Normal value 1 selection_color 1 align 148
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Group transformParameters {
           xywh {18 215 100 100} box ENGRAVED_BOX
@@ -169,6 +169,8 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
       }
       Fl_Slider progressSlider {
         xywh {5 324 735 15} type {Horz Fill} selection_color 2
+        code0 {\#include <fltkProgressBar.h>}
+        class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
         xywh {5 349 735 25}
@@ -184,7 +186,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
       }
       Fl_Button {} {
         label {../../Documentation/Art/itkLogo.gif}
-        callback {aboutWindow->hide();} selected
+        callback {aboutWindow->hide();}
         xywh {10 45 450 275} box DOWN_BOX labeltype image
       }
     }

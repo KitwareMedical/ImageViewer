@@ -38,10 +38,10 @@ Fl_Menu_Item liImageRegistrationConsoleGUI::menu_[] = {
  {0}
 };
 
-inline void liImageRegistrationConsoleGUI::cb_targetButton_i(li::LightButton*, void*) {
+inline void liImageRegistrationConsoleGUI::cb_targetButton_i(fltk::LightButton*, void*) {
   ShowTarget();
 }
-void liImageRegistrationConsoleGUI::cb_targetButton(li::LightButton* o, void* v) {
+void liImageRegistrationConsoleGUI::cb_targetButton(fltk::LightButton* o, void* v) {
   ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_targetButton_i(o,v);
 }
 
@@ -52,10 +52,10 @@ void liImageRegistrationConsoleGUI::cb_Start(Fl_Button* o, void* v) {
   ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Start_i(o,v);
 }
 
-inline void liImageRegistrationConsoleGUI::cb_referenceButton_i(li::LightButton*, void*) {
+inline void liImageRegistrationConsoleGUI::cb_referenceButton_i(fltk::LightButton*, void*) {
   ShowReference();
 }
-void liImageRegistrationConsoleGUI::cb_referenceButton(li::LightButton* o, void* v) {
+void liImageRegistrationConsoleGUI::cb_referenceButton(fltk::LightButton* o, void* v) {
   ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_referenceButton_i(o,v);
 }
 
@@ -73,10 +73,10 @@ void liImageRegistrationConsoleGUI::cb_Estimated(Fl_Button* o, void* v) {
   ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Estimated_i(o,v);
 }
 
-inline void liImageRegistrationConsoleGUI::cb_mappedReferenceButton_i(li::LightButton*, void*) {
+inline void liImageRegistrationConsoleGUI::cb_mappedReferenceButton_i(fltk::LightButton*, void*) {
   ShowMappedReference();
 }
-void liImageRegistrationConsoleGUI::cb_mappedReferenceButton(li::LightButton* o, void* v) {
+void liImageRegistrationConsoleGUI::cb_mappedReferenceButton(fltk::LightButton* o, void* v) {
   ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_mappedReferenceButton_i(o,v);
 }
 
@@ -1774,7 +1774,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
     }
     { Fl_Group* o = controlsGroup = new Fl_Group(0, 25, 755, 365);
       o->deactivate();
-      { li::LightButton* o = targetButton = new li::LightButton(20, 75, 105, 30, "Target");
+      { fltk::LightButton* o = targetButton = new fltk::LightButton(20, 75, 105, 30, "Target");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -1785,7 +1785,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
         o->callback((Fl_Callback*)cb_Start);
         o->align(FL_ALIGN_WRAP);
       }
-      { li::LightButton* o = referenceButton = new li::LightButton(235, 240, 105, 30, "Reference");
+      { fltk::LightButton* o = referenceButton = new fltk::LightButton(235, 240, 105, 30, "Reference");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -1796,7 +1796,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
         o->callback((Fl_Callback*)cb_Apply);
         o->align(FL_ALIGN_WRAP);
       }
-      { li::LightButton* o = registrationMethodButton = new li::LightButton(285, 148, 130, 51, "Registration Method");
+      { fltk::LightButton* o = registrationMethodButton = new fltk::LightButton(285, 148, 130, 51, "Registration Method");
         o->type(0);
         o->box(FL_ROUND_UP_BOX);
         o->value(1);
@@ -1808,7 +1808,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
         o->callback((Fl_Callback*)cb_Estimated);
         o->align(FL_ALIGN_WRAP);
       }
-      { li::LightButton* o = mappedReferenceButton = new li::LightButton(585, 155, 105, 40, "Mapped Reference");
+      { fltk::LightButton* o = mappedReferenceButton = new fltk::LightButton(585, 155, 105, 40, "Mapped Reference");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -1827,7 +1827,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
       }
       o->end();
     }
-    { Fl_Slider* o = progressSlider = new Fl_Slider(5, 324, 735, 15);
+    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 735, 15);
       o->type(3);
       o->selection_color(2);
     }

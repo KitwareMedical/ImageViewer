@@ -5,14 +5,14 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <liImageRegistrationConsoleBase.h>
-#include <liLightButton.h>
+#include <fltkLightButton.h>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Choice.H>
-#include <FL/Fl_Slider.H>
+#include <fltkProgressBar.h>
 #include <FL/Fl_Output.H>
 
 class liImageRegistrationConsoleGUI : public liImageRegistrationConsoleBase {
@@ -30,36 +30,36 @@ private:
 public:
   Fl_Group *Connectors;
   Fl_Group *controlsGroup;
-  li::LightButton *targetButton;
+  fltk::LightButton *targetButton;
 private:
-  inline void cb_targetButton_i(li::LightButton*, void*);
-  static void cb_targetButton(li::LightButton*, void*);
+  inline void cb_targetButton_i(fltk::LightButton*, void*);
+  static void cb_targetButton(fltk::LightButton*, void*);
   inline void cb_Start_i(Fl_Button*, void*);
   static void cb_Start(Fl_Button*, void*);
 public:
-  li::LightButton *referenceButton;
+  fltk::LightButton *referenceButton;
 private:
-  inline void cb_referenceButton_i(li::LightButton*, void*);
-  static void cb_referenceButton(li::LightButton*, void*);
+  inline void cb_referenceButton_i(fltk::LightButton*, void*);
+  static void cb_referenceButton(fltk::LightButton*, void*);
   inline void cb_Apply_i(Fl_Button*, void*);
   static void cb_Apply(Fl_Button*, void*);
 public:
-  li::LightButton *registrationMethodButton;
+  fltk::LightButton *registrationMethodButton;
 private:
   inline void cb_Estimated_i(Fl_Button*, void*);
   static void cb_Estimated(Fl_Button*, void*);
 public:
-  li::LightButton *mappedReferenceButton;
+  fltk::LightButton *mappedReferenceButton;
 private:
-  inline void cb_mappedReferenceButton_i(li::LightButton*, void*);
-  static void cb_mappedReferenceButton(li::LightButton*, void*);
+  inline void cb_mappedReferenceButton_i(fltk::LightButton*, void*);
+  static void cb_mappedReferenceButton(fltk::LightButton*, void*);
 public:
   Fl_Group *transformParameters;
   Fl_Value_Input *xTranslation;
   Fl_Value_Input *yTranslation;
   Fl_Value_Input *zTranslation;
   static Fl_Menu_Item menu_1[];
-  Fl_Slider *progressSlider;
+  fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;
   Fl_Window *aboutWindow;
 private:

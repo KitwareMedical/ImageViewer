@@ -17,8 +17,6 @@
 
 #include <liImageRegistrationConsole.h>
 #include <Fl/fl_file_chooser.H>
-#include <liCommandUpdateProgress.h>
-#include <liCommandUpdateLightButton.h>
 #include <itkFileIOMetaImage.h>
  
 
@@ -34,9 +32,7 @@ liImageRegistrationConsole
  
   FileIOMetaImageFactory * factory = new FileIOMetaImageFactory;
   ObjectFactoryBase * factoryBase = static_cast<ObjectFactoryBase *>( factory );
-  ObjectFactoryBase::RegisterFactory( factoryBase );
-  
-  typedef li::CommandUpdateLightButton  CommandButton;
+  ObjectFactoryBase::RegisterFactory( factoryBase );  
 
   this->m_InputViewer           = new InputImageViewerType;
   this->m_ReferenceViewer       = new ImageViewerType;
@@ -46,16 +42,11 @@ liImageRegistrationConsole
   this->m_ReferenceViewer->SetLabel( "Reference Image" );
   this->m_MappedReferenceViewer->SetLabel( "Mapped Reference Image" );
 
-  li::CommandUpdateProgress::Pointer commandUpdateProgress =
-                              li::CommandUpdateProgress::New();
+  m_Reader->AddObserver( itk::Command::StartEvent, targetButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::EndEvent, targetButton->GetRedrawCommand().GetPointer() );
 
-  commandUpdateProgress->SetConsole( this );
-
-  m_Reader->AddObserver( itk::Command::StartEvent, targetButton->GetCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::EndEvent, targetButton->GetCommand().GetPointer() );
-
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetCommand().GetPointer() );
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetRedrawCommand().GetPointer() );
   
   ShowStatus("Let's start by loading an image...");
 
