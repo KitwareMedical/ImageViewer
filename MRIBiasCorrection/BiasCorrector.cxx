@@ -221,6 +221,7 @@ int main(int argc, char* argv[])
   filter->SetOptimizerInitialRadius(initialRadius) ;
   filter->SetBiasFieldDegree(degree) ;
   filter->SetUsingSlabIdentification(usingSlabIdentification) ;
+  filter->SetUsingInterSliceIntensityCorrection(true) ;
   filter->SetSlicingDirection(sliceDirection) ;
   filter->Update() ;
 

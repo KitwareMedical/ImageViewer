@@ -244,7 +244,7 @@ int main(int argc, char* argv[])
   // zero.
   filter->SetBiasFieldDegree(degree) ;
   // turn on inter-slice intensity correction 
-  filter->SetUsingInterSliceIntensityCorrection(false) ;
+  filter->SetUsingInterSliceIntensityCorrection(true) ;
   // disable slab identifcation
   // the filter will think the largest possible region as the only one
   // slab.
@@ -253,6 +253,7 @@ int main(int argc, char* argv[])
   filter->SetUsingBiasFieldCorrection(true) ;
   // disable output image generation
   filter->SetGeneratingOutput(false) ;
+  filter->SetSlicingDirection(2) ;
 
   std::cout << "Estimating the bias field..." << std::endl ;
   filter->Update() ;
