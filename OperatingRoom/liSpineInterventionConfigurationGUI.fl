@@ -18,7 +18,7 @@ class SpineInterventionConfigurationGUI {open
         xywh {1 2 300 25}
       } {
         submenu {} {
-          label File selected
+          label File
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -104,7 +104,7 @@ class SpineInterventionConfigurationGUI {open
         }
       }
       Fl_Button {} {
-        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif} selected
         xywh {185 30 110 70} box FLAT_BOX labeltype image
       }
     }
