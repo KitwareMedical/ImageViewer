@@ -26,19 +26,19 @@ LINK_LIBRARIES(
  ${OPENGL_LIBRARY}
 )
 
-SOURCE_FILES(QtSlicer_SRCS 
+SET(QtSlicer_SRCS 
 QtSlicerTest.cxx
 QtGlSliceView.cxx
 QtSlicer.cxx
 )
 
-SOURCE_FILES(QtSlicer_GUI_SRCS 
+SET(QtSlicer_GUI_SRCS 
 QtSlicerGUI.ui
 QtSlicerHelpGUI.ui
 )
 
 
-SOURCE_FILES(QtSlicer_MOC_SRCS 
+SET(QtSlicer_MOC_SRCS 
 QtGlSliceView.h
 )
 
