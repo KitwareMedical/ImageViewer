@@ -776,7 +776,7 @@ ClickPoint* SliceView<imType>::getClickedPoint(unsigned int index)
     if(index >= cClickedPoints.size())
 	return ((ClickPoint*)0);
     std::list<ClickPoint*>::const_iterator j = cClickedPoints.begin();
-    for(int i=0;i<index;i++,j++);
+    for(int i=0;i<static_cast<int>(index);i++,j++);
     return(*j);
 }
 
