@@ -28,8 +28,8 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Gradient Anisotropic Diffusion...");
       // Set the parameters on it
-      module.GetFilter()->SetIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 2 ].CurrentValue) );
+      module.GetFilter()->SetIterations(             atoi( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 1 ].CurrentValue) );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -40,8 +40,8 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Gradient Anisotropic Diffusion...");
       // Set the parameters on it
-      module.GetFilter()->SetIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 2 ].CurrentValue) );
+      module.GetFilter()->SetIterations(             atoi( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 1 ].CurrentValue) );
       // Execute the filter
       module.ProcessData( pds );
       break; 
