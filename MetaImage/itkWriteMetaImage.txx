@@ -17,6 +17,7 @@
 #include "itkObjectFactory.h"
 #include <fstream>
 #include <MetaImageLib.h>
+#include <itkImageRegionSimpleIterator.h>
 
 namespace itk
 {
