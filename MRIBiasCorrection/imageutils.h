@@ -62,7 +62,7 @@ class ImageIOError : public itk::ExceptionObject
     Operation = operation ;
   }
 
-  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(fileName, line)
+  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(nfile, line)
   {
     FileName = fileName ;
     Operation = operation ;
