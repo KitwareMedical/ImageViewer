@@ -138,7 +138,8 @@ int OptionList::GetMultiDoubleOption(std::string tag,
   return arg_no ;
 }
 
-double OptionList::GetDoubleOption(std::string tag, bool required)
+double OptionList::GetDoubleOption(std::string tag, double default_value,
+                                   bool required)
   throw (RequiredOptionMissing) 
 {
   StringVector temp_args ;
@@ -148,12 +149,12 @@ double OptionList::GetDoubleOption(std::string tag, bool required)
     throw RequiredOptionMissing(tag) ;
   
   if (arg_no == 0)
-    return -1 ;
+    return default_value ;
   
   return atof(temp_args[0].c_str()) ;
 }
 
-bool OptionList::GetBooleanOption(std::string tag, bool required)
+bool OptionList::GetBooleanOption(std::string tag, bool default_value, bool required)
   throw (RequiredOptionMissing) 
 {
   StringVector args ;
@@ -163,7 +164,7 @@ bool OptionList::GetBooleanOption(std::string tag, bool required)
     throw RequiredOptionMissing(tag) ;
   
   if (arg_no == 0)
-    return false ;
+    return default_value ;
   
   if (args[0] == "yes")
     {
@@ -202,7 +203,7 @@ int OptionList::GetMultiIntOption(std::string tag,
   return arg_no ;
 }
 
-int OptionList::GetIntOption(std::string tag, bool required)
+int OptionList::GetIntOption(std::string tag, int default_value, bool required)
   throw (RequiredOptionMissing) 
 {
   StringVector args ;
@@ -212,7 +213,7 @@ int OptionList::GetIntOption(std::string tag, bool required)
     throw RequiredOptionMissing(tag) ;
   
   if (arg_no == 0)
-    return -1 ;
+    return default_value ;
   
   return atoi(args[0].c_str()) ;
 }

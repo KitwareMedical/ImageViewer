@@ -77,10 +77,10 @@ public:
                            bool required) 
     throw (RequiredOptionMissing) ;
 
-  double GetDoubleOption(std::string tag, bool required) 
+  double GetDoubleOption(std::string tag, double default_value, bool required) 
     throw (RequiredOptionMissing) ; 
 
-  bool GetBooleanOption(std::string tag, bool required) 
+  bool GetBooleanOption(std::string tag, bool default_value, bool required) 
     throw (RequiredOptionMissing) ;
 
   int GetMultiIntOption(std::string tag, 
@@ -89,7 +89,7 @@ public:
     throw (RequiredOptionMissing) ;
 
 
-  int GetIntOption(std::string tag, bool required) 
+  int GetIntOption(std::string tag, int default_value, bool required) 
     throw (RequiredOptionMissing) ;
 
   int GetStringOption(std::string tag, std::string* ret, bool required) 
