@@ -137,7 +137,7 @@ bool MF_Read(std::ifstream &fp, int nFields, MF_FieldRec *field, int fTerm, bool
                      char * start = str;
                      while( isspace( *start ) ) start++;
                      char * compact = str;
-                     while( *start )
+                     while( *start && *start != '\r' )
                      {
                        *compact = *start;
                        start++;
