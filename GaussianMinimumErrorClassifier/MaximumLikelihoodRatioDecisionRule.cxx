@@ -42,27 +42,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 MaximumLikelihoodRatioDecisionRule::MaximumLikelihoodRatioDecisionRule() 
 {
+  m_TotalSampleSize = 0 ;
 }
 
 unsigned int 
 MaximumLikelihoodRatioDecisionRule::Evaluate(std::vector< double > discriminantScores)
 {
   unsigned int maxIndex = 0 ;
-  unsigned int row, column ;
-  double APrioriRatio ;
-  double LikelihoodRatio ;
-  for (row = 0 ; row < m_ClassSizes.size() ; row++)
+  double maxScore = 0.0 ;
+  unsigned int i ;
+  
+  for (i = 0 ; i < m_ClassSizes.size() ; i++)
     {
-      for (column = 0 ; column < m_ClassSizes.size() ; column++)
+      m_TempScores[i] = discriminantScores[i] * m_ClassSizes[i] ;
+    }
+
+  for (i = 0 ; i < m_ClassSizes.size() ; i++)
+    {
+      if (m_TempScores[i] > maxScore)
         {
-          LikelihoodRatio = discriminantScores[row] / discriminantScores[column] ;
-          APrioriRatio = m_APrioriRatioMatrix.get(column, row) ;
-          if (LikelihoodRatio > APrioriRatio)
-            {
-              maxIndex = row ;
-            }
+          maxIndex = i ;
+          maxScore = m_TempScores[i] ;
         }
     }
+
   return maxIndex ;
 }
 
@@ -70,7 +73,8 @@ void MaximumLikelihoodRatioDecisionRule::AddClassSampleSize(unsigned int size)
 {
   m_ClassSizes.push_back(size) ;
   m_APrioriRatioMatrix.resize(m_ClassSizes.size(), m_ClassSizes.size()) ;
-  
+  m_TempScores.resize(m_ClassSizes.size()) ;
+  m_TotalSampleSize += size ;
   unsigned int row, column ;
   double APrioriRatio ;
   for (row = 0 ; row < m_ClassSizes.size() ; row++)

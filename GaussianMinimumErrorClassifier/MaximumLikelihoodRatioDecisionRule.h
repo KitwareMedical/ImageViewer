@@ -67,14 +67,16 @@ class MaximumLikelihoodRatioDecisionRule :
   
   unsigned int Evaluate(std::vector< double > discriminantScores) ;
   void AddClassSampleSize(unsigned int size) ;
-  
+
  protected:
   MaximumLikelihoodRatioDecisionRule() ;
   virtual ~MaximumLikelihoodRatioDecisionRule() {}
   
  private:
   std::vector< unsigned int > m_ClassSizes ;
+  std::vector< double > m_TempScores ;
   vnl_matrix< double > m_APrioriRatioMatrix ;
+  unsigned long m_TotalSampleSize ;
 } ; // end of class
 
 #endif
