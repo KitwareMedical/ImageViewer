@@ -119,20 +119,6 @@ public:
   };
 
   // Description:
-  // Determine to copy or not copy the output data, depending on the
-  // composition of the pipeline.
-  virtual void SetCopyOutputData ( int v )
-  {
-    this->vtkImporter->SetCopyImportData ( v );
-  }
-  virtual int GetCopyOutputData ()
-  {
-    return this->vtkImporter->GetCopyImportData();
-  }
-  virtual void CopyOutputDataOn () { this->vtkImporter->CopyImportDataOn(); };
-  virtual void CopyOutputDataOff () { this->vtkImporter->CopyImportDataOff(); };
-  
-  // Description:
   // Set the Input of the filter.
   virtual void SetInput(vtkImageData *Input)
   {
