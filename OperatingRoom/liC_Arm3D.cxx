@@ -14,19 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-//--------------------------------------------
-//
-//     Project: Operating Room
-//
-//     Author:  Luis Ibanez
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27599
-//
-//--------------------------------------------
-
 
 
 #include "liC_Arm3D.h"
@@ -319,10 +306,27 @@ C_Arm3D::SetupGeometry(void)
      const double z1 = m_Radius * sin( th );
      const double y2 = ( m_Radius + m_RadialWidth )*cos( th );
      const double z2 = ( m_Radius + m_RadialWidth )*sin( th );
-     m_Points[j++] = -w2, y1, z1;
-     m_Points[j++] = -w2, y2, z2;
-     m_Points[j++] =  w2, y2, z2;
-     m_Points[j++] =  w2, y1, z1;
+
+     m_Points[j][0] = -w2;
+     m_Points[j][1] =  y1;
+     m_Points[j][2] =  z1;
+     j++;
+
+     m_Points[j][0] = -w2;
+     m_Points[j][1] =  y2;
+     m_Points[j][2] =  z2;
+     j++;
+
+     m_Points[j][0] =  w2;
+     m_Points[j][1] =  y2;
+     m_Points[j][2] =  z2;
+     j++;
+
+     m_Points[j][0] =  w2;
+     m_Points[j][1] =  y1;
+     m_Points[j][2] =  z1;
+     j++;
+
    }
 
   ScheduleToUpdateDisplayList();
