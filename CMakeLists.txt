@@ -87,7 +87,7 @@ SUBDIRS(MetaImageImporter)
 SUBDIRS(MetaImageReadWrite)
 
 # Test the conditions for building the MRIBiasCorrection example
-SUBDIRS(MRIBiasCorrection)
+#SUBDIRS(MRIBiasCorrection)
 
 
 # Add an option to build FEM examples
