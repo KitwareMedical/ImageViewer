@@ -17,7 +17,6 @@
 
 #include <RegionGrowingSegmentationBase.h>
 #include <FL/fl_ask.H>
-#include <itkRawImageIO.h>
 
 
 /************************************
@@ -30,9 +29,7 @@ RegionGrowingSegmentationBase
 {
 
   m_ImageReader                  = ImageReaderType::New();
-
-  itk::RawImageIOFactory< InputImageType::PixelType, 
-                          InputImageType::ImageDimension >::RegisterOneFactory();
+  m_ImageWriter                  = ImageWriterType::New();
 
   m_CastImageFilter = CastImageFilterType::New();
   m_CastImageFilter->SetInput( m_ImageReader->GetOutput() );
@@ -103,6 +100,26 @@ RegionGrowingSegmentationBase
 
 }
 
+
+ 
+/************************************
+ *
+ *  Save Confidence Connected image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentationBase 
+::WriteOutputImage( const char * filename )
+{
+  if( !filename )
+  {
+    return;
+  }
+
+  m_ImageWriter->SetFileName( filename );
+  m_ImageWriter->Update();
+  
+}
 
 
 

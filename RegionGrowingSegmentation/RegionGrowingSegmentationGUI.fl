@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0100 
+version 1.0103 
 header_name {.h} 
 code_name {.cxx}
 class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase}
@@ -7,7 +7,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   Function {RegionGrowingSegmentationGUI()} {} {
     Fl_Window consoleWindow {
       label {Region Growing Segmentation}
-      xywh {4 20 970 455}
+      xywh {240 576 970 455}
       code0 {\#include <RegionGrowingSegmentationBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -204,12 +204,12 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         }
         Fl_Value_Input gradientAnisotropicDiffusionIterationsValueInput {
           label Iterations
-          callback {m_GradientAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
+          callback {m_GradientAnisotropicDiffusionImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
           xywh {237 196 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
         }
         Fl_Value_Input curvatureAnisotropicDiffusionIterationsValueInput {
           label Iterations
-          callback {m_CurvatureAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
+          callback {m_CurvatureAnisotropicDiffusionImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
           xywh {232 329 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
         }
         Fl_Value_Input gradientAnisotropicDiffusionConductanceValueInput {
@@ -302,6 +302,21 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           xywh {455 320 90 40} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
+        Fl_Button {} {
+          label Save
+          callback {this->WriteConnectedThresholdImage();}
+          xywh {788 56 65 27} box ROUND_UP_BOX labelsize 12
+        }
+        Fl_Button {} {
+          label Save
+          callback {this->WriteConfidenceConnectedImage();}
+          xywh {790 160 65 27} box ROUND_UP_BOX labelsize 12
+        }
+        Fl_Button {} {
+          label Save
+          callback {this->WriteFuzzyConnectedImage();} selected
+          xywh {790 259 65 27} box ROUND_UP_BOX labelsize 12
+        }
       }
       Fl_Slider progressSlider {
         xywh {10 397 943 15} type {Horz Fill} selection_color 2
@@ -381,6 +396,6 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   } {}
   Function {UpdateExtract()} {open return_type {virtual void}
   } {}
-  Function {ShowHomogeneousImageWithVTK( void )} {selected return_type {virtual void}
+  Function {ShowHomogeneousImageWithVTK( void )} {return_type {virtual void}
   } {}
 } 

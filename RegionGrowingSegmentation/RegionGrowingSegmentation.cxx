@@ -67,7 +67,7 @@ RegionGrowingSegmentation
   m_CurvatureFlowImageFilter->SetTimeStep(
                                    curvatureFlowTimeStepValueInput->value() );
 
-  m_CurvatureAnisotropicDiffusionImageFilter->SetIterations(
+  m_CurvatureAnisotropicDiffusionImageFilter->SetNumberOfIterations(
          static_cast<unsigned int>(curvatureAnisotropicDiffusionIterationsValueInput->value()) );
 
   m_CurvatureAnisotropicDiffusionImageFilter->SetTimeStep(
@@ -76,7 +76,7 @@ RegionGrowingSegmentation
   m_CurvatureAnisotropicDiffusionImageFilter->SetConductanceParameter(
                                    curvatureAnisotropicDiffusionConductanceValueInput->value() );
 
-  m_GradientAnisotropicDiffusionImageFilter->SetIterations(
+  m_GradientAnisotropicDiffusionImageFilter->SetNumberOfIterations(
          static_cast<unsigned int>(gradientAnisotropicDiffusionIterationsValueInput->value()) );
 
   m_GradientAnisotropicDiffusionImageFilter->SetTimeStep(
@@ -174,10 +174,89 @@ RegionGrowingSegmentation
 
 
 
+ 
+/************************************
+ *
+ *  Write Output Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::WriteOutputImage( void )
+{
 
+  const char * filename = fl_file_chooser("Output Image filename","*.*","");
+  if( !filename )
+  {
+    return;
+  }
+
+  this->ShowStatus("Writing output image file...");
+  
+  try 
+  {
+    RegionGrowingSegmentationBase::WriteOutputImage( filename );
+  }
+  catch( ... ) 
+  {
+    this->ShowStatus("Problems writing image");
+    return;
+  }
+
+  this->ShowStatus("Output Image saved");
+
+}
 
 
  
+/************************************
+ *
+ *  Write Confidence Connected Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::WriteConfidenceConnectedImage( void )
+{
+  m_ImageWriter->SetInput( 
+        m_ConfidenceConnectedImageFilter->GetOutput() );
+
+  this->WriteOutputImage();
+}
+
+  
+/************************************
+ *
+ *  Write Fuzzy Connectedness Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::WriteFuzzyConnectedImage( void )
+{
+  m_ImageWriter->SetInput( 
+        m_FuzzyConnectedImageFilter->GetOutput() );
+
+  this->WriteOutputImage();
+}
+
+ 
+/************************************
+ *
+ *  Write Confidence Connected Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::WriteConnectedThresholdImage( void )
+{
+  m_ImageWriter->SetInput( 
+        m_ConnectedThresholdImageFilter->GetOutput() );
+
+  this->WriteOutputImage();
+}
+
+
 /************************************
  *
  *  Load Input Image

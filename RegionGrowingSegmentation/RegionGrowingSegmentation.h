@@ -38,11 +38,17 @@ public:
   /** Pixel type used for reading the input image */
   typedef   RegionGrowingSegmentationBase::InputPixelType       InputPixelType;
 
+  /** Pixel type used for writing the output image */
+  typedef   RegionGrowingSegmentationBase::OutputPixelType      OutputPixelType;
+
   /** Pixel type to be used internally */
   typedef   RegionGrowingSegmentationBase::InternalPixelType    InternalPixelType;
 
   /** Input image type */
   typedef   RegionGrowingSegmentationBase::InputImageType       InputImageType;
+
+  /** Output image type */
+  typedef   RegionGrowingSegmentationBase::OutputImageType      OutputImageType;
 
   /** Internal image type */
   typedef   RegionGrowingSegmentationBase::InternalImageType    InternalImageType;
@@ -56,7 +62,10 @@ public:
   typedef fltk::ImageViewer< InternalPixelType, 
                                     OverlayPixelType >          InternalImageViewerType;
 
-  typedef fltk::VTKImageViewer< InternalPixelType >             VTKImageViewerType;
+  typedef fltk::ImageViewer< OutputPixelType, 
+                                    OverlayPixelType >          OutputImageViewerType;
+
+  typedef fltk::VTKImageViewer< OutputPixelType >               VTKImageViewerType;
 
 
 public:
@@ -64,6 +73,7 @@ public:
   virtual ~RegionGrowingSegmentation();
 
   virtual void LoadInputImage();
+  virtual void WriteOutputImage();
 
   virtual void ShowConsole();
 
@@ -84,6 +94,10 @@ public:
 
   virtual void ShowHomogeneousImageWithVTK();
 
+  virtual void WriteConnectedThresholdImage();
+  virtual void WriteConfidenceConnectedImage();
+  virtual void WriteFuzzyConnectedImage();
+
   virtual void Quit();
 
   virtual void UpdateExtract();
@@ -97,10 +111,11 @@ private:
   InternalImageViewerType     m_CurvatureFlowImageViewer;
   InternalImageViewerType     m_GradientAnisotropicDiffusionImageViewer;
   InternalImageViewerType     m_CurvatureAnisotropicDiffusionImageViewer;
-  InternalImageViewerType     m_ConnectedThresholdImageViewer;
-  InternalImageViewerType     m_ConfidenceConnectedImageViewer;
-  InternalImageViewerType     m_FuzzyConnectedImageViewer;
   InternalImageViewerType     m_HomogeneousImageViewer;
+
+  OutputImageViewerType       m_ConnectedThresholdImageViewer;
+  OutputImageViewerType       m_ConfidenceConnectedImageViewer;
+  OutputImageViewerType       m_FuzzyConnectedImageViewer;
 
   InputImageViewerType        m_InputImageViewer;
 
