@@ -88,6 +88,9 @@ proc OpenFile {} {
 proc SetFitImage {} {
     global FitImage Viewer ViewSize
 
+    if { [info commands reader] == "" } {
+        return
+    }
 
     if { $FitImage } {
         set size [[$Viewer GetImageWindow] GetSize]

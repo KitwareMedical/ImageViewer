@@ -1,5 +1,4 @@
 if { [catch {set VTK_TCL $env(VTK_TCL)}] != 0} { set VTK_TCL "./" }
-if { [catch {set VTK_DATA $env(VTK_DATA)}] != 0} { set VTK_DATA "./" }
 
 catch {source $VTK_TCL/WidgetObject.tcl}
 catch {source $VTK_TCL/vtkInt.tcl}
@@ -51,6 +50,7 @@ proc BindTkImageViewer {widget} {
    bind $widget <B3-Motion> {UpdateQueryInteraction %W %x %y}
    bind $widget <ButtonRelease-3> {EndQueryInteraction %W}
 
+   bind $widget <Configure> {SetFitImage}
    bind $widget <Expose> {ExposeTkImageViewer %W %x %y %w %h}
    bind $widget <Enter> {EnterTkViewer %W}
    bind $widget <Leave> {LeaveTkViewer %W}
