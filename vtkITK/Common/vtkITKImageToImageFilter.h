@@ -12,6 +12,7 @@
 #include "vtkImageImport.h"
 #include "vtkImageExport.h"
 #include "vtkImageToImageFilter.h"
+#include "vtkImageCast.h"
 
 #undef itkExceptionMacro  
 #define itkExceptionMacro(x) \
@@ -110,20 +111,36 @@ public:
   // Description:
   // This method returns the cache to make a connection
   // It justs feeds the request to the sub filter.
+  void SetOutput ( vtkImageData* d ) { this->vtkImporter->SetOutput ( d ); };
   virtual vtkImageData *GetOutput() { return this->vtkImporter->GetOutput(); };
   virtual vtkImageData *GetOutput(int idx)
   {
     return (vtkImageData *) this->vtkImporter->GetOutput(idx);
   };
+
+  // Description:
+  // Determine to copy or not copy the output data, depending on the
+  // composition of the pipeline.
+  virtual void SetCopyOutputData ( int v )
+  {
+    this->vtkImporter->SetCopyImportData ( v );
+  }
+  virtual int GetCopyOutputData ()
+  {
+    return this->vtkImporter->GetCopyImportData();
+  }
+  virtual void CopyOutputDataOn () { this->vtkImporter->CopyImportDataOn(); };
+  virtual void CopyOutputDataOff () { this->vtkImporter->CopyImportDataOff(); };
   
   // Description:
   // Set the Input of the filter.
   virtual void SetInput(vtkImageData *Input)
   {
-    this->vtkExporter->SetInput(Input);
+    this->vtkCast->SetInput(Input);
   };
 
-  // Description: Override vtkSource's Update so that we can access this class's GetOutput(). vtkSource's GetOutput is not virtual.
+  // Description: Override vtkSource's Update so that we can access
+  // this class's GetOutput(). vtkSource's GetOutput is not virtual.
   void Update()
     {
       if (this->GetOutput(0))
@@ -166,8 +183,10 @@ public:
   vtkITKImageToImageFilter()
   {
     // Need an import, export, and a ITK pipeline
+    this->vtkCast = vtkImageCast::New();
     this->vtkExporter = vtkImageExport::New();
     this->vtkImporter = vtkImageImport::New();
+    this->vtkExporter->SetInput ( this->vtkCast->GetOutput() );
     this->m_Process = NULL;
     this->m_ProgressCommand = MemberCommand::New();
     this->m_ProgressCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleProgressEvent );
@@ -178,8 +197,10 @@ public:
   };
   ~vtkITKImageToImageFilter()
   {
+    std::cerr << "Destructing vtkITKImageToImageFilter" << std::endl;
     this->vtkExporter->Delete();
     this->vtkImporter->Delete();
+    this->vtkCast->Delete();
   };
 
   // BTX  
@@ -204,6 +225,7 @@ public:
   
   // ITK Progress object
   // To/from VTK
+  vtkImageCast* vtkCast;
   vtkImageImport* vtkImporter;
   vtkImageExport* vtkExporter;  
   //ETX

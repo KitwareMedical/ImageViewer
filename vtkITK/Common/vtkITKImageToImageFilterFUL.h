@@ -39,7 +39,7 @@ protected:
   typedef itk::ImageToImageFilter<InputImageType,OutputImageType> GenericFilterType;
   GenericFilterType::Pointer m_Filter;
 
-  vtkITKImageToImageFilterFUL ( GenericFilterType* filter )
+  vtkITKImageToImageFilterFUL ( GenericFilterType* filter ) : vtkITKImageToImageFilter()
   {
     // Need an import, export, and a ITK pipeline
     m_Filter = filter;
@@ -51,6 +51,7 @@ protected:
     m_Filter->SetInput ( this->itkImporter->GetOutput() );
     this->itkExporter->SetInput ( m_Filter->GetOutput() );
     this->LinkITKProgressToVTKProgress ( m_Filter );
+    this->vtkCast->SetOutputScalarTypeToFloat();
   };
 
   ~vtkITKImageToImageFilterFUL()

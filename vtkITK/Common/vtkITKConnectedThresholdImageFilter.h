@@ -15,15 +15,15 @@
 #define __vtkITKConnectedThresholdImageFilter_h
 
 
-#include "vtkITKImageToImageFilterFF.h"
+#include "vtkITKImageToImageFilterUSUS.h"
 #include "itkConnectedThresholdImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImageFilterFF
+class VTK_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImageFilterUSUS
 {
  public:
   static vtkITKConnectedThresholdImageFilter *New();
-  vtkTypeRevisionMacro(vtkITKConnectedThresholdImageFilter, vtkITKImageToImageFilterFF);
+  vtkTypeRevisionMacro(vtkITKConnectedThresholdImageFilter, vtkITKImageToImageFilterUSUS);
 
   void SetReplaceValue ( double value )
   {
@@ -68,7 +68,7 @@ private:
   void operator=(const vtkITKConnectedThresholdImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKConnectedThresholdImageFilter, "$Revision: 1.3 $");
+vtkCxxRevisionMacro(vtkITKConnectedThresholdImageFilter, "$Revision: 1.4 $");
 vtkStandardNewMacro(vtkITKConnectedThresholdImageFilter);
 
 #endif

@@ -1,40 +1,41 @@
 SET( VTKITKCommon_SRCS
 vtkITKAntiAliasBinaryImageFilter.h
 vtkITKBilateralImageFilter.h
-vtkITKGradientAnisotropicDiffusionImageFilter.h
-vtkITKCurvatureAnisotropicDiffusionImageFilter.h
-vtkITKGradientMagnitudeImageFilter.h
-vtkITKMutualInformationTransform.cxx
-vtkITKWatershedImageFilter.cxx
-vtkITKNormalizeImageFilter.cxx
-vtkITKDiscreteGaussianImageFilter.h
-vtkITKConnectedThresholdImageFilter.cxx
 vtkITKConfidenceConnectedImageFilter.cxx
-vtkITKIsolatedConnectedImageFilter.cxx
+vtkITKConnectedThresholdImageFilter.cxx
+vtkITKCurvatureAnisotropicDiffusionImageFilter.h
 vtkITKDanielssonDistanceMapImageFilter.cxx
-vtkITKPDEDeformableRegistrationFilter.h
-vtkITKThresholdSegmentationLevelSetImageFilter.h
-vtkITKLaplacianSegmentationLevelSetImageFilter.h
+vtkITKDiscreteGaussianImageFilter.h
+vtkITKGradientAnisotropicDiffusionImageFilter.h
+vtkITKGradientMagnitudeImageFilter.h
 vtkITKImageToImageFilter.h
+vtkITKImageToImageFilter2DFF.h
+vtkITKImageToImageFilterFF.h
+vtkITKImageToImageFilterFUL.h
+vtkITKImageToImageFilterULUL.h
 vtkITKImageToImageFilterUSUL.h
 vtkITKImageToImageFilterUSUS.h
-vtkITKImageToImageFilterFUL.h
-vtkITKImageToImageFilterFF.h
-vtkITKImageToImageFilterF3F3.h
-vtkITKImageToImageFilter2DFF.h
+vtkITKIsolatedConnectedImageFilter.cxx
+vtkITKLaplacianSegmentationLevelSetImageFilter.h
+vtkITKMutualInformationTransform.cxx
+vtkITKNeighborhoodConnectedImageFilter.h
+vtkITKNormalizeImageFilter.cxx
+vtkITKPDEDeformableRegistrationFilter.h
+vtkITKThresholdSegmentationLevelSetImageFilter.h
+vtkITKTobogganImageFilter.h
+vtkITKWatershedImageFilter.cxx
 )
 
 SET_SOURCE_FILES_PROPERTIES ( 
 vtkITKImageToImageFilter.h
+vtkITKImageToImageFilter2DFF.h
+vtkITKImageToImageFilterFF.h
+vtkITKImageToImageFilterFUL.h
+vtkITKImageToImageFilterULUL.h
 vtkITKImageToImageFilterUSUL.h
 vtkITKImageToImageFilterUSUS.h
-vtkITKImageToImageFilterFUL.h
-vtkITKImageToImageFilterFF.h
-vtkITKImageToImageFilterF3F3.h
-vtkITKImageToImageFilter2DFF.h
 ABSTRACT
 )
-
 
 ADD_LIBRARY ( vtkVTKITKCommon ${VTKITKCommon_SRCS} )
 
@@ -70,7 +71,8 @@ IF (VTK_WRAP_PYTHON)
 ENDIF (VTK_WRAP_PYTHON)
 
 
-LINK_LIBRARIES (
+TARGET_LINK_LIBRARIES (
+vtkVTKITKCommon
 vtkCommon 
 vtkFiltering
 vtkImaging

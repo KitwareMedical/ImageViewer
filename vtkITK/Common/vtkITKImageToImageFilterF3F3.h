@@ -53,7 +53,7 @@ protected:
     this->LinkITKProgressToVTKProgress ( m_Filter );
     
     // Set up the filter pipeline
-    m_Filter->SetInput ( this->itkImporter->GetOutput() );
+    // m_Filter->SetInput ( this->itkImporter->GetOutput() );
     this->itkExporter->SetInput ( m_Filter->GetOutput() );
   };
 

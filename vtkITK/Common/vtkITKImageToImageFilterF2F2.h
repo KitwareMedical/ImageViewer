@@ -112,6 +112,7 @@ protected:
     this->append = vtkImageAppendComponents::New();
     this->append->SetInput ( 0, this->vtkImporter->GetOutput() );
     this->append->SetInput ( 1, this->vtkImporter1->GetOutput() );
+    this->vtkCast->SetOutputScalarTypeToFloat();
 
 //     cout << m_Filter;
 //     vtkImporter1->DebugOn();
