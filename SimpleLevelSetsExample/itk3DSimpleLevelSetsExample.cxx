@@ -289,8 +289,7 @@ private:
 
 } //end of itk namespace
 
-
-void main(int argc, char** argv)
+int main(int argc, char** argv)
 {
   typedef itk::Image<float,3> ImageType;
   
