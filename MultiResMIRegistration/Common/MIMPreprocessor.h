@@ -121,7 +121,7 @@ public:
     {
     for ( unsigned int j = 0; j < ImageDimension; j++ )
       {
-      if ( static_cast<int>(m_PermuteOrder[j]) != j ) { return true; }
+      if ( m_PermuteOrder[j] != j ) { return true; }
       }
     return false;
     } 
