@@ -115,7 +115,7 @@ SphereFunctionControl<ImagePixelType>
 ::SetCenter( double x, double y, double z )
 {
     
-  SpatialFunctionType::InputType functionCenter;
+  typename SpatialFunctionType::InputType functionCenter;
   functionCenter[0] = x;
   functionCenter[1] = y;
   functionCenter[2] = z;

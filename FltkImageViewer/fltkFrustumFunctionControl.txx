@@ -188,7 +188,7 @@ FrustumFunctionControl<ImagePixelType>
 ::SetApex( double x, double y, double z )
 {
     
-  SpatialFunctionType::InputType functionApex;
+  typename SpatialFunctionType::InputType functionApex;
   functionApex[0] = x;
   functionApex[1] = y;
   functionApex[2] = z;
