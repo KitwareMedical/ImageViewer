@@ -306,7 +306,11 @@ void ImageRegLMEx::ApplyLoads()
   LoadBC::Pointer l1;
 
   // elements for the corner of the image only valid if nx=ny
-  unsigned int ind0=0, ind1=(unsigned int)( (float)m_Nx/(float)m_MeshResolution-1.0), ind2=ind1*(ind1+1), ind3=ind2+ind1;
+  unsigned int ind0=0; 
+  unsigned int ind1=(unsigned int)(m_MeshResolution-1.0);
+  unsigned int ind2=m_MeshResolution*(m_MeshResolution-1); 
+  unsigned int ind3=m_MeshResolution*m_MeshResolution-1; 
+ 
 
   l1=LoadBC::New();
   l1->m_element=( &*m_Solver.el.Find(ind0));
@@ -631,7 +635,7 @@ void ImageRegLMEx::MultiResPyramidSolve()
   pyramid2->SetInput( caster1->GetOutput());
 
 // set schedule by specifying the number of levels;
-  unsigned int numLevels = 3;
+  unsigned int numLevels = 2;
   itk::Vector<unsigned int,ImageDimension> factors;
   factors.Fill( 1 << (numLevels - 1) );
   pyramid1->SetNumberOfLevels( numLevels );
@@ -673,7 +677,7 @@ void ImageRegLMEx::MultiResPyramidSolve()
     {
       float s1=(float)SizeReduction[i][0];  
       float s2=(float)SizeReduction[i+1][0];  
-      float Magnification=s1/s2;
+      float Magnification=1.0;//s1/s2;
       LinearSystemSolverType* ls=
         dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
       unsigned int TotalSolutionIndex=1; // from SolverType
@@ -682,7 +686,6 @@ void ImageRegLMEx::MultiResPyramidSolve()
         float temp=ls->GetSolutionValue(i,TotalSolutionIndex);
         ls->SetSolutionValue(i,temp*Magnification,TotalSolutionIndex);
       }
-      m_Solver.SetLinearSystemWrapper(ls);
     }
   }
   //m_RefImg=caster2->GetOutput(); // //FIXME for testing
@@ -722,8 +725,8 @@ int main()
 //    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt_shift.im";  
 //    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt.im"; 
 //    m_TargetFileName="E:\\Avants\\MetaImages\\callosa2_dt.im"; 
-  X.m_Nx=64;   // set image size
-  X.m_Ny=64;
+  X.m_Nx=128;   // set image size
+  X.m_Ny=128;
  
 //  m_ReferenceFileName="E:\\Avants\\MetaImages\\gauss_im1.im"; 
 //  m_TargetFileName="E:\\Avants\\MetaImages\\gauss_im2.im";
@@ -746,9 +749,9 @@ int main()
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
-  X.SetNumberOfIntegrationPoints(2);// Resolution of energy integration
-  X.SetWidthOfMetricRegion(1);
-  X.DoMultiRes(true);// Use multi-resolution strategy
+  X.SetNumberOfIntegrationPoints(4);// Resolution of energy integration
+  X.SetWidthOfMetricRegion(2);
+  X.DoMultiRes(false);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
   X.m_MaxSmoothing=2.0; // set multi-res parameters
   X.m_MinSmoothing=0.5;
