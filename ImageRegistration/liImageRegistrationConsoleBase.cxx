@@ -217,7 +217,7 @@ void
 liImageRegistrationConsoleBase 
 ::Execute( void )
 {
-
+  m_ImageRegistrationMethod->GetOptimizer()->StartOptimization();
 }
 
 
