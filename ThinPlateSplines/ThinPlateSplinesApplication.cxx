@@ -246,6 +246,7 @@ void
 ThinPlateSplinesApplication
 ::Show(void)
 {
+  m_FlRenderWindowInteractor->Enable();
   this->ThinPlateSplinesApplicationGUI::Show();
   this->CreateSpline();
 }
