@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
   generator->SetClassMask(mask) ;
   generator->SetNumberOfClasses(numberOfClasses) ;
   generator->GenerateData() ;
-  MembershipSampleGeneratorType::OutputPointer membershipSample = 
+  MembershipSampleGeneratorType::OutputType* membershipSample = 
     generator->GetOutput() ;
   
   /* =================================================== */
@@ -270,7 +270,7 @@ int main(int argc, char* argv[])
   classifier->SetLookupTableUpperBound(upper) ;
   classifier->Update() ;
   
-  ClassifierType::OutputPointer result = classifier->GetOutput() ;
+  ClassifierType::OutputType* result = classifier->GetOutput() ;
 
   /* ===================================================== */
   std::cout << "Creating a image with result class labels..." << std::endl ;
