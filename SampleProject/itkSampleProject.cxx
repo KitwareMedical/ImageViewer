@@ -49,9 +49,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //     2) Run a copy of CMakeSetup
 //     3) Locate this project's source tree and build tree
 //     4) Build the project files
-//     5) Edit the cache values for ITK_SOURCE_DIR and ITK_BINARY_DIR
+//     5) Edit the cache value for ITK_BINARY_DIR (default is NOTFOUND)
+//     6) Load SampleProject.dsw into MSDEV and build
 //
-// Unix directions coming soon.
+// To build this project on Unix:
+//     1) Copy the contents of this directory somewhere outside the Insight
+//             source tree
+//     2) cd /path/to/SampleProject
+//     3) Run cmake on SampleProject
+//            > /path/to/cmake .
+//     4) Edit the cache values for ITK_BINARY_DIR (default is NOTFOUND)
+//     5) Build the project using make
+//
 //
 
 
