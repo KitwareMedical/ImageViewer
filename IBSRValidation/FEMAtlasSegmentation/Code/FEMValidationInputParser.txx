@@ -204,7 +204,7 @@ FEMValidationInputParser<TImage,TLabelImage>
   /*************************
    * Read in algorithm parameters from file
    *************************/
-  FILE * paramFile;
+/*  FILE * paramFile;
   paramFile = fopen( m_ParameterFileName.c_str(), "r" );
   if( !paramFile )
     {
@@ -229,14 +229,12 @@ FEMValidationInputParser<TImage,TLabelImage>
     }
   m_NumberOfMatchPoints = uNumber;
 
-
+*/
 
 /*** FIXME: remove later ****/
 #define PRINTOUT( name ) \
   std::cout << "" #name ": " << m_##name << std::endl;
 
-  PRINTOUT( NumberOfHistogramLevels );
-  PRINTOUT( NumberOfMatchPoints );
 
 }
 
