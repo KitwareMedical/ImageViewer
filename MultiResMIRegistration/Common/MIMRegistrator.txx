@@ -131,6 +131,7 @@ MIMRegistrator<TFixedImage,TMovingImage>
  
   m_Registration->SetInitialTransformParameters( m_InitialParameters );
 
+  m_Registration->SetFixedImageRegion( m_FixedImage->GetBufferedRegion() );
 
   try
     {
