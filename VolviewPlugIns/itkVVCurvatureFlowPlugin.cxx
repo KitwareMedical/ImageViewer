@@ -1,4 +1,4 @@
-/* perform a simple threshold filter */
+/* perform smoothing using an anisotropic diffusion filter */
 
 #include "vtkVVPluginAPI.h"
 
@@ -196,6 +196,7 @@ private:
 
 static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
+
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
   try 
@@ -220,11 +221,12 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
   }
   catch( itk::ExceptionObject & except )
   {
-    // What to do here ? Display a message ? call an error function ?
+    info->DisplayError( info, except.what() ); 
     return -1;
   }
   return 0;
 }
+
 
 static int UpdateGUI(void *inf)
 {
