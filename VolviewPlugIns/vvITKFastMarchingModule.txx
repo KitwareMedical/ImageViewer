@@ -130,7 +130,6 @@ FastMarchingModule<TInputPixelType>
 ::SetStoppingValue( float value )
 {
   m_FastMarchingFilter->SetStoppingValue( value );
-  m_FastMarchingFilter->SetLargeValue( value );
 }
 
 
