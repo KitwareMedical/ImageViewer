@@ -1,0 +1,484 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 9">
+<meta name=Originator content="Microsoft Word 9">
+<link rel=File-List href="./README_files/filelist.xml">
+<link rel=Edit-Time-Data href="./README_files/editdata.mso">
+<link rel=OLE-Object-Data href="./README_files/oledata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>itkEllipsoidInteriorExteriorSpatialFunctionExample</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>robert</o:Author>
+  <o:LastAuthor>robert</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>134</o:TotalTime>
+  <o:LastPrinted>2001-08-02T19:59:00Z</o:LastPrinted>
+  <o:Created>2001-08-17T14:57:00Z</o:Created>
+  <o:LastSaved>2001-08-17T14:57:00Z</o:LastSaved>
+  <o:Pages>2</o:Pages>
+  <o:Words>814</o:Words>
+  <o:Characters>4645</o:Characters>
+  <o:Company>University of Pittsburgh</o:Company>
+  <o:Lines>38</o:Lines>
+  <o:Paragraphs>9</o:Paragraphs>
+  <o:CharactersWithSpaces>5704</o:CharactersWithSpaces>
+  <o:Version>9.3821</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-style-next:Normal;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-font-kerning:0pt;}
+p.MsoCaption, li.MsoCaption, div.MsoCaption
+	{mso-style-next:Normal;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoBodyTextIndent, li.MsoBodyTextIndent, div.MsoBodyTextIndent
+	{margin:0in;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-indent:.5in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+@list l0
+	{mso-list-id:357505483;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1954454926 67698689 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US link=blue vlink=purple style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<p class=MsoNormal><span style='color:silver'>itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:4.0in'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal align=right style='text-align:right'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<table border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;
+ mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+ <tr>
+  <td width=295 valign=top style='width:221.4pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal><!--[if gte vml 1]><v:shapetype id="_x0000_t75"
+   coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe"
+   filled="f" stroked="f">
+   <v:stroke joinstyle="miter"/>
+   <v:formulas>
+    <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+    <v:f eqn="sum @0 1 0"/>
+    <v:f eqn="sum 0 0 @1"/>
+    <v:f eqn="prod @2 1 2"/>
+    <v:f eqn="prod @3 21600 pixelWidth"/>
+    <v:f eqn="prod @3 21600 pixelHeight"/>
+    <v:f eqn="sum @0 0 1"/>
+    <v:f eqn="prod @6 1 2"/>
+    <v:f eqn="prod @7 21600 pixelWidth"/>
+    <v:f eqn="sum @8 21600 0"/>
+    <v:f eqn="prod @7 21600 pixelHeight"/>
+    <v:f eqn="sum @10 21600 0"/>
+   </v:formulas>
+   <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+   <o:lock v:ext="edit" aspectratio="t"/>
+  </v:shapetype><v:shape id="_x0000_i1025" type="#_x0000_t75" style='width:135pt;
+   height:86.25pt'>
+   <v:imagedata src="./README_files/image001.png" o:title="itkLogoTransparentBackground"/>
+  </v:shape><![endif]--><![if !vml]><img width=180 height=115
+  src="./README_files/image002.gif" v:shapes="_x0000_i1025"><![endif]></p>
+  </td>
+  <td width=295 valign=top style='width:221.4pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoCaption align=right style='text-align:right'><span
+  style='font-weight:normal'>Robert J. Tamburo<o:p></o:p></span></p>
+  <p class=MsoNormal align=right style='text-align:right'>August 17, 2001</p>
+  <p class=MsoNormal align=right style='text-align:right'>University of
+  Pittsburgh</p>
+  <p class=MsoNormal align=right style='text-align:right'>749 Benedum Hall </p>
+  <p class=MsoNormal align=right style='text-align:right'>Pittsburgh, PA 15261</p>
+  <p class=MsoNormal align=right style='text-align:right'><a
+  href="mailto:rjtst21@pitt.edu">rjtst21@pitt.edu</a></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal align=right style='text-align:right'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoCaption><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoCaption>Summary</p>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------<o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>This
+example demonstrates how to create a geometrical shape within an itkImage using
+Spatial Functions. Specifically, this example will use
+itkEllipsoidInteriorExteriorSpatialFunction to create an itkImage consisting of
+an ellipsoid.<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption>Description</p>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------<o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>First,
+an <i>itkImage</i> (dimension of 3, size of 50x50x50, spacing of (1,1,1), and
+origin (0,0,0)) is created and completely filled with pixels of intensity value
+128. Then, <i>itkFloodFilledSpatialFunctionConditionalIterator</i> is used to
+iterate through the image and set pixels to 256 if <i>itkEllipsoidInteriorExteriorSpatialFunction</i>
+returns 1, meaning that it is within the interior of the ellipsoid. The
+ellipsoid is defined by its axes lengths (from edge-to-edge of the ellipsoid)
+as well as the orientations of these axes. This example is restricted to 3D to
+allow for the visualization of the resulting image, which is done via a <i>VTK</i>
+image file. The volume of the ellipsoid is measured by counting the number of
+interior pixels of the ellipsoid. This measure can be used to verify the
+resulting ellipsoid by comparing it against the calculated volume (percent
+difference) of the ellipsoid given by:<o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption align=center style='text-align:center'><span
+style='font-weight:normal'><sub><!--[if gte vml 1]><v:shape id="_x0000_i1026"
+ type="#_x0000_t75" style='width:99.75pt;height:33.75pt' o:ole="">
+ <v:imagedata src="./README_files/image003.wmz" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=133 height=45
+src="./README_files/image004.gif" v:shapes="_x0000_i1026"><![endif]></sub><!--[if gte mso 9]><xml>
+ <o:OLEObject Type="Embed" ProgID="Equation.3" ShapeID="_x0000_i1026"
+  DrawAspect="Content" ObjectID="_1059550991">
+ </o:OLEObject>
+</xml><![endif]-->, where a, b, and c are the lengths of the ellipsoid axes.<o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>The
+ellipsoid is also validated by checking that the center of the ellipsoid has
+been labeled as an interior pixel (a function value of 1) by evaluating the
+spatial function at the origin of the ellipsoid.<o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>NOTE:
+Orientation vectors must be orthogonal to each other!<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption>To Use This Example</p>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'>Build and run
+itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx from the workspace
+generated from CMake. The resulting VTK image file is stored as:<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption align=center style='text-align:center'><span
+style='font-weight:normal'>&quot;Insight\Examples\EllipsoidInteriorExteriorSpatialFunction\ellipsoid.vtk&quot;<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>Default
+settings should result in an image of an ellipsoid with its axis of length 40
+oriented along the (0,1,0) direction, axis of length 30 oriented along the
+(1,0,0) direction, and axis of length 20 oriented along the (0,0,1) direction.
+The origin of the ellipsoid is sampled and evaluated by the spatial function
+and returns <i>function value</i>, which is 1 since the origin of the ellipsoid
+is within the ellipsoid.<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption align=center style='text-align:center'>Results of the
+example (with defaults):</p>
+
+<table border=1 cellspacing=0 cellpadding=0 style='margin-left:77.4pt;
+ border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;
+ mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+ <tr>
+  <td width=216 valign=top style='width:2.25in;border:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>calculated
+  ellipsoid volume</p>
+  </td>
+  <td width=168 valign=top style='width:1.75in;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoCaption align=center style='text-align:center'><span
+  style='font-weight:normal'>12566.4 pixels<o:p></o:p></span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=216 valign=top style='width:2.25in;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>measured ellipsoid
+  volume</p>
+  </td>
+  <td width=168 valign=top style='width:1.75in;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>12428 pixels</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=216 valign=top style='width:2.25in;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>volume error</p>
+  </td>
+  <td width=168 valign=top style='width:1.75in;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>1.10907%</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=216 valign=top style='width:2.25in;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>function value</p>
+  </td>
+  <td width=168 valign=top style='width:1.75in;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal align=center style='text-align:center'>1</p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoCaption align=center style='text-align:center'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1027" type="#_x0000_t75" style='width:291pt;height:269.25pt'>
+ <v:imagedata src="./README_files/image005.jpg" o:title="ellipsoid"/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=388 height=359
+src="./README_files/image006.jpg" v:shapes="_x0000_i1027"><![endif]></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b>Fig. 1: </b>Resulting
+Image Containing an Ellipsoid From This Example<sup>*<o:p></o:p></sup></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>*See
+&quot;Insight\Examples\EllipsoidInteriorExteriorSpatialFunction\ellipsoid.jpg&quot;
+for snapshot of resulting image. <o:p></o:p></span></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption>Insight Classes Used</p>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------<o:p></o:p></span></p>
+
+<p class=MsoNormal>These are the Insight classes used for this example with a
+brief description. They appear in order of first use:</p>
+
+<p class=MsoCaption style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo1;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol;
+font-weight:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-weight:normal'>itkImage.h: generates
+a physical image.<o:p></o:p></span></p>
+
+<p class=MsoCaption style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo1;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol;
+font-weight:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-weight:normal'>itkImageRegionIterator.h:
+iterates through the pixels in the physical image and sets them to 128.<o:p></o:p></span></p>
+
+<p class=MsoCaption style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo1;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol;
+font-weight:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-weight:normal'>itkEllipsoidInteriorExteriorSpatialFunction.h:
+evaluates pixels in the image and determines whether they are within the
+ellipsoid or not.<o:p></o:p></span></p>
+
+<p class=MsoCaption style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo1;
+tab-stops:list .5in'><![if !supportLists]><span style='font-family:Symbol;
+font-weight:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='font-weight:normal'>itkFloodFilledSpatialFunctionConditionalIterator.h:
+iterates the image and sets them to 256 if they are within the ellipsoid.<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption>Possible Uses Of Ellipsoids</p>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------<o:p></o:p></span></p>
+
+<p class=MsoCaption style='text-align:justify'><span style='font-weight:normal'>The
+ellipsoid images created by EllipsoidInteriorExteriorSpatialFunction are useful
+for testing imaging algorithms, pixel-sampling routines, establishing geometric
+domains of influence, etc.<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></span></p>
+
+<p class=MsoCaption>Non-ITK Requirements</p>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------<o:p></o:p></span></p>
+
+<p class=MsoCaption><span style='font-weight:normal'>A VTK image viewer is
+needed to visualize the output file ellipsoid.vtk.<o:p></o:p></span></p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h1>Copyright</h1>
+
+<p class=MsoCaption><span style='font-weight:normal'>------------------------------------------------------</span></p>
+
+<p class=MsoNormal>Copyright (c) 2001 Insight Consortium All rights reserved.</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal>Redistribution and use in source and binary forms, with or
+without modification, are</p>
+
+<p class=MsoNormal>permitted provided that the following conditions are met:</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> </span>* Redistributions of
+source code must retain the above copyright notice,</p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>this list of
+conditions and the following disclaimer.</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> </span>* Redistributions in
+binary form must reproduce the above copyright notice,</p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>this list of
+conditions and the following disclaimer in the documentation</p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>and/or other
+materials provided with the distribution.</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes"> </span>* The name of the
+Insight Consortium, nor the names of any consortium members,</p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>nor of any
+contributors, may be used to endorse or promote products derived</p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">   </span>from this software
+without specific prior written permission.</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">  </span>* Modified source
+versions must be plainly marked as such, and must not be</p>
+
+<p class=MsoNormal><span style="mso-spacerun: yes">    </span>misrepresented as
+being the original software.</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoBodyText>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND
+CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY,</p>
+
+<p class=MsoNormal style='text-align:justify'>OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+
+</div>
+
+</body>
+
+</html>
