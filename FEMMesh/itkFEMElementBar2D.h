@@ -19,9 +19,8 @@
 #define __itkFEMElementBar2D_h
 
 #include "itkFEMElement.h"
-#include "itkFEMDisplacementNode.h"
+#include "itkFEMNode.h"
 #include "itkFEMMaterialStandard.h"
-#include "itkFEMLoadElementBase.h"
 #include "itkMacro.h"
 
 
@@ -43,7 +42,7 @@ class FEMElementBar2D : public FEMElement
 public:
 
   /** Type of Node used by this element  */
-  typedef FEMDisplacementNode< 2 >          NodeType;   
+  typedef FEMNode< 2 >          NodeType;   
 
 
   typedef FEMElement                        Superclass;
@@ -138,7 +137,7 @@ public:
     m_Node2 = 0;
   }
 
-  void SetNode(unsigned int Id, FEMNode * node )
+  void SetNode(unsigned int Id, FEMNodeBase * node )
     {
       switch( Id )
       {

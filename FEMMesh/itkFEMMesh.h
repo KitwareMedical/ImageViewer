@@ -19,7 +19,7 @@
 #define __itkFEMMesh_h
 
 
-#include "itkFEMNode.h"
+#include "itkFEMNodeBase.h"
 #include "itkFEMElement.h"
 #include "itkFEMCell.h"
 #include "itkPoint.h"
@@ -71,7 +71,7 @@ public:
   typedef FEMCell< PointDimension >          CellType;
 
   /** Type for the Nodes */
-  typedef FEMNode                            NodeType;
+  typedef FEMNodeBase                        NodeType;
 
   /** Type for the Element */
   typedef FEMElement                         ElementType;

@@ -32,7 +32,6 @@
 
 #include "itkNumericTraits.h"
 
-#include "itkFEMDisplacementNode.h"
 #include "itkFEMLineCell.h"
 #include "itkFEMElementBar2D.h"
 

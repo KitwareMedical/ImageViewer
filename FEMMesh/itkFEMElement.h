@@ -20,7 +20,7 @@
 #define __itkFEMElement_h
 
 
-#include "itkFEMNode.h"
+#include "itkFEMNodeBase.h"
 #include "itkFEMCellBase.h"
 #include "vnl/vnl_matrix.h"
 
@@ -52,7 +52,7 @@ class FEMElement
 public:
 
   /** Use a standard symplified type for the Node base class */
-  typedef FEMNode                 NodeType;
+  typedef FEMNodeBase             NodeType;
 
   /** Use a standard symplified type for the Cell base class */
   typedef FEMCellBase             CellType;
