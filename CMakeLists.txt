@@ -69,6 +69,10 @@ ENDIF(HAS_METAIMAGE)
 # Add an option to build or not build the EllipsoidInteriorExteriorSpatialFunction example
 SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 
+# Add an option to build or not build the SymmetricEllipsoidInteriorExteriorSpatialFunction example
+SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
+
+
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
