@@ -1,7 +1,9 @@
 
 #include "BacterialColony.h"
-#include "BacterialColonyRedrawCommand.h"
 #include "BacterialColonyGUI.h"
+#include "Eukariote.h"
+#include "PressureSensitiveBacteria.h"
+#include "GradientEatingBacteria.h"
 #include "CellsViewer.h"
 #include "CommandEvents.h"
 #include "CellsViewerCommand.h"
@@ -36,19 +38,30 @@ int main()
 
   viewer->SetCellsAggregate( colony );
   
-  bio::BacterialColonyRedrawCommand::Pointer colonyRedrawCommand =
-                                    bio::BacterialColonyRedrawCommand::New();
+  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent(), 
+                            colony->GetRedrawCommand().GetPointer() );
 
-  colonyRedrawCommand->SetBacterialColony( colony );
+  // Add All the known species here
+  viewer->AddSpeciesEggProducer( 
+            & bio::Prokariote::CreateEgg, 
+              bio::Prokariote::GetSpeciesName() );
 
-  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent(), colonyRedrawCommand );
+  viewer->AddSpeciesEggProducer( 
+            & bio::Bacteria::CreateEgg,   
+              bio::Bacteria::GetSpeciesName() );
 
-  colony->SetGrowthRadiusIncrement( 0.01 );
+  viewer->AddSpeciesEggProducer( 
+            & bio::PressureSensitiveBacteria::CreateEgg,   
+              bio::PressureSensitiveBacteria::GetSpeciesName() );
 
+  viewer->AddSpeciesEggProducer( 
+            & bio::GradientEatingBacteria::CreateEgg,   
+              bio::GradientEatingBacteria::GetSpeciesName() );
 
-  bio::Bacteria * first = new bio::Bacteria;
+  viewer->AddSpeciesEggProducer( 
+            & bio::Eukariote::CreateEgg,  
+              bio::Eukariote::GetSpeciesName() );
 
-  colony->Add( first );
 
 
   viewer->Show();
