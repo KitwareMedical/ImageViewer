@@ -54,6 +54,7 @@ vvGradientAnisotropicDiffusion
 vvCurvatureAnisotropicDiffusion
 vvConfidenceConnected
 vvSigmoid
+vvGradientMagnitude
 vvGradientMagnitudeRecursiveGaussian
 )
 
@@ -75,6 +76,9 @@ TARGET_LINK_LIBRARIES(vvSigmoid ITKCommon ITKBasicFilters)
 
 ADD_LIBRARY(vvGradientMagnitudeRecursiveGaussian MODULE itkVVGradientMagnitudeRecursiveGaussianPlugin.cxx)
 TARGET_LINK_LIBRARIES(vvGradientMagnitudeRecursiveGaussian ITKCommon ITKBasicFilters)
+
+ADD_LIBRARY(vvGradientMagnitude MODULE itkVVGradientMagnitudePlugin.cxx)
+TARGET_LINK_LIBRARIES(vvGradientMagnitude ITKCommon ITKBasicFilters)
 
 
 # copy the plugins to a plugin directory
