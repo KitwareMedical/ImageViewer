@@ -49,4 +49,11 @@ negative_features 1=Use 0=Do not use.  Turning negative features on will swap th
 
 Note that this example does NOT handle COLOR PNG images.
 
+vtkViewOutput.tcl 
+-----------------
+This VTK script can be used to view the output of the example application(s).
+You will need to edit the file to point to the correct data files and set the
+X and Y values correctly.
 
+When viewing the "feature" image, the green values correspond to negative 
+speeds and the red to positive speeds.
