@@ -1,29 +1,35 @@
+SUBDIRS( SampleInputs )
 
 INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
+${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/VanderbiltValdiation
+${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration
 )
 
 LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Code/Common
+${ITK_BINARY_DIR}/Code/IO
+${ITK_BINARY_DIR}/Code/BasicFilters
+${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/Numerics
 )
 
 
 LINK_LIBRARIES (
 VXLNumerics
-ITKIO
-ITKCommon
 ITKNumerics
+ITKCommon
+ITKIO
+ITKBasicFilters 
 )
 
-SOURCE_FILES( MIRegistration_SRCS
-MIRegistrationApp
-MultiResMIRegistration )
+SOURCE_FILES( VanderbiltValidation_SRCS
+VanderbiltValidation/VanderbiltValidation
+VanderbiltValidation/VanderbiltModality )
 
 
-ADD_EXECUTABLE(MultiResMIRegistration MIRegistration_SRCS )
-
+ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration )
+ADD_EXECUTABLE(VanderbiltValidation   VanderbiltValidation_SRCS )

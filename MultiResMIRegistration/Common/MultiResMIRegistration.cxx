@@ -14,7 +14,10 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#include "MIRegistrationApp.h"
+
+#include <iostream>
+
+#include "SimpleApp.h"
 #include "itkExceptionObject.h"
 
 
@@ -24,21 +27,27 @@ int main(int argc, char *argv[])
     {
     std::cout << "Parameter file name missing" << std::endl;
     std::cout << std::endl;
-    std::cout << "Usage:  MIRigidRegistration param.file" << std::endl;
+    std::cout << "Usage: MultiResMIRegistration param.file" << std::endl;
     return 1;
     }
 
   // run the registration
   try
     {
-    MIRegistrationApp theApp( argv[1] );
-    theApp.Execute();
+    typedef itk::SimpleApp<signed short> AppType;
+    AppType::Pointer theApp = AppType::New();
+    theApp->SetParameterFileName( argv[1] );
+    theApp->Execute();
+
     }
   catch( itk::ExceptionObject& err)
     {
-    std::cout << "Caught an exception: " << std::endl;
-    std::cout << err.GetLocation() << std::endl;
-    std::cout << err.GetDescription() << std::endl;
+    std::cout << "Caught an ITK exception: " << std::endl;
+    std::cout << err << std::endl;
+    }
+  catch(...)
+    {
+    std::cout << "Caught an non-ITK exception " << std::endl;
     }
 
   return 0;

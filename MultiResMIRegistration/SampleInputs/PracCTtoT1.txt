@@ -6,15 +6,14 @@ N:/Vanderbilt/registration/images/practice/ct/image.bin
 1
 512 512 29
 0.653595 0.653595 4.0
+0 1 2
+0 0 0
 5
 4 4 1
 8 8 1
 2500 2500 2500 2500 2500
 1e-4 1e-5 5e-6 1e-6 5e-7
-320 320 320 320 320
-registered.raw
-1
-1
+320
 cttot1
 
 

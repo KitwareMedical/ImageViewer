@@ -32,6 +32,46 @@
 namespace itk
 {
 
+/** \class MIMRegistrator
+ *
+ * This component computes the transform to register a
+ * moving image onto a fixed image.
+ *
+ * In particular, it uses the ITK registration framework with
+ * the following combination of components:
+ *   - MutualInformationImageToImageMetric
+ *   - QuaternionRigidTransform
+ *   - QuaternionRigidTransformGradientDescentOptimizer
+ *   - LinearInterpolateImageFunction
+ *
+ * The registration is done using a multiresolution strategy.
+ * At each resolution level, the downsampled images are obtained
+ * using a RecursiveMultiResolutionPyramidImageFilter.
+ * 
+ * \warning This class requires both images to be 3D and with
+ * pixels of a real type.
+ *
+ * The registration process is activated by method Execute().
+ *
+ * Inputs:
+ *   - pointer to fixed image
+ *   - pointer to moving image
+ *   - number of resolution levels
+ *   - scaling applied to the translation parameters during optimization
+ *   - parzen window width for the fixed image
+ *   - parzen window width for the moving image
+ *   - number of optimization iterations at each level
+ *   - the optimization learning rate at each level
+ *   - the initial rigid (quaternion) transform parameters
+ *   - the coarest level shrink factors for the fixed image
+ *   - the coarest level shrink factors for the moving image
+ *
+ * Outputs:
+ *   - rigid (quaternion) transform parameters to maps points from
+ *     the fixed image to the moving image.
+ *   - pointer to equivalent affine transform.
+ *
+ */ 
 template <typename TFixedImage, typename TMovingImage>
 class MIMRegistrator : public Object
 {
@@ -103,7 +143,7 @@ public:
   typedef FixedArray<unsigned int,ImageDimension> ShrinkFactorsArray;
 
   /** Affine transform type. */
-  typedef AffineTransform<double>   AffineTransformType;
+  typedef AffineTransform<double,ImageDimension>   AffineTransformType;
   typedef typename AffineTransformType::Pointer AffineTransformPointer;
 
   /** Set the fixed image. */
@@ -144,7 +184,7 @@ public:
   itkSetMacro( MovingImageShrinkFactors, ShrinkFactorsArray );
 
   /** Method to execute the registration. */
-  void Execute();
+  virtual void Execute();
 
   /** Get number of parameters. */
   unsigned long GetNumberOfParameters()
@@ -153,7 +193,7 @@ public:
   /** Get computed transform parameters. */
   const ParametersType& GetTransformParameters();
 
-  /** Get compute affine transform. */
+  /** Get computed affine transform. */
   AffineTransformPointer GetAffineTransform();
 
   /** Initialize registration at the start of new level. */

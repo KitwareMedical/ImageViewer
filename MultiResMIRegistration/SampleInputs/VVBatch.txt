@@ -1,0 +1,17 @@
+N:/Vanderbilt/registration/images
+VVOutput.txt
+[Insert investigators here]
+[Insert site here]
+Multi-resolution rigid mutual information maximization
+0 0 1 0 SampleInputs/VVCTToMR.txt
+0 0 2 0 SampleInputs/VVCTToMR.txt
+0 0 3 0 SampleInputs/VVCTToMR.txt
+0 0 6 0 SampleInputs/VVCTToMR.txt
+0 0 7 0 SampleInputs/VVCTToMR.txt
+0 0 8 0 SampleInputs/VVCTToMR.txt
+0 1 5 1 SampleInputs/VVMRToPET.txt
+0 2 5 1 SampleInputs/VVMRToPET.txt
+0 3 5 1 SampleInputs/VVMRToPET.txt
+0 6 5 1 SampleInputs/VVMRToPET.txt
+0 7 5 1 SampleInputs/VVMRToPET.txt
+0 8 5 1 SampleInputs/VVMRToPET.txt
