@@ -70,12 +70,14 @@ IF(HAS_FLTK)
       SUBDIRS(TripleTKImageDisplay)
       SUBDIRS(RegionGrowingSegmentation)
     ENDIF(HAS_VTK)
-    SUBDIRS(MetaImageImporter)
     SUBDIRS(MetaImageViewer)
     SUBDIRS(SurfaceGenerator)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_FLTK)
 
+# MetaImage Utilities
+SUBDIRS(MetaImageImporter)
+SUBDIRS(MetaImageReadWrite)
 
 # Test the conditions for building the MRIBiasCorrection example
 SUBDIRS(MRIBiasCorrection)
