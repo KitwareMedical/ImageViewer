@@ -18,9 +18,9 @@
 #include "itkRawImageIO.h"
 #include "itkImageFileWriter.h"
 
-const int V_WIDTH  = 64;
-const int V_HEIGHT = 64;
-const int V_DEPTH  = 64;
+const unsigned int V_WIDTH  = 64;
+const unsigned int V_HEIGHT = 64;
+const unsigned int V_DEPTH  = 64;
 
 float sphere(float x, float y, float z)
 {
@@ -67,8 +67,14 @@ int main()
   // Create a binary image of a sphere.
   BinaryImageType::Pointer image = BinaryImageType::New();
   BinaryImageType::RegionType region;
-  BinaryImageType::RegionType::SizeType sz = {64, 64, 64};
-  BinaryImageType::RegionType::IndexType idx = {0,0,0};
+  BinaryImageType::RegionType::SizeType sz;
+  BinaryImageType::RegionType::IndexType idx;
+  for (unsigned k = 0; k < 3; ++k)
+    {
+      sz[k] = 64;
+      idx[k] = 0;
+    }
+
   region.SetSize(sz);
   region.SetIndex(idx);
   image->SetRegions(region);
