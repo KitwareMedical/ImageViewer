@@ -43,7 +43,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkByteSwapper.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageMapper.h"
-#include "itkRawImageWriter.h"
+//#include "itkRawImageWriter.h"
+#include "itkImageFileWriter.h"
 #include "itkExceptionObject.h"
 
 #include "vnl/vnl_math.h"
@@ -308,6 +309,8 @@ const char * filename,
 bool bigEndian )
 {
 
+// comment this out until RawImageWriter reinstated.
+/*
   typedef itk::RawImageWriter<InputImageType> WriterType;
   WriterType::Pointer writer = WriterType::New();
 
@@ -321,6 +324,14 @@ bool bigEndian )
     }
 
   writer->SetFileTypeToBinary();
+  writer->SetFileName( filename );
+  writer->SetInput( input );
+  writer->Write();
+*/
+
+  typedef itk::ImageFileWriter<InputImageType> WriterType;
+  WriterType::Pointer writer = WriterType::New();
+
   writer->SetFileName( filename );
   writer->SetInput( input );
   writer->Write();
