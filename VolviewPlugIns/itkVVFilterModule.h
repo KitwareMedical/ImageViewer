@@ -196,9 +196,9 @@ public:
       // NumericTraits should be used here. 
       // The code below is ok only for unsigned types in the InputPixelType...
       InternalPixelType value = ot.Get();
-      if( value < 0.0 ) 
+      if( value < itk::NumericTraits<InternalPixelType>::Zero ) 
         {
-        value = 0.0;
+        value = itk::NumericTraits<InternalPixelType>::Zero;
         }
       *outData = static_cast< InputPixelType >( value );
       ++ot;
