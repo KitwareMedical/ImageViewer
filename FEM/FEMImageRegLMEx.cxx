@@ -46,7 +46,7 @@ ImageRegLMEx::ImageRegLMEx( )
   m_MetricWidth=3;
   m_DoLineSearch=false;
   m_SearchForMinAtEachLevel=false;
-  m_LineSearchStep=0.05;
+  m_LineSearchStep=0.025;
 
   m_MaxSmoothing=1;
   m_MinSmoothing=1;
@@ -57,6 +57,7 @@ ImageRegLMEx::ImageRegLMEx( )
   m_ReferenceFileName = NULL;
   m_TargetFileName = NULL;
   m_LandmarkFileName = NULL;
+  m_TotalIterations=0;
 }
 
 
@@ -532,11 +533,10 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
     /*
      * Solve the system of equations for displacements (u=K^-1*F)
      */
-    m_Solver.Solve();
-   
+    m_Solver.Solve();  
+    m_Solver.GoldenSection();
     Float cure=0.0,mint=0.0,tstep=m_LineSearchStep;
   
-    //m_Solver.AverageLastTwoDisplacements();
 
    if (m_DoLineSearch) 
    {
@@ -553,15 +553,25 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
      }
      m_Solver.AddToDisplacements(mint); 
    }
-   else m_Solver.AddToDisplacements(1.);
-   
-   std::cout << " min E " << m_MinE << "  t " << mint << " iter " << iters << std::endl;
+   else 
+   {
+     cure=m_Load->EvaluateMetricGivenSolution(&(m_Solver.el), 1.0);
+     if (cure <= m_MinE)
+     {
+        m_MinE=cure;
+        mint=iters;   
+        m_Solver.AddToDisplacements(); 
+     } else iters=m_Maxiters;
+   }
+   std::cout << " min E " << m_MinE << " Cur E " << cure << "  t " << mint << " iter " << iters << std::endl;
    //m_Solver.ZeroVector(2);
    //m_Solver.ZeroVector(3);
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere
    //GetVectorField();
    //WarpImage();
    //WriteWarpedImage(m_ResultsFileName);
+   
+   m_TotalIterations++;
   } 
   
 }
