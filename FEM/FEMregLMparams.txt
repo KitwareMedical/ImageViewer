@@ -4,20 +4,22 @@
 0	% DescentDirection
 0	% DoLineSearch
 490000	% Elasticity
-2	% MaximumIterations
+5	% MaximumIterations
 1.	% TimeStep
 1.e3	% Rho
-E:\\Avants\\MetaImages\\brain_slice1smth.im	% ReferenceFileName
-E:\\Avants\\MetaImages\\brain_slice2smth.im	% TargetFileName
+/mnt/data/tessa/temp/img1.raw	% ReferenceFileName
+/mnt/data/tessa/temp/img2.raw	% TargetFileName
 0	% UseLandmarks - read the file name below if this is true
-c:\tessa\temp\e15326s16i1_2.regLM	% LandmarkFileName
-E:\\Avants\\MetaImages\\result	% ResultsFileName
+/mnt/data/tessa/temp/e15326s16i1_2.regLM	% LandmarkFileName
+/mnt/data/tessa/temp/result	% ResultsFileName
 128	% Nx (image x dimension)
 128	% Ny (image y dimension)
 4	% MeshResolution
 4	% NumberOfIntegrationPoints
 1	% WidthOfMetricRegion
-1	% DoMultiRes - read the parameters below if this is true
+1	% WriteDisplacementField
+/mnt/data/tessa/temp/disp	% DisplacementsFileName
+0	% DoMultiRes - read the parameters below if this is true
 1	% DoSearchForMinAtEachResolution
 2	% Number of levels in the multi-res pyramid
 2	% Maximum Level to use in the pyramid 

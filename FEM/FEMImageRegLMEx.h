@@ -49,6 +49,8 @@
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_vector_fixed.h"
 
+#include "itkVectorIndexSelectionCastImageFilter.h"
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -131,6 +133,7 @@ public:
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType; 
   typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator; 
   typedef itk::ImageRegionIteratorWithIndex<FieldType> FieldIterator; 
+  typedef itk::VectorIndexSelectionCastImageFilter<FieldType,FloatImageType> IndexSelectCasterType;
 
   /**
    * Easy access to the FEMObjectFactory. We create a new class
@@ -179,13 +182,14 @@ public:
   void  WarpImage();      
 
   /** Writes the displacement field to a file. */
-  void WriteDispField();
+  void WriteDisplacementField(unsigned int index);
 
   /** Set the following parameters to run the example */
   void SetReferenceFile(const char* r) {m_ReferenceFileName=r;}
   void SetTargetFile(const char* t) {m_TargetFileName=t;}
   void SetLandmarkFile(const char* l) {m_LandmarkFileName=l; }
   void SetResultsFile(const char* r) {m_ResultsFileName=r;}
+  void SetDisplacementsFile(const char* r) {m_DisplacementsFileName=r;}
   void SetMeshResolution(unsigned int i){ m_MeshResolution=i;}
   void SetNumberOfIntegrationPoints(unsigned int i){ m_NumberOfIntegrationPoints=i;}
   void SetWidthOfMetricRegion(unsigned int i) { m_MetricWidth=i;}
@@ -199,11 +203,13 @@ public:
   void DoMultiRes(bool b) { m_DoMultiRes=b; } 
   void DoSearchForMinAtEachResolution(bool b) { m_SearchForMinAtEachLevel=b; } 
   void UseLandmarks(bool b) {m_UseLandmarks=b;}
+  void WriteDisplacements(bool b) {m_WriteDisplacementField=b;}
 
   const char* m_ReferenceFileName;  
   const char* m_TargetFileName;
   const char* m_LandmarkFileName;
   const char* m_ResultsFileName;
+  const char* m_DisplacementsFileName;
 
   unsigned int m_MeshResolution; // determines maximum resolution of regular mesh
   unsigned int m_NumberOfIntegrationPoints;// resolution of integration
@@ -227,6 +233,7 @@ public:
   bool  m_DoMultiRes;
   bool  m_SearchForMinAtEachLevel;
   bool  m_UseLandmarks;
+  bool  m_WriteDisplacementField;
   Float m_LineSearchStep;
   Sign  m_DescentDirection;
   int m_FileCount; // keeps track of number of files written

@@ -255,14 +255,14 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> buffer;
-  sbuf = new char[256];
-  strcpy(sbuf, buffer);
+    sbuf = new char[256];
+    strcpy(sbuf, buffer);
     this->SetReferenceFile(sbuf);
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> buffer;
-  sbuf = new char[256];
-  strcpy(sbuf, buffer);
+    sbuf = new char[256];
+    strcpy(sbuf, buffer);
     this->SetTargetFile(sbuf);
     
     FEMLightObject::SkipWhiteSpace(f);
@@ -280,8 +280,8 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> buffer;
-  sbuf = new char[256];
-  strcpy(sbuf, buffer);
+    sbuf = new char[256];
+    strcpy(sbuf, buffer);
     this->SetResultsFile(sbuf);
     
     FEMLightObject::SkipWhiteSpace(f);
@@ -304,6 +304,19 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
     f >> ibuf;
     this->SetWidthOfMetricRegion(ibuf);
     
+    FEMLightObject::SkipWhiteSpace(f);
+    f >> ibuf;
+    FEMLightObject::SkipWhiteSpace(f);
+    f >> buffer;
+
+    if (ibuf == 1) {
+      this->WriteDisplacements(true);
+      sbuf = new char[256];
+      strcpy(sbuf, buffer);
+      this->SetDisplacementsFile(sbuf);
+    }
+    else { this->WriteDisplacements(false); }
+
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
     if (ibuf == 1) {
@@ -339,9 +352,36 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
   }  
 }
 
-void ImageRegLMEx::WriteDispField()
+void ImageRegLMEx::WriteDisplacementField(unsigned int index)
+  // Outputs the displacement field for the index provided (0=x,1=y,2=z)
 {
-  ;
+  // Initialize the caster to the displacement field
+  IndexSelectCasterType::Pointer fieldCaster = IndexSelectCasterType::New();
+  fieldCaster->SetInput( m_Field );
+  fieldCaster->SetIndex( index );
+  
+  // Define the output of the caster
+  FloatImageType::Pointer fieldImage = FloatImageType::New();
+  fieldCaster->Update();
+  fieldImage = fieldCaster->GetOutput();
+
+  // Set up the output filename
+  char* outfile = new char[strlen(m_DisplacementsFileName+10)];
+  sprintf(outfile, "%s%c.raw", m_DisplacementsFileName, 'x'+index);
+  std::cout << "Writing displacements to " << outfile;
+
+  // Write the single-index field to a file
+  //   itk::ImageRegionIteratorWithIndex<FloatImageType> it( fieldImage, fieldImage->GetLargestPossibleRegion() );
+  //   for (; !it.IsAtEnd(); ++it) { std::cout << it.Get() << "\t"; }
+
+  itk::RawImageIO<Float,2>::Pointer io = itk::RawImageIO<Float,2>::New();
+  itk::ImageFileWriter<FloatImageType>::Pointer writer = itk::ImageFileWriter<FloatImageType>::New();
+  writer->SetInput(fieldImage);
+  writer->SetImageIO(io);
+  writer->SetFileName(outfile);
+  writer->Write();
+
+  std::cout << "...done" << std::endl;
 }
 
 
@@ -887,11 +927,16 @@ int main()
 {
   itk::fem::ImageRegLMEx X; // Declare the registration class
 
-  X.ConfigFileName="U:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt";
+  X.ConfigFileName="/u/tessa/itk/Insight/Examples/FEM/FEMregLMparams.txt";
   if (!X.ReadConfigFile(X.ConfigFileName,X.m_Solver)) { return -1; }
 
   X.RunRegistration();
   X.WriteWarpedImage(X.m_ResultsFileName);
+
+  if (X.m_WriteDisplacementField) {
+    X.WriteDisplacementField(0);
+    X.WriteDisplacementField(1);
+  }
 
   return 0;
 }
