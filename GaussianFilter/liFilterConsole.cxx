@@ -87,7 +87,7 @@ liFilterConsole
   m_Add->AddObserver(  itk::Command::ProgressEvent, commandUpdateProgress.GetPointer() );
   m_Modulus->AddObserver(  itk::Command::ProgressEvent, commandUpdateProgress.GetPointer() );
                               
-//  m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::StartEvent, HxButton->GetCommand().GetPointer() );
   m_Hy->AddObserver(  itk::Command::StartEvent, HyButton->GetCommand().GetPointer() );
   m_Hz->AddObserver(  itk::Command::StartEvent, HzButton->GetCommand().GetPointer() );
@@ -103,7 +103,7 @@ liFilterConsole
   m_Add->AddObserver( itk::Command::StartEvent, laplacianButton->GetCommand().GetPointer() );
   m_Modulus->AddObserver( itk::Command::StartEvent, modulusButton->GetCommand().GetPointer() );
 
-//  m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::EndEvent, HxButton->GetCommand().GetPointer() );
   m_Hy->AddObserver(  itk::Command::EndEvent, HyButton->GetCommand().GetPointer() );
   m_Hz->AddObserver(  itk::Command::EndEvent, HzButton->GetCommand().GetPointer() );
@@ -119,7 +119,7 @@ liFilterConsole
   m_Add->AddObserver( itk::Command::EndEvent, laplacianButton->GetCommand().GetPointer() );
   m_Modulus->AddObserver( itk::Command::EndEvent, modulusButton->GetCommand().GetPointer() );
 
-//  m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetCommand().GetPointer() );
   m_Hy->AddObserver(  itk::Command::ModifiedEvent, HyButton->GetCommand().GetPointer() );
   m_Hz->AddObserver(  itk::Command::ModifiedEvent, HzButton->GetCommand().GetPointer() );
@@ -139,7 +139,6 @@ liFilterConsole
   m_H2y->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetCommand().GetPointer() );
   m_H2z->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetCommand().GetPointer() );
 
-  /*
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HyButton->GetCommand().GetPointer() );
@@ -155,7 +154,6 @@ liFilterConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, H2zButton->GetCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetCommand().GetPointer() );
-*/
 
   ShowStatus("Let's start by loading an image...");
 
@@ -268,7 +266,6 @@ liFilterConsole
 
   controlsGroup->activate();
 
-  // input filter should call invalidate at this point
 
 }
 
@@ -378,13 +375,13 @@ void
 liFilterConsole
 ::ShowInput( void )
 {
-/*
-  if( !(this->m_InputImage ) )
+
+  if( ! (this->m_ImageLoaded) ) 
   {
     ShowStatus("Please load an image first");
     return;
   }
-*/
+
   this->m_InputViewer->SetImage( this->m_Reader->GetOutput() );  
   this->m_InputViewer->Show();
 
