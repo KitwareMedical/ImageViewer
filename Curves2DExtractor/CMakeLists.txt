@@ -54,7 +54,6 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 ITKIO
-MetaImageIO
 itkpng
 itkzlib
 FltkImageViewer
