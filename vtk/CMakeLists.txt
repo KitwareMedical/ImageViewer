@@ -1,6 +1,5 @@
 # Add VTK code if we found VTK
-INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindVTK.cmake)
-IF (USE_VTK_FILE)
+IF (HAS_VTK)
   INCLUDE(${USE_VTK_FILE})
   LINK_LIBRARIES( 
       vtkRendering
@@ -10,7 +9,7 @@ IF (USE_VTK_FILE)
       vtkFiltering
       vtkCommon
   )
-ENDIF (USE_VTK_FILE)
+ENDIF (HAS_VTK)
 
 INCLUDE_DIRECTORIES(${ITK_SOURCE_DIR}/Code/BasicFilters)
 INCLUDE_DIRECTORIES(${ITK_SOURCE_DIR}/Code/Algorithms)

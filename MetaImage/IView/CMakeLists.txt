@@ -1,5 +1,3 @@
-INCLUDE(${CMAKE_ROOT}/Modules/FindFLTK.cmake)
-
 SOURCE_FILES(IView_SRCS
 IView
 IViewGUI
