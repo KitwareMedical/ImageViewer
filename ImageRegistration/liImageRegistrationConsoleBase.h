@@ -19,7 +19,7 @@
 
 #include <itkImage.h>
 #include <itkImageFileReader.h>
-#include <itkWriteMetaImage.h>
+#include <itkImageFileWriter.h>
 #include <itkResampleImageFilter.h>
 #include <itkImageRegistrationMethod.h>
 
@@ -113,6 +113,8 @@ public:
                                       AffineTransformType 
                                                   >  ResampleFilterType;
 
+  typedef   itk::ImageFileWriter< MovingImageType >  MovingImageWriterType;
+
 
 public:
   liImageRegistrationConsoleBase();
@@ -122,6 +124,8 @@ public:
   virtual void LoadFixedImage(const char * filename);
   virtual void LoadMovingImage(void)=0;
   virtual void LoadMovingImage(const char * filename);
+  virtual void SaveMovingImage(void)=0;
+  virtual void SaveMovingImage(const char * filename);
 
   virtual void ShowStatus(const char * text);
 
@@ -141,6 +145,8 @@ protected:
   FixedImageReaderType::Pointer           m_FixedImageReader;
 
   MovingImageReaderType::Pointer          m_MovingImageReader;
+
+  MovingImageWriterType::Pointer          m_MovingImageWriter;
 
   ResampleFilterType::Pointer             m_ResampleInputMovingImageFilter;
 

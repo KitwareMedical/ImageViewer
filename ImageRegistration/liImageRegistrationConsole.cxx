@@ -81,7 +81,7 @@ liImageRegistrationConsole
     return;
   }
 
-  this->ShowStatus("Loading fixed image file...");
+  this->ShowStatus("Loading moving image file...");
   
   try 
   {
@@ -140,6 +140,45 @@ liImageRegistrationConsole
 }
 
    
+
+
+ 
+/************************************
+ *
+ *  Save Moving Image
+ *
+ ***********************************/
+void
+liImageRegistrationConsole
+::SaveMovingImage( void )
+{
+
+  const char * filename = fl_file_chooser("Moving Image filename","*.mh[da]","");
+  if( !filename )
+  {
+    return;
+  }
+
+  this->ShowStatus("Saving moving image file...");
+  
+  try 
+  {
+    liImageRegistrationConsoleBase::SaveMovingImage( filename );
+  }
+  catch( ... ) 
+  {
+    this->ShowStatus("Problems saving file format");
+    return;
+  }
+
+  this->ShowStatus("Moving Image Saved");
+
+}
+
+
+
+
+
 /************************************
  *
  *  Show

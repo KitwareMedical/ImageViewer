@@ -18,6 +18,7 @@
 #include <liImageRegistrationConsoleBase.h>
 #include <FL/fl_ask.H>
 #include <itkMetaImageIOFactory.h>
+#include <itkRawImageIO.h>
 
 
 /************************************
@@ -33,6 +34,8 @@ liImageRegistrationConsoleBase
   m_FixedImageReader                  = FixedImageReaderType::New();
   
   m_MovingImageReader                 = MovingImageReaderType::New();
+  
+  m_MovingImageWriter                 = MovingImageWriterType::New();
   
   m_ResampleInputMovingImageFilter  = ResampleFilterType::New();
 
@@ -52,11 +55,14 @@ liImageRegistrationConsoleBase
   m_ImageRegistrationMethod->SetFixedImage(  m_FixedImageReader->GetOutput() );
   m_ImageRegistrationMethod->SetMovingImage( m_ResampleInputMovingImageFilter->GetOutput() );
 
+  m_MovingImageWriter->SetInput( m_ResampleInputMovingImageFilter->GetOutput() );
 
   m_SelectedMetric = meanSquares;
 
-  // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
+
+  itk::RawImageIOFactory< MovingImageType::PixelType, 
+                          MovingImageType::ImageDimension >::RegisterOneFactory();
 
   m_FixedImageIsLoaded  = false;
   m_MovingImageIsLoaded = false;
@@ -124,6 +130,40 @@ liImageRegistrationConsoleBase
   m_MovingImageIsLoaded = true;
 
 }
+
+ 
+/************************************
+ *
+ *  Save Moving Image
+ *
+ ***********************************/
+void
+liImageRegistrationConsoleBase 
+::SaveMovingImage( const char * filename )
+{
+  if( !filename )
+  {
+    return;
+  }
+
+
+/*
+  std::ofstream ofs( filename );
+  MovingImageType * movingImage = 
+      m_ResampleInputMovingImageFilter->GetOutput().GetPointer();
+  ofs.write( (char*)movingImage->GetBufferPointer(), 
+             movingImage->GetBufferedRegion().GetNumberOfPixels() 
+             * sizeof( MovingImageType::PixelType ) );
+            
+  ofs.close();
+  std::cout << "Image was writen to : " << filename << std::endl;
+*/
+
+  m_MovingImageWriter->SetFileName( filename );
+  m_MovingImageWriter->Write();
+
+}
+
 
 
  

@@ -40,6 +40,7 @@ public:
 
   virtual void LoadFixedImage(void);
   virtual void LoadMovingImage(void);
+  virtual void SaveMovingImage(void);
 
   virtual void Quit(void);
   virtual void ShowStatus(const char * text);
