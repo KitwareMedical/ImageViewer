@@ -67,7 +67,7 @@ SET(MatroxInput_GUI_SRCS
 )
 
 
-ADD_EXECUTABLE(MatroxInput MatroxInput_SRCS)
+ADD_EXECUTABLE(MatroxInput ${MatroxInput_SRCS})
 
 
 FLTK_WRAP_UI(MatroxInput ${MatroxInput_GUI_SRCS})
