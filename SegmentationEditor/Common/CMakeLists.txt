@@ -13,8 +13,8 @@ vtkPatchedImageReader.h
 vtkPatchedLookupTable.h
 vtkWSBoundingBoxManager.h
 vtkWSLookupTableManager.h
-vtkLookupTableEquivalencyHash
-vtkITKWatershedFilterAndWriter
+vtkLookupTableEquivalencyHash.cxx
+vtkITKWatershedFilterAndWriter.h
 )
 
 WRAP_EXCLUDE_FILES(
@@ -27,7 +27,9 @@ ADD_LIBRARY ( vtkWSTCommon WSTCommon_SRCS )
 # Link in with ITK
 INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Code/Numerics/ )
 INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Examples/vtkITK/Common/ )
+INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Examples/SegmentationEditor/Common/ )
 
+LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Examples/Examples/SegmentationEditor/Common )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Examples/Examples/vtkITK/Common )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Algorithms )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/BasicFilters )
