@@ -41,11 +41,10 @@ public:
 
   virtual ~FEMMeshApplicationBase();
   
-  virtual void CreateSphere(void);
-  virtual void CreateTriangle(void);
   virtual void CreateFEMMesh(void);
   virtual void DisplayFEMMesh(void);
-  virtual void DisplayAxes(void);
+  virtual void DisplayAxes(void) const;
+  virtual void ComputeArea(void) const;
 
 protected:
  

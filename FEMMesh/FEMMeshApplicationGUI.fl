@@ -11,14 +11,14 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
   } {
     Fl_Window controlWindow {
       label {Finite Elements Rendering} open
-      xywh {194 50 843 543} resizable
+      xywh {176 50 843 543} resizable
       code0 {\#include "FEMMeshApplicationBase.h"} visible
     } {
       Fl_Menu_Bar {} {open
         xywh {0 0 840 25}
       } {
         submenu {} {
-          label File open
+          label File
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -28,22 +28,12 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
           }
         }
         submenu {} {
-          label View open
+          label View
           xywh {0 0 100 20}
         } {
           menuitem {} {
-            label Sphere
-            callback {this->CreateSphere();}
-            xywh {0 0 100 20}
-          }
-          menuitem {} {
-            label Triangle
-            callback {this->CreateTriangle();}
-            xywh {0 0 100 20}
-          }
-          menuitem {} {
             label {Coordinate Axes}
-            callback {this->DisplayAxes();} selected
+            callback {this->DisplayAxes();}
             xywh {10 10 100 20}
           }
         }
@@ -55,6 +45,16 @@ class FEMMeshApplicationGUI {open : {public FEMMeshApplicationBase}
             label FEMMesh
             callback {this->CreateFEMMesh();}
             xywh {10 10 100 20}
+          }
+        }
+        submenu {} {
+          label Compute selected
+          xywh {5 5 100 20}
+        } {
+          menuitem {} {
+            label Area
+            callback {this->ComputeArea();}
+            xywh {0 0 100 20}
           }
         }
       }

@@ -38,11 +38,22 @@
 #include "itkFEMElementBar2D.h"
 
 
+// Headers for the Heat Conduction problem
 #include "itkFEMElementTriangleHeat.h"
 
 
 
 
+// Headers for the Area Computing problem
+#include "itkFEMElementTriangleAreaVisitor.h"
+#include "itkFEMElementQuadrilateralAreaVisitor.h"
+
+
+
+
+
+
+// Constructor
 FEMMeshApplicationBase
 ::FEMMeshApplicationBase()
 {
@@ -72,125 +83,12 @@ FEMMeshApplicationBase
 
 
 
-void
-FEMMeshApplicationBase
-::CreateSphere(void)
-{
-
-  // create sphere geometry
-  vtkSphereSource * sphere = vtkSphereSource::New();
-  sphere->SetRadius(1.0);
-  sphere->SetThetaResolution(18);
-  sphere->SetPhiResolution(18);
-
-  // map to graphics library
-  vtkPolyDataMapper * mapper = vtkPolyDataMapper::New();
-  mapper->SetInput( sphere->GetOutput()  );
-
-  // actor coordinates geometry, properties, transformation
-  vtkActor * actor = vtkActor::New();
-  actor->SetMapper( mapper );
-  actor->GetProperty()->SetColor(0,0,1); 
-  actor->GetProperty()->SetOpacity(0.2); 
-
-  // add the actor to the scene
-  m_Renderer->AddActor( actor );
-
-  sphere->Delete();
-  mapper->Delete();
-  actor->Delete();
-  
-
-}
-
-
 
 
 
 void
 FEMMeshApplicationBase
-::CreateTriangle(void)
-{
-
-
-  const float cos30 = sqrt( 3.0 ) / 2.0;
-  const float sin30 = 0.5;
-
-  // Z coordinate of the points
-  const float z0 = 0.0;
-  const float z1 = 0.0;
-  const float z2 = 0.0;
-
-  const unsigned int numberOfPoints = 3;
-
-  static float x[numberOfPoints][3]=
-  {
-    {  cos30, -sin30,  z0 }, 
-    {    0.0,    1.0,  z1 },
-    { -cos30, -sin30,  z2 } 
-  };
-
-
-  const unsigned int numberOfLines = 3;
-  const unsigned int pointsPerLine = 2;
-  static vtkIdType   linePoints[numberOfLines][pointsPerLine] = 
-  {
-    {0,1},
-    {1,2},
-    {2,0}
-  };
-  
-  // We'll create the building blocks of polydata including data attributes.
-  vtkPolyData   * triangle = vtkPolyData::New();
-  vtkPoints     * points   = vtkPoints::New();
-  vtkCellArray  * lines    = vtkCellArray::New();
-
-  // Load the point, cell, and data attributes.
-  for (unsigned int i=0; i<numberOfPoints; i++) 
-    {
-    points->InsertPoint(i,x[i]);
-    }
-
-
-  for (unsigned int l=0; l<numberOfLines; l++) 
-    {
-    lines->InsertNextCell(pointsPerLine,linePoints[l]);
-    }
-
-
-  // We now assign the pieces to the vtkPolyData.
-  triangle->SetPoints(points);
-  points->Delete();
-  triangle->SetLines(lines);
-
-
-  // map to graphics library
-  vtkPolyDataMapper * mapper = vtkPolyDataMapper::New();
-  mapper->SetInput( triangle  );
-
-  // actor coordinates geometry, properties, transformation
-  vtkActor * actor = vtkActor::New();
-  actor->SetMapper( mapper );
-  actor->GetProperty()->SetColor(0,0,1); // color blue
-
-  // add the actor to the scene
-  m_Renderer->AddActor( actor );
-
-
-  triangle->Delete();
-  mapper->Delete();
-  actor->Delete();
- 
-
-}
-
-
-
-
-
-void
-FEMMeshApplicationBase
-::DisplayAxes(void)
+::DisplayAxes(void) const
 {
     
   vtkAxes *axes = vtkAxes::New();
@@ -233,10 +131,11 @@ FEMMeshApplicationBase
   HeatMeshType::Pointer  heatMesh = HeatMeshType::New();
   m_HeatSolver->SetMesh( heatMesh );
 
-  typedef itk::fem::FEMElementTriangleHeat< HeatMeshType >  HeatElementType;
+  typedef itk::fem::FEMElementTriangle< HeatMeshType >        TriangleElementType;
+  typedef itk::fem::FEMElementQuadrilateral< HeatMeshType >   QuadrilateralElementType;
   
   const unsigned int nx = 10;
-  const unsigned int ny = 10;
+  const unsigned int ny = 15;
 
   const double dx = 1.5;
   const double dy = 1.0;
@@ -247,8 +146,8 @@ FEMMeshApplicationBase
   HeatPointsContainer::Pointer points = HeatPointsContainer::New();
   points->Reserve( ( nx + 1 ) * ( ny + 1 ) );
 
-  typedef HeatMeshType::PointIdentifier   HeatPointIdentifier;
-  HeatPointIdentifier pointId = itk::NumericTraits< HeatPointIdentifier >::Zero;
+  typedef HeatMeshType::PointIdentifier   PointIdentifierType;
+  PointIdentifierType pointId = itk::NumericTraits< PointIdentifierType >::Zero;
 
   typedef HeatMeshType::PointType::ValueType CoordinateRepresentationType;
 
@@ -268,39 +167,68 @@ FEMMeshApplicationBase
 
   heatMesh->SetPoints( points.GetPointer() );
 
-  // Create the points
+  // Create the ElementsContainer
   typedef HeatMeshType::ElementsContainer    HeatElementsContainer;
   HeatElementsContainer::Pointer elements  = HeatElementsContainer::New();
 
-  elements->Reserve( 2 * nx * ny );
+  typedef HeatMeshType::ElementIdentifier  ElementIdentifierType;
+  ElementIdentifierType elementId = 
+                  itk::NumericTraits< ElementIdentifierType >::Zero;
 
-  typedef HeatMeshType::ElementIdentifier  HeatElementIdentifier;
-  HeatElementIdentifier elementId = 
-                          itk::NumericTraits< HeatElementIdentifier >::Zero;
+  const unsigned int nyt = 10;          // number of rows with triangles
+  const unsigned int nyq = ny - nyt;    // number of rows with quadrilaterals
+  const unsigned int numberOfTriangularElements    = 2 * nx * nyt;
+  const unsigned int numberOfQuadrilateralElements =     nx * nyq;
 
-  for(unsigned int y=0; y<ny; y++) 
+  elements->Reserve(  numberOfTriangularElements    + 
+                      numberOfQuadrilateralElements   );
+
+  // Create the Triangular Elements
+  for(unsigned int y=0; y<nyt; y++) 
     {
     for(unsigned int x=0; x<nx; x++) 
       {
       const unsigned int pointsPerRow = nx+1;
-      const HeatPointIdentifier point0 =   x   + (   y   * pointsPerRow );
-      const HeatPointIdentifier point1 = (x+1) + (   y   * pointsPerRow );
-      const HeatPointIdentifier point2 =   x   + ( (y+1) * pointsPerRow );
-      const HeatPointIdentifier point3 = (x+1) + ( (y+1) * pointsPerRow );
+      const PointIdentifierType point0 =   x   + (   y   * pointsPerRow );
+      const PointIdentifierType point1 = (x+1) + (   y   * pointsPerRow );
+      const PointIdentifierType point2 =   x   + ( (y+1) * pointsPerRow );
+      const PointIdentifierType point3 = (x+1) + ( (y+1) * pointsPerRow );
 
-      HeatElementType::Pointer elementA = HeatElementType::New();
-      HeatElementType::BaseCellType & cellA = elementA->GetCell();
+      TriangleElementType::Pointer elementA = TriangleElementType::New();
+      TriangleElementType::BaseCellType & cellA = elementA->GetCell();
       cellA.SetPointId( 0, point0 );
       cellA.SetPointId( 1, point1 );
       cellA.SetPointId( 2, point3 );
       elements->SetElement( elementId++, elementA );
 
-      HeatElementType::Pointer elementB = HeatElementType::New();
-      HeatElementType::BaseCellType & cellB = elementB->GetCell();
+      TriangleElementType::Pointer elementB = TriangleElementType::New();
+      TriangleElementType::BaseCellType & cellB = elementB->GetCell();
       cellB.SetPointId( 0, point0 );
       cellB.SetPointId( 1, point3 );
       cellB.SetPointId( 2, point2 );
       elements->SetElement( elementId++, elementB );
+
+      }
+    }
+
+  // Create the Quadrilateral Elements
+  for(unsigned int y=nyt; y<nyq+nyt; y++) 
+    {
+    for(unsigned int x=0; x<nx; x++) 
+      {
+      const unsigned int pointsPerRow = nx+1;
+      const PointIdentifierType point0 =   x   + (   y   * pointsPerRow );
+      const PointIdentifierType point1 = (x+1) + (   y   * pointsPerRow );
+      const PointIdentifierType point2 =   x   + ( (y+1) * pointsPerRow );
+      const PointIdentifierType point3 = (x+1) + ( (y+1) * pointsPerRow );
+
+      QuadrilateralElementType::Pointer elementA = QuadrilateralElementType::New();
+      QuadrilateralElementType::BaseCellType & cellA = elementA->GetCell();
+      cellA.SetPointId( 0, point0 );
+      cellA.SetPointId( 1, point1 );
+      cellA.SetPointId( 3, point2 );  // defined in zigzag
+      cellA.SetPointId( 2, point3 );  // defined in zigzag
+      elements->SetElement( elementId++, elementA );
 
       }
     }
@@ -319,12 +247,14 @@ FEMMeshApplicationBase
 
 
 
+
 void
 FEMMeshApplicationBase
 ::DisplayFEMMesh(void)
 {
 
-  typedef itk::fem::FEMElementTriangle< HeatMeshType >  HeatElementType;
+  typedef itk::fem::FEMElementTriangle< HeatMeshType >       TriangleElementType;
+  typedef itk::fem::FEMElementQuadrilateral< HeatMeshType >  QuadrilateralElementType;
  
   typedef vtkItkElementMultiVisitor< HeatMeshType >     HeatVisitorType;
   
@@ -332,9 +262,16 @@ FEMMeshApplicationBase
   // Define the Cell Visitor Types
   typedef itk::fem::FEMElementVisitorImplementation<
                                           HeatMeshType,
-                                          HeatElementType,
+                                          TriangleElementType,
                                           HeatVisitorType  
                                                       >  HeatTriangleVisitorType;
+
+  typedef itk::fem::FEMElementVisitorImplementation<
+                                          HeatMeshType,
+                                          QuadrilateralElementType,
+                                          HeatVisitorType  
+                                                      >  HeatQuadrilateralVisitorType;
+
 
   // Get the number of points in the mesh
   HeatMeshType::Pointer heatMesh = m_HeatSolver->GetMesh();
@@ -373,32 +310,41 @@ FEMMeshApplicationBase
   
 
   // Now create the cells using the MulitVisitor
-  // 1. Create a MultiVisitor
+  // Create a MultiVisitor
   typedef HeatMeshType::ElementMultiVisitorType       HeatCellMultiVisitorType;
   HeatCellMultiVisitorType::Pointer multiVisitor    = HeatCellMultiVisitorType::New();
 
-  // 2. Create a LineCell visitor
-  HeatTriangleVisitorType::Pointer triangleVisitor = HeatTriangleVisitorType::New();
+  // Create a Element visitors
+  HeatTriangleVisitorType::Pointer triangleVisitor = 
+                                              HeatTriangleVisitorType::New();
+
+  HeatQuadrilateralVisitorType::Pointer quadrilateralVisitor =
+                                              HeatQuadrilateralVisitorType::New();
 
 
-  // 3. Set up the visitors
+
   int vtkCellCount = 0; // running counter for current cell being inserted into vtk
-  int numCells = heatMesh->GetNumberOfCells();
+  int numCells = heatMesh->GetNumberOfElements();
 
   int *types = new int[numCells]; // type array for vtk 
 
-  // create vtk cells and estimate the size
+  // create vtk cells and allocate memory for the cells.
   vtkCellArray* cells = vtkCellArray::New();
-  const unsigned int maximumExpectedNumberOfPointsPerCell = 3;
-  cells->EstimateSize( numCells, maximumExpectedNumberOfPointsPerCell );  
+  cells->Allocate( numCells );  
 
   // Set the TypeArray CellCount and CellArray for both visitors
   triangleVisitor->SetTypeArray( types );
   triangleVisitor->SetCellCounter( &vtkCellCount );
   triangleVisitor->SetCellArray( cells );
 
+  quadrilateralVisitor->SetTypeArray( types );
+  quadrilateralVisitor->SetCellCounter( &vtkCellCount );
+  quadrilateralVisitor->SetCellArray( cells );
+
+
   // add the visitors to the multivisitor
   multiVisitor->AddVisitor( triangleVisitor );
+  multiVisitor->AddVisitor( quadrilateralVisitor );
 
   // Now ask the mesh to accept the multivisitor which
   // will Call Visit for each cell in the mesh that matches the
@@ -433,4 +379,96 @@ FEMMeshApplicationBase
   actor->Delete();
   vgrid->Delete();
 
+  delete [] types;
+
 }
+
+
+
+
+
+
+
+
+//
+// Instantiate Visitors that compute Element's Area
+// and send them to visit all the Element in the Mesh.
+//
+void
+FEMMeshApplicationBase
+::ComputeArea(void) const
+{
+
+  // Types for Triangles
+  typedef itk::fem::FEMElementTriangle< 
+                            HeatMeshType >  TriangleElementType;
+ 
+  typedef itk::fem::FEMElementTriangleAreaVisitor< 
+                            HeatMeshType >  TriangleAreaVisitorType;
+
+  
+  typedef itk::fem::FEMElementVisitorImplementation<
+                                        HeatMeshType,
+                                        TriangleElementType,
+                                        TriangleAreaVisitorType  
+                                            >  TriangleAreaVisitorImplementationType;
+
+
+  TriangleAreaVisitorImplementationType::Pointer triangleVisitor = 
+                                  TriangleAreaVisitorImplementationType::New();
+
+
+
+  // Types for Quadrilaterals
+  typedef itk::fem::FEMElementQuadrilateral< 
+                            HeatMeshType >  QuadrilateralElementType;
+ 
+  typedef itk::fem::FEMElementQuadrilateralAreaVisitor< 
+                            HeatMeshType >  QuadrilateralAreaVisitorType;
+
+  
+  typedef itk::fem::FEMElementVisitorImplementation<
+                                        HeatMeshType,
+                                        QuadrilateralElementType,
+                                        QuadrilateralAreaVisitorType  
+                                            >  QuadrilateralAreaVisitorImplementationType;
+
+
+  QuadrilateralAreaVisitorImplementationType::Pointer quadrilateralVisitor = 
+                                  QuadrilateralAreaVisitorImplementationType::New();
+
+
+
+  HeatMeshType::Pointer heatMesh = m_HeatSolver->GetMesh();
+
+
+  triangleVisitor->SetMesh( heatMesh );
+  quadrilateralVisitor->SetMesh( heatMesh );
+
+
+  // Create a MultiVisitor
+  typedef HeatMeshType::ElementMultiVisitorType       MultiVisitorType;
+
+  MultiVisitorType::Pointer multiVisitor    = MultiVisitorType::New();
+
+
+  multiVisitor->AddVisitor( triangleVisitor );
+  multiVisitor->AddVisitor( quadrilateralVisitor );
+
+
+
+  // Now ask the mesh to accept the multivisitor which
+  // will Call Visit for each cell in the mesh that matches the
+  // cell types of the visitors added to the MultiVisitor
+  heatMesh->Accept( multiVisitor );
+  
+
+  // Print the subtotals by Element Type
+  std::cout << "Area of Triangles      = " << triangleVisitor->GetArea() << std::endl;
+  std::cout << "Area of Quadrilaterals = " << quadrilateralVisitor->GetArea() << std::endl;
+
+}
+
+
+
+
