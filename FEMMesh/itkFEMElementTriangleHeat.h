@@ -157,9 +157,7 @@ public:
 
 protected:
   /** Default constructor of an element */
-  FEMElementTriangleHeat() {
-      m_TermalConductivity = 1.0;
-  }
+  FEMElementTriangleHeat() {}
 
   /** Default destructor of an element */
   virtual ~FEMElementTriangleHeat() {}
@@ -172,7 +170,6 @@ private:
    */
   MaterialStandard::ConstPointer m_Material;
 
-  RealType      m_TermalConductivity;
 
 };
 
