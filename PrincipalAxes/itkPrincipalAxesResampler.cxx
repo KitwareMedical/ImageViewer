@@ -45,10 +45,12 @@ typedef ImageType::RegionType               ImageRegionType;
 typedef ImageType::SizeType                 ImageSizeType;
 typedef ImageType::AffineTransformType      AffineTransformType;
 
+typedef AffineTransformType::ScalarType     CoordRepType;
+
 typedef itk::Index<NDimensions>                    ImageIndexType;
 typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
 typedef itk::ImageMomentsCalculator<ImageType>  ImageMomentsCalculatorType;
-typedef itk::LinearInterpolateImageFunction<ImageType>  InterpolatorType;
+typedef itk::LinearInterpolateImageFunction<ImageType,CoordRepType>  InterpolatorType;
 typedef itk::Point<double, NDimensions>            PointType;
 
 
