@@ -159,8 +159,6 @@ void GlWindow::SaveImage(const char * filename)
   glReadBuffer(GL_FRONT);
   glReadPixels(0,0,wnx,wny,GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid *)image);
 
-  bool firstPixel = true;
-
   for(int y=wny-1; y>=0; y--)  
   {
     unsigned char *p = image + 4*y*wnx;
@@ -170,15 +168,7 @@ void GlWindow::SaveImage(const char * filename)
       const unsigned char green = *p++;
       const unsigned char blue  = *p++;
                                    p++; // alpha channel
-      if( firstPixel )       
-      {
-        of << green << blue;
-        firstPixel = false;
-      }
-      else 
-      {
-        of << red << green << blue;
-      }
+      of << red << green << blue;
     }
   }
 
