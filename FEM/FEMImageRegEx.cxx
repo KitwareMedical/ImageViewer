@@ -482,7 +482,6 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 {
 
   // for image output
-  FILE *fbin; 
   std::string exte=".raw";
   std::string fnum;
   m_FileCount++;
@@ -495,6 +494,8 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 
   std::string fullfname=(fname+fnum+exte);
 
+/*  
+  FILE *fbin; 
   ImgIterator wimIter( m_WarpedImage,m_Wregion );
 
   fbin=fopen(fullfname.c_str(),"wb");
@@ -507,15 +508,31 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
     fwrite(&t,sizeof(t),1,fbin); 
   }
   fclose(fbin);     
-
-/* had linking errors with this code 
-  typedef itk::RawImageWriter<ImageType> WriterType;
-  WriterType::Pointer writer = WriterType::New();
-  writer->SetFileTypeToBinary();
-  writer->SetInput( m_WarpedImage );
-  writer->SetFileName( fullfname.c_str() );
-  writer->Write();
 */
+ 
+  // Write a Raw File
+  typedef  itk::ImageFileWriter< ImageType >      FileSinkType;
+  typedef  itk::RawImageIO<ImageType::PixelType,ImageType::ImageDimension>   RawWriterType;
+
+  FileSinkType::Pointer   fileSink   = FileSinkType::New();
+  RawWriterType::Pointer  rawWriter  = RawWriterType::New();
+
+  fileSink->SetImageIO( rawWriter );
+  fileSink->SetFileName( fullfname.c_str() );
+  fileSink->SetInput( m_WarpedImage );
+
+  
+  try
+    {
+    fileSink->Write();
+    }
+  catch( itk::ExceptionObject & e )
+    {
+    std::cerr << "Exception caught during Raw file writing " << std::endl;
+    std::cerr << e << std::endl;
+    return;
+    }
+
   
 }
 
