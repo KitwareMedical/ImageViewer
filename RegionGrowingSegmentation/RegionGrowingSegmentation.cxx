@@ -183,7 +183,7 @@ RegionGrowingSegmentation
 ::LoadInputImage( void )
 {
 
-  const char * filename = fl_file_chooser("Input Image filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Input Image filename","*.*","");
   if( !filename )
   {
     return;

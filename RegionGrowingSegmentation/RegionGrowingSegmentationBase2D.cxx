@@ -18,6 +18,7 @@
 #include <RegionGrowingSegmentationBase2D.h>
 #include <FL/fl_ask.H>
 #include <itkRawImageIO.h>
+#include <itkMinimumMaximumImageCalculator.h>
 
 
 /************************************
@@ -104,6 +105,19 @@ RegionGrowingSegmentationBase2D
   m_ImageReader->Update();
   
   m_InputImageIsLoaded = true;
+
+  typedef  itk::MinimumMaximumImageCalculator< InternalImageType > MinimumMaximumCalculatorType;
+  MinimumMaximumCalculatorType::Pointer calculator = MinimumMaximumCalculatorType::New();
+
+  m_CastImageFilter->Update();
+  calculator->SetImage( m_CastImageFilter->GetOutput() );
+  calculator->ComputeMaximum();
+  const float maximumValue = calculator->GetMaximum();
+  const float factor = 1.1;
+  const float replacementValue = maximumValue * factor;
+
+  m_ConnectedThresholdImageFilter->SetReplaceValue( replacementValue );
+  m_ConfidenceConnectedImageFilter->SetReplaceValue( replacementValue );
 
 }
 

@@ -40,6 +40,15 @@
     m_ComposedImageViewer                       = InternalImageViewerType::New();
     m_InputImageViewer                          = InputImageViewerType::New();
 
+    m_CurvatureFlowImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_GradientAnisotropicDiffusionImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_CurvatureAnisotropicDiffusionImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_ConnectedThresholdImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_ConfidenceConnectedImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_FuzzyConnectedImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_HomogeneousImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_ComposedImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+    m_InputImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
 
     m_InputImageViewer->SetLabel("Input Image");
 
@@ -184,6 +193,7 @@
     m_ConnectedThresholdImageViewer->Hide();
     m_ConfidenceConnectedImageViewer->Hide();
     m_HomogeneousImageViewer->Hide();
+    m_ComposedImageViewer->Hide();
     consoleWindow->hide();
   }
 
@@ -203,7 +213,7 @@
   ::LoadInputImage( void )
   {
 
-    const char * filename = fl_file_chooser("Input Image filename","*.mh[da]","");
+    const char * filename = fl_file_chooser("Input Image filename","*.*","");
     if( !filename )
     {
       return;
