@@ -51,7 +51,7 @@ proc InitializeWindowLevelInterface {} {
    .wl.f1.window set $w
    .wl.f2.level set $l
 
-   .wl.f3.ch set 10
+   .wl.f3.ch set 2
 
    frame .ex
    button .ex.exit -text "Exit" -command "exit"
