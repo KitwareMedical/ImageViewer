@@ -19,7 +19,6 @@
 
 #include "RawVolumeReader.h"
 #include "itkImageRegionIterator.h"
-#include "itkImageMapper.h"
 #include "itkExceptionObject.h"
 
 #include "itkFastMarchingImageFilter.h"
