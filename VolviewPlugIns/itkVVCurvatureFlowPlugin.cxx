@@ -10,6 +10,7 @@
 #include "itkImportImageFilter.h"
 #include "itkCastImageFilter.h"
 #include "itkImageRegionConstIterator.h"
+#include "itkCommand.h"
 
 
 template <class TPixelType >
@@ -50,6 +51,9 @@ public:
                                 InternalImageType, 
                                 InternalImageType > CurvatureFlowFilterType;
 
+  // Command/Observer intended to update the progress
+  typedef itk::MemberCommand< FilterModule >  CommandType;
+
 
 public:
 
@@ -59,7 +63,11 @@ public:
     m_ImportFilter       = ImportFilterType::New();
     m_CastFilter         = CastFilterType::New();
     m_CurvaturFlowFilter = CurvatureFlowFilterType::New();
+    m_CommandObserver    = CommandType::New();
+    m_Info               = 0;
     }
+
+
 
   /**  Destructor */
   ~FilterModule() 
@@ -67,9 +75,38 @@ public:
     }
 
 
+
+
+  void 
+  ProgressUpdate( itk::Object * caller, const itk::EventObject & event )
+  {
+
+    if( typeid( itk::ProgressEvent ) != typeid( event ) )
+      {
+      return;
+      }
+
+    itk::ProcessObject::Pointer process =
+              dynamic_cast< itk::ProcessObject *>( caller );
+
+    const float progress = process->GetProgress();
+
+    m_Info->UpdateProgress(m_Info, progress, "Smoothing with Curvature Flow..."); 
+
+  }
+
+
+
+  /**  Set the Plugin Info structure */
+  void
+  SetPlugInfo( vtkVVPluginInfo * info )
+  {
+    m_Info = info;
+  }
+
   /**  ProcessData performs the actual filtering on the data */
   void 
-  ProcessData( vtkVVPluginInfo * info, const vtkVVProcessDataStruct * pds )
+  ProcessData( const vtkVVProcessDataStruct * pds )
   {
 
     SizeType   size;
@@ -80,9 +117,9 @@ public:
 
     for(unsigned int i=0; i<3; i++)
       {
-      size[i]     =  info->InputVolumeDimensions[i];
-      origin[i]   =  info->InputVolumeOrigin[i];
-      spacing[i]  =  info->InputVolumeSpacing[i];
+      size[i]     =  m_Info->InputVolumeDimensions[i];
+      origin[i]   =  m_Info->InputVolumeOrigin[i];
+      spacing[i]  =  m_Info->InputVolumeSpacing[i];
       start[i]    =  0;
       }
 
@@ -110,22 +147,18 @@ public:
 
     // Set the parameters on it
     m_CurvaturFlowFilter->SetNumberOfIterations(
-      atoi(info->GUIItems[0].CurrentValue));
+      atoi(m_Info->GUIItems[0].CurrentValue));
     m_CurvaturFlowFilter->SetTimeStep(
-      atof(info->GUIItems[1].CurrentValue));
+      atof(m_Info->GUIItems[1].CurrentValue));
     m_CurvaturFlowFilter->SetInput( m_CastFilter->GetOutput() );
+
+    m_CommandObserver->SetCallbackFunction( this, ProgressUpdate );
+
+    m_CurvaturFlowFilter->AddObserver( itk::ProgressEvent(), m_CommandObserver );
+
 
     m_CurvaturFlowFilter->Update();
 
-  /*
-    // setup progress
-    vtkCallbackCommand *cc = vtkCallbackCommand::New();
-    cc->SetCallback(vvCurvatureFlowProgress);
-    cc->SetClientData(inf);
-    ig->AddObserver(vtkCommand::ProgressEvent,cc);
-    cc->Delete();
-    
-  */
 
     typename InternalImageType::ConstPointer outputImage =
                                                m_CurvaturFlowFilter->GetOutput();
@@ -153,45 +186,43 @@ private:
 
     typename CurvatureFlowFilterType::Pointer m_CurvaturFlowFilter;
 
+    typename CommandType::Pointer      m_CommandObserver    ;
+
+    vtkVVPluginInfo   * m_Info;
 };
 
 
 
-extern "C" {  
-/*
-  void vvCurvatureFlowProgress(vtkObject *obj, unsigned long, void *inf, 
-                        void *vtkNotUsed(prog))
-  {
-    vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
-    vtkSource *src = vtkSource::SafeDownCast(obj);
-    if (src)
-      {
-      info->UpdateProgress(info,src->GetProgress(),"Smoothing with Curvature Flow..."); 
-      }
-  }
-*/
-}
 
 static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
+  try 
+  {
   switch( info->InputVolumeScalarType )
     {
     case VTK_UNSIGNED_CHAR:
       {
       FilterModule< unsigned char > module;
-      module.ProcessData( info, pds );
+      module.SetPlugInfo( info );
+      module.ProcessData( pds  );
       break; 
       }
     case VTK_UNSIGNED_SHORT:
       {
       FilterModule< unsigned short > module;
-      module.ProcessData( info, pds );
+      module.SetPlugInfo( info );
+      module.ProcessData( pds );
       break; 
       }
     }
-
+  }
+  catch( itk::ExceptionObject & except )
+  {
+    // What to do here ? Display a message ? call an error function ?
+    return -1;
+  }
   return 0;
 }
 
