@@ -14,9 +14,9 @@ See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
 #include <fstream>
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkImageRegionIterator.h"
-#include "itkImportPhysicalImageFilter.h"
+#include "itkImportImageFilter.h"
 #include "itkImageToImageRigidMutualInformationGradientDescentRegistration.h"
 #include "vnl/vnl_math.h"
 
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
     anExporter2->Export(rawTarget);
 
   // Create an ImportImageFilter filter for the reference and target
-  typedef itk::ImportPhysicalImageFilter<float, 3> ImportImageFilter;
+  typedef itk::ImportImageFilter<float, 3> ImportImageFilter;
 
   ImportImageFilter::Pointer importReference = ImportImageFilter::New();
   ImportImageFilter::Pointer importTarget    = ImportImageFilter::New();
@@ -348,7 +348,7 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.1 $  $Date: 2001-07-10 20:59:56 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.2 $  $Date: 2001-07-18 19:27:21 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
