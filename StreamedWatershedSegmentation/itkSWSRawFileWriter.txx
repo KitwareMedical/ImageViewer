@@ -32,7 +32,7 @@ void RawFileWriter<TOutputImage>::GenerateData()
   unsigned int i, num;
 
   // Get input
-  typename  TOutputImage::Pointer input = this->GetInput();
+  typename  TOutputImage::ConstPointer input = this->GetInput();
 
   num = 1;
   for (i = 0; i < ImageDimension; ++i)
