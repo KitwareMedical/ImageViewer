@@ -1,12 +1,43 @@
-/*
-12/99
-Class of vtk convenience functions painful to work out. 
-This class does nothing but save code in an easy place to find and use.
+/*=========================================================================
 
-	All functions return true on success and false on failure. Reasons for failure
-can be retrieved by calling Error(). Error() returns null if no error is present,
-so check before use. 
-*/
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    VTKVolRen.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+Copyright (c) 2001 Insight Consortium
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+ * The name of the Insight Consortium, nor the names of any consortium members,
+   nor of any contributors, may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+
+  * Modified source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS ``AS IS''
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+=========================================================================*/
 
 #ifndef _VTKVolRen_h
 #define _VTKVolRen_h
@@ -15,7 +46,16 @@ so check before use.
 #include "itkImage.h"
 #include "itkSimpleImageRegionIterator.h"
 
-
+/**
+ * \class VTKVolRen
+ * \brief Class of vtk convenience functions painful to work out.
+ *
+ * This class does nothing but save code in an easy place to find and use.
+ * All functions return true on success and false on failure. Reasons for failure
+ * can be retrieved by calling Error(). Error() returns null if no error is present,
+ * so check before use. 
+ *
+ **/
 template <class T>
 class VTKVolRen
   {
@@ -29,32 +69,32 @@ class VTKVolRen
   protected:
 
     char    mError[200];
-	  double  mStepSize;//for step volue rendering. Should be
-										  //set to the minimum of xstep, ystep, zstep. Default
-										  //is 0.08.
+    double  mStepSize;//for step volue rendering. Should be
+                      //set to the minimum of xstep, ystep, zstep. Default
+                      //is 0.08.
 
-	  double  mOpacity;	//for setting global opacity of a volume. Default 1.0.
-										  //Will not affect sites excluded by opacmask.
+    double  mOpacity;  //for setting global opacity of a volume. Default 1.0.
+                       //Will not affect sites excluded by opacmask.
 
-	  double  mIntensityMin;//voxels of opacask intensity will be set
-										      //to an opacity of 0. This value can therefore
-										      //be used as a ask to exclude soe areas of a dataset
-										      //if unwanted regions are set to opacask intensity.
-										      //If you don't want this feature, set opacval to
-										      //256 or -1 or soething out of range of uchar.
-										      //Default value is 0, which isn't a very useful
-										      //value for MIP projections anyway.
+    double  mIntensityMin;//voxels of opacask intensity will be set
+                          //to an opacity of 0. This value can therefore
+                          //be used as a ask to exclude soe areas of a dataset
+                          //if unwanted regions are set to opacask intensity.
+                          //If you don't want this feature, set opacval to
+                          //256 or -1 or soething out of range of uchar.
+                          //Default value is 0, which isn't a very useful
+                          //value for MIP projections anyway.
 
 
 
 
     ImagePointer     mImData;
-       
+   
     OverlayPointer   mMask;
 
-    bool                     mUseMask;
+    bool             mUseMask;
 
-	  vtkStructuredPoints		   *mVol;
+    vtkStructuredPoints      *mVol;
     vtkScalars               *mScalars;
     vtkVolume                *mActor;
     vtkPiecewiseFunction     *mColorFunc;
@@ -64,44 +104,44 @@ class VTKVolRen
         
   public:
 
-	  VTKVolRen();
+    VTKVolRen();
 
-	  char*   error(void);	
+    char*    error(void);
 
-    // Volume Rendering Stuff
-		//Greyscale volume for MIP volue rendering. Vtk's volume is buggy
-		//for unequal axial spacings. Volume will therefore
-		//create a volume with stepsizes = 1; the caller must scale 
-		//the actor by xstep, ystep, zstep. One also should not use
-		//vtkSetOrigin() with these volumes--that's buggy too. If you
-		//need an offset, you must provide it by SetUserMatrix().
+    //Volume Rendering Stuff
+    //Greyscale volume for MIP volue rendering. Vtk's volume is buggy
+    //for unequal axial spacings. Volume will therefore
+    //create a volume with stepsizes = 1; the caller must scale 
+    //the actor by xstep, ystep, zstep. One also should not use
+    //vtkSetOrigin() with these volumes--that's buggy too. If you
+    //need an offset, you must provide it by SetUserMatrix().
 
-	  bool    SetInputImage( ImageType * newIm );
+    bool    SetInputImage( ImageType * newIm );
 
     void    stepSize(double newStepSize);
     double  stepSize(void);
-        
+    
     void    opacity(double newOpacity);  //val should be between 0 and 1
-	  double  opacity(void);
+    double  opacity(void);
 
-	  void    intensityMin(double newIntensityMin);
+    void    intensityMin(double newIntensityMin);
     double  intensityMin(void);
 
     void    maskData(OverlayType::Pointer newMask);
     OverlayType::Pointer maskData(void);
 
-	  void	useMask(bool newUseMask);
-	  bool	useMask(void);
+    void  useMask(bool newUseMask);
+    bool  useMask(void);
 
     vtkVolume               * actor(void);
     vtkPiecewiseFunction    * colorFunc(void);
     vtkPiecewiseFunction    * opacityFunc(void);
     vtkVolumeProperty       * property(void);
     vtkVolumeRayCastMapper  * mapper(void);
-	  vtkStructuredPoints		  * volume(void);
+    vtkStructuredPoints     * volume(void);
     vtkScalars              * scalars(void);
 
-	  void update(void);
+    void update(void);
 
   };
 
@@ -113,9 +153,9 @@ VTKVolRen<T>::VTKVolRen()
   {
   *mError = '\0';
 
-	mStepSize = 0.8;				//volume rendering default stepsize
-	mOpacity = 0.8;					//global opacity of a volume
-	mIntensityMin = 0;				//voxels of this intensity will be set to 0 opacity
+  mStepSize = 0.8;        //volume rendering default stepsize
+  mOpacity = 0.8;         //global opacity of a volume
+  mIntensityMin = 0;      //voxels of this intensity will be set to 0 opacity
 
   mImData = ImageType::New();
   mVol = NULL;
@@ -128,21 +168,21 @@ VTKVolRen<T>::VTKVolRen()
   mColorFunc = vtkPiecewiseFunction::New();
   mColorFunc->AddSegment(0, 0.0, 255, 1.0);
 
-	/*  
-	//turns out the above smaller function is sufficient for greyscale; however
-	//save the following function for reference because you might want it later.
-	//It is good for color mapping.
-		
-	vtkColorTransferFunction* ctfun = vtkColorTransferFunction::New();
-		ctfun->AddRGBSegment(0, 0.0, 0.0, 0.0, 
+  /*  
+  //turns out the above smaller function is sufficient for greyscale; however
+  //save the following function for reference because you might want it later.
+  //It is good for color mapping.
+ 
+  vtkColorTransferFunction* ctfun = vtkColorTransferFunction::New();
+    ctfun->AddRGBSegment(0, 0.0, 0.0, 0.0, 
                              255, 1.0, 1.0, 1.0 );
-	*/
+  */
 
-	//All voxels of volIntensityMin intensity will have an opacity of 0.
-	//The opacity of remaining voxels is volOpacity 
+  //All voxels of volIntensityMin intensity will have an opacity of 0.
+  //The opacity of remaining voxels is volOpacity 
   mOpacityTransferFunc = vtkPiecewiseFunction::New();
   mOpacityTransferFunc->AddPoint(0, 0);
-	mOpacityTransferFunc->AddSegment(1, mOpacity, 255, mOpacity);
+  mOpacityTransferFunc->AddSegment(1, mOpacity, 255, mOpacity);
 
   mProperty = vtkVolumeProperty::New();
     //mProperty->SetColor(mColorFunc);
@@ -152,7 +192,7 @@ VTKVolRen<T>::VTKVolRen()
   vtkVolumeRayCastMIPFunction *rt = vtkVolumeRayCastMIPFunction::New();
   mMapper = vtkVolumeRayCastMapper::New();
   mMapper->SetVolumeRayCastFunction(rt);
-  mMapper->SetSampleDistance(mStepSize);		//class data
+  mMapper->SetSampleDistance(mStepSize);    //class data
 
   rt->Delete();
 
@@ -181,12 +221,12 @@ template <class T>
 void VTKVolRen<T>::opacity(double newOpacity)
   {
   if (newOpacity < 0)
-        newOpacity = 0;
-	if (newOpacity > 1)
-        newOpacity = 1.0;
-	mOpacity = newOpacity;
+    newOpacity = 0;
+  if (newOpacity > 1)
+    newOpacity = 1.0;
+  mOpacity = newOpacity;
 
-	intensityMin(mIntensityMin);
+  intensityMin(mIntensityMin);
   }
 
 template <class T>
@@ -206,21 +246,21 @@ void VTKVolRen<T>::intensityMin(double newIntensityMin)
   if(mIntensityMin*255 <= 0) 
     {
     mOpacityTransferFunc->AddPoint(0, 0); 
-	  mOpacityTransferFunc->AddSegment(1, mOpacity, 255, mOpacity);
+    mOpacityTransferFunc->AddSegment(1, mOpacity, 255, mOpacity);
     }
-	else
-    if(mIntensityMin*255 >= 255) 
-      {
-			mOpacityTransferFunc->AddSegment(0, mOpacity, 254, mOpacity);
-    	mOpacityTransferFunc->AddPoint(255, 0); 
-      }
-	else 
+  else
+  if(mIntensityMin*255 >= 255) 
     {
-		mOpacityTransferFunc->AddSegment(0, 0, mIntensityMin*255 - 1, 0);
-		mOpacityTransferFunc->AddSegment(mIntensityMin*255 + 1, mOpacity, 255, mOpacity);
+    mOpacityTransferFunc->AddSegment(0, mOpacity, 254, mOpacity);
+    mOpacityTransferFunc->AddPoint(255, 0); 
+    }
+  else 
+    {
+    mOpacityTransferFunc->AddSegment(0, 0, mIntensityMin*255 - 1, 0);
+    mOpacityTransferFunc->AddSegment(mIntensityMin*255 + 1, mOpacity, 255, mOpacity);
     mOpacityTransferFunc->AddPoint(mIntensityMin*255, 0); 
-	  }
-    
+    }
+
   mProperty->SetScalarOpacity(mOpacityTransferFunc);
   }
 
@@ -255,13 +295,13 @@ VTKVolRen<T>::maskData(void)
 template <class T>
 void VTKVolRen<T>::useMask(bool newUseMask)
   {
-	mUseMask = newUseMask;
+  mUseMask = newUseMask;
   }
 
 template <class T>
 bool VTKVolRen<T>::useMask(void)
   {
-	return mUseMask;
+  return mUseMask;
   }
 
 
@@ -282,7 +322,7 @@ bool VTKVolRen<T>::SetInputImage(ImageType * image)
     return false;
     }
 
-	mImData = newIm;
+  mImData = newIm;
     
   mVol = vtkStructuredPoints::New();
   mVol->SetDimensions(mImData->GetLargestPossibleRegion().GetSize()[0],
@@ -388,13 +428,13 @@ vtkVolumeRayCastMapper * VTKVolRen<T>::mapper(void)
 template <class T>
 vtkStructuredPoints * VTKVolRen<T>::volume(void)
   {
-	return mVol;
+  return mVol;
   }
 
 template <class T>
 vtkScalars * VTKVolRen<T>::scalars(void)
   {
-	return mScalars;
+  return mScalars;
   }
 
 template <class T>
@@ -403,10 +443,10 @@ void VTKVolRen<T>::update(void)
   if(mImData == NULL)
     return;
 
-	//create a structured points dataset with
-	//scalar values equal to the vals in the MRA. Set the
-	//spacing to 1,1,1. The caller must scale the actor by
-	//(xstep, ystep, zstep).
+  //create a structured points dataset with
+  //scalar values equal to the vals in the MRA. Set the
+  //spacing to 1,1,1. The caller must scale the actor by
+  //(xstep, ystep, zstep).
   
   itk::SimpleImageRegionIterator<ImageType> it(mImData,mImData->GetRequestedRegion());
   itk::SimpleImageRegionIterator<OverlayType> itMask(mMask,mMask->GetRequestedRegion());
@@ -426,25 +466,24 @@ void VTKVolRen<T>::update(void)
   
   //double imMin = mImData->dataMin();
   //double imRange = mImData->dataMax()-imMin;
-	
-  
+
   it = it.Begin();
   itMask = itMask.Begin();
   long i=0;
   
   if(mUseMask) 
-	  {
+    {
     int j = 0;
     //for (i = 0; i < (long)mImData->quantity(); i++)
     while (!it.IsAtEnd())
       {
       if(itMask.Get()>0)
         {
-    	  mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
-	 	    j++;
+        mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
+        j++;
         } 
       else
-    	  mScalars->InsertScalar(i, 0);
+        mScalars->InsertScalar(i, 0);
       i++; 
       ++it;
       ++itMask;
@@ -454,7 +493,7 @@ void VTKVolRen<T>::update(void)
     while (!it.IsAtEnd())
       {
       //for (i = 0; i < (long)mImData->quantity(); i++)
-		  mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
+      mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
       ++it;
       i++;
       }
@@ -466,7 +505,7 @@ void VTKVolRen<T>::update(void)
 
   mActor->SetMapper(mMapper);
   mActor->SetProperty(mProperty);
-	
+
   }
 
 #endif
