@@ -62,6 +62,7 @@ public:
   typedef typename Superclass::CellsContainer                CellsContainer;
   typedef typename Superclass::CellIdentifier                CellIdentifier;
   typedef typename Superclass::CellIdentifier                ElementIdentifier;
+  typedef typename Superclass::PointType                     PointType;
 
   /** Convenient enums obtained from TMeshTraits template parameter. */
   enum {PointDimension = MeshTraits::PointDimension};
