@@ -1,4 +1,4 @@
-FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.h H:/usr/local/fltk /usr/local/fltk )
+INCLUDE(${CMAKE_SOURCE_DIR}/CMake/Modules/FindFLTK.cmake)
 
 SOURCE_FILES(IView_SRCS
 IView
@@ -9,7 +9,7 @@ IViewGUIBase
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
-${FLTK_INCLUDE_DIR}
+${FLTK_INCLUDE_PATH}
 )
 
 ADD_LIBRARY(
