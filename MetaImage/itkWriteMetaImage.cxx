@@ -17,8 +17,6 @@
 #include "itkImage.h"
 #include <itkScalar.h>
 
-#include "MetaUtils.h"
-
 #define ITK_MANUAL_INSTANTIATION
 #include "itkWriteMetaImage.h"
 

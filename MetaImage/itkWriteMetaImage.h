@@ -17,6 +17,7 @@
 #define __itkWriteMetaImage_h
 
 #include "itkWriteImage.h"
+#include "MetaUtils.h"
 #include <vector>
 
 namespace itk
