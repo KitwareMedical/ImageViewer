@@ -352,7 +352,7 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
   }  
 }
 
-int ImageRegLMEx::WriteDisplacementField(unsigned int index)
+void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Outputs the displacement field for the index provided (0=x,1=y,2=z)
 {
   // Initialize the caster to the displacement field
@@ -368,28 +368,20 @@ int ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Set up the output filename
   char* outfile = new char[strlen(m_DisplacementsFileName+10)];
   sprintf(outfile, "%s%c.raw", m_DisplacementsFileName, 'x'+index);
-  std::cout << "Writing displacements (" << fieldCaster->GetIndex() << ") to " << outfile;
+  std::cout << "Writing displacements to " << outfile;
 
   // Write the single-index field to a file
-  //itk::ImageRegionIteratorWithIndex<FloatImageType> it( fieldImage, fieldImage->GetLargestPossibleRegion() );
-  //for (; !it.IsAtEnd(); ++it) { std::cout << it.Get() << "\t"; }
+  //   itk::ImageRegionIteratorWithIndex<FloatImageType> it( fieldImage, fieldImage->GetLargestPossibleRegion() );
+  //   for (; !it.IsAtEnd(); ++it) { std::cout << it.Get() << "\t"; }
 
-  try {
-    itk::RawImageIO<Float,2>::Pointer io = itk::RawImageIO<Float,2>::New();
-    itk::ImageFileWriter<FloatImageType>::Pointer writer = itk::ImageFileWriter<FloatImageType>::New();
-    writer->SetImageIO(io);
-    writer->SetFileName(outfile);
-    writer->SetInput(fieldImage);
-    writer->Write();
-  }
-  catch (::itk::ExceptionObject &err) {
-    std::cerr << "ITK exception detected: "  << err;
-    
-    return -1;
-  }
+  itk::RawImageIO<Float,2>::Pointer io = itk::RawImageIO<Float,2>::New();
+  itk::ImageFileWriter<FloatImageType>::Pointer writer = itk::ImageFileWriter<FloatImageType>::New();
+  writer->SetInput(fieldImage);
+  writer->SetImageIO(io);
+  writer->SetFileName(outfile);
+  writer->Write();
 
   std::cout << "...done" << std::endl;
-  return 0;
 }
 
 
@@ -619,7 +611,8 @@ void ImageRegLMEx::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
 void ImageRegLMEx::IterativeSolve(SolverType& mySolver)
 {
 
-  unsigned int minct=0,NumMins=2;
+  unsigned int minct=0,NumMins=0;
+  if (!m_DoMultiRes) NumMins=1;
   if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
   m_MinE=10.e9;
   Float LastE=9.e9 , deltE=1.e9, ETol=1.e-5;
@@ -696,23 +689,26 @@ void ImageRegLMEx::GetVectorField(SolverType& mySolver)
     unsigned int sfsz= (*elt)->GetNumberOfNodes();
     vnl_vector<double> shapeF( sfsz );
 // FIXME this code should work for arbitrary dimension
-    for (double r=-1.0; r <= 1.0; r=r+ 1./(1.0* (double)m_ImageSize[0] / (double)m_MeshResolution) )
-    for (double s=-1.0; s <= 1.0; s=s+ 1./(1.0* (double)m_ImageSize[1] / (double)m_MeshResolution) )
+    for (double r=-1.0; r <= 1.; r=r+ 1./(1.0* (double)m_ImageSize[0] / (double)m_MeshResolution) )
+    for (double s=-1.0; s <= 1.; s=s+ 1./(1.0* (double)m_ImageSize[1] / (double)m_MeshResolution) )
     {
       Pos[0]=r; 
       Pos[1]=s;
       VectorType disp; 
-      vnl_vector<double> ncoord(2); 
+ 
       Gpt=(*elt)->GetGlobalFromLocalCoordinates(Pos);
       Sol=(*elt)->InterpolateSolution(Pos,*(mySolver.GetLS()),mySolver.TotalSolutionIndex); // for total solution index
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        long int temp=(long int) (Gpt[ii]*(Float)m_ImageScaling[ii]+0.5);
+        Float x=Gpt[ii];
+        long int temp;
+        if (r == -1.0 || s==-1.0) temp=(long int) ((x)*(Float)m_ImageScaling[ii]+0.5);// BUG FIX ME
+        else temp=(long int) ((x+0.5)*(Float)m_ImageScaling[ii]);
         rindex[ii]=temp;
         disp[ii] =(Float) 1.0*Sol[ii]*((Float)m_ImageScaling[ii]);
-//        if (disp[ii] < -100.) std:: cout << " Num Error " << disp[ii] << std::endl;
+//        if (disp[ii] < -100.) std:: cout << " Num Error " << disp[ii] << std::endl; 
       }
-    //  std::cout << " ind " << rindex << " vec " << disp << std::endl;
+     
       m_Field->SetPixel(rindex, disp );
     }    
   }
@@ -945,14 +941,14 @@ int main()
 {
   itk::fem::ImageRegLMEx X; // Declare the registration class
 
-  //X.ConfigFileName="U://itk//Insight//Examples//FEM//FEMregLMparams.txt";
-  X.ConfigFileName="c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt";
+  X.ConfigFileName="U://itk//Insight//Examples//FEM//FEMregLMparams.txt";
+  //X.ConfigFileName="c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt";
   if (!X.ReadConfigFile(X.ConfigFileName,X.m_Solver)) { return -1; }
 
   X.RunRegistration();
   X.WriteWarpedImage(X.m_ResultsFileName);
 
-  //X.m_WriteDisplacementField=false;
+  X.m_WriteDisplacementField=false;
   if (X.m_WriteDisplacementField) {
     X.WriteDisplacementField(0);
     X.WriteDisplacementField(1);
