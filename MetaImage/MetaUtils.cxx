@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 
-using namespace std;
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -230,7 +229,7 @@ void * MET_Alloc(MET_Type _pType, int _x)
 	d = calloc(_x, MET_SizeOfType(_pType));
 	if(d == NULL)
 		{
-		cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType) << ", " << _x << ") returned NULL" << endl;
+		std::cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType) << ", " << _x << ") returned NULL" << std::endl;
 		MET_Error = true;
       return NULL;
 		}
@@ -246,9 +245,9 @@ void * MET_Alloc(MET_Type _pType, int _y, int _x)
 	d = calloc(_y*_x, MET_SizeOfType(_pType));
 	if(d == NULL)
 		{
-		cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType);
-      cout << ", " << _y << ", " << _x;
-      cout << ") returned NULL" << endl;
+		std::cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType);
+      std::cout << ", " << _y << ", " << _x;
+      std::cout << ") returned NULL" << std::endl;
 		MET_Error = true;
 		return NULL;
 		}
@@ -264,9 +263,9 @@ void * MET_Alloc(MET_Type _pType, int _z, int _y, int _x)
 	d = calloc(_z*_y*_x, MET_SizeOfType(_pType));
 	if(d == NULL)
 		{
-		cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType);
-		cout << ", " << _z << ", " << _y << ", " << _x;
-		cout << ") returned NULL" << endl;
+		std::cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType);
+		std::cout << ", " << _z << ", " << _y << ", " << _x;
+		std::cout << ") returned NULL" << std::endl;
 		MET_Error = true;
 		return NULL;
 		}
@@ -282,9 +281,9 @@ void * MET_Alloc(MET_Type _pType, int _s, int _z, int _y, int _x)
 	d = calloc(_s*_z*_y*_x, MET_SizeOfType(_pType));
 	if(d == NULL)
 		{
-		cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType);
-		cout << ", " << _s << ", " << _z << ", " << _y << ", " << _x;
-      cout << ") returned NULL" << endl;
+		std::cout << "ERROR: MI_Alloc(" << MET_TypeToString(_pType);
+		std::cout << ", " << _s << ", " << _z << ", " << _y << ", " << _x;
+      std::cout << ") returned NULL" << std::endl;
      	MET_Error = true;
 		return NULL;
 		}

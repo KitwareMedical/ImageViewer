@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <iostream>
-#include <string.h>
-#include <math.h>
+#include <cstring>
+#include <cmath>
 
-using namespace std;
 
 #include "MetaUtils.h"
 #include "MetaImageLib.h"
@@ -275,25 +274,25 @@ PrintMetaInfo()
    int i;
 
    if(strlen(iComment)>0)
-      cout << "Comment = " << iComment << endl;
+      std::cout << "Comment = " << iComment << std::endl;
 
    if(strlen(iDate)>0)
-      cout << "Date = " << iDate << endl;
+      std::cout << "Date = " << iDate << std::endl;
 
    if(iModality != MET_MOD_UNKNOWN)
-      cout << "Modality = " << MET_ModToString(iModality) << endl;
+      std::cout << "Modality = " << MET_ModToString(iModality) << std::endl;
 
-   cout << "NDims = " << iNDims << endl;
+   std::cout << "NDims = " << iNDims << std::endl;
 
-   cout << "DimSize = ";
+   std::cout << "DimSize = ";
    for(i=0; i<iNDims; i++)
-      cout << iDimSize[i] << " ";
-   cout << endl;
+      std::cout << iDimSize[i] << " ";
+   std::cout << std::endl;
    
    if(eMin != eMax)
       {
-      cout << "Min = " << eMin << endl;
-      cout << "Max = " << eMax << endl;
+      std::cout << "Min = " << eMin << std::endl;
+      std::cout << "Max = " << eMax << std::endl;
       }
 
    bool defined = false;
@@ -305,10 +304,10 @@ PrintMetaInfo()
          }
    if(defined)
       {
-      cout << "ImagePosition = ";
+      std::cout << "ImagePosition = ";
       for(i=0; i<3; i++)
-         cout << iPosition[i] << " ";
-      cout << endl;
+         std::cout << iPosition[i] << " ";
+      std::cout << std::endl;
       }
 
    defined = false;
@@ -320,10 +319,10 @@ PrintMetaInfo()
          }
    if(defined)
       {
-      cout << "ImageOrientation = ";
+      std::cout << "ImageOrientation = ";
       for(i=0; i<6; i++)
-         cout << iOrientation[i] << " ";
-      cout << endl;
+         std::cout << iOrientation[i] << " ";
+      std::cout << std::endl;
       }
 
    defined = false;
@@ -335,10 +334,10 @@ PrintMetaInfo()
          }
    if(defined)
       {
-      cout << "PatientPosition = ";
+      std::cout << "PatientPosition = ";
       for(i=0; i<3; i++)
-         cout << pPosition[i] << " ";
-      cout << endl;
+         std::cout << pPosition[i] << " ";
+      std::cout << std::endl;
       }
 
    defined = false;
@@ -350,10 +349,10 @@ PrintMetaInfo()
          }
    if(defined)
       {
-      cout << "SequenceID = ";
+      std::cout << "SequenceID = ";
       for(i=0; i<4; i++)
-         cout << seqID[i] << " ";
-      cout << endl;
+         std::cout << seqID[i] << " ";
+      std::cout << std::endl;
       }
 
    defined = false;
@@ -365,10 +364,10 @@ PrintMetaInfo()
          }
    if(defined)
       {
-      cout << "ElementSize = ";
+      std::cout << "ElementSize = ";
       for(i=0; i<iNDims; i++)
-         cout << eSize[i] << " ";
-      cout << endl;
+         std::cout << eSize[i] << " ";
+      std::cout << std::endl;
       }
 
    defined = false;
@@ -380,21 +379,21 @@ PrintMetaInfo()
          }
    if(defined)
       {
-      cout << "ElementSpacing = ";
+      std::cout << "ElementSpacing = ";
       for(i=0; i<iNDims; i++)
-         cout << eSpacing[i] << " ";
-      cout << endl;
+         std::cout << eSpacing[i] << " ";
+      std::cout << std::endl;
       }
 
-   cout << "ElementType = " << MET_TypeToString(eType) << endl;
+   std::cout << "ElementType = " << MET_TypeToString(eType) << std::endl;
 
    if(eNBits>0 && eNBits != MET_SizeOfType(eType)*8)
-      cout << "ElementNBits = " << eNBits << endl;
+      std::cout << "ElementNBits = " << eNBits << std::endl;
    
    if(eByteOrderMSB)
-      cout << "ElementByteOrderMSB = True" << endl;
+      std::cout << "ElementByteOrderMSB = True" << std::endl;
      else
-      cout << "ElementByteOrderMSB = False" << endl;
+      std::cout << "ElementByteOrderMSB = False" << std::endl;
    }
 
 //
@@ -410,7 +409,7 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
    iReadFilePointer = fopen(_fname, "r+b");
    if(iReadFilePointer == NULL)
       {
-      cout << "Error: Cannot open file: " << _fname << endl;
+      std::cout << "Error: Cannot open file: " << _fname << std::endl;
       strcpy(errorMessage, "Error: Cannot open file: ");
       strcat(errorMessage, _fname);
       return 0;
@@ -518,7 +517,7 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
    int lastC = c;
    if(!MF_Read(iReadFilePointer, c+1, f, c))
       {
-      cout << "Error parsing header file: _" << _fname << "_" << endl;
+      std::cout << "Error parsing header file: _" << _fname << "_" << std::endl;
       strcpy(errorMessage, "Error parsing header file: ");
       strcat(errorMessage, _fname);
       return false;
@@ -540,7 +539,7 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
    iNDims = (int)(f[++c].val[0]);
    if(c != nDimsC)
       {
-      cout << "MetaImageLib Error: field count" << endl;
+      std::cout << "MetaImageLib Error: field count" << std::endl;
       exit(0);
       }
 
@@ -638,7 +637,7 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
 
    if(c != lastC)
       {
-      cout << "MetaImageLib Error: last field" << endl;
+      std::cout << "MetaImageLib Error: last field" << std::endl;
       exit(0);
       }
 
@@ -694,7 +693,7 @@ GetFieldValue(const char *_fieldName, MF_ValType _fieldType, int _nDims)
 
    if(!MF_Read(iReadFilePointer, 2, f, 1))
       {
-      cout << "Error: Field does not exist: " << _fieldName << endl;
+      std::cout << "Error: Field does not exist: " << _fieldName << std::endl;
       strcpy(errorMessage, "Error: Field does not exist: ");
       strcat(errorMessage, _fieldName);
       return NULL;
@@ -729,7 +728,7 @@ ReadImageData()
       {
       strcpy(errorMessage, "Error: cannot open element data file: ");
       strcat(errorMessage, fName);
-      cout << "Error: Cannot open element data file: _" << fName << "_" << endl;
+      std::cout << "Error: Cannot open element data file: _" << fName << "_" << std::endl;
       return false;
       }
 
@@ -742,7 +741,7 @@ ReadImageData()
       if(n != iHeaderSize)
          {
          sprintf(errorMessage, "Error: read header %d but expected %d", n, iHeaderSize);
-         cout << "Error: read header " << n << " but expecting " << iHeaderSize << endl;
+         std::cout << "Error: read header " << n << " but expecting " << iHeaderSize << std::endl;
          return false;
          }
       }
@@ -751,7 +750,7 @@ ReadImageData()
    if(eData == NULL)
       {
       strcpy(errorMessage, "Error: Cannot allocate memory for image data");
-      cout << "Error: Cannot allocate memory for image data" << endl;
+      std::cout << "Error: Cannot allocate memory for image data" << std::endl;
       return false;
       }
    iFreeEData = true;
@@ -760,7 +759,7 @@ ReadImageData()
    if(n != iQuantity)
       {
       sprintf(errorMessage, "Error: read %i but expected %i", n, iQuantity);
-      cout << "Error: read " << n << " but expecting " << iQuantity << endl;
+      std::cout << "Error: read " << n << " but expecting " << iQuantity << std::endl;
       return false;
       }
 
@@ -1390,7 +1389,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
       {
       strcpy(errorMessage, "Error: cannot write to file: ");
       strcat(errorMessage, _headname);
-      cout << "Error: Cannot write to file: " << _headname << endl;
+      std::cout << "Error: Cannot write to file: " << _headname << std::endl;
       return false;
       }
    iWriteFileOpen = true;
@@ -1529,7 +1528,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
       {
       strcpy(errorMessage, "Error: Cannot write image data to file: ");
       strcat(errorMessage, _dataname);
-      cout << "Error: Cannot write image data to file: " << pName << endl;
+      std::cout << "Error: Cannot write image data to file: " << pName << std::endl;
       return false;
       }
    int n = fwrite(eData, eNBytes, iQuantity, fp);
@@ -1537,7 +1536,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
 
    if (!n)
      {
-     cout<<"Something went wrong in MetaImage::Save()";
+     std::cout<<"Something went wrong in MetaImage::Save()";
      strcpy(errorMessage, "Write failed");
      return 0;
      }

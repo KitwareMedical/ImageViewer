@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 
-using namespace std;
 
 #include "MetaFileLib.h"
 
@@ -23,7 +22,7 @@ bool MF_SkipToVal(FILE *fp)
 
 	if(feof(fp))
 		{
-		cout << "Incomplete file record definition" << endl;
+		std::cout << "Incomplete file record definition" << std::endl;
 		return false;
 		}
 	while((c == sepChar || c == ' ' || c == '\t') && !feof(fp))
@@ -31,7 +30,7 @@ bool MF_SkipToVal(FILE *fp)
 	fseek(fp, -1, SEEK_CUR);
 	if(feof(fp))
 		{
-		cout << "Incomplete file record definition" << endl;
+		std::cout << "Incomplete file record definition" << std::endl;
 		return false;
 		}
 	return true;
@@ -44,7 +43,7 @@ bool MF_IsComplete(int nFields, MF_FieldRec *field)
    for(i=0; i<nFields; i++)
 		if(field[i].required && !field[i].defined)
 			{
-			cout << field[i].name << " required and not defined." << endl;
+			std::cout << field[i].name << " required and not defined." << std::endl;
 			return false;
 			}
    return true;
@@ -94,7 +93,7 @@ bool MF_Read(FILE *fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopO
 				if(field[i].dependsOn >= 0)
 					if(!field[field[i].dependsOn].defined)
 						{
-						cout << field[i].name << " defined prior to defining " << field[field[i].dependsOn].name << endl;
+						std::cout << field[i].name << " defined prior to defining " << field[field[i].dependsOn].name << std::endl;
 						return false;
 						}
 				switch(field[i].type)
@@ -147,7 +146,7 @@ bool MF_Read(FILE *fp, int nFields, MF_FieldRec *field, int fTerm, bool fromTopO
 							{
                      if(field[i].length <= 0)
                         {
-							   cout << "Float and Int arrays must have dependency" << endl;
+							   std::cout << "Float and Int arrays must have dependency" << std::endl;
 						      return false;
                         }
 							for(j=0; j<field[i].length; j++)
@@ -193,7 +192,7 @@ bool MF_Write(FILE *fp, int nFields, MF_FieldRec *field, char _sepChar)
             fprintf(fp, "%s %c ", field[i].name, sepChar);
             if(field[i].dependsOn >= 0)
                if(field[i].length != field[field[i].dependsOn].val[0])
-                  cout << "Warning: length and dependsOn values not equal in write" << endl;
+                  std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
             for(j=0; j<field[i].length; j++)
                fprintf(fp, "%c", (char)field[i].val[j]);
             fprintf(fp, "\n");
@@ -202,7 +201,7 @@ bool MF_Write(FILE *fp, int nFields, MF_FieldRec *field, char _sepChar)
             fprintf(fp, "%s %c", field[i].name, sepChar);
             if(field[i].dependsOn >= 0)
                if(field[i].length != field[field[i].dependsOn].val[0])
-                  cout << "Warning: length and dependsOn values not equal in write" << endl;
+                  std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
             for(j=0; j<field[i].length; j++)
                fprintf(fp, " %d", (int)field[i].val[j]);
             fprintf(fp, "\n");
@@ -211,7 +210,7 @@ bool MF_Write(FILE *fp, int nFields, MF_FieldRec *field, char _sepChar)
             fprintf(fp, "%s %c", field[i].name, sepChar);
             if(field[i].dependsOn >= 0)
                if(field[i].length != field[field[i].dependsOn].val[0])
-                  cout << "Warning: length and dependsOn values not equal in write" << endl;
+                  std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
             for(j=0; j<field[i].length; j++)
                fprintf(fp, " %e", (float)field[i].val[j]);
             fprintf(fp, "\n");
