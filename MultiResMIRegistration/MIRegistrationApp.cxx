@@ -651,7 +651,7 @@ const char * basename )
   
   // write image out to pgm files
   char filename[256];
-  unsigned char buffer[50];
+  char buffer[50];
   unsigned long ncol = input->GetBufferedRegion().GetSize()[0];
   unsigned long nrow = input->GetBufferedRegion().GetSize()[1];
   unsigned long nslice = input->GetBufferedRegion().GetSize()[2];
