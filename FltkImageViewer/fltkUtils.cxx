@@ -274,7 +274,6 @@ int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buff
  */
 int ifuGetText(const char *mesg, char *buffer)
   {
-  int l = (int)strlen(mesg);
   Fl_Window window(520, 560);
   Fl_Multiline_Input input(10, 10, 500, 500, mesg);
   input.value(buffer);

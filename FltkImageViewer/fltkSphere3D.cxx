@@ -155,6 +155,10 @@ Sphere3D::DrawGeometry(void) const
     case triangles:
       gluQuadricDrawStyle( m_GluQuadric, GLU_FILL );
       break;
+    case none:
+      break;
+    case surfacepoints:
+      break;
     }
   gluQuadricNormals( m_GluQuadric, GL_SMOOTH );
   gluSphere( m_GluQuadric, 

@@ -503,6 +503,8 @@ Image2DViewerWindow
           case ClickMode:
             ClickEventHandling( p1x, p1y );
             break;
+          case ZoomingMode:
+            break;
           }
 
         }
@@ -531,6 +533,8 @@ Image2DViewerWindow
             SelectEventHandling( p1x, p1y );
             break;
           case ClickMode:
+            break;
+          case ZoomingMode:
             break;
           }
         }
