@@ -8,6 +8,9 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+SUBDIRS(MultiResMIRegistration)
+
+
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
@@ -19,6 +22,7 @@ IF(UNIX)
   -lm
   )
 ENDIF(UNIX)
+
 
 ADD_EXECUTABLE(itkPrincipalAxesResampler itkPrincipalAxesResampler)
 
