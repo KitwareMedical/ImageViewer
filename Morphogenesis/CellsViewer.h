@@ -24,18 +24,20 @@ public:
   typedef CellsViewerBase::SubstratesType        SubstratesType;
   typedef CellsViewerBase::SubstratesDrawersType SubstratesDrawersType;
 
-	CellsViewer();
+  CellsViewer();
 
-	virtual ~CellsViewer();
+  virtual ~CellsViewer();
 
-	virtual void Quit(void);
-	virtual void Run(void);
-	virtual void Stop(void);
-	virtual void Restart(void);
+  virtual void Quit(void);
+  virtual void Run(void);
+  virtual void Stop(void);
+  virtual void Restart(void);
   virtual void Show(void);
   virtual void ShowControls(void);
+  virtual void ShowSpecies(void);
   virtual void HideControls(void);
   virtual void LoadSubstrate(void);
+  virtual void AddSpeciesEggProducer( EggProducerFunction *, const char *); 
 
 private:
   

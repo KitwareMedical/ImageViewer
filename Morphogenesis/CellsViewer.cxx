@@ -33,7 +33,7 @@ CellsViewer
 void CellsViewer
 ::Quit(void)
 {
-	this->HideControls();
+  this->HideControls();
   substratesWindow->hide();
   CellsViewerBase::Quit();
 }
@@ -45,8 +45,8 @@ void CellsViewer
 void CellsViewer
 ::Show(void)
 {
-	this->ShowControls();
   this->ShowDisplay();
+  this->ShowControls();
 }
 
 
@@ -57,7 +57,32 @@ void CellsViewer
 void CellsViewer
 ::ShowControls(void)
 {
-	controlWindow->show();
+  controlWindow->show();
+}
+
+
+
+/**
+ *    Add the egg of a Species to the Browser
+ */ 
+void CellsViewer
+::AddSpeciesEggProducer( 
+              EggProducerFunction * producer,  
+              const char * name )
+{
+  CellsViewerBase::AddSpeciesEggProducer( producer );
+  speciesBrowser->add( name );
+}
+
+  
+
+/**
+ *    Show the Species Browser
+ */ 
+void CellsViewer
+::ShowSpecies(void)
+{
+  speciesWindow->show();
 }
 
 
@@ -69,7 +94,8 @@ void CellsViewer
 void CellsViewer
 ::HideControls(void)
 {
-	controlWindow->hide();
+  controlWindow->hide();
+  speciesWindow->hide();
 }
 
 
