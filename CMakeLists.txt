@@ -106,6 +106,14 @@ IF(HAS_METAIMAGE)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
+# Add an option to build or not build the Gradient Gaussian Filter example
+IF(HAS_METAIMAGE)
+  IF(HAS_FLTKIMAGEVIEWER)
+    SUBDIRS(GradientRecursiveGaussianFilter)
+  ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_METAIMAGE)
+
+
 
 # Add an option to build the Tcl Wrap for the stl string class
 IF( ITK_WRAP_TCL )
