@@ -344,6 +344,21 @@ CellularAggregate
 
 
 
+void
+CellularAggregate
+::Show(void)
+{
+}
+
+
+
+void
+CellularAggregate
+::Hide(void)
+{
+}
+
+
 
 
 void

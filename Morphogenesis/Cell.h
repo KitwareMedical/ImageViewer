@@ -27,7 +27,7 @@ class Cell
 
 public:
 
-  enum { Dimension = 2 };
+  enum { Dimension = 3 };
   enum { PointDimension = Dimension };
 
   typedef   itk::Vector<double,PointDimension>  VectorType;

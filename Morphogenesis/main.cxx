@@ -50,7 +50,6 @@ int main()
 
   colony->Add( first );
 
-  colony->Show();
 
   viewer->Show();
   

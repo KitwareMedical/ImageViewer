@@ -140,6 +140,8 @@ public:
 
   void DumpContent( std::ostream & os ) const;
 
+  virtual void Show(void);
+  virtual void Hide(void);
 
 protected:
 

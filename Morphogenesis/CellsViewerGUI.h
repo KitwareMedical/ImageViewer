@@ -19,6 +19,8 @@ private:
   static void cb_Load(Fl_Menu_*, void*);
   inline void cb_Quit_i(Fl_Menu_*, void*);
   static void cb_Quit(Fl_Menu_*, void*);
+  inline void cb_Cellular_i(Fl_Menu_*, void*);
+  static void cb_Cellular(Fl_Menu_*, void*);
   inline void cb_Image_i(Fl_Menu_*, void*);
   static void cb_Image(Fl_Menu_*, void*);
   inline void cb_3_i(Fl_Button*, void*);

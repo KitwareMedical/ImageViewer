@@ -9,7 +9,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
   Function {CellsViewerGUI()} {} {
     Fl_Window controlWindow {
-      label {Control Panel} open selected
+      label {Control Panel} open
       xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
@@ -36,9 +36,14 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
           xywh {0 0 100 20}
         } {
           menuitem {} {
+            label {Cellular Aggregate Controls}
+            callback {ShowCellularAggregateControls();} selected
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
             label {Image 3D controls}
             callback {ShowSlicerControls();}
-            xywh {0 0 100 20}
+            xywh {10 10 100 20}
           }
         }
       }

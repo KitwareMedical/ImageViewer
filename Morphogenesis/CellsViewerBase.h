@@ -48,7 +48,10 @@ public:
 	virtual void Restart(void);
   virtual void ShowDisplay(void);
   virtual void ShowSlicerControls(void);
+  virtual void ShowCellularAggregateControls(void);
   virtual void HideDisplay(void);
+  virtual void HideSlicerControls(void);
+  virtual void HideCellularAggregateControls(void);
   virtual void SetCellsAggregate( CellularAggregate * );
   virtual clock_t GetStartTime(void) const;
   virtual void LoadImage(void);
@@ -59,7 +62,7 @@ public:
 
 private:
   
-	bool      m_Stop;
+	bool                                m_Stop;
 
   fltkDisplayGlWindowGUI              m_Display;
 
@@ -69,7 +72,9 @@ private:
 
   SliceDrawerPointer                  m_SliceDrawer;
 
-  CellularAggregate::Pointer  m_Cells;
+  CellularAggregate::Pointer          m_Cells;
+
+  bool                                m_ImageIsLoaded;
 
   clock_t   m_StartTime;
 

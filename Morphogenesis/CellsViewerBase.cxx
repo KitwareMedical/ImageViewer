@@ -3,6 +3,7 @@
 
 #include "CellsViewerBase.h"
 #include <Fl/fl_file_chooser.H>
+#include <Fl/fl_ask.H>
 
 namespace bio {
 
@@ -14,8 +15,9 @@ CellsViewerBase
 ::CellsViewerBase()
 {
   m_Display.GetGlWindow()->SetBackground( 0.8, 0.8, 0.9 );
-  m_Stop = true;
-  m_StartTime = 0;
+  m_Stop =            true;
+  m_StartTime =          0;
+  m_ImageIsLoaded =  false;
 
   m_SliceDrawer = SliceDrawerType::New();
 
@@ -47,6 +49,7 @@ CellsViewerBase
 CellsViewerBase
 ::~CellsViewerBase()
 {
+
 	this->HideDisplay();
 }
 
@@ -59,6 +62,8 @@ void CellsViewerBase
 ::Quit(void)
 {
   this->Stop();
+  this->HideSlicerControls();
+  this->HideCellularAggregateControls();
 	this->HideDisplay();
 }
 
@@ -75,17 +80,6 @@ void CellsViewerBase
 
 
 /**
- *    Show the Slicer controls
- */ 
-void CellsViewerBase
-::ShowSlicerControls(void)
-{
-	m_SliceDrawer->Show();
-}
-
-
-
-/**
  *    Hide the Display
  */ 
 void CellsViewerBase
@@ -93,6 +87,54 @@ void CellsViewerBase
 {
 	m_Display.Hide();
 }
+
+
+
+
+/**
+ *    Show the Slicer controls
+ */ 
+void CellsViewerBase
+::ShowSlicerControls(void)
+{
+  if( m_ImageIsLoaded && Cell::Dimension==3 )
+    {
+  	m_SliceDrawer->Show();
+    }
+}
+
+
+
+/**
+ *    Hide the Slicer controls
+ */ 
+void CellsViewerBase
+::HideSlicerControls(void)
+{
+  m_SliceDrawer->Hide();
+}
+
+
+/**
+ *    Show the Cellular Aggregate controls
+ */ 
+void CellsViewerBase
+::ShowCellularAggregateControls(void)
+{
+  m_Cells->Show();
+}
+
+
+
+/**
+ *    Hide the Cellular Aggregate controls
+ */ 
+void CellsViewerBase
+::HideCellularAggregateControls(void)
+{
+  m_Cells->Hide();
+}
+
 
 
 
@@ -202,7 +244,26 @@ CellsViewerBase
     return;
   }
   m_ImageReader->SetFileName( filename );
-  m_ImageReader->Update();
+  try {
+    m_ImageReader->Update();
+  }
+  catch ( itk::ExceptionObject & ex )
+  {
+    m_ImageIsLoaded = false;
+    std::string message;
+    message = "Problem found while reading image ";
+    message += filename;
+    message += "\n";
+    message += ex.GetLocation();
+    message += "\n";
+    message += ex.GetDescription();
+    fl_alert( message.c_str() );
+    return;
+  }
+  
+  m_SliceDrawer->SetInput( m_Image.GetPointer() );
+
+  m_ImageIsLoaded = true;
 }
 
   

@@ -16,6 +16,13 @@ void CellsViewerGUI::cb_Quit(Fl_Menu_* o, void* v) {
   ((CellsViewerGUI*)(o->parent()->user_data()))->cb_Quit_i(o,v);
 }
 
+inline void CellsViewerGUI::cb_Cellular_i(Fl_Menu_*, void*) {
+  ShowCellularAggregateControls();
+}
+void CellsViewerGUI::cb_Cellular(Fl_Menu_* o, void* v) {
+  ((CellsViewerGUI*)(o->parent()->user_data()))->cb_Cellular_i(o,v);
+}
+
 inline void CellsViewerGUI::cb_Image_i(Fl_Menu_*, void*) {
   ShowSlicerControls();
 }
@@ -29,6 +36,7 @@ Fl_Menu_Item CellsViewerGUI::menu_[] = {
  {"Quit", 0x80071,  (Fl_Callback*)CellsViewerGUI::cb_Quit, 0, 0, 0, 0, 14, 0},
  {0},
  {"View", 0,  0, 0, 64, 0, 0, 14, 0},
+ {"Cellular Aggregate Controls", 0,  (Fl_Callback*)CellsViewerGUI::cb_Cellular, 0, 0, 0, 0, 14, 0},
  {"Image 3D controls", 0,  (Fl_Callback*)CellsViewerGUI::cb_Image, 0, 0, 0, 0, 14, 0},
  {0},
  {0}
