@@ -459,7 +459,7 @@ liImageRegistrationConsole
   AffineTransformType::OutputVectorType axis;
   AffineTransformType::ScalarType       angle;
   
-  angle   = angleRotation->value();
+  angle   = angleRotation->value() * atan( 1.0 ) / 45.0 ;
   axis[0] = xRotation->value();
   axis[1] = yRotation->value();
   axis[2] = zRotation->value();
