@@ -7,7 +7,7 @@ class fltkImage2DViewerGUI {open
   Function {fltkImage2DViewerGUI()} {open
   } {
     Fl_Window externalWindow {open
-      xywh {512 175 454 367} resizable visible
+      xywh {512 175 450 365} resizable visible
     } {
       Fl_Box imageViewer {
         xywh {0 0 450 365}
@@ -37,14 +37,16 @@ class fltkImage2DViewerGUI {open
   } {
     code {externalWindow->label( label );} {}
   }
-  Function {Show(void)} {return_type void
+  Function {Show(void)} {open return_type void
   } {
     code {externalWindow->show();
 imageViewer->show();} {}
   }
-  Function {Hide(void)} {return_type void
+  Function {Hide(void)} {open return_type void
   } {
-    code {externalWindow->hide();} {}
+    code {externalWindow->hide();
+intensityWindow->hide();} {selected
+    }
   }
   Function {Redraw(void)} {return_type void
   } {
@@ -53,6 +55,6 @@ Fl::check();} {}
   }
   Function {Update(void)} {return_type {virtual void}
   } {}
-  Function {RenderImage( double min, double max )} {open selected return_type {virtual void}
+  Function {RenderImage( double min, double max )} {open return_type {virtual void}
   } {}
 } 
