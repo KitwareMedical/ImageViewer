@@ -52,11 +52,11 @@ public:
 
   typename SegmentTreeType::Pointer GetInput()
     {      return static_cast<SegmentTreeType *>
-             (this->ProcessObject::GetInput(0).GetPointer());    }
+             (this->ProcessObject::GetInput(0));    }
   
   typename SegmentTreeType::Pointer GetOutput()
     {      return static_cast<SegmentTreeType *>
-             (this->ProcessObject::GetOutput(0).GetPointer());    }
+             (this->ProcessObject::GetOutput(0));    }
 
   /** Set the file name of the SegmentTree data to read.   */
   void SetFileName(const char *fn)

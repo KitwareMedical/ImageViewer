@@ -49,11 +49,11 @@ public:
 
   EquivalencyTableType::Pointer GetInput()
     { return static_cast<EquivalencyTableType *>
-              (this->ProcessObject::GetInput(0).GetPointer());    }
+              (this->ProcessObject::GetInput(0));    }
   
   EquivalencyTableType::Pointer GetOutput()
     { return static_cast<EquivalencyTableType *>
-             (this->ProcessObject::GetOutput(0).GetPointer());    }
+             (this->ProcessObject::GetOutput(0));    }
 
   /** Set the name of the file to read.  */
   void SetFileName(const char *fn)

@@ -51,11 +51,11 @@ public:
 
   typename SegmentTableType::Pointer GetInput()
     {      return static_cast<SegmentTableType *>
-             (this->ProcessObject::GetInput(0).GetPointer());    }
+             (this->ProcessObject::GetInput(0));    }
   
   typename SegmentTableType::Pointer GetOutput()
     {      return static_cast<SegmentTableType *>
-             (this->ProcessObject::GetOutput(0).GetPointer());    }
+             (this->ProcessObject::GetOutput(0));    }
 
   struct record_t
   {

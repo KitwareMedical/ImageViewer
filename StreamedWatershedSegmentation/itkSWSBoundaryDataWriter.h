@@ -51,11 +51,11 @@ public:
 
   typename BoundaryDataType::Pointer GetInput()
     {      return static_cast<BoundaryDataType *>
-             (this->ProcessObject::GetInput(0).GetPointer());    }
+             (this->ProcessObject::GetInput(0));    }
 
   typename BoundaryDataType::Pointer GetOutput()
     {      return static_cast<BoundaryDataType *>
-             (this->ProcessObject::GetOutput(0).GetPointer());    }
+             (this->ProcessObject::GetOutput(0));    }
 
   void SetFileName(const char *fn)
     {

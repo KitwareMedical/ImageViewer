@@ -53,7 +53,7 @@ public:
     {   this->ProcessObject::SetNthOutput(0, input); }
   typename BoundaryDataType::Pointer GetOutput()
     {      return static_cast<BoundaryDataType *>
-             (this->ProcessObject::GetOutput(0).GetPointer());    }
+             (this->ProcessObject::GetOutput(0));    }
 
   /** Set the name of the file to read.   */
   void SetFileName(const char *fn)

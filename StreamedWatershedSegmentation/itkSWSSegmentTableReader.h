@@ -51,7 +51,7 @@ public:
 
   typename SegmentTableType::Pointer GetOutput()
     { return static_cast<SegmentTableType *>
-             (this->ProcessObject::GetOutput(0).GetPointer());    }
+             (this->ProcessObject::GetOutput(0));    }
 
   typedef typename SegmentTableWriter::record_t record_t;
   typedef typename SegmentTableWriter::edge_pair_t edge_pair_t;
