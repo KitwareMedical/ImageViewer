@@ -56,6 +56,12 @@ windowing
  */
 template <class imType>
 class SliceView {
+public:
+  // some typedefs
+  typedef Image<imType,3>                    ImageType;
+  typedef typename ImageType::Pointer        ImagePointer;
+  typedef typename ImageType::ConstPointer   ImageConstPointer;
+
 protected:
   void   (* cSliceNumCallBack)(void);
   void    * cSliceNumArg;
@@ -63,7 +69,7 @@ protected:
 
   bool                     cValidImData;
   bool                     cViewImData;
-  Image<imType,3>::Pointer cImData;
+  ImagePointer             cImData;
   void                    (* cViewImDataCallBack)(void);
   void                     * cViewImDataArg;
   void                    (* cViewImDataArgCallBack)(void 
@@ -130,17 +136,17 @@ winOrientationArg);
   unsigned int     cWinSizeY;
   unsigned int     cWinDataSizeX;
   unsigned int     cWinDataSizeY;
-  unsigned int	 inDataSizeX;
-  unsigned int	 inDataSizeY;
+  unsigned int     inDataSizeX;
+  unsigned int     inDataSizeY;
   unsigned char    *cWinImData;
   unsigned short   *cWinZBuffer;
 
-	unsigned long *cDimSize;
-	imType cDataMax, cDataMin;
+  unsigned long *cDimSize;
+  imType cDataMax, cDataMin;
 
-	    /* list of points clicked and maximum no. of points to be stored*/
+      /* list of points clicked and maximum no. of points to be stored*/
         std::list< ClickPoint * > cClickedPoints;
-	    unsigned int maxClickPoints;
+      unsigned int maxClickPoints;
 
         int cX, cY, cW, cH;
 
@@ -151,16 +157,14 @@ public:
   virtual ~SliceView(void);
 
   /*! Specify the 3D image to view in slices - pure virtual function*/
-  virtual void  SetInputImage(Image<imType,3>::Pointer 
-newImData) = 0;
+  virtual void  SetInputImage( ImageType * newImData ) = 0;
 
   /*! Return a pointer to the image data */
   
-  const Image<imType,3>::ConstPointer & GetInputImage(void) 
-const;
+  const ImageConstPointer & GetInputImage(void) const;
   
   /*! Dammit, give me a pointer to the image that's not const! */
-  Image<imType,3>::Pointer GetInputImage(void);
+  ImagePointer GetInputImage(void);
   
   /*! Return a pointer to the pixels being displayed */
   unsigned char *         winImData(void);
@@ -173,7 +177,7 @@ const;
 
   unsigned int    winDataSizeY(void);
   /*! Turn on/off the viewing of the image */
-  void	        viewImData(bool newViewImData);
+  void          viewImData(bool newViewImData);
   /*! Status of the image - viewed / not viewed */
   bool            viewImData(void);
   /*! Called when viewing of the image is toggled */
@@ -221,7 +225,7 @@ void * newWinCetnerArg);
   /*! Return the total number of slices */
   unsigned int    numSlices(void);
   /*! Specify the slice to view */
-  void 	        sliceNum(unsigned int newSliceNum);
+  void           sliceNum(unsigned int newSliceNum);
   /*! What slice is being viewed */
   unsigned int    sliceNum(void);
   /*! Called when new slice is viewed */
@@ -260,7 +264,7 @@ newX, float newY, float newZ, float newV));
   void         maxClickedPointsStored(unsigned int i);
   unsigned int maxClickedPointsStored();
 
-  void	clearClickedPointsStored(){cClickedPoints.clear();}
+  void  clearClickedPointsStored(){cClickedPoints.clear();}
 
   void        clickUser(float newX, float newY, float newZ);
   float       clickUserX(void);
@@ -411,7 +415,7 @@ SliceView<imType>::~SliceView()
 //
 //
 template <class imType>
-const Image<imType,3>::ConstPointer & 
+const SliceView<imType>::ImageConstPointer &
 SliceView<imType>
 ::GetInputImage(void) const
 {
@@ -422,9 +426,11 @@ SliceView<imType>
 
 
 template <class imType>
-Image<imType,3>::Pointer SliceView<imType>::GetInputImage(void)
+SliceView<imType>::ImagePointer 
+SliceView<imType>
+::GetInputImage(void)
 {
-	return (Image<imType,3>::Pointer)cImData;
+  return (ImagePointer)cImData;
 }
 
 
@@ -435,7 +441,7 @@ Image<imType,3>::Pointer SliceView<imType>::GetInputImage(void)
 template <class imType>
 unsigned char* SliceView<imType>::winImData(void)
 {
-	return cWinImData;
+  return cWinImData;
 }
 
 
@@ -446,7 +452,7 @@ template <class imType>
 unsigned int SliceView<imType>::winDataSizeX(void)
 {
 
-	return cWinDataSizeX;
+  return cWinDataSizeX;
 
 }
 
@@ -458,7 +464,7 @@ unsigned int SliceView<imType>::winDataSizeY(void)
 
 {
 
-	return cWinDataSizeY;
+  return cWinDataSizeY;
 
 }
 
@@ -574,10 +580,14 @@ bool SliceView<imType>::flipZ()
 template <class imType>
 unsigned int SliceView<imType>::numSlices(void)
 {
-Image<imType,3>::RegionType cregion = 
-cImData->GetLargestPossibleRegion();
-Image<imType,3>::SizeType   size   = cregion.GetSize();
+
+typename ImageType::RegionType cregion = 
+                      cImData->GetLargestPossibleRegion();
+
+typename ImageType::SizeType   size   = cregion.GetSize();
+
 unsigned long *s=new unsigned long[3];
+
 s[0]=size[0];
 s[1]=size[1];
 s[2]=size[2];
@@ -700,7 +710,8 @@ void SliceView<imType>::clickSelect(float newX, float newY, float newZ)
     if(cClickSelectZ >= cDimSize[2])
         cClickSelectZ = cDimSize[2]-1;
 
-	itk::Image<imType,3>::IndexType ind;
+    typename ImageType::IndexType ind;
+
     ind[0] = (unsigned long)cClickSelectX;
     ind[1] = (unsigned long)cClickSelectY;
     ind[2] = (unsigned long)cClickSelectZ;
@@ -709,10 +720,10 @@ void SliceView<imType>::clickSelect(float newX, float newY, float newZ)
     /*if length of list is equal to max, remove the earliest point 
 stored */
     if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
-	      cClickedPoints.pop_back();
+        cClickedPoints.pop_back();
 
     cClickedPoints.push_front(new ClickPoint(cClickSelectX,
-				cClickSelectY, cClickSelectZ, tf));
+        cClickSelectY, cClickSelectZ, tf));
 
     if(cClickSelectCallBack != NULL)
         cClickSelectCallBack(cClickSelectX, cClickSelectY, 
@@ -774,7 +785,7 @@ template <class imType>
 ClickPoint* SliceView<imType>::getClickedPoint(unsigned int index)
 {
     if(index >= cClickedPoints.size())
-	return ((ClickPoint*)0);
+  return ((ClickPoint*)0);
     std::list<ClickPoint*>::const_iterator j = cClickedPoints.begin();
     for(int i=0;i<static_cast<int>(index);i++,j++);
     return(*j);
@@ -787,7 +798,7 @@ template <class imType>
 float* SliceView<imType>::getClickedPointCoordinates(unsigned int index)
 {
     if(index>= cClickedPoints.size())
-	return (float*)0;
+  return (float*)0;
     float *p = new float[3];
     std::list<ClickPoint*>::const_iterator j = cClickedPoints.begin();
     for(int i=0;i<index;i++,j++);
@@ -845,7 +856,8 @@ void SliceView<imType>::clickUser(float newX, float newY, float newZ)
     if(cClickUserZ>=cDimSize[2])
         cClickUserZ = cDimSize[2]-1;
 
-    Image<imType,3>::IndexType ind;
+    typename ImageType::IndexType ind;
+
     ind[0] = (unsigned long)cClickUserX;
     ind[1] = (unsigned long)cClickUserY;
     ind[2] = (unsigned long)cClickUserZ;
@@ -1220,7 +1232,7 @@ void SliceView<imType>::winShift(int newWinShiftUp, int
 newWinShiftRight)
 {
     winCenter(cWinCenter[cWinOrder[0]]+newWinShiftRight,
-	      cWinCenter[cWinOrder[1]]+newWinShiftUp);
+        cWinCenter[cWinOrder[1]]+newWinShiftUp);
 }
 
 
@@ -1532,37 +1544,37 @@ cDimSize[cWinOrder[1]]/2);
             return 1;
             break;
         case 'l':
-			switch(cImageMode) {
-				default:
-				case IMG_VAL:
-					imageMode(IMG_LOG);
+      switch(cImageMode) {
+        default:
+        case IMG_VAL:
+          imageMode(IMG_LOG);
                     update();
-					break;
-				case IMG_LOG:
-					imageMode(IMG_DX);
+          break;
+        case IMG_LOG:
+          imageMode(IMG_DX);
                     update();
-					break;
-				case IMG_DX:
-					imageMode(IMG_DY);
+          break;
+        case IMG_DX:
+          imageMode(IMG_DY);
                     update();
-					break;
-				case IMG_DY:
-					imageMode(IMG_DZ);
+          break;
+        case IMG_DY:
+          imageMode(IMG_DZ);
                     update();
-					break;
-				case IMG_DZ:
-					imageMode(IMG_H);
+          break;
+        case IMG_DZ:
+          imageMode(IMG_H);
                     update();
-					break;
-				case IMG_H:
-					imageMode(IMG_MIP);
+          break;
+        case IMG_H:
+          imageMode(IMG_MIP);
                     update();
-					break;
-				case IMG_MIP:
-					imageMode(IMG_VAL);
+          break;
+        case IMG_MIP:
+          imageMode(IMG_VAL);
                     update();
-					break;
-			}
+          break;
+      }
             return 1;
             break;
         case 'q':

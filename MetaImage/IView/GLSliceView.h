@@ -43,11 +43,11 @@ definition */
   GLSliceView(int x, int y, int w, int h, const char *l);
 
   /*! Specify the 3D image to view slice by slice */
-  void SetInputImage(ImageType::Pointer newImData);
+  void SetInputImage(ImageType * newImData);
   const ImageType::Pointer & GetInputImage(void) const;
 
   /*! Specify the 3D image to view as an overlay */
-  void SetInputOverlay(OverlayType::Pointer newOverlayData);
+  void SetInputOverlay(OverlayType * newOverlayData);
 
   /*! Return a pointer to the overlay data */
   const OverlayType::Pointer & GetInputOverlay(void) const;
@@ -105,7 +105,7 @@ SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::
-SetInputImage(ImageType::Pointer newImData)
+SetInputImage(ImageType * newImData)
 {
  
   if( cValidOverlayData )
@@ -263,17 +263,20 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 //
 template <class ImagePixelType, class OverlayPixelType>
 void 
-GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay( 
-												OverlayType::Pointer newOverlayData)
-{ImageType::RegionType newoverlay_region = 
-newOverlayData->GetLargestPossibleRegion();
- ImageType::SizeType   newoverlay_size   = newoverlay_region.GetSize();
- ImageType::RegionType cImData_region = 
-cImData->GetLargestPossibleRegion();
- ImageType::SizeType   cImData_size   = cImData_region.GetSize();
-    if( !cValidImData ||
-         newoverlay_size[2]==cImData_size[2] 
-		)
+GLSliceView<ImagePixelType, OverlayPixelType>
+::SetInputOverlay( OverlayType * newOverlayData )
+{
+  ImageType::RegionType newoverlay_region = 
+                  newOverlayData->GetLargestPossibleRegion();
+
+  ImageType::SizeType   newoverlay_size   = newoverlay_region.GetSize();
+
+  ImageType::RegionType cImData_region = 
+                                    cImData->GetLargestPossibleRegion();
+
+  ImageType::SizeType   cImData_size   = cImData_region.GetSize();
+
+  if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
     {
         cOverlayData = newOverlayData;
         
@@ -286,8 +289,7 @@ cImData->GetLargestPossibleRegion();
           delete [] cWinOverlayData;
         }
 
-        const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY 
-* 4;
+        const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY * 4;
         cWinOverlayData = new unsigned char[ bufferSize ];
         update();
     }
