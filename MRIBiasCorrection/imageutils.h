@@ -23,11 +23,12 @@ PURPOSE.  See the above copyright notices for more information.
 #include "itkImageFileWriter.h"
 #include <itkImageRegionIterator.h>
 #include <itkImageRegionIteratorWithIndex.h>
+#include "itkNumericTraits.h"
 
 #include "myutils.h"
 
 typedef itk::Image<float, 3> ImageType ;
-typedef itk::Image<short, 3> MaskType ;
+typedef itk::Image<unsigned char, 3> MaskType ;
 typedef ImageType::Pointer ImagePointer ;
 typedef MaskType::Pointer MaskPointer ;
 typedef itk::ImageFileReader< ImageType > ImageReaderType ;
@@ -87,10 +88,10 @@ void logImage(ImagePointer source, ImagePointer target)
       pixel = s_iter.Get() ;
       
       log_pixel =  log( pixel + 1 ) ;
-      if (pixel < 0)
-        t_iter.Set( 0.0 ) ;
+      if (pixel < itk::NumericTraits< ImageType::PixelType>::Zero)
+        t_iter.Set( itk::NumericTraits< ImageType::PixelType >::Zero ) ;
       else
-        t_iter.Set( log_pixel ) ;
+        t_iter.Set( (ImageType::PixelType) log_pixel ) ;
 
       ++s_iter ;
       ++t_iter ;
