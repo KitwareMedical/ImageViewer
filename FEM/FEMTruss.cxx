@@ -21,6 +21,7 @@
 #endif
 
 #include "itkFEM.h"
+#include "itkFEMItpackLinearSystemWrapper.h"
 #include <iostream>
 
 using namespace itk::fem;
@@ -48,6 +49,13 @@ int main( int argc, char *argv[] ) {
    * effectively defines one FEM problem.
    */
   Solver S;
+
+  /*
+   * Set the linear system wrapper object that we wish to use.
+   */
+  ItpackLinearSystemWrapper itpack;
+  itpack.SetMaximumNonZeroValuesInMatrix(1000);
+  S.SetLinearSystemWrapper(&itpack);
 
 
 
