@@ -66,7 +66,6 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 ITKIO 
-MetaIO
 VXLNumerics
 FltkImageViewer
 ${FLTK_LIBRARY}

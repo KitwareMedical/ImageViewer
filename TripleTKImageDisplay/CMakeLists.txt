@@ -52,7 +52,6 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 VXLNumerics
-MetaIO
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
