@@ -94,10 +94,7 @@ unsigned int level )
   this->Superclass::OneLevelRegistration( level );
 
 }
-
-
-/**
- * 
+ 
 
 /**
  * PrintSelf method
