@@ -80,6 +80,8 @@ public:
   virtual void ShowLaplacian(void);
   virtual void ShowSmoothed(void);
   virtual void ShowGradientModulus(void);
+  virtual void ShowMaxEigenValue(void);
+  virtual void ShowMinEigenValue(void);
   virtual void Execute(void);
 
 private:
@@ -100,6 +102,9 @@ private:
   ImageViewerPointer           m_Viewer_Laplacian;
 
   ImageViewerPointer           m_Viewer_Gradient_Modulus;
+
+  ImageViewerPointer           m_Viewer_Max_EigenValue;
+  ImageViewerPointer           m_Viewer_Min_EigenValue;
 
 };
 

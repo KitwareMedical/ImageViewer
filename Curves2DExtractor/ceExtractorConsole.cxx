@@ -77,6 +77,9 @@ ceExtractorConsole
 
   m_Viewer_Gradient_Modulus = ImageViewerType::New();
 
+  m_Viewer_Min_EigenValue = ImageViewerType::New();
+  m_Viewer_Max_EigenValue = ImageViewerType::New();
+
   m_InputViewer->SetLabel( "Input Image" );
 
   m_Viewer_H1x->SetLabel( "Gradient X" );
@@ -93,6 +96,10 @@ ceExtractorConsole
   
   m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
+  m_Viewer_Max_EigenValue->SetLabel( "Max Eigen Value" );
+  m_Viewer_Min_EigenValue->SetLabel( "Min Eigen Value" );
+
+
   fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
                             progressSlider->GetRedrawCommand().GetPointer();
 
@@ -106,6 +113,8 @@ ceExtractorConsole
   m_H1xy->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Add->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Modulus->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_Eigen->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_Gradient->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
                               
   m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::StartEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -118,6 +127,8 @@ ceExtractorConsole
   m_H1xy->AddObserver( itk::Command::StartEvent, H1xyButton->GetRedrawCommand().GetPointer() );
   m_Add->AddObserver( itk::Command::StartEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Modulus->AddObserver( itk::Command::StartEvent, modulusButton->GetRedrawCommand().GetPointer() );
+  m_Eigen->AddObserver( itk::Command::StartEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Eigen->AddObserver( itk::Command::StartEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::EndEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -130,6 +141,8 @@ ceExtractorConsole
   m_H1xy->AddObserver( itk::Command::EndEvent, H1xyButton->GetRedrawCommand().GetPointer() );
   m_Add->AddObserver( itk::Command::EndEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Modulus->AddObserver( itk::Command::EndEvent, modulusButton->GetRedrawCommand().GetPointer() );
+  m_Eigen->AddObserver( itk::Command::EndEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Eigen->AddObserver( itk::Command::EndEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -156,6 +169,8 @@ ceExtractorConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, H1xyButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, laplacianButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
 
   this->ShowStatus("Let's start by loading an image...");
 
@@ -253,6 +268,8 @@ ceExtractorConsole
   m_InputViewer->Hide();
   m_Viewer_Laplacian->Hide();
   m_Viewer_Gradient_Modulus->Hide();
+  m_Viewer_Max_EigenValue->Hide();
+  m_Viewer_Min_EigenValue->Hide();
 }
 
 
@@ -464,6 +481,44 @@ ceExtractorConsole
   m_Modulus->Update();
   m_Viewer_Gradient_Modulus->SetImage( m_Modulus->GetOutput() );  
   m_Viewer_Gradient_Modulus->Show();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Show Max Eigen Value
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::ShowMaxEigenValue( void )
+{
+
+  m_Eigen->Update(); 
+  m_Viewer_Max_EigenValue->SetImage( m_Eigen->GetMaxEigenValue() );  
+  m_Viewer_Max_EigenValue->Show();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Show Min Eigen Value
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::ShowMinEigenValue( void )
+{
+
+  m_Eigen->Update(); 
+  m_Viewer_Min_EigenValue->SetImage( m_Eigen->GetMinEigenValue() );  
+  m_Viewer_Min_EigenValue->Show();
 
 }
 

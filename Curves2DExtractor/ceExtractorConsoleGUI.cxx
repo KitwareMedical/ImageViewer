@@ -271,6 +271,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->value(1);
         o->callback((Fl_Callback*)cb_Sigma);
         o->align(FL_ALIGN_TOP);
+        o->when(FL_WHEN_RELEASE);
       }
       { fltk::LightButton* o = H1yButton = new fltk::LightButton(295, 109, 100, 24, "Gradient Y");
         o->type(0);

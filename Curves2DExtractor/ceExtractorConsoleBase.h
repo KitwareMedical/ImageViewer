@@ -53,6 +53,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
 #include <itkAddImageFilter.h>
 #include <itkBinaryMagnitudeImageFilter.h>
+#include <itkEigenAnalysis2DImageFilter.h>
+#include <itkGradientRecursiveGaussianImageFilter.h>
 
 
 class ceExtractorConsoleBase 
@@ -60,12 +62,18 @@ class ceExtractorConsoleBase
 
 public:
 
-  typedef   unsigned short                    InputPixelType;
-  typedef   float                             PixelType;
-  typedef   float                             ComputationType;
+  typedef   unsigned char                     InputPixelType;
+  typedef   double                            PixelType;
+  typedef   double                            ComputationType;
 
-  typedef   itk::Image< InputPixelType, 2 >   InputImageType;
-  typedef   itk::Image< PixelType, 2 >        ImageType;
+  typedef   itk::Vector< PixelType, 2 >           VectorType;
+  
+  typedef   itk::CovariantVector< PixelType, 2 >  CovariantVectorType;
+
+  typedef   itk::Image< InputPixelType, 2 >       InputImageType;
+  typedef   itk::Image< PixelType, 2 >            ImageType;
+  typedef   itk::Image< VectorType, 2 >           VectorImageType;
+  typedef   itk::Image< CovariantVectorType, 2 >  CovariantVectorImageType;
 
   typedef   itk::FileIOToImageFilter< 
                             InputImageType >       VolumeReaderType;
@@ -100,6 +108,11 @@ public:
   typedef   itk::BinaryMagnitudeImageFilter< ImageType, 
                             ImageType, ImageType >  ModulusFilterType;
 
+  typedef   itk::EigenAnalysis2DImageFilter< ImageType, 
+                            ImageType, VectorImageType >  EigenFilterType;
+
+  typedef   itk::GradientRecursiveGaussianImageFilter< InputImageType,
+                            CovariantVectorImageType, ComputationType > GradientFilterType;
 
 
 public:
@@ -131,6 +144,10 @@ protected:
 
   AddFilterType::Pointer                         m_Add;
   ModulusFilterType::Pointer                 m_Modulus;
+
+  EigenFilterType::Pointer                     m_Eigen;
+
+  GradientFilterType::Pointer               m_Gradient;
 
   bool                                   m_ImageLoaded;
 

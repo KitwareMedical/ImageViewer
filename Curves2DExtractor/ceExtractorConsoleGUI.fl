@@ -7,8 +7,7 @@ gridy 5
 snap 3
 class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
 } {
-  Function {ceExtractorConsoleGUI()} {selected
-  } {
+  Function {ceExtractorConsoleGUI()} {} {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console}
       xywh {365 120 837 391}
@@ -132,8 +131,8 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         }
         Fl_Counter {} {
           label Sigma
-          callback {SetSigma( o->value() );}
-          xywh {30 190 160 25} align 1 minimum -100 maximum 100 value 1
+          callback {SetSigma( o->value() );} selected
+          xywh {30 190 160 25} align 1 when 4 minimum -100 maximum 100 value 1
         }
         Fl_Light_Button H1yButton {
           label {Gradient Y}

@@ -95,17 +95,32 @@ ceExtractorConsoleBase
 
   m_H1xy->SetInputImage( m_H1x->GetOutput() );
 
+  
   m_Add = AddFilterType::New();
 
   m_Add->SetInput1( m_H2x->GetOutput() );
   m_Add->SetInput2( m_H2y->GetOutput() );
 
+  
   m_Modulus = ModulusFilterType::New();
 
   m_Modulus->SetInput1( m_H1x->GetOutput() );
   m_Modulus->SetInput2( m_H1y->GetOutput() );
 
+  
+  m_Gradient = GradientFilterType::New();
+  
+  m_Gradient->SetInput( m_Reader->GetOutput() );
 
+  
+  m_Eigen = EigenFilterType::New();
+  
+  m_Eigen->SetInput1( m_H2x->GetOutput() );
+  m_Eigen->SetInput2( m_H1xy->GetOutput() );
+  m_Eigen->SetInput3( m_H2y->GetOutput() );
+      
+
+  
 }
 
 
@@ -207,6 +222,8 @@ ceExtractorConsoleBase
   m_H2x->SetSigma( value );
   m_H2y->SetSigma( value );
 
+  m_Gradient->SetSigma( value );
+
 }
 
 
@@ -238,6 +255,9 @@ ceExtractorConsoleBase
 
   m_Modulus->Update();
   
+  m_Eigen->Update();
+
+  m_Gradient->Update();
 
 }
 
