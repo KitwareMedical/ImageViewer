@@ -1,17 +1,15 @@
-# Add VTK code if we found VTK
-INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
-IF (USE_VTK_FILE)
-  INCLUDE(${USE_VTK_FILE})
-  LINK_LIBRARIES( 
-      vtkRendering
-      vtkGraphics	  
-      vtkImaging
-      vtkIO
-      vtkFiltering
-      vtkCommon
-  )
-ENDIF (USE_VTK_FILE)
+# Use VTK for this directory.  This is safe because we wouldn't be
+# here if we didn't find VTK.
 
+INCLUDE(${USE_VTK_FILE})
+LINK_LIBRARIES( 
+  vtkRendering
+  vtkGraphics	  
+  vtkImaging
+  vtkIO
+  vtkFiltering
+  vtkCommon
+)
 
 LINK_LIBRARIES(VXLNumerics ITKCommon)
 
@@ -22,4 +20,3 @@ vtkImageStatistics
 )
 
 ADD_EXECUTABLE(MRIRegistration MRIRegistration_SRCS)
-
