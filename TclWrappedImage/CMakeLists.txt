@@ -24,7 +24,15 @@ LINK_LIBRARIES (
   ) 
 
 ADD_LIBRARY (ImageTcl SHARED)
-CABLE_WRAP_TCL ( ImageTcl itk::Image<char,3>;  itkImage )
+
+# Each class follows the format:
+# [tag:]class_name[;source1;source2;...]
+#  
+CABLE_WRAP_TCL ( ImageTcl 
+    itkImage3DChar:itk::Image<char,3>;itkImage.h
+    itkImage3DRegion:itk::ImageRegion<3>;itkImageRegion.h  
+    itkImage3DCharPointer:itk::Image<char,3>::Pointer;itkImage.h
+    )
 
 # Configure files
 CONFIGURE_FILE(
