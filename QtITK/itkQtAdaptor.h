@@ -1,0 +1,143 @@
+#include <qobject.h>
+#include "itkObject.h"
+#include "itkObjectFactory.h"
+#include "itkCommand.h"
+
+
+namespace itk {
+
+/** Helper class that interface with Qt Signals and Slots */
+class QtTranslator : public QObject
+{
+
+  Q_OBJECT
+public:
+  QtTranslator() {}
+  virtual ~QtTranslator() {}
+
+signals:
+  void Signal();
+
+public slots:
+  virtual void Slot() {}; 
+  virtual void Slot(int) {}; 
+  virtual void Slot(double) {}; 
+
+};
+
+
+
+/** Helper class that interface Methods with Qt Slots */
+template <typename T>
+class QtSlotAdaptor : public QtTranslator
+{
+  typedef  void (T::*TMemberFunctionVoidPointer)(); 
+  typedef  void (T::*TMemberFunctionIntPointer)(int); 
+  typedef  void (T::*TMemberFunctionDoublePointer)(double); 
+
+public:
+  QtSlotAdaptor():m_MemberFunctionVoid(0),
+                  m_MemberFunctionInt(0),
+                  m_MemberFunctionDouble(0) {}
+
+  virtual ~QtSlotAdaptor() {}
+
+  /** Specify the callback function. */
+  void SetCallbackFunction(T* object,  
+                           TMemberFunctionVoidPointer memberFunction)
+    {
+      m_This = object;
+      m_MemberFunctionVoid = memberFunction;
+    }
+
+  /** Specify the callback function. */
+  void SetCallbackFunction(T* object,  
+                           TMemberFunctionIntPointer memberFunction)
+    {
+      m_This = object;
+      m_MemberFunctionInt = memberFunction;
+    }
+
+  /** Specify the callback function. */
+  void SetCallbackFunction(T* object,  
+                           TMemberFunctionDoublePointer memberFunction)
+    {
+      m_This = object;
+      m_MemberFunctionDouble = memberFunction;
+    }
+ 
+  /** Slot to be connected to Qt Signals. */
+  void Slot() 
+  {
+  std::cout << "Slot(void)" << std::endl;
+  if( m_MemberFunctionVoid ) 
+    {
+    ((*m_This).*(m_MemberFunctionVoid))();
+    }
+  }
+
+  /** Slot to be connected to Qt Signals. */
+  void Slot(int value) 
+  {
+  std::cout << "Slot(int)" << std::endl;
+  if( m_MemberFunctionInt ) 
+    {
+    ((*m_This).*(m_MemberFunctionInt))(value);
+    }
+  }
+
+  /** Slot to be connected to Qt Signals. */
+  void Slot(double value) 
+  {
+  std::cout << "Slot(double)" << std::endl;
+  if( m_MemberFunctionDouble ) 
+    {
+    ((*m_This).*(m_MemberFunctionDouble))(value);
+    }
+  }
+
+
+
+protected:
+  T* m_This;
+  TMemberFunctionVoidPointer    m_MemberFunctionVoid;
+  TMemberFunctionIntPointer     m_MemberFunctionInt;
+  TMemberFunctionDoublePointer  m_MemberFunctionDouble;
+
+ 
+};
+
+
+
+/** Helper class that interface Observers with Qt Signals */
+class QtSignalAdaptor : public QtTranslator
+{
+  typedef SimpleMemberCommand<QtSignalAdaptor> CommandType;
+
+public:
+  QtSignalAdaptor()
+    {
+    m_Command = CommandType::New();
+    m_Command->SetCallbackFunction( this, & QtSignalAdaptor::EmitSignal );  
+    }
+
+  virtual ~QtSignalAdaptor() {}
+
+  CommandType * GetCommand()
+    {
+    return m_Command;
+    } 
+
+  void EmitSignal()
+    {
+    emit Signal();
+    }
+
+private:
+  CommandType::Pointer    m_Command;
+};
+
+
+
+
+} // end namespace
