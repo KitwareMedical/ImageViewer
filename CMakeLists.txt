@@ -14,5 +14,9 @@ ITKCommon
 ITKBasicFilters 
 )
 
+UNIX_LIBRARIES (
+-lm
+)
+
 EXECUTABLES(itkPrincipalAxesResampler)
 
