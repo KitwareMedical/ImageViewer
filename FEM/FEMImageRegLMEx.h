@@ -116,6 +116,7 @@ class ImageRegLMEx
 {
 public:
   
+  typedef LinearSystemWrapperItpack LinearSystemSolverType;
   typedef SolverCrankNicolson SolverType;
   enum Sign { positive = 1, negative = -1 };
   typedef double Float;
@@ -151,11 +152,16 @@ public:
   /** Reads images from m_ReferenceFileName and m_TargetFileName */
   void  ReadImages();  
   /** This function generates a rectangular mesh of MeshResolution size */
-  int  GenRegMesh(); 
+  void  CreateMesh(); 
+  /** The loads are entered into the solver. */
+  void ApplyLoads(); 
+  /**  Builds the itpack linear system wrapper with appropriate parameters. */
+  void CreateLinearSystemSolver();
   /** The solution loop */
   void  IterativeSolve();  
   /** The solution loop for a simple multi-resolution strategy. */
   void  MultiResSolve();
+  void  MultiResPyramidSolve();
   /** Evaluates the energy by calling the image metric */
   Float EvaluateEnergy();
   /** Interpolates the vector field over the domain */

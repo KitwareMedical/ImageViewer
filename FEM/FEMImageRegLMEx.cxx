@@ -48,7 +48,7 @@ ImageRegLMEx::ImageRegLMEx( )
   m_MetricWidth=3;
   m_DoLineSearch=false;
   m_SearchForMinAtEachLevel=false;
-  m_LineSearchStep=0.05;
+  m_LineSearchStep=0.025;
 
   m_MaxSmoothing=1;
   m_MinSmoothing=1;
@@ -64,75 +64,66 @@ ImageRegLMEx::ImageRegLMEx( )
 
 void ImageRegLMEx::RunRegistration()
 {
-    std::cout << "beginning \n";  
-    m_Solver.SetDeltatT(m_dT);  
-    m_Solver.SetRho(m_Rho);    
-
-    ReadImages();
-    
-    GenRegMesh(); 
+  std::cout << "beginning \n";  
+  m_Solver.SetDeltatT(m_dT);  
+  m_Solver.SetRho(m_Rho);    
+  
+  ReadImages();
+ 
+  if (!m_DoMultiRes) 
+  { 
+    CreateMesh(); 
+    ApplyLoads();
 
     m_Solver.GenerateGFN();
 
-    m_Load=LMClass2::New();
+    CreateLinearSystemSolver();
 
-    m_Load->SetReferenceImage(m_RefImg);
-    m_Load->SetTargetImage(m_TarImg);
-    MetricType::Pointer msqp=MetricType::New();
-    msqp->SetScaleGradient(1.0); // this is the default(?)
-    m_Load->SetMetric(msqp.GetPointer());
-    m_Load->InitializeMetric();
-    ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
-    m_Load->SetMetricRadius(r);
-    m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
-    m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
-    m_Load->SetSign((Float)m_DescentDirection);
-    m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
-    m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+    m_Solver.AssembleKandM();
+
+    IterativeSolve(); 
+  }
+  else 
+  {    
+    MultiResPyramidSolve();
+  }
+
+  GetVectorField();
+  WarpImage();
+
+  std::cout<<"\n E " << m_E << " dt " << m_dT << " rho " << m_Rho << "\n";
+
+  LinearSystemSolverType* temp=
+    dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+  delete temp;
   
-  
+}
+
+void ImageRegLMEx::CreateLinearSystemSolver()
+{
     //FIXME - experiment with these values and choices for solver
-    LinearSystemWrapperItpack itpackWrapper; 
-    LinearSystemWrapperDenseVNL vnld;  
-    itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
-    itpackWrapper.SetMaximumNumberIterations(m_Solver.GetNGFN()); 
-    itpackWrapper.SetTolerance(1.e-6);
+    LinearSystemSolverType* itpackWrapper=new LinearSystemSolverType; 
+    itpackWrapper->SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
+    itpackWrapper->SetMaximumNumberIterations(m_Solver.GetNGFN()); 
+    itpackWrapper->SetTolerance(1.e-6);
 
     // select solution type
     // did converge in test
     
-    itpackWrapper.JacobianSemiIterative(); // err 23 500 its
-    
+    itpackWrapper->JacobianSemiIterative(); // err 23 500 its
+    m_Solver.SetLinearSystemWrapper(itpackWrapper); 
+
     // did not converge below here:  ordered best to worst
-   // itpackWrapper.SymmetricSuccessiveOverrelaxationSuccessiveOverrelaxation(); // err 53
-   // itpackWrapper.SymmetricSuccessiveOverrelaxationConjugateGradient();// err 43 
-   // itpackWrapper.SuccessiveOverrelaxation(); // err 33 500 its
+   // itpackWrapper->SymmetricSuccessiveOverrelaxationSuccessiveOverrelaxation(); // err 53
+   // itpackWrapper->SymmetricSuccessiveOverrelaxationConjugateGradient();// err 43 
+   // itpackWrapper->SuccessiveOverrelaxation(); // err 33 500 its
 
     // These methods failed!!
-    //itpackWrapper.JacobianConjugateGradient();  // err 13 500 its
-    //itpackWrapper.ReducedSystemSemiIteration(); // err 201 
-    //itpackWrapper.ReducedSystemConjugateGradient(); // err 201 
+    //itpackWrapper->JacobianConjugateGradient();  // err 13 500 its
+    //itpackWrapper->ReducedSystemSemiIteration(); // err 201 
+    //itpackWrapper->ReducedSystemConjugateGradient(); // err 201 
 
-     m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
-    //m_Solver.SetLinearSystemWrapper(&vnld); 
-
-  
-  //Assemble the global mass and stiffness matrix. In order to do this
-  // the GFN's should already be assigned to every DOF.
-     
-  m_Solver.AssembleKandM();
- 
-   
-  // Solve the system in time 
-
-  if (!m_DoMultiRes) IterativeSolve(); else MultiResSolve();
- 
-  GetVectorField();
-
-  WarpImage();
-
-  std::cout<<"\n E " << m_E << " dt " << m_dT << " rho " << m_Rho << "\n";
-  
+    
 }
 
 void ImageRegLMEx::ReadImages()
@@ -198,9 +189,6 @@ void ImageRegLMEx::WriteDispField()
 
 void ImageRegLMEx::WarpImage()
 {
- // -------------------------------------------------------
-  std::cout << "Warping image" << std::endl;
-
    // -------------------------------------------------------
   std::cout << "Warping image" << std::endl;
   bool InverseWarp=true;
@@ -270,7 +258,7 @@ void ImageRegLMEx::WarpImage()
 
 }
 
-int ImageRegLMEx::GenRegMesh()
+void ImageRegLMEx::CreateMesh()
 {
 
   /*
@@ -306,11 +294,14 @@ int ImageRegLMEx::GenRegMesh()
     Rectangular(e1,m_Solver,MeshOrigin,MeshSize,ElementsPerDimension);   
   delete e1;
 
+}
+
+void ImageRegLMEx::ApplyLoads()
+{
  /*
   * Apply the boundary conditions.  We pin the image corners.
   * First compute which elements these will be.
   */
-
 
   LoadBC::Pointer l1;
 
@@ -383,7 +374,6 @@ int ImageRegLMEx::GenRegMesh()
     catch (itk::ExceptionObject &err) { 
       std::cerr << "Exception: " << err;
       f.close();
-      return -1;
     }
     
     f.close();
@@ -391,8 +381,24 @@ int ImageRegLMEx::GenRegMesh()
   }
   else { std::cout << "no landmark file specified." << std::endl; }
   }
+  
+  m_Load=LMClass2::New();
 
-  return 0;
+    m_Load->SetReferenceImage(m_RefImg);
+    m_Load->SetTargetImage(m_TarImg);
+    MetricType::Pointer msqp=MetricType::New();
+    msqp->SetScaleGradient(1.0); // this is the default(?)
+    m_Load->SetMetric(msqp.GetPointer());
+    m_Load->InitializeMetric();
+    ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+    m_Load->SetMetricRadius(r);
+    m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
+    m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
+    m_Load->SetSign((Float)m_DescentDirection);
+    m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
+    m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+  
+  return;
 }
 
 
@@ -404,9 +410,6 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
   // iterative solve  
   for (unsigned int iters=0; iters<m_Maxiters; iters++){
 
-//    float radparam=1.-(float)iters/((float)m_Maxiters-1.);
-//    unsigned int maxrad=9,minrad=1;
-//    SetWidthOfMetricRegion(minrad+maxrad*(unsigned int)radparam);
     /*
      * Assemble the master force vector (from the applied loads)
      */
@@ -543,41 +546,12 @@ void ImageRegLMEx::WriteWarpedImage(const char* fname)
 
 void ImageRegLMEx::MultiResSolve()
 {
-
-  
- 
-//   Setup a multi-resolution pyramid
-  typedef itk::MultiResolutionPyramidImageFilter<ImageType,ImageType>
-    PyramidType;
-  typedef PyramidType::ScheduleType ScheduleType;
-  PyramidType::Pointer pyramid = PyramidType::New();
-
-  pyramid->SetInput( m_RefImg );
-   // set schedule by specifying the number of levels;
-  unsigned int numLevels = 3;
-  itk::Vector<unsigned int,ImageDimension> factors;
-  factors.Fill( 1 << (numLevels - 1) );
-  pyramid->SetNumberOfLevels( numLevels );
-
-  pyramid->Print( std::cout );
-
-//  update pyramid at a particular level
-  unsigned int testLevel = 0;
-  pyramid->Update();
-  pyramid->GetOutput( testLevel )->Update();
-
-  // check the output image information  
-  ImageType::SizeType outputSize =
-    pyramid->GetOutput( testLevel )->GetLargestPossibleRegion().GetSize();
-  std::cout << " size at level " << testLevel << outputSize << std::endl;
-
   typedef itk::CastImageFilter<ImageType,FloatImageType> CasterType1;
   CasterType1::Pointer caster1 = CasterType1::New();
   typedef itk::CastImageFilter<FloatImageType,ImageType> CasterType2;
   CasterType2::Pointer caster2 = CasterType2::New();
 
   typedef DiscreteGaussianImageFilter<FloatImageType,FloatImageType>  SmootherType;
-//  typedef MeanImageFilter<ImageType, ImageType>  SmootherType;
   SmootherType::Pointer smoothfilter = SmootherType::New();
   //itk::CannyEdgeDetectionImageFilter<ImageType, ImageType>::Pointer  edgefilter = itk::CannyEdgeDetectionImageFilter<ImageType, ImageType>::New();
   //itk::SobelEdgeDetectionImageFilter<ImageType, ImageType>::Pointer edgefilter
@@ -588,24 +562,20 @@ void ImageRegLMEx::MultiResSolve()
   edgefilter->SetVariance(1.0f);
   edgefilter->SetMaximumError(.01f);
 
-//  ImageType::SizeType neighRadius;
-  //neighRadius[0] = 1;
-  //neighRadius[1] = 1;
-  //smoothfilter->SetRadius(neighRadius);
-
-  // run the algorithm
   smoothfilter->SetVariance(1.0f);
   smoothfilter->SetMaximumError(.01f);
       
   float smoothing;
   // run the algorithm
+
+  CreateMesh(); 
+  ApplyLoads();
+  m_Solver.GenerateGFN();
+  CreateLinearSystemSolver();
+  m_Solver.AssembleKandM();
+  
   for (smoothing=m_MaxSmoothing; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
   {
-
-  //  neighRadius[0] =(unsigned long) smoothing;
-  //  neighRadius[1] =(unsigned long) smoothing;
-  //  smoothfilter->SetRadius(neighRadius);
-
     smoothfilter->SetVariance(smoothing);
     edgefilter->SetVariance(smoothing);
 
@@ -626,13 +596,96 @@ void ImageRegLMEx::MultiResSolve()
     edgefilter->Update();    
     caster2->SetInput(smoothfilter->GetOutput()); caster2->Update();
     m_Load->SetMetricReferenceImage(caster2->GetOutput());
+ 
     IterativeSolve();
+
   }
 // now full res
   m_Load->SetMetricTargetImage(m_TarImg); 
   m_Load->SetMetricReferenceImage(m_RefImg);
   IterativeSolve();
   //if (smoothing <= m_MinSmoothing) m_RefImg=caster2->GetOutput(); // //FIXME for testing
+
+  return;
+}
+
+
+void ImageRegLMEx::MultiResPyramidSolve()
+{
+
+//   Setup a multi-resolution pyramid
+  typedef itk::MultiResolutionPyramidImageFilter<FloatImageType,FloatImageType>
+    PyramidType;
+  typedef PyramidType::ScheduleType ScheduleType;
+  PyramidType::Pointer pyramid1 = PyramidType::New();
+  PyramidType::Pointer pyramid2 = PyramidType::New();
+
+  typedef itk::CastImageFilter<ImageType,FloatImageType> CasterType1;
+  CasterType1::Pointer caster1 = CasterType1::New();
+  typedef itk::CastImageFilter<FloatImageType,ImageType> CasterType2;
+  CasterType2::Pointer caster2 = CasterType2::New();
+
+  caster1->SetInput(m_RefImg); caster1->Update();
+  pyramid1->SetInput( caster1->GetOutput());
+  caster1->SetInput(m_TarImg); caster1->Update();
+  pyramid2->SetInput( caster1->GetOutput());
+
+// set schedule by specifying the number of levels;
+  unsigned int numLevels = 3;
+  itk::Vector<unsigned int,ImageDimension> factors;
+  factors.Fill( 1 << (numLevels - 1) );
+  pyramid1->SetNumberOfLevels( numLevels );
+  pyramid2->SetNumberOfLevels( numLevels );
+
+  ImageType::SizeType Isz=m_RefImg->GetLargestPossibleRegion().GetSize();
+  ScheduleType SizeReduction=pyramid1->GetSchedule();
+
+  for (unsigned int i=0; i<numLevels; i++)
+  {
+    pyramid1->Update();
+    pyramid1->GetOutput( i )->Update();
+    pyramid2->Update();
+    pyramid2->GetOutput( i )->Update();
+
+    m_Nx=Isz[0]/SizeReduction[i][0];
+    m_Ny=Isz[1]/SizeReduction[i][1];
+
+//  m_MeshResolution=
+
+    CreateMesh(); 
+    ApplyLoads();
+    
+    caster2->SetInput(pyramid1->GetOutput(i)); caster2->Update();
+    m_Load->SetMetricReferenceImage(caster2->GetOutput());  
+
+    caster2->SetInput(pyramid2->GetOutput(i)); caster2->Update();
+    m_Load->SetMetricTargetImage(caster2->GetOutput());  
+
+    m_Solver.GenerateGFN();
+
+    if (i == 0) CreateLinearSystemSolver(); // for when we change # of gfns (remesh)
+
+    m_Solver.AssembleKandM();
+
+    IterativeSolve();
+
+    if (i < numLevels-1)
+    {
+      float s1=(float)SizeReduction[i][0];  
+      float s2=(float)SizeReduction[i+1][0];  
+      float Magnification=s1/s2;
+      LinearSystemSolverType* ls=
+        dynamic_cast<LinearSystemSolverType*>(m_Solver.GetLinearSystemWrapper());
+      unsigned int TotalSolutionIndex=1; // from SolverType
+      for (unsigned int j=0; j<m_Solver.GetNGFN(); j++)
+      {
+        float temp=ls->GetSolutionValue(i,TotalSolutionIndex);
+        ls->SetSolutionValue(i,temp*Magnification,TotalSolutionIndex);
+      }
+      m_Solver.SetLinearSystemWrapper(ls);
+    }
+  }
+  //m_RefImg=caster2->GetOutput(); // //FIXME for testing
 
   return;
 }
@@ -693,9 +746,9 @@ int main()
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
-  X.SetNumberOfIntegrationPoints(8);// Resolution of energy integration
+  X.SetNumberOfIntegrationPoints(2);// Resolution of energy integration
   X.SetWidthOfMetricRegion(1);
-  X.DoMultiRes(false);// Use multi-resolution strategy
+  X.DoMultiRes(true);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
   X.m_MaxSmoothing=2.0; // set multi-res parameters
   X.m_MinSmoothing=0.5;
