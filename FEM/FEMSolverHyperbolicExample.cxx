@@ -117,7 +117,7 @@ void PrintElementCoordinates(SolverHyperbolic& S, char comment, ofstream& of, in
   for (Solver::ElementArray::iterator e = S.el.begin(); e != S.el.end(); e++) {
     of << "e(" << ct << "," << (iter+1) << ",:,:)=[";
     if (IDL_OUTPUT) { of << " ["; }
-    for (int n=0; n < (*e)->GetNumberOfNodes(); n++) {
+    for (unsigned int n=0; n < (*e)->GetNumberOfNodes(); n++) {
 
       // FIXME: this will generate errors in IDL - needs to be comma-delimited
       Element::VectorType nc = (*e)->GetNodeCoordinates(n);
