@@ -11,6 +11,11 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 
   const unsigned int Dimension = 3;
 
+  const float alpha   = atof( info->GetGUIProperty(info, 0, VVP_GUI_VALUE ));
+  const float beta    = atof( info->GetGUIProperty(info, 1, VVP_GUI_VALUE ));
+  const float minimum = atof( info->GetGUIProperty(info, 2, VVP_GUI_VALUE ));
+  const float maximum = atof( info->GetGUIProperty(info, 3, VVP_GUI_VALUE ));
+
   try 
   {
   switch( info->InputVolumeScalarType )
@@ -24,10 +29,10 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetPluginInfo( info );
       module.SetUpdateMessage("Transforming intensities with a Sigmoid function...");
       // Set the parameters on it
-      module.GetFilter()->SetAlpha(          atof( info->GetGUIProperty(info, 0, VVP_GUI_VALUE )) );
-      module.GetFilter()->SetBeta(           atof( info->GetGUIProperty(info, 1, VVP_GUI_VALUE )) );
-      module.GetFilter()->SetOutputMinimum(  atoi( info->GetGUIProperty(info, 2, VVP_GUI_VALUE )) );
-      module.GetFilter()->SetOutputMaximum(  atoi( info->GetGUIProperty(info, 3, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetAlpha( alpha );         
+      module.GetFilter()->SetBeta(  beta  );
+      module.GetFilter()->SetOutputMinimum( minimum ); 
+      module.GetFilter()->SetOutputMaximum( maximum );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -41,10 +46,10 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetPluginInfo( info );
       module.SetUpdateMessage("Transforming intensities with a Sigmoid function...");
       // Set the parameters on it
-      module.GetFilter()->SetAlpha(          atof( info->GetGUIProperty(info, 0, VVP_GUI_VALUE )) );
-      module.GetFilter()->SetBeta(           atof( info->GetGUIProperty(info, 1, VVP_GUI_VALUE )) );
-      module.GetFilter()->SetOutputMinimum(  atoi( info->GetGUIProperty(info, 2, VVP_GUI_VALUE )) );
-      module.GetFilter()->SetOutputMaximum(  atoi( info->GetGUIProperty(info, 3, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetAlpha( alpha );         
+      module.GetFilter()->SetBeta(  beta  );
+      module.GetFilter()->SetOutputMinimum( minimum ); 
+      module.GetFilter()->SetOutputMaximum( maximum );
       // Execute the filter
       module.ProcessData( pds );
       break; 
