@@ -109,6 +109,7 @@ FastMarchingLevelSetBase
 ::ClearSeeds()
 {
   m_TrialPoints->Initialize(); 
+  m_FastMarchingFilter->Modified();
   m_NumberOfSeeds = 0;
 }
 
@@ -132,6 +133,7 @@ FastMarchingLevelSetBase
   node.SetIndex( seedPosition );
 
   m_TrialPoints->InsertElement( m_NumberOfSeeds, node );
+  m_FastMarchingFilter->Modified();
   m_NumberOfSeeds++;
   
 }
