@@ -92,7 +92,7 @@ Bacteria
   // Create a perturbation for separating the daugther cells
   double angle = static_cast<double>( rand() ) / 
                  static_cast<double>( RAND_MAX ) *
-                 atan(1) * 4.0;
+                 atan(1.0f) * 4.0;
 
   Cell::VectorType perturbationVector;
   double perturbationLength = m_Radius * 0.75;
