@@ -84,7 +84,7 @@ public:
   // Visit a line and create the VTK_LINE cell 
   void Visit(unsigned long cellId, LineElementType * t)
     {
-    vtkIdType numberOfPoints = 2;
+    const vtkIdType numberOfPoints = 2;
     vtkIdType pointIds[numberOfPoints];
     typedef TriangleElementType::BaseCellType CellType;
     CellType & cell = t->GetCell();
@@ -103,7 +103,7 @@ public:
   // Visit a line and create the VTK_TRIANGLE cell 
   void Visit(unsigned long cellId, TriangleElementType * t)
     {
-    vtkIdType numberOfPoints = 3;
+    const vtkIdType numberOfPoints = 3;
     vtkIdType pointIds[numberOfPoints];
     typedef TriangleElementType::BaseCellType CellType;
     CellType & cell = t->GetCell();
@@ -122,7 +122,7 @@ public:
   // Visit a line and create the VTK_QUAD cell 
   void Visit(unsigned long cellId, QuadrilateralElementType * t)
     {
-    vtkIdType numberOfPoints = 4;
+    const vtkIdType numberOfPoints = 4;
     vtkIdType pointIds[numberOfPoints];
     typedef QuadrilateralElementType::BaseCellType CellType;
     CellType & cell = t->GetCell();
