@@ -7,8 +7,7 @@ gridy 5
 snap 3
 class liFilterConsoleGUI {open : {public liFilterConsoleBase}
 } {
-  Function {liFilterConsoleGUI()} {open
-  } {
+  Function {liFilterConsoleGUI()} {} {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console}
       xywh {329 176 757 391} hide
@@ -264,15 +263,16 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
     }
     Fl_Window aboutWindow {
       label {About ...} open selected
-      xywh {149 482 392 254} box UP_BOX hide
+      xywh {271 470 440 323} box UP_BOX visible
     } {
-      Fl_Button {} {
-        label {../Documents/Art/itkLogo.xpm}
-        xywh {20 50 355 180} box DOWN_BOX color 7
-      }
       Fl_Box {} {
         label {This program uses the INSIGHT Toolkit}
-        xywh {20 15 340 35} labelsize 18
+        xywh {53 3 340 35} labelsize 18
+      }
+      Fl_Button {} {
+        label {../../Documentation/Art/itkLogo.gif}
+        callback {aboutWindow->hide();}
+        xywh {15 40 410 270} box DOWN_BOX labeltype image
       }
     }
   }

@@ -97,6 +97,10 @@ public:
   Fl_Slider *progressSlider;
   Fl_Output *statusTextOutput;
   Fl_Window *aboutWindow;
+private:
+  inline void cb_Documentation_i(Fl_Button*, void*);
+  static void cb_Documentation(Fl_Button*, void*);
+public:
   virtual ~liFilterConsoleGUI();
   virtual void Quit( void );
   virtual void Load( void );
