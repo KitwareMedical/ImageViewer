@@ -23,7 +23,6 @@
 
   */
 
-//#include "itkFEMElementBar2D_test.h"
 
 #include "FEMMeshApplication.h"
 
@@ -31,7 +30,6 @@
 
 int main(int, char**)
 {
-//  itk::fem::Bar2D a;
 
   FEMMeshApplication  application;
 
