@@ -194,9 +194,9 @@ Slice3DDrawer<TImage>
   m_Ny = size[1];
   m_Nz = size[2];
 
-  m_Nxr = (int)pow(2, floor( log(static_cast<float>(m_Nx))/log(2.0f)+1 ) );
-  m_Nyr = (int)pow(2, floor( log(static_cast<float>(m_Ny))/log(2.0f)+1 ) );
-  m_Nzr = (int)pow(2, floor( log(static_cast<float>(m_Nz))/log(2.0f)+1 ) );
+  m_Nxr = (int)pow((float)2.0, (float)floor( log(static_cast<float>(m_Nx))/log(2.0f)+1 ) );
+  m_Nyr = (int)pow((float)2.0, (float)floor( log(static_cast<float>(m_Ny))/log(2.0f)+1 ) );
+  m_Nzr = (int)pow((float)2.0, (float)floor( log(static_cast<float>(m_Nz))/log(2.0f)+1 ) );
 
   m_Dx = m_Image->GetSpacing()[0];
   m_Dy = m_Image->GetSpacing()[1];
