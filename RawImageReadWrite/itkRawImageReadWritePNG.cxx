@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   if( argc < 6 ) 
     {
     std::cerr << std::endl;
-    std::cerr << "Usage:  RawImageReadWritePNG  inputImageFile.raw   sizeX   sizeY   sizeZ   outputImageFilesPrefix" << std::endl;
+    std::cerr << "Usage:  RawImageReadWritePNG  inputImageFile.raw   sizeX   sizeY   sizeZ   outputImageFile" << std::endl;
     std::cerr << std::endl;
     return -1;
     }
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
   PNGWriterType::Pointer  pngWriter  = PNGWriterType::New();
 
   fileSink->SetImageIO( pngWriter );
-  fileSink->SetFilePrefix( outputFileName );
+  fileSink->SetFileName( outputFileName );
   fileSink->SetInput( fileSource->GetOutput() );
 
   
