@@ -117,7 +117,20 @@ int main()
     ++ti;
   }
 
+  // set image origin to be center of the image
+  double transCenter[2];
+  for( unsigned int j = 0; j < 2; j++ )
+    {
+    transCenter[j] = -0.5 * double(size[j] - 1);
+    }
 
+  imgReference->SetOrigin( transCenter );
+  imgTarget->SetOrigin( transCenter );
+
+
+ /**
+  * Setup the registrator
+  */
   typedef itk::MultiResolutionMutualInformationRegistration<
     ReferenceType,TargetType> MRRegistrationType;
 
@@ -128,7 +141,7 @@ int main()
   registrator->SetNumberOfLevels( 4 );
 
   unsigned int niter[4] = { 200, 100, 100, 50 };
-  double rates[4] = { 1.0e-6, 5.0e-7, 1.0e-7, 5.0e-8 };
+  double rates[4] = { 1e-5, 1e-6, 1e-7, 1e-8 };
 
   registrator->SetNumberOfIterations( niter );
   registrator->SetLearningRates( rates );
@@ -147,7 +160,50 @@ int main()
   method->GetMetric()->SetNumberOfSpatialSamples( 50 );
 
 
+  /**
+   * Do the registration
+   */
   registrator->StartRegistration();
+
+
+  /**
+   * Check the results
+   */
+  MRRegistrationType::RegistrationType::ParametersType solution = 
+    method->GetParameters();
+
+  std::cout << "Solution is: " << solution << std::endl;
+
+  //
+  // check results to see if it is within range
+  //
+  bool pass = true;
+  double trueParameters[6] = { 1, 0, 0, 1, 0, 0 };
+  trueParameters[4] = - displacement[0];
+  trueParameters[5] = - displacement[1];
+  for( unsigned int j = 0; j < 4; j++ )
+    {
+    if( vnl_math_abs( solution[j] - trueParameters[j] ) > 0.02 )
+      {
+      pass = false;
+      }
+    }
+  for( unsigned int j = 4; j < 6; j++ )
+    {
+    if( vnl_math_abs( solution[j] * transScale - trueParameters[j] ) > 1.0 )
+      {
+      pass = false;
+      }
+    }
+
+  if( !pass )
+    {
+    std::cout << "Test failed." << std::endl;
+    return EXIT_FAILURE;
+    }
+
+  std::cout << "Test passed." << std::endl;
+  return EXIT_SUCCESS;
 
 
   return 0;
