@@ -25,7 +25,7 @@ SUBDIRS(AntiAliasBinaryImageFilter)
 SUBDIRS(WatershedSegmentation)
 
 # Build the SimpleLevelSetsExample
-#SUBDIRS(SimpleLevelSetsExample)
+SUBDIRS(SimpleLevelSetsExample)
 
 # Test the condition to build or not build the Image Registration example
 IF(HAS_METAIMAGE)
