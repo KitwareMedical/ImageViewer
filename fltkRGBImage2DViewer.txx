@@ -36,6 +36,7 @@ RGBImage2DViewer<ImagePixelType>
   m_Tag = 0L;
 
   m_FlipY = false ;
+  m_OverlayOpacity = 0.5;
 }
 
 
@@ -66,50 +67,78 @@ RGBImage2DViewer<ImagePixelType>
 {
   if (imageViewer->GetBuffer() == 0)
     {
-      m_ImageSize = image->GetRequestedRegion().GetSize() ;
-      this->externalWindow->size(m_ImageSize[0], m_ImageSize[1]);
-      imageViewer->Allocate( m_ImageSize[0], m_ImageSize[1] );
+    m_ImageSize = image->GetRequestedRegion().GetSize() ;
+    this->externalWindow->size(m_ImageSize[0], m_ImageSize[1]);
+    imageViewer->Allocate( m_ImageSize[0], m_ImageSize[1] );
 
-      // Fill the Image
+    // Fill the Image
  
-  itk::ImageLinearConstIteratorWithIndex< ImageType > 
+    itk::ImageLinearConstIteratorWithIndex< ImageType > 
                                         it( image, image->GetRequestedRegion() );
 
-  const int bytesPerPixel = imageViewer->GetNumberOfBytesPerPixel();
+    const int bytesPerPixel = imageViewer->GetNumberOfBytesPerPixel();
 
-  it.SetDirection( 0 );
+    it.SetDirection( 0 );
 
-  const unsigned int totalSize  =
-    m_ImageSize[0] * m_ImageSize[1] * bytesPerPixel;
+    const unsigned int totalSize  =
+                m_ImageSize[0] * m_ImageSize[1] * bytesPerPixel;
 
-  const unsigned int totalWidth = m_ImageSize[0] * bytesPerPixel;
+    const unsigned int totalWidth = m_ImageSize[0] * bytesPerPixel;
 
-  fltk::RGBImage2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
+    fltk::RGBImage2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
 
-
+    if(!m_FlipY)
+      {
       unsigned char * dest = buffer + totalSize + 3 - totalWidth;
       it.GoToBegin();
       while( !it.IsAtEnd() )  // Should only have one slice...but anyway.
         {
-          while( !it.IsAtEndOfLine() ) 
-            { 
-              const double valueR = it.Get().GetRed();//( it.Get() - min ) * factor;
-              const unsigned char valuecR = static_cast<unsigned char>( valueR );
-              *dest = valuecR;
-              dest++;
-              const double valueG = it.Get().GetGreen();//( it.Get() - min ) * factor;
-              const unsigned char valuecG = static_cast<unsigned char>( valueG );
-              *dest = valuecG;
-              dest++;
-              const double valueB = it.Get().GetBlue();//( it.Get() - min ) * factor;
-              const unsigned char valuecB = static_cast<unsigned char>( valueB );
-              *dest = valuecB;
-              dest++;
-              ++it;
-            }
-          it.NextLine();
-          dest -= 2 * totalWidth;
+        while( !it.IsAtEndOfLine() ) 
+          { 
+          const double valueR = it.Get().GetRed();
+          const unsigned char valuecR = static_cast<unsigned char>( valueR );
+          *dest = valuecR;
+          dest++;
+          const double valueG = it.Get().GetGreen();
+          const unsigned char valuecG = static_cast<unsigned char>( valueG );
+          *dest = valuecG;
+          dest++;
+          const double valueB = it.Get().GetBlue();
+          const unsigned char valuecB = static_cast<unsigned char>( valueB );
+          *dest = valuecB;
+          dest++;
+          ++it;
+          }
+        it.NextLine();
+        dest -= 2 * totalWidth;
         }
+      }
+    else
+      {
+      unsigned char * dest = buffer;
+      
+      it.GoToBegin();
+      while( !it.IsAtEnd() )  // Should only have one slice...but anyway.
+        {
+        while( !it.IsAtEndOfLine() ) 
+          { 
+          const double valueR = it.Get().GetRed();
+          const unsigned char valuecR = static_cast<unsigned char>( valueR );
+          *dest = valuecR;
+          dest++;
+          const double valueG = it.Get().GetGreen();
+          const unsigned char valuecG = static_cast<unsigned char>( valueG );
+          *dest = valuecG;
+          dest++;
+          const double valueB = it.Get().GetBlue();
+          const unsigned char valuecB = static_cast<unsigned char>( valueB );
+          *dest = valuecB;
+          dest++;
+          ++it;
+          }
+        it.NextLine();
+        }
+      }
     }
 
   if( m_Image && m_Tag )
@@ -126,6 +155,17 @@ RGBImage2DViewer<ImagePixelType>
  
   Update();
 
+}
+
+template <class ImagePixelType>
+void
+RGBImage2DViewer<ImagePixelType>
+::SetOverlay(OverlayType * overlay)
+{
+  m_Overlay = overlay;
+  m_ColorTable = ColorTableType::New();
+  m_ColorTable->useDiscrete();
+  UpdateOverlay();
 }
 
 
@@ -274,7 +314,89 @@ RGBImage2DViewer<ImagePixelType>
 }
 
 
+template <class ImagePixelType>
+void
+RGBImage2DViewer<ImagePixelType>
+::UpdateOverlay(void)
+{ 
+  if( !m_Overlay )
+  {
+    return;
+  }
 
+  OverlayType::RegionType region  = m_Overlay->GetRequestedRegion();
+  OverlayType::SizeType   size    = region.GetSize();  
+
+  imageViewer->AllocateOverlay();
+
+  unsigned char * overlay = imageViewer->GetOverlay();
+      
+  itk::ImageLinearConstIteratorWithIndex< OverlayType > 
+                                         it( m_Overlay,region );
+
+  it.SetDirection( 0 );
+  it.GoToBegin();
+
+  const unsigned int totalSize = size[0]*size[1]*4;
+  const unsigned int totalWidth = size[0]*4;
+
+
+  
+
+  typedef itk::MinimumMaximumImageCalculator<OverlayType> MinMaxCalculatorType;
+  MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
+  MinMaxCalculator->SetImage(m_Overlay);
+  MinMaxCalculator->Compute();
+
+  typename OverlayType::PixelType max = MinMaxCalculator->GetMaximum();
+  typename OverlayType::PixelType min = MinMaxCalculator->GetMinimum();
+
+  unsigned int i=0;
+
+  if(!m_FlipY)
+    {
+    unsigned char * dest = overlay + totalSize - totalWidth;
+    while( !it.IsAtEnd() )
+      {
+      while( !it.IsAtEndOfLine() ) 
+        {
+        OverlayType::PixelType value = it.Get();
+        value = (unsigned char) (value - min)/(max-min);
+        *dest++ = m_ColorTable->color(value-1)->GetRed()*255;
+        *dest++ = m_ColorTable->color(value-1)->GetGreen()*255;
+        *dest++ = m_ColorTable->color(value-1)->GetBlue()*255;
+        *dest++ = 255*m_OverlayOpacity;
+        ++it;
+        }
+      it.NextLine();
+      dest -= 2 * totalWidth;
+      }
+    }
+  else
+    {
+    unsigned char * dest = overlay;
+    while( !it.IsAtEnd() )
+      {
+      while( !it.IsAtEndOfLine() ) 
+        {
+        OverlayType::PixelType value = it.Get();
+        value = (unsigned char) (value - min)/(max-min);
+        *dest++ = m_ColorTable->color(value-1)->GetRed()*255;
+        *dest++ = m_ColorTable->color(value-1)->GetGreen()*255;
+        *dest++ = m_ColorTable->color(value-1)->GetBlue()*255;
+        *dest++ = 255*m_OverlayOpacity;
+        ++it;
+        }
+      it.NextLine();
+      }
+
+
+    }
+
+
+  imageViewer->redraw();
+  Fl::check();
+}
 
 
 

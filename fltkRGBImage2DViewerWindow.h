@@ -64,10 +64,15 @@ public:
   void SetIntensityWindow( Fl_Window * window );
   void SetParentWindow( Fl_Window * window );
 
+  void AllocateOverlay(void);
+  ValueType * GetOverlay(void) 
+  { return m_Overlay; }
+
 private:
 
   ColorType          m_Background;
   ValueType       *  m_Buffer;
+  ValueType       *  m_Overlay;
   int                m_Width;
   int                m_Height;
   double             m_Zoom;

@@ -46,6 +46,7 @@ RGBImage2DViewerWindow(int x,int y,int w,int h, const char * label)
   m_Background.SetBlue( 0.5 );
   
   m_Buffer = 0;
+  m_Overlay = 0;
 
   m_ShiftX =   0;
   m_ShiftY =   0;
@@ -72,6 +73,12 @@ RGBImage2DViewerWindow
     {
     delete [] m_Buffer;
     m_Buffer = 0;
+    }
+
+  if( m_Overlay )
+    {
+    delete [] m_Overlay;
+    m_Overlay = 0;
     }
 }
 
@@ -149,7 +156,28 @@ Allocate(unsigned int nx,unsigned int ny)
 
 }
 
+//------------------------------------------
+//
+//    Allocate Overlay
+//
+//------------------------------------------
+void
+RGBImage2DViewerWindow::
+AllocateOverlay(void)
+{
+  if( !m_Buffer )
+  {
+    return;
+  }
+  if( m_Overlay )
+  {
+    delete [] m_Overlay;
+  }
 
+  m_Overlay = new unsigned char[ GetWidth() * GetHeight() * 4 ]; // *4 for RGBA
+
+
+}
 
 //------------------------------------------
 //
@@ -315,6 +343,17 @@ void RGBImage2DViewerWindow::draw(void)
                 GL_RGB, GL_UNSIGNED_BYTE, 
                 static_cast<void *>(m_Buffer) );
 
+  glDisable(GL_DEPTH_TEST);
+
+  if(m_Overlay)
+  {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDrawPixels(m_Width, m_Height, GL_RGBA, 
+       GL_UNSIGNED_BYTE,  static_cast<void *>(m_Overlay));
+    glDisable(GL_BLEND);
+  }
+
   //
   // Prepare for drawing other objects
   //
@@ -341,6 +380,8 @@ void RGBImage2DViewerWindow::draw(void)
 
   glEnable(GL_NORMALIZE);
   glEnable(GL_DEPTH_TEST);
+
+
 
   // Call other drawers
   GetNotifier()->InvokeEvent( fltk::GlDrawEvent() );

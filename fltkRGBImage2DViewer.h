@@ -21,6 +21,7 @@
 #include "itkImage.h"
 #include "fltkRGBImage2DViewerGUI.h"
 #include "itkCommand.h"
+#include <itkColorTable.h>
 
 namespace fltk {
 
@@ -59,6 +60,12 @@ public:
   typedef itk::Image< ImagePixelType, 2 >   ImageType;
   
   /**
+   * Overlay Type
+   */
+  typedef unsigned char                       OverlayPixelType;
+  typedef itk::Image< OverlayPixelType, 2 >   OverlayType;
+
+  /**
    * Chanel Image Type
    */
   typedef PixelComponentType             ChannelPixelType ;
@@ -69,11 +76,20 @@ public:
    */
   typedef itk::SimpleMemberCommand< Self >      ObserverCommandType;
 
+  /**
+   * Color Table Type
+   */
+  typedef itk::ColorTable<double> ColorTableType;
 
   /**
    * Observer Command
    */
   virtual void SetImage(ImageType * image);
+  
+  /**
+   * Set the overlay
+   */
+  virtual void SetOverlay(OverlayType * overlay);
 
   virtual void SetRedChannel(ChannelImageType* image) ;
   virtual void SetGreenChannel(ChannelImageType* image) ;
@@ -103,6 +119,9 @@ public:
 
   itkSetMacro(FlipY, bool) ;
 
+  void UpdateOverlay(void);
+  void SetOverlayOpacity(float opacity) {m_OverlayOpacity = opacity;}
+
 protected:
   
   RGBImage2DViewer();
@@ -120,8 +139,11 @@ private:
   typename ChannelImageType::Pointer m_RedImage ;
   typename ChannelImageType::Pointer m_GreenImage ;
   typename ChannelImageType::Pointer m_BlueImage ;
-
+  typename OverlayType::Pointer     m_Overlay;
+  typename ColorTableType::Pointer         m_ColorTable;
   bool m_FlipY ;
+  float m_OverlayOpacity;
+
 };
 
 
