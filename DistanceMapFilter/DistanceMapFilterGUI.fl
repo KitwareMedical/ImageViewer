@@ -1,0 +1,78 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0011 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
+} {
+  Function {DistanceMapFilterGUI()} {} {
+    Fl_Window controlWindow {
+      label {Surface Generator} open
+      xywh {288 168 238 117}
+      code0 {\#include "DistanceMapFilterBase.h"} visible
+    } {
+      Fl_Menu_Bar {} {open
+        xywh {0 0 235 25}
+      } {
+        submenu {} {
+          label File
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Load
+            callback {Load();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Save
+            callback {Save();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Quit
+            callback {Quit();}
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label View open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Image
+            callback {ShowDisplay();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Slice Controls}
+            callback {m_ImageSliceDrawer->Show();}
+            xywh {10 10 100 20}
+          }
+        }
+      }
+      Fl_Button computeDistancetButton {
+        label {Compute Distance}
+        callback {this->ComputeDistance();} selected
+        xywh {40 45 155 45} box ROUND_UP_BOX
+      }
+    }
+  }
+  Function {~DistanceMapFilterGUI()} {return_type virtual
+  } {}
+  Function {Quit(void)} {return_type {virtual void}
+  } {
+    code {this->Hide();} {}
+  }
+  Function {Hide(void)} {return_type {virtual void}
+  } {
+    code {controlWindow->hide();
+m_ImageSliceDrawer->Hide();
+this->HideDisplay();} {}
+  }
+  Function {Show(void)} {return_type {virtual void}
+  } {
+    code {controlWindow->show();} {}
+  }
+} 
