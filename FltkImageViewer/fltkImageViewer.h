@@ -73,6 +73,11 @@ public:
                                                   void *),
                      void * newClickSelectArg);
 
+  
+  virtual void ViewDetails(bool detail);
+  virtual void ViewValue(bool value);
+  virtual void ViewCrosshairs(bool crosshairs);
+
 private:
   GLSliceViewType * glSliceView;
 };

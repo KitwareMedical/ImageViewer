@@ -427,5 +427,30 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 }
 
 
+template <class ImagePixelType, class OverlayPixelType>
+void 
+ImageViewer<ImagePixelType,OverlayPixelType>
+::ViewDetails(bool detail)
+{
+  glSliceView->viewDetails(detail);
+}
+  
+  
+template <class ImagePixelType, class OverlayPixelType>
+void 
+ImageViewer<ImagePixelType,OverlayPixelType>
+::ViewValue(bool value)
+{
+  glSliceView->viewValue(value);
+}
+  
+template <class ImagePixelType, class OverlayPixelType>
+void 
+ImageViewer<ImagePixelType,OverlayPixelType>
+::ViewCrosshairs(bool crosshairs)
+{
+  glSliceView->viewCrosshairs(crosshairs);
+}
+
 
 } // end namespace itk
