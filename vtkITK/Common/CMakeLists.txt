@@ -29,6 +29,7 @@ ADD_LIBRARY ( vtkVTKITKCommon VTKITKCommon_SRCS )
 INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Code/Numerics/ )
 INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Examples/vtkITK/Common/ )
 
+LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Algorithms )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/BasicFilters )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Common )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/IO )
@@ -69,10 +70,10 @@ vtkCommon
 vtkFiltering
 vtkImaging
 vtkVTKITKCommon 
+VXLNumerics
 ITKCommon
 ITKBasicFilters
 ITKNumerics
-ITKStatistics
 ITKBasicFilters
 )
 
