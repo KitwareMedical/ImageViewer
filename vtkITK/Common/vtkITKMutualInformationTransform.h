@@ -82,6 +82,10 @@ public:
   void Inverse();
 
   // Description:
+  // Set the transformation to the Identity matrix.
+  void Identity();
+
+  // Description:
   // Get the MTime.
   unsigned long GetMTime();
 

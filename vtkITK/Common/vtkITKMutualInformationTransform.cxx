@@ -56,7 +56,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.5 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.6 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------
@@ -261,10 +261,18 @@ void vtkITKMutualInformationTransform::InternalUpdate()
     return;
     }
 
-  if (this->SourceImage->GetScalarType() != this->TargetImage->GetScalarType())
+  if (this->SourceImage->GetScalarType() != VTK_FLOAT)
     {
     vtkErrorMacro (<< "Source type " << this->SourceImage->GetScalarType()
-                   << "Does not match Target type" << this->TargetImage->GetScalarType());
+                   << "must be float");
+    this->Matrix->Identity();
+    return;
+    }
+
+  if (this->TargetImage->GetScalarType() != VTK_FLOAT)
+    {
+    vtkErrorMacro (<< "Target type " << this->SourceImage->GetScalarType()
+                   << "must be float");
     this->Matrix->Identity();
     return;
     }
@@ -275,18 +283,12 @@ void vtkITKMutualInformationTransform::InternalUpdate()
                                  this->TargetImage,
                                  this->Matrix,
                                  dummy);
-#if 0
-  switch (this->SourceImage->GetScalarType())
-    {
-    vtkTemplateMacro4(vtkITKMutualInformationExecute, this,
-                 this->SourceImage, this->TargetImage,
-                 static_cast<VTK_TT>(0));
-                 
-    default:
-      vtkGenericWarningMacro("InternalUpdate: Unknown input ScalarType");
-      return;
-    }
-#endif
+}
+
+//------------------------------------------------------------------------
+void vtkITKMutualInformationTransform::Identity()
+{
+    this->Matrix->Identity();
 }
 
 //------------------------------------------------------------------------
