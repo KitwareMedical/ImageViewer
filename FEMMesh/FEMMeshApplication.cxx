@@ -68,9 +68,20 @@ void
 FEMMeshApplication
 ::CreateFEMMesh(void)
 {
-  this->FEMMeshApplicationBase::CreateFEMMesh();
+ 
+  try
+    {
+    this->FEMMeshApplicationBase::CreateFEMMesh();
+    }
+  catch( itk::ExceptionObject & excp )
+  {
+    fl_alert( excp.GetDescription() );
+    return;
+  }
+
   m_FlRenderWindowInteractor->redraw();
   Fl::check();
+
 }
 
 
