@@ -77,7 +77,9 @@ values.
 SETTING THE FILTER PARAMETERS
 
 How you set the filter parameters will obviously depend on the data that you
-are working with, but here are a few guidelines.
+are working with, but here are a few guidelines.  For more detailed information
+about the watershed algorithm and its parameters, see the documentation contained
+in itk::WatershedImageFilter.h.
 
 conductance_term
 
@@ -110,16 +112,17 @@ flood_level
  entire image.  Start with small percentages of 10 or 20 percent and work your
  way up.
 
+
 If in doubt, start with the following command line:
 
-itkWatershedSegmentationExample input_file.pgm output_file.raw 1.0 10 0.07 0.20
+itkWatershedSegmentationExample input_file.pgm output_prefix 1.0 10 0.07
 
 
 -----------------------------------------------------------------------------
 VIEWING THE RESULTS
 
-The algorithm will produce a labeled image in a raw, ascii format (no header).
-This image has potentially many thousands of label values.  All the parameters
+The algorithm will produce labeled images in a raw, ascii format (no header).
+These images have potentially many thousands of label values.  All the parameters
 described above will affect the number of regions produced.  Typically, raising
 the values of the parameters lowers the number of segments produced. 
 
@@ -130,12 +133,3 @@ spread close label values far apart in the RGB range.  A hashing scheme that
 puts more weight on least-significant integer bits is a good way to accomplish
 this.
 
--------------------------------------------------------------------------------
-EXTENDING THIS EXAMPLE
-
-The itkWatershedImageFilter is designed to work with
-itkRelabelWatershedImageFilter to relabel the basic output at different "flood
-levels." See the Doxygen documentation for these two classes and the file
-InsightDocuments/User/AlgorithmsGuide/WatershedSegmentationGuide.ps for more
-information.  Once the initial segmentation is done, this relabeling is
-comparatively fast and can be done interactively.
