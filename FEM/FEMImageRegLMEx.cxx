@@ -134,8 +134,16 @@ void ReadRawImageFiles( RegistrationType* X)
 //  X->SetTargetImage(tarfilter->GetOutput());
 }
 
-int main() 
-{ 
+int main(int argc, char *argv[])
+{
+  char* paramname;
+  if ( argc < 2 )
+    {
+    std::cout << "Parameter file name missing" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Usage:  FEMImageRegLMEx param.file" << std::endl;
+    paramname="U:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt";
+    } else paramname=argv[1];
   
 // Register the correct load implementation with the element typed visitor dispatcher. 
   {
@@ -149,7 +157,7 @@ int main()
 
   RegistrationType::Pointer X= RegistrationType::New(); // Declare the registration class
 
-  X->SetConfigFileName("U:\\noe\\dev\\C\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
+  X->SetConfigFileName(paramname);
   //X->SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
   if (  !X->ReadConfigFile( (X->GetConfigFileName()).c_str() ) ) { return -1; }
  
