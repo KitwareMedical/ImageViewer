@@ -54,7 +54,7 @@ integer.  (But see below for hooks to change these parameters.)
 
 #include "itkAffineTransform.h"
 #include "itkByteSwapper.h"
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkImageMomentsCalculator.h"
 #include "itkResampleImageFilter.h"
 #include "itkSimpleImageRegionIterator.h"
@@ -63,7 +63,7 @@ integer.  (But see below for hooks to change these parameters.)
 enum {NDimensions = 3};
 
 typedef unsigned short                      PixelType;
-typedef itk::PhysicalImage<PixelType, NDimensions>  ImageType;
+typedef itk::Image<PixelType, NDimensions>  ImageType;
 typedef ImageType::RegionType               ImageRegionType;
 typedef ImageType::SizeType                 ImageSizeType;
 typedef ImageType::AffineTransformType      AffineTransformType;

@@ -64,7 +64,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkImageRegionIterator.h"
 
 #include <iostream>
@@ -73,7 +73,7 @@ int main()
 {
   //Allocate Images
   typedef float PixelType;
-  typedef itk::PhysicalImage<PixelType,2>      ImageType;
+  typedef itk::Image<PixelType,2>      ImageType;
   enum { ImageDimension = ImageType::ImageDimension };
 
   ImageType::SizeType size = {{100,100}};

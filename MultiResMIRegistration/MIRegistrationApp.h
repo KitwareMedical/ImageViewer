@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __MIRegistrationApp_h
 #define __MIRegistrationApp_h
 
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkMultiResolutionMutualInformationRigidRegistration.h"
 
 #include <string>
@@ -74,14 +74,14 @@ public:
   /**
    * InputImageType is the raw image type
    */
-  typedef itk::PhysicalImage<InputPixelType,ImageDimension>
+  typedef itk::Image<InputPixelType,ImageDimension>
     InputImageType;
   typedef InputImageType::Pointer InputImagePointer;
 
   /**
    * ImageType is the internal image type
    */
-  typedef itk::PhysicalImage<PixelType,ImageDimension>
+  typedef itk::Image<PixelType,ImageDimension>
     ImageType;
   typedef ImageType::Pointer ImagePointer;
 

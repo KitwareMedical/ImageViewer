@@ -80,7 +80,7 @@ public:
   /** 
    * Volume Image Type
    */
-  // typedef itk::PhysicalImage<unsigned short, 3> VolumeType;
+  // typedef itk::Image<unsigned short, 3> VolumeType;
   typedef li::VertebralSegmentRegistrator::VolumeImageType VolumeType;
 
 

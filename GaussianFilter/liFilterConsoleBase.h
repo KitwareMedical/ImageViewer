@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef liFILTERCONSOLEBASE
 #define liFILTERCONSOLEBASE
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkFileIOToImageFilter.h>
 #include <itkWriteMetaImage.h>
 #include <itkRecursiveGaussianImageFilter.h>
@@ -64,8 +64,8 @@ public:
   typedef   float                             PixelType;
   typedef   float                             ComputationType;
 
-  typedef   itk::PhysicalImage< InputPixelType, 3 >   InputImageType;
-  typedef   itk::PhysicalImage< PixelType, 3 >        ImageType;
+  typedef   itk::Image< InputPixelType, 3 >   InputImageType;
+  typedef   itk::Image< PixelType, 3 >        ImageType;
 
   typedef   itk::FileIOToImageFilter< 
                             InputImageType >       VolumeReaderType;

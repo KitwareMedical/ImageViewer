@@ -17,7 +17,7 @@
 #include <fltkGlWindow.h>
 #include <itkPoint.h>
 #include <itkLightObject.h>
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 
 
 namespace li 
@@ -68,8 +68,8 @@ public:
   /**
    *  Image type for real fluoroscopy
    */
-  //typedef itk::PhysicalImage< unsigned char, 2 > ImageType; 
-  typedef itk::PhysicalImage< unsigned short, 2 > ImageType; 
+  //typedef itk::Image< unsigned char, 2 > ImageType; 
+  typedef itk::Image< unsigned short, 2 > ImageType; 
 
 
   /**

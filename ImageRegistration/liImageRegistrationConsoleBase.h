@@ -43,8 +43,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef liIMAGEREGISTRATIONCONSOLEBASE
 #define liIMAGEREGISTRATIONCONSOLEBASE
 
-#include <itkPhysicalImage.h>
-#include <itkPhysicalImageAdaptor.h>
+#include <itkImage.h>
+#include <itkImageAdaptor.h>
 #include <itkFileIOToImageFilter.h>
 #include <itkWriteMetaImage.h>
 #include <itkImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration.h>
@@ -83,7 +83,7 @@ public:
 
   
   // Type of the image to be read from the file
-  typedef   itk::PhysicalImage< InputPixelType, 
+  typedef   itk::Image< InputPixelType, 
                                 ImageDimension >          InputImageType;
 
   // Data Accessor to convert image pixels from 
@@ -93,16 +93,16 @@ public:
 
   // ImageAdaptor that will simulate that the input image
   // is an image with pixels of internal type
-  typedef   itk::PhysicalImageAdaptor< InputImageType,
+  typedef   itk::ImageAdaptor< InputImageType,
                                        DataAccessorType >   TargetType;
                                        
   // Type of the Reference image                                     
-  typedef   itk::PhysicalImage< PixelType, 
+  typedef   itk::Image< PixelType, 
                                 ImageDimension >          ReferenceType;
 
 
    // Type of the Mapped Reference image
-  typedef   itk::PhysicalImage< PixelType, 
+  typedef   itk::Image< PixelType, 
                                 ImageDimension >      MappedReferenceType;
 
  
