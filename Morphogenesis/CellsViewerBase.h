@@ -25,7 +25,8 @@ namespace bio {
 */
 class CellsViewerBase
 {
-
+public:
+    
   typedef unsigned char                               PixelType;
   
   typedef itk::Image<PixelType, Cell::Dimension >     ImageType;

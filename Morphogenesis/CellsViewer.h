@@ -21,6 +21,9 @@ class CellsViewer : public CellsViewerGUI
 
 public:
 
+  typedef CellsViewerBase::SubstratesType        SubstratesType;
+  typedef CellsViewerBase::SubstratesDrawersType SubstratesDrawersType;
+
 	CellsViewer();
 
 	virtual ~CellsViewer();
