@@ -261,7 +261,7 @@ ThinPlateSplinesApplicationBase
   m_VTKSourceLandMarks->Allocate( numberOfLandMarks + 2  );
   m_VTKTargetLandMarks->Allocate( numberOfLandMarks + 2  );
 
-  vtkIdType pointId = itk::NumericTraits< vtkIdType >::Zero; 
+  vtkIdType pointId = 0;
 
   typedef PointSetType::PointsContainer::Iterator  PointIteratorType;
   PointIteratorType slm = m_SourceLandMarks->GetPoints()->Begin();
@@ -379,7 +379,7 @@ ThinPlateSplinesApplicationBase
 
   m_TimeCollector.Start("VTK Thin Plate Spline");
 
-  vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
+  vtkIdType pointCounter = 0;
   while( point != end )
     {
     PointType & p = *point;
@@ -391,7 +391,7 @@ ThinPlateSplinesApplicationBase
 
   m_TimeCollector.Stop("VTK Thin Plate Spline");
 
-  pointCounter = itk::NumericTraits< vtkIdType >::Zero;
+  pointCounter = 0;
   for( unsigned int i=0; i<m_PointsToTransform.size(); i++ )
     {
     m_VTKLinesTransformedByVTK->InsertNextCell( VTK_VERTEX, &pointCounter );
@@ -584,7 +584,7 @@ ThinPlateSplinesApplicationBase
   PointArrayType::iterator point = m_PointsTransformedByITK.begin();
   PointArrayType::iterator end   = m_PointsTransformedByITK.end();
 
-  vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
+  vtkIdType pointCounter = 0;
 
   while( point != end )
     {
@@ -623,7 +623,7 @@ ThinPlateSplinesApplicationBase
 
   m_VTKPointsToTransform->SetNumberOfPoints( nx * ny * nz );
 
-  vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
+  vtkIdType pointCounter = 0;
 
   PointType p;
   for(unsigned int z=0; z<nz; z++)
