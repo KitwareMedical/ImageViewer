@@ -450,7 +450,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
     }
   cWinMinX = ti;
   cWinMaxX = cWinSizeX - 1; // here
-  if( cWinMaxX >= cDimSize[ cWinOrder[0] ] )
+  if( cWinMaxX >= static_cast<int>( cDimSize[ cWinOrder[0] ] ) )
     {
     cWinMaxX = cDimSize[ cWinOrder[0] ] - 1;
     }
@@ -468,7 +468,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
     } 
   cWinMinY = ti;
   cWinMaxY = cWinSizeY - 1; // here
-  if( cWinMaxY >= cDimSize[ cWinOrder[1] ] ) 
+  if( cWinMaxY >= static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
     {
     cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
     }
@@ -910,7 +910,8 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       glDisable(GL_BLEND);
       }
     if( cViewCrosshairs 
-      && (int)(cClickSelect[cWinOrder[2]]) == sliceNum())
+      && static_cast<int>(cClickSelect[cWinOrder[2]]) == 
+         static_cast<int>( sliceNum() ) )
       {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
