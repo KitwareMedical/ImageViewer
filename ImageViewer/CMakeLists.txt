@@ -6,6 +6,7 @@ ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Utilities/GlutMaster
+${GLUT_INCLUDE_DIR}
 ${OPENGL_INCLUDE_PATH}
 )
 
@@ -21,5 +22,5 @@ LINK_LIBRARIES (
 
 ADD_EXECUTABLE(ImageViewer itkImageViewer.cxx )
 
-TARGET_LINK_LIBRARIES(ImageViewer ITKGlut )
+TARGET_LINK_LIBRARIES(ImageViewer ITKIO ITKGlut )
 
