@@ -32,6 +32,15 @@ RegionGrowingSegmentation
 
   m_InputImageViewer.SetLabel("Input Image");
 
+  m_CurvatureFlowImageViewer.SetLabel("Curvature Flow Image");
+  m_CurvatureFlowImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );  
+
+  m_GradientAnisotropicDiffusionImageViewer.SetLabel("Gradient Anisotropic Diffusion Image");
+  m_GradientAnisotropicDiffusionImageViewer.SetImage( m_GradientAnisotropicDiffusionImageFilter->GetOutput() );  
+
+  m_CurvatureAnisotropicDiffusionImageViewer.SetLabel("Curvature Anisotropic Diffusion Image");
+  m_CurvatureAnisotropicDiffusionImageViewer.SetImage( m_CurvatureAnisotropicDiffusionImageFilter->GetOutput() );  
+
   m_ConnectedThresholdImageViewer.SetLabel("Connected Threshold Image");
   m_ConnectedThresholdImageViewer.SetImage( m_ConnectedThresholdImageFilter->GetOutput() );  
 
@@ -41,9 +50,9 @@ RegionGrowingSegmentation
   m_FuzzyConnectedImageViewer.SetLabel("Fuzzy Connected Image");
   m_FuzzyConnectedImageViewer.SetImage( m_FuzzyConnectedImageFilter->GetOutput() );  
 
-  m_HomogeneousImageViewer.SetLabel("Curvature Flow Image");
+  m_HomogeneousImageViewer.SetLabel("Homogeneous Image");
   m_HomogeneousImageViewer.ClickSelectCallBack( ClickSelectCallback, (void *)this);
-  m_HomogeneousImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );
+  m_HomogeneousImageViewer.SetImage( m_NullImageFilter->GetOutput() );
 
   // Initialize ITK filter with GUI values
   m_ConnectedThresholdImageFilter->SetLower( 
@@ -53,10 +62,28 @@ RegionGrowingSegmentation
       static_cast<InputPixelType>( upperThresholdCounter->value() ) );
 
   m_CurvatureFlowImageFilter->SetNumberOfIterations(
-                                   static_cast<unsigned int>(iterationsValueInput->value()) );
+         static_cast<unsigned int>(curvatureFlowIterationsValueInput->value()) );
 
   m_CurvatureFlowImageFilter->SetTimeStep(
-                                   timeStep->value() );
+                                   curvatureFlowTimeStepValueInput->value() );
+
+  m_CurvatureAnisotropicDiffusionImageFilter->SetIterations(
+         static_cast<unsigned int>(curvatureAnisotropicDiffusionIterationsValueInput->value()) );
+
+  m_CurvatureAnisotropicDiffusionImageFilter->SetTimeStep(
+                                   curvatureAnisotropicDiffusionTimeStepValueInput->value() );
+
+  m_CurvatureAnisotropicDiffusionImageFilter->SetConductanceParameter(
+                                   curvatureAnisotropicDiffusionConductanceValueInput->value() );
+
+  m_GradientAnisotropicDiffusionImageFilter->SetIterations(
+         static_cast<unsigned int>(gradientAnisotropicDiffusionIterationsValueInput->value()) );
+
+  m_GradientAnisotropicDiffusionImageFilter->SetTimeStep(
+                                   gradientAnisotropicDiffusionTimeStepValueInput->value() );
+
+  m_GradientAnisotropicDiffusionImageFilter->SetConductanceParameter(
+                                   gradientAnisotropicDiffusionConductanceValueInput->value() );
 
   m_ConfidenceConnectedImageFilter->SetMultiplier( multiplierValueInput->value() );
 
@@ -70,16 +97,22 @@ RegionGrowingSegmentation
 
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
-  loadInputImageButton->Observe(  m_ImageReader.GetPointer() );
-  homogeneousImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
+  homogeneousImageButton->Observe( m_NullImageFilter.GetPointer() );
   thresholdConnectedImageButton->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
   confidenceConnectedImageButton->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
   fuzzyConnectedImageButton->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
+  curvatureFlowImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
+  gradientAnisotropicDiffusionImageButton->Observe( m_GradientAnisotropicDiffusionImageFilter.GetPointer() );
+  curvatureAnisotropicDiffusionImageButton->Observe( m_CurvatureAnisotropicDiffusionImageFilter.GetPointer() );
 
+  progressSlider->Observe( m_CastImageFilter.GetPointer() );
+  progressSlider->Observe( m_NullImageFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
+  progressSlider->Observe( m_CurvatureFlowImageFilter.GetPointer() );
+  progressSlider->Observe( m_CurvatureAnisotropicDiffusionImageFilter.GetPointer() );
+  progressSlider->Observe( m_GradientAnisotropicDiffusionImageFilter.GetPointer() );
   progressSlider->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
   progressSlider->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
-  progressSlider->Observe( m_CurvatureFlowImageFilter.GetPointer() );
   progressSlider->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
 
 }
@@ -125,6 +158,9 @@ RegionGrowingSegmentation
 ::Quit(void)
 {
   m_InputImageViewer.Hide();
+  m_CurvatureFlowImageViewer.Hide();
+  m_GradientAnisotropicDiffusionImageViewer.Hide();
+  m_CurvatureAnisotropicDiffusionImageViewer.Hide();
   m_ConnectedThresholdImageViewer.Hide();
   m_ConfidenceConnectedImageViewer.Hide();
   m_HomogeneousImageViewer.Hide();
@@ -283,11 +319,69 @@ void
 RegionGrowingSegmentation
 ::ShowHomogeneousImage( void )
 {
-  m_CurvatureFlowImageFilter->Update();
-  m_HomogeneousImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );  
+  m_NullImageFilter->Update();
+  m_HomogeneousImageViewer.SetImage( m_NullImageFilter->GetOutput() );  
   m_HomogeneousImageViewer.Show();
 
 }
+
+
+
+
+ 
+/************************************
+ *
+ *  Show Curvature Flow Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowCurvatureFlowImage( void )
+{
+  m_CurvatureFlowImageFilter->Update();
+  m_CurvatureFlowImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );  
+  m_CurvatureFlowImageViewer.Show();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Show Gradient Anisotropic Diffusion Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowGradientAnisotropicDiffusionImage( void )
+{
+  m_GradientAnisotropicDiffusionImageFilter->Update();
+  m_GradientAnisotropicDiffusionImageViewer.SetImage( m_GradientAnisotropicDiffusionImageFilter->GetOutput() );  
+  m_GradientAnisotropicDiffusionImageViewer.Show();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Show Curvature Anisotropic Diffusion Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowCurvatureAnisotropicDiffusionImage( void )
+{
+  m_CurvatureAnisotropicDiffusionImageFilter->Update();
+  m_CurvatureAnisotropicDiffusionImageViewer.SetImage( m_CurvatureAnisotropicDiffusionImageFilter->GetOutput() );  
+  m_CurvatureAnisotropicDiffusionImageViewer.Show();
+
+}
+
+
+
 
 
 
@@ -338,9 +432,6 @@ RegionGrowingSegmentation
 
 
   
-
-
-
 
 
 /*  Finaly the main() that will instantiate the application  */

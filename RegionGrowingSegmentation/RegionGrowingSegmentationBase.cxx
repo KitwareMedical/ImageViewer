@@ -43,14 +43,23 @@ RegionGrowingSegmentationBase
   m_CurvatureFlowImageFilter = CurvatureFlowImageFilterType::New();
   m_CurvatureFlowImageFilter->SetInput( m_CastImageFilter->GetOutput() );
 
+  m_CurvatureAnisotropicDiffusionImageFilter = CurvatureAnisotropicDiffusionImageFilterType::New();
+  m_CurvatureAnisotropicDiffusionImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+  
+  m_GradientAnisotropicDiffusionImageFilter = GradientAnisotropicDiffusionImageFilterType::New();
+  m_GradientAnisotropicDiffusionImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+  
+  m_NullImageFilter = NullImageFilterType::New();
+  m_NullImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+
   m_ConnectedThresholdImageFilter = ConnectedThresholdImageFilterType::New();
-  m_ConnectedThresholdImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+  m_ConnectedThresholdImageFilter->SetInput( m_NullImageFilter->GetOutput() );
 
   m_ConfidenceConnectedImageFilter = ConfidenceConnectedImageFilterType::New();
-  m_ConfidenceConnectedImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+  m_ConfidenceConnectedImageFilter->SetInput( m_NullImageFilter->GetOutput() );
 
   m_FuzzyConnectedImageFilter = FuzzyConnectedImageFilterType::New();
-  m_FuzzyConnectedImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+  m_FuzzyConnectedImageFilter->SetInput( m_NullImageFilter->GetOutput() );
 
   m_InputImageIsLoaded  = false;
 
@@ -93,6 +102,36 @@ RegionGrowingSegmentationBase
   m_InputImageIsLoaded = true;
 
 }
+
+
+
+
+/************************************
+ *
+ *  Select Smoothing Filter
+ *
+ ***********************************/
+void
+RegionGrowingSegmentationBase
+::SelectSmoothingFilter( unsigned int choice )
+{
+  switch(choice)
+    {
+    case 0:
+      m_NullImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+      break;
+    case 1:
+      m_NullImageFilter->SetInput( m_GradientAnisotropicDiffusionImageFilter->GetOutput() );
+      break;
+    case 2:
+      m_NullImageFilter->SetInput( m_CurvatureAnisotropicDiffusionImageFilter->GetOutput() );
+      break;
+    }
+}
+
+
+
+
 
 
 

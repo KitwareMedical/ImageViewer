@@ -17,15 +17,20 @@
 #ifndef REGIONGROWINGSEGMENTATIONBASE
 #define REGIONGROWINGSEGMENTATIONBASE
 
-#include <itkImage.h>
 #include <itkImageFileReader.h>
 #include <itkImageFileWriter.h>
+
+#include <itkImage.h>
+#include <itkCastImageFilter.h>
 
 #include <itkConnectedThresholdImageFilter.h>
 #include <itkConfidenceConnectedImageFilter.h>
 #include <itkSimpleFuzzyConnectednessScalarImageFilter.h>
+
 #include <itkCurvatureFlowImageFilter.h>
-#include <itkCastImageFilter.h>
+#include <itkGradientAnisotropicDiffusionImageFilter.h>
+#include <itkCurvatureAnisotropicDiffusionImageFilter.h>
+
 
 
 /**
@@ -44,7 +49,7 @@ public:
   typedef   unsigned char                         InputPixelType;
 
   /** Pixel type to be used internally */
-  typedef   double                                InternalPixelType;
+  typedef   float                                 InternalPixelType;
   
   /** Type of the input image */
   typedef   itk::Image<InputPixelType,ImageDimension>    InputImageType;
@@ -60,11 +65,29 @@ public:
                  InputImageType, 
                  InternalImageType >     CastImageFilterType;
 
+  /** Null filter used to select smoothing filter */
+  typedef   itk::CastImageFilter< 
+                 InternalImageType, 
+                 InternalImageType >     NullImageFilterType;
+
+
 
   /** Curvature flow image filter for producing homogeneous regions */
   typedef   itk::CurvatureFlowImageFilter< 
                  InternalImageType, 
                  InternalImageType >     CurvatureFlowImageFilterType;
+
+  /** Curvature Anisotropic Diffusion Image Filter */
+  typedef   itk::CurvatureAnisotropicDiffusionImageFilter< 
+                 InternalImageType, 
+                 InternalImageType > CurvatureAnisotropicDiffusionImageFilterType;
+
+  /** Gradient Anisotropic Diffusion Image Filter */
+  typedef   itk::GradientAnisotropicDiffusionImageFilter< 
+                 InternalImageType, 
+                 InternalImageType > GradientAnisotropicDiffusionImageFilterType;
+
+
 
   /** Threshold Connected Image Filter */
   typedef   itk::ConnectedThresholdImageFilter< 
@@ -93,6 +116,9 @@ public:
 
   virtual void Stop(void);
 
+  virtual void SelectSmoothingFilter( unsigned int );
+
+
 protected:
 
   ImageReaderType::Pointer                    m_ImageReader;
@@ -101,7 +127,13 @@ protected:
 
   CastImageFilterType::Pointer                m_CastImageFilter;
 
+  NullImageFilterType::Pointer                m_NullImageFilter;
+
   CurvatureFlowImageFilterType::Pointer       m_CurvatureFlowImageFilter;
+
+  CurvatureAnisotropicDiffusionImageFilterType::Pointer  m_CurvatureAnisotropicDiffusionImageFilter;
+
+  GradientAnisotropicDiffusionImageFilterType::Pointer   m_GradientAnisotropicDiffusionImageFilter;
 
   ConnectedThresholdImageFilterType::Pointer  m_ConnectedThresholdImageFilter;
 

@@ -76,6 +76,9 @@ public:
   virtual void ShowFuzzyConnectedImage(void);
 
   virtual void ShowHomogeneousImage(void);
+  virtual void ShowCurvatureFlowImage(void);
+  virtual void ShowGradientAnisotropicDiffusionImage(void);
+  virtual void ShowCurvatureAnisotropicDiffusionImage(void);
 
   virtual void Quit(void);
 
@@ -85,6 +88,9 @@ public:
 
 private:
 
+  InternalImageViewerType     m_CurvatureFlowImageViewer;
+  InternalImageViewerType     m_GradientAnisotropicDiffusionImageViewer;
+  InternalImageViewerType     m_CurvatureAnisotropicDiffusionImageViewer;
   InternalImageViewerType     m_ConnectedThresholdImageViewer;
   InternalImageViewerType     m_ConfidenceConnectedImageViewer;
   InternalImageViewerType     m_FuzzyConnectedImageViewer;

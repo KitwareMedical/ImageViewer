@@ -10,203 +10,302 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   Function {RegionGrowingSegmentationGUI()} {open
   } {
     Fl_Window consoleWindow {
-      label {Region Growing Segmentation} open
-      xywh {126 327 830 459}
+      label {Region Growing Segmentation}
+      xywh {4 20 1079 459}
       code0 {\#include <RegionGrowingSegmentationBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
-      Fl_Group Connectors {selected
-        xywh {0 0 825 390}
+      Fl_Group Connectors {
+        xywh {0 0 1070 390}
       } {
         Fl_Box {} {
-          xywh {64 47 85 10} box UP_BOX color 4
+          xywh {725 38 108 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {490 38 108 10} box UP_BOX color 4
+          xywh {55 55 9 90} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {170 50 9 70} box UP_BOX color 4
+          xywh {575 36 68 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {170 125 9 70} box UP_BOX color 4
+          xywh {575 142 69 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {300 36 108 10} box UP_BOX color 4
+          xywh {575 240 68 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {301 142 108 10} box UP_BOX color 4
+          xywh {573 36 9 214} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {300 240 108 10} box UP_BOX color 4
+          xywh {500 147 9 48} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {300 36 9 214} box UP_BOX color 4
+          xywh {520 142 60 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {170 202 9 48} box UP_BOX color 4
+          xywh {726 142 104 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {60 116 85 9} box UP_BOX color 4
+          xywh {725 240 108 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {195 191 115 9} box UP_BOX color 4
+          xywh {112 36 62 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {491 143 108 10} box UP_BOX color 4
+          xywh {113 142 61 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {490 240 108 10} box UP_BOX color 4
+          xywh {112 276 67 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {112 36 9 249} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {71 142 74 9} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {267 36 62 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {422 141 52 9} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {268 142 61 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {267 277 67 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {422 35 9 252} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {348 36 83 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {349 142 82 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {348 277 83 10} box UP_BOX color 4
         }
       }
       Fl_Group controlsGroup {
-        xywh {5 5 820 385}
+        xywh {5 5 1065 385}
       } {
         Fl_Light_Button inputImageButton {
           label {Input Image}
           callback {ShowInputImage();}
-          xywh {129 41 96 25} type Normal value 1 selection_color 1 labelsize 12
+          xywh {20 129 78 39} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label Quit
           callback {this->Quit();}
-          xywh {595 330 65 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {825 325 90 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button thresholdConnectedImageButton {
-          label {Threshold Connected Image}
+          label Display
           callback {this->ShowConnectedThresholdImage();}
-          xywh {565 20 110 50} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {786 31 70 25} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Connected Threshold}
           callback {m_ConnectedThresholdImageFilter->Update();}
-          xywh {370 24 170 37} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {605 24 170 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Button {} {
           label {../../Documentation/Art/itkLogoSmall.gif}
-          xywh {705 308 100 67} box DOWN_FRAME labeltype image
+          xywh {940 303 105 67} box DOWN_FRAME labeltype image
         }
         Fl_Counter lowerThresholdCounter {
           label Lower
           callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );}
-          xywh {388 61 134 25} align 4 minimum 0 maximum 255 step 1 value 100
+          xywh {643 61 121 25} labelsize 12 align 4 minimum 0 maximum 255 step 1 value 100 textsize 12
           code0 {o->lstep(10.0);}
         }
         Fl_Counter upperThresholdCounter {
           label Upper
           callback {m_ConnectedThresholdImageFilter->SetUpper( static_cast<InputPixelType>( o->value() ) );}
-          xywh {388 86 134 25} align 4 minimum 0 maximum 255 step 1 value 200
+          xywh {643 86 121 25} labelsize 12 align 4 minimum 0 maximum 255 step 1 value 200 textsize 12
           code0 {o->lstep( 10.0 );}
         }
         Fl_Group seedGroup {
-          label {Seed Point} open
-          xywh {123 232 95 115} box ENGRAVED_BOX align 17
+          label {Seed Point}
+          xywh {453 183 95 115} box ENGRAVED_BOX align 17
         } {
           Fl_Value_Output xSeedPointValueOutput {
             label {X }
-            xywh {151 257 55 25}
+            xywh {481 208 55 25} labelsize 12 step 0.01 textsize 12
           }
           Fl_Value_Output ySeedPointValueOutput {
             label {Y }
-            xywh {151 284 55 25}
+            xywh {481 235 55 25} labelsize 12 step 0.01 textsize 12
           }
           Fl_Value_Output zSeedPointValueOutput {
             label {Z }
-            xywh {151 311 55 25}
+            xywh {481 262 55 25} labelsize 12 step 0.01 textsize 12
           }
         }
         Fl_Button {} {
           label {Curvature Flow}
           callback {m_CurvatureFlowImageFilter->Update();}
-          xywh {110 102 130 37} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {140 22 165 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button homogeneousImageButton {
           label {Homogeneous Image}
           callback {ShowHomogeneousImage();}
-          xywh {115 175 120 40} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {440 126 118 40} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
-        }
-        Fl_Group curvatureFlowGroup {open
-          xywh {21 101 75 115} box ENGRAVED_BOX align 17
-        } {
-          Fl_Value_Input timeStep {
-            label TimeStep
-            callback {m_CurvatureFlowImageFilter->SetTimeStep( o->value() );}
-            xywh {31 126 55 25} align 1 maximum 10 value 0.25
-          }
-          Fl_Value_Input iterationsValueInput {
-            label Iterations
-            callback {m_CurvatureFlowImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
-            xywh {31 171 55 25} align 1 minimum 1 maximum 100 value 2
-          }
         }
         Fl_Button {} {
           label {Confidence Connected}
           callback {m_ConfidenceConnectedImageFilter->Update();}
-          xywh {370 129 170 37} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {605 129 170 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button confidenceConnectedImageButton {
-          label {Confidence Connected Image}
+          label Display
           callback {this->ShowConfidenceConnectedImage();}
-          xywh {565 125 110 50} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {787 135 70 25} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Fuzzy Connected}
           callback {m_ConfidenceConnectedImageFilter->Update();}
-          xywh {370 227 170 37} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {605 227 170 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button fuzzyConnectedImageButton {
-          label {Fuzzy Connected Image}
+          label Display
           callback {this->ShowFuzzyConnectedImage();}
-          xywh {565 220 110 50} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {788 233 69 26} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
+        }
+        Fl_Value_Input curvatureFlowTimeStepValueInput {
+          label TimeStep
+          callback {m_CurvatureFlowImageFilter->SetTimeStep( o->value() );}
+          xywh {234 59 55 25} labelsize 12 maximum 10 value 0.125 textsize 12
+        }
+        Fl_Value_Input curvatureFlowIterationsValueInput {
+          label Iterations
+          callback {m_CurvatureFlowImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
+          xywh {234 84 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
+        }
+        Fl_Button {} {
+          label {Gradient Anisotropic Diffusion}
+          callback {m_GradientAnisotropicDiffusionImageFilter->Update();}
+          xywh {139 127 167 44} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Button {} {
+          label {Curvature Anisotropic Diffusion}
+          callback {m_CurvatureAnisotropicDiffusionImageFilter->Update();}
+          xywh {138 260 166 44} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Value_Input curvatureAnisotropicDiffusionTimeStepValueInput {
+          label TimeStep
+          callback {m_CurvatureAnisotropicDiffusionImageFilter->SetTimeStep( o->value() );}
+          xywh {232 304 55 25} labelsize 12 maximum 10 value 0.125 textsize 12
+        }
+        Fl_Value_Input gradientAnisotropicDiffusionTimeStepValueInput {
+          label TimeStep
+          callback {m_GradientAnisotropicDiffusionImageFilter->SetTimeStep( o->value() );}
+          xywh {237 171 55 25} labelsize 12 maximum 10 value 0.125 textsize 12
+        }
+        Fl_Value_Input gradientAnisotropicDiffusionIterationsValueInput {
+          label Iterations
+          callback {m_GradientAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
+          xywh {237 196 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
+        }
+        Fl_Value_Input curvatureAnisotropicDiffusionIterationsValueInput {
+          label Iterations
+          callback {m_CurvatureAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
+          xywh {232 329 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
+        }
+        Fl_Value_Input gradientAnisotropicDiffusionConductanceValueInput {
+          label Conductance
+          callback {m_GradientAnisotropicDiffusionImageFilter->SetConductanceParameter( o->value() );}
+          xywh {237 221 55 25} labelsize 12 maximum 10 step 0.01 value 3 textsize 12
+        }
+        Fl_Value_Input curvatureAnisotropicDiffusionConductanceValueInput {
+          label Conductance
+          callback {m_CurvatureAnisotropicDiffusionImageFilter->SetConductanceParameter( o->value() );}
+          xywh {232 354 55 25} labelsize 12 maximum 10 step 0.01 value 3 textsize 12
+        }
+        Fl_Light_Button curvatureFlowImageButton {
+          label Display
+          callback {this->ShowCurvatureFlowImage();} selected
+          xywh {317 29 68 24} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button gradientAnisotropicDiffusionImageButton {
+          label Display
+          callback {this->ShowGradientAnisotropicDiffusionImage();}
+          xywh {314 136 68 24} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button curvatureAnisotropicDiffusionImageButton {
+          label Display
+          callback {this->ShowCurvatureAnisotropicDiffusionImage();}
+          xywh {314 271 68 24} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
+        }
+        Fl_Button {} {
+          label Load
+          callback {this->LoadInputImage();}
+          xywh {20 48 81 35} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Group homogenizerGroup {open
+          xywh {390 20 50 285}
+        } {
+          Fl_Check_Button {} {
+            callback {this->SelectSmoothingFilter( 0 );}
+            xywh {394 28 26 26} type Radio down_box DIAMOND_DOWN_BOX value 1 selection_color 2
+          }
+          Fl_Check_Button {} {
+            callback {this->SelectSmoothingFilter( 1 );}
+            xywh {390 134 26 26} type Radio down_box DIAMOND_DOWN_BOX selection_color 2
+          }
+          Fl_Check_Button {} {
+            callback {this->SelectSmoothingFilter( 2 );}
+            xywh {393 269 26 26} type Radio down_box DIAMOND_DOWN_BOX selection_color 2
+          }
         }
       }
       Fl_Slider progressSlider {
-        xywh {10 397 810 15} type {Horz Fill} selection_color 2
+        xywh {10 397 1060 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {10 420 810 25}
-      }
-      Fl_Light_Button loadInputImageButton {
-        label Load
-        callback {this->LoadInputImage();}
-        xywh {29 41 65 25} type Normal value 1 selection_color 1 labelsize 12
-        class {fltk::LightButton}
+        xywh {10 420 1060 25}
       }
       Fl_Value_Input multiplierValueInput {
         label Multiplier
         callback {m_ConfidenceConnectedImageFilter->SetMultiplier( o->value() );}
-        xywh {462 167 55 25} minimum 1 maximum 100 value 2.5
+        xywh {697 167 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
       }
       Fl_Value_Input iterationsConfidenceValueInput {
         label Iterations
         callback {m_ConfidenceConnectedImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
-        xywh {462 193 55 25} minimum 1 maximum 100 value 2
+        xywh {697 193 55 25} labelsize 12 minimum 1 maximum 100 value 2 textsize 12
       }
       Fl_Value_Input fuzzyMeanValueInput {
         label Mean
         callback {m_FuzzyConnectedImageFilter->SetMean( o->value() );}
-        xywh {465 265 55 25} minimum 1 maximum 100 value 2.5
+        xywh {700 265 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
       }
       Fl_Value_Input fuzzyVarianceValueInput {
         label Variance
         callback {m_FuzzyConnectedImageFilter->SetVariance( o->value() );}
-        xywh {465 291 55 25} minimum 1 maximum 100 value 2.5
+        xywh {700 291 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
       }
       Fl_Value_Input fuzzyDiffMeanValueInput {
         label {Diff Mean}
         callback {m_FuzzyConnectedImageFilter->SetDiff_Mean( o->value() );}
-        xywh {465 317 55 25} minimum 1 maximum 100 value 2.5
+        xywh {700 317 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
       }
       Fl_Value_Input fuzzyDiffVarianceValueInput {
         label {Diff Variance}
         callback {m_FuzzyConnectedImageFilter->SetDiff_Variance( o->value() );}
-        xywh {465 344 55 25} minimum 1 maximum 100 value 2.5
+        xywh {700 344 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
       }
     }
   }
@@ -229,5 +328,11 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   Function {ShowConfidenceConnectedImage( void )} {return_type {virtual void}
   } {}
   Function {ShowFuzzyConnectedImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowCurvatureFlowImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowCurvatureAnisotropicDiffusionImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowGradientAnisotropicDiffusionImage( void )} {return_type {virtual void}
   } {}
 } 
