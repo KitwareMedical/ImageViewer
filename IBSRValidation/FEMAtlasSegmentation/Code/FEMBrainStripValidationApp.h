@@ -17,7 +17,6 @@
 #ifndef _FEMBrainStripValidationApp_h
 #define _FEMBrainStripValidationApp_h
 
-#include <string>
 #include "itkFEM.h"
 
 #include "../../AtlasSegmentation/Code/ApplicationBase.h"
@@ -27,6 +26,8 @@
 #include "FEMRegistrator.h"
 #include "FEMAtlasLabeler.h"
 #include "../../AtlasSegmentation/Code/ValidationOutput.h"
+
+#include <string>
 
 namespace itk
 {

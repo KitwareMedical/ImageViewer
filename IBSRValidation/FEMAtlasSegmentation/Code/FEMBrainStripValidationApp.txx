@@ -73,7 +73,7 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 
   if ( Resample){  
   
-  typedef ImageType::SizeType                 ImageSizeType;
+  typedef typename ImageType::SizeType                 ImageSizeType;
   typedef itk::AffineTransform<double,ImageDimension>   AffineTransformType;
   typedef itk::LinearInterpolateImageFunction<ImageType,double>  InterpolatorType;
 

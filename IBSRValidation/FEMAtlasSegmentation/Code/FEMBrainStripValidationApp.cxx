@@ -22,9 +22,9 @@
 #include <iostream>
 #include <fstream>
 
+#include "FEMBrainStripValidationApp.h"
 #include "itkImage.h"
 #include "itkExceptionObject.h"
-#include "FEMBrainStripValidationApp.h"
 
 // to use:  FEMBrainStripValidationApp U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\input_1.txt 
 typedef itk::Image<unsigned char,3> ImageType;

@@ -130,7 +130,7 @@ public:
   /** Set the moving image. */
   itkGetObjectMacro( WarpedAtlasLabelImage, LabelImageType );
 
-  /** Set FEM registration configuratrion filename. */
+  /* Set FEM registration configuratrion filename. */
   itkSetStringMacro( FEMConfigurationFileName );
 
   /** Method to execute the registration. */
