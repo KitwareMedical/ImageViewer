@@ -26,8 +26,14 @@ namespace itk {
 namespace fem {
    
 // Register load class.
-typedef  ImageMetricLoad<ImageRegLMEx::ImageType,ImageRegLMEx::ImageType> LMClass2;
-template class itk::fem::ImageMetricLoadImplementation<LMClass2>;
+template class itk::fem::ImageMetricLoadImplementation<ImageRegLMEx::ImageMetricLoadType>;
+
+
+template<class TLoadClass>
+const bool ImageMetricLoadImplementation<TLoadClass>::registered=
+VisitorDispatcher<ImageRegLMEx::ElementType,ImageRegLMEx::ElementType::LoadType, ImageRegLMEx::ElementType::LoadImplementationFunctionPointer>
+  ::RegisterVisitor((ImageRegLMEx::ImageMetricLoadType*)0, &ImageMetricLoadImplementation<ImageRegLMEx::ImageMetricLoadType>::ImplementImageMetricLoad);
+
 
 ImageRegLMEx::ImageRegLMEx( )
 {
@@ -95,7 +101,7 @@ void ImageRegLMEx::RunRegistration()
     itpackWrapper.JacobianSemiIterative(); 
     m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
 
-    m_Load=LMClass2::New();
+    m_Load=ImageRegLMEx::ImageMetricLoadType::New();
 
     m_Load->SetReferenceImage(m_RefImg);
     m_Load->SetTargetImage(m_TarImg);
@@ -109,7 +115,7 @@ void ImageRegLMEx::RunRegistration()
     m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
     m_Load->SetSign((Float)m_DescentDirection);
     m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
-    m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+    m_Load=dynamic_cast<ImageRegLMEx::ImageMetricLoadType*> (&*m_Solver.load.Find(m_Solver.load.size()));  
   
  
     m_Solver.AssembleKandM();
@@ -589,7 +595,7 @@ void ImageRegLMEx::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
   else { std::cout << "no landmark file specified." << std::endl; }
   }
   
-  m_Load=LMClass2::New();
+  m_Load=ImageRegLMEx::ImageMetricLoadType::New();
 
   m_Load->SetReferenceImage(m_RefImg);
   m_Load->SetTargetImage(m_TarImg);
@@ -603,7 +609,7 @@ void ImageRegLMEx::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
   m_Load->GN=mySolver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
   m_Load->SetSign((Float)m_DescentDirection);
   mySolver.load.push_back( FEMP<Load>(&*m_Load) );    
-  m_Load=dynamic_cast<LMClass2*> (&*mySolver.load.Find(mySolver.load.size()));  
+  m_Load=dynamic_cast<ImageRegLMEx::ImageMetricLoadType*> (&*mySolver.load.Find(mySolver.load.size()));  
   
   return;
 }
@@ -881,7 +887,7 @@ void ImageRegLMEx::MultiResSolve()
       itpackWrapper.JacobianSemiIterative(); 
       m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
 
-      m_Load=LMClass2::New();
+      m_Load=ImageRegLMEx::ImageMetricLoadType::New();
 
       Rcaster2->SetInput(pyramidR->GetOutput(i)); Rcaster2->Update();
       m_Load->SetReferenceImage(Rcaster2->GetOutput()); 
@@ -899,7 +905,7 @@ void ImageRegLMEx::MultiResSolve()
       m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
       m_Load->SetSign((Float)m_DescentDirection);
       m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
-      m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+      m_Load=dynamic_cast<ImageRegLMEx::ImageMetricLoadType*> (&*m_Solver.load.Find(m_Solver.load.size()));  
    
       m_Solver.AssembleKandM();
  

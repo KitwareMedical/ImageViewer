@@ -16,7 +16,6 @@
 =========================================================================*/
 
 #include "itkFEM.h"
-//#include "itkFEMLoadLandmark.h"
 #include "itkFEMLinearSystemWrapperItpack.h"
 #include "itkFEMLinearSystemWrapperDenseVNL.h"
 
@@ -138,6 +137,10 @@ public:
   typedef itk::ImageRegionIteratorWithIndex<FieldType> FieldIterator; 
   typedef itk::VectorIndexSelectionCastImageFilter<FieldType,FloatImageType> IndexSelectCasterType;
 
+  
+   
+/** Instantiate the load class with the correct image type. */
+  typedef  ImageMetricLoad<ImageType,ImageType> ImageMetricLoadType;
   /**
    * Easy access to the FEMObjectFactory. We create a new class
    * whose name is shorter and it's not templated...
@@ -160,7 +163,7 @@ public:
   /** Helper functions */
   /** Reads images from m_ReferenceFileName and m_TargetFileName */
   void  ReadImages();  
-  /** This function generates a rectangular mesh of ElementsPerSide^D size */
+  /** This function generates a regular mesh of ElementsPerSide^D size */
   void CreateMesh(ImageSizeType MeshOrigin, ImageSizeType MeshSize, 
                               double ElementsPerSide, Solver& S);
   /** The loads are entered into the solver. */
@@ -207,11 +210,22 @@ public:
   void DoSearchForMinAtEachResolution(bool b) { m_SearchForMinAtEachLevel=b; } 
   void UseLandmarks(bool b) {m_UseLandmarks=b;}
   void WriteDisplacements(bool b) {m_WriteDisplacementField=b;}
+  SolverType* GetSolver(){return &m_Solver;}
+
+
+  ImageRegLMEx( ); 
+
+
+  const char* ConfigFileName;
+  bool  m_WriteDisplacementField;
+  const char* m_ResultsFileName;
+  SolverType m_Solver; // Defines the solver to use
+
+  private :
 
   const char* m_ReferenceFileName;  
   const char* m_TargetFileName;
   const char* m_LandmarkFileName;
-  const char* m_ResultsFileName;
   const char* m_DisplacementsFileName;
 
   unsigned int m_MeshResolution; // determines maximum resolution of regular mesh
@@ -236,13 +250,10 @@ public:
   bool  m_DoMultiRes;
   bool  m_SearchForMinAtEachLevel;
   bool  m_UseLandmarks;
-  bool  m_WriteDisplacementField;
   Float m_LineSearchStep;
   Sign  m_DescentDirection;
   int m_FileCount; // keeps track of number of files written
 
-  SolverType m_Solver; // Defines the solver to use
-  SolverType* GetSolver(){return &m_Solver;}
   ImageMetricLoad<ImageType,ImageType>* m_Load; // Defines the load to use
    
   ImageType::RegionType m_FieldRegion;
@@ -265,19 +276,8 @@ public:
   ImageType::IndexType m_Rindex;
   ImageType::IndexType m_Tindex;
 
-  const char* ConfigFileName;
   ElementType::Pointer e1;
-/** for quadrature rules, see
-"Exact Integrations of Polynomials and Symmetric 
-Quadrature Formulas over Arbitrary Polyhedral Grids", journal
-of computational physics, 140, 122-147 (1998)
 
-  
-A. Stroud (1971), Approximate Calculation of Multiple Integrals,
-Prentice-Hall.
-  */
-
-  ImageRegLMEx( ); 
  
 
 };
