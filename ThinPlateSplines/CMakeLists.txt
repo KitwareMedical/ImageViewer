@@ -8,7 +8,9 @@ ${ITK_SOURCE_DIR}/Code/Numerics
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
 ${ITK_SOURCE_DIR}/Examples/ThinPlateSplines
+${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/ThinPlateSplines
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
@@ -16,6 +18,7 @@ ${OPENGL_INCLUDE_PATH}
 LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/Numerics
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${FLTK_LIB_PATH}
 )
 
@@ -29,6 +32,7 @@ LINK_LIBRARIES(
   vtkIO
   vtkFiltering
   vtkCommon
+  FltkImageViewer
 )
 
 SOURCE_FILES(ThinPlateSplinesApplication_SRCS
