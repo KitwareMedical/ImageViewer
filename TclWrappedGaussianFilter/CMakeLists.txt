@@ -7,49 +7,62 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindCABLE.cmake)
 INCLUDE_DIRECTORIES (
   ${TCL_INCLUDE_PATH}
   ${CABLE_INCLUDE_DIR}
+  ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl/doc
+  ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vnl  
   ${ITK_SOURCE_DIR}/Code/Common
+  ${ITK_SOURCE_DIR}/Code/IO
   ${ITK_SOURCE_DIR}/Code/BasicFilters
   ${ITK_SOURCE_DIR}/Code/Algorithms
-  ${ITK_SOURCE_DIR}/Code/IO
   ${ITK_SOURCE_DIR}/Examples/TclWrappedGaussianFilter
-  ${ITK_SOURCE_DIR}/Code/Numerics
-  ${ITK_SOURCE_DIR}/Code/Numerics/vxl
-  ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vnl
   )
 
 LINK_LIBRARIES (
   ${TCL_LIBRARY}
   ${CABLE_TCL_LIBRARY}
-  ${ITK_BINARY_DIR}/Code/Common
+  ${ITK_BINARY_DIR}/Code/IO
   ${ITK_BINARY_DIR}/Code/BasicFilters
   ${ITK_BINARY_DIR}/Code/Algorithms
-  ${ITK_BINARY_DIR}/Code/IO
+  ${ITK_BINARY_DIR}/Code/Numerics
+  ${ITK_BINARY_DIR}/Code/Common
   ) 
 
 ADD_LIBRARY (GaussianFilterTcl SHARED)
 
+
+#
+#  Definitions equivalent to C-typedefs
+#
+CABLE_CLASS_SET( PixelType                "unsigned char"                            )
+CABLE_CLASS_SET( Dimension                  3                                        )
+CABLE_CLASS_SET( itkImage3DBase           "itk::ImageBase<$Dimension>"               )
+CABLE_CLASS_SET( itkImage3DUchar          "itk::Image<$PixelType,$Dimension>"        )
+CABLE_CLASS_SET( itkImage3DUcharPointer   "itk::SmartPointer< $itkImage3DUchar >"    )
+CABLE_CLASS_SET( itkVector3Ddouble        "itk::Vector<double, $Dimension>"          )
+CABLE_CLASS_SET( itkImage3DRegion         "itk::ImageRegion<$Dimension>"             )
+CABLE_CLASS_SET( itkSize3DType            "itk::Size<$Dimension>"                    )
+CABLE_CLASS_SET( itkIndex3DType           "itk::Index<$Dimension>"                   )
+CABLE_CLASS_SET( itkImageReader           "itk::ImageFileReader< $itkImage3DUchar >" )
+
+
+#
 # Each class follows the format:
 # [tag:]class_name[;source1;source2;...]
 #  
-CABLE_WRAP_TCL ( GaussianFilterTcl
-    "itkVector3D:itk::Vector<double,3>;itkVector.h"
-    "itkLightObject:itkLightObject;itkLightObject.h"
-    "itkObject:itk::Object;itkObject.h"
-    "itkDataObject:itkDataObject;itkDataObject.h"
-    "itkSize3D:itk::Size<3>:itkSize.h"
-    "itkIndex3D:itk::Index<3>:itkIndex.h"
-    "itkArray3DULong:itk::Array<unsigned long,3>;itkArray.h"
-    "itkArray3DDouble:itk::Array<double,3>;itkArray.h"
-    "itkArray3DInt:itk::Array<int,3>;itkArray.h"
-    "itkImage3DBase:itk::ImageBase<3>;itkImageBase.h"
-    "itkImage3DChar:itk::Image<char,3>;itkImage.h"
-    "itkImage3DRegion:itk::ImageRegion<3>;itkImageRegion.h" 
-    "itkImage3DCharPointer:itk::Image<char,3>::Pointer;itkImage.h"
-    "itkSmoothingGaussianFilter:itk::RecursiveGaussianImageFilter< itk::Image<char,3> , itk::Image<char,3> ,double>;itkRecursiveGaussianImageFilter.h"
+CABLE_WRAP_TCL ( GaussianFilterTcl 
+    "$itkImage3DBase;itkImageBase.h"
+    "$itkImage3DUchar;itkImage.h"
+    "$itkImage3DUcharPointer;itkImage.h"
+    "$itkVector3Ddouble;itkVector.h"
+    "$itkImage3DRegion;itkImageRegion.h"
+    "$itkSize3DType;itkSize.h"
+    "$itkIndex3DType;itkIndex.h"
+    "itk::ImageIOBase;itkImageIOBase.h"
+    "itk::ImageIOFactory;itkImageIOFactory.h"
+    "itk::PNGImageIO;itkPNGImageIO.h"
     )
 
-#    "itkImageReader:itk::ImageFileReader< itkImage3DChar >;itkImageFileReader.h"
-
+#    "itk::MetaImageIO;itkMetaImageIO.h"
+#    "itk::MetaImageIOFactory;itkMetaImageIOFactory.h"
 # Configure files
 CONFIGURE_FILE(
 ${ITK_SOURCE_DIR}/Examples/TclWrappedGaussianFilter/itkGaussianFilter.tcl.in 
