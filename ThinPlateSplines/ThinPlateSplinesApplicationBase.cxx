@@ -19,16 +19,15 @@
 
 #include "vtkPolyDataMapper.h"
 #include "vtkDataSetMapper.h"
-#include "vtkSphereSource.h"
 #include "vtkActor.h"
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
-#include "vtkUnstructuredGrid.h"
 #include "vtkPoints.h"
-#include "vtkFloatArray.h"
-#include "vtkLine.h"
 #include "vtkAxes.h"
 #include "vtkTubeFilter.h"
+#include "vtkGlyph3D.h"
+#include "vtkSphereSource.h"
+
 
 #include "itkNumericTraits.h"
 
@@ -48,6 +47,9 @@ ThinPlateSplinesApplicationBase
   m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
   m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 10.0 ); 
 
+  m_VTKSourceLandMarks = vtkPoints::New();
+  m_VTKTargetLandMarks = vtkPoints::New();
+
 }
 
 
@@ -58,6 +60,10 @@ ThinPlateSplinesApplicationBase
 {
   m_RenderWindow->Delete();
   m_Renderer->Delete();
+
+  m_VTKTargetLandMarks->Delete();
+  m_VTKSourceLandMarks->Delete();
+
 }
 
 
@@ -101,9 +107,147 @@ void
 ThinPlateSplinesApplicationBase
 ::CreateSpline(void)
 {
+  this->CreateLandMarks();
+}
 
+
+ 
+void
+ThinPlateSplinesApplicationBase
+::CreateLandMarks(void)
+{
+
+  const unsigned int nx =  6;
+  const unsigned int ny =  6;
+  const unsigned int nz =  1;
+
+  PointType p;
+  for(unsigned int z=0; z<nz; z++)
+    {
+    CoordinateRepresentationType rz = z;
+    p[2] = rz;  
+    for(unsigned int y=0; y<ny; y++)
+      {
+      CoordinateRepresentationType ry = y;
+      ry -= ny/2;
+      p[1] = ry;
+      for(unsigned int x=0; x<nx; x++)
+        {
+        CoordinateRepresentationType rx = x;
+        rx -= 3*nx/2;  
+        p[0] = rx;
+        m_SourceLandMarks.push_back( p );
+        rx += 2*nx;
+        p[0] = rx;
+        m_TargetLandMarks.push_back( p );
+        }
+      }
+    }
+
+  this->DisplayAxes();
+  this->DisplayLandMarks();
 
 }
 
+
+ 
+void
+ThinPlateSplinesApplicationBase
+::TransferLandMarksToVTK(void)
+{
+
+  m_VTKSourceLandMarks->Delete();
+  m_VTKTargetLandMarks->Delete();
+
+  m_VTKSourceLandMarks = vtkPoints::New();
+  m_VTKTargetLandMarks = vtkPoints::New();
+
+  const unsigned int numberOfLandMarks = m_SourceLandMarks.size();
+
+  if( numberOfLandMarks != m_TargetLandMarks.size() )
+    {
+    itkGenericExceptionMacro( << "The number of Source Landmarks is different from the number of Target Landmarks " );
+    }
+
+  m_VTKSourceLandMarks->Allocate( numberOfLandMarks );
+  m_VTKTargetLandMarks->Allocate( numberOfLandMarks );
+
+  vtkIdType pointId = itk::NumericTraits< vtkIdType >::Zero; 
+
+  PointArrayType::iterator tlm = m_TargetLandMarks.begin();
+  PointArrayType::iterator slm = m_SourceLandMarks.begin();
+  PointArrayType::iterator end = m_SourceLandMarks.end();
+  while( slm != end )
+    {
+    m_VTKSourceLandMarks->InsertNextPoint( (*slm)[0],(*slm)[1],(*slm)[2] );
+    m_VTKTargetLandMarks->InsertNextPoint( (*tlm)[0],(*tlm)[1],(*tlm)[2] );
+    ++slm;
+    ++tlm;
+    ++pointId;
+    }
+
+}
+
+
+
+void
+ThinPlateSplinesApplicationBase
+::DisplayLandMarks(void)
+{
+
+  this->TransferLandMarksToVTK();
+   
+  vtkSphereSource * typicalSphere = vtkSphereSource::New();
+  typicalSphere->SetRadius(0.05);
+
+  vtkPolyData * sourcePolyData = vtkPolyData::New();
+  vtkGlyph3D  * sourceSpheres  = vtkGlyph3D::New();
+
+  sourceSpheres->SetSource( typicalSphere->GetOutput() );
+  sourcePolyData->SetPoints( m_VTKSourceLandMarks );
+  sourceSpheres->SetInput( sourcePolyData );
+
+  vtkPolyData * targetPolyData = vtkPolyData::New();
+  vtkGlyph3D  * targetSpheres  = vtkGlyph3D::New();
+
+  targetSpheres->SetSource( typicalSphere->GetOutput() );
+  targetPolyData->SetPoints( m_VTKTargetLandMarks );
+  targetSpheres->SetInput( targetPolyData );
+
+  // map to graphics library
+  vtkPolyDataMapper * sourceMapper   = vtkPolyDataMapper::New();
+  sourceMapper->SetInput( sourceSpheres->GetOutput() );
+
+  // map to graphics library
+  vtkPolyDataMapper * targetMapper   = vtkPolyDataMapper::New();
+  targetMapper->SetInput( targetSpheres->GetOutput() );
+
+  // actor coordinates geometry, properties, transformation
+  vtkActor * sourceActor = vtkActor::New();
+  sourceActor->SetMapper( sourceMapper );
+  sourceActor->GetProperty()->SetColor(0,0,1); 
+
+  // actor coordinates geometry, properties, transformation
+  vtkActor * targetActor = vtkActor::New();
+  targetActor->SetMapper( targetMapper );
+  targetActor->GetProperty()->SetColor(1,0,0); 
+
+  // add the actor to the scene
+  m_Renderer->AddActor( sourceActor );
+  m_Renderer->AddActor( targetActor );
+/*
+  sourceActor->Delete();
+  sourceMapper->Delete();
+  sourceSpheres->Delete();
+  sourcePolyData->Delete();
+
+  targetActor->Delete();
+  targetMapper->Delete();
+  targetSpheres->Delete();
+  targetPolyData->Delete();
+
+  typicalSphere->Delete();
+*/
+}
 
    

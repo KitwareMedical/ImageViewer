@@ -22,9 +22,8 @@
 #include "itkMacro.h"
 
 #include "vtkRenderWindow.h"
-
-#include "itkPointSet.h"
-#include "itkDefaultStaticMeshTraits.h"
+#include "itkPoint.h"
+#include "vtkPoints.h"
 
 #include <set>
 
@@ -37,28 +36,15 @@ class ThinPlateSplinesApplicationBase
 
 public:
 
-  enum { PointsDimension              = 2 };
+  enum { PointsDimension              = 3 };
 
-  typedef char              PointDataType;
-  typedef float             CoordinateRepresentationType;
-  typedef float             InterpolationWeightType;
-  typedef char              CellDataType;
+  typedef float       CoordinateRepresentationType;
 
-  enum  { MaxTopologicalDimension = 3 };
- 
-  typedef itk::DefaultStaticMeshTraits<
-                                  PointDataType,
-                                  PointsDimension,
-                                  MaxTopologicalDimension,
-                                  CoordinateRepresentationType,
-                                  InterpolationWeightType,
-                                  CellDataType 
-                                          >       MeshTraits;
+  typedef itk::Point< CoordinateRepresentationType,
+                                  PointsDimension >  PointType;
+
+  typedef std::vector< PointType >            PointArrayType;
       
-  // Set of points to convert
-  typedef itk::PointSet< MeshTraits > PointSetType;
-
-
 public:
 
   ThinPlateSplinesApplicationBase();
@@ -66,6 +52,9 @@ public:
   
   virtual void DisplayAxes(void);
   virtual void CreateSpline(void);
+  virtual void CreateLandMarks(void);
+  virtual void DisplayLandMarks(void);
+
 
 protected:
  
@@ -73,10 +62,18 @@ protected:
   vtkRenderer     * m_Renderer;
 
 
-  PointSetType::Pointer  m_PointSet;
+  PointArrayType    m_Points;   // Points to pass though the transformation
+
+  PointArrayType    m_SourceLandMarks;   
+  PointArrayType    m_TargetLandMarks;   
+  
+  vtkPoints       * m_VTKSourceLandMarks;
+  vtkPoints       * m_VTKTargetLandMarks;
+
 
 private:
 
+  void TransferLandMarksToVTK(void);
 
 };
 

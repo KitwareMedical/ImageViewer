@@ -33,6 +33,7 @@ LINK_LIBRARIES(
 
 SOURCE_FILES(ThinPlateSplinesApplication_SRCS
 ThinPlateSplinesApplicationBase
+ThinPlateSplinesApplication
 vtkFlRenderWindowInteractor
 main
 )
