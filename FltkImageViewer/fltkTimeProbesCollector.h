@@ -26,7 +26,7 @@ namespace fltk
 
 class TimeProbesCollector : public TimeProbesCollectorGUI
 {
-
+  typedef ::itk::TimeProbesCollectorBase BaseClassType;
 public:
 
   TimeProbesCollector();

@@ -5,7 +5,7 @@ code_name {.cxx}
 gridx 5 
 gridy 5 
 snap 3
-class TimeProbesCollectorGUI {open : {public itk::TimeProbesCollectorBase}
+class TimeProbesCollectorGUI {open : {public ::itk::TimeProbesCollectorBase}
 } {
   Function {TimeProbesCollectorGUI()} {open
   } {

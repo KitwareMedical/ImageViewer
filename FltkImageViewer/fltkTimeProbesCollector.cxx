@@ -17,6 +17,7 @@
 #include "fltkTimeProbesCollector.h"
 #include "fltkTimeProbeGUI.h"
 
+#include "Fl/fl_ask.H"
 
 namespace fltk 
 {
@@ -41,7 +42,8 @@ void
 TimeProbesCollector
 ::Clear(void) 
 {
-  TimeProbesCollectorBase::Clear();
+  BaseClassType::Clear();
+      
   probesPack->clear();
   controlPanel->redraw();
   Fl::check();
@@ -55,7 +57,8 @@ void
 TimeProbesCollector
 ::Stop(const char * nameid) 
 {
-  TimeProbesCollectorBase::Stop( nameid );
+  BaseClassType::Stop( nameid );
+  
   if( continuousCheckButton->value() )
     {
     this->Report();
@@ -70,7 +73,8 @@ void
 TimeProbesCollector
 ::Start(const char * nameid) 
 {
-  TimeProbesCollectorBase::Start( nameid );
+  BaseClassType::Start( nameid );
+
   if( continuousCheckButton->value() )
     {
     this->Report();
