@@ -75,7 +75,9 @@ void
 ThinPlateSplinesApplication
 ::UpdateSelectedTargetLandMark()
 {
-  const unsigned int landMarkId = targetLandMarkIdCounter->value();
+  const unsigned int landMarkId = 
+          static_cast<unsigned int>( targetLandMarkIdCounter->value() );
+
   const CoordinateRepresentationType x =  xTargetValueInput->value();
   const CoordinateRepresentationType y =  yTargetValueInput->value();
   const CoordinateRepresentationType z =  zTargetValueInput->value();
