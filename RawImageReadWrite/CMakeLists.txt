@@ -12,6 +12,10 @@ SOURCE_FILES(RawImageReadWrite_SRCS
 itkRawImageReadWrite
 )
 
+SOURCE_FILES(RawImageReadWritePNG_SRCS
+itkRawImageReadWritePNG
+)
+
 
 LINK_LIBRARIES (
 ITKCommon
@@ -24,6 +28,7 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(RawImageReadWrite   RawImageReadWrite_SRCS)
+ADD_EXECUTABLE(RawImageReadWrite      RawImageReadWrite_SRCS)
+ADD_EXECUTABLE(RawImageReadWritePNG   RawImageReadWritePNG_SRCS)
 
 
