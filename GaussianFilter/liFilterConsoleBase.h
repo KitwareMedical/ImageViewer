@@ -107,11 +107,18 @@ public:
 
   liFilterConsoleBase();
   virtual ~liFilterConsoleBase();
+  virtual void Load(void) = 0;
   virtual void Load(const char * filename);
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
   virtual void Execute(void);
   virtual void SetSigma( ComputationType );
+
+  virtual void WriteLaplacian(void) = 0;
+  virtual void WriteGradientX(void) = 0;
+  virtual void WriteGradientY(void) = 0;
+  virtual void WriteGradientZ(void) = 0;
+  virtual void WriteGradientModulus(void) = 0;
 
   virtual void WriteLaplacian(const char * filename);
   virtual void WriteGradientX(const char * filename);
