@@ -362,6 +362,16 @@ template <class imType>
     unsigned int WinMinY(){return cWinMinY;}
     unsigned int WinSizeX(){return cWinSizeX;}
     unsigned int WinSizeY(){return cWinSizeY;}
+
+  void viewDetails(bool detail){cViewDetails = detail;}
+  bool viewDetails(){return cViewDetails;}
+
+  void viewValue(bool value){cViewValue = value;}
+  bool viewValue(){return cViewValue;}
+
+  void viewCrosshairs(bool crosshairs){cViewCrosshairs = crosshairs;}
+  bool viewCrosshairs(){return cViewCrosshairs;}
+
 };
 
 
