@@ -15,7 +15,7 @@ Some important configuration details:
 
      * CMake version 1.6.5 or later should be used.
 
-     * FLTK version 1.1.2 is required
+     * FLTK version 1.1.3 is required
 
      * Qt  version 2.3 is required
 
