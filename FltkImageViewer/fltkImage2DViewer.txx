@@ -118,7 +118,7 @@ Image2DViewer<ImagePixelType>
     imageViewer->Allocate( size[0], size[1] );
   }
 
-  fltk::Image2DViewerWindow::DataType * buffer = imageViewer->GetBuffer();
+  fltk::Image2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
 
   typedef itk::MinimumMaximumImageCalculator<ImageType> MinMaxCalculatorType;
   MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
