@@ -20,6 +20,7 @@ ITKCommon
 ITKBasicFilters
 vtkpng
 vtkzlib
+${OPENGL_gl_LIBRARY}
 )
 
 ADD_EXECUTABLE(vtk2itk vtk2itk.cxx)
