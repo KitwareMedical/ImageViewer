@@ -42,8 +42,10 @@ ThinPlateSplinesApplicationBase
   m_Renderer = 0;
   this->CreateRenderer();
   
-  m_VTKSourceLandMarks = vtkPoints::New();
-  m_VTKTargetLandMarks = vtkPoints::New();
+  m_VTKSourceLandMarks   = vtkPoints::New();
+  m_VTKTargetLandMarks   = vtkPoints::New();
+  m_VTKPointsToTransform = vtkPoints::New();
+  m_VTKLinesToTransform  = vtkCellArray::New();
 
 }
 
@@ -79,7 +81,7 @@ ThinPlateSplinesApplicationBase
 
   m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
   m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
-  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 10.0 ); 
+  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 20.0 ); 
 }
 
 
@@ -144,11 +146,24 @@ ThinPlateSplinesApplicationBase
 }
 
 
+
+
+void
+ThinPlateSplinesApplicationBase
+::ShowTimeProbes(void)
+{
+  m_TimeCollector.Show();
+}
+
+
  
 void
 ThinPlateSplinesApplicationBase
 ::CreateLandMarks(void)
 {
+
+  m_SourceLandMarks.clear();
+  m_TargetLandMarks.clear();
 
   const unsigned int nx =  6;
   const unsigned int ny =  6;
@@ -293,13 +308,113 @@ ThinPlateSplinesApplicationBase
    
 
 
-
-
+ 
 void
 ThinPlateSplinesApplicationBase
-::ShowTimeProbes(void)
+::MapPoints(void)
 {
-  m_TimeCollector.Show();
+
+  m_PointsToTransform.clear();
+
+  m_VTKPointsToTransform->Delete();
+  m_VTKPointsToTransform = vtkPoints::New();
+
+  m_VTKLinesToTransform->Delete();
+  m_VTKLinesToTransform = vtkCellArray::New();
+
+  const unsigned int fac = 2;
+
+  const unsigned int nx =  6 * fac;
+  const unsigned int ny =  6 * fac;
+  const unsigned int nz =  1;
+
+  CoordinateRepresentationType deltax = 1.0f;
+
+  vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
+
+  PointType p;
+  for(unsigned int z=0; z<nz; z++)
+    {
+    CoordinateRepresentationType rz = z;
+    p[2] = rz;  
+    for(unsigned int y=0; y<ny; y++)
+      {
+      CoordinateRepresentationType ry = y;
+      ry /= fac;
+      ry -= ny/(2*fac);
+      p[1] = ry;
+      vtkIdType endpoints[2];
+      for(unsigned int x=0; x<nx; x++)
+        {
+        CoordinateRepresentationType rx = x;
+        rx /= fac;
+        rx -= nx/fac + deltax;
+        p[0] = rx;
+        m_PointsToTransform.push_back( p );
+        m_VTKPointsToTransform->InsertNextPoint( p[0], p[1], p[2] );
+        pointCounter++;
+        if( x > 0 )
+          {
+          endpoints[0] = pointCounter-1;
+          endpoints[1] = pointCounter;
+std::cout << endpoints[0] << " -> " << endpoints[1] << std::endl;
+          m_VTKLinesToTransform->InsertNextCell( VTK_LINE, endpoints );
+          }
+        }
+      }
+    }
+
 }
+
+
+ 
+void
+ThinPlateSplinesApplicationBase
+::DisplayPoints(void)
+{
+
+  vtkPolyData * sourcePolyData = vtkPolyData::New();
+  sourcePolyData->SetPoints( m_VTKPointsToTransform );
+  sourcePolyData->SetLines( m_VTKLinesToTransform );
+
+  // map to graphics library
+  vtkPolyDataMapper * sourceMapper   = vtkPolyDataMapper::New();
+  sourceMapper->SetInput( sourcePolyData );
+
+  vtkPolyData * targetPolyData = vtkPolyData::New();
+//  targetPolyData->SetPoints( m_VTKPointsTransformed );
+
+  // map to graphics library
+  vtkPolyDataMapper * targetMapper   = vtkPolyDataMapper::New();
+  targetMapper->SetInput( targetPolyData );
+
+  // actor coordinates geometry, properties, transformation
+  vtkActor * sourceActor = vtkActor::New();
+  sourceActor->SetMapper( sourceMapper );
+  sourceActor->GetProperty()->SetRepresentationToWireframe();
+  sourceActor->GetProperty()->SetColor(0,0,1); 
+
+  // actor coordinates geometry, properties, transformation
+  vtkActor * targetActor = vtkActor::New();
+  targetActor->SetMapper( targetMapper );
+  targetActor->GetProperty()->SetColor(1,0,0); 
+
+  // add the actor to the scene
+  m_Renderer->AddActor( sourceActor );
+  m_Renderer->AddActor( targetActor );
+
+  m_ActorsToDelete.insert( sourceActor );
+  m_ActorsToDelete.insert( targetActor );
+
+  sourceMapper->Delete();
+  sourcePolyData->Delete();
+
+  targetMapper->Delete();
+  targetPolyData->Delete();
+  
+
+}
+
+
 
 

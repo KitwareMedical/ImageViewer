@@ -22,6 +22,7 @@
 ThinPlateSplinesApplication
 ::ThinPlateSplinesApplication()
 {
+
 }
 
 
@@ -46,6 +47,16 @@ ThinPlateSplinesApplication
 }
 
 
+
+void 
+ThinPlateSplinesApplication
+::MapPoints()
+{
+  this->ThinPlateSplinesApplicationBase::MapPoints();
+  this->DisplayPoints();
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
 
 
 void 

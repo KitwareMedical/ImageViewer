@@ -47,6 +47,8 @@ public:
   ~ThinPlateSplinesApplication();
   
 
+protected:
+  virtual void MapPoints(void);
 
 private:
 

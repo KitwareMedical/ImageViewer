@@ -55,6 +55,7 @@ public:
   virtual void CreateSpline(void);
   virtual void CreateLandMarks(void);
   virtual void DisplayLandMarks(void);
+  virtual void DisplayPoints(void);
   virtual void ShowTimeProbes(void);
   virtual void SelectSourceLandMark(void) = 0;
   virtual void SelectTargetLandMark(void) = 0;
@@ -72,11 +73,18 @@ protected:
 
   PointArrayType    m_SourceLandMarks;   
   PointArrayType    m_TargetLandMarks;   
+
+  PointArrayType    m_PointsToTransform;   
   
   vtkPoints       * m_VTKSourceLandMarks;
   vtkPoints       * m_VTKTargetLandMarks;
 
+  vtkPoints       * m_VTKPointsToTransform;
+  vtkCellArray    * m_VTKLinesToTransform;
+
   fltk::TimeProbesCollector  m_TimeCollector;
+
+  virtual void    MapPoints(void);
 
 private:
 

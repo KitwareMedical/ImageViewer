@@ -11,7 +11,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
   } {
     Fl_Window controlWindow {
       label {Finite Elements Rendering} open
-      xywh {110 167 1010 554} resizable
+      xywh {67 137 1010 538} resizable
       code0 {\#include "ThinPlateSplinesApplicationBase.h"} visible
     } {
       Fl_Menu_Bar {} {open
@@ -59,10 +59,10 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
         }
       }
       Fl_Group {} {
-        xywh {35 60 780 435} box DOWN_FRAME
+        xywh {15 40 800 485} box DOWN_FRAME
       } {
-        Fl_Box m_FlRenderWindowInteractor {
-          xywh {45 70 760 415} box DOWN_FRAME
+        Fl_Box m_FlRenderWindowInteractor {selected
+          xywh {25 50 780 465} box DOWN_FRAME
           code0 {\#include "vtkFlRenderWindowInteractor.h"}
           code1 {m_FlRenderWindowInteractor->SetRenderWindow( m_RenderWindow );}
           class vtkFlRenderWindowInteractor
@@ -70,53 +70,60 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
       }
       Fl_Group {} {
         label {Target LandMarks}
-        xywh {830 310 165 185} box ENGRAVED_FRAME
+        xywh {830 280 165 185} box ENGRAVED_FRAME
       } {
         Fl_Counter targetLandMarkIdCounter {
           label {LandMark Id}
           callback {this->SelectTargetLandMark();}
-          xywh {850 345 130 25} align 1 minimum 0 maximum 10000 step 1
+          xywh {850 315 130 25} align 1 minimum 0 maximum 10000 step 1
+          code0 {o->lstep(10);}
         }
         Fl_Value_Input xTargetValueInput {
           label {x :}
           callback {this->UpdateSelectedTargetLandMark();}
-          xywh {867 390 110 25}
+          xywh {867 360 110 25}
         }
         Fl_Value_Input yTargetValueInput {
           label {y :}
           callback {this->UpdateSelectedTargetLandMark();}
-          xywh {867 415 110 25}
+          xywh {867 385 110 25}
         }
         Fl_Value_Input zTargetValueInput {
           label {z :}
           callback {this->UpdateSelectedTargetLandMark();}
-          xywh {867 440 110 25}
+          xywh {867 410 110 25}
         }
       }
       Fl_Group {} {
         label {Source LandMarks}
-        xywh {831 90 165 185} box ENGRAVED_FRAME
+        xywh {831 75 165 185} box ENGRAVED_FRAME
       } {
         Fl_Counter sourceLandMarkIdCounter {
           label {LandMark Id}
           callback {this->SelectSourceLandMark();}
-          xywh {851 125 130 25} align 1 minimum 0 maximum 10000 step 1
+          xywh {851 110 130 25} align 1 minimum 0 maximum 10000 step 1
+          code0 {o->lstep(10);}
         }
         Fl_Value_Input xSourceValueInput {
           label {x :}
           callback {this->UpdateSelectedSourceLandMark();}
-          xywh {868 170 110 25}
+          xywh {868 155 110 25}
         }
         Fl_Value_Input ySourceValueInput {
           label {y :}
           callback {this->UpdateSelectedSourceLandMark();}
-          xywh {868 195 110 25}
+          xywh {868 180 110 25}
         }
         Fl_Value_Input zSourceValueInput {
           label {z :}
-          callback {this->UpdateSelectedSourceLandMark();} selected
-          xywh {868 220 110 25}
+          callback {this->UpdateSelectedSourceLandMark();}
+          xywh {868 205 110 25}
         }
+      }
+      Fl_Button {} {
+        label {Map Points}
+        callback {this->MapPoints();}
+        xywh {855 480 125 25}
       }
     }
   }
