@@ -84,6 +84,7 @@ class FLVTKVolRenWin : public FLVTKWin
        
        void OverlaymaskData(void);
        void maskData(OverlayType * newMaskData);
+       OverlayType::Pointer maskData(void);
        
        void useMask(bool newUseMask);
        bool useMask(void);
@@ -319,7 +320,7 @@ FLVTKVolRenWin<T>::maskData(void)
   }
 
 template <class T>
-void FLVTKVolRenWin<T>::maskData(OverlayType::Pointer newMaskData)
+void FLVTKVolRenWin<T>::maskData(OverlayType *newMaskData)
   {
   if(mMask != NULL)
     if(mMaskAlloc)
