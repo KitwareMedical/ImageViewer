@@ -56,7 +56,7 @@ void print_usage()
   print_line("MRIBiasCorrection 1.0 (21.June.2001)");
 
   print_line("usage: IntensityHistogram3D --file file" ) ;
-  print_line("       [--mask] file --bin-size int") ;
+  print_line("       [--mask] file --bin-size double") ;
 
   print_line("");
 
@@ -65,7 +65,7 @@ void print_usage()
   print_line("--mask file") ;
   print_line("        mask image. If mask is specified, this program") ;
   print_line("        uses the pixels greater than zero only in the mask file") ;
-  print_line("--bin-size") ;
+  print_line("--bin-size double") ;
   print_line("        intensity interval") ;
 
   print_line("") ;
@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
     {
       options.GetStringOption("file", &fileName, true) ;
       options.GetStringOption("mask", &maskFileName, false) ;
-      binSize = options.GetDoubleOption("bin-size", true) ;
+      binSize = options.GetDoubleOption("bin-size", 10, true) ;
     }
   catch(OptionList::RequiredOptionMissing e)
     {
