@@ -1,11 +1,6 @@
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
-FIND_PATH(VTK_INCLUDE_PATH common/vtkConfigure.h.in c:/vtk)
-FIND_PATH(VTK_BIN_PATH vtkConfigure.h c:/vtkbin)
-FIND_PATH(VTK_LIB_PATH vtkdll.lib c:/vtkbin/vtkdll)
-FIND_LIBRARY(VTK_LIBRARY vtkdll c:/vtkbin/vtkdll)
-
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
@@ -14,10 +9,6 @@ ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
 ${FLTK_INCLUDE_PATH}
-${VTK_INCLUDE_PATH}
-${VTK_INCLUDE_PATH}/common
-${VTK_INCLUDE_PATH}/graphics
-${VTK_BIN_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
@@ -28,8 +19,22 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
 ${FLTK_LIB_PATH}
-${VTK_LIB_PATH}
 )
+
+# Add VTK code if we found VTK
+INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
+IF (USE_VTK_FILE)
+  INCLUDE(${USE_VTK_FILE})
+  LINK_LIBRARIES( 
+      vtkRendering
+      vtkGraphics	  
+      vtkImaging
+      vtkIO
+      vtkFiltering
+      vtkCommon
+  )
+ENDIF (USE_VTK_FILE)
+
 
 SOURCE_FILES(TripleTKID_SRCS
 3D/FLVTKWin
@@ -46,7 +51,6 @@ ITKBasicFilters
 VXLNumerics
 MetaImageIO
 ${FLTK_LIBRARY}
-${VTK_LIBRARY}
 ${OPENGL_LIBRARY}
 )
 
