@@ -8,9 +8,9 @@ typedef union
   GenericValue * GenericValue_ptr;
   std::vector<GenericValue *> * ValueArray_ptr;
 } YYSTYPE;
-#define NUM     257
+#define NUM 257
 #define DEC_NUM 258
-#define IDENT   259
+#define IDENT 259
 #define STRING  260
 #define EQUALS  261
 #define LPAREN  262

@@ -124,7 +124,7 @@ TAB	\t
 
 {NUMBER} {
   INCR_COL;
-  yylval.integer=atoll(yytext);
+  yylval.integer=atol(yytext);
   return NUM;
 }
 

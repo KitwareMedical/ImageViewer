@@ -27,13 +27,15 @@ public:
 inline std::ostream& operator<<(std::ostream& s, const Exception &f)
 { s << "VPF::Exception: " << f.info; return s; }
 
-  
+//typedef itk::hash<const char *> strhash;
 class strhash : public itk::hash<const char *>
 {
 public:
+  static itk::hash<const char *> hasher;
   ::size_t operator()(const std::string &s) const
   {
-    return itk::hash<const char *>::operator()(s.c_str());
+    //    return itk::hash<const char *>::operator()(s.c_str());
+    return hasher(s.c_str());
   }
 };
   

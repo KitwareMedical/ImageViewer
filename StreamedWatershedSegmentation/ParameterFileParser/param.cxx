@@ -81,6 +81,7 @@ const Parameter& ParameterFile::operator[](const std::string &s)
 GenericValue * Parameter
 ::GetElement( std::vector<GenericValue *>::size_type n) const
 {
+  typedef std::vector<GenericValue *> Superclass;
   if (this->valid() == false)
     {
       return &m_InvalidValue;
@@ -94,7 +95,7 @@ GenericValue * Parameter
       return &m_InvalidValue;
       //      DIE("VPF::Parameter: request for element past the end of parameter");
     }
-  return std::vector<GenericValue *>::operator[](n);
+  return Superclass::operator[](n);
 }
  
 
