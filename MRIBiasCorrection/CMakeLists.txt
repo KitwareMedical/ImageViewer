@@ -5,7 +5,7 @@ ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/Numerics
 ${ITK_SOURCE_DIR}/Code/Numerics/Statistics
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage
-${ITK_SOURCE_DIR}/Code/Local/bias
+${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
 )
 
 SOURCE_FILES(ImageCorrector_SRCS
