@@ -19,6 +19,7 @@
 #ifdef _MSC_VER
 #pragma warning(disable: 4786)
 #endif
+#include <afx.h>
 #include <fstream>
 
 #include "FEMImageRegLMEx.h"
@@ -64,9 +65,9 @@ void ReadRawImageFiles( RegistrationType* X)
   typedef  itk::RawImageIO< PixType,ImageDimension>   RawReaderType;
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
-  reffilter->SetFileName( X->GetReferenceFile() );
+  reffilter->SetFileName( (X->GetReferenceFile()).c_str() );
   FileSourceType::Pointer tarfilter = FileSourceType::New();
-  tarfilter->SetFileName( X->GetTargetFile() );
+  tarfilter->SetFileName( (X->GetTargetFile()).c_str() );
 
   RawReaderType::Pointer  rawReader  = RawReaderType::New();
   rawReader->SetFileDimensionality( ImageDimension );
@@ -150,9 +151,9 @@ int main()
 
   RegistrationType::Pointer X= RegistrationType::New(); // Declare the registration class
 
-  X->SetConfigFileName("U://itk//Insight//Examples//FEM//FEMregLMparams.txt");
+  X->SetConfigFileName("U:\\noe\\dev\\C\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
   //X->SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
-  if (!X->ReadConfigFile(X->GetConfigFileName())) { return -1; }
+  if (  !X->ReadConfigFile( (X->GetConfigFileName()).c_str() ) ) { return -1; }
  
   // Read Raw Files 
   ReadRawImageFiles(X);
@@ -178,7 +179,7 @@ int main()
   X->RunRegistration();
 
   // Get outputs -- in image or vector field form
-  X->WriteWarpedImage(X->GetResultsFileName());
+  X->WriteWarpedImage((X->GetResultsFileName()).c_str());
 
   X->SetWriteDisplacements(false);
   if (X->GetWriteDisplacements()) {
