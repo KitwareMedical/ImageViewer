@@ -252,7 +252,10 @@ bool MF_Write(itk::Ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
                   std::cout << "Warning: length and dependsOn values not equal in write" << std::endl;
                }
             }
-            fp.write( (char *)(field[i].val), field[i].length );
+            char temp_str[80] ;
+            for (int d = 0 ; d < field[i].length ; d++)
+              temp_str[d] = (char) field[i].val[d] ;
+            fp.write(temp_str, field[i].length );
             fp << std::endl;
             break;
          case MF_INT_ARRAY:
