@@ -101,7 +101,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
         }
         Fl_Value_Input lowerThresholdValueInput {
           label Lower
-          callback {m_ThresholdFilter->SetLowerThreshold( o->value() );} selected
+          callback {m_ThresholdFilter->SetLowerThreshold( o->value() );}
           xywh {570 40 55 25} labelsize 12 maximum 1000 step 0.1 textsize 12
         }
         Fl_Light_Button timeCrossingButton {
@@ -134,8 +134,8 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
         }
         Fl_Value_Input sigmaValueInput {
           label Sigma
-          callback {m_DerivativeFilter->SetSigma( o->value() );}
-          xywh {159 110 35 25} labelsize 12 maximum 50 step 0.1 value 5 textsize 12
+          callback {m_DerivativeFilter->SetSigma( o->value() );} selected
+          xywh {159 110 35 25} labelsize 12 maximum 50 step 0.1 value 1.2 textsize 12
         }
       }
       Fl_Slider progressSlider {
