@@ -25,8 +25,8 @@ m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );}
         xywh {10 15 280 175}
       } {
         Fl_Group {} {
-          label {External Offset}
-          xywh {10 40 280 150} align 129 hide
+          label {External Offset} selected
+          xywh {10 40 280 150} align 129
         } {
           Fl_Value_Output xExternalOffsetValueOutput {
             xywh {205 65 65 25}
@@ -88,7 +88,7 @@ UpdateExternalOffset();}
         } {
           Fl_Choice {} {
             label {Draw Mode : } open
-            xywh {140 61 100 25}
+            xywh {140 65 100 25}
           } {
             menuitem {} {
               label None
@@ -124,19 +124,19 @@ m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
           Fl_Check_Button displayClusterCheckButton {
             label {  Display Cluster}
             callback {SetDisplayPointSet();}
-            xywh {80 101 145 30} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX selection_color 2
+            xywh {80 101 155 29} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX selection_color 2
           }
           Fl_Button {} {
             label Registration
             callback {ShowRegistrationControl()}
-            xywh {80 145 145 25}
+            xywh {80 140 155 25}
             code0 {\#include <liVesselsRegistrator.h>}
             code1 {\#include <fltkRegularStepGradientDescent.h>}
           }
         }
         Fl_Group {} {
           label Browse open
-          xywh {10 40 280 150}
+          xywh {10 40 280 150} hide
         } {
           Fl_Scroll {} {open
             xywh {25 50 255 125} box DOWN_BOX
@@ -193,7 +193,7 @@ offset[2] = zExternalOffsetAdjuster->value();
 m_Vessels->SetExternalOffset( offset );
 m_Vessels->InvokeEvent( li::VesselsChangedEvent );} {}
   }
-  Function {SetDisplayPointSet(void)} {return_type {virtual void}
+  Function {SetDisplayPointSet(void)} {open return_type {virtual void}
   } {
     code {if( displayClusterCheckButton->value() )
 {
@@ -216,7 +216,8 @@ m_Vessels->InvokeEvent( li::VesselsChangedEvent );} {}
   }
   Function {GetRegistrator(void)} {return_type {li::VesselsRegistrator::Pointer}
   } {
-    code {return m_Registrator;} {selected
-    }
+    code {return m_Registrator;} {}
   }
+  Function {GeneratePointSet(void)} {return_type {virtual void}
+  } {}
 } 

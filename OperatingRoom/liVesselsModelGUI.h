@@ -80,5 +80,6 @@ public:
   virtual void ShowRegistrationControl(void);
   virtual void SetImage( li::VesselsRegistrator::FluoroscopicImageType * image );
   li::VesselsRegistrator::Pointer GetRegistrator(void);
+  virtual void GeneratePointSet(void);
 };
 #endif

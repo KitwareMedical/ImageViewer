@@ -29,13 +29,13 @@ enum EventIds
   FluoroscopyUnitMovedEvent,
   TableMovedEvent,
   PatientMovedEvent,
-  NeedToRefreshFluoroscopyUnitProjection,
   VolumeReslicedEvent,
   GLDrawEvent,
   SpineChangedEvent,
   VesselsChangedEvent,
   RequestVesselPointSetGenerationEvent,
   FieldOfViewChangedEvent
+
 };
 
 

@@ -83,7 +83,6 @@ FluoroscopyCArmMobile::RefreshObservers( void ) const
 {
   Redraw();
   InvokeEvent( FluoroscopyUnitMovedEvent );
-  InvokeEvent( NeedToRefreshFluoroscopyUnitProjection );
 }
 
 

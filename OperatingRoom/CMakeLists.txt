@@ -1,7 +1,6 @@
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindGLUT.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -14,7 +13,6 @@ ${ITK_SOURCE_DIR}/Examples/OperatingRoom
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 ${GLU_INCLUDE_PATH}
-${GLUT_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
@@ -35,6 +33,7 @@ liCommandGLRedrawModelSensitive
 liCommandUpdateImageIntensifier
 liCommandUpdateSpineModelGUI
 liCommandUpdateRegistratorFieldOfView
+liCommandTubesGeneratePointSet
 liCone3D
 liCylinder3D
 liFluoroscopyCArm
@@ -85,7 +84,6 @@ MetaImageIO
 VXLNumerics
 FltkImageViewer
 ${FLTK_LIBRARY}
-${GLUT_LIBRARY}
 ${GLU_LIBRARY}
 ${OPENGL_LIBRARY}
 )

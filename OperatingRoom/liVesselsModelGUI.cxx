@@ -100,7 +100,6 @@ m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );
     { Fl_Tabs* o = new Fl_Tabs(10, 15, 280, 175);
       { Fl_Group* o = new Fl_Group(10, 40, 280, 150, "External Offset");
         o->align(129);
-        o->hide();
         xExternalOffsetValueOutput = new Fl_Value_Output(205, 65, 65, 25);
         yExternalOffsetValueOutput = new Fl_Value_Output(205, 92, 65, 25);
         zExternalOffsetValueOutput = new Fl_Value_Output(205, 119, 65, 25);
@@ -154,21 +153,22 @@ m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );
       }
       { Fl_Group* o = new Fl_Group(10, 40, 280, 150, "Display");
         o->hide();
-        { Fl_Choice* o = new Fl_Choice(140, 61, 100, 25, "Draw Mode : ");
+        { Fl_Choice* o = new Fl_Choice(140, 65, 100, 25, "Draw Mode : ");
           o->menu(menu_Draw);
         }
-        { Fl_Check_Button* o = displayClusterCheckButton = new Fl_Check_Button(80, 101, 145, 30, "  Display Cluster");
+        { Fl_Check_Button* o = displayClusterCheckButton = new Fl_Check_Button(80, 101, 155, 29, "  Display Cluster");
           o->box(FL_ENGRAVED_FRAME);
           o->down_box(FL_DIAMOND_DOWN_BOX);
           o->selection_color(2);
           o->callback((Fl_Callback*)cb_displayClusterCheckButton);
         }
-        { Fl_Button* o = new Fl_Button(80, 145, 145, 25, "Registration");
+        { Fl_Button* o = new Fl_Button(80, 140, 155, 25, "Registration");
           o->callback((Fl_Callback*)cb_Registration);
         }
         o->end();
       }
       { Fl_Group* o = new Fl_Group(10, 40, 280, 150, "Browse");
+        o->hide();
         { Fl_Scroll* o = new Fl_Scroll(25, 50, 255, 125);
           o->box(FL_DOWN_BOX);
           { Fl_Tile* o = new Fl_Tile(25, 50, 255, 125);
@@ -252,4 +252,7 @@ void VesselsModelGUI::SetImage( li::VesselsRegistrator::FluoroscopicImageType * 
 
 li::VesselsRegistrator::Pointer VesselsModelGUI::GetRegistrator(void) {
   return m_Registrator;
+}
+
+void VesselsModelGUI::GeneratePointSet(void) {
 }

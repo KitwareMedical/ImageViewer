@@ -56,6 +56,8 @@ VectorTubes3D::VectorTubes3D() {
 
   m_DisplayPointSet = false;
 
+  this->SetAutoSensing( true );
+
   }
 
 
@@ -240,6 +242,7 @@ void VectorTubes3D::DrawGeometry(void) const
 
   if( m_DisplayPointSet )
   {
+    glLoadIdentity();
     m_PointSet3D->glDraw();
   }
 

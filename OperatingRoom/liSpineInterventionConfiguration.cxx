@@ -23,6 +23,7 @@
 #include <liCommandGLRedrawModelSensitive.h>
 #include <liCommandUpdateImageIntensifier.h>
 #include <liCommandUpdateRegistratorFieldOfView.h>
+#include <liCommandTubesGeneratePointSet.h>
 
 #include <Fl/fl_file_chooser.H>
 #include <Fl/fl_ask.H>
@@ -191,6 +192,31 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
   commandUpdateRegistratorFieldOfView->SetRegistrator( 
                                           m_VesselsGUI.GetRegistrator() );
 
+
+  li::CommandTubesGeneratePointSet::Pointer
+                   commandTubesGeneratePointSet =
+                          li::CommandTubesGeneratePointSet::New();
+
+  commandTubesGeneratePointSet->SetFluoroscopyUnit(
+                        m_OperatingRoomModel->GetFluoroscopyUnit() );
+
+  commandTubesGeneratePointSet->SetTubes(
+      m_OperatingRoomModel->GetPatient()->GetVesselsModel().GetPointer() );
+
+  m_OperatingRoomModel->GetPatient()->AddObserver( 
+                                        li::PatientMovedEvent,
+                                        commandTubesGeneratePointSet );
+
+  m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver(
+                                    li::FluoroscopyUnitMovedEvent,
+                                    commandTubesGeneratePointSet );
+
+  m_OperatingRoomModel->GetSurgeryTable()->AddObserver( 
+                                li::TableMovedEvent,
+                                commandTubesGeneratePointSet );
+                              
+
+ 
 }
 
 
@@ -409,7 +435,7 @@ SpineInterventionConfiguration
 
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->Load( filename );
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->SetDrawingMode( 
-      Shape3D::lines );
+                                                            Shape3D::lines );
 
 }
 
@@ -628,11 +654,7 @@ SpineInterventionConfiguration
   m_VolumeSliceDrawer->SetInput( 
              m_VolumeImageReader->GetOutput().GetPointer() );
 
-  m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
-                                li::FluoroscopyUnitMovedEvent );
-
-  m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
-                                li::FluoroscopyUnitMovedEvent );
+  m_VolumeSliceDrawer->InvokeEvent( li::VolumeReslicedEvent );
 
 }
 

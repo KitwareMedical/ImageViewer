@@ -752,37 +752,54 @@ void Tube3D::GeneratePointSet( const VectorType & sight )
   PointSetType::PointsContainer::Iterator      pi = points->Begin();
   PointSetType::PointDataContainer::Iterator   vi = values->Begin();
 
-  VectorType tangent = m_Medial[1] - m_Medial[0];
+  PointType  medialA = ComputeCurrentPosition( m_Medial[1] );
+  PointType  medialB = ComputeCurrentPosition( m_Medial[0] );
+
+  VectorType tangent = medialA - medialB;
   VectorType normal  = sight;
 
   tangent.Normalize();
   normal.Normalize();
+
 
   const double AngleThreshold = 1e-4;
 
   unsigned int count = 0;
   for(int i=0; i<m_NumberOfSections; i++ )
   {
-    PointType    medial  = m_Medial[i];
+
+    if( i > 0 )
+    {
+      medialA = ComputeCurrentPosition( m_Medial[ i ] );
+      medialB = ComputeCurrentPosition( m_Medial[i-1] );
+      tangent = medialA - medialB;
+    }
+
+
+    PointType    medial  = ComputeCurrentPosition( m_Medial[i] );
     VectorType   radial  = tangent ^ normal;
     
     if( radial.GetNorm() < AngleThreshold ) 
     {
       // tangent and normal are almost parallel...
+      // ignore this particular segment
       continue;
     }
-
+    
+    radial.Normalize();
+    
     double factor = 1.0 - radialWidthRatio/2.0;
     for(int k=0; k<numberOfRadialSamples; k++)
     {
       const double x   = factor - 1.0;
       const double v   = x * exp( - x*x / radialWidthRatio*radialWidthRatio );
       vi.Value() = v;
-      pi.Value() = medial + radial * factor;
+      const VectorType offset = radial * factor * m_Radius[i];
+      pi.Value() = medial + offset;
       ++pi;
       ++vi;
       vi.Value() = v;
-      pi.Value() = medial - radial * factor;
+      pi.Value() = medial - offset;
       ++pi;
       ++vi;
       factor += radialWidthRatio / numberOfRadialSamples;
