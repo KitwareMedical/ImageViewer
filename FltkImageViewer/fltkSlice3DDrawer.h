@@ -174,19 +174,19 @@ public:
   /**
    * Bind texture for Slice X
    */
-   void BindTextureX(void);
+   void BindTextureX(void) const;
 
    
   /**
    * Bind texture for Slice Y
    */
-   void BindTextureY(void);
+   void BindTextureY(void) const;
 
 
   /**
    * Bind texture for Slice Z
    */
-   void BindTextureZ(void);
+   void BindTextureZ(void) const;
 
   /**
    * Get the Observer/Command that will redraw the object
@@ -242,9 +242,13 @@ private:
    unsigned char        * m_TextureZ;
    mutable GLuint         m_TextureName[3];
 
+   mutable bool           m_TextureBindedX;
+   mutable bool           m_TextureBindedY;
+   mutable bool           m_TextureBindedZ;
+
    PixelType              m_Max_Value;
 
-   mutable bool           texturesGenerated;
+   mutable bool           m_TexturesGenerated;
 
   DrawCommandPointer      m_DrawCommand;
 

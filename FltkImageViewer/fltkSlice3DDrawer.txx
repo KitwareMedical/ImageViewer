@@ -67,8 +67,12 @@ Slice3DDrawer<TImage>
   m_SliceY = 0;
   m_SliceZ = 0;
 
-  texturesGenerated = false;
-
+  m_TexturesGenerated = false;
+  
+  m_TextureBindedX = false;
+  m_TextureBindedY = false;
+  m_TextureBindedZ = false;
+  
   m_DrawCommand = DrawCommandType::New();
   m_DrawCommand->SetCallbackFunction( this, &Self::glDraw );
 
@@ -195,14 +199,14 @@ Slice3DDrawer<TImage>
 
   PixelType  max = it.Get();
   while( ! it.IsAtEnd() )
-  {
-	 const PixelType val = it.Get();
-     if( max < val )
-     {
-       max = val;
-     }
-     ++it;
-  }
+    {
+    const PixelType val = it.Get();
+    if( max < val )
+      {
+      max = val;
+      }
+    ++it;
+    }
   m_Max_Value = max;
 
 
@@ -321,7 +325,7 @@ Slice3DDrawer<ImagePixelType>
 ::SelectSliceX(void)
 {
     xValueOutput->value( xScrollBar->value() );
-    BindTextureX();
+    m_TextureBindedX = false;
     InvokeEvent( fltk::VolumeReslicedEvent() );
 }
 
@@ -339,7 +343,7 @@ Slice3DDrawer<ImagePixelType>
 ::SelectSliceY(void)
 {
     yValueOutput->value( yScrollBar->value() );
-    BindTextureY();
+    m_TextureBindedY = false;
     InvokeEvent( fltk::VolumeReslicedEvent() );
 }
 
@@ -356,7 +360,7 @@ Slice3DDrawer<ImagePixelType>
 ::SelectSliceZ(void)
 {
     zValueOutput->value( zScrollBar->value() );
-    BindTextureZ();
+    m_TextureBindedZ = false;
     InvokeEvent( fltk::VolumeReslicedEvent() );
 }
 
@@ -374,17 +378,37 @@ Slice3DDrawer<ImagePixelType>
 ::glDraw(void) const
 {
 
-
-  if( !texturesGenerated )
-  {
-    glGenTextures(3, m_TextureName);
-    texturesGenerated = true;
-  }
   
   if( !(m_Image) )
   {
     return;
   }
+
+  if( !m_TexturesGenerated )
+    {
+    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+    glGenTextures(3, m_TextureName);
+    m_TexturesGenerated = true;
+    }
+
+  if( !m_TextureBindedX )
+    {
+    this->BindTextureX();
+    m_TextureBindedX = true;
+    }
+  
+  if( !m_TextureBindedY )
+    {
+    this->BindTextureY();
+    m_TextureBindedY = true;
+    }
+
+  if( !m_TextureBindedZ )
+    {
+    this->BindTextureZ();
+    m_TextureBindedZ = true;
+    }
+
 
 
   RegionType region = m_Image->GetRequestedRegion();
@@ -439,7 +463,7 @@ Slice3DDrawer<ImagePixelType>
   glGetError();        // Clearing Error buffer
   glColor3f(1.0,1.0,1.0);
 
-  if( xCheckButton->value() ) 
+  if( xCheckButton->value() && m_TextureBindedX ) 
   {
     int px = xScrollBar->value();
     GLfloat pnx =   px    * m_Dx;
@@ -458,7 +482,7 @@ Slice3DDrawer<ImagePixelType>
 
 
 
-  if( yCheckButton->value() ) 
+  if( yCheckButton->value() && m_TextureBindedY ) 
   {
     int py = yScrollBar->value();
     GLfloat pnx =   m_Nx   * m_Dx;
@@ -477,7 +501,7 @@ Slice3DDrawer<ImagePixelType>
 
 
 
-  if( zCheckButton->value() ) 
+  if( zCheckButton->value() && m_TextureBindedZ ) 
   {
     int pz = zScrollBar->value();
     GLfloat pnx =   m_Nx   * m_Dx;
@@ -512,7 +536,7 @@ Slice3DDrawer<ImagePixelType>
 template <class ImagePixelType>
 void 
 Slice3DDrawer<ImagePixelType>
-::BindTextureX(void) 
+::BindTextureX(void) const
 {
 
   const GLint level  = 0;  // Level-of-Detail (sub-sampling...)
@@ -571,7 +595,7 @@ Slice3DDrawer<ImagePixelType>
 template <class ImagePixelType>
 void 
 Slice3DDrawer<ImagePixelType>
-::BindTextureY(void) 
+::BindTextureY(void) const 
 {
 
   const GLint level  = 0;  // Level-of-Detail (sub-sampling...)
@@ -631,7 +655,7 @@ Slice3DDrawer<ImagePixelType>
 template <class ImagePixelType>
 void 
 Slice3DDrawer<ImagePixelType>
-::BindTextureZ(void) 
+::BindTextureZ(void) const
 {
 
   const GLint level  = 0;  // Level-of-Detail (sub-sampling...)
