@@ -56,6 +56,10 @@ public:
   // Visit the Element and compute the HeatConduction
   void Visit( unsigned long cellId, ElementType * t )
     {
+    ElementType & element = *t;
+    ElementType::ShapeFunctionsDerivativesType shapeFunctionsDerivatives;
+    ElementType::ParametricPointType gaussPoint;
+    element.ComputeShapeFunctionDerivativesAt( gaussPoint, shapeFunctionsDerivatives );
     }
 };
   
