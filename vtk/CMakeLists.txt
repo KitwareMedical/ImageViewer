@@ -1,5 +1,5 @@
 # Add VTK code if we found VTK
-INCLUDE (${CMAKE_ROOT}/Modules/FindVTK.cmake)
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindVTK.cmake)
 IF (USE_VTK_FILE)
   INCLUDE(${USE_VTK_FILE})
   LINK_LIBRARIES( 
