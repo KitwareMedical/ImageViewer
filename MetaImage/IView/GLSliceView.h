@@ -819,14 +819,14 @@ GL_UNSIGNED_BYTE, cWinOverlayData);
         const int y = static_cast<int>(  cH/2-gl_height()/2  );
         gl_draw( cAxisLabelX[cWinOrientation],
                  cW-(gl_width(cAxisLabelX[cWinOrientation])+10), 
-                 y );
+                 static_cast<float>( y ) );
       }
       else
       {
         const int y = static_cast<int>( cH/2-gl_height()/2  );
         gl_draw( cAxisLabelX[cWinOrientation],
                  (gl_width(cAxisLabelX[cWinOrientation])+10),
-                 y );
+                 static_cast<float>( y ));
       }
 
       if(!cFlipY)
@@ -834,14 +834,14 @@ GL_UNSIGNED_BYTE, cWinOverlayData);
         const int y = static_cast<int>( cH-gl_height()-10 ) ;
         gl_draw( cAxisLabelY[cWinOrientation],
                  cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
-                 y );
+                 static_cast<float>(y) );
       }
       else
       {
         const int y = static_cast<int>( gl_height()+10 );
         gl_draw( cAxisLabelY[cWinOrientation], 
                  cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
-                 y);
+                 static_cast<float>(y));
       }
 
       glDisable(GL_BLEND);
