@@ -15,5 +15,5 @@ FLTK_WRAP_UI(Curves2DExtractorLib ceExtractorConsoleGUI.fl)
 TARGET_LINK_LIBRARIES(Curves2DExtractorLib
                       ITKBasicFilters ITKIO ITKFltkImageViewer)
 
-ADD_EXECUTABLE(Curves2DExtractor main.cxx)
+ADD_GUI_EXECUTABLE(Curves2DExtractor main.cxx)
 TARGET_LINK_LIBRARIES(Curves2DExtractor Curves2DExtractorLib)

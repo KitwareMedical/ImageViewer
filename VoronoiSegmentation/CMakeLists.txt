@@ -25,5 +25,7 @@ SET(Project_FLTK_SRCS
 VDSegGrayUI.fl
 )
 
-ADD_EXECUTABLE(VoronoiSegmentation   ${Project_SRCS})
+ADD_GUI_EXECUTABLE(VoronoiSegmentation   "${Project_SRCS}")
+
 FLTK_WRAP_UI(VoronoiSegmentation ${Project_FLTK_SRCS})
+

@@ -9,11 +9,14 @@ ${MutualInformationEuler2DRegistration_SOURCE_DIR}
 ${MutualInformationEuler2DRegistration_BINARY_DIR}
 )
 
-ADD_EXECUTABLE(MutualInformationEuler2DRegistration
+SET(MutualInformationEuler2DRegistration_SRCS
   RegisterApplication.cxx
   RegisterWindow.cxx
   register.cxx
 )
+
+ADD_GUI_EXECUTABLE(MutualInformationEuler2DRegistration
+  "${MutualInformationEuler2DRegistration_SRCS}")
 
 FLTK_WRAP_UI(MutualInformationEuler2DRegistration registerGUI.fl)
 

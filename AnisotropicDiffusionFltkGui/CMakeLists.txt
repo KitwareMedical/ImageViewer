@@ -25,8 +25,8 @@ SET(AnisotropicDiffusionFltkGui2D_GUI_SRCS
 liFilterConsole2DGUI.fl
 )
 
-ADD_EXECUTABLE(AnisotropicDiffusionFltkGui3D ${AnisotropicDiffusionFltkGui3D_SRCS})
-ADD_EXECUTABLE(AnisotropicDiffusionFltkGui2D ${AnisotropicDiffusionFltkGui2D_SRCS})
+ADD_GUI_EXECUTABLE(AnisotropicDiffusionFltkGui3D "${AnisotropicDiffusionFltkGui3D_SRCS}")
+ADD_GUI_EXECUTABLE(AnisotropicDiffusionFltkGui2D "${AnisotropicDiffusionFltkGui2D_SRCS}")
 
 FLTK_WRAP_UI(AnisotropicDiffusionFltkGui3D   ${AnisotropicDiffusionFltkGui3D_GUI_SRCS})
 FLTK_WRAP_UI(AnisotropicDiffusionFltkGui2D   ${AnisotropicDiffusionFltkGui2D_GUI_SRCS})

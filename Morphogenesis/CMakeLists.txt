@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(
   ${InsightApplications_BINARY_DIR}/Morphogenesis
 )
 
-ADD_EXECUTABLE(Morphogenesis
+SET(Morphogenesis_SRCS
   Bacteria.cxx
   BacterialColony.cxx
   Cell.cxx
@@ -21,6 +21,8 @@ ADD_EXECUTABLE(Morphogenesis
   Prokariote.cxx
   main.cxx
 )
+
+ADD_GUI_EXECUTABLE(Morphogenesis "${Morphogenesis_SRCS}")
 
 FLTK_WRAP_UI(Morphogenesis BacterialColonyGUI.fl CellsViewerGUI.fl)
 TARGET_LINK_LIBRARIES(Morphogenesis ITKFltkImageViewer ITKBasicFilters ITKIO)

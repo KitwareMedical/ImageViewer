@@ -17,6 +17,6 @@ IF(WIN32)
   )
 ENDIF(WIN32)
 
-ADD_EXECUTABLE( DicomImageViewer DicomImageViewer.cxx )
+ADD_GUI_EXECUTABLE( DicomImageViewer DicomImageViewer.cxx )
 
 

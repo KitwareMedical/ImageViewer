@@ -23,7 +23,7 @@ ITKIO
 ITKFltkImageViewer
 )
 
-ADD_EXECUTABLE(DistanceMapFilter ${DistanceMapFilter_SRCS})
+ADD_GUI_EXECUTABLE(DistanceMapFilter "${DistanceMapFilter_SRCS}")
 
 FLTK_WRAP_UI(DistanceMapFilter  ${DistanceMapFilter_GUI_SRCS})
 

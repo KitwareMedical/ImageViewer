@@ -8,8 +8,13 @@ INCLUDE_DIRECTORIES(
   ${InsightApplications_BINARY_DIR}/GeodesicActiveContour
 )
 
-ADD_EXECUTABLE(GeodesicActiveContour GeodesicActiveContourBase.cxx
-               GeodesicActiveContour.cxx)
+SET(GeodesicActiveContour_SRCS
+  GeodesicActiveContourBase.cxx
+  GeodesicActiveContour.cxx
+  )
+
+ADD_GUI_EXECUTABLE(GeodesicActiveContour "${GeodesicActiveContour_SRCS}")
+
 FLTK_WRAP_UI(GeodesicActiveContour GeodesicActiveContourGUI.fl)
 
 TARGET_LINK_LIBRARIES(GeodesicActiveContour ITKNumerics ITKBasicFilters

@@ -19,7 +19,7 @@ IF(WIN32)
   )
 ENDIF(WIN32)
 
-ADD_EXECUTABLE( MetaImageViewer ${MetaImageViewer_SRCS} )
+ADD_GUI_EXECUTABLE( MetaImageViewer "${MetaImageViewer_SRCS}" )
 
 SET(MetaImageViewer_GUI_SRCS
   MetaImageViewerGUI.fld

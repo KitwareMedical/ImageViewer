@@ -24,5 +24,7 @@ SET(Project_FLTK_SRCS
 FuzzySegGrayUI.fl
 )
 
-ADD_EXECUTABLE(SimpleFuzzyConnectedness   ${Project_SRCS})
+ADD_GUI_EXECUTABLE(SimpleFuzzyConnectedness   "${Project_SRCS}")
+
 FLTK_WRAP_UI(SimpleFuzzyConnectedness ${Project_FLTK_SRCS})
+

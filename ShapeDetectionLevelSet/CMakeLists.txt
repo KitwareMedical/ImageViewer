@@ -36,6 +36,6 @@ ITKFltkImageViewer
 ITKVtkFltk
 )
 
-ADD_EXECUTABLE(ShapeDetectionLevelSet ${ShapeDetectionLevelSet_SRCS})
+ADD_GUI_EXECUTABLE(ShapeDetectionLevelSet "${ShapeDetectionLevelSet_SRCS}")
 FLTK_WRAP_UI( ShapeDetectionLevelSet ${ShapeDetectionLevelSet_GUI_SRCS} )
 

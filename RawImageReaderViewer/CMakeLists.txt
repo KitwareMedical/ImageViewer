@@ -22,6 +22,6 @@ SET(RawImageReaderViewer_GUI_SRCS
 itkRawImageReaderViewerGUI.fl
 )
 
-ADD_EXECUTABLE(RawImageReaderViewer   ${RawImageReaderViewer_SRCS})
+ADD_GUI_EXECUTABLE(RawImageReaderViewer   "${RawImageReaderViewer_SRCS}")
 
 FLTK_WRAP_UI(RawImageReaderViewer   ${RawImageReaderViewer_GUI_SRCS})

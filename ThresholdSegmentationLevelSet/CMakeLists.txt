@@ -37,6 +37,6 @@ vtkCommon
 )
 
 
-ADD_EXECUTABLE(ThresholdSegmentationLevelSet ${ThresholdSegmentationLevelSet_SRCS})
+ADD_GUI_EXECUTABLE(ThresholdSegmentationLevelSet "${ThresholdSegmentationLevelSet_SRCS}")
 FLTK_WRAP_UI( ThresholdSegmentationLevelSet ${ThresholdSegmentationLevelSet_GUI_SRCS} )
 

@@ -24,7 +24,7 @@ ITKIO
 ITKFltkImageViewer
 )
 
-ADD_EXECUTABLE(ImageRegistration ${ImageRegistration_SRCS})
+ADD_GUI_EXECUTABLE(ImageRegistration "${ImageRegistration_SRCS}")
 
 FLTK_WRAP_UI( ImageRegistration ${ImageRegistration_GUI_SRCS} )
 

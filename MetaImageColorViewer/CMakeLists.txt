@@ -14,7 +14,7 @@ IF(WIN32)
   )
 ENDIF(WIN32)
 
-ADD_EXECUTABLE( MetaImageColorViewer ${MetaImageColorViewer_SRCS} )
+ADD_GUI_EXECUTABLE( MetaImageColorViewer "${MetaImageColorViewer_SRCS}" )
 TARGET_LINK_LIBRARIES (MetaImageColorViewer
   ITKBasicFilters
   ITKFltkImageViewer

@@ -46,9 +46,9 @@ vtkCommon
 )
 
 
-ADD_EXECUTABLE(RegionGrowingSegmentation2D ${RegionGrowingSegmentation2D_SRCS})
-FLTK_WRAP_UI( RegionGrowingSegmentation2D ${RegionGrowingSegmentation2D_GUI_SRCS} )
+ADD_GUI_EXECUTABLE(RegionGrowingSegmentation2D "${RegionGrowingSegmentation2D_SRCS}")
+FLTK_WRAP_UI( RegionGrowingSegmentation2D ${RegionGrowingSegmentation2D_GUI_SRCS})
 
-ADD_EXECUTABLE(RegionGrowingSegmentation ${RegionGrowingSegmentation_SRCS})
+ADD_GUI_EXECUTABLE(RegionGrowingSegmentation "${RegionGrowingSegmentation_SRCS}")
 FLTK_WRAP_UI( RegionGrowingSegmentation ${RegionGrowingSegmentation_GUI_SRCS} )
 

@@ -8,8 +8,14 @@ INCLUDE_DIRECTORIES(
   ${InsightApplications_BINARY_DIR}/FastMarchingLevelSet
 )
 
-ADD_EXECUTABLE(FastMarchingLevelSet FastMarchingLevelSetBase.cxx
-               FastMarchingLevelSet.cxx)
+SET(FastMarchingLevelSet_SRCS 
+  FastMarchingLevelSetBase.cxx
+  FastMarchingLevelSet.cxx
+  )
+
+ADD_GUI_EXECUTABLE(FastMarchingLevelSet "${FastMarchingLevelSet_SRCS}")
+
 FLTK_WRAP_UI(FastMarchingLevelSet FastMarchingLevelSetGUI.fl)
+
 TARGET_LINK_LIBRARIES(FastMarchingLevelSet ITKFltkImageViewer ITKVtkFltk
                       ITKBasicFilters ITKNumerics ITKIO)

@@ -72,6 +72,38 @@ IF(USE_FLTK)
   ENDIF(FLTK_FOUND)
 ENDIF(USE_FLTK)
 
+
+# Macro for adding resources to GUI application on the Mac
+#
+IF(APPLE)
+  FIND_PROGRAM(ITK_APPLE_RESOURCE Rez /Developer/Tools)
+  FIND_FILE(ITK_FLTK_RESOURCE mac.r /usr/local/include/FL)
+  IF(NOT ITK_FLTK_RESOURCE)
+    MESSAGE("Fltk resources not found, GUI application will not respond to mouse events")
+  ENDIF(NOT ITK_FLTK_RESOURCE)
+
+  MACRO(ADD_GUI_EXECUTABLE name sources)
+    ADD_EXECUTABLE(${name} ${sources})
+    SET(EXEC_PATH ${EXECUTABLE_OUTPUT_PATH}) 
+    IF(NOT EXEC_PATH)
+      SET(EXEC_PATH ${CMAKE_CURRENT_BINARY_DIR})
+    ENDIF(NOT EXEC_PATH)
+      IF(ITK_APPLE_RESOURCE)
+        ADD_CUSTOM_COMMAND(SOURCE ${name}
+                           COMMAND ${ITK_APPLE_RESOURCE}
+                           ARGS -t APPL ${ITK_FLTK_RESOURCE} -o 
+                           ${EXEC_PATH}/${name}
+                           TARGET ${name})
+      ENDIF(ITK_APPLE_RESOURCE)
+  ENDMACRO(ADD_GUI_EXECUTABLE)
+ELSE(APPLE)
+  MACRO(ADD_GUI_EXECUTABLE name sources)
+    ADD_EXECUTABLE(${name} ${sources})
+  ENDMACRO(ADD_GUI_EXECUTABLE)
+ENDIF(APPLE)
+
+#
+
 #Build the Auxiliary directory on which many applications depend
 SUBDIRS(Auxiliary)
 
