@@ -52,6 +52,7 @@ IF (VTK_WRAP_PYTHON)
   VTK_WRAP_PYTHON(vtkVTKITKCommonPython VTKITKCommonPython_SRCS ${VTKITKCommon_SRCS})
   ADD_LIBRARY(vtkVTKITKCommonPython SHARED ${VTKITKCommonPython_SRCS})
   TARGET_LINK_LIBRARIES (vtkVTKITKCommonPython 
+                         vtkVTKITKCommon
                          vtkFilteringPython 
                          vtkCommonPython)
   IF(WIN32)
