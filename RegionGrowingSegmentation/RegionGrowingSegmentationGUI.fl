@@ -1,16 +1,13 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0011 
+version 1.0100 
 header_name {.h} 
-code_name {.cxx} 
-gridx 5 
-gridy 5 
-snap 3
+code_name {.cxx}
 class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase}
 } {
   Function {RegionGrowingSegmentationGUI()} {open
   } {
     Fl_Window consoleWindow {
-      label {Region Growing Segmentation}
+      label {Region Growing Segmentation} open
       xywh {4 20 1079 459}
       code0 {\#include <RegionGrowingSegmentationBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
@@ -88,19 +85,14 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           xywh {348 277 83 10} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {
-        xywh {5 5 1065 385}
+      Fl_Group controlsGroup {selected
+        xywh {5 5 1065 385} deactivate
       } {
         Fl_Light_Button inputImageButton {
           label {Input Image}
           callback {ShowInputImage();}
           xywh {20 129 78 39} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
-        }
-        Fl_Button {} {
-          label Quit
-          callback {this->Quit();}
-          xywh {825 325 90 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button thresholdConnectedImageButton {
           label Display
@@ -227,7 +219,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         }
         Fl_Light_Button curvatureFlowImageButton {
           label Display
-          callback {this->ShowCurvatureFlowImage();} selected
+          callback {this->ShowCurvatureFlowImage();}
           xywh {317 29 68 24} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
@@ -242,11 +234,6 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           callback {this->ShowCurvatureAnisotropicDiffusionImage();}
           xywh {314 271 68 24} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
-        }
-        Fl_Button {} {
-          label Load
-          callback {this->LoadInputImage();}
-          xywh {20 48 81 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Group homogenizerGroup {open
           xywh {390 20 50 285}
@@ -302,6 +289,16 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         label {Diff Variance}
         callback {m_FuzzyConnectedImageFilter->SetDiff_Variance( o->value() );}
         xywh {700 344 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
+      }
+      Fl_Button {} {
+        label Quit
+        callback {this->Quit();}
+        xywh {830 330 90 35} box ROUND_UP_BOX labelsize 12 align 128
+      }
+      Fl_Button {} {
+        label Load
+        callback {this->LoadInputImage();}
+        xywh {25 53 81 35} box ROUND_UP_BOX labelsize 12 align 128
       }
     }
   }
