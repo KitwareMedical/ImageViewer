@@ -14,18 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-//--------------------------------------------
-//
-//     Project: Operating Room
-//
-//     Author:  Luis Ibanez
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27599
-//
-//--------------------------------------------
 
 
 #include "liSurgeryTable.h"

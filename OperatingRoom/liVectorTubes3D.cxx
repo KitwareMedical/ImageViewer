@@ -14,19 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-//--------------------------------------------
-//
-//     Project Angio Room
-//
-//     Author:  Luis Ibanez
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27514
-//
-//--------------------------------------------
-
 
 
 #include "liVectorTubes3D.h"

@@ -14,18 +14,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-//--------------------------------------------
-//
-//     Project Angio Room
-//
-//     Author:  Luis Ibanez
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27514
-//
-//--------------------------------------------
+
 #ifndef liTUBE3DCLASS
 #define liTUBE3DCLASS
 

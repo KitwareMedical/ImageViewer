@@ -14,21 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-//--------------------------------------------
-//
-//    Project Registrator
-//
-//    Author:  Luis Ibanez
-//  
-//    Directed by: Elizabeth Bullitt, MD
-//
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27514
-//
-//--------------------------------------------
 
 
 #include <liSampleGeneratorBodyPlane.h>

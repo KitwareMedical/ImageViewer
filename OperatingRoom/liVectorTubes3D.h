@@ -14,18 +14,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-//--------------------------------------------
-//
-//     Project Point Associator
-//
-//     Author:  Luis Ibanez
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27514
-//
-//--------------------------------------------
+
 #ifndef liVECTORTUBES3DCLASS
 #define liVECTORTUBES3DCLASS
 
