@@ -16,6 +16,8 @@
 =========================================================================*/
 #include "CellsViewer.h"
 
+#include "CommandEvents.h"
+#include "CellsViewerCommand.h"
 
 namespace bio {
 
@@ -207,6 +209,28 @@ CellsViewer
     substratesBrowser->add( substrate->first.c_str() );
     ++substrate;
     }
+}
+
+
+
+/**
+ *    Connect the cellular aggregate
+ */ 
+void CellsViewer
+::SetCellsAggregate( CellularAggregate * cells )
+{
+
+  CellsViewerBase::SetCellsAggregate( cells );
+
+  // Setup Observers
+  cells->AddObserver( TimeStepEvent(), this->GetRedrawCommand() );
+
+  CellsViewerCommand::Pointer viewerCommand = CellsViewerCommand::New();
+
+  viewerCommand->SetCellsViewer( this );
+  cells->AddObserver( TimeStepEvent(), viewerCommand );
+  
+
 }
 
 

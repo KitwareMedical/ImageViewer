@@ -24,8 +24,6 @@
 #include "GradientEatingBacteria.h"
 #include "BilayerOrganism.h"
 #include "CellsViewer.h"
-#include "CommandEvents.h"
-#include "CellsViewerCommand.h"
 
 
 int main()
@@ -37,20 +35,10 @@ int main()
   bio::BacterialColony::Pointer  colony = bio::BacterialColony::New();
 
 
-  bio::CellsViewerCommand::Pointer viewerCommand = 
-                                          bio::CellsViewerCommand::New();
-
-  viewerCommand->SetCellsViewer( viewer );
-
-  itk::Command::Pointer redrawCommand = viewer->GetRedrawCommand();
-  colony->AddObserver( bio::TimeStepEvent(), redrawCommand );
-
-  colony->AddObserver( bio::TimeStepEvent(), viewerCommand );
+  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent(), 
+                       colony->GetRedrawCommand().GetPointer() );
 
   viewer->SetCellsAggregate( colony );
-  
-  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent(), 
-                            colony->GetRedrawCommand().GetPointer() );
 
   // Add All the known species here
   viewer->AddSpeciesEggProducer( 

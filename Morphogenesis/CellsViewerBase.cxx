@@ -38,6 +38,7 @@ CellsViewerBase
   m_Stop =            true;
   m_StartTime =          0;
 
+  
 }
 
 
@@ -245,6 +246,7 @@ void CellsViewerBase
 ::SetCellsAggregate( CellularAggregate * cells )
 {
   m_Cells = cells;
+
 }
 
 

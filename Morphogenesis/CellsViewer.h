@@ -48,6 +48,8 @@ public:
   virtual void AddSpeciesEggProducer( EggProducerFunction *, const char *); 
   virtual void AddClippingPlane( void );
 
+  virtual void SetCellsAggregate( CellularAggregate * );
+
 private:
   
 };

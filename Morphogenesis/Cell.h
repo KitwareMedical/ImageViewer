@@ -38,7 +38,7 @@ class CellularAggregate;
 class Cell  
 {
 public:
-  enum { Dimension = 3 };
+  enum { Dimension = 2 };
   enum { PointDimension = Dimension };
 
   typedef   itk::Vector<double,PointDimension>  VectorType;
