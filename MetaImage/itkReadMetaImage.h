@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __itkReadMetaImage_h
 #define __itkReadMetaImage_h
 
+#include "itkFstream.h"
 #include "itkImageSource.h"
 
 namespace itk
