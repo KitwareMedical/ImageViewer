@@ -10,20 +10,14 @@ class fltkImageViewerGUI {open
   Function {fltkImageViewerGUI()} {} {}
   Function {~fltkImageViewerGUI()} {return_type virtual
   } {}
-  Function {CreateGUI()} {} {
-    Fl_Window iviewWindow {
-      xywh {855 28 298 401} labelsize 10 resizable visible
+  Function {CreateGUI()} {open
+  } {
+    Fl_Window iviewWindow {open
+      xywh {855 29 298 401} labelsize 10 resizable visible
     } {
-      Fl_Group glWindowGroup {
+      Fl_Group glWindowGroup {open
         xywh {0 25 260 320}
       } {
-        Fl_Box {} {
-          label {3D Win}
-          xywh {0 25 260 250} box EMBOSSED_BOX
-          code0 {\#include <GLSliceView.h>}
-          code1 {CreateGLSliceView( glWindowGroup, o );}
-          class Fl_Gl_Window
-        }
         Fl_Choice orientationChoice {
           callback {SetOrientation();} selected
           xywh {20 325 50 20}
@@ -40,6 +34,13 @@ class fltkImageViewerGUI {open
             label Z
             xywh {10 10 100 20}
           }
+        }
+        Fl_Box {} {
+          label {3D Win}
+          xywh {0 25 260 250} box EMBOSSED_BOX
+          code0 {\#include <GLSliceView.h>}
+          code1 {CreateGLSliceView( glWindowGroup, o );}
+          class Fl_Gl_Window
         }
       }
       Fl_Menu_Bar {} {
@@ -119,7 +120,7 @@ class fltkImageViewerGUI {open
     }
     Fl_Window clickedPointsWindow {
       label {Clicked Points}
-      xywh {548 26 291 405} visible
+      xywh {548 29 291 405} visible
     } {
       Fl_Browser clickedPointsBrowser {
         xywh {10 15 270 345} textfont 4
