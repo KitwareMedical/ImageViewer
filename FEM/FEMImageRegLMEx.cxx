@@ -145,8 +145,12 @@ ImageRegLMEx<TReference,TTarget,TElement>::ImageRegLMEx( )
   
   
   // Register the correct element type and load implementation with the visitor dispatcher 
-  VisitorDispatcher<ElementType,itk::fem::Element::LoadType, ElementType::LoadImplementationFunctionPointer>
-  ::RegisterVisitor((ImageMetricLoadType*)0, &ImageMetricLoadImplementation<ImageMetricLoadType>::ImplementImageMetricLoad);
+  typedef VisitorDispatcher< ElementType,
+                             itk::fem::Element::LoadType, 
+                             typename ElementType::LoadImplementationFunctionPointer >   DispatcherType;
+  
+  DispatcherType::RegisterVisitor((ImageMetricLoadType*)0, 
+                    &ImageMetricLoadImplementation<ImageMetricLoadType>::ImplementImageMetricLoad);
 
 
 }
@@ -218,7 +222,8 @@ void ImageRegLMEx<TReference,TTarget,TElement>::ReadImages()
  
   // Read a Raw File
   typedef  itk::ImageFileReader< ImageType >      FileSourceType;
-  typedef  itk::RawImageIO< ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
+  typedef  itk::RawImageIO< typename ImageType::PixelType,
+                            ImageType::ImageDimension>   RawReaderType;
 
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
