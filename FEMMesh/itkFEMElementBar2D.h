@@ -19,7 +19,6 @@
 #define __itkFEMElementBar2D_h
 
 #include "itkFEMElement.h"
-#include "itkFEMNode.h"
 #include "itkFEMMaterialStandard.h"
 #include "itkMacro.h"
 
@@ -34,65 +33,63 @@ namespace fem {
  * \class FEMElementBar2D
  * \brief 1D Bar (spring) finite element in 2D space.
  *
- * This element is defined by two NodeXY object and a MaterialStandard object.
+ * This element is defined by two points and a MaterialStandard object.
  */
-class FEMElementBar2D : public FEMElement
+template < typename TFEMMesh, unsigned int NDisplacementComponentsPerPoint >
+class FEMElementBar2D : 
+        public FEMElement< LineCell < typename TFEMMesh::PixelType,
+                                      typename TFEMMesh::CellTraits >,
+                           TFEMMesh,
+                           NDisplacementComponentsPerPoint >
 {
 
 public:
-
-  /** Type of Node used by this element  */
-  typedef FEMNode< 2 >          NodeType;   
-
-
-  typedef FEMElement                        Superclass;
-  typedef Superclass::MatrixType            MatrixType;
-  typedef Superclass::LoadsVectorType       LoadsVectorType;
-
 
   /**
    * Number of Components of the Displacement Field
    * (also known as number of degrees of freedom)
    */
   enum { NumberOfDisplacementComponents = 4 };
+
+  typedef TFEMMesh                                FEMMeshType;
+  typedef typename FEMMeshType::CellTraits        CellTraits;
+  typedef typename FEMMeshType::PointType         PointType;
+  typedef typename FEMMeshType::CoordRepType      CoordinateRepresentationType;
+
+  typedef LineCell< DisplacementType, CellTraits >        CellType;
+
+  typedef FEMElement< CellType, 
+                      FEMMeshType,
+                      NDisplacementComponentsPerPoint >           Superclass;
+
+  typedef typename Superclass::MatrixType                 MatrixType;
+  typedef typename Superclass::LoadsVectorType            LoadsVectorType;
+
+  typedef typename Superclass::PointsContainer            PointsContainer;
+  typedef typename Superclass::PointDataContainer         PointDataContainer;
+  typedef typename Superclass::CellsContainer             CellsContainer;
+  typedef typename Superclass::CellType::PointIdIterator  PointIdIterator;
+  typedef typename Superclass::DisplacementType           DisplacementType;
+
   
-  /**
-   * Required virtual functions
-   */
-
-  /** Return the number of components of the Displacement Field 
-      (also known as the number of Degrees of Freedom */
-  virtual unsigned int GetNumberOfDisplacementComponents(void) const 
-    { return NumberOfDisplacementComponents; }
-
-
-  virtual unsigned int GetNumberOfNodes( void ) const 
-    { return 2; }
-
   /**
    * Element stiffness matrix
    */
-  MatrixType GetStiffnessMatrix(void) const
+  MatrixType GetStiffnessMatrix( const FEMMeshType * mesh ) const
   {
 
     MatrixType stiffnessMatrix( NumberOfDisplacementComponents, NumberOfDisplacementComponents);
+    
+    PointIdIterator Id = this->GetPointIds(); 
+    typename PointsContainer::Pointer points = mesh->GetPoints();
 
+    const PointType & point1 = points->ElementAt( *Id++ );
+    const PointType & point2 = points->ElementAt( *Id++ );
 
-    /* X coordinate of the first Node... */
-    /* 
-    // Maybe what we really need here is the *Jacobian* of the transformation... 
-    // something like:   this->GetCell()->GetJacobian();
-    // not the actual coordinates of the points... (?)
-    // Otherwise the element will have to be templated over the 
-    // dimension of the points...which doesn't make much sense...   :-/
-    //
-    const PointType * point1 = this->GetCell()->GetPoint( 0 );
-    const PointType * point2 = this->GetCell()->GetPoint( 0 );
-    const CoordinateRepresentationType x1 = (*point1)[0];
-    const CoordinateRepresentationType y1 = (*point1)[1];
-    const CoordinateRepresentationType x2 = (*point2)[0];
-    const CoordinateRepresentationType y2 = (*point2)[1];
-    */
+    const CoordinateRepresentationType x1 = point1[0];
+    const CoordinateRepresentationType y1 = point1[1];
+    const CoordinateRepresentationType x2 = point2[0];
+    const CoordinateRepresentationType y2 = point2[1];
 
     return stiffnessMatrix;
   }
@@ -102,63 +99,16 @@ public:
    */
   LoadsVectorType GetExternalLoads(LoadElement * l) const;
 
-  /**
-   * Return a particular Component of the Displacement Field
-   */
-  const DisplacementType & GetDisplacementComponent(unsigned int i) const 
-    {
-    switch ( i ) {
-    case 0:
-      return m_Node1->GetDisplacement( 0 );
-      break;
-    case 1:
-      return m_Node1->GetDisplacement( 1 );
-      break;
-    case 2:
-      return m_Node2->GetDisplacement( 0 );
-      break;
-    case 3:
-      return m_Node2->GetDisplacement( 1 );
-      break;
-    }
-    itkGenericExceptionMacro(<<"Attempt to access displacement field variable with index not in [0:3]");
-    return NumericTraits< DisplacementType >::Zero;
-  }
 
+protected:
+  /** Default constructor of an element */
+  FEMElementBar2D() {}
 
-  /**
-   * Default constructor of an element must initialize the Nodes (add vertex objects)
-   * But if a node for a specific point already exist, we should not create
-   * another one.
-   */
-  FEMElementBar2D()
-  {
-    m_Node1 = 0;
-    m_Node2 = 0;
-  }
+  /** Default destructor of an element */
+  virtual ~FEMElementBar2D() {}
 
-  void SetNode(unsigned int Id, FEMNodeBase * node )
-    {
-      switch( Id )
-      {
-      case 0:   
-        m_Node1 = dynamic_cast<NodeType *>( node );  
-        break;
-      case 1:
-        m_Node2 = dynamic_cast<NodeType *>( node );
-        break;
-      default:
-        itkGenericExceptionMacro(<<"FEM Element Bar only accepts Nodes with Id 0 or 1");
-      }
-    }
 
 public:
-
-  /**
-   * Pointers to node objects that defines the element
-   */
-  NodeType * m_Node1;
-  NodeType * m_Node2;
 
   /**
    * Pointer to geometric and material properties of the element
@@ -174,3 +124,4 @@ public:
 }} // end namespace itk::fem
 
 #endif // #ifndef __itkFEMElementBar2D_h
+
