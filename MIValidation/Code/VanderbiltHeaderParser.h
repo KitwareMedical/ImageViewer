@@ -64,11 +64,11 @@ public:
   itkNewMacro(Self);
 
   /** Typedef support. */
-  enum { ImageDimension = VImageDimension };
-  typedef Size<ImageDimension> SizeType;
-  typedef FixedArray<double,ImageDimension> SpacingType;
-  typedef FixedArray<unsigned int, ImageDimension> AxesType;
-  typedef FixedArray<bool, ImageDimension> DirectionType;
+  itkStaticConstMacro(ImageDimension, unsigned int, VImageDimension);
+  typedef Size<VImageDimension> SizeType;
+  typedef FixedArray<double,VImageDimension> SpacingType;
+  typedef FixedArray<unsigned int, VImageDimension> AxesType;
+  typedef FixedArray<bool, VImageDimension> DirectionType;
 
   /** Set the input file name. */
   itkSetStringMacro( FileName );

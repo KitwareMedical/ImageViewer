@@ -79,10 +79,10 @@ public:
   typedef typename ImageType::Pointer ImagePointer;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
  
   /** ShrinkFactors type. */
-  typedef FixedArray<unsigned int, ImageDimension> ShrinkFactorsType;
+  typedef FixedArray<unsigned int, itkGetStaticConstMacro(ImageDimension)> ShrinkFactorsType;
 
   /** IterationArray type. */
   typedef Array<unsigned int> IterationsArrayType;
@@ -91,10 +91,10 @@ public:
   typedef Array<double> RatesArrayType;
 
   /** PermuteOrder type. */
-  typedef FixedArray<unsigned int, ImageDimension> PermuteOrderType;
+  typedef FixedArray<unsigned int, itkGetStaticConstMacro(ImageDimension)> PermuteOrderType;
 
   /** FlipAxes type. */
-  typedef FixedArray<bool, ImageDimension> FlipAxesType;
+  typedef FixedArray<bool, itkGetStaticConstMacro(ImageDimension)> FlipAxesType;
 
   /** Modality type. */
   typedef VanderbiltModality::ModalityType ModalityType;

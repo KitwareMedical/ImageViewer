@@ -16,7 +16,7 @@
 =========================================================================*/
 #include <iostream>
 #include <fstream>
-
+#include <stdio.h>
 #include "VanderbiltModality.h"
 
 #include "VanderbiltValidationApp.h"
