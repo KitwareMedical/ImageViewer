@@ -1,10 +1,3 @@
-INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
-
-SET ( DicomImageViewer_SRCS
-  DicomImageViewer.cxx
-  )
 
 INCLUDE_DIRECTORIES (
   ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
@@ -28,6 +21,6 @@ IF(WIN32)
   )
 ENDIF(WIN32)
 
-ADD_EXECUTABLE( DicomImageViewer ${DicomImageViewer_SRCS} )
+ADD_EXECUTABLE( DicomImageViewer DicomImageViewer.cxx )
 
 

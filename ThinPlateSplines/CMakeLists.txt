@@ -1,6 +1,4 @@
 
-INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
-
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/Numerics

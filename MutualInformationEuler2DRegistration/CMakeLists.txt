@@ -1,5 +1,3 @@
-# Include OpenGL
-INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 INCLUDE_REGULAR_EXPRESSION(".*")
 

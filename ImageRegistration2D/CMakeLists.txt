@@ -1,6 +1,3 @@
-# Include OpenGL
-INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
-
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
