@@ -7,7 +7,8 @@ gridy 5
 snap 3
 class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
 } {
-  Function {DistanceMapFilterGUI()} {} {
+  Function {DistanceMapFilterGUI()} {open
+  } {
     Fl_Window controlWindow {
       label {Surface Generator} open
       xywh {599 70 238 117}
@@ -17,7 +18,7 @@ class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
         xywh {0 0 235 25}
       } {
         submenu {} {
-          label File
+          label File open
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -55,11 +56,21 @@ class DistanceMapFilterGUI {open : {public DistanceMapFilterBase}
             callback {m_DistanceImageSliceDrawer->Show();}
             xywh {20 20 100 20}
           }
+          menuitem {} {
+            label {Input Viewer}
+            callback {m_ImageViewer->Show();}
+            xywh {30 30 100 20}
+          }
+          menuitem {} {
+            label {Distance Map Viewer}
+            callback {m_DistanceImageViewer->Show();} selected
+            xywh {40 40 100 20}
+          }
         }
       }
       Fl_Button computeDistancetButton {
         label {Compute Distance}
-        callback {this->ComputeDistance();} selected
+        callback {this->ComputeDistance();}
         xywh {40 45 155 45} box ROUND_UP_BOX
       }
     }

@@ -22,6 +22,7 @@
 #include "fltkDisplayGlWindowGUI.h"
 #include "fltkSlice3DDrawer.h"
 #include "fltkVectorImage3D.h"
+#include "fltkImageViewer.h"
 #include "fltkClippingPlane3DDrawer.h"
 #include "itkImage.h"
 #include "itkImageFileReader.h"
@@ -93,15 +94,24 @@ public:
   typedef   VolumeReaderType::Pointer                    VolumeReaderPointer;
 
 
-  /** Slice Drawer for Input Image  */
+  /** Slice Drawer for Input Image : Orthogonal slices in OpenGL */
   typedef fltk::Slice3DDrawer< ImageType >               ImageSliceDrawerType;
   typedef ImageSliceDrawerType::Pointer                  ImageSliceDrawerPointer;
 
-  /** Slice Drawer for Distance Image  */
+  /** Slice Drawer for Distance Image  : Orthogonal slices in OpenGL */
   typedef fltk::Slice3DDrawer< DistanceImageType >  DistanceImageSliceDrawerType;
   typedef DistanceImageSliceDrawerType::Pointer     DistanceImageSliceDrawerPointer;
 
-  
+  typedef unsigned char      OverlayPixelType;
+
+  /** Image viewer using in-plane slice by slice */ 
+  typedef fltk::ImageViewer< ImageType::PixelType,
+                                OverlayPixelType >    ImageViewerType;
+
+  typedef fltk::ImageViewer< DistanceImageType::PixelType,
+                             OverlayPixelType  >      DistanceImageViewerType;
+
+
 
 protected:
 
@@ -125,11 +135,15 @@ public:
 protected:
 
   VolumeReaderPointer                 m_Reader;
+
   DistanceImagePointer                m_DistanceImage;
   DistanceFilterPointer               m_DistanceFilter;
 
   ImageSliceDrawerPointer             m_ImageSliceDrawer;
   DistanceImageSliceDrawerPointer     m_DistanceImageSliceDrawer;
+
+  ImageViewerType                   * m_ImageViewer;
+  DistanceImageViewerType           * m_DistanceImageViewer;
 
   fltkDisplayGlWindowGUI              m_Display;
 

@@ -68,6 +68,15 @@ DistanceMapFilterBase
  
   m_DistanceImageSliceDrawer->SetLabel("Input Image");
 
+  m_ImageViewer = new ImageViewerType;
+  m_ImageViewer->SetLabel("Input Image");
+  m_ImageViewer->SetImage( m_Reader->GetOutput() );
+
+  m_DistanceImageViewer = new DistanceImageViewerType;
+  m_DistanceImageViewer->SetLabel("Distance Map");
+  m_DistanceImageViewer->SetImage( m_DistanceFilter->GetOutput() );
+
+
   // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
 
@@ -78,6 +87,8 @@ DistanceMapFilterBase
 ::~DistanceMapFilterBase()
 {
   this->HideDisplay();
+  delete m_ImageViewer;
+  delete m_DistanceImageViewer;
 }
 
 
@@ -187,6 +198,8 @@ DistanceMapFilterBase
   m_Reader->Update();
 
   m_ImageSliceDrawer->SetInput( m_Reader->GetOutput() );
+
+  m_ImageViewer->SetImage( m_Reader->GetOutput() );
  
   m_ImageLoaded = true;
 
@@ -217,6 +230,8 @@ DistanceMapFilterBase
 
   m_Display.Redraw();
 
+  m_DistanceImageViewer->SetImage( 
+               m_DistanceFilter->GetOutput() );
 
 }
 
