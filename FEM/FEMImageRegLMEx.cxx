@@ -48,7 +48,7 @@ ImageRegLMEx::ImageRegLMEx( )
   m_SearchForMinAtEachLevel=false;
   m_LineSearchStep=0.025;
 
-  m_MaxSmoothing=1;
+  m_NumLevels=1;
   m_MinSmoothing=1;
   m_SmoothingStep=2;
   m_DoMultiRes=false;
@@ -314,8 +314,8 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
       else { this->DoSearchForMinAtEachResolution(true); }
 
       FEMLightObject::SkipWhiteSpace(f);
-      f >> fbuf;
-      this->m_MaxSmoothing = fbuf;
+      f >> ibuf;
+      this->m_NumLevels = (unsigned int) ibuf;
 
       FEMLightObject::SkipWhiteSpace(f);
       f >> fbuf;
@@ -772,7 +772,7 @@ void ImageRegLMEx::MultiResSolve()
   pyramidT->SetInput( Tcaster1->GetOutput());
 
 // set schedule by specifying the number of levels;
-  unsigned int numLevels = 2;
+  unsigned int numLevels = (unsigned int) m_NumLevels;
   pyramidR->SetNumberOfLevels( numLevels );
   pyramidT->SetNumberOfLevels( numLevels );
 
@@ -955,7 +955,7 @@ void ImageRegLMEx::MultiResSolve()
   CreateLinearSystemSolver();
   m_Solver.AssembleKandM();
   
-  for (smoothing=m_MaxSmoothing; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
+  for (smoothing=m_NumLevels; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
   {
     smoothfilter->SetVariance(smoothing);
     edgefilter->SetVariance(smoothing);
