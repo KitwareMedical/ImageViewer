@@ -448,26 +448,38 @@ liImageRegistrationConsoleBase
   {
   case translationTransform:
     {
-    m_ImageRegistrationMethod->SetTransform( 
-        itk::TranslationTransform<double,ImageDimension>::New() );
+    typedef itk::TranslationTransform<double,ImageDimension> TransformType;
+    TransformType::Pointer transform = TransformType::New();
+    transform->SetIdentity();
+    m_ImageRegistrationMethod->SetTransform( transform );
+    m_ImageRegistrationMethod->SetInitialTransformParameters( transform->GetParameters() );
     break;
     }
   case scaleTransform:
     {
-    m_ImageRegistrationMethod->SetTransform( 
-        itk::ScaleTransform<double,ImageDimension>::New() );
+    typedef itk::ScaleTransform<double,ImageDimension> TransformType;
+    TransformType::Pointer transform = TransformType::New();
+    transform->SetIdentity();
+    m_ImageRegistrationMethod->SetTransform( transform );
+    m_ImageRegistrationMethod->SetInitialTransformParameters( transform->GetParameters() );
     break;
     }
   case affineTransform:
     {
-    m_ImageRegistrationMethod->SetTransform( 
-        itk::AffineTransform<double,ImageDimension>::New() );
+    typedef itk::AffineTransform<double,ImageDimension> TransformType;
+    TransformType::Pointer transform = TransformType::New();
+    transform->SetIdentity();
+    m_ImageRegistrationMethod->SetTransform( transform );
+    m_ImageRegistrationMethod->SetInitialTransformParameters( transform->GetParameters() );
     break;
     }
   case rigidTransform:
     {
-    m_ImageRegistrationMethod->SetTransform( 
-        itk::Rigid3DTransform<double>::New() );
+    typedef itk::Rigid3DTransform<double> TransformType;
+    TransformType::Pointer transform = TransformType::New();
+    transform->SetIdentity();
+    m_ImageRegistrationMethod->SetTransform( transform );
+    m_ImageRegistrationMethod->SetInitialTransformParameters( transform->GetParameters() );
     break;
     }
   default:
