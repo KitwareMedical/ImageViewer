@@ -116,18 +116,18 @@ int main(int argc, char* argv[])
   std::string outputFileName ;
   std::string inputMaskFileName = "" ;
   std::string outputMaskFileName = "" ;
-  bool useLog ;
-  int degree ;
-  int sliceDirection ;
+  bool useLog = true;
+  int degree = 3;
+  int sliceDirection = 2;
   vnl_vector<double> coefficientVector ;
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
-  int maximumIteration ; 
+  int maximumIteration = 20; 
   double initialRadius ;
-  double growth ;
-  double shrink ;
+  double growth = 1.05;
+  double shrink = 0.0;
 
-  bool usingSlabIdentification ;
+  bool usingSlabIdentification = false;
 
   try
     {
