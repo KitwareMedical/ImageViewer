@@ -1,5 +1,5 @@
 /*=========================================================================
-
+               
   Program:   Insight Segmentation & Registration Toolkit
   Module:    FEMBrainStripValidationApp.cxx
   Language:  C++
@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-// disable debug warnings in MS compiler
-#ifdef _MSC_VER
+// disable debug warnings in MS compiler 
+#ifdef _MSC_VER 
 #pragma warning(disable: 4786)
 #endif
 
@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include "FEMBrainStripValidationApp.h"
 #include "itkImage.h"
-#include "itkExceptionObject.h"
+#include "itkExceptionObject.h"       
 
 // to use:  FEMBrainStripValidationApp U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\input_1.txt 
 typedef itk::Image<unsigned char,3> ImageType;
@@ -54,9 +54,15 @@ int main(int argc, char *argv[])
     std::cout << "Parameter file name missing" << std::endl;
     std::cout << std::endl;
     std::cout << "Usage:  FEMBrainStripValidationApp param.file" << std::endl;
-    paramname="U:\\itk\\Insight\\Examples\\IBSRValidation\\FEMAtlasSegmentation\\Inputs\\input_resample.txt";
+    paramname="U:\\itk\\Insight\\Examples\\IBSRValidation\\FEMAtlasSegmentation\\Inputs\\myinput_resample.txt";
 //    return 1;
     } else paramname=argv[1];
+
+  // registering the load for both hexahedron and tetrahedron elements   
+  DispatcherType::RegisterVisitor((ImageLoadType*)0, 
+          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
+  DispatcherType2::RegisterVisitor((ImageLoadType*)0, 
+          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
 
   // registering the load for both hexahedron and tetrahedron elements
   
@@ -125,13 +131,14 @@ int main(int argc, char *argv[])
 
   signed int startSlice;
   unsigned int numberOfSlices,xsize,ysize,matchpoints,histbins;
+  int edgefilt;
   char patientID[maxChar];
 
   // get altas information
   inputStream.getline( lineBuffer, maxChar, '\n' );
 
-  if ( sscanf( lineBuffer, "%s %d %d %d %d %d %u", 
-    patientID, &xsize, &ysize, &startSlice, &numberOfSlices, &histbins, &matchpoints ) != 7 )
+  if ( sscanf( lineBuffer, "%s %d %d %d %d %d %u %d", 
+    patientID, &xsize, &ysize, &startSlice, &numberOfSlices, &histbins, &matchpoints , &edgefilt) != 8 )
     {
     std::cout << "Problem with atlas specification: " << lineBuffer << std::endl;
     std::cout << "Usage: ";
@@ -146,7 +153,8 @@ int main(int argc, char *argv[])
   app->SetImageYSize(ysize);
   app->SetNumberOfHistogramLevels(histbins);  
   app->SetNumberOfMatchPoints(matchpoints);
-  
+  app->SetEdgeFilter(edgefilt);
+
   // run registration cases one at a time
   while ( !inputStream.eof() )
     {
@@ -173,11 +181,11 @@ int main(int argc, char *argv[])
     std::cout << " subject = " << app->GetSubjectPatientID();
     std::cout << std::endl;
 
-    try
+  //  try
       {
       app->Execute();
       }
-    catch( itk::ExceptionObject& err)
+    /*catch( itk::ExceptionObject& err)
       {
       std::cout << "Caught an ITK exception: " << std::endl;
       std::cout << err << std::endl;
@@ -185,7 +193,7 @@ int main(int argc, char *argv[])
     catch(...)
       {
       std::cout << "Caught an non-ITK exception " << std::endl;
-      }
+      }*/
 
     }
 

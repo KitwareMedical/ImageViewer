@@ -109,6 +109,8 @@ public:
   itkGetMacro( MovingImageMinimum, InputPixelType );
 
 
+  itkGetMacro( EdgeFilter, int );
+  itkSetMacro( EdgeFilter, int );
 protected:
   FEMPreprocessor();
   ~FEMPreprocessor(){};
@@ -128,7 +130,10 @@ private:
   InputPixelType                         m_FixedImageMinimum;
   InputPixelType                         m_MovingImageMinimum;
 
+  int                                    m_EdgeFilter;
   typedef typename OutputImageType::Pointer OutputImagePointer;
+  void ThresholdImage( OutputImageType *  input,
+   OutputImagePointer & output ); 
   void NormalizeImage( InputImageType * input,
    OutputImagePointer & output, InputPixelType & min ); 
   void EdgeFilterImage( OutputImageType * input,

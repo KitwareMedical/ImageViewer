@@ -129,6 +129,8 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 
   m_Preprocessor->SetNumberOfHistogramLevels( this->GetNumberOfHistogramLevels() );
   m_Preprocessor->SetNumberOfMatchPoints( this->GetNumberOfMatchPoints() );
+
+  m_Preprocessor->SetEdgeFilter( this->GetEdgeFilter() );
 }
 
 
@@ -175,14 +177,14 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   m_Generator->SetOutputFileName( m_OutputFileName.c_str() );
   m_Generator->SetAppendOutputFile( m_AppendOutputFile );
 
-/*
+
   typedef typename LabelImageType::PixelType PType;
   itk::RawImageIO<PType,ImageDimension>::Pointer io;
   itk::ImageFileWriter<LabelImageType>::Pointer writer;
   io = itk::RawImageIO<PType,ImageDimension>::New();
   writer = itk::ImageFileWriter<LabelImageType>::New();
   writer->SetImageIO(io);
-  writer->SetFileName("E:\\Avants\\MetaImages\\junk128x128c.raw");
+  writer->SetFileName("subjectlabel.raw");
   writer->SetInput(m_Parser->GetSubjectLabelImage() ); 
   writer->Write();
  
@@ -191,12 +193,11 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   io2 = itk::RawImageIO<PType,ImageDimension>::New();
   writer2 = itk::ImageFileWriter<LabelImageType>::New();
   writer2->SetImageIO(io2);
-  writer2->SetFileName("E:\\Avants\\MetaImages\\junk128x128d.raw");
+  writer2->SetFileName("outputlabel.raw");
   writer2->SetInput(m_Labeler->GetOutputLabelImage()); 
   writer2->Write();
 
  
-*/
 
 }
 

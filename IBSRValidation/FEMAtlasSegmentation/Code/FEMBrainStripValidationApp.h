@@ -134,6 +134,9 @@ public:
   /** Set the number of atlas slices. */
   itkSetMacro( AtlasNumberOfSlices, unsigned long );
 
+  itkGetMacro( EdgeFilter, int );
+  itkSetMacro( EdgeFilter, int );
+
   /** Set the subject patient ID. */
   itkSetStringMacro( SubjectPatientID );
   itkGetStringMacro( SubjectPatientID );
@@ -191,6 +194,7 @@ private:
   signed long                   m_SubjectStartSliceNumber;
   unsigned long                 m_AtlasNumberOfSlices;
   unsigned long                 m_SubjectNumberOfSlices;
+  int                           m_EdgeFilter;
 
   unsigned long                          m_NumberOfHistogramLevels;
   unsigned long                          m_NumberOfMatchPoints;

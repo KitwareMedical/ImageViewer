@@ -17,10 +17,15 @@
 #ifndef _FEMPreprocessor_txx
 #define _FEMPreprocessor_txx
 
+#include "itkImageToListAdaptor.h"
+#include "itkMeanCalculator.h"
 #include "FEMPreprocessor.h"
 #include "itkMinimumMaximumImageFilter.h"
 #include "itkShiftScaleImageFilter.h"
 #include "itkHistogramMatchingImageFilter.h"
+#include "itkOtsuThresholdImageCalculator.h"
+#include "itkMultiplyImageFilter.h"
+#include "itkBinaryThresholdImageFilter.h"
 
 namespace itk
 {
@@ -52,13 +57,14 @@ FEMPreprocessor<TInputImage,TOutputImage>
   PRINTOUT( NumberOfMatchPoints );
   this->NormalizeImage( m_InputFixedImage, m_OutputFixedImage, m_FixedImageMinimum );
   this->NormalizeImage( m_InputMovingImage, m_OutputMovingImage, m_MovingImageMinimum );
+  this->ThresholdImage( m_OutputFixedImage, m_OutputFixedImage );
+  this->ThresholdImage( m_OutputMovingImage, m_OutputMovingImage);
   
-  int m_EdgeFilter=-1;
   if ( m_EdgeFilter >= 0)
   {
     float variance=7.0;
-    this->EdgeFilterImage( m_OutputFixedImage, m_OutputFixedImage, m_EdgeFilter, variance );
-    this->EdgeFilterImage( m_OutputMovingImage, m_OutputMovingImage,m_EdgeFilter, variance );
+    this->EdgeFilterImage( m_OutputFixedImage, m_OutputFixedImage, 2, variance );
+    this->EdgeFilterImage( m_OutputMovingImage, m_OutputMovingImage,2, variance );
   }
   typedef HistogramMatchingImageFilter<OutputImageType,OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
@@ -73,6 +79,63 @@ FEMPreprocessor<TInputImage,TOutputImage>
   m_OutputMovingImage = filter->GetOutput();//m_OutputMovingImage;// 
   
 }
+
+template <typename TInputImage, typename  TOutputImage>
+void
+FEMPreprocessor<TInputImage,TOutputImage>
+::ThresholdImage( 
+OutputImageType *  input,
+OutputImagePointer & output)
+{
+
+  typedef itk::OtsuThresholdImageCalculator<OutputImageType>  CalculatorType;
+  CalculatorType::Pointer calculator = CalculatorType::New();
+   
+  calculator->SetImage(input);
+  calculator->SetNumberOfHistogramBins( 255);
+
+  calculator->Compute(); 
+  /*
+  // creates an ImageToListAdaptor object
+  typedef  Statistics::ImageToListAdaptor< InputImageType > ImageToListAdaptorType ;
+
+  ImageToListAdaptorType::Pointer sample = ImageToListAdaptorType::New() ;
+  sample->SetImage(input) ;
+
+  typedef itk::Statistics::MeanCalculator< ImageToListAdaptorType > 
+    CalculatorType;
+
+  CalculatorType::Pointer calculator = CalculatorType::New() ;
+  
+  calculator->SetInputSample(sample.GetPointer()) ;
+  calculator->Update();
+*/
+  typedef BinaryThresholdImageFilter<OutputImageType,RealImageType> InputThresholderType;
+  typename InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
+
+  inputThresholder->SetInput( input );
+  inputThresholder->SetInsideValue( 1.0 );
+  inputThresholder->SetOutsideValue( 0.0 );
+  inputThresholder->SetLowerThreshold( (float)calculator->GetThreshold()*(float)0.7 );
+  inputThresholder->SetUpperThreshold( 10000 );
+
+  // Declare the type for the MULTIPLY filter
+  typedef itk::MultiplyImageFilter<OutputImageType,
+                                RealImageType,OutputImageType >  MultFilterType;
+ // Create an MULTIPLY Filter                                
+  MultFilterType::Pointer filter = MultFilterType::New();
+
+  // Connect the input images
+  filter->SetInput1( input ); 
+  filter->SetInput2(  inputThresholder->GetOutput());
+
+  // Execute the filter
+  filter->Update();
+  // Get the Smart Pointer to the Filter Output 
+  output = filter->GetOutput();
+
+}
+
 
 
 template <typename TInputImage, typename  TOutputImage>
