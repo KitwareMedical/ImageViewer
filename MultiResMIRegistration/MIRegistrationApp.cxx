@@ -218,7 +218,15 @@ MIRegistrationApp
 
   m_Registrator->SetNumberOfIterations( m_NumberOfIterations );
   m_Registrator->SetLearningRates( m_LearningRates );
-  m_Registrator->SetTranslationScales( m_TranslationScales );
+
+  // set the translation scale
+  itk::Point<double,7> scales;
+  scales.Fill(1.0);
+  for( int j = 4; j < 7; j++ )
+    {
+    scales[j] = 1.0 / vnl_math_sqr( m_TranslationScales[0] );
+    }
+  internalRegistrator->GetOptimizer()->GetTransform()->SetScale( scales );
   
 }
 
