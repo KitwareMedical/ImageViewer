@@ -69,6 +69,7 @@ public:
     m_CommandObserver    = CommandType::New();
     m_Info               = 0;
     m_UpdateMessage      = "Processing the filter...";
+    m_NeedCasting        = true;
     }
 
 
@@ -84,6 +85,11 @@ public:
     return m_Filter.GetPointer();
   }
 
+
+  void SetNeedCasting( bool value )
+  {
+    m_NeedCasting = value;
+  }
 
   void SetUpdateMessage( const char * message )
   {
@@ -156,8 +162,15 @@ public:
 
 
     // Connect the pipeline
-    m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
-    m_Filter->SetInput( m_CastFilter->GetOutput() );
+    if( m_NeedCasting )
+      {
+      m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
+      m_Filter->SetInput( m_CastFilter->GetOutput() );
+      }
+    else 
+      {
+//      m_Filter->SetInput( m_ImportFilter->GetOutput() );
+      }
 
     // Set the Observer for updating progress in the GUI
     m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
@@ -205,6 +218,9 @@ private:
     vtkVVPluginInfo                     * m_Info;
 
     std::string                           m_UpdateMessage;
+  
+    bool                                  m_NeedCasting;
+
 };
 
 

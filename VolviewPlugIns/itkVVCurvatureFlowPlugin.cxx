@@ -30,6 +30,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       // Set the parameters on it
       module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
       module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
+      module.SetNeedCasting( true );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -42,6 +43,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       // Set the parameters on it
       module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
       module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
+      module.SetNeedCasting( true );
       // Execute the filter
       module.ProcessData( pds );
       break; 
