@@ -58,6 +58,7 @@ ReadMetaImage<TOutputImage>
 
   m_OutputImage->SetSpacing( metaImage.ElemSize() );
 
+
   Size dimSize;
 
   for(unsigned int i=0; i<TOutputImage::ImageDimension; i++) 
@@ -75,6 +76,7 @@ ReadMetaImage<TOutputImage>
   region.SetIndex( start );
 
   m_OutputImage->SetLargestPossibleRegion( region );
+  m_OutputImage->SetRequestedRegion( region );
   m_OutputImage->SetBufferedRegion( region );
   m_OutputImage->Allocate();
     
