@@ -1,0 +1,20 @@
+N:/Vanderbilt/registration/images/practice/mr_T1/image.bin
+1
+256 256 26
+1.25 1.25 4.0
+N:/Vanderbilt/registration/images/practice/ct/image.bin
+1
+512 512 29
+0.653595 0.653595 4.0
+5
+4 4 1
+8 8 1
+2500 2500 2500 2500 2500
+1e-4 1e-5 5e-6 1e-6 5e-7
+320 320 320 320 320
+registered.raw
+1
+1
+cttot1
+
+

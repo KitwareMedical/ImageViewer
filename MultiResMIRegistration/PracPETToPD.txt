@@ -1,0 +1,20 @@
+N:/Vanderbilt/registration/images/practice/mr_PD/image.bin
+1
+256 256 26
+1.25 1.25 4.0
+N:/Vanderbilt/registration/images/practice/pet/image.bin
+1
+128 128 15
+2.590723 2.590723 8.0
+4
+2 2 1
+4 4 1
+5000 2500 2500 2500
+1e-4 1e-5 5e-6 1e-6
+640 320 320 320
+registered.raw
+1
+1
+pettopd
+
+
