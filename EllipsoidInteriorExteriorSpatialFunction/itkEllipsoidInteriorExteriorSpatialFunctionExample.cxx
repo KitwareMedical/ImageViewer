@@ -78,7 +78,7 @@ int main()
   itk::ImageRegionIterator<TImageType> it =
      itk::ImageRegionIterator<TImageType>(sourceImage, largestPossibleRegion);
 
-  int numImagePixels = 0;
+  unsigned long numImagePixels = 0;
   unsigned char exteriorPixelValue = 128;
   for(it.GoToBegin(); !it.IsAtEnd(); ++it)
     {
@@ -121,9 +121,13 @@ int main()
   // Set the orientations of the ellipsoids
   spatialFunc->SetOrientations(orientations);
 
-  TImageType::IndexType seedPos;
-  TImageType::IndexValueType pos[] = {center[0], center[1], center[2]};
-  seedPos.SetIndex(pos);
+  typedef   TImageType::IndexType       IndexType;
+  typedef   IndexType::IndexValueType   IndexValueType;
+
+  IndexType seedPos;
+  seedPos[0] = static_cast<IndexValueType>(center[0]);
+  seedPos[1] = static_cast<IndexValueType>(center[1]);
+  seedPos[2] = static_cast<IndexValueType>(center[2]);
 
   itk::FloodFilledSpatialFunctionConditionalIterator<TImageType, TEllipsoidFunctionType> 
     sfi = itk::FloodFilledSpatialFunctionConditionalIterator<TImageType,
@@ -148,11 +152,11 @@ int main()
   // Iterate through source image and get pixel values and count pixels 
   // iterated through, not filled by spatial function, filled by spatial
   // function, and not set by the spatial function.
-  for(int x = 0; x < xExtent; x++)
+  for(unsigned long x = 0; x < xExtent; x++)
     {
-     for(int y = 0; y < yExtent; y++)
+     for(unsigned long y = 0; y < yExtent; y++)
         {
-        for(int z = 0; z < zExtent; z++)
+        for(unsigned long z = 0; z < zExtent; z++)
           {
           indexarray[0] = x;
           indexarray[1] = y;
@@ -161,11 +165,23 @@ int main()
           index.SetIndex(indexarray);
           apixel = sourceImage->GetPixel(index);
           if(apixel == exteriorPixelValue) 
-          ++numExteriorPixels;
-          else if(apixel == interiorPixelValue) 
-          ++numInteriorPixels2;
-          else if(apixel != interiorPixelValue || apixel != exteriorPixelValue) 
-          ++numErrorPixels;
+            {
+            ++numExteriorPixels;
+            }
+          else 
+            {
+            if(apixel == interiorPixelValue) 
+              {
+              ++numInteriorPixels2;
+              }
+            else 
+              {
+              if(apixel != interiorPixelValue || apixel != exteriorPixelValue)
+                { 
+                ++numErrorPixels;
+                }
+              }
+            }
           }
        }
     }
