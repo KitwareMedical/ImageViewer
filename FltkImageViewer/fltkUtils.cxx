@@ -120,7 +120,7 @@ int ifuGetString(const char *mesg, char *buffer)
 int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buffer2)
   {
   int l = strlen(mesg1);
-  if(strlen(mesg2)>l)
+  if((int)strlen(mesg2)>l)
      l = strlen(mesg2);
   Fl_Window window(270+l*8,10+25+10+25+10+35);
   Fl_Input input1(10+l*8, 10, 250, 25, mesg1);
@@ -163,11 +163,11 @@ int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buff
      const char *mesg3, char *buffer3)
   {
   int l = strlen(mesg1);
-  if(strlen(mesg2)>l)
+  if((int)strlen(mesg2)>l)
     {
     l = strlen(mesg2);
     }
-  if(strlen(mesg3)>l)
+  if((int)strlen(mesg3)>l)
     {
     l = strlen(mesg3);
     }
@@ -216,15 +216,15 @@ int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buff
      const char *mesg3, char *buffer3, const char *mesg4, char *buffer4)
   {
   int l = strlen(mesg1);
-  if(strlen(mesg2)>l)
+  if((int)strlen(mesg2)>l)
     {
     l = strlen(mesg2);
     }
-  if(strlen(mesg3)>l)
+  if((int)strlen(mesg3)>l)
     {
     l = strlen(mesg3);
     }
-  if(strlen(mesg4)>l)
+  if((int)strlen(mesg4)>l)
     {
     l = strlen(mesg4);
     }
@@ -274,7 +274,7 @@ int ifuGetString(const char *mesg1, char *buffer1, const char *mesg2, char *buff
  */
 int ifuGetText(const char *mesg, char *buffer)
   {
-  int l = strlen(mesg);
+  int l = (int)strlen(mesg);
   Fl_Window window(520, 560);
   Fl_Multiline_Input input(10, 10, 500, 500, mesg);
   input.value(buffer);
