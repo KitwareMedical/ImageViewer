@@ -40,7 +40,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 #include "itkImage.h"
-#include "itkImage.h"
 
 #define ITK_MANUAL_INSTANTIATION
 #include "itkWriteMetaImage.h"
@@ -165,112 +164,5 @@ WriteMetaImage<Image<short,3> >
   return MET_SHORT;
 }
 
-// Now we gotta do the same for physical image variants...
-template <>
-MET_Type
-WriteMetaImage<Image<signed char,2> >
-::GetTypeCode(void) const
-{
-  return MET_CHAR;
-}
-
-/**
- *   Type Code for char
- */
-template <>
-MET_Type
-WriteMetaImage<Image<signed char,3> >
-::GetTypeCode(void) const
-{
-  return MET_CHAR;
-}
-
-/**
- *   Type Code for unsigned char
- */
-template <>
-MET_Type
-WriteMetaImage<Image<unsigned char,2> >
-::GetTypeCode(void) const
-{
-  return MET_UCHAR;
-}
-
-/**
- *   Type Code for unsigned char
- */
-template <>
-MET_Type
-WriteMetaImage<Image<unsigned char,3> >
-::GetTypeCode(void) const
-{
-  return MET_UCHAR;
-}
-
-/**
- *   Type Code for float
- */
-template <>
-MET_Type
-WriteMetaImage<Image<float,2> >
-::GetTypeCode(void) const
-{
-  return MET_FLOAT;
-}
-
-/**
- *   Type Code for float
- */
-template <>
-MET_Type
-WriteMetaImage<Image<float,3> >
-::GetTypeCode(void) const
-{
-  return MET_FLOAT;
-}
-
-/**
- *   Type Code for unsigned short
- */
-template <>
-MET_Type
-WriteMetaImage<Image<unsigned short,2> >
-::GetTypeCode(void) const
-{
-  return MET_USHORT;
-}
-
-/**
- *   Type Code for unsigned short
- */
-template <>
-MET_Type
-WriteMetaImage<Image<unsigned short,3> >
-::GetTypeCode(void) const
-{
-  return MET_USHORT;
-}
-
-/**
- *   Type Code for short
- */
-template <>
-MET_Type
-WriteMetaImage<Image<short,2> >
-::GetTypeCode(void) const
-{
-  return MET_SHORT;
-}
-
-/**
- *   Type Code for short
- */
-template <>
-MET_Type
-WriteMetaImage<Image<short,3> >
-::GetTypeCode(void) const
-{
-  return MET_SHORT;
-}
 
 } // end namespace itk
