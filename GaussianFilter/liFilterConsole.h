@@ -1,15 +1,21 @@
-//--------------------------------------------
-//
-//		  Project Gaussian Filter
-//
-//		  Author:  Luis Ibanez
-//	
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27599
-//
-//--------------------------------------------
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    liFilterConsole.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+
+  Copyright (c) 2000 National Library of Medicine
+  All rights reserved.
+
+  See COPYRIGHT.txt for copyright details.
+
+=========================================================================*/
+
+
+
 
 #ifndef liFILTERCONSOLE
 #define liFILTERCONSOLE
