@@ -42,18 +42,34 @@ glDrawEllipsoid() {
   CriticalPoint cp2;
   CriticalPoint cp3;
 
-  p1 =  10.0f,   0.0f,    0.0f;
-  p2 =   0.0f,  10.0f,    0.0f;
-  p3 =   0.0f,   0.0f,   10.0f;
+  p1[0] =  10.0f;
+  p1[1] =   0.0f;
+  p1[2] =   0.0f;
+
+  p2[0] =   0.0f;
+  p2[1] =  10.0f;
+  p2[2] =   0.0f;
+
+  p3[0] =   0.0f;
+  p3[1] =   0.0f;
+  p3[2] =  10.0f;
 
   // Normals
   CriticalPoint::NormalType normal1;
   CriticalPoint::NormalType normal2;
   CriticalPoint::NormalType normal3;
 
-  normal1 = 1.0f, 0.0f, 0.0f;
-  normal2 = 0.0f, 1.0f, 0.0f;
-  normal3 = 0.0f, 0.0f, 1.0f;
+  normal1[0] = 1.0f;
+  normal1[1] = 0.0f;
+  normal1[2] = 0.0f;
+
+  normal2[0] = 0.0f;
+  normal2[1] = 1.0f;
+  normal2[2] = 0.0f;
+
+  normal3[0] = 0.0f;
+  normal3[1] = 0.0f;
+  normal3[2] = 1.0f;
 
   cp1.SetNormal( normal1 );
   cp2.SetNormal( normal2 );
@@ -64,9 +80,18 @@ glDrawEllipsoid() {
   CriticalPoint::VectorType  maximumDirection2;
   CriticalPoint::VectorType  maximumDirection3;
 
-  maximumDirection1 = 0.0f, 1.0f, 0.0f;
-  maximumDirection2 = 0.0f, 0.0f, 1.0f;
-  maximumDirection3 = 0.0f, 1.0f, 0.0f;
+  maximumDirection1[0] = 0.0f;
+  maximumDirection1[1] = 1.0f;
+  maximumDirection1[2] = 0.0f;
+
+  maximumDirection2[0] = 0.0f;
+  maximumDirection2[1] = 0.0f;
+  maximumDirection2[2] = 1.0f;
+
+  maximumDirection3[0] = 0.0f;
+  maximumDirection3[1] = 1.0f;
+  maximumDirection3[2] = 0.0f;
+
 
   cp1.SetMaximumDirection( maximumDirection1 );
   cp2.SetMaximumDirection( maximumDirection2 );
@@ -77,9 +102,17 @@ glDrawEllipsoid() {
   CriticalPoint::VectorType  minimumDirection2;
   CriticalPoint::VectorType  minimumDirection3;
 
-  minimumDirection1 = 0.0f, 0.0f, 1.0f;
-  minimumDirection2 = 1.0f, 0.0f, 0.0f;
-  minimumDirection3 = 1.0f, 0.0f, 0.0f;
+  minimumDirection1[0] = 0.0f;
+  minimumDirection1[1] = 0.0f;
+  minimumDirection1[2] = 1.0f;
+
+  minimumDirection2[0] = 1.0f;
+  minimumDirection2[1] = 0.0f;
+  minimumDirection2[2] = 0.0f;
+
+  minimumDirection3[0] = 1.0f;
+  minimumDirection3[1] = 0.0f;
+  minimumDirection3[2] = 0.0f;
 
   cp1.SetMinimumDirection( minimumDirection1 );
   cp2.SetMinimumDirection( minimumDirection2 );
