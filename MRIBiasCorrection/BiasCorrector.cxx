@@ -240,7 +240,6 @@ int main(int argc, char* argv[])
   filter->SetBiasFieldDegree(degree) ;
   filter->SetUsingSlabIdentification(usingSlabIdentification) ;
   filter->SetSlicingDirection(sliceDirection) ;
-  filter->SetVerboseMode(true) ;
   filter->Update() ;
 
   std::cout << "Writing the output image..." << std::endl ;
