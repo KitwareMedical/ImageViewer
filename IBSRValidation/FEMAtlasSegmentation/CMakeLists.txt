@@ -28,6 +28,20 @@ ${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
 ${ITK_SOURCE_DIR}/Examples/IBSRValidation/FEMAtlasSegmentation
 )
 
+SOURCE_GROUP("Source Files Template" ./*.txx)
+
+
+# Add an option to build the visualization functions
+IF(WIN32)
+    OPTION(FEM_VISUALIZATION "Select whether the visualization functions will be built for Finite Elements Modeling (FEM) classes or not. If you select to build visualization functions, be sure to define FEM_BUILD_VISUALIZATION macro before including the FEM classes.")
+    MARK_AS_ADVANCED( FEM_VISUALIZATION )
+    IF(FEM_VISUALIZATION)
+    # Define the macro that includes all the required functions and include MFC support
+    ADD_DEFINITIONS( -DFEM_BUILD_VISUALIZATION /D "_AFXDLL" )
+    ENDIF(FEM_VISUALIZATION)
+ENDIF(WIN32)
+
+
 ADD_EXECUTABLE(FEMBrainStripValidationApp ${FEMBrainStripApp_SRCS} )
 TARGET_LINK_LIBRARIES(FEMBrainStripValidationApp ITKBasicFilters ITKNumerics FEM ITKIO)
 
