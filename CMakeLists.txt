@@ -106,6 +106,18 @@ IF( ITK_WRAP_TCL )
 ENDIF( ITK_WRAP_TCL )
 
 
+# Add an option to build the Tcl Wrap for the GaussianFilter example
+IF( ITK_WRAP_TCL )
+  IF( GCCXML )
+    IF( CABLE )
+      IF( TCL_TCLSH )
+        SUBDIRS(TclWrappedGaussianFilter)
+      ENDIF( TCL_TCLSH )
+    ENDIF( CABLE )
+  ENDIF( GCCXML )
+ENDIF( ITK_WRAP_TCL )
+
+
 
 LINK_LIBRARIES (
 VXLNumerics
