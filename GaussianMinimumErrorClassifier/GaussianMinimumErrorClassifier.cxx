@@ -30,7 +30,7 @@
 #include "itkGaussianDensityFunction.h"
 #include "itkMeanCalculator.h"
 #include "itkCovarianceCalculator.h"
-#include "itkGenericClassifier.h"
+#include "itkTableLookupClassifier.h"
 #include "MaximumLikelihoodRatioDecisionRule.h"
 
 void print_usage()
@@ -46,16 +46,16 @@ void print_usage()
 
   std::cout << "--training file" << std::endl ;
   std::cout << "        image file name with intesnity values [meta image format]"  
-    << std::endl ;
+            << std::endl ;
   std::cout << "--class-mask file" << std::endl ;
   std::cout << "        image file name with class labels [meta image format]"  
-    << std::endl ;
+            << std::endl ;
   std::cout << "--target file" << std::endl ;
   std::cout << "        target image file name with intensity values [meta image format]" 
-    << std::endl ;
+            << std::endl ;
   std::cout << "--output file" << std::endl ;
   std::cout << "        output image file name that will have the class labels for pixels" 
-    << std::endl ;
+            << std::endl ;
   std::cout << "        in the target image file [meta image format]"  << std::endl ;
 
   std::cout << "" << std::endl ;
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
   /* ================================================== */
   std::cout << "Importing the images to samples..."
             << std::endl ;
-  typedef stat::ImageListSampleAdaptor<ImageType, short, 1> 
+  typedef stat::ImageListSampleAdaptor< ImageType, stat::ScalarAccessor< ImageType > > 
     ImageListSampleType;
 
   ImageListSampleType::Pointer sample =
@@ -159,10 +159,15 @@ int main(int argc, char* argv[])
 
   generator->SetInput(sample) ;
   generator->SetClassMask(mask) ;
+  generator->SetNumberOfClasses(10) ;
   generator->GenerateData() ;
   MembershipSampleGeneratorType::OutputPointer membershipSample = 
     generator->GetOutput() ;
   unsigned int numberOfClasses = membershipSample->GetNumberOfClasses() ;
+  std::cout << "Generating class samples..." 
+            << std::endl ;
+  membershipSample->GenerateClassSamples() ;
+  
   /* =================================================== */
   std::cout << "Inducing the gaussian density function parameters and apriori probabilities..." 
             << std::endl ;
@@ -190,14 +195,25 @@ int main(int argc, char* argv[])
   DecisionRuleType::Pointer rule = DecisionRuleType::New() ;
 
   unsigned int sampleSize = 0 ;
-
+  std::cout << "Inducing the gaussian density function parameters and apriori probabilities..." << std::endl ;
+  std::cout << "number of classes = " << numberOfClasses << std::endl ;
   for (unsigned int i = 0 ; i < numberOfClasses ; i++)
     {
-      meanCalculator->SetSample(membershipSample->GetClassSample(i)) ;
+      std::cout << "gaussian [" << i << "]" << std::endl ;
+      // add the class sample size to the decision rule 
+      // for the a priori probability calculation
+      std::cout << "  Sample size = " ;
+      sampleSize = membershipSample->GetClassSampleSize(i) ;
+      std::cout << sampleSize << std::endl ;
+      rule->AddClassSampleSize(sampleSize) ;
+
+      ClassSampleType::Pointer subSample = 
+        membershipSample->GetClassSample(i) ;
+      meanCalculator->SetSample(subSample) ;
       meanCalculator->GenerateData() ;
       mean = meanCalculator->GetOutput() ;
 
-      covarianceCalculator->SetSample(membershipSample->GetClassSample(i)) ;
+      covarianceCalculator->SetSample(subSample) ;
       covarianceCalculator->SetMean(mean) ;
       covarianceCalculator->GenerateData() ;
       covariance = covarianceCalculator->GetOutput() ;
@@ -205,23 +221,29 @@ int main(int argc, char* argv[])
       densityFunctions[i] = DensityFunctionType::New() ;
       (densityFunctions[i])->SetMean(mean) ;
       (densityFunctions[i])->SetCovariance(covariance) ;
-      std::cout << "gaussian [" << i << "]" << std::endl ;
       std::cout << "  mean = " << (densityFunctions[i])->GetMean()
                 << std::endl ;
       std::cout << "  covariance = " << std::endl ;
       (densityFunctions[i])->GetCovariance().print(std::cout) ;
       
-      // add the class sample size to the decision rule 
-      // for the a priori probability calculation
-      std::cout << "  Sample size = " ;
-      sampleSize = (membershipSample->GetClassSample(i))->GetSize(0) ;
-      std::cout << sampleSize << std::endl ;
-      rule->AddClassSampleSize(sampleSize) ;
     }
+
+  typedef itk::ImageRegionIteratorWithIndex< ImageType > ImageIteratorType ;
+  ImageIteratorType t_iter(target, target->GetLargestPossibleRegion()) ;
+  short temp ;
+  while (!t_iter.IsAtEnd())
+    {
+      if (temp < t_iter.Get())
+        {
+          temp = t_iter.Get() ;
+        }
+      ++t_iter ;
+    }
+  std::cout << "Max value = " << temp << std::endl ;
   /* =================================================== */
   std::cout << "Classifying..." << std::endl ;
   
-  typedef stat::GenericClassifier< ImageListSampleType, DensityFunctionType, DecisionRuleType > ClassifierType ;
+  typedef stat::TableLookupClassifier< ImageListSampleType, DensityFunctionType, DecisionRuleType > ClassifierType ;
 
   ClassifierType::Pointer classifier = ClassifierType::New() ;
   classifier->SetSample(targetSample) ;
@@ -231,7 +253,12 @@ int main(int argc, char* argv[])
     }
 
   classifier->SetDecisionRule(rule) ;
-  
+  ClassifierType::CachedMeasurementVectorType upper ;
+  ClassifierType::CachedMeasurementVectorType lower ;
+  upper[0] = temp ;
+  lower[0] = 0 ;
+  classifier->SetLookupTableLowerBound(lower) ;
+  classifier->SetLookupTableUpperBound(upper) ;
   classifier->GenerateData() ;
   
   ClassifierType::OutputPointer result = classifier->GetOutput() ;
@@ -245,7 +272,6 @@ int main(int argc, char* argv[])
   output->SetBufferedRegion(target->GetLargestPossibleRegion()) ;
   output->SetLargestPossibleRegion(target->GetLargestPossibleRegion()) ;
   output->Allocate() ;
-  typedef itk::ImageRegionIteratorWithIndex< ImageType > ImageIteratorType ;
   ImageIteratorType i_iter(output, output->GetLargestPossibleRegion()) ;
   i_iter.GoToBegin() ;
   ClassifierType::OutputType::Iterator m_iter = result->Begin() ;
