@@ -29,8 +29,8 @@ IF(FLTK_LIBRARY)
      )
 
   INCLUDE_DIRECTORIES(
-     ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
-     ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
+     ${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
+     ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
      ${FLTK_INCLUDE_PATH}
      )
 

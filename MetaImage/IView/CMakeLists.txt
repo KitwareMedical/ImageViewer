@@ -7,8 +7,8 @@ IViewGUIBase
 )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Unsupported/MetaImage
-${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
+${ITK_SOURCE_DIR}/Auxiliary/MetaImage
+${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
 ${FLTK_INCLUDE_PATH}
 )
 

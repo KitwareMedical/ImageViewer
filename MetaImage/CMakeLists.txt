@@ -8,7 +8,7 @@ VXLNumerics
 )
 
 LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Unsupported/MetaImage
+${ITK_BINARY_DIR}/Auxiliary/MetaImage
 ${ITK_BINARY_DIR}/Code/BasicFilters
 )
 
@@ -23,7 +23,7 @@ itkFileIOMetaImage
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Unsupported/MetaImage
+${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 )
 
 ADD_LIBRARY(
