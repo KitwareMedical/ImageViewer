@@ -18,8 +18,6 @@ LINK_LIBRARIES (
 ITKBasicFilters 
 ITKCommon
 VXLNumerics
-dl
-pthread
 )
 
 EXECUTABLES(itkPrincipalAxesResampler)
