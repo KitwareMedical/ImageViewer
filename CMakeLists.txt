@@ -48,7 +48,10 @@ SUBDIRS(MIValidation)
 SUBDIRS(IBSRValidation)
 
 # Build the RawImageReadWrite example
-#SUBDIRS(RawImageReadWrite)
+SUBDIRS(RawImageReadWrite)
+
+# Build the PNGImageReadWrite example
+SUBDIRS(PNGImageReadWrite)
 
 # Examples requiring MetaImages and Fltk GUI 
 IF(HAS_METAIMAGE)
