@@ -48,7 +48,7 @@ SUBDIRS(MIValidation)
 SUBDIRS(IBSRValidation)
 
 # Build the RawImageReadWrite example
-SUBDIRS(RawImageReadWrite)
+#SUBDIRS(RawImageReadWrite)
 
 # Examples requiring MetaImages and Fltk GUI 
 IF(HAS_METAIMAGE)
@@ -139,6 +139,13 @@ IF(HAS_VTK)
   ENDIF (VTK_WRAP_TCL)
 ENDIF(HAS_VTK)
 
+
+IF(HAS_VTK)
+  IF (VTK_WRAP_TCL)
+    SUBDIRS(WST)
+  ENDIF (VTK_WRAP_TCL)
+ENDIF(HAS_VTK)
+
 # Add an option to build the Tcl Wrap for the stl string class
 IF( ITK_WRAP_TCL )
   IF( GCCXML )
@@ -177,6 +184,7 @@ ENDIF( ITK_WRAP_TCL )
 
 
 LINK_LIBRARIES (
+ITKAlgorithms
 VXLNumerics
 ITKCommon
 ITKBasicFilters 
