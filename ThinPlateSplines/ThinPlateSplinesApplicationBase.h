@@ -45,23 +45,16 @@ public:
   typedef itk::Point< CoordinateRepresentationType,
                                   PointsDimension >  PointType;
 
-  typedef std::vector< PointType >            PointArrayType;
+  typedef std::vector< PointType >                   PointArrayType;
       
-  typedef char PointDataType;
-  typedef char CellDataType;
-  typedef float InterpolationWeightType;
-
-  typedef itk::DefaultStaticMeshTraits< 
-                              PointDataType,
-                              PointsDimension,
-                              PointsDimension,
+  typedef itk::ThinPlateSplineKernelTransform< 
                               CoordinateRepresentationType,
-                              InterpolationWeightType,
-                              CellDataType >      MeshTraits;
+                              PointsDimension >  ThinPlateSplineTransformType;
 
-  typedef itk::PointSet< MeshTraits >       PointSetType;
-  typedef PointSetType::Pointer             PointSetPointer;
+  typedef ThinPlateSplineTransformType::Pointer  ThinPlateSplineTransformPointer;
 
+  typedef ThinPlateSplineTransformType::PointSetType      PointSetType;
+  typedef PointSetType::Pointer                           PointSetPointer;
 
 public:
 
@@ -93,6 +86,7 @@ protected:
   PointSetPointer   m_TargetLandMarks;   
 
   PointArrayType    m_PointsToTransform;   
+  PointArrayType    m_PointsTransformed;   
   
   vtkPoints       * m_VTKSourceLandMarks;
   vtkPoints       * m_VTKTargetLandMarks;
@@ -100,11 +94,16 @@ protected:
   vtkPoints       * m_VTKPointsToTransform;
   vtkCellArray    * m_VTKLinesToTransform;
 
+  vtkPoints       * m_VTKPointsTransformed;
+  vtkCellArray    * m_VTKLinesTransformed;
+
   fltk::TimeProbesCollector  m_TimeCollector;
 
   virtual void    MapPoints(void);
   virtual void    CreateSourcePoints(void);
   virtual void    RemoveActors(void);
+
+  ThinPlateSplineTransformPointer  m_ThinPlateSplineTransform;
 
 private:
 

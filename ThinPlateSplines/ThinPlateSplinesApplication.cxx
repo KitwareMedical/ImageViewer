@@ -55,7 +55,10 @@ ThinPlateSplinesApplication
 ::MapPoints()
 {
   this->ThinPlateSplinesApplicationBase::MapPoints();
+  this->RemoveActors();
+  this->DisplayAxes();
   this->DisplayPoints();
+  this->DisplayLandMarks();
   m_FlRenderWindowInteractor->redraw();
   Fl::check();
 }
