@@ -32,7 +32,7 @@ liFilterConsole2DBase
 ::liFilterConsole2DBase()
 {
 
-  m_ImageLoaded = false;
+  m_ImageFileNameAvailable = false;
 
   m_Reader     = VolumeReaderType::New();
   
@@ -95,13 +95,21 @@ liFilterConsole2DBase
   m_Modulus->SetInput1( m_H1x->GetOutput() );
   m_Modulus->SetInput2( m_H1y->GetOutput() );
 
+  m_MinimumMaximumModulus   = MinimumMaximumImageFilterType::New();
+  m_MinimumMaximumSmoothed  = MinimumMaximumImageFilterType::New();
+  m_MinimumMaximumLaplacian = MinimumMaximumImageFilterType::New();
+
+  m_MinimumMaximumSmoothed->SetInput(  m_Smoothed->GetOutput()  );
+  m_MinimumMaximumModulus->SetInput(   m_Modulus->GetOutput()   );
+  m_MinimumMaximumLaplacian->SetInput( m_Laplacian->GetOutput() );
+
   m_IntensityScaleModulus   = IntensityScaleImageFilterType::New();
   m_IntensityScaleSmoothed  = IntensityScaleImageFilterType::New();
   m_IntensityScaleLaplacian = IntensityScaleImageFilterType::New();
 
-  m_IntensityScaleSmoothed->SetInput(  m_Smoothed->GetOutput()  );
-  m_IntensityScaleModulus->SetInput(   m_Modulus->GetOutput()   );
-  m_IntensityScaleLaplacian->SetInput( m_Laplacian->GetOutput() );
+  m_IntensityScaleSmoothed->SetInput(  m_MinimumMaximumSmoothed->GetOutput()  );
+  m_IntensityScaleModulus->SetInput(   m_MinimumMaximumModulus->GetOutput()   );
+  m_IntensityScaleLaplacian->SetInput( m_MinimumMaximumLaplacian->GetOutput() );
 
   m_WriterSmoothed   = VolumeWriterType::New();
   m_WriterModulus    = VolumeWriterType::New();
@@ -153,9 +161,8 @@ liFilterConsole2DBase
   }
 
   m_Reader->SetFileName( filename );
-  m_Reader->Update();
 
-  m_ImageLoaded = true;
+  m_ImageFileNameAvailable = true;
 
 }
 
@@ -296,7 +303,7 @@ liFilterConsole2DBase
 ::Execute( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
+  if( ! (m_ImageFileNameAvailable) ) 
   {
     ShowStatus("Please load an image first");
     return;

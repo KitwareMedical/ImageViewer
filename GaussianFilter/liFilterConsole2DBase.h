@@ -24,6 +24,7 @@
 #include <itkAddImageFilter.h>
 #include <itkBinaryMagnitudeImageFilter.h>
 #include <itkShiftScaleImageFilter.h>
+#include <itkMinimumMaximumImageFilter.h>
 
 class liFilterConsole2DBase 
 {
@@ -69,6 +70,10 @@ public:
                      ImageType,
                      OutputImageType >  IntensityScaleImageFilterType; 
                                  
+  typedef   itk::MinimumMaximumImageFilter<
+                               ImageType
+                               >  MinimumMaximumImageFilterType; 
+                                 
 
 
 public:
@@ -107,7 +112,11 @@ protected:
   GaussianFilterType::Pointer                 m_Smoothed;
   ModulusFilterType::Pointer                  m_Modulus;
 
-  bool                                        m_ImageLoaded;
+  bool                                        m_ImageFileNameAvailable;
+
+  MinimumMaximumImageFilterType::Pointer      m_MinimumMaximumSmoothed;  
+  MinimumMaximumImageFilterType::Pointer      m_MinimumMaximumLaplacian;  
+  MinimumMaximumImageFilterType::Pointer      m_MinimumMaximumModulus;  
 
   IntensityScaleImageFilterType::Pointer      m_IntensityScaleSmoothed;  
   IntensityScaleImageFilterType::Pointer      m_IntensityScaleLaplacian;  

@@ -246,12 +246,13 @@ liFilterConsole2D
 ::ShowInput( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
+  if( ! (m_ImageFileNameAvailable) ) 
   {
-    this->ShowStatus("Please load an image first");
+    this->ShowStatus("Please provide a image filename first");
     return;
   }
 
+  m_Reader->Update();
   m_InputViewer->SetImage( m_Reader->GetOutput() );  
   m_InputViewer->Show();
 
@@ -405,9 +406,9 @@ liFilterConsole2D
 ::Execute( void )
 {
 
-  if( ! (m_ImageLoaded) ) 
+  if( ! (m_ImageFileNameAvailable) ) 
   {
-    this->ShowStatus("Please load an image first");
+    this->ShowStatus("Please provide a filename for the image first");
     return;
   }
 
