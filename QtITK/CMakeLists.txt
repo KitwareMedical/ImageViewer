@@ -1,0 +1,30 @@
+PROJECT(QtITKExample)
+
+# 
+# Find ITK
+#
+INCLUDE (${CMAKE_ROOT}/Modules/FindITK.cmake)
+IF (USE_ITK_FILE)
+  INCLUDE(${USE_ITK_FILE})
+ENDIF(USE_ITK_FILE)
+
+# 
+# Find QT
+#
+INCLUDE (${CMAKE_ROOT}/Modules/FindQt.cmake)
+
+INCLUDE_DIRECTORIES(
+${QT_INCLUDE_PATH}
+)
+
+
+LINK_LIBRARIES (
+VXLNumerics
+ITKCommon
+${QT_QT_LIBRARY}
+)
+
+
+
+ADD_EXECUTABLE(QtITK qtITK.cxx )
+
