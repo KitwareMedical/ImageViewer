@@ -1,13 +1,13 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0100 
+version 1.0103 
 header_name {.h} 
 code_name {.cxx}
 class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBase2D}
 } {
   Function {RegionGrowingSegmentation2DGUI()} {} {
     Fl_Window consoleWindow {
-      label {Region Growing Segmentation}
-      xywh {4 20 1075 440}
+      label {Region Growing Segmentation} open
+      xywh {345 258 1075 440}
       code0 {\#include <RegionGrowingSegmentationBase2D.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -54,7 +54,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
           xywh {75 141 52 9} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {
+      Fl_Group controlsGroup {open
         xywh {5 5 1065 385} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -295,6 +295,21 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
             }
           }
         }
+        Fl_Button {} {
+          label Save
+          callback {this->WriteConnectedThresholdImage();}
+          xywh {783 56 75 27} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Button {} {
+          label Save
+          callback {this->WriteConfidenceConnectedImage();}
+          xywh {785 160 75 27} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Button {} {
+          label Save
+          callback {this->WriteFuzzyConnectedImage();} selected
+          xywh {785 258 75 27} box ROUND_UP_BOX labelsize 12 align 128
+        }
       }
       Fl_Slider progressSlider {
         xywh {10 382 1060 15} type {Horz Fill} selection_color 2
@@ -374,6 +389,6 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
   } {}
   Function {ShowComposedImage( void )} {return_type {virtual void}
   } {}
-  Function {ShowBilateralImage( void )} {selected return_type {virtual void}
+  Function {ShowBilateralImage( void )} {return_type {virtual void}
   } {}
 } 
