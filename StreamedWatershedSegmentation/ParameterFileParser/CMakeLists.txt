@@ -9,5 +9,12 @@ INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 )
 
+LINK_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
+)
+
+LINK_LIBRARIES (
+ITKCommon
+)
 
 ADD_LIBRARY(param param_SRCS)
