@@ -45,19 +45,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ce_FilterConsoleBase_h
 #define ce_FilterConsoleBase_h
 
-#include <itkImage.h>
-#include <itkRecursiveGaussianImageFilter.h>
-#include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
-#include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
-#include <itkAddImageFilter.h>
-#include <itkBinaryMagnitudeImageFilter.h>
-#include <itkEigenAnalysis2DImageFilter.h>
-#include <itkGradientRecursiveGaussianImageFilter.h>
-#include <itkMultiplyImageFilter.h>
-#include <itkImageToParametricSpaceFilter.h>
-#include <itkMesh.h>
-#include <itkImageFileReader.h>
-#include <itkJoinImageFilter.h>
+#include "itkImage.h"
+#include "itkRecursiveGaussianImageFilter.h"
+#include "itkFirstDerivativeRecursiveGaussianImageFilter.h"
+#include "itkSecondDerivativeRecursiveGaussianImageFilter.h"
+#include "itkAddImageFilter.h"
+#include "itkBinaryMagnitudeImageFilter.h"
+#include "itkEigenAnalysis2DImageFilter.h"
+#include "itkGradientRecursiveGaussianImageFilter.h"
+#include "itkMultiplyImageFilter.h"
+#include "itkImageToParametricSpaceFilter.h"
+#include "itkMesh.h"
+#include "itkImageFileReader.h"
+#include "itkJoinImageFilter.h"
+#include "itkSphereSpatialFunction.h"
+#include "itkInteriorExteriorMeshFilter.h"
+#include "fltkSphereFunctionControl.h"
+#include "fltkFrustumFunctionControl.h"
+#include "itkParametricSpaceToImageSpaceMeshFilter.h"
+
+
 
 
 class ceExtractorConsoleBase 
@@ -78,10 +85,14 @@ public:
   typedef   itk::Image< VectorType, 2 >           VectorImageType;
   typedef   itk::Image< CovariantVectorType, 2 >  CovariantVectorImageType;
 
-  typedef   itk::Mesh< int, 3 >                   MeshType;
-    
+  typedef   ImageType::IndexType                  MeshPointDataType;
+
+  typedef   itk::Mesh< MeshPointDataType, 3 >     MeshType;
+
   typedef   itk::ImageFileReader< 
-                            InputImageType >       VolumeReaderType;
+                            InputImageType >      VolumeReaderType;
+
+  typedef   itk::Mesh< MeshType::PointType, 2 >   ImageSpaceMeshType;
 
 
   typedef   itk::RecursiveGaussianImageFilter<
@@ -131,6 +142,45 @@ public:
   typedef   itk::JoinImageFilter< ImageType, ImageType >      JoinFilterType;
 
 
+  typedef   itk::SphereSpatialFunction< 
+                                MeshType::PointDimension,
+                                MeshType::PointType >  SphereSpatialFunctionType;
+  
+  typedef   itk::FrustumSpatialFunction< 
+                                MeshType::PointDimension,
+                                MeshType::PointType >  FrustumSpatialFunctionType;
+
+
+            
+  typedef fltk::SphereFunctionControl< 
+                                  SphereSpatialFunctionType >
+                                            SphereSpatialFunctionControlType;
+  
+  typedef fltk::FrustumFunctionControl< 
+                                  FrustumSpatialFunctionType >
+                                            FrustumSpatialFunctionControlType;
+  
+// These typedefs select the particular SpatialFunction
+// typedef  ShereSpatialFunctionType           SpatialFunctionType;
+// typedef  SphereSpatialFunctionControlType   SpatialFunctionControlType;
+   typedef  FrustumSpatialFunctionType         SpatialFunctionType;
+   typedef  FrustumSpatialFunctionControlType  SpatialFunctionControlType;
+
+
+                                
+  typedef itk::InteriorExteriorMeshFilter<
+                                        MeshType,
+                                        MeshType,
+                                        SpatialFunctionType  >   
+                                                   SpatialFunctionFilterType;
+
+
+
+  typedef itk::ParametricSpaceToImageSpaceMeshFilter<
+                                      MeshType,
+                                      ImageSpaceMeshType 
+                                      >         InverseParametricFilterType;
+
 public:
 
   ceExtractorConsoleBase();
@@ -138,6 +188,8 @@ public:
   virtual void Load(const char * filename);
   virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
+  virtual void ShowSpatialFunctionControl( void );
+  virtual void HideSpatialFunctionControl( void );
   virtual void Execute(void);
   virtual void SetSigma( ComputationType );
 
@@ -159,20 +211,26 @@ protected:
   GaussianSecondDerivativeFilterType::Pointer    m_H2y;
 
   AddFilterType::Pointer                         m_Add;
+
   ModulusFilterType::Pointer                 m_Modulus;
 
-  EigenFilterType::Pointer                     m_Eigen;
+  EigenFilterType::Pointer                m_Eigen;
 
-  GradientFilterType::Pointer               m_Gradient;
+  GradientFilterType::Pointer             m_Gradient;
 
-  ScalarProductFilterType::Pointer     m_ScalarProduct;
+  ScalarProductFilterType::Pointer        m_ScalarProduct;
 
-  JoinFilterType::Pointer                       m_Join;
+  JoinFilterType::Pointer                 m_Join;
     
-  ParametricSpaceFilterType::Pointer m_ParametricSpace;
+  ParametricSpaceFilterType::Pointer      m_ParametricSpace;
 
+  SpatialFunctionFilterType::Pointer      m_SpatialFunctionFilter;
 
-  bool                                   m_ImageLoaded;
+  SpatialFunctionControlType::Pointer     m_SpatialFunctionControl;
+
+  InverseParametricFilterType::Pointer    m_InverseParametricFilter;
+
+  bool   m_ImageLoaded;
 
 };
 

@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0009 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -10,12 +10,12 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
   Function {ceExtractorConsoleGUI()} {} {
     Fl_Window consoleWindow {
       label {2D Curves Extractor Console} open
-      xywh {286 278 878 391}
+      xywh {5 23 1012 391}
       code0 {\#include <ceExtractorConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {5 5 865 255}
+        xywh {5 5 995 255}
       } {
         Fl_Box {} {
           xywh {445 167 56 10} box UP_BOX color 4
@@ -123,7 +123,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {380 45 380 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {780 55 10 80} box UP_BOX color 4
+          xywh {915 55 10 50} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {810 55 10 155} box UP_BOX color 4
@@ -134,9 +134,18 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Box {} {
           xywh {725 125 65 10} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {835 45 65 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {780 55 10 80} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {915 115 10 50} box UP_BOX color 4
+        }
       }
       Fl_Group controlsGroup {
-        xywh {5 5 865 255} box DOWN_FRAME deactivate
+        xywh {5 5 995 255} box DOWN_FRAME deactivate
       } {
         Fl_Light_Button inputButton {
           label Input
@@ -150,7 +159,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {295 85 100 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
-        Fl_Counter {} {
+        Fl_Counter sigmaCounter {
           label Sigma
           callback {SetSigma( o->value() );}
           xywh {30 190 160 25} align 1 when 4 minimum -100 maximum 100 value 1
@@ -238,17 +247,34 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button parametricSpaceButton {
           label {Parametric Space}
           callback {ShowParametricSpace();}
-          xywh {745 35 115 35} type Normal value 1 selection_color 1 align 148
+          xywh {745 35 105 37} type Normal value 1 selection_color 1 align 148
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button extractedParametricPointsButton {
+          label {Extracted Points}
+          callback {ShowExtractedParametricPoints();}
+          xywh {870 90 100 40} type Normal value 1 selection_color 1 align 148
+          class {fltk::LightButton}
+        }
+        Fl_Button {} {
+          label {Spatial Function}
+          callback {ShowSpatialFunctionControl();}
+          xywh {875 30 90 45} box ROUND_UP_BOX align 128
+        }
+        Fl_Light_Button curve2DPointsButton {
+          label {Curve2D Points}
+          callback {ShowCurve2DPoints();}
+          xywh {870 150 100 40} type Normal value 1 selection_color 1 align 148
           class {fltk::LightButton}
         }
       }
       Fl_Slider progressSlider {
-        xywh {5 324 755 15} type {Horz Fill} selection_color 2
+        xywh {5 324 825 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 349 755 25}
+        xywh {5 349 825 25}
       }
       Fl_Light_Button loadButton {
         label Load
@@ -259,16 +285,16 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
       Fl_Button {} {
         label Quit
         callback {Quit();}
-        xywh {145 280 80 30} box ROUND_UP_BOX
+        xywh {675 275 90 30} box ROUND_UP_BOX
       }
       Fl_Button {} {
         label Execute
         callback {Execute();}
-        xywh {25 280 80 30} box ROUND_UP_BOX
+        xywh {305 275 215 30} box ROUND_UP_BOX
       }
       Fl_Button {} {
-        label {../../Documentation/Art/itkLogoSmallTransparentBackground.xpm} selected
-        xywh {765 312 110 75} box FLAT_BOX labeltype image
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        xywh {850 300 110 75} box FLAT_BOX labeltype image
       }
     }
   }
@@ -305,5 +331,11 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
   Function {ShowGradientOnEigenVector( void )} {return_type {virtual void}
   } {}
   Function {ShowParametricSpace( void )} {return_type {virtual void}
+  } {}
+  Function {ResetViewOfParametricSpace( void )} {return_type {virtual void}
+  } {}
+  Function {ShowCurve2DPoints( void )} {return_type {virtual void}
+  } {}
+  Function {ShowExtractedParametricPoints( void )} {return_type {virtual void}
   } {}
 } 

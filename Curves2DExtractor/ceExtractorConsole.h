@@ -49,6 +49,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "fltkImage2DViewer.h"
 #include "fltkDisplayGlWindowGUI.h"
 #include "fltkPointSet3D.h"
+#include "fltkPointSet2D.h"
 #include "itkPointSet.h"
 
 
@@ -68,12 +69,17 @@ public:
   typedef fltk::PointSet3D< PointSetType >      PointSetShapeType;
   typedef PointSetShapeType::Pointer            PointSetShapePointer;
 
+  typedef ceExtractorConsoleBase::ImageSpaceMeshType ImageSpaceMeshType;
+  typedef fltk::PointSet2D< ImageSpaceMeshType > ImageSpacePointSetShapeType;   
+  typedef ImageSpacePointSetShapeType::Pointer   ImageSpacePointSetShapePointer;
+
 public:
   ceExtractorConsole();
   virtual ~ceExtractorConsole();
   virtual void Show(void);
   virtual void Hide(void);
   virtual void Load(void);
+  virtual void Load(const char * filename);
   virtual void Quit(void);
   virtual void ShowStatus(const char * text);
   virtual void ShowInput(void);
@@ -89,6 +95,11 @@ public:
   virtual void ShowMinEigenValue(void);
   virtual void ShowGradientOnEigenVector(void);
   virtual void ShowParametricSpace(void);
+  virtual void ShowCurve2DPoints(void);
+  virtual void ShowExtractedParametricPoints(void);
+  virtual void ResetViewOfParametricSpace(void);
+  virtual void ResetViewOfExtractedParametricSpace(void);
+  virtual void SetSigma( ceExtractorConsoleBase::ComputationType );
   virtual void Execute(void);
 
 private:
@@ -115,9 +126,15 @@ private:
 
   ImageViewerPointer           m_Viewer_Gradient_On_EigenVector;
 
+  ImageViewerPointer           m_Viewer_Extracted_Points;
+    
   GlDisplayType                m_ParametricSpaceViewer;
+  GlDisplayType                m_ExtractedParametricSpaceViewer;
 
   PointSetShapePointer         m_ParametricSpaceSamplesShape;
+  PointSetShapePointer         m_ExtractedParametricSpaceSamplesShape;
+  
+  ImageSpacePointSetShapePointer    m_ImageSpaceSamplesShape;
 
 };
 

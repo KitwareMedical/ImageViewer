@@ -127,17 +127,38 @@ ceExtractorConsoleBase
   
   m_ScalarProduct = ScalarProductFilterType::New();
 
-//  m_ScalarProduct->SetInput1( m_Gradient->GetOutput() );
-//  m_ScalarProduct->SetInput2( m_Gradient->GetOutput() );
-
   m_ScalarProduct->SetInput1( m_Join->GetOutput() );
   m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
 
   m_ParametricSpace = ParametricSpaceFilterType::New();
 
-  m_ParametricSpace->SetInput( 0, m_Hxy->GetOutput() );
-  m_ParametricSpace->SetInput( 1, m_Eigen->GetMaxEigenValue() );
-  m_ParametricSpace->SetInput( 2, m_ScalarProduct->GetOutput() );
+  m_ParametricSpace->SetInput( 0, m_Eigen->GetMaxEigenValue() );
+  m_ParametricSpace->SetInput( 1, m_ScalarProduct->GetOutput() );
+  m_ParametricSpace->SetInput( 2, m_Hxy->GetOutput() );
+
+  m_SpatialFunctionControl = SpatialFunctionControlType::New();
+
+  m_SpatialFunctionFilter = SpatialFunctionFilterType::New();
+
+  m_SpatialFunctionFilter->SetInput(  
+                              m_ParametricSpace->GetOutput() );
+
+  m_SpatialFunctionControl->SetSpatialFunction( 
+      m_SpatialFunctionFilter->GetSpatialFunction().GetPointer() );
+
+
+  m_SpatialFunctionControl->SetAngleZ( 20.0f );
+  m_SpatialFunctionControl->SetApertureAngleX( 12.0f );
+  m_SpatialFunctionControl->SetApertureAngleY(  2.0f );
+  m_SpatialFunctionControl->SetTopPlane( 10.0f );
+  m_SpatialFunctionControl->SetBottomPlane( 110.0f );
+  m_SpatialFunctionControl->SetApex( 0.0f, 0.0f, 105.0f );
+
+  
+  m_InverseParametricFilter = InverseParametricFilterType::New();
+
+  m_InverseParametricFilter->SetInput( 
+      m_SpatialFunctionFilter->GetOutput().GetPointer() );
 
 }
 
@@ -273,11 +294,37 @@ ceExtractorConsoleBase
 
   m_Modulus->Update();
   
-  m_ParametricSpace->Update();
+  m_InverseParametricFilter->Update();
 
 }
 
 
 
+ 
+/************************************
+ *
+ *  Show Spatial Function Control
+ *
+ ***********************************/
+void
+ceExtractorConsoleBase 
+::ShowSpatialFunctionControl( void )
+{
+  m_SpatialFunctionControl->Show();
+}
+
+
+ 
+/************************************
+ *
+ *  Hide Spatial Function Control
+ *
+ ***********************************/
+void
+ceExtractorConsoleBase 
+::HideSpatialFunctionControl( void )
+{
+  m_SpatialFunctionControl->Hide();
+}
 
 

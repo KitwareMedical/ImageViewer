@@ -83,6 +83,8 @@ ceExtractorConsole
 
   m_Viewer_Gradient_On_EigenVector = ImageViewerType::New();
 
+  m_Viewer_Extracted_Points = ImageViewerType::New();
+
   m_InputViewer->SetLabel( "Input Image" );
 
   m_Viewer_H1x->SetLabel( "Gradient X" );
@@ -102,17 +104,28 @@ ceExtractorConsole
   m_Viewer_Max_EigenValue->SetLabel( "Max Eigen Value" );
   m_Viewer_Min_EigenValue->SetLabel( "Min Eigen Value" );
 
+  m_Viewer_Extracted_Points->SetLabel("Points of Extracted Curves");
+
   m_Viewer_Gradient_On_EigenVector->SetLabel( "Gradient Projected on EigenVector" );
 
   m_ParametricSpaceSamplesShape = PointSetShapeType::New();
 
-  m_ParametricSpaceSamplesShape->SetPointSet( m_ParametricSpace->GetOutput() );
+  m_ParametricSpaceSamplesShape->SetPointSet( 
+                          m_ParametricSpace->GetOutput().GetPointer() );
   
   // OpenGL display list mode
   m_ParametricSpaceSamplesShape->SetCompileMode( fltk::Shape3D::compileExecute ); 
 
   m_ParametricSpaceViewer.SetLabel("Parametric Space");
 
+
+
+  m_ExtractedParametricSpaceSamplesShape = PointSetShapeType::New();
+
+  m_ExtractedParametricSpaceSamplesShape->SetPointSet( 
+                          m_SpatialFunctionFilter->GetOutput().GetPointer() );
+
+  
 
   fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
                             progressSlider->GetRedrawCommand().GetPointer();
@@ -132,6 +145,8 @@ ceExtractorConsole
   m_Gradient->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_ScalarProduct->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_ParametricSpace->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_SpatialFunctionFilter->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_InverseParametricFilter->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
                               
   m_Reader->AddObserver( itk::Command::StartEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetRedrawCommand().GetPointer() );
@@ -151,7 +166,11 @@ ceExtractorConsole
   m_ScalarProduct->AddObserver( itk::Command::StartEvent, 
                                 gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_ParametricSpace->AddObserver(  itk::Command::StartEvent, 
-                                   parametricSpaceButton->GetRedrawCommand().GetPointer() );
+                              parametricSpaceButton->GetRedrawCommand().GetPointer() );
+  m_SpatialFunctionFilter->AddObserver(  itk::Command::StartEvent, 
+                              extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
+  m_InverseParametricFilter->AddObserver(  itk::Command::StartEvent, 
+                              curve2DPointsButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::EndEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetRedrawCommand().GetPointer() );
@@ -174,9 +193,13 @@ ceExtractorConsole
                          parametricSpaceButton->GetRedrawCommand().GetPointer() );
   m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
                          m_ParametricSpaceSamplesShape->GetDisplayListUpdateCommand().GetPointer() );
-  m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
-                         m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
-
+  m_SpatialFunctionFilter->AddObserver(  itk::Command::EndEvent, 
+                         extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
+  m_SpatialFunctionFilter->AddObserver(  itk::Command::EndEvent, 
+                 m_ExtractedParametricSpaceSamplesShape->GetDisplayListUpdateCommand().GetPointer() );
+  m_InverseParametricFilter->AddObserver(  itk::Command::EndEvent, 
+                              curve2DPointsButton->GetRedrawCommand().GetPointer() );
+  
   m_Reader->AddObserver( itk::Command::ModifiedEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -198,6 +221,10 @@ ceExtractorConsole
                                 gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_ParametricSpace->AddObserver(  itk::Command::ModifiedEvent, 
                                    parametricSpaceButton->GetRedrawCommand().GetPointer() );
+  m_SpatialFunctionFilter->AddObserver(  itk::Command::ModifiedEvent, 
+                                   extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
+  m_InverseParametricFilter->AddObserver(  itk::Command::ModifiedEvent, 
+                                    curve2DPointsButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
@@ -214,16 +241,18 @@ ceExtractorConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, parametricSpaceButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, curve2DPointsButton->GetRedrawCommand().GetPointer() );
 
 
   // Register the PointSet as a Drawer in the OpenGL window
   m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
-                                                fltk::GlDrawEvent, 
-                                                m_ParametricSpaceSamplesShape->GetDrawCommand() );
+                                         fltk::GlDrawEvent, 
+                                         m_ParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
 
-  // Notify the OpenGL window when the set of points change
+  // Notify the OpenGL window when the set of points changes
   m_ParametricSpace->AddObserver( itk::Command::EndEvent,
-                                  m_ParametricSpaceViewer.GetRedrawCommand() );
+                                  m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
 
 
   fltk::Shape3D::ColorType  parametricSpacePointsColor;
@@ -239,6 +268,50 @@ ceExtractorConsole
   m_ParametricSpaceViewer.GetGlWindow()->SetBackground( 
                                            parametricSpaceBackgroundColor );
 
+  m_ImageSpaceSamplesShape = ImageSpacePointSetShapeType::New();
+
+  fltk::Shape3D::ColorType curve2DColor;
+  curve2DColor.SetRed(   1.0 );
+  curve2DColor.SetGreen( 0.0 );
+  curve2DColor.SetBlue(  0.0 );
+  m_ImageSpaceSamplesShape->SetColor( curve2DColor );
+
+  m_ImageSpaceSamplesShape->SetPointSet(
+                  m_InverseParametricFilter->GetOutput().GetPointer() );
+
+  m_Viewer_Extracted_Points->GetNotifier()->AddObserver(
+                  fltk::GlDrawEvent, 
+                  m_ImageSpaceSamplesShape->GetDrawCommand().GetPointer() );
+  
+  m_InverseParametricFilter->AddObserver( 
+                  itk::Command::EndEvent,
+                  m_Viewer_Extracted_Points->GetRedrawCommand().GetPointer() );
+
+  // Register the SpatialFunctionControl as a Drawer in the OpenGL window
+  m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
+                  fltk::GlDrawEvent, 
+                  m_SpatialFunctionControl->GetDrawCommand().GetPointer() );
+
+  // Notify the OpenGL window when the spatial function changes
+  m_SpatialFunctionControl->AddObserver( fltk::RedrawEvent,
+                  m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+
+
+  
+  m_ExtractedParametricSpaceSamplesShape->SetCompileMode( fltk::Shape3D::compileExecute ); 
+  
+  m_ExtractedParametricSpaceViewer.SetLabel("Filtered Parametric Space");
+  
+  
+  m_SpatialFunctionControl->AddObserver( fltk::RedrawEvent,
+                           m_ExtractedParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+
+  m_ExtractedParametricSpaceViewer.GetNotifier()->AddObserver( 
+                  fltk::GlDrawEvent, 
+                  m_ExtractedParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
+
+  m_SpatialFunctionControl->SetParametersFromGUI();
+  
   this->ShowStatus("Let's start by loading an image...");
 
 }
@@ -259,7 +332,7 @@ ceExtractorConsole
 
 
 
- 
+
 /************************************
  *
  *  Load
@@ -270,11 +343,28 @@ ceExtractorConsole
 ::Load( void )
 {
 
-  const char * filename = fl_file_chooser("Image filename","*.*","");
+  const char * filename = fl_file_chooser("Image filename","*.*","latmag0Acor.mha");
   if( !filename )
   {
     return;
   }
+
+  this->Load( filename );
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Load
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::Load( const char * filename )
+{
 
   this->ShowStatus("Loading image file...");
   
@@ -282,7 +372,7 @@ ceExtractorConsole
   {
     ceExtractorConsoleBase::Load( filename );
   }
-  catch( ... ) 
+  catch( ... )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
   {
     this->ShowStatus("Problems reading file format");
     controlsGroup->deactivate();
@@ -338,7 +428,13 @@ ceExtractorConsole
   m_Viewer_Max_EigenValue->Hide();
   m_Viewer_Min_EigenValue->Hide();
   m_Viewer_Gradient_On_EigenVector->Hide();
+  m_Viewer_Extracted_Points->Hide();
+  
   m_ParametricSpaceViewer.Hide();
+  m_ExtractedParametricSpaceViewer.Hide();
+
+  this->ceExtractorConsoleBase::HideSpatialFunctionControl();
+
 }
 
 
@@ -614,6 +710,46 @@ ceExtractorConsole
 
 
  
+/*******************************************
+ *
+ *  Extracted Parametric Points
+ *
+ ******************************************/
+void
+ceExtractorConsole
+::ShowExtractedParametricPoints( void )
+{
+
+  m_ExtractedParametricSpaceViewer.Show();
+  this->ResetViewOfExtractedParametricSpace();
+
+}
+
+ 
+/*******************************************
+ *
+ *  Show Input Image and Extracted Points
+ *
+ ******************************************/
+void
+ceExtractorConsole
+::ShowCurve2DPoints( void )
+{
+
+  if( ! (m_ImageLoaded) ) 
+  {
+    this->ShowStatus("Please load an image first");
+    return;
+  }
+
+  m_InverseParametricFilter->Update();
+
+  m_Viewer_Extracted_Points->SetImage( m_Reader->GetOutput() );  
+  m_Viewer_Extracted_Points->Show();
+
+}
+
+ 
 /************************************
  *
  *  Show the Parametric Space
@@ -624,12 +760,89 @@ ceExtractorConsole
 ::ShowParametricSpace( void )
 {
 
-  m_ParametricSpace->Update(); 
   m_ParametricSpaceViewer.Show();
+  this->ResetViewOfParametricSpace();
+
+}
+
+
+
+ 
+/****************************************
+ *
+ *  Reset View of the Parametric Space
+ *
+ ****************************************/
+void
+ceExtractorConsole
+::ResetViewOfParametricSpace( void )
+{
+
+  m_ParametricSpace->Update(); 
+
+  fltk::GlWindowInteractive::Point3DType center;
+  center[0] =   0;
+  center[1] =   0;
+  center[2] = -60;
+
+  m_ParametricSpaceViewer.GetGlWindow()->ResetViewingParameters();
+
+  m_ParametricSpaceViewer.GetGlWindow()->SetCenter( center );
+  m_ParametricSpaceViewer.GetGlWindow()->SetZoom( 2.0 );
+  m_ParametricSpaceViewer.GetGlWindow()->SetAltitude( -90.0 );
+  m_ParametricSpaceViewer.GetGlWindow()->SetAzimuth( 45.0 );
+  
+  m_ParametricSpaceViewer.GetGlWindow()->redraw();
+
 
 }
 
  
+/*************************************************
+ *
+ *  Reset View of the Extracted Parametric Space
+ *
+ *************************************************/
+void
+ceExtractorConsole
+::ResetViewOfExtractedParametricSpace( void )
+{
+
+  m_SpatialFunctionFilter->Update(); 
+
+  fltk::GlWindowInteractive::Point3DType center;
+  center[0] =   0;
+  center[1] =   0;
+  center[2] = -60;
+
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->ResetViewingParameters();
+  
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->SetZoom( 2.0 );
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->SetAltitude( -90.0 );
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->SetAzimuth( 45.0 );
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->SetCenter( center );
+
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->redraw();
+
+}
+ 
+ 
+/************************************
+ *
+ *  Set Sigma
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::SetSigma( ceExtractorConsoleBase::ComputationType value )
+{
+  sigmaCounter->value( value );
+  this->ceExtractorConsoleBase::SetSigma( value );
+}
+
+
+
+  
 /************************************
  *
  *  Execute
@@ -677,6 +890,9 @@ int main()
   ceExtractorConsole * console = new ceExtractorConsole();
 
   console->Show();
+  console->Load("./DSA.mha");
+  console->SetSigma( 4.0 );
+  console->ShowInput();
 
   Fl::run();
 
