@@ -52,6 +52,7 @@ Image2DViewerWindow(int x,int y,int w,int h, const char * label)
   m_Width = 0;
   m_Height = 0;
 
+  m_SelectionCallBack = 0 ;
 }
 
 
@@ -287,6 +288,7 @@ void Image2DViewerWindow::draw(void)
     glLoadIdentity();
   }
 
+
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   
   const GLdouble width  = static_cast<GLdouble>( m_Width );
@@ -303,9 +305,30 @@ void Image2DViewerWindow::draw(void)
   glPixelStorei( GL_UNPACK_SKIP_ROWS,        0 );
   glPixelStorei( GL_UNPACK_SKIP_PIXELS,      0 );
   
-  glRasterPos2i( m_ShiftX, m_ShiftY );
+  glRasterPos2i( m_ShiftX, m_ShiftY ) ;
 
   glPixelZoom( m_Zoom, m_Zoom );
+
+
+  // drawing selection box begin
+  int X1 = m_Box.X1 * 2 + m_ShiftX ;
+  int X2 = m_Box.X2 * 2 + m_ShiftX ;
+  int Y1 = -(m_Box.Y1 * 2 + m_ShiftY) ;
+  int Y2 = -(m_Box.Y2 * 2 + m_ShiftY) ;
+
+  if (Y2 >= m_Height - 2 )
+    {
+      Y2 = m_Height - 2 ;
+    }
+
+  glBegin(GL_LINE_STRIP);
+  glVertex2i(X1, Y1) ;
+  glVertex2i(X2, Y1) ;
+  glVertex2i(X2, Y2) ;
+  glVertex2i(X1, Y2) ;
+  glVertex2i(X1, Y1) ;
+  glEnd();
+  // end 
 
   glDrawPixels( m_Width, m_Height, 
                 GL_LUMINANCE, GL_UNSIGNED_BYTE, 
@@ -481,7 +504,8 @@ Image2DViewerWindow
       const int state = Fl::event_state();
       if( state == FL_BUTTON1 )
         {
-          PanningEventHandling( p1x, p1y );
+          //PanningEventHandling( p1x, p1y );
+          SelectEventHandling( p1x, p1y );
         }
       else if (state == FL_BUTTON2 )
         {
@@ -513,10 +537,79 @@ Image2DViewerWindow
   m_ShiftY -= dy; // Mouse Y -> - OpenGl Y
   p1x = p2x;
   p1y = p2y;
+  
   redraw();
   Fl::check();
 }
 
+void 
+Image2DViewerWindow
+::SetSelectionBox(SelectionBoxType* box)
+{
+  m_Box.X1 = box->X1 ;
+  m_Box.Y1 = box->Y1 ;
+  m_Box.X2 = box->X2 ;
+  m_Box.Y2 = box->Y2 ;
+
+  redraw();
+  Fl::check();
+}
+
+void 
+Image2DViewerWindow
+::SetSelectionCallBack(void* ptrObject,
+                       void (*selectionCallBack)(void* ptrObject,
+                                                 SelectionBoxType* box))
+{
+  m_SelectionCallBackTargetObject = ptrObject ;
+  m_SelectionCallBack = selectionCallBack ;
+}
+
+//------------------------------------------
+//
+//    Select Event Handling 
+//
+//------------------------------------------
+void 
+Image2DViewerWindow
+::SelectEventHandling(int & p1x, int & p1y)
+{
+  int p2x = Fl::event_x();
+  int p2y = Fl::event_y();
+
+  if (p2x >= m_Width)
+    {
+      p2x = m_Width - 1 ;
+    }
+
+  if (p2x <= 0)
+    {
+      p2x = 0 ;
+    }
+
+  if (p2y >= m_Height)
+    {
+      p2y = m_Height ;
+    }
+
+  if (p2y <= 0 )
+    {
+      p2y = 0 ;
+    }
+
+  m_Box.X1 = p1x ;
+  m_Box.X2 = p2x ;
+  m_Box.Y1 = p1y ;
+  m_Box.Y2 = p2y ;
+
+  if (m_SelectionCallBack != 0)
+    {
+      m_SelectionCallBack(m_SelectionCallBackTargetObject, &m_Box) ;
+    }
+
+  redraw();
+  Fl::check();
+}
 
 //------------------------------------------
 //

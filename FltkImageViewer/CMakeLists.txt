@@ -12,6 +12,7 @@ IF(HAS_FLTK)
      fltkGlWindowInteractive
      fltkGlWindowInteractiveFlat
      fltkImage2DViewerWindow
+     fltkRGBImage2DViewerWindow
      fltkLightButton
      fltkProgressBar
      fltkRegularStepGradientDescent
@@ -29,6 +30,7 @@ IF(HAS_FLTK)
      fltkFrustumFunctionControlGUI.fl
      fltkImageViewerGUI.fl
      fltkImage2DViewerGUI.fl
+     fltkRGBImage2DViewerGUI.fl
      fltkRegularStepGradientDescentGUI.fl
      fltkSlice2DDrawerGUI.fl
      fltkSlice3DDrawerGUI.fl
@@ -54,4 +56,5 @@ IF(HAS_FLTK)
   FLTK_WRAP_UI(FltkImageViewer FltkImageViewer_GUI_SRCS )
 
 ENDIF(HAS_FLTK)
+
 

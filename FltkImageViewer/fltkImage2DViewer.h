@@ -40,7 +40,6 @@ public:
    */
   typedef itk::SmartPointer<Self>        Pointer;
   typedef itk::SmartPointer<const Self>  ConstPointer;
-
   /** 
    * Run-time type information (and related methods).
    */
@@ -51,7 +50,6 @@ public:
    */
   itkNewMacro(Self);  
 
- 
   /**
    * Image Type
    */
@@ -89,6 +87,13 @@ public:
    */
   itkGetObjectMacro( RedrawCommand, ObserverCommandType );
 
+//    void SetSelectionCallBack(void* ptrObject, 
+//                              void (*selectionCallBack)
+//                              (void* ptrObject, 
+//                               Image2DViewerWindow::SelectionBoxType* box)) ;
+
+  itkSetMacro(FlipY, bool) ;
+
 protected:
   
   Image2DViewer();
@@ -99,6 +104,7 @@ private:
   typename ImageType::Pointer              m_Image;
   typename ObserverCommandType::Pointer    m_RedrawCommand; 
   unsigned long                            m_Tag;
+  bool m_FlipY ;
 
 };
 

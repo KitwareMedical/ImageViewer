@@ -34,6 +34,14 @@ public:
 
   typedef itk::RGBPixel<float>  ColorType;
 
+  struct SelectionBox {
+    int X1 ;
+    int X2 ;
+    int Y1 ;
+    int Y2 ;
+  } ;
+  typedef SelectionBox SelectionBoxType ;
+
   Image2DViewerWindow(int x,int y,int w,int h, const char * label=0);
   virtual ~Image2DViewerWindow();
 
@@ -64,14 +72,19 @@ public:
   void SetIntensityWindow( Fl_Window * window );
   void SetParentWindow( Fl_Window * window );
   void PanningEventHandling(int & p1x, int & p1y);
+  void SelectEventHandling(int & p1x, int & p1y);
   void ZoomingEventHandling(int & p1x, int & p1y);
-
+  void SetSelectionBox(SelectionBoxType* box) ;
+  void SetSelectionCallBack(void* ptrObject, 
+                            void (*selectionCallBack)
+                            (void* ptrObject, 
+                             SelectionBoxType* box)) ;
 private:
 
   ColorType          m_Background;
   ValueType       *  m_Buffer;
-  unsigned int       m_Width;
-  unsigned int       m_Height;
+  int       m_Width;
+  int       m_Height;
   double             m_Zoom;
   int                m_ShiftX;
   int                m_ShiftY;
@@ -79,6 +92,9 @@ private:
   Fl_Window       *  m_ParentWindow;
   unsigned int       m_NumberOfBytesPerPixel;
 
+  SelectionBoxType m_Box ;
+  void* m_SelectionCallBackTargetObject ;
+  void (*m_SelectionCallBack)(void* ptrObject, SelectionBoxType* box) ;
 };
 
 

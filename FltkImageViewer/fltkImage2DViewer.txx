@@ -34,6 +34,7 @@ Image2DViewer<ImagePixelType>
   
   m_Tag = 0L;
 
+  m_FlipY = false ;
 }
 
 
@@ -89,8 +90,6 @@ Image2DViewer<ImagePixelType>
 ::Update(void) 
 {
 
-
-    
   if( !m_Image )
     {
     return;
@@ -130,22 +129,21 @@ Image2DViewer<ImagePixelType>
   const unsigned int totalWidth = size[0] * bytesPerPixel;
 
   fltk::Image2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
-  unsigned char * dest = buffer + totalSize - totalWidth;
 
+  unsigned char * dest = buffer + totalSize - totalWidth;
   it.GoToBegin();
   while( !it.IsAtEnd() )  // Should only have one slice...but anyway.
-  {
-    while( !it.IsAtEndOfLine() ) 
     {
-       const double value = ( it.Get() - min ) * factor;
-       const unsigned char valuec = static_cast<unsigned char>( value );
-      *dest++ = valuec;
-      ++it;
+      while( !it.IsAtEndOfLine() ) 
+        {
+          const double value = ( it.Get() - min ) * factor;
+          const unsigned char valuec = static_cast<unsigned char>( value );
+          *dest++ = valuec;
+          ++it;
+        }
+      it.NextLine();
+      dest -= 2 * totalWidth;
     }
-    it.NextLine();
-    dest -= 2 * totalWidth;
-  
-  }
 
   imageViewer->redraw();
   Fl::check();
