@@ -62,9 +62,9 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->visible_r();} {}
   }
-  Function {GetRedrawCommand(void)} {return_type {const fltk::GlWindow::RedrawCommandType::Pointer &}
+  Function {GetRedrawCommand(void)} {return_type { itk::Command::Pointer }
   } {
-    code {return drawWindow->GetRedrawCommand();} {}
+    code {return drawWindow->GetRedrawCommand().GetPointer();} {}
   }
   Function {GetNotifier(void)} {return_type {itk::LightObject::Pointer &}
   } {

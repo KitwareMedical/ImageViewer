@@ -57,8 +57,8 @@ int fltkDisplayGlWindowFlatGUI::IsVisible(void) {
   return drawWindow->visible_r();
 }
 
-const fltk::GlWindow::RedrawCommandType::Pointer & fltkDisplayGlWindowFlatGUI::GetRedrawCommand(void) {
-  return drawWindow->GetRedrawCommand();
+itk::Command::Pointer fltkDisplayGlWindowFlatGUI::GetRedrawCommand(void) {
+  return drawWindow->GetRedrawCommand().GetPointer();
 }
 
 itk::LightObject::Pointer & fltkDisplayGlWindowFlatGUI::GetNotifier(void) {

@@ -24,7 +24,7 @@ public:
   int GetHeight(void);
   void MakeCurrent(void);
   int IsVisible(void);
-  const fltk::GlWindow::RedrawCommandType::Pointer & GetRedrawCommand(void);
+  itk::Command::Pointer GetRedrawCommand(void);
   itk::LightObject::Pointer & GetNotifier(void);
   virtual void SetBackground(GLfloat r, GLfloat g, GLfloat b);
 };
