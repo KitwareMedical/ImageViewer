@@ -79,7 +79,7 @@ public:
    *  of its list of points
    */
   virtual const DisplacementType & 
-     GetDisplacement(unsigned int i,const FEMMeshType *mesh ) const = 0;
+     GetDisplacement(unsigned int i, FEMMeshType *mesh ) const = 0;
 
   /**
    * Compute and return element stiffnes matrix in global coordinate system

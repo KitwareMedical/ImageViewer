@@ -79,7 +79,7 @@ public:
    *  of its list of points
    */
   const DisplacementType & 
-     GetDisplacement(unsigned int i,const FEMMeshType *mesh ) const
+     GetDisplacement(unsigned int i,FEMMeshType *mesh ) const
       { const PointIdentifier Id = *( this->GetPointIds() + i );
         return mesh->GetPointData()->ElementAt( Id ); }
 
