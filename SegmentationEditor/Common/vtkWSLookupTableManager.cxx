@@ -319,7 +319,6 @@ void vtkWSLookupTableManager::SetNumberOfLabels(unsigned long n)
 float vtkWSLookupTableManager::UndoLastMerge()
 {
   if (UndoPositionPointer == 0 ) return 0.0;
-  merge_t *temp;
 
   float threshold = (float) ( (double) (UndoPositionPointer->saliency) /
     (double) MaximumSaliency );

@@ -25,7 +25,7 @@
 #include "vtkWSLookupTableManager.h"
 #include "vtkWSBoundingBoxManager.h"
 
-class VTK_COMMON_EXPORT vtkBinaryVolumeLogic : public vtkObject
+class VTK_EXPORT vtkBinaryVolumeLogic : public vtkObject
 {
 public:
   static vtkBinaryVolumeLogic *New();

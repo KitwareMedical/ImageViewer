@@ -82,7 +82,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define VTK_SCALE_LINEAR 0
 #define VTK_SCALE_LOG10 1
 
-class VTK_COMMON_EXPORT vtkPatchedLookupTable : public vtkScalarsToColors
+class VTK_EXPORT vtkPatchedLookupTable : public vtkScalarsToColors
 {
 public:
   // Description:

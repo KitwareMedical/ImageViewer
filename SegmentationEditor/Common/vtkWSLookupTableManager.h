@@ -27,7 +27,7 @@
 #include "vtkLookupTableEquivalencyHash.h"
 #include "vtkImageData.h"
 
-class VTK_COMMON_EXPORT vtkWSLookupTableManager : public vtkObject
+class VTK_EXPORT vtkWSLookupTableManager : public vtkObject
 {
 public:
   static vtkWSLookupTableManager *New();

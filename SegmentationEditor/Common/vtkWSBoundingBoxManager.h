@@ -23,7 +23,7 @@
 #include "vtkBoundingBox.h"
 #include "vtkImageData.h"
 
-class VTK_COMMON_EXPORT vtkWSBoundingBoxManager : public vtkObject
+class VTK_EXPORT vtkWSBoundingBoxManager : public vtkObject
 {
 public:
   static vtkWSBoundingBoxManager *New();

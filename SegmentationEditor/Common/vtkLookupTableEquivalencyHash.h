@@ -32,7 +32,7 @@ typedef std::list<merge_t> merge_list_t;
 
 typedef std::list<unsigned long> unsigned_long_list_t;
 
-class vtkLookupTableEquivalencyHash
+class ITK_EXPORT vtkLookupTableEquivalencyHash
 {
 public:
   typedef vtkLookupTableEquivalencyHash Self;

@@ -22,7 +22,7 @@
 
 #include "vtkObject.h"
 
-class VTK_COMMON_EXPORT vtkBoundingBox: public vtkObject
+class VTK_EXPORT vtkBoundingBox: public vtkObject
 {
 public:
   static vtkBoundingBox *New();

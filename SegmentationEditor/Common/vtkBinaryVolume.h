@@ -23,7 +23,7 @@
 
 #include "vtkImageData.h"
 
-class VTK_COMMON_EXPORT vtkBinaryVolume : public vtkImageData
+class VTK_EXPORT vtkBinaryVolume : public vtkImageData
 {
 public:
   static vtkBinaryVolume *New();
