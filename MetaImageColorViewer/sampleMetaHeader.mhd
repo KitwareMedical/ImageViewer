@@ -1,0 +1,7 @@
+NDims = 3
+Comment = Load four slices of RGB data: slice00[1-4].raw
+DimSize = 256 256 4
+ElementByteOrderMSB = False
+ElementNumberOfChannels = 3
+ElementType = MET_UCHAR
+ElementDataFile = slice%03d.raw 1 4 1
