@@ -45,7 +45,7 @@ int main(int argc, char **argv)
   const char * inputFileName  = argv[1];
   const char * outputFileName = argv[3];
 
-  const unsigned int nz = atoi( argv[2] );
+  // const unsigned int nz = atoi( argv[2] );
 
 
   typedef  unsigned char    PixelType;

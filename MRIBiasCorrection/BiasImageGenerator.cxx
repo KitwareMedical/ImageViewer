@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
         coefficientVector[i] = coefficients[i] ;
       degree = options.GetIntOption("degree", 3, true) ;
       dimension = options.GetIntOption("dimension", 3,  true) ;
-      if(dimension != ImageType::ImageDimension)
+      if(dimension != static_cast<int>(ImageType::ImageDimension))
         {
         std::cout << "Currently compiled to only support "
                   << ImageType::ImageDimension << " dimensional images."

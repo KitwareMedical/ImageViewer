@@ -230,7 +230,7 @@ int main(int argc, char* argv[])
       
   BiasField::DomainSizeType biasSize ;
   ImageType::SizeType size = input->GetLargestPossibleRegion().GetSize() ;
-  long dim = 0 ;
+  unsigned int dim = 0 ;
   biasSize.clear() ;
   int biasDimension = 0  ;
 
