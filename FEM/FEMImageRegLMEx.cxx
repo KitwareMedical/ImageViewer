@@ -501,7 +501,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::WarpImage()
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
         tindex[ii]+=(long int)(disp[ii]+0.5);
-        if ((unsigned int) tindex[ii] >= (unsigned int) 0 && (unsigned int) tindex[ii] < (unsigned int) m_FieldSize[ii])  InImage=true;
+        if ( tindex[ii] >= 0 && (unsigned int) tindex[ii] < (unsigned int) m_FieldSize[ii])  InImage=true;
           else 
           {
             InImage=false;
