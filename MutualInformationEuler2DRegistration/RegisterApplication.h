@@ -91,7 +91,6 @@ protected:
   bool m_MovingImageLoaded ;
   bool m_RegisteredImageAvailable ;
 
-  ImageIOType::Pointer m_IO ;
   ImageReaderType::Pointer m_FixedImageReader ;
   ImageReaderType::Pointer m_MovingImageReader ;
   ImageWriterType::Pointer m_RegisteredImageWriter ;

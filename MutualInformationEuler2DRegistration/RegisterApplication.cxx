@@ -1,15 +1,17 @@
 #include "RegisterApplication.h"
+#include "itkMetaImageIOFactory.h"
+#include "itkPNGImageIO.h"
+#include "itkPNGImageIOFactory.h"
 
 RegisterApplication::RegisterApplication()
 {
-  m_IO = ImageIOType::New() ;
   m_FixedImageReader = ImageReaderType::New() ;
   m_MovingImageReader = ImageReaderType::New() ;
   m_RegisteredImageWriter = ImageWriterType::New() ;
 
-  m_FixedImageReader->SetImageIO(m_IO) ;
-  m_MovingImageReader->SetImageIO(m_IO) ;
-  m_RegisteredImageWriter->SetImageIO(m_IO) ;
+  m_FixedImageReader->SetImageIO( itk::PNGImageIO::New() ) ;
+  m_MovingImageReader->SetImageIO(itk::PNGImageIO::New() ) ;
+  m_RegisteredImageWriter->SetImageIO(itk::PNGImageIO::New() ) ;
 
   m_FixedImageFlipper = ImageFlipperType::New() ;
   m_MovingImageFlipper = ImageFlipperType::New() ;
@@ -47,6 +49,11 @@ RegisterApplication::RegisterApplication()
   m_LearningRate = 0.0001 ;
   m_TranslationScale = 0.00001 ;
   m_RotationScale = 1 ;
+
+  // Register a producer of MetaImage and PNG readers
+  itk::MetaImageIOFactory::RegisterOneFactory();
+  itk::PNGImageIOFactory::RegisterOneFactory();
+
 }
 
 void RegisterApplication::LoadFixedImage()
