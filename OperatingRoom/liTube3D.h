@@ -125,8 +125,8 @@ protected:
   
 private:
 
-	int	          m_NumberOfSectors;	  // Number of radial sectors
-	int	          m_NumberOfSections; 	// Number of rectilinear sections
+	unsigned int	m_NumberOfSectors;	  // Number of radial sectors
+	unsigned int	m_NumberOfSections; 	// Number of rectilinear sections
 	float        *m_Radius;	            // Array of radius
 	PointType    *m_Vertex;	            // Array of vertex coordinates
 	PointType    *m_Medial;	            // Array of medial Point3Ds

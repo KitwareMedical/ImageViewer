@@ -87,7 +87,7 @@ public:
   /**
    *  Get the Extrinsic transformation
    */
-  const TransformType & GetExtrinsic( void ) const;
+  TransformType::ConstPointer GetExtrinsic( void ) const;
 
 
   /**
@@ -156,11 +156,11 @@ protected:
 
 private:
 
-  Box3D::Pointer               m_Body;
+  Box3D::Pointer                 m_Body;
 
-	mutable TransformType        m_Extrinsic;
+	mutable TransformType::Pointer m_Extrinsic;
 
-	TransformType                m_RegistrationCorrection;
+  TransformType::Pointer         m_RegistrationCorrection;
 
 	ClinicalPosition             m_ClinicalPosition;
 

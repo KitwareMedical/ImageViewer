@@ -15,6 +15,7 @@
 
 #include <liTube3D.h>
 #include <FL/fl_ask.H>
+#include <fstream>
 #include <cstring>
 
 namespace li {
@@ -62,7 +63,7 @@ bool Tube3D::Alloc( unsigned int numberOfSectors,
     return false;
   }
   
-  for(int i=0; i<m_NumberOfSections; i++) 
+  for(unsigned int i=0; i<m_NumberOfSections; i++) 
   {
     m_Radius[i] = 1.0;
   }
@@ -79,7 +80,7 @@ bool Tube3D::Alloc( unsigned int numberOfSectors,
   PointType pp;
   pp = 0.0, 0.0,-interleave*((double)m_NumberOfSections)/2.0;
 
-  for(int j=0; j<m_NumberOfSections; j++) 
+  for(unsigned int j=0; j<m_NumberOfSections; j++) 
   {
     m_Medial[j] = pp;
     pp[2] += interleave;
@@ -159,7 +160,7 @@ void Tube3D::Copy(const Tube3D & sm )
     return;
   }
 
-  for(int i=0; i<m_NumberOfSections; i++) 
+  for(unsigned int i=0; i<m_NumberOfSections; i++) 
   {
     m_Radius[i] = sm.m_Radius[i];
     m_Medial[i] = sm.m_Medial[i];
@@ -181,8 +182,10 @@ void Tube3D::Copy(const Tube3D & sm )
 //--------------------------------------------------
 void Tube3D::SetRadius(GLfloat rad) {
 
-  if( m_Radius ) {
-    for(unsigned int i=0; i<m_NumberOfSections; i++) {
+  if( m_Radius ) 
+    {
+    for(unsigned int i=0; i<m_NumberOfSections; i++) 
+      {
       m_Radius[i] = rad;
       }
     }
@@ -314,7 +317,7 @@ void Tube3D::DrawGeometry(void) const
 //    Read from a file
 //
 //--------------------------------------------------
-int Tube3D::Read( Shape3D::IfstreamType & is )
+int Tube3D::Read( ifstream & is )
 {
 
   Clear();
@@ -459,7 +462,7 @@ void Tube3D::SubsampleUsingRadius(void)
 
   unsigned int count = 1;
 
-  for(int i=1; i<m_NumberOfSections; i++)
+  for(unsigned int i=1; i<m_NumberOfSections; i++)
   {
     PointType p = m_Medial[i];
     double distance = p.EuclideanDistanceTo( currentPoint );
@@ -494,7 +497,8 @@ void Tube3D::SubsampleUsingRadius(void)
 void Tube3D::Smooth(void) 
 {
   const int lenght = 5;
-  const int range  = 2 * lenght + 1;
+  const unsigned int range  = 2 * lenght + 1;
+
 
   if( m_NumberOfSections < range ) 
   {
@@ -513,19 +517,19 @@ void Tube3D::Smooth(void)
   double my = 0;
   double mz = 0;
 
-  for(int jj=0; jj<range; jj++) 
+  for(unsigned int jj=0; jj<range; jj++) 
   {
     mx += m_Medial[ jj ][0];
     my += m_Medial[ jj ][1];
     mz += m_Medial[ jj ][2];
   }
 
-  for(int k=m_NumberOfSections-lenght; k<m_NumberOfSections; k++) 
+  for(unsigned int k=m_NumberOfSections-lenght; k<m_NumberOfSections; k++) 
   {
     smoothed[k] = m_Medial[k];
   }
   
-  for(int i=lenght; i< m_NumberOfSections-lenght; i++)
+  for(unsigned int i=lenght; i< m_NumberOfSections-lenght; i++)
   {
     smoothed[i][0] = mx/range;
     smoothed[i][1] = my/range;
@@ -535,7 +539,7 @@ void Tube3D::Smooth(void)
     mz += m_Medial[i+lenght][2] - m_Medial[i-lenght][2];
   }
 
-  for(int kk=0; kk<m_NumberOfSections; kk++) 
+  for(unsigned int kk=0; kk<m_NumberOfSections; kk++) 
   {
     m_Medial[kk] = smoothed[kk];
   }
@@ -765,7 +769,7 @@ void Tube3D::GeneratePointSet( const VectorType & sight )
   const double AngleThreshold = 1e-4;
 
   unsigned int count = 0;
-  for(int i=0; i<m_NumberOfSections; i++ )
+  for(unsigned int i=0; i<m_NumberOfSections; i++ )
   {
 
     if( i > 0 )
@@ -789,7 +793,7 @@ void Tube3D::GeneratePointSet( const VectorType & sight )
     radial.Normalize();
     
     double factor = 1.0 - radialWidthRatio/2.0;
-    for(int k=0; k<numberOfRadialSamples; k++)
+    for(unsigned int k=0; k<numberOfRadialSamples; k++)
     {
       const double x   = factor - 1.0;
       const double v   = x * exp( - x*x / radialWidthRatio*radialWidthRatio );
@@ -843,14 +847,14 @@ void Tube3D::GeneratePointSet(void)
   PointSetType::PointDataContainer::Iterator   vi = values->Begin();
 
   unsigned int count = 0;
-  for(int i=0; i<m_NumberOfSections; i++ )
+  for(unsigned int i=0; i<m_NumberOfSections; i++ )
   {
     PointType medial = m_Medial[i];
-    for(int j=0; j<m_NumberOfSectors; j++ )
+    for(unsigned int j=0; j<m_NumberOfSectors; j++ )
     {
       VectorType radial = m_Vertex[ count ] - medial;
       double factor = 1.0 - radialWidthRatio/2.0;
-      for(int k=0; k<numberOfRadialSamples; k++)
+      for(unsigned int k=0; k<numberOfRadialSamples; k++)
       {
         pi.Value() = medial + radial * factor;
         double x   =  factor-1.0;

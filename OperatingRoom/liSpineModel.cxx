@@ -13,6 +13,7 @@
 
 
 #include <liSpineModel.h>
+#include <fstream>
 
 
 
@@ -238,6 +239,7 @@ SpineModel::Save(const char *filename)
   }
 
 
+  std::ofstream out2;
   Shape3D::OfstreamType outFile;
   outFile.open(filename);
   

@@ -100,6 +100,7 @@ m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );
     { Fl_Tabs* o = new Fl_Tabs(10, 15, 280, 175);
       { Fl_Group* o = new Fl_Group(10, 40, 280, 150, "External Offset");
         o->align(129);
+        o->hide();
         xExternalOffsetValueOutput = new Fl_Value_Output(205, 65, 65, 25);
         yExternalOffsetValueOutput = new Fl_Value_Output(205, 92, 65, 25);
         zExternalOffsetValueOutput = new Fl_Value_Output(205, 119, 65, 25);

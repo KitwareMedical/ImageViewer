@@ -63,10 +63,10 @@ Patient::~Patient()
 //		return extrinsic matrix
 //
 //--------------------------------------------------
-Patient::TransformType const & 
+Patient::TransformType::ConstPointer 
 Patient::GetExtrinsic(void) const 
 {
-	return m_Extrinsic;
+	return m_Extrinsic.GetPointer();
 }
 
 
@@ -187,10 +187,10 @@ Patient
 ::SetRegistrationOffset(const VectorType & trans, const VectorType & rot) 
 {
 	
-	m_RegistrationCorrection.Translate( trans );
-  m_RegistrationCorrection.Rotate( 1, 2, rot[0]);
-  m_RegistrationCorrection.Rotate( 2, 0, rot[1]);
-  m_RegistrationCorrection.Rotate( 0, 1, rot[2]);
+	m_RegistrationCorrection->Translate( trans );
+  m_RegistrationCorrection->Rotate( 1, 2, rot[0]);
+  m_RegistrationCorrection->Rotate( 2, 0, rot[1]);
+  m_RegistrationCorrection->Rotate( 0, 1, rot[2]);
 
 }
 
@@ -204,7 +204,7 @@ void
 Patient::ClearRegistrationOffset(void) 
 {
 	
-	m_RegistrationCorrection.SetIdentity();
+	m_RegistrationCorrection->SetIdentity();
 
 }
 
@@ -238,7 +238,8 @@ Patient
 ::CorrectionOutOfBounds(void) const
 {
 
-  const TransformType::VectorType translation = m_RegistrationCorrection.GetOffset();
+  const TransformType::OffsetType translation = 
+                                  m_RegistrationCorrection->GetOffset();
 
   bool val = false;
 

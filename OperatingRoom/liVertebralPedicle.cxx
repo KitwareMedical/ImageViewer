@@ -15,6 +15,7 @@
 #include <FL/gl.h>
 #include <FL/fl_ask.H>
 #include <liVertebralPedicle.h>
+#include <fstream>
 
 namespace li {
 
@@ -314,7 +315,7 @@ void VertebralPedicle::DrawGeometry(void) const
 //
 //----------------------------------------------------
 int 
-VertebralPedicle::Write( Shape3D::OfstreamType &os, int level ) const 
+VertebralPedicle::Write( std::ofstream &os, int level ) const 
 {
 
   int stat = 1;

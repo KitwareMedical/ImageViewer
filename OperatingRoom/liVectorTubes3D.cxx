@@ -15,6 +15,7 @@
 
 #include <liVectorTubes3D.h>
 #include <itkExceptionObject.h>
+#include <fstream>
 
 namespace li {
 
@@ -260,7 +261,7 @@ void VectorTubes3D::DrawGeometry(void) const
 void VectorTubes3D::Load( const char * filename )
 {
 
-  Shape3D::IfstreamType ifs;
+  std::ifstream ifs;
   ifs.open( filename );
   if( ifs.fail() ) 
   {

@@ -521,6 +521,11 @@ void Shape3D::glDraw(void) const
         glMaterialColor();  
         break;
         }
+
+    case surfacepoints:
+        {
+        break; 
+        }
   }
 
   if( m_AutoSensing ) 

@@ -13,6 +13,7 @@
 
 
 #include <liVertebralBody.h>
+#include <fstream>
 
 
 
@@ -50,7 +51,7 @@ VertebralBody::VertebralBody()
 //  ofx.open("hi");
 //  ofx.close();
 
-  Shape3D::IfstreamType ifx;
+  std::ifstream ifx;
   ifx.open("hi");
   ifx.close();
 }

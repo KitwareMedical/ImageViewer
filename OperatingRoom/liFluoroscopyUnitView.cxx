@@ -15,7 +15,7 @@
 #include <liBox3D.h>
 #include <liCommandEvents.h>
 #include <itkPoint.h>
-#include <itkImageSliceConstIterator.h>
+#include <itkImageSliceConstIteratorWithIndex.h>
 #include <itkImageRegionConstIteratorWithIndex.h>
 #include <GL/glu.h>
 #include <cmath>
@@ -301,7 +301,7 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
   m_ImageBackground   = new unsigned char [ totalSize     ];
   m_TextureBackground = new unsigned char [ totalSize * 4 ];  // RGB + A
   
-  itk::ImageSliceConstIterator< ImageType > 
+  itk::ImageSliceConstIteratorWithIndex< ImageType > 
                                         it( m_Image,
                                             m_Image->GetBufferedRegion() );
 
@@ -490,6 +490,9 @@ void FluoroscopyUnitView::draw(void)
     glLightfv( GL_LIGHT0, GL_POSITION, lightPosition );
 
     glColor3f( (GLfloat)1.0, (GLfloat)1.0, (GLfloat)1.0 );
+    
+    GLfloat color[] = { (GLfloat)1.0, (GLfloat)1.0, (GLfloat)1.0, (GLfloat)1.0 };
+    glMaterialfv(GL_FRONT,GL_DIFFUSE,color);
 
     GLfloat focalDistance = lineOfSight.GetNorm();
     GLfloat pnx =   m_DetectorRadius;
@@ -503,6 +506,7 @@ void FluoroscopyUnitView::draw(void)
       glNormal3f( 0.0,0.0,1.0); glTexCoord2f( 1.0, 0.0 ); glVertex3f(  pnx,  pny, -focalDistance );
     glEnd();
     glDisable( GL_TEXTURE_2D );
+
   }
 
 

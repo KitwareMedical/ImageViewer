@@ -153,7 +153,7 @@ UpdateGUI();
 
 void SpineModelGUI::SetImage( li::VertebralSegmentRegistrator::FluoroscopicImageType * image ) {
   m_Image = image;
-for(unsigned int i=0; i<segmentBrowser->size(); i++)
+for(int i=0; i<segmentBrowser->size(); i++)
 {
   liVertebralSegmentGUI *vgui = 
     (liVertebralSegmentGUI *)( segmentBrowser->data(i+1) ); 
@@ -163,7 +163,7 @@ for(unsigned int i=0; i<segmentBrowser->size(); i++)
 
 void SpineModelGUI::SetVolume( li::VertebralSegmentRegistrator::VolumeImageType * volume ) {
   m_Volume = volume;
-for(unsigned int i=0; i<segmentBrowser->size(); i++)
+for(int i=0; i<segmentBrowser->size(); i++)
 {
   liVertebralSegmentGUI *vgui = 
     (liVertebralSegmentGUI *)( segmentBrowser->data(i+1) ); 

@@ -15,6 +15,7 @@
 #include <liVertebralSegment.h>
 #include <liSampleGeneratorPedicle.h>
 #include <liSampleGeneratorBodyPlane.h>
+#include <fstream>
 
 
 namespace li {
@@ -232,7 +233,7 @@ VertebralSegment::GetVertebralPedicle( void )
 //
 //----------------------------------------------------
 int 
-VertebralSegment::Write( Shape3D::OfstreamType &os, int level ) const 
+VertebralSegment::Write( std::ofstream &os, int level ) const 
 {
 
   int stat = 1;
