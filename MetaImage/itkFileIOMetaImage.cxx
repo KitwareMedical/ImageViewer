@@ -1,41 +1,41 @@
-#include "itkImageIOMetaImage.h"
+#include "itkFileIOMetaImage.h"
 
 namespace itk
 {
 
-ImageIOMetaImageFactory::ImageIOMetaImageFactory()
+FileIOMetaImageFactory::FileIOMetaImageFactory()
 {
-	myProductType::Pointer m_MyProduct = ImageIOMetaImage::New();
+	myProductType::Pointer m_MyProduct = FileIOMetaImage::New();
 
   RegisterOverride(m_MyProduct->GetSupportedFileExtensions().c_str(),
-                   "ImageIOMetaImage", "Create ImageIOMetaImage", true,
-                   CreateObjectFunction<ImageIOMetaImage>::New());
+                   "FileIOMetaImage", "Create FileIOMetaImage", true,
+                   CreateObjectFunction<FileIOMetaImage>::New());
 }
 
-const char* ImageIOMetaImageFactory::GetITKSourceVersion()
+const char* FileIOMetaImageFactory::GetITKSourceVersion()
 {
 	return ITK_SOURCE_VERSION;
 }
 
-const char* ImageIOMetaImageFactory::GetDescription()
+const char* FileIOMetaImageFactory::GetDescription()
 {
-	return "ImageIOMetaImageFactory - TObject factory with registry";
+	return "FileIOMetaImageFactory - TObject factory with registry";
 }
 
 const char META_EXT1[] = "mha";
 const char META_EXT2[] = "mhd";
 const char META_EXT3[] = "mda";
 
-ImageIOMetaImage::ImageIOMetaImage() : ImageIO()
+FileIOMetaImage::FileIOMetaImage() : ImageIO()
 {
   Reset();
 }
 
-ImageIOMetaImage::~ImageIOMetaImage()
+FileIOMetaImage::~FileIOMetaImage()
 {
 }
 
-void ImageIOMetaImage::Reset ()
+void FileIOMetaImage::Reset ()
 {
   int i;
 
@@ -70,7 +70,7 @@ void ImageIOMetaImage::Reset ()
   m_MetaImage = NULL;
 }
 
-void ImageIOMetaImage::Load()
+void FileIOMetaImage::Load()
 {
   ReadHeader();
 
@@ -83,12 +83,12 @@ void ImageIOMetaImage::Load()
   m_MetaImage = NULL;
 }
 
-void ImageIOMetaImage::Load2D(const std::string fileName)
+void FileIOMetaImage::Load2D(const std::string fileName)
 {
-  ImageIOMetaImage::Load();
+  FileIOMetaImage::Load();
 }
 
-void ImageIOMetaImage::Load2DSlice(const std::string fileName,
+void FileIOMetaImage::Load2DSlice(const std::string fileName,
                                   const unsigned int sliceNum,
                                   const unsigned int offset)
 {
@@ -114,12 +114,12 @@ void ImageIOMetaImage::Load2DSlice(const std::string fileName,
   m_MetaImage = NULL;
 }
 
-void ImageIOMetaImage::Save(const std::string headerFile, const std::string dataFile)
+void FileIOMetaImage::Save(const std::string headerFile, const std::string dataFile)
 {
-  ImageIOMetaImage::Save3D(headerFile, dataFile);
+  FileIOMetaImage::Save3D(headerFile, dataFile);
 }
 
-void ImageIOMetaImage::Save3D(const std::string headerFile, const std::string dataFile)
+void FileIOMetaImage::Save3D(const std::string headerFile, const std::string dataFile)
 {
   char* hFile = new char[300];
   char* dFile = NULL;
@@ -202,7 +202,7 @@ void ImageIOMetaImage::Save3D(const std::string headerFile, const std::string da
   delete m_MetaImage;
 }
 
-void ImageIOMetaImage::ReadHeader(const std::string fileName)
+void FileIOMetaImage::ReadHeader(const std::string fileName)
 {
   m_MetaImage = new MetaImage();
   if (fileName == "")
@@ -229,17 +229,18 @@ void ImageIOMetaImage::ReadHeader(const std::string fileName)
   m_MetaImage = NULL;
 }
 
-std::string ImageIOMetaImage::GetSupportedFileExtensions() const
+std::string FileIOMetaImage::GetSupportedFileExtensions() const
 {
-  return "mhd";
+//  return "mhd";
+  return "mha";
 }
 
-void ImageIOMetaImage::Print(std::ostream& os)
+void FileIOMetaImage::Print(std::ostream& os)
 {
   ImageIO::Print(os);
 }
 
-void ImageIOMetaImage::CopyAcquisitionParamsToImageIO (MetaImage* fromHere)
+void FileIOMetaImage::CopyAcquisitionParamsToImageIO (MetaImage* fromHere)
 {
   SetComment(fromHere->Comment());
   SetDate(fromHere->Date());
@@ -252,7 +253,7 @@ void ImageIOMetaImage::CopyAcquisitionParamsToImageIO (MetaImage* fromHere)
   SetElementSpacing(fromHere->ElemSpacing());
 }
 
-void ImageIOMetaImage::CopyAcquisitionParamsToMetaImage (MetaImage* toHere)
+void FileIOMetaImage::CopyAcquisitionParamsToMetaImage (MetaImage* toHere)
 {
   toHere->Comment(GetComment());
   toHere->Date(GetDate());
@@ -264,7 +265,7 @@ void ImageIOMetaImage::CopyAcquisitionParamsToMetaImage (MetaImage* toHere)
   toHere->ElemSpacing(GetElementSpacing());
 }
 
-AtomicPixelType ImageIOMetaImage::ConvertMET_TypeToAtomicPixelType (const MET_Type value) const
+AtomicPixelType FileIOMetaImage::ConvertMET_TypeToAtomicPixelType (const MET_Type value) const
 {
   AtomicPixelType result;
 
@@ -301,7 +302,7 @@ AtomicPixelType ImageIOMetaImage::ConvertMET_TypeToAtomicPixelType (const MET_Ty
   return result;
 }
 
-MET_Type ImageIOMetaImage::ConvertAtomicPixelTypeToMET_Type (const AtomicPixelType value) const
+MET_Type FileIOMetaImage::ConvertAtomicPixelTypeToMET_Type (const AtomicPixelType value) const
 {
   MET_Type result;
 
@@ -338,17 +339,17 @@ MET_Type ImageIOMetaImage::ConvertAtomicPixelTypeToMET_Type (const AtomicPixelTy
   return result;
 }
 
-void ImageIOMetaImage::SetModality(const MET_ModType newValue)
+void FileIOMetaImage::SetModality(const MET_ModType newValue)
 {
   m_Modality = newValue;
 }
 
-MET_ModType ImageIOMetaImage::GetModality() const
+MET_ModType FileIOMetaImage::GetModality() const
 {
   return m_Modality;
 }
 
-void ImageIOMetaImage::SetOrientation(const float* newValue)
+void FileIOMetaImage::SetOrientation(const float* newValue)
 {
   int i;
 
@@ -365,12 +366,12 @@ void ImageIOMetaImage::SetOrientation(const float* newValue)
   }
 }
 
-float* ImageIOMetaImage::GetOrientation() const
+float* FileIOMetaImage::GetOrientation() const
 {
   return (float*) m_Orientation;
 }
 
-void ImageIOMetaImage::SetImagePosition(const float* newValue)
+void FileIOMetaImage::SetImagePosition(const float* newValue)
 {
   int i;
 
@@ -387,12 +388,12 @@ void ImageIOMetaImage::SetImagePosition(const float* newValue)
   }
 }
 
-float* ImageIOMetaImage::GetImagePosition() const
+float* FileIOMetaImage::GetImagePosition() const
 {
   return (float*) m_ImagePosition;
 }
 
-void ImageIOMetaImage::SetPatientPosition(const float* newValue)
+void FileIOMetaImage::SetPatientPosition(const float* newValue)
 {
   int i;
 
@@ -409,12 +410,12 @@ void ImageIOMetaImage::SetPatientPosition(const float* newValue)
   }
 }
 
-float* ImageIOMetaImage::GetPatientPosition() const
+float* FileIOMetaImage::GetPatientPosition() const
 {
   return (float*) m_PatientPosition;
 }
 
-void ImageIOMetaImage::SetSequenceID(const float* newValue)
+void FileIOMetaImage::SetSequenceID(const float* newValue)
 {
   int i;
 
@@ -431,12 +432,12 @@ void ImageIOMetaImage::SetSequenceID(const float* newValue)
   }
 }
 
-float* ImageIOMetaImage::GetSequenceID() const
+float* FileIOMetaImage::GetSequenceID() const
 {
   return (float*) m_SequenceID;
 }
 
-void ImageIOMetaImage::SetElementSize(const float* newValue)
+void FileIOMetaImage::SetElementSize(const float* newValue)
 {
   int i;
 
@@ -453,12 +454,12 @@ void ImageIOMetaImage::SetElementSize(const float* newValue)
   }
 }
 
-float* ImageIOMetaImage::GetElementSize() const
+float* FileIOMetaImage::GetElementSize() const
 {
   return (float*) m_ElementSize;
 }
 
-void ImageIOMetaImage::SetElementSpacing(const float* newValue)
+void FileIOMetaImage::SetElementSpacing(const float* newValue)
 {
   int i;
 
@@ -475,7 +476,7 @@ void ImageIOMetaImage::SetElementSpacing(const float* newValue)
   }
 }
 
-float* ImageIOMetaImage::GetElementSpacing() const
+float* FileIOMetaImage::GetElementSpacing() const
 {
   return (float*) m_ElementSpacing;
 }

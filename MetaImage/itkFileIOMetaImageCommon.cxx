@@ -1,4 +1,4 @@
-#include "itkImageIOMetaImageCommon.h"
+#include "itkFileIOMetaImageCommon.h"
 
 namespace itk
 {

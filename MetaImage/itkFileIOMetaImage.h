@@ -1,28 +1,28 @@
-#ifndef __itkImageIOMetaImage_h
-#define __itkImageIOMetaImage_h
+#ifndef __itkFileIOMetaImage_h
+#define __itkFileIOMetaImage_h
 
 #include "itkImageIO.h"
 #include "MetaImageLib.h"
-#include "itkImageIOMetaImageCommon.h"
+#include "itkFileIOMetaImageCommon.h"
 #include <itkVersion.h>
 #include <string>
 
 namespace itk
 {
 
-class ITK_EXPORT ImageIOMetaImage : public ImageIO
+class ITK_EXPORT FileIOMetaImage : public ImageIO
 {
 public:
   /**
    * Smart pointer typedef support.
    */
-  typedef ImageIOMetaImage Self;
+  typedef FileIOMetaImage Self;
   typedef SmartPointer<Self>  Pointer;
 
   /**
    * Run-time type information (and related methods).
    */
-  itkTypeMacro(ImageIOMetaImage, ImageIO);
+  itkTypeMacro(FileIOMetaImage, ImageIO);
 
   /**
    * Method for creation through the object factory.
@@ -191,26 +191,26 @@ protected:
   /**
    * Default constructor
    */
-  ImageIOMetaImage();
+  FileIOMetaImage();
 
   /**
    * Destructor
    */
-  ~ImageIOMetaImage();
+  ~FileIOMetaImage();
 
 private:
 };
 
-class ITK_EXPORT ImageIOMetaImageFactory : public ObjectFactoryBase
+class ITK_EXPORT FileIOMetaImageFactory : public ObjectFactoryBase
 {
 public:
-  ImageIOMetaImageFactory();
+  FileIOMetaImageFactory();
   const char* GetITKSourceVersion();
   const char* GetDescription();
 
 
 protected:
-  typedef ImageIOMetaImage myProductType;
+  typedef FileIOMetaImage myProductType;
 
   const myProductType* m_MyProduct;
 
