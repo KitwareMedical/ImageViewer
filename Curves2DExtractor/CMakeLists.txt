@@ -2,14 +2,7 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_SOURCE_DIR}/Utilities/zlib
-${ITK_SOURCE_DIR}/Utilities/png
-${ITK_SOURCE_DIR}/Utilities/MetaIO
 ${ITK_SOURCE_DIR}/Examples/Curves2DExtractor
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/Curves2DExtractor
@@ -17,52 +10,28 @@ ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
-
-SET(Curves2DExtractor_SRCS
-ceExtractorConsole.cxx
-ceExtractorConsoleBase.cxx
-)
-
-SET(FLTK_GUI_Files_SRCS
-ceExtractorConsoleGUI.fl
-)
-
-
-ADD_LIBRARY(Curves2DExtractorLib ${Curves2DExtractor_SRCS})
+ADD_LIBRARY(Curves2DExtractorLib
+            ceExtractorConsole.cxx
+            ceExtractorConsoleBase.cxx)
 
 #
 # Take the list of GUI files, generate .cxx and .h from 
 # them and add them to the build process of the target
 #
-FLTK_WRAP_UI(Curves2DExtractorLib ${FLTK_GUI_Files_SRCS} )
+FLTK_WRAP_UI(Curves2DExtractorLib ceExtractorConsoleGUI.fl)
 
-
-
-LINK_LIBRARIES (
-Curves2DExtractorLib
-ITKCommon
-ITKBasicFilters 
-ITKIO
-MetaIO
-itkpng
-itkzlib
-FltkImageViewer
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
-)
+TARGET_LINK_LIBRARIES (Curves2DExtractorLib
+                       ITKBasicFilters ITKIO FltkImageViewer
+                       ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
 IF(WIN32)
-  LINK_LIBRARIES(
-  wsock32
-  )
+  TARGET_LINK_LIBRARIES(Curves2DExtractorLib wsock32)
 ENDIF(WIN32)
 
 IF(UNIX)
-  LINK_LIBRARIES (
-  ${CMAKE_X_LIBS}
-  )
+  TARGET_LINK_LIBRARIES(Curves2DExtractorLib ${CMAKE_X_LIBS})
 ENDIF(UNIX)
 
 ADD_EXECUTABLE(Curves2DExtractor main.cxx)
+TARGET_LINK_LIBRARIES(Curves2DExtractor Curves2DExtractorLib)
 
