@@ -18,7 +18,7 @@
 
 
 #include "FEMMeshApplication.h"
-#include <Fl/Fl_ask.H>
+#include <FL/fl_ask.H>
 
 FEMMeshApplication
 ::FEMMeshApplication()

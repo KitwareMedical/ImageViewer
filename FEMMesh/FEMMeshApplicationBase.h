@@ -23,11 +23,8 @@
 
 #include "vtkRenderWindow.h"
 #include "itkFEMMesh.h"
-
-
-#include <set>
-
-
+#include "itkDefaultDynamicMeshTraits.h"
+#include "itkLineCell.h"
 
 // This is the base classe for the Application
 
@@ -37,42 +34,67 @@ class FEMMeshApplicationBase
 public:
 
   enum { PointsDimension              = 3 };
+  enum { MaximumTopologicalDimension  = 3 };
 
-  // Type for the FEM Mesh containing both the geometrical
-  // and physical aspects of the problem.
-  typedef itk::fem::FEMMesh< PointsDimension > FEMMeshType;
+  // Type used for representing the coordinates of points
+  // in geometric space
+  typedef float     CoordinateRepresentationType;
+
+  // Type used by the Cells for the weights required for
+  // interpolation of points and values.
+  typedef double    InterpolationWeightsType;
+
+  // PointDataType is the type that will be used for the
+  // Degrees of Freedom (or DisplacementField) of the 
+  // FEM problem.
+  typedef float           PointDataType;
+
+  // For FEM it is expected that eventual values stored
+  // at the Cells will be of the same type that those
+  // values stored at the Points.
+  typedef PointDataType   CellDataType;
 
 
-  // Types related with Geometry. The points represent space
-  // positions and the cells define the topology of the mesh.
-  // Cells are also responsible for providing methods for 
-  // mapping from geometrical space to parametric coordinates.
-  typedef  FEMMeshType::PointType             BasePointType;
-  typedef  FEMMeshType::CellType              BaseCellType;
+  // Traits for all the elements of the Mesh
+  typedef itk::DefaultDynamicMeshTraits<
+                                PointDataType,
+                                PointsDimension,
+                                MaximumTopologicalDimension,
+                                CoordinateRepresentationType,
+                                InterpolationWeightsType,
+                                CellDataType
+                                                  >  MeshTraits;
 
-  // Node type containing the Degrees of Freedom 
-  // of the physical problem. 
-  // Note that Nodes are not necessarily associated with 
-  // points because the geometry can be represented by 
-  // interpolating with a certain order while the physical
-  // layer can use a different order.
-  typedef  FEMMeshType::NodeType                   BaseNodeType;
-  typedef  FEMMeshType::ElementType                BaseElementType;
+  // Type for the Cell Traits
+  typedef MeshTraits::CellTraits                CellTraits;
 
-  // Structures to hold pointers to objects that should be 
-  // deleted at destruction time of the application.
-  // This is needed because the FEMMesh is holding arrays of 
-  // pointers to all the objects it manages: Points, Nodes,
-  // Cells, Elements.
-  typedef  std::set< BasePointType   * >    PointsToBeDeletedContainer;
-  typedef  std::set< BaseNodeType    * >    NodesToBeDeletedContainer;
-  typedef  std::set< BaseCellType    * >    CellsToBeDeletedContainer;
-  typedef  std::set< BaseElementType * >    ElementsToBeDeletedContainer;
+  // Type for the Geometrical level
+  typedef itk::Mesh<  PointDataType, 
+                      PointsDimension, 
+                      MeshTraits >              MeshType;
+
+  // Type for the Physical level
+  typedef itk::fem::FEMMesh< MeshType >         FEMMeshType;
+
+  // Type for giving an unique identifier to every cell
+  typedef  FEMMeshType::CellIdentifier          CellIdentifierType;
+
+  // Types related with Points
+  typedef  FEMMeshType::PointType               PointType;
+  typedef  FEMMeshType::PointIdentifier         PointIdentifierType;
+
+  // Type for the Multivisitor that will iterate over the Cells
+  typedef  FEMMeshType::CellMultiVisitorType    CellMultiVisitorType;
+
+  // Type for One dimensional Cells
+  typedef  itk::LineCell< PointDataType, CellTraits >   LineCellType;
+
 
 public:
 
   FEMMeshApplicationBase();
-  ~FEMMeshApplicationBase();
+
+  virtual ~FEMMeshApplicationBase();
   
   virtual void CreateSphere(void);
   virtual void CreateTriangle(void);
@@ -82,39 +104,13 @@ public:
 
 protected:
  
-  vtkRenderWindow * m_RenderWindow;
-  vtkRenderer     * m_Renderer;
+  vtkRenderWindow     * m_RenderWindow;
+  vtkRenderer         * m_Renderer;
 
 
   FEMMeshType::Pointer  m_FEMMesh;
 
-private:
-
-  // Internal data used to feed the MESH
-  // This tables of pointers are keept here
-  // in order to facilitate memory release
-  // when the program is quitting.
-  // The FEMMesh itself will not release 
-  // any of the pointer that are paased to
-  // it as Point *, Node *, Cell *, Element *.
-  //
-  // std::set is used to make sure that no
-  // pointer is deleted twice.
-  //
-  // NOTE that ONLY those Points, Nodes, 
-  // Cells or Elements that are dynamically
-  // allocated should be included in these 
-  // sets.
-  //
-  PointsToBeDeletedContainer      m_PointsToBeDeleted;
-  NodesToBeDeletedContainer       m_NodesToBeDeleted;
-  CellsToBeDeletedContainer       m_CellsToBeDeleted;
-  ElementsToBeDeletedContainer    m_ElementsToBeDeleted;
-
-
 };
-
-
 
 
 #endif

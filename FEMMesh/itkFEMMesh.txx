@@ -20,16 +20,14 @@
 
 #ifndef _itkFEMMesh_txx
 #define _itkFEMMesh_txx
-
 #include "itkFEMMesh.h"
-
 
 namespace itk {
 namespace fem {
 
 
-template< unsigned int NPointDimension >
-FEMMesh<NPointDimension>
+template<class TMesh>
+FEMMesh<TMesh>
 ::FEMMesh()
 {
 
@@ -37,157 +35,13 @@ FEMMesh<NPointDimension>
 }
 
 
-template< unsigned int NPointDimension >
-FEMMesh<NPointDimension>
+template<class TMesh>
+FEMMesh<TMesh>
 ::~FEMMesh()
 {
 
             
 }
-
-
-
- 
-template < unsigned int NPointDimension >
-void
-FEMMesh<NPointDimension>
-::PrintSelf(std::ostream& os, Indent indent) const
-{
-  Superclass::PrintSelf(os, indent);
-}
-
-
- 
-template < unsigned int NPointDimension >
-unsigned long
-FEMMesh<NPointDimension>
-::GetNumberOfPoints(void) const
-{
-  return m_Points.size();
-}
-
-
-
- 
-template < unsigned int NPointDimension >
-unsigned long
-FEMMesh<NPointDimension>
-::GetNumberOfCells(void) const
-{
-  return m_Cells.size();
-}
-
-
-
-
- 
-template < unsigned int NPointDimension >
-unsigned long
-FEMMesh<NPointDimension>
-::GetNumberOfNodes(void) const
-{
-  return m_Nodes.size();
-}
-
-
-
-
- 
-template < unsigned int NPointDimension >
-unsigned long
-FEMMesh<NPointDimension>
-::GetNumberOfElements(void) const
-{
-  return m_Elements.size();
-}
-
-
-
- 
-template < unsigned int NPointDimension >
-void
-FEMMesh<NPointDimension>
-::AddPoint( PointType * p ) 
-{
-  m_Points.push_back( p );
-}
-
-
-
- 
-template < unsigned int NPointDimension >
-void
-FEMMesh<NPointDimension>
-::AddCell( CellType * p ) 
-{
-  m_Cells.push_back( p );
-}
-
-
-
- 
-template < unsigned int NPointDimension >
-void
-FEMMesh<NPointDimension>
-::AddElement( ElementType * p ) 
-{
-  m_Elements.push_back( p );
-}
-
-
-
- 
-template < unsigned int NPointDimension >
-void
-FEMMesh<NPointDimension>
-::AddNode( NodeType * p ) 
-{
-  m_Nodes.push_back( p );
-}
-
-
- 
-template < unsigned int NPointDimension >
-FEMMesh<NPointDimension>::PointType *
-FEMMesh<NPointDimension>
-::GetPoint( unsigned int Id ) 
-{
-  return m_Points[ Id ];
-}
-
-
-
- 
-template < unsigned int NPointDimension >
-FEMMesh<NPointDimension>::NodeType *
-FEMMesh<NPointDimension>
-::GetNode( unsigned int Id ) 
-{
-  return m_Nodes[ Id ];
-}
-
-
- 
-template < unsigned int NPointDimension >
-FEMMesh<NPointDimension>::CellType *
-FEMMesh<NPointDimension>
-::GetCell( unsigned int Id ) 
-{
-  return m_Cells[ Id ];
-}
-
-
- 
-template < unsigned int NPointDimension >
-FEMMesh<NPointDimension>::ElementType *
-FEMMesh<NPointDimension>
-::GetElement( unsigned int Id ) 
-{
-  return m_Elements[ Id ];
-}
-
-
-
 
 
 
