@@ -20,6 +20,8 @@
 #include "vtkPolyDataMapper.h"
 #include "vtkDataSetMapper.h"
 #include "vtkActor.h"
+#include "vtkCamera.h"
+#include "vtkProperty.h"
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
 #include "vtkPoints.h"
