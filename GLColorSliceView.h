@@ -220,22 +220,35 @@ void GLColorSliceView<ImagePixelType, OverlayPixelType>::
 clickSelect(float newX, float newY, float newZ)
   {    
   cClickSelect[0] = newX;
-  if(cClickSelect[0]<0)
-      cClickSelect[0] = 0;
+  if(cClickSelect[0]<0) 
+    {
+    cClickSelect[0] = 0;
+    }
   if(cClickSelect[0] >= cDimSize[0])
-      cClickSelect[0] = cDimSize[0]-1;
+    {
+    cClickSelect[0] = cDimSize[0]-1;
+    }
 
   cClickSelect[1] = newY;
   if(cClickSelect[1]<0)
-      cClickSelect[1] = 0;
+    {
+    cClickSelect[1] = 0;
+    }
   if(cClickSelect[1] >= cDimSize[1])
-      cClickSelect[1] = cDimSize[1]-1;
+    {
+    cClickSelect[1] = cDimSize[1]-1;
+    }
 
   cClickSelect[2] = newZ;
+
   if(cClickSelect[2]<0)
-      cClickSelect[2] = 0;
+    {
+    cClickSelect[2] = 0;
+    }
   if(cClickSelect[2] >= cDimSize[2])
-      cClickSelect[2] = cDimSize[2]-1;
+    {
+    cClickSelect[2] = cDimSize[2]-1;
+    }
 
   typename ImageType::IndexType ind;
 
@@ -246,18 +259,28 @@ clickSelect(float newX, float newY, float newZ)
       
   /*if length of list is equal to max, remove the earliest point stored */
   if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
-      cClickedPoints.pop_back();
+    {
+    cClickedPoints.pop_back();
+    }
+  
+  ClickPoint point( cClickSelect[0], 
+                    cClickSelect[1], 
+                    cClickSelect[2], 
+                    cClickSelectV     );
 
-  cClickedPoints.push_front(new ClickPoint(cClickSelect[0],
-      cClickSelect[1], cClickSelect[2], cClickSelectV));
+  cClickedPoints.push_front( point );
 
   if(cClickSelectCallBack != NULL)
+    {
       cClickSelectCallBack(cClickSelect[0], cClickSelect[1], 
                            cClickSelect[2], cClickSelectV);
+    }
   if(cClickSelectArgCallBack != NULL)
-      cClickSelectArgCallBack(cClickSelect[0], cClickSelect[1], 
+    {
+    cClickSelectArgCallBack(cClickSelect[0], cClickSelect[1], 
                               cClickSelect[2], cClickSelectV,
                               cClickSelectArg);
+    }
 
   if(cViewValue || cViewCrosshairs)
     {

@@ -70,13 +70,19 @@ const char IWModeTypeName[3][5] =
   /*! Structure clickPoint to store the x,y,z and intensity value of a
   * point in the image
 */
-struct ClickPoint 
+class ClickPoint 
   {
-  float x, y, z;
-  double value;
-  
-  ClickPoint(float _x,float _y,float _z,double v)
+  public:
+    ClickPoint()
+    : x(0),y(0),z(0),value(0){}
+    ClickPoint( const ClickPoint & p )
+    { x = p.x; y = p.y; z = p.z; value = p.value; }
+    ClickPoint(float _x,float _y,float _z,double v)
     : x(_x),y(_y),z(_z),value(v){}
+
+  public:
+    float x, y, z;
+    double value;
   };
 
 
@@ -317,9 +323,8 @@ template <class imType>
       /*! Returns the last ith clicked point - ie. to get the last point
       * i = 0, to get the 2nd last point i = 1, and so on
     */
-    ClickPoint   getClickedPoint(unsigned int i=0);
-    float*       getClickedPointCoordinates(unsigned int i=0);
-    int numClickedPointsStored(){ return cClickedPoints.size();}
+    bool         getClickedPoint(unsigned int i, ClickPoint & point);
+    int          numClickedPointsStored(){ return cClickedPoints.size();}
     
     void         maxClickedPointsStored(unsigned int i);
     unsigned int maxClickedPointsStored();
@@ -893,35 +898,17 @@ float SliceView<imType>::clickSelectZ(void)
 
 
 template <class imType>
-ClickPoint SliceView<imType>::getClickedPoint(unsigned int index)
+bool SliceView<imType>::getClickedPoint(unsigned int index, ClickPoint & point)
   {
   if(index >= cClickedPoints.size())
     {
-    return ClickPoint();
+    return false;
     }
   std::list<ClickPoint>::const_iterator j = cClickedPoints.begin();
   
   for(int i=0;i<static_cast<int>(index);i++,j++);
-  
-  return(*j);
-  }
-
-
-
-
-template <class imType>
-float* SliceView<imType>::
-getClickedPointCoordinates(unsigned int index)
-  {
-  if(index>= cClickedPoints.size())
-    return (float*)0;
-  float *p = new float[3];
-  std::list<ClickPoint>::const_iterator j = cClickedPoints.begin();
-  for(int i=0;i<index;i++,j++);
-  p[0] = (*j)->x;
-  p[1] = (*j)->y;
-  p[2] = (*j)->z;
-  return p;
+    point = *j;
+  return true;
   }
 
 
