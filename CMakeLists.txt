@@ -99,6 +99,14 @@ SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
 
 
+# Add an option to build or not build the SurfaceGenerator example
+IF(HAS_METAIMAGE)
+  IF(HAS_FLTKIMAGEVIEWER)
+    SUBDIRS(SurfaceGenerator)
+  ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_METAIMAGE)
+
+
 # Add an option to build the Tcl Wrap for the stl string class
 IF( ITK_WRAP_TCL )
   IF( GCCXML )
