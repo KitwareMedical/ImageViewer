@@ -49,6 +49,9 @@ RegionGrowingSegmentationBase
   m_ConfidenceConnectedImageFilter = ConfidenceConnectedImageFilterType::New();
   m_ConfidenceConnectedImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
 
+  m_FuzzyConnectedImageFilter = FuzzyConnectedImageFilterType::New();
+  m_FuzzyConnectedImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );
+
   m_InputImageIsLoaded  = false;
 
 }

@@ -73,6 +73,8 @@ public:
 
   virtual void ShowConfidenceConnectedImage(void);
 
+  virtual void ShowFuzzyConnectedImage(void);
+
   virtual void ShowHomogeneousImage(void);
 
   virtual void Quit(void);
@@ -85,6 +87,7 @@ private:
 
   InternalImageViewerType     m_ConnectedThresholdImageViewer;
   InternalImageViewerType     m_ConfidenceConnectedImageViewer;
+  InternalImageViewerType     m_FuzzyConnectedImageViewer;
   InternalImageViewerType     m_HomogeneousImageViewer;
 
   InputImageViewerType        m_InputImageViewer;

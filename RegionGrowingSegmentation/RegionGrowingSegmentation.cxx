@@ -38,6 +38,9 @@ RegionGrowingSegmentation
   m_ConfidenceConnectedImageViewer.SetLabel("Confidence Connected Image");
   m_ConfidenceConnectedImageViewer.SetImage( m_ConfidenceConnectedImageFilter->GetOutput() );  
 
+  m_FuzzyConnectedImageViewer.SetLabel("Fuzzy Connected Image");
+  m_FuzzyConnectedImageViewer.SetImage( m_FuzzyConnectedImageFilter->GetOutput() );  
+
   m_HomogeneousImageViewer.SetLabel("Curvature Flow Image");
   m_HomogeneousImageViewer.ClickSelectCallBack( ClickSelectCallback, (void *)this);
   m_HomogeneousImageViewer.SetImage( m_CurvatureFlowImageFilter->GetOutput() );
@@ -60,6 +63,10 @@ RegionGrowingSegmentation
   m_ConfidenceConnectedImageFilter->SetNumberOfIterations( 
       static_cast<InputPixelType>( iterationsConfidenceValueInput->value() ) );
 
+  m_FuzzyConnectedImageFilter->SetMean( fuzzyMeanValueInput->value() );
+  m_FuzzyConnectedImageFilter->SetVariance( fuzzyVarianceValueInput->value() );
+  m_FuzzyConnectedImageFilter->SetDiff_Mean( fuzzyDiffMeanValueInput->value() );
+  m_FuzzyConnectedImageFilter->SetDiff_Variance( fuzzyDiffVarianceValueInput->value() );
 
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
@@ -67,11 +74,13 @@ RegionGrowingSegmentation
   homogeneousImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
   thresholdConnectedImageButton->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
   confidenceConnectedImageButton->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
+  fuzzyConnectedImageButton->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
 
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
   progressSlider->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
   progressSlider->Observe( m_CurvatureFlowImageFilter.GetPointer() );
+  progressSlider->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
 
 }
 
@@ -241,6 +250,25 @@ RegionGrowingSegmentation
   m_ConfidenceConnectedImageViewer.Show();
 
 }
+
+
+
+ 
+/************************************
+ *
+ *  Show Fuzzy Connected Image
+ *
+ ***********************************/
+void
+RegionGrowingSegmentation
+::ShowFuzzyConnectedImage( void )
+{
+  m_FuzzyConnectedImageFilter->Update();
+  m_FuzzyConnectedImageViewer.SetImage( m_FuzzyConnectedImageFilter->GetOutput() );  
+  m_FuzzyConnectedImageViewer.Show();
+
+}
+
 
 
 
