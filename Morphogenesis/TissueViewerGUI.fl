@@ -1,0 +1,56 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class TissueViewerGUI {open
+} {
+  Function {TissueViewerGUI()} {} {
+    Fl_Window tissueWindow {
+      label {Tissue Window} open
+      xywh {386 200 435 416} resizable visible
+    } {
+      Fl_Box tissueView {
+        xywh {5 5 425 405} box DOWN_BOX color 115
+        code0 {\#include "TissueViewerWindow.h"}
+        class TissueViewerWindow
+      }
+    }
+    Fl_Window controlWindow {
+      label {Control Panel} open
+      xywh {494 37 399 103} visible
+    } {
+      Fl_Menu_Bar {} {open
+        xywh {0 0 400 25}
+      } {
+        submenu {} {
+          label File open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Quit
+            callback {Quit();}
+            xywh {0 0 100 20} shortcut 0x80071
+          }
+        }
+      }
+      Fl_Button {} {
+        label {>} selected
+        xywh {50 45 65 30}
+      }
+    }
+    Fl_Window {} {open
+      xywh {92 111 104 100} hide
+    } {}
+  }
+  Function {~TissueViewerGUI()} {return_type virtual
+  } {}
+  Function {Quit(void)} {return_type {virtual void}
+  } {}
+  Function {Show(void)} {return_type {virtual void}
+  } {}
+  Function {Hide(void)} {return_type {virtual void}
+  } {}
+} 
