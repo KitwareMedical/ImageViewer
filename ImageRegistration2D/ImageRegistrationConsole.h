@@ -18,6 +18,7 @@
 #define liIMAGEREGISTRATIONCONSOLE
 
 #include <fltkImage2DViewer.h>
+#include <fltkRegularStepGradientDescent.h>
 #include <ImageRegistrationConsoleGUI.h>
 
 class ImageRegistrationConsole : public ImageRegistrationConsoleGUI {
@@ -26,8 +27,9 @@ public:
 
   typedef ImageRegistrationConsoleBase::PixelType PixelType;
 
-  typedef fltk::Image2DViewer< PixelType > ImageViewerType;
-  typedef ImageViewerType::Pointer         ImageViewerPointer;
+  typedef fltk::Image2DViewer< PixelType >    ImageViewerType;
+  typedef ImageViewerType::Pointer            ImageViewerPointer;
+  typedef fltk::RegularStepGradientDescent    OptimizerGUIType;
 
 
 public:
@@ -59,6 +61,7 @@ private:
   ImageViewerPointer            m_MovingImageViewer;
   ImageViewerPointer            m_FixedImageViewer;
   ImageViewerPointer            m_RegisteredMovingImageViewer;
+  OptimizerGUIType              m_OptimizerInterface;
 
 };
 

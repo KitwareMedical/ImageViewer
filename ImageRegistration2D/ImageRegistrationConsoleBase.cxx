@@ -57,9 +57,13 @@ ImageRegistrationConsoleBase
   m_FixedImageIsLoaded  = false;
   m_MovingImageIsLoaded = false;
 
+  m_ImageRegistrationMethod->SetOptimizer( 
+             itk::RegularStepGradientDescentOptimizer::New() ); 
+
   this->SelectMetric( meanSquares );
   this->SelectTransform( translationTransform );
   this->SelectInterpolator( nearestNeighborInterpolator );
+
 
 }
 
