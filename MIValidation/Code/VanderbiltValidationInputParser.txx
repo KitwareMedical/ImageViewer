@@ -265,7 +265,7 @@ VanderbiltValidationInputParser<TImage>
     
   // parse the file
   unsigned int uNumber;
-  float        fNumber;
+  double        fNumber;
 
   // get number of levels
   if( fscanf( paramFile, "%d", &uNumber) != 1 )
@@ -297,7 +297,7 @@ VanderbiltValidationInputParser<TImage>
   }
   for( unsigned int j = 0; j < m_NumberOfLevels; j++ )
     {
-    if( fscanf( paramFile, "%f", &fNumber ) != 1 )
+    if( fscanf( paramFile, "%lf", &fNumber ) != 1 )
      {
      itkExceptionMacro( << "Could not find learning rates per level. " );
      }
