@@ -20,8 +20,8 @@ class GLSliceView : public SliceView<ImagePixelType>,
                     public Fl_Gl_Window 
 {
 public:
-  typedef itk::PhysicalImage<ImagePixelType,3>     ImageType;
-  typedef itk::PhysicalImage<OverlayPixelType,3>   OverlayType;
+  typedef itk::Image<ImagePixelType,3>     ImageType;
+  typedef itk::Image<OverlayPixelType,3>   OverlayType;
  
 protected:
   bool        cValidOverlayData;
@@ -250,7 +250,7 @@ cImData->GetLargestPossibleRegion();
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-const PhysicalImage<ImagePixelType,3>::Pointer &
+const Image<ImagePixelType,3>::Pointer &
 GLSliceView<ImagePixelType, OverlayPixelType>
 ::GetInputImage(void) const
 {

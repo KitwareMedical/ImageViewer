@@ -7,7 +7,7 @@
  * command.  
  */
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkFileIOMetaImage.h>
 #include <itkWriteMetaImage.h>
 #include <itkFileIOToImageFilter.h>
@@ -16,12 +16,12 @@
 int main ()
 {
   /* 
-   * This defines our image. Note that while we use a PhysicalImage for this
+   * This defines our image. Note that while we use a Image for this
    * test (because MetaImage defines a mapping between image-space to
    * physical-space), you can just as easily substitute an Image in its
    * place.  
    */
-  typedef itk::PhysicalImage<unsigned short, 3> myImageType;
+  typedef itk::Image<unsigned short, 3> myImageType;
 
   /*
    * This defines our MetaImage writer

@@ -6,7 +6,7 @@
  * automated via a diff command.
  */
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkFileIOMetaImage.h>
 #include <itkWriteMetaImage.h>
 #include <itkFileIOToImageFilter.h>
@@ -16,11 +16,11 @@ using namespace itk;
 int main ()
 {
   /* 
-   * This defines our image. Note that while we use a PhysicalImage for this test
+   * This defines our image. Note that while we use a Image for this test
    * (because MetaImage defines a mapping between image-space to physical-space),
    * you can just as easily substitute an Image in its place.
    */
-  typedef PhysicalImage<unsigned short, 3> myImageType;
+  typedef Image<unsigned short, 3> myImageType;
   /*
    * This defines our MetaImage writer
    */

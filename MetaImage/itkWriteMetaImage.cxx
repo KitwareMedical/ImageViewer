@@ -40,7 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 #include "itkImage.h"
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 
 #define ITK_MANUAL_INSTANTIATION
 #include "itkWriteMetaImage.h"
@@ -168,7 +168,7 @@ WriteMetaImage<Image<short,3> >
 // Now we gotta do the same for physical image variants...
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<signed char,2> >
+WriteMetaImage<Image<signed char,2> >
 ::GetTypeCode(void) const
 {
   return MET_CHAR;
@@ -179,7 +179,7 @@ WriteMetaImage<PhysicalImage<signed char,2> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<signed char,3> >
+WriteMetaImage<Image<signed char,3> >
 ::GetTypeCode(void) const
 {
   return MET_CHAR;
@@ -190,7 +190,7 @@ WriteMetaImage<PhysicalImage<signed char,3> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<unsigned char,2> >
+WriteMetaImage<Image<unsigned char,2> >
 ::GetTypeCode(void) const
 {
   return MET_UCHAR;
@@ -201,7 +201,7 @@ WriteMetaImage<PhysicalImage<unsigned char,2> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<unsigned char,3> >
+WriteMetaImage<Image<unsigned char,3> >
 ::GetTypeCode(void) const
 {
   return MET_UCHAR;
@@ -212,7 +212,7 @@ WriteMetaImage<PhysicalImage<unsigned char,3> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<float,2> >
+WriteMetaImage<Image<float,2> >
 ::GetTypeCode(void) const
 {
   return MET_FLOAT;
@@ -223,7 +223,7 @@ WriteMetaImage<PhysicalImage<float,2> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<float,3> >
+WriteMetaImage<Image<float,3> >
 ::GetTypeCode(void) const
 {
   return MET_FLOAT;
@@ -234,7 +234,7 @@ WriteMetaImage<PhysicalImage<float,3> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<unsigned short,2> >
+WriteMetaImage<Image<unsigned short,2> >
 ::GetTypeCode(void) const
 {
   return MET_USHORT;
@@ -245,7 +245,7 @@ WriteMetaImage<PhysicalImage<unsigned short,2> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<unsigned short,3> >
+WriteMetaImage<Image<unsigned short,3> >
 ::GetTypeCode(void) const
 {
   return MET_USHORT;
@@ -256,7 +256,7 @@ WriteMetaImage<PhysicalImage<unsigned short,3> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<short,2> >
+WriteMetaImage<Image<short,2> >
 ::GetTypeCode(void) const
 {
   return MET_SHORT;
@@ -267,7 +267,7 @@ WriteMetaImage<PhysicalImage<short,2> >
  */
 template <>
 MET_Type
-WriteMetaImage<PhysicalImage<short,3> >
+WriteMetaImage<Image<short,3> >
 ::GetTypeCode(void) const
 {
   return MET_SHORT;
