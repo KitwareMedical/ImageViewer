@@ -145,7 +145,7 @@ int main()
   spatialFunc->SetOrientations(orientations);
 
   TImageType::IndexType seedPos;
-  const unsigned long pos[] = {center[0], center[1], center[2]};
+  TImageType::IndexValueType pos[] = {center[0], center[1], center[2]};
   seedPos.SetIndex(pos);
 
   itk::FloodFilledSpatialFunctionConditionalIterator<TImageType, TEllipsoidFunctionType> 
@@ -166,7 +166,7 @@ int main()
   int numInteriorPixels2 = 0; // Number of pixels filled by spatial function
   int numErrorPixels = 0; // Number of pixels not set by spatial function
   
-  unsigned long indexarray[3] = {0,0,0};
+  TImageType::IndexValueType indexarray[3] = {0,0,0};
 
   // Iterate through source image and get pixel values and count pixels 
   // iterated through, not filled by spatial function, filled by spatial
