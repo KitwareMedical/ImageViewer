@@ -114,9 +114,9 @@ public:
    */
   void Observe( itk::Object *caller )
   {
-    caller->AddObserver(  itk::StartEvent(), m_RedrawCommand.GetPointer() );
+    caller->AddObserver(  itk::StartEvent(),    m_RedrawCommand.GetPointer() );
     caller->AddObserver(  itk::ModifiedEvent(), m_RedrawCommand.GetPointer() );
-    caller->AddObserver(  itk::EndEvent(), m_RedrawCommand.GetPointer() );
+    caller->AddObserver(  itk::EndEvent(),      m_RedrawCommand.GetPointer() );
   }
 
 

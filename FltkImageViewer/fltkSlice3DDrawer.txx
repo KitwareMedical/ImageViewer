@@ -45,6 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "fltkSlice3DDrawer.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include <GL/glu.h>
+#include "fltkCommandEvents.h"
 
 
 namespace fltk {
