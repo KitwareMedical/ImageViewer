@@ -9,12 +9,12 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
   Function {CellsViewerGUI()} {} {
     Fl_Window controlWindow {
-      label {Control Panel} open
+      label {Control Panel} open selected
       xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
       Fl_Button {} {
-        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.xpm}
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
         xywh {10 75 110 75} box FLAT_BOX labeltype image
       }
       Fl_Menu_Bar {} {open
@@ -91,7 +91,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
     }
     Fl_Window substratesWindow {
       label Substrates
-      xywh {235 20 249 146} resizable visible
+      xywh {235 23 249 146} hide resizable
     } {
       Fl_Browser substratesBrowser {
         callback {ShowSubstrate( o->text( o->value() ) );}
@@ -100,7 +100,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
     }
     Fl_Window speciesWindow {
       label Species
-      xywh {418 247 278 193} resizable visible
+      xywh {418 247 278 193} hide resizable
     } {
       Fl_Browser speciesBrowser {
         callback {createEggButton->activate();}
@@ -109,7 +109,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       Fl_Button createEggButton {
         label {Create Egg}
         callback {SelectSpecies( speciesBrowser->value()-1 );
-speciesWindow->hide();} selected
+speciesWindow->hide();}
         xywh {25 160 100 25} deactivate
       }
       Fl_Button {} {
