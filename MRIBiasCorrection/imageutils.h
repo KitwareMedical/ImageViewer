@@ -54,15 +54,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class ImageIOError : public itk::ExceptionObject
 {
  public:
-  ImageIOError() : ExceptionObject() {}
+  ImageIOError() : itk::ExceptionObject() {}
   
-  ImageIOError(const char *file, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(file, line)
+  ImageIOError(const char *file, unsigned int line, std::string fileName, std::string operation) : itk::ExceptionObject(file, line)
   {
     FileName = fileName ;
     Operation = operation ;
   }
 
-  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : ExceptionObject(nfile, line)
+  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : itk::ExceptionObject(nfile, line)
   {
     FileName = fileName ;
     Operation = operation ;
