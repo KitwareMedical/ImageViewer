@@ -46,7 +46,7 @@ liImageRegistrationConsoleBase
 
   m_InputTransform = AffineTransformType::New();
 
-  m_ResampleInputMovingImageFilter->SetTransform( m_InputTransform );
+  m_ResampleInputMovingImageFilter->SetTransform( m_InputTransform.GetPointer() );
 
   m_ImageRegistrationMethod     = ImageRegistrationMethodType::New();
 
