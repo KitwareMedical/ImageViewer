@@ -2,6 +2,7 @@ SOURCE_FILES( VTKITKCommon_SRCS
 vtkITKConnectedThresholdImageFilter.cxx
 vtkITKConfidenceConnectedImageFilter.cxx
 vtkITKIsolatedConnectedImageFilter.cxx
+vtkITKDanielssonDistanceMapImageFilter.cxx
 vtkITKImageToImageFilter.h
 vtkITKImageToImageFilterUSUL.h
 vtkITKImageToImageFilterUSUS.h
