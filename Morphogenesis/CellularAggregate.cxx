@@ -141,8 +141,18 @@ CellularAggregate
         ++neighbor;
         continue;// if the neigbor has been removed, skip it
         }
-      glVertex3f( position1[0], position1[1], position1[2] );
-      glVertex3f( position2[0], position2[1], position2[2] );
+
+      switch( Cell::Dimension )
+      {
+      case 2:
+        glVertex3f( position1[0], position1[1], 0.0 );
+        glVertex3f( position2[0], position2[1], 0.0 );
+        break;
+      case 3:
+        glVertex3f( position1[0], position1[1], position1[2] );
+        glVertex3f( position2[0], position2[1], position2[2] );
+        break;
+      }
 
       ++neighbor;
       }

@@ -66,8 +66,8 @@ int main()
               bio::BilayerOrganism::GetSpeciesName() );
 
 
-  viewer->SetNumberOfIterationsBetweenSaves( 100 );
-  viewer->SetMaximumNumberOfSaves( 10 );
+  viewer->SetNumberOfIterationsBetweenSaves( 5 );
+  viewer->SetMaximumNumberOfSaves( 1000 );
 
 
   viewer->Show();
