@@ -53,6 +53,9 @@ Image2DViewerWindow(int x,int y,int w,int h, const char * label)
   m_Height = 0;
 
   m_SelectionCallBack = 0 ;
+
+  m_InteractionMode = SelectMode;
+
 }
 
 
@@ -486,6 +489,17 @@ Image2DViewerWindow
         {
         p1x = Fl::event_x();
         p1y = Fl::event_y();
+        switch( m_InteractionMode )
+          {
+          case PanningMode:
+            break;
+          case SelectMode:
+            break;
+          case ClickMode:
+            ClickEventHandling( p1x, p1y );
+            break;
+          }
+
         }
       else if( state == FL_BUTTON2 )
         {
@@ -504,8 +518,17 @@ Image2DViewerWindow
       const int state = Fl::event_state();
       if( state == FL_BUTTON1 )
         {
-          //PanningEventHandling( p1x, p1y );
-          SelectEventHandling( p1x, p1y );
+        switch( m_InteractionMode )
+          {
+          case PanningMode:
+            PanningEventHandling( p1x, p1y );
+            break;
+          case SelectMode:
+            SelectEventHandling( p1x, p1y );
+            break;
+          case ClickMode:
+            break;
+          }
         }
       else if (state == FL_BUTTON2 )
         {
@@ -563,6 +586,26 @@ Image2DViewerWindow
 {
   m_SelectionCallBackTargetObject = ptrObject ;
   m_SelectionCallBack = selectionCallBack ;
+}
+
+
+//------------------------------------------
+//
+//    Click Event Handling 
+//
+//------------------------------------------
+void 
+Image2DViewerWindow
+::ClickEventHandling(int & px, int & py)
+{
+  
+  if (m_ClickCallBack != 0)
+    {
+      m_ClickCallBack( px, py ) ;
+    }
+
+  redraw();
+  Fl::check();
 }
 
 //------------------------------------------
@@ -632,6 +675,19 @@ Image2DViewerWindow
   Fl::check();
 }
 
+
+
+//------------------------------------------
+//
+//    Select Interaction Mode
+//
+//------------------------------------------
+void 
+Image2DViewerWindow
+::SetInteractionMode( InteractionModeType mode )
+{
+  m_InteractionMode = mode;
+}
 
 
 } // end namespace fltk

@@ -73,12 +73,27 @@ public:
   void SetParentWindow( Fl_Window * window );
   void PanningEventHandling(int & p1x, int & p1y);
   void SelectEventHandling(int & p1x, int & p1y);
+  void ClickEventHandling(int & p1x, int & p1y);
   void ZoomingEventHandling(int & p1x, int & p1y);
   void SetSelectionBox(SelectionBoxType* box) ;
   void SetSelectionCallBack(void* ptrObject, 
                             void (*selectionCallBack)
                             (void* ptrObject, 
                              SelectionBoxType* box)) ;
+
+  void SetClickCallBack( void (*clickCallBack)( int & px, int & py)) ;
+
+
+  typedef enum { 
+      PanningMode, 
+      ZoomingMode, 
+      SelectMode,
+      ClickMode
+      } 
+      InteractionModeType;
+
+  void SetInteractionMode( InteractionModeType mode );
+
 private:
 
   ColorType          m_Background;
@@ -92,9 +107,12 @@ private:
   Fl_Window       *  m_ParentWindow;
   unsigned int       m_NumberOfBytesPerPixel;
 
+  InteractionModeType m_InteractionMode;
+
   SelectionBoxType m_Box ;
   void* m_SelectionCallBackTargetObject ;
   void (*m_SelectionCallBack)(void* ptrObject, SelectionBoxType* box) ;
+  void (*m_ClickCallBack)( int & px, int & py) ;
 };
 
 
