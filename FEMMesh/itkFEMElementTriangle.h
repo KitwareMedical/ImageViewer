@@ -19,8 +19,6 @@
 #define __itkFEMElementTriangle_h
 
 #include "itkFEMElement.h"
-#include "itkFEMMaterialStandard.h"
-#include "itkMacro.h"
 #include "itkTriangleCell.h"
 
 
@@ -32,9 +30,9 @@ namespace fem {
 
 /**
  * \class FEMElementTriangle
- * \brief Triangular finite element in 2D space.
+ * \brief Triangular finite element.
  *
- * This element is defined by two points and a MaterialStandard object.
+ * This element is defined by three points
  */
 template < typename TFEMMesh >
 class FEMElementTriangle : 
@@ -95,14 +93,6 @@ protected:
 
   /** Default destructor of an element */
   virtual ~FEMElementTriangle() {}
-
-
-public:
-
-  /**
-   * Pointer to geometric and material properties of the element
-   */
-  MaterialStandard::ConstPointer m_Material;
 
 };
 
