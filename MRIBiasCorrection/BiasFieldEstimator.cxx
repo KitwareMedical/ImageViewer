@@ -138,8 +138,7 @@ void printResult(Corrector::Pointer filter, OptionList& options)
     std::cout << " --init-step-size " << filter->GetOptimizerInitialRadius() ;
 
 
-  std::cout << " --dimension " << filter->GetBiasFieldDimension() 
-            << " --coefficient-length " << filter->GetNoOfBiasFieldCoefficients()
+  std::cout << " --coefficient-length " << filter->GetNoOfBiasFieldCoefficients()
             << " --coefficients " ;
 
   Corrector::BiasField::CoefficientVector coefficients = 
