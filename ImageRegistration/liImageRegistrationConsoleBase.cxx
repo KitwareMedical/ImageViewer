@@ -118,6 +118,14 @@ liImageRegistrationConsoleBase
 ::GenerateReference( void )
 {
 
+  ShowStatus("Transforming the orignal image...");
+
+  // Select to Process the whole image 
+  this->m_TargetImage->SetRequestedRegion(
+      this->m_TargetImage->GetBufferedRegion() );
+  
+
+  //  Allocate the reference accordingly
   this->m_ReferenceImage = ReferenceType::New();
 
   this->m_ReferenceImage->SetLargestPossibleRegion(
@@ -129,28 +137,60 @@ liImageRegistrationConsoleBase
   this->m_ReferenceImage->SetRequestedRegion(
       this->m_TargetImage->GetRequestedRegion() );
 
+  this->m_ReferenceImage->Allocate();
 
   this->m_ImageMapper->SetDomain( this->m_TargetImage );
 
+
+  UpdateTransformationParameters();
 
   typedef ReferenceType::IndexType  IndexType;
 
   ReferenceIteratorType it( m_ReferenceImage,
                    m_ReferenceImage->GetRequestedRegion() );
 
+  float percent = 0.0;
+
+  const unsigned long totalPixels =
+        m_ReferenceImage->GetOffsetTable()[ImageDimension];
+
+  const unsigned long hundreth = totalPixels / 100;
+  unsigned long counter = 0;
+
   it.Begin();
 
   while( ! it.IsAtEnd() )
   {
+
+    if( counter > hundreth ) 
+    {
+      counter = 0;
+      percent += 0.01;
+      ShowProgress( percent );
+    }
+    
     IndexType index = it.GetIndex();
     PointType point;
     for(unsigned int i=0; i<ImageDimension; i++)
     {
       point[i] = index[i];
     }
-    it.Set( this->m_ImageMapper->Evaluate( point ) );
+    PixelType value;
+    try 
+    {
+      value = this->m_ImageMapper->Evaluate( point );
+    }
+    catch( itk::MapperException )
+    {      
+      value = 0.0;
+    }
+    it.Set( value );
     ++it;
+    ++counter;
   }
+
+  ShowProgress( 1.0 );
+  ShowStatus("Image Transformation done");
 
 }
 
@@ -193,6 +233,21 @@ liImageRegistrationConsoleBase
 void
 liImageRegistrationConsoleBase 
 ::GenerateMappedReference( void )
+{
+
+}
+
+
+ 
+/************************************
+ *
+ *  Update the parameters of the 
+ *  Transformation
+ *
+ ***********************************/
+void
+liImageRegistrationConsoleBase 
+::UpdateTransformationParameters( void )
 {
 
 }

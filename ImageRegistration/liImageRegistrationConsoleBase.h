@@ -100,6 +100,9 @@ public:
   typedef  TransformationType::PointType          PointType;
 
 
+  typedef  TransformationType::ParametersType      ParametersType;
+
+
 public:
 
   liImageRegistrationConsoleBase();
@@ -110,6 +113,7 @@ public:
   virtual void Execute(void);
   virtual void GenerateReference(void);
   virtual void GenerateMappedReference(void);
+  virtual void UpdateTransformationParameters(void);
 
 protected:
 
