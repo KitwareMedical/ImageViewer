@@ -43,7 +43,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           }
         }
       }
-      Fl_Group Connectors {open
+      Fl_Group Connectors {
         xywh {0 25 755 365}
       } {
         Fl_Box {} {
@@ -81,6 +81,12 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         }
         Fl_Box {} {
           xywh {165 170 55 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {145 180 8 90} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {98 260 55 10} box UP_BOX color 4
         }
       }
       Fl_Group controlsGroup {
@@ -120,9 +126,45 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         }
         Fl_Light_Button mappedReferenceButton {
           label {Mapped Reference}
-          callback {ShowMappedReference();} selected
+          callback {ShowMappedReference();}
           xywh {585 155 105 40} type Normal value 1 selection_color 1 align 148
           class {li::LightButton}
+        }
+        Fl_Group transformParameters {
+          xywh {18 215 100 100} box ENGRAVED_BOX
+        } {
+          Fl_Value_Input xTranslation {
+            label {X : }
+            xywh {56 226 50 25}
+          }
+          Fl_Value_Input yTranslation {
+            label {Y : }
+            xywh {56 251 50 25}
+          }
+          Fl_Value_Input zTranslation {
+            label {Z : }
+            xywh {56 276 50 25}
+          }
+        }
+        Fl_Choice {} {
+          xywh {265 118 165 30}
+        } {
+          menuitem {} {
+            label {Mean Squares}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Normalized Correlation}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label {Pattern Intensity}
+            xywh {20 20 100 20}
+          }
+          menuitem {} {
+            label {Mutual Information}
+            xywh {30 30 100 20}
+          }
         }
       }
       Fl_Slider progressSlider {
@@ -133,16 +175,17 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
       }
     }
     Fl_Window aboutWindow {
-      label {About ...} open
-      xywh {149 482 392 254} box UP_BOX hide
+      label {About ...}
+      xywh {532 534 471 338} box UP_BOX visible
     } {
-      Fl_Button {} {
-        label {../Documents/Art/itkLogo.xpm}
-        xywh {20 50 355 180} box DOWN_BOX color 7
-      }
       Fl_Box {} {
         label {This program uses the INSIGHT Toolkit}
-        xywh {20 15 340 35} labelsize 18
+        xywh {60 7 340 35} labelsize 18
+      }
+      Fl_Button {} {
+        label {../../Documentation/Art/itkLogo.gif}
+        callback {aboutWindow->hide();} selected
+        xywh {10 45 450 275} box DOWN_BOX labeltype image
       }
     }
   }
