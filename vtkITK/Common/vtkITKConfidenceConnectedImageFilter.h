@@ -27,7 +27,8 @@ class VTK_EXPORT vtkITKConfidenceConnectedImageFilter : public vtkITKImageToImag
 
   void SetReplaceValue ( double value )
   {
-    DelegateITKInputMacro ( SetReplaceValue, value );
+    InputImagePixelType d = static_cast<InputImagePixelType> ( value );
+    DelegateITKInputMacro ( SetReplaceValue, d );
   };
 
   void SetMultiplier ( double value )
@@ -66,7 +67,7 @@ private:
   void operator=(const vtkITKConfidenceConnectedImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKConfidenceConnectedImageFilter, "$Revision: 1.2 $");
+vtkCxxRevisionMacro(vtkITKConfidenceConnectedImageFilter, "$Revision: 1.3 $");
 vtkStandardNewMacro(vtkITKConfidenceConnectedImageFilter);
 
 #endif
