@@ -351,8 +351,6 @@ RGBImage2DViewer<ImagePixelType>
   typename OverlayType::PixelType max = MinMaxCalculator->GetMaximum();
   typename OverlayType::PixelType min = MinMaxCalculator->GetMinimum();
 
-  unsigned int i=0;
-
   if(!m_FlipY)
     {
     unsigned char * dest = overlay + totalSize - totalWidth;
@@ -365,10 +363,10 @@ RGBImage2DViewer<ImagePixelType>
           {
             value = (unsigned char) (value - min)/(max-min);
           }
-        *dest++ = m_ColorTable->color(value-1)->GetRed()*255;
-        *dest++ = m_ColorTable->color(value-1)->GetGreen()*255;
-        *dest++ = m_ColorTable->color(value-1)->GetBlue()*255;
-        *dest++ = 255*m_OverlayOpacity;
+        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetRed()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetGreen()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetBlue()*255);
+        *dest++ = static_cast<unsigned char>(255*m_OverlayOpacity);
         ++it;
         }
       it.NextLine();
@@ -387,10 +385,10 @@ RGBImage2DViewer<ImagePixelType>
           {
             value = (unsigned char) (value - min)/(max-min);
           }
-        *dest++ = m_ColorTable->color(value-1)->GetRed()*255;
-        *dest++ = m_ColorTable->color(value-1)->GetGreen()*255;
-        *dest++ = m_ColorTable->color(value-1)->GetBlue()*255;
-        *dest++ = 255*m_OverlayOpacity;
+        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetRed()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetGreen()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetBlue()*255);
+        *dest++ = static_cast<unsigned char>(255*m_OverlayOpacity);
         ++it;
         }
       it.NextLine();
