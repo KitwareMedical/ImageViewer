@@ -27,7 +27,7 @@ ENDIF(BUILD_WATERSHED_SEGMENTATION)
 # ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the Multiresolution Registration example
-# SUBDIRS(MultiResMIRegistration)
+SUBDIRS(MultiResMIRegistration)
 
 # Add an option to build or not build the Gaussian Filter GUI example
 IF(HAS_METAIMAGE)

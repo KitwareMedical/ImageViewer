@@ -18,7 +18,8 @@
 #define __MIRegistrationApp_h
 
 #include "itkImage.h"
-#include "itkMultiResolutionMutualInformationRigidRegistration.h"
+#include "itkArray.h"
+#include "MIMRegistrator.h"
 
 #include <string>
 
@@ -48,15 +49,12 @@ public:
   typedef InputImageType::SizeType SizeType;
 
   /** RegistratorType is the type of the registrator used */
-  typedef itk::MultiResolutionMutualInformationRigidRegistration<
+  typedef itk::MIMRegistrator<
     ImageType, ImageType> RegistratorType;
   typedef RegistratorType::Pointer RegistratorPointer;
 
-  /** InternalRegistratorType is the type of the internal registrator used. */
-  typedef RegistratorType::RegistrationType InternalRegistratorType;
-
   /** ParametersType is the type of the transform parameters. */
-  typedef InternalRegistratorType::ParametersType ParametersType;
+  typedef RegistratorType::ParametersType ParametersType;
 
   /** MaxNumberOfLevels enumeration. */
   enum { MaxNumberOfLevels = 8 };
@@ -143,13 +141,13 @@ private:
    unsigned int         m_NumberOfLevels;
 
    /*** Number of iterations to perform at each level  */
-   unsigned int         m_NumberOfIterations[MaxNumberOfLevels];
+   itk::Array<unsigned int> m_NumberOfIterations;
 
    /*** Learning rate at each level  */
-   double               m_LearningRates[MaxNumberOfLevels];
+   itk::Array<double>       m_LearningRates;
 
    /*** Translation scaling at each level  */
-   double               m_TranslationScales[MaxNumberOfLevels];
+   itk::Array<double>       m_TranslationScales;
 
    /*** Target starting shrink factors  */
    unsigned int         m_TargetShrinkFactors[ImageDimension];

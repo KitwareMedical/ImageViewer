@@ -111,7 +111,7 @@ MIRegistrationApp
 
   try
     {
-    m_Registrator->StartRegistration();
+    m_Registrator->Execute();
     }
   catch(...)
     {
@@ -120,7 +120,7 @@ MIRegistrationApp
     }
 
   // Get the results
-  m_Parameters = m_Registrator->GetInternalRegistrationMethod()->GetParameters();
+  m_Parameters = m_Registrator->GetTransformParameters();
   std::cout << "Final parameters: " << m_Parameters << std::endl;
 
   // Transform the reference
@@ -174,38 +174,20 @@ MIRegistrationApp
 {
 
   // connect the images
-  m_Registrator->SetTarget( m_NormalizedTarget );
-  m_Registrator->SetReference( m_NormalizedReference );
-
-  InternalRegistratorType::Pointer internalRegistrator =
-    m_Registrator->GetInternalRegistrationMethod();
-
-  // set the parzen window width
-  internalRegistrator->GetMetric()->SetTargetStandardDeviation( 0.4 );
-  internalRegistrator->GetMetric()->SetReferenceStandardDeviation( 0.4 );
-
-  // set the spatial samples to be used
-  internalRegistrator->GetMetric()->SetNumberOfSpatialSamples( 50 );
+  m_Registrator->SetFixedImage( m_NormalizedTarget );
+  m_Registrator->SetMovingImage( m_NormalizedReference );
 
   // set multiresolution related parameters
   m_Registrator->SetNumberOfLevels( m_NumberOfLevels );
 
-  m_Registrator->GetTargetPyramid()->
-    SetStartingShrinkFactors( m_TargetShrinkFactors );
-  m_Registrator->GetReferencePyramid()->
-    SetStartingShrinkFactors( m_ReferenceShrinkFactors );
+  m_Registrator->SetFixedImageShrinkFactors( m_TargetShrinkFactors );
+  m_Registrator->SetMovingImageShrinkFactors( m_ReferenceShrinkFactors );
 
   m_Registrator->SetNumberOfIterations( m_NumberOfIterations );
   m_Registrator->SetLearningRates( m_LearningRates );
 
-  // set the translation scale
-  itk::Point<double,7> scales;
-  scales.Fill(1.0);
-  for( int j = 4; j < 7; j++ )
-    {
-    scales[j] = 1.0 / vnl_math_sqr( m_TranslationScales[0] );
-    }
-  internalRegistrator->GetOptimizer()->GetTransform()->SetScale( scales );
+  double scale = 1.0 / vnl_math_sqr( m_TranslationScales[0] );
+  m_Registrator->SetTranslationScale( scale );
   
 }
 
@@ -393,14 +375,14 @@ MIRegistrationApp
 {
 
   // set up the resampler
-  typedef InternalRegistratorType::TransformationType TransformationType;
-  typedef TransformationType::ScalarType CoordRepType;
+  typedef RegistratorType::TransformType TransformType;
+  typedef TransformType::ScalarType CoordRepType;
   typedef itk::LinearInterpolateImageFunction<InputImageType,CoordRepType> 
     InterpolatorType;
   typedef itk::ResampleImageFilter<InputImageType,InputImageType,
-    TransformationType,InterpolatorType> ResamplerType;
+    TransformType,InterpolatorType> ResamplerType;
 
-  TransformationType::Pointer transform = TransformationType::New();
+  TransformType::Pointer transform = TransformType::New();
   transform->SetParameters( m_Parameters );
 
   InterpolatorType::Pointer interpolator = InterpolatorType::New();
@@ -525,6 +507,11 @@ const char * filename )
   std::cout << std::endl;
 
   // get number of iterations
+  {
+  itk::Array<unsigned int> temp( m_NumberOfLevels );
+  temp.Fill( 0 );
+  m_NumberOfIterations = temp;
+  }
   std::cout << "Number of iterations: ";
   for( unsigned int j = 0; j < m_NumberOfLevels; j++ )
     {
@@ -535,6 +522,11 @@ const char * filename )
   std::cout << std::endl;
 
   // get learning rates
+  {
+  itk::Array<double> temp( m_NumberOfLevels );
+  temp.Fill( 0 );
+  m_LearningRates = temp;
+  }
   std::cout << "Learning rates: ";
   for( unsigned int j = 0; j < m_NumberOfLevels; j++ )
     {
@@ -545,6 +537,11 @@ const char * filename )
   std::cout << std::endl;
 
   // get translation scales
+  {
+  itk::Array<double> temp( m_NumberOfLevels );
+  temp.Fill( 0 );
+  m_TranslationScales = temp;
+  }
   std::cout << "Translation scales: ";
   for( unsigned int j = 0; j < m_NumberOfLevels; j++ )
     {
