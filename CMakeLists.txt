@@ -9,8 +9,10 @@ ${CMAKE_BINARY_DIR}/Code/Algorithms
 )
 
 LINK_LIBRARIES (
+VXLNumerics
 ITKCommon
 ITKBasicFilters 
 )
 
 EXECUTABLES(itkPrincipalAxesResampler)
+
