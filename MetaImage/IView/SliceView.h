@@ -137,11 +137,11 @@ public:
   virtual ~SliceView(void);
 
   /*! Specify the 3D image to view in slices - pure virtual function*/
-  virtual void  SetInputImage(const PhysicalImage<imType,3>::Pointer newImData) = 0;
+  virtual void  SetInputImage(PhysicalImage<imType,3> * newImData) = 0;
 
   /*! Return a pointer to the image data */
   
-  const PhysicalImage<imType,3>::Pointer GetInputImage(void) const;
+  const PhysicalImage<imType,3>::ConstPointer & GetInputImage(void) const;
   
   /*! Dammit, give me a pointer to the image that's not const! */
   PhysicalImage<imType,3>::Pointer GetInputImage(void);
@@ -376,7 +376,9 @@ SliceView<imType>::~SliceView()
 //
 //
 template <class imType>
-const PhysicalImage<imType,3>::Pointer SliceView<imType>::GetInputImage(void) const
+const PhysicalImage<imType,3>::Pointer & 
+SliceView<imType>
+::GetInputImage(void) const
 {
     return cImData;
 }

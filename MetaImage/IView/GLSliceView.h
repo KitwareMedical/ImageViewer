@@ -42,14 +42,14 @@ public:
   GLSliceView(int x, int y, int w, int h, const char *l);
 
   /*! Specify the 3D image to view slice by slice */
-  void SetInputImage(const ImageType::Pointer newImData);
-  const ImageType::Pointer GetInputImage(void) const;
+  void SetInputImage(ImageType * newImData);
+  const ImageType::Pointer & GetInputImage(void) const;
 
   /*! Specify the 3D image to view as an overlay */
-  void SetInputOverlay(OverlayType::Pointer newOverlayData);
+  void SetInputOverlay(OverlayType * newOverlayData);
 
   /*! Return a pointer to the overlay data */
-  const OverlayType::Pointer GetInputOverlay(void) const;
+  const OverlayType::Pointer & GetInputOverlay(void) const;
 
   /*! Turn on/off the viewing of the overlay */
   void	ViewOverlayData(bool newViewOverlayData);
@@ -104,7 +104,7 @@ SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::
-SetInputImage(ImageType::Pointer newImData)
+SetInputImage(ImageType * newImData)
 {
  
   if( cValidOverlayData )
@@ -246,8 +246,9 @@ SetInputImage(ImageType::Pointer newImData)
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-const PhysicalImage<ImagePixelType,3>::Pointer 
-GLSliceView<ImagePixelType, OverlayPixelType>::GetInputImage(void) const
+const PhysicalImage<ImagePixelType,3>::Pointer &
+GLSliceView<ImagePixelType, OverlayPixelType>
+::GetInputImage(void) const
 {
     return cImData;
 }
@@ -259,7 +260,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::GetInputImage(void) const
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay( 
-                              OverlayType::Pointer newOverlayData)
+                              OverlayType * newOverlayData)
 {ImageType::RegionType newoverlay_region = newOverlayData->GetLargestPossibleRegion();
  ImageType::SizeType   newoverlay_size   = newoverlay_region.GetSize();
  ImageType::RegionType cImData_region = cImData->GetLargestPossibleRegion();
@@ -290,7 +291,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay(
 
 
 template <class ImagePixelType, class OverlayPixelType>
-const Image<OverlayPixelType,3>::Pointer 
+const Image<OverlayPixelType,3>::Pointer &
 GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) const
 {
   return cOverlayData;
