@@ -46,8 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define liFILTERCONSOLEBASE
 
 #include <itkImage.h>
-#include <itkFileIOToImageFilter.h>
-#include <itkWriteMetaImage.h>
+#include <itkImageFileReader.h>
 #include <itkRecursiveGaussianImageFilter.h>
 #include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
 #include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
@@ -67,11 +66,11 @@ public:
   typedef   itk::Image< InputPixelType, 3 >   InputImageType;
   typedef   itk::Image< PixelType, 3 >        ImageType;
 
-  typedef   itk::FileIOToImageFilter< 
+  typedef   itk::ImageFileReader< 
                             InputImageType >       VolumeReaderType;
 
-  typedef   itk::WriteMetaImage< 
-                            ImageType >            VolumeWriterType;
+//  typedef   itk::WriteMetaImage< 
+//                            ImageType >            VolumeWriterType;
 
   typedef   itk::RecursiveGaussianImageFilter<
                             InputImageType,
@@ -145,11 +144,13 @@ protected:
 
   bool                                   m_ImageLoaded;
 
+  /*
   VolumeWriterType::Pointer         m_Writer_Laplacian;
   VolumeWriterType::Pointer        m_Writer_Gradient_X;
   VolumeWriterType::Pointer        m_Writer_Gradient_Y;
   VolumeWriterType::Pointer        m_Writer_Gradient_Z;
   VolumeWriterType::Pointer   m_Writer_Gradient_Modulus;
+  */
 
 };
 

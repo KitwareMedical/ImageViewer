@@ -43,7 +43,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <liFilterConsole.h>
 #include <FL/fl_file_chooser.H>
 #include <fltkLightButtonRedrawCommand.h>
-#include <itkFileIOMetaImage.h>
  
 
 
@@ -56,9 +55,6 @@ liFilterConsole
 ::liFilterConsole()
 {
  
-  FileIOMetaImageFactory * factory = new FileIOMetaImageFactory;
-  ObjectFactoryBase * factoryBase = static_cast<ObjectFactoryBase *>( factory );
-  ObjectFactoryBase::RegisterFactory( factoryBase );
   
   typedef fltk::LightButtonRedrawCommand  CommandButton;
 
