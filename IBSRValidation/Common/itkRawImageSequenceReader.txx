@@ -85,7 +85,7 @@ void RawImageSequenceReader<TOutputImage, ConvertPixelTraits>::GenerateData()
     throw RawImageSequenceReaderException(__FILE__, __LINE__, "FilePrefix must be non-empty");
     }
   
-  if ( m_ImageIO == 0 )
+  if ( m_ImageIO.IsNull() )
     {
     RawImageSequenceReaderException e(__FILE__, __LINE__);
     e.SetDescription("ImageIO must be specified");
