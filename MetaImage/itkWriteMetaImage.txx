@@ -71,11 +71,13 @@ WriteMetaImage<TInputImage>
   const typename TInputImage::SizeType & size = 
         m_InputImage->GetBufferedRegion().GetSize();
         
-  const float         *spacing = m_InputImage->GetSpacing();                
+  const double         *spacing = m_InputImage->GetSpacing();                
+  float fspacing[dimension];
 
   for(unsigned int i=0; i<dimension; i++) 
   {
-    dimSize[i] = size[i];
+    dimSize[i]  = size[i];
+    fspacing[i] = spacing[i];
   }
 
   typedef typename TInputImage::PixelType PixelType;
@@ -100,7 +102,7 @@ WriteMetaImage<TInputImage>
   MetaImage saver(  dimension,
                     dimSize,
                     GetTypeCode(),
-                    spacing,
+                    fspacing,
                     BitsPerPixel,
                     MET_SYSTEM_BYTE_ORDER_MSB,
                     yetAnotherBuffer  );
