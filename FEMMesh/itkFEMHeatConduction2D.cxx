@@ -77,7 +77,7 @@ FEMHeatConduction2D
   // the mesh is composed of different elements types
   // e.g. triangles and quads.
 
-  ElementsContainer::Pointer   elements = m_Mesh->GetElements();
+  ElementsContainer::Pointer   elements = m_Mesh->GetElementsContainer();
   if( !elements ) 
     {
     itkGenericExceptionMacro(<<"The Mesh is empty of Elements");
