@@ -5,6 +5,7 @@
 #     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
 #     PURPOSE.  See the above copyright notices for more information.
 
+package require vtk
 package require vtkinteraction
 
 set X 63
@@ -39,6 +40,9 @@ vtkRenderWindow renWin1
   renWin1 AddRenderer ren1
   renWin1 SetSize 256 256
 
+vtkRenderWindowInteractor iren1
+    iren1 SetRenderWindow renWin1
+
 vtkActor blob1
  blob1 SetMapper map1
  eval [blob1 GetProperty] SetColor 1.0 0.8 0.5
@@ -71,6 +75,9 @@ vtkRenderWindow renWin2
   renWin2 AddRenderer ren2
   renWin2 SetSize 256 256
 
+vtkRenderWindowInteractor iren2
+    iren2 SetRenderWindow renWin2
+
 vtkActor blob2
  blob2 SetMapper map2
  eval [blob2 GetProperty] SetColor 1.0 0.8 0.5
@@ -89,6 +96,6 @@ pack .windows.r1 .windows.r2 -side left -expand true -fill both
 
 pack .windows -expand true -fill both
 
-::vtk::bind_tk_imageviewer_widget .windows.r1
-::vtk::bind_tk_imageviewer_widget .windows.r2
+#::vtk::bind_tk_imageviewer_widget .windows.r1
+#::vtk::bind_tk_imageviewer_widget .windows.r2
 
