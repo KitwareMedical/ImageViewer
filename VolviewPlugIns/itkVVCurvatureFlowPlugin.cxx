@@ -244,13 +244,13 @@ static int UpdateGUI(void *inf)
   info->GUIItems[0].GUIType = VV_GUI_SCALE;
   info->GUIItems[0].Default = "5";
   info->GUIItems[0].Help = "Number of times that the diffusion approximation will be computed. The more iterations, the stronger the smoothing";
-  info->GUIItems[0].Hints = "1 40 1";
+  info->GUIItems[0].Hints = "1 100 1";
 
   info->GUIItems[1].Label = "Time Step";
   info->GUIItems[1].GUIType = VV_GUI_SCALE;
   info->GUIItems[1].Default = "0.125";
   info->GUIItems[1].Help = "Discretization of time for approximating the diffusion process.";
-  info->GUIItems[1].Hints = "0.01 1.0 0.01";
+  info->GUIItems[1].Hints = "0.01 1.0 0.005";
 
   info->RequiredZOverlap = 0;
   
