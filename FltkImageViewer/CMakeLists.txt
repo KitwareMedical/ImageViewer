@@ -49,15 +49,15 @@ IF(HAS_FLTK)
      )
 
   ADD_LIBRARY(
-     FltkImageViewer ${FltkImageViewer_SRCS}
+     ITKFltkImageViewer ${FltkImageViewer_SRCS}
      )
 
-  TARGET_LINK_LIBRARIES(FltkImageViewer ${FLTK_LIBRARIES} ${GLU_LIBRARY})
+  TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${GLU_LIBRARY})
 
 #
 # Take the list of GUI files, generate .cxx and .h from 
 # them and add them to the build process of the target
 #
-  FLTK_WRAP_UI(FltkImageViewer ${FltkImageViewer_GUI_SRCS} )
+  FLTK_WRAP_UI(ITKFltkImageViewer ${FltkImageViewer_GUI_SRCS} )
 
 ENDIF(HAS_FLTK)
