@@ -275,8 +275,10 @@ InputImageType * imgPtr
     }
 
   // read the file
+  // NOTE: VC++ requires below that buffer be cast to (char *) rather
+  // than the more sensible (unsigned char *).
   InputPixelType * buffer = imgPtr->GetBufferPointer();
-  imgStream.read( (unsigned char *) buffer,
+  imgStream.read( (char *) buffer,
                   numPixels * sizeof(InputPixelType) );
 
   // clost the file
