@@ -75,9 +75,9 @@ SUBDIRS(FuzzyConnectedness)
 SUBDIRS(ShapeDetection)
 
 # The MRI Registration example needs VTK
-IF (HAS_VTK)
-  SUBDIRS(MRIRegistration)
-ENDIF (HAS_VTK)
+#IF (HAS_VTK)
+#  SUBDIRS(MRIRegistration)
+#ENDIF (HAS_VTK)
 
 # Add an option to build or not build the TripleTKImageDisplay example.
 # It needs VTK.
