@@ -96,7 +96,7 @@ public:
   typedef TMovingImage MovingImageType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TFixedImage::ImageDimension };
+  itkStaticConstMacro (ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Transform Type. */
   typedef QuaternionRigidTransform< double >       TransformType;
@@ -140,10 +140,10 @@ public:
   typedef Array<unsigned int> UnsignedIntArray;
 
   /** ShrinkFactorsArray type. */
-  typedef FixedArray<unsigned int,ImageDimension> ShrinkFactorsArray;
+  typedef FixedArray<unsigned int,itkGetStaticConstMacro(ImageDimension)> ShrinkFactorsArray;
 
   /** Affine transform type. */
-  typedef AffineTransform<double,ImageDimension>   AffineTransformType;
+  typedef AffineTransform<double,itkGetStaticConstMacro(ImageDimension)>   AffineTransformType;
   typedef typename AffineTransformType::Pointer AffineTransformPointer;
 
   /** Set the fixed image. */

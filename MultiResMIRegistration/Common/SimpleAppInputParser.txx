@@ -19,6 +19,7 @@
 
 #include "SimpleAppInputParser.h"
 #include "RawVolumeReader.h"
+#include <stdio.h>
 
 namespace itk
 {
@@ -107,7 +108,7 @@ SimpleAppInputParser<TImage>
   std::cout << "Image Size: " << fixedImageSize << std::endl;
 
   // get fixed image spacing
-  FixedArray<double,ImageDimension> fixedImageSpacing;
+  SpacingType fixedImageSpacing;
   for( int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%f", &fNumber ) != 1 ) 
@@ -153,7 +154,7 @@ SimpleAppInputParser<TImage>
   std::cout << "Image Size: " << movingImageSize << std::endl;
 
   // get moving image spacing
-  FixedArray<double,ImageDimension> movingImageSpacing;
+  SpacingType movingImageSpacing;
   for( int j = 0; j < ImageDimension; j++ )
     {
     if( fscanf( paramFile, "%f", &fNumber ) != 1 ) 

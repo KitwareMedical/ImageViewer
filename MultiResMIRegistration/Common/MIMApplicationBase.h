@@ -55,7 +55,7 @@ public:
   /** Input image type. */
   typedef TInputImage InputImageType;
   typedef typename InputImageType::PixelType InputPixelType;
-  enum { ImageDimension = TInputImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TInputImage::ImageDimension );
 
   /** Internal image type. */
   typedef TImage ImageType;

@@ -71,10 +71,13 @@ public:
   typedef TImage ImageType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
  
   /** ShrinkFactors type. */
-  typedef FixedArray<unsigned int, ImageDimension> ShrinkFactorsType;
+  typedef FixedArray<unsigned int, itkGetStaticConstMacro(ImageDimension)> ShrinkFactorsType;
+
+  /** Spacing type. */
+  typedef FixedArray<double, itkGetStaticConstMacro(ImageDimension)> SpacingType;
 
   /** IterationArray type. */
   typedef Array<unsigned int> IterationsArrayType;
@@ -83,10 +86,10 @@ public:
   typedef Array<double> RatesArrayType;
 
   /** PermuteOrder type. */
-  typedef FixedArray<unsigned int, ImageDimension> PermuteOrderType;
+  typedef FixedArray<unsigned int, itkGetStaticConstMacro(ImageDimension)> PermuteOrderType;
 
   /** FlipAxes type. */
-  typedef FixedArray<bool, ImageDimension> FlipAxesType;
+  typedef FixedArray<bool, itkGetStaticConstMacro(ImageDimension)> FlipAxesType;
 
   /** Set input parameter file name. */
   itkSetStringMacro( ParameterFileName );
