@@ -169,6 +169,34 @@ FluoroscopyUnitView
 
 
 
+//--------------------------------------------
+//
+//    Get the projection matrix
+//
+//--------------------------------------------
+const GLfloat *
+FluoroscopyUnitView
+::GetProjectionMatrix( void ) const
+{
+  return m_ProjectionMatrix;
+}
+
+
+
+//--------------------------------------------
+//
+//    Get the model matrix
+//
+//--------------------------------------------
+const GLfloat *
+FluoroscopyUnitView
+::GetModelMatrix( void ) const
+{
+  return m_ModelMatrix;
+}
+
+
+
 
 
 //--------------------------------------------
@@ -384,6 +412,8 @@ void FluoroscopyUnitView::draw(void)
              m_DetectorVerticalDirection[1],
              m_DetectorVerticalDirection[2]  );
 
+  glGetFloatv( GL_PROJECTION_MATRIX, m_ProjectionMatrix );
+
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
 
@@ -404,6 +434,7 @@ void FluoroscopyUnitView::draw(void)
   glEnable( GL_LIGHT0 );
   glEnable( GL_LIGHTING );
 
+  glGetFloatv( GL_MODELVIEW_MATRIX, m_ModelMatrix );
 
   m_Notifier->InvokeEvent( GLDrawEvent  );
 

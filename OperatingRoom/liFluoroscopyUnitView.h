@@ -129,6 +129,17 @@ public:
    */
   itk::LightObject::Pointer  GetNotifier(void);
 
+
+  /**
+   *  Get the Projection Matrix
+   */
+  const GLfloat * GetProjectionMatrix(void) const;
+  
+  /**
+   *  Get the Model Matrix
+   */
+  const GLfloat * GetModelMatrix(void) const;
+ 
 private:
   /**
    *  Position of the source of X-rays.
@@ -184,6 +195,14 @@ private:
   unsigned char * m_ImageBackground;
   int             m_ImageBackgroundWidth;
   int             m_ImageBackgroundHeight;
+
+  /**
+   *  Matrices for projection and rigid 3D transform
+   *
+   */
+  GLfloat         m_ProjectionMatrix[16];
+  GLfloat         m_ModelMatrix[16];
+  
 
 };
 
