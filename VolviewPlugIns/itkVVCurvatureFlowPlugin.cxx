@@ -103,6 +103,9 @@ void VV_PLUGIN_EXPORT vvCurvatureFlowInit(vtkVVPluginInfo *info)
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
   
+  // Number of bytes required in intermediate memory per voxel
+  info->PerVoxelMemoryRequired = 8; // actually depends on the input pixel size
+  
   /* setup the GUI components */
   info->NumberOfGUIItems = 2;
   info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));

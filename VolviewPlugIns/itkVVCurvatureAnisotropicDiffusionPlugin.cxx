@@ -110,6 +110,8 @@ void VV_PLUGIN_EXPORT vvCurvatureAnisotropicDiffusionInit(vtkVVPluginInfo *info)
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
+  // Number of bytes required in intermediate memory per voxel
+  info->PerVoxelMemoryRequired = 8;
   
   /* setup the GUI components */
   info->NumberOfGUIItems = 3;

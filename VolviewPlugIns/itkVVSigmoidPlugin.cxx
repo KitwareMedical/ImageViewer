@@ -68,7 +68,7 @@ static int UpdateGUI(void *inf)
   info->GUIItems[0].GUIType = VV_GUI_SCALE;
   info->GUIItems[0].Default = "5";
   info->GUIItems[0].Help = "Factor that defines the width of the Sigmoid in the range scale. Setting a small alpha results in a step transion on the Sigmoid function. A large alpha value produces a very smooth and low slanted Sigmoid.";
-  info->GUIItems[0].Hints = "-10 10 0.1";
+  info->GUIItems[0].Hints = "-100 100 0.1";
 
   info->GUIItems[1].Label = "Beta";
   info->GUIItems[1].GUIType = VV_GUI_SCALE;
@@ -117,6 +117,9 @@ void VV_PLUGIN_EXPORT vvSigmoidInit(vtkVVPluginInfo *info)
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 1;
   info->RequiredZOverlap = 0;
+
+  // Number of bytes required in intermediate memory per voxel
+  info->PerVoxelMemoryRequired = 1; // actually depends on the input pixel size
   
   /* setup the GUI components */
   info->NumberOfGUIItems = 4;
