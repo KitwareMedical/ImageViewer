@@ -1,2 +1,2 @@
-SUBDIRS = \
-MetaImage
+SUBDIRS(MetaImage)
+

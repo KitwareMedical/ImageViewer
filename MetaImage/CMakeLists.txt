@@ -1,8 +1,9 @@
-LIBRARY = MetaImageIO
+LIBRARY(MetaImageIO)
 
-SOURCE_FILES = \
-MetaFileLib \
-MetaImageLib \
-itkWriteMetaImage \
+SOURCE_FILES(
+MetaFileLib 
+MetaImageLib
+itkWriteMetaImage 
 MetaUtils
+)
 
