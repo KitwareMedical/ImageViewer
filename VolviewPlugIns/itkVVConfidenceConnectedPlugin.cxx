@@ -1,6 +1,6 @@
 /* perform segmentation using the confidence connected image filter */
 
-#include "itkVVFilterModuleWithCasting.h"
+#include "itkVVFilterModule.h"
 
 #include "itkConfidenceConnectedImageFilter.h"
 
@@ -11,24 +11,18 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 
   const unsigned int Dimension = 3;
 
-  typedef   unsigned short      InternalPixelType;
-  typedef   itk::Image< InternalPixelType,Dimension > InternalImageType; 
-
-  typedef   itk::ConfidenceConnectedImageFilter< 
-                                InternalImageType,  
-                                InternalImageType >   FilterType;
- 
-  typedef  InternalImageType::IndexType   IndexType;
-
-  IndexType seed;
-
   try 
   {
   switch( info->InputVolumeScalarType )
     {
     case VTK_UNSIGNED_CHAR:
       {
-      FilterModuleWithCasting< unsigned char, FilterType > module;
+      typedef  unsigned char                        PixelType;
+      typedef  itk::Image< PixelType, Dimension >   ImageType; 
+      typedef  ImageType::IndexType                 IndexType;
+      typedef  itk::ConfidenceConnectedImageFilter< ImageType,  ImageType >   FilterType;
+      IndexType seed;
+      FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
@@ -47,7 +41,12 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       }
     case VTK_UNSIGNED_SHORT:
       {
-      FilterModuleWithCasting< unsigned short, FilterType > module;
+      typedef  unsigned short                       PixelType;
+      typedef  itk::Image< PixelType, Dimension >   ImageType; 
+      typedef  ImageType::IndexType                 IndexType;
+      typedef  itk::ConfidenceConnectedImageFilter< ImageType,  ImageType >   FilterType;
+      IndexType seed;
+      FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
@@ -150,6 +149,9 @@ void VV_PLUGIN_EXPORT vvConfidenceConnectedInit(vtkVVPluginInfo *info)
   info->SupportsInPlaceProcessing = 0;
   info->SupportsProcessingPieces = 0;
   info->RequiredZOverlap = 0;
+
+  // Number of bytes required in intermediate memory per voxel
+  info->PerVoxelMemoryRequired = 1; 
   
   /* setup the GUI components */
   info->NumberOfGUIItems = 7;
