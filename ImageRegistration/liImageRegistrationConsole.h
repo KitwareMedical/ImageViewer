@@ -30,10 +30,10 @@ public:
   typedef unsigned char  OverlayPixelType;
   
   typedef fltk::ImageViewer< PixelType,
-                       OverlayPixelType > ImageViewerType;
+                             OverlayPixelType > ImageViewerType;
 
-  typedef fltk::ImageViewer< PixelType,     
-                       OverlayPixelType > TargetImageViewerType;
+  typedef fltk::ImageViewer< InputPixelType,     
+                             OverlayPixelType > InputImageViewerType;
 
 public:
   liImageRegistrationConsole();
@@ -52,7 +52,7 @@ public:
 
 private:
 
-  ImageViewerType           * m_TargetViewer;
+  InputImageViewerType      * m_InputViewer;
   ImageViewerType           * m_ReferenceViewer;
   ImageViewerType           * m_MappedReferenceViewer;
 

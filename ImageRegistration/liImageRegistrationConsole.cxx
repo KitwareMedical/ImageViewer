@@ -38,11 +38,11 @@ liImageRegistrationConsole
   
   typedef li::CommandUpdateLightButton  CommandButton;
 
-  this->m_TargetViewer          = new TargetImageViewerType;
+  this->m_InputViewer           = new InputImageViewerType;
   this->m_ReferenceViewer       = new ImageViewerType;
   this->m_MappedReferenceViewer = new ImageViewerType;
 
-  this->m_TargetViewer->SetLabel( "Target Image" );
+  this->m_InputViewer->SetLabel( "Target Image" );
   this->m_ReferenceViewer->SetLabel( "Reference Image" );
   this->m_MappedReferenceViewer->SetLabel( "Mapped Reference Image" );
 
@@ -73,10 +73,10 @@ liImageRegistrationConsole
 ::~liImageRegistrationConsole()
 {
 
-  if( this->m_TargetViewer ) 
+  if( this->m_InputViewer ) 
   {
-    delete this->m_TargetViewer;
-    this->m_TargetViewer = 0;
+    delete this->m_InputViewer;
+    this->m_InputViewer = 0;
   }
 
   if( this->m_ReferenceViewer ) 
@@ -161,7 +161,7 @@ liImageRegistrationConsole
 {
 
   consoleWindow->hide();
-  this->m_TargetViewer->Hide();
+  this->m_InputViewer->Hide();
   this->m_ReferenceViewer->Hide();
   this->m_MappedReferenceViewer->Hide();
   aboutWindow->hide();
@@ -240,8 +240,8 @@ liImageRegistrationConsole
     return;
   }
 
-  this->m_TargetViewer->SetImage( this->m_Reader->GetOutput().GetPointer() );  
-  this->m_TargetViewer->Show();
+  this->m_InputViewer->SetImage( this->m_Reader->GetOutput() );  
+  this->m_InputViewer->Show();
 
 }
 
