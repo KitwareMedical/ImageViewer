@@ -31,7 +31,7 @@ vtkImaging
 vtkIO
 vtkFiltering
 vtkCommon
-FltkImageViewer
+ITKFltkImageViewer
 vtkFltk
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
