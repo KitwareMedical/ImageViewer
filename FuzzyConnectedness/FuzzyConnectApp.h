@@ -47,7 +47,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  * \class FuzzyConnectApp
- * \brief A mutual information registration command line based application
+ * \brief A simple fuzzy connectedness based object delineation command 
+ *        line application
  *
  **/
 class FuzzyConnectApp
