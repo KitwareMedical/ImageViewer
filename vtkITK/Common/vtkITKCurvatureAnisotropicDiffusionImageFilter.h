@@ -35,9 +35,9 @@ class VTK_EXPORT vtkITKCurvatureAnisotropicDiffusionImageFilter : public vtkITKI
     DelegateITKOutputMacro(GetConductanceParameter) ;
   };
 
-  unsigned int GetIterations ()
+  unsigned int GetNumberOfIterations ()
   {
-    DelegateITKOutputMacro(GetIterations) ;
+    DelegateITKOutputMacro(GetNumberOfIterations) ;
   };
 
   void SetNumberOfIterations( unsigned int value )
@@ -69,7 +69,7 @@ private:
   void operator=(const vtkITKCurvatureAnisotropicDiffusionImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKCurvatureAnisotropicDiffusionImageFilter, "$Revision: 1.2 $");
+vtkCxxRevisionMacro(vtkITKCurvatureAnisotropicDiffusionImageFilter, "$Revision: 1.3 $");
 vtkStandardNewMacro(vtkITKCurvatureAnisotropicDiffusionImageFilter);
 
 #endif
