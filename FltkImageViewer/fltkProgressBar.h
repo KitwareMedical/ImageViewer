@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "itkCommand.h"
 #include "fltkCommandEvents.h"
-#include <Fl/Fl_Slider.h>
+#include <FL/Fl_Slider.H>
 
 
 namespace fltk {
