@@ -15,7 +15,7 @@
 
 =========================================================================*/
 #include "itkImageRegionIterator.h"
-#include "itkLevelSet2DFunction.h"
+#include "itkLevelSetFunction.h"
 #include "itkRawImageIO.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
@@ -77,7 +77,7 @@ void evaluate_function(itk::Image<float, 2> *im,
 
 namespace itk {
 
-class MorphFunction : public LevelSet2DFunction< Image<float, 2> >
+class MorphFunction : public LevelSetFunction< Image<float, 2> >
 {
 public:
   void SetDistanceTransform (Image<float, 2> *d)
@@ -85,7 +85,7 @@ public:
   
   typedef MorphFunction Self;
 
-  typedef LevelSet2DFunction< Image<float, 2> > Superclass;
+  typedef LevelSetFunction< Image<float, 2> > Superclass;
   typedef Superclass::RadiusType RadiusType;
   
    /** 
@@ -97,7 +97,7 @@ public:
   /**
    * Run-time type information (and related methods)
    */
-  itkTypeMacro( MorphFunction, LevelSet2DFunction );
+  itkTypeMacro( MorphFunction, LevelSetFunction );
   
   /**
    * Method for creation through the object factory.
