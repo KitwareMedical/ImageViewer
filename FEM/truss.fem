@@ -25,21 +25,21 @@
 	E  : 30000	% Young modulus
 	A  : 0.02	% Crossection area
 	I  : 0.004	% Moment of inertia
-	ni : 0	% Poisson's ratio
+	nu : 0	% Poisson's ratio
 	END:	% End of material definition
 <MaterialStandard>
 	1	% Global object number
 	E  : 200000	% Young modulus
 	A  : 0.001	% Crossection area
 	I  : 0	% Moment of inertia
-	ni : 0	% Poisson's ratio
+	nu : 0	% Poisson's ratio
 	END:	% End of material definition
 <MaterialStandard>
 	2	% Global object number
 	E  : 200000	% Young modulus
 	A  : 0.003	% Crossection area
 	I  : 0	% Moment of inertia
-	ni : 0	% Poisson's ratio
+	nu : 0	% Poisson's ratio
 	END:	% End of material definition
 
 <END>	% End of materials
