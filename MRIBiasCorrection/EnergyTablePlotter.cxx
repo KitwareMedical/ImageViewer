@@ -67,8 +67,8 @@ int main(int argc, char* argv[])
 
   itk::Array <double> classMeans ;
   itk::Array<double> classSigmas ;
-  bool useLog ;
-  int interval ;
+  bool useLog = true;
+  int interval = 10;
   try
     {
       options.GetMultiDoubleOption("class-mean", &classMeans, true) ;

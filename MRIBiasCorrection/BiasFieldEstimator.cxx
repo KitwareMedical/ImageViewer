@@ -148,15 +148,15 @@ int main(int argc, char* argv[])
 
   std::string inputFileName ;
   std::string inputMaskFileName = "" ;
-  bool useLog ;
-  int degree ;
+  bool useLog = true;
+  int degree = 3;
   itk::Array<double> coefficientVector ;
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
-  int maximumIteration ; 
-  double initialRadius ;
-  double grow ;
-  double shrink ;
+  int maximumIteration = 20;
+  double initialRadius = 1.02;
+  double grow  = 1.05;
+  double shrink = pow(grow, -0.25);
 
   try
     {
