@@ -30,21 +30,6 @@ SUBDIRS(SimpleLevelSetsExample)
 # Build the FloodFilledSpatialFunctionExample
 SUBDIRS(FloodFilledSpatialFunction)
 
-# Test the condition to build or not build the Image Registration example
-IF(HAS_METAIMAGE)
- IF(HAS_FLTKIMAGEVIEWER)
-   SUBDIRS(ImageRegistration)
- ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
-
-# Test the condition to build or not build the Image Registration example
-IF(HAS_METAIMAGE)
- IF(HAS_FLTKIMAGEVIEWER)
-   SUBDIRS(ImageRegistration2D)
- ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
-
-
 # Build the Multiresolution Registration example
 SUBDIRS(MultiResMIRegistration)
 
@@ -57,43 +42,26 @@ SUBDIRS(IBSRValidation)
 # Build the RawImageReadWrite example
 SUBDIRS(RawImageReadWrite)
 
-
-# Build the RawImageReaderViewer example
-IF(HAS_FLTKIMAGEVIEWER)
-  SUBDIRS(RawImageReaderViewer)
-ENDIF(HAS_FLTKIMAGEVIEWER)
-
-# Test the conditions for building the Gaussian Filter GUI example
+# Examples requiring MetaImages and Fltk GUI 
 IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(GaussianFilter)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
+  IF(HAS_FLTK)
+    IF(HAS_FLTKIMAGEVIEWER)
+      SUBDIRS(DistanceMapFilter)
+      SUBDIRS(GaussianFilter)
+      SUBDIRS(GradientRecursiveGaussianFilter)
+      SUBDIRS(Curves2DExtractor)
+      SUBDIRS(Morphogenesis)
+      SUBDIRS(MutualInformationEuler2DRegistration)
+      SUBDIRS(ImageRegistration)
+      SUBDIRS(ImageRegistration2D)
+      SUBDIRS(RawImageReaderViewer)
+#     SUBDIRS(OperatingRoom)
+      SUBDIRS(TripleTKImageDisplay)
+      SUBDIRS(SurfaceGenerator)
+    ENDIF(HAS_FLTKIMAGEVIEWER)
+  ENDIF(HAS_VTK)
 ENDIF(HAS_METAIMAGE)
 
-# Test the conditions for building the Extractor of 2D curves
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-#    SUBDIRS(Curves2DExtractor)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
-
-
-# Add an option to build or not build the Image Guided Intervention example
-# IF(HAS_METAIMAGE)
-#  IF(HAS_FLTKIMAGEVIEWER)
-#    SUBDIRS(OperatingRoom)
-#  ENDIF(HAS_FLTKIMAGEVIEWER)
-# ENDIF(HAS_METAIMAGE)
-
-# Add an option to build or not build the PrincipalAxes example
-SUBDIRS(PrincipalAxes)
-
-# Test the conditions for building the Morphogenesis example
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(Morphogenesis)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
 
 # Test the conditions for building the MRIBiasCorrection example
 IF(HAS_METAIMAGE)
@@ -117,14 +85,6 @@ IF (HAS_VTK)
   SUBDIRS(MRIRegistration)
 ENDIF (HAS_VTK)
 
-# Add an option to build or not build the TripleTKImageDisplay example.
-# It needs VTK.
-IF(HAS_METAIMAGE)
-  IF(HAS_VTK)
-    SUBDIRS(TripleTKImageDisplay)
-  ENDIF(HAS_VTK)
-ENDIF(HAS_METAIMAGE)
-
 # Add an option to build or not build the
 # GaussianMinimumErrorClassifier example
 IF(HAS_METAIMAGE)
@@ -137,36 +97,6 @@ SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 # Add an option to build or not build the SymmetricEllipsoidInteriorExteriorSpatialFunction example
 SUBDIRS(SymmetricEllipsoidInteriorExteriorSpatialFunction)
 
-
-# Add an option to build or not build the SurfaceGenerator example
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(SurfaceGenerator)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
-
-# Add an option to build or not build the Gradient Gaussian Filter example
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(GradientRecursiveGaussianFilter)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
-
-
-# Add an option to build or not build the Distance Map Filter example
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(DistanceMapFilter)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
-
-# Test the condition to build or not build the 
-# mutual informantion + Euler 2D transform image registration example
-IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(MutualInformationEuler2DRegistration)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the FEM - Mesh example
 OPTION(BUILD_FEM_MESH_EXAMPLE "Build the FEM-Mesh example" OFF)
@@ -186,11 +116,11 @@ MARK_AS_ADVANCED( BUILD_FEM_MESH_EXAMPLE )
 
 # Test the conditions for building the ThinPlateSplines example
 IF(HAS_VTK)
-  IF(HAS_FLTKIMAGEVIEWER)
+  IF(HAS_FLTK)
     IF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
       SUBDIRS(ThinPlateSplines)
     ENDIF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
+  ENDIF(HAS_FLTK)
 ENDIF(HAS_VTK)
 
 IF(HAS_VTK)
