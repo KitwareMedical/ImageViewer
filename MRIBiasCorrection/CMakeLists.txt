@@ -11,30 +11,22 @@ ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
 
 SOURCE_FILES(ImageCorrector_SRCS
 OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/itkMultivariateLegendrePolynomial
 ImageCorrector
 )
  
 
 SOURCE_FILES(BiasImageGenerator_SRCS
 OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/itkMultivariateLegendrePolynomial
 BiasImageGenerator
 )
  
 SOURCE_FILES(BiasFieldEstimator_SRCS
 OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/itkCacheableScalarFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkCompositeValleyFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkMultivariateLegendrePolynomial
 BiasFieldEstimator
 )
 
 SOURCE_FILES(InterSliceIntensityCorrector_SRCS
 OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/itkCacheableScalarFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkCompositeValleyFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkMultivariateLegendrePolynomial
 InterSliceIntensityCorrector
 )
 
@@ -50,22 +42,18 @@ SlabIdentifier
 
 SOURCE_FILES(EnergyTablePlotter_SRCS
 OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/itkCacheableScalarFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkCompositeValleyFunction
 EnergyTablePlotter
 )
 
 
 SOURCE_FILES(BiasCorrector_SRCS
 OptionList
-${ITK_SOURCE_DIR}/Code/Numerics/itkCacheableScalarFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkCompositeValleyFunction
-${ITK_SOURCE_DIR}/Code/Numerics/itkMultivariateLegendrePolynomial
 BiasCorrector
 )
 
 LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/BasicFilters
+${ITK_BINARY_DIR}/Code/Numerics
 ${ITK_BINARY_DIR}/Code/Numerics/Statistics
 ${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Auxiliary/MetaImage
@@ -77,6 +65,7 @@ ITKCommon
 ITKIO
 ITKBasicFilters
 ITKStatistics
+ITKNumerics
 MetaImageIO
 VXLNumerics
 )
