@@ -227,43 +227,72 @@ update()
     return;
     }
   
-  int winWidth = (int)( cDimSize[ cWinOrder[0] ] / cWinZoom );
-  cWinSizeX = ( (int) winWidth);
-  int ti = (int)( (int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
-  if( ti <= - (int) cDimSize[ cWinOrder[0] ] ) 
+  double zoomBase = cW/(cDimSize[cWinOrder[0]]*(fabs(cSpacing[cWinOrder[0]])
+                        /fabs(cSpacing[0])));
+  if(zoomBase >
+      cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])
+          /fabs(cSpacing[0]))))
     {
-    ti = -(int)cDimSize[ cWinOrder[0] ] + 1;
+    zoomBase = cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])
+                   /fabs(cSpacing[0])));
     }
-  else if( ti >= (int)cDimSize[ cWinOrder[0] ]) 
+  double scale0 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[0]])
+                                             /fabs(cSpacing[0]);
+  double scale1 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[1]])
+                                             /fabs(cSpacing[0]);
+
+  if(cWinZoom>1)
     {
-    ti = cDimSize[ cWinOrder[0] ] - 1;
+    cWinSizeX = (int)( cW / scale0 );
+    cWinMinX = (int)( (int)cWinCenter[ cWinOrder[0] ] - cWinSizeX/2);
+    cWinMaxX = (int)( (int)cWinCenter[ cWinOrder[0] ] + cWinSizeX/2);
     }
-  cWinMinX = ti;
-  cWinMaxX = cDimSize[ cWinOrder[0] ] - 1; // here
-  if( cWinMaxX >= static_cast<int>( cDimSize[ cWinOrder[0] ] ) )
+  else
     {
-    cWinMaxX = cDimSize[ cWinOrder[0] ] - 1;
+    cWinSizeX = (int)(cDimSize[ cWinOrder[0] ]);
+    cWinMinX = 0;
+    cWinMaxX = (int)( (int)(cDimSize[ cWinOrder[0] ]) - 1 );
+    cWinCenter[cWinOrder[0]] = (int)( cDimSize[ cWinOrder[0] ] / 2);
+    }
+  if( cWinMinX <= - (int) cDimSize[ cWinOrder[0] ] ) 
+    {
+    cWinMinX = -(int)cDimSize[ cWinOrder[0] ] + 1;
+    }
+  else if(cWinMinX >= (int)cDimSize[ cWinOrder[0] ]) 
+    {
+    cWinMinX = (int)cDimSize[ cWinOrder[0] ] - 1;
+    }
+  if( cWinMaxX >= (int)( cDimSize[ cWinOrder[0] ] ) )
+    {
+    cWinMaxX = (int)cDimSize[ cWinOrder[0] ] - 1;
     }
   
-  winWidth = static_cast<int>( cDimSize[ cWinOrder[1] ] / cWinZoom );
-  cWinSizeY = ( static_cast<int>( winWidth) );
-  ti = static_cast<int>( static_cast<int>(cWinCenter[ cWinOrder[1] ]) 
-                         - winWidth/2);
-  if( ti <= - static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
+  if(cWinZoom>1)
     {
-    ti = -(int)cDimSize[ cWinOrder[1] ] + 1;
+    cWinSizeY = (int)( cH / scale1 );
+    cWinMinY = (int)( (int)(cWinCenter[ cWinOrder[1] ]) - cWinSizeY/2 );
+    cWinMaxY = (int)( (int)(cWinCenter[ cWinOrder[1] ]) + cWinSizeY/2 );
     }
-  else if( ti >= static_cast<int>(cDimSize[ cWinOrder[1] ] ) ) 
+  else
     {
-    ti = cDimSize[ cWinOrder[1] ] - 1;
+    cWinSizeY = (int)(cDimSize[ cWinOrder[1] ]);
+    cWinMinY = 0;
+    cWinMaxY = (int)( (int)(cDimSize[ cWinOrder[1] ]) - 1 );
+    cWinCenter[cWinOrder[1]] = (int)( cDimSize[ cWinOrder[1] ] / 2);
+    }
+  if( cWinMinY <= - (int)( cDimSize[ cWinOrder[1] ] ) ) 
+    {
+    cWinMinY = -(int)cDimSize[ cWinOrder[1] ] + 1;
+    }
+  else if( cWinMinY >= (int)(cDimSize[ cWinOrder[1] ] ) ) 
+    {
+    cWinMinY = cDimSize[ cWinOrder[1] ] - 1;
     } 
-  cWinMinY = ti;
-  cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
-  if( cWinMaxY >= static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
+  if( cWinMaxY >= (int)( cDimSize[ cWinOrder[1] ] ) ) 
     {
     cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
     }
-  
+
   memset( cWinImData, 0, cWinDataSizeX*cWinDataSizeY*3 );
   if( cValidOverlayData ) 
     {
@@ -645,14 +674,36 @@ draw()
       return;
       }
     
-    float scale0 = cW/(float)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
-    float scale1 = cW/(float)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
-    
-    
-    glRasterPos2i((cFlipX[cWinOrientation])?cW:0,
-      (cFlipY[cWinOrientation])?cH:0);  
+    double zoomBase = cW/(cDimSize[cWinOrder[0]]*(fabs(cSpacing[cWinOrder[0]])
+                                                  /fabs(cSpacing[0])));
+    if(zoomBase >
+       cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])
+                                   /fabs(cSpacing[0]))))
+      {
+      zoomBase = cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])
+                                             /fabs(cSpacing[0])));
+      }
+
+    double scale0 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[0]])
+                             / fabs(cSpacing[0]);
+    double scale1 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[1]]) 
+                             / fabs(cSpacing[0]);
+
+    int originX = 0;
+    int originY = 0;
+    if(cWinZoom<=1)
+      {
+      if(cW-scale0*cDimSize[cWinOrder[0]]>0)
+        {
+        originX = (int)((cW-scale0*cDimSize[cWinOrder[0]])/2.0);
+        }
+      if(cH-scale1*cDimSize[cWinOrder[1]]>0)
+        {
+        originY = (int)((cH-scale1*cDimSize[cWinOrder[1]])/2.0);
+        }
+      }
+    glRasterPos2i((cFlipX[cWinOrientation])?cW-originX:originX,
+      (cFlipY[cWinOrientation])?cH-originY:originY);  
     glPixelZoom((cFlipX[cWinOrientation])?-scale0:scale0,
       (cFlipY[cWinOrientation])?-scale1:scale1);
     
@@ -718,25 +769,37 @@ draw()
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
       gl_font(FL_TIMES_BOLD, 12);
       char s[80];
-      if((ImagePixelType)1.1==1.1)
+      float px, py, pz;
+      float val = cClickSelectV;
+      char * suffix = "";
+      if( cViewValuePhysicalUnits )
         {
-        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f, %03f, %0.3f", 
-          cClickSelect[0],
-          cClickSelect[1], 
-          cClickSelect[2], 
-          (float)cClickSelectR,
-          (float)cClickSelectG,
-          (float)cClickSelectB);
+        px = cOrigin[0]+cSpacing[0]*cClickSelect[0];
+        py = cOrigin[1]+cSpacing[1]*cClickSelect[1];
+        pz = cOrigin[2]+cSpacing[2]*cClickSelect[2];
+        suffix = cPhysicalUnitsName;
+        }
+       else
+        {
+        px = cClickSelect[0];
+        py = cClickSelect[1];
+        pz = cClickSelect[2];
+        }
+      if((ImagePixelType)1.5==1.5)
+        {
+        sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %0.3f", 
+                px, suffix,
+                py, suffix,
+                pz, suffix,
+                val);
         }
       else
         {
-        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %d, %d, %d", 
-          cClickSelect[0],
-          cClickSelect[1], 
-          cClickSelect[2], 
-          (int)cClickSelectR,
-          (int)cClickSelectG,
-          (int)cClickSelectB);
+        sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %d", 
+                px, suffix,
+                py, suffix,
+                pz, suffix,
+                (int)val);
         }
       gl_draw( s,
         (int)(cW-(gl_width(s)+2)), 2);
@@ -784,20 +847,22 @@ draw()
       int x;
       if(cFlipX[cWinOrientation])
         {
-        x = (int)(cW - (cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
+        x = (int)(cW - (cClickSelect[cWinOrder[0]] - cWinMinX) * scale0 
+                     - originX);
         }
       else
         {
-        x = (int)((cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
+        x = (int)((cClickSelect[cWinOrder[0]] - cWinMinX) * scale0 + originX);
         }
       int y;
       if(cFlipY[cWinOrientation])
         {
-        y = (int)(cH - (cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
+        y = (int)(cH - (cClickSelect[cWinOrder[1]] - cWinMinY) * scale1
+                     - originY);
         }
       else
         {
-        y = (int)((cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
+        y = (int)((cClickSelect[cWinOrder[1]] - cWinMinY) * scale1 + originY);
         }
       glBegin(GL_LINES);
       glVertex2d(0, y);
