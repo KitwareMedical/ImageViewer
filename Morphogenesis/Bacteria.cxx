@@ -106,7 +106,7 @@ Bacteria
 
   aggregate->Add( siblingA, siblingB, perturbationVector );
 
-  aggregate->Remove( this ); // "this" will be destroyed here
+  this->MarkForRemoval();
 
 }
 

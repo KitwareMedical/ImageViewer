@@ -16,7 +16,7 @@ Cell::ColorType    Cell::DefaultColor;
 
 double             Cell::DefaultRadius         =       10; // microns
 
-double             Cell::GrowthRadiusIncrement =    0.01; // 0.001 microns
+double             Cell::GrowthRadiusIncrement =      0.1; // 0.001 microns
 double             Cell::GrowthRadiusLimit     =       20; // microns
 
 double             Cell::NutrientSelfRepairLevel  =     0; 
@@ -56,6 +56,9 @@ Cell
   // Start with minimum reserves
   m_NutrientsReserveLevel = NutrientSelfRepairLevel + DefaultNutrientsIntake;
   m_EnergyReserveLevel    = EnergySelfRepairLevel   + DefaultEnergyIntake;
+
+  // too young to die...
+  m_MarkedForRemoval = false;
 
 }
 
@@ -163,6 +166,35 @@ Cell
   Cell * cell = new Cell;
   cell->m_ParentIdentifier = m_SelfIdentifier;
   return cell;
+}
+
+
+
+
+/**
+ *  Mark this cell for removal
+ *  The cellular aggregate with remove
+ *  this cell from its list at the earliest occasion
+ */ 
+void
+Cell 
+::MarkForRemoval(void) 
+{
+  m_MarkedForRemoval = true;
+}
+
+
+
+/**
+ *  Mark this cell for removal
+ *  The cellular aggregate with remove
+ *  this cell from its list at the earliest occasion
+ */ 
+bool
+Cell 
+::MarkedForRemoval(void) const
+{
+  return m_MarkedForRemoval;
 }
 
 

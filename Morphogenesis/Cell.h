@@ -50,6 +50,8 @@ public:
   virtual       CellularAggregate * GetCellularAggregate( void );
   virtual const CellularAggregate * GetCellularAggregate( void ) const;
 
+  bool MarkedForRemoval(void) const;
+
 protected:
   
   virtual void Grow(void);
@@ -64,6 +66,8 @@ protected:
   virtual bool CheckPointApoptosis(void);
 
   virtual Cell * CreateNew(void);
+
+  void MarkForRemoval(void);
 
   typedef enum {
                   M = 1,
@@ -90,6 +94,8 @@ public:
   static void SetEnergySelfRepairLevel( double );
   static void SetNutrientSelfRepairLevel( double );
   static void SetDefaultColor( const ColorType & color );
+
+
 
 protected:
 
@@ -133,6 +139,10 @@ private:
 private:
 
    CellularAggregate  *   m_Aggregate;
+
+
+   bool                   m_MarkedForRemoval;
+
 
 };
 

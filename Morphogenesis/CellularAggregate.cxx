@@ -299,16 +299,22 @@ CellularAggregate
   this->ComputeForces();
   this->UpdatePositions();
   
-  CellsIterator cell = m_Mesh->GetPointData()->Begin();
-  CellsIterator end  = m_Mesh->GetPointData()->End();
+  CellsIterator begin = m_Mesh->GetPointData()->Begin();
+  CellsIterator end   = m_Mesh->GetPointData()->End();
+
+  CellsIterator cell  = begin;
 
   while( cell != end )
     {
-    cell.Value()->AdvanceTimeStep();
+    Cell * theCell = cell.Value();
+    theCell->AdvanceTimeStep();
     ++cell;
+    if( theCell->MarkedForRemoval() )
+      {
+      this->Remove( theCell );      
+      }
     }
   
-
   this->InvokeEvent( TimeStepEvent );
 
   m_Iteration++;
