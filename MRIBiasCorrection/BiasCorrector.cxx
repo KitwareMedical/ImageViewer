@@ -20,9 +20,10 @@ PURPOSE.  See the above copyright notices for more information.
 
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
-#include "imageutils.h"
 #include "metaITKUtils.h"
+#include "imageutils.h"
 
+typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> Corrector ;
 
 void print_usage()
 {
@@ -112,8 +113,6 @@ int main(int argc, char* argv[])
 
   OptionList options(argc, argv) ;
 
-  typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> 
-    Corrector ;
   Corrector::Pointer filter = Corrector::New() ;
 
   std::string inputFileName ;

@@ -20,9 +20,8 @@ PURPOSE.  See the above copyright notices for more information.
 
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
+#include "metaITKUtils.h"
 #include "imageutils.h"
-
-typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> Corrector ;
 
 void print_usage()
 {
@@ -85,9 +84,12 @@ void print_usage()
 }
 
 
+
+typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> Corrector ;
+
+#if 0
 void printResult(Corrector::Pointer filter, OptionList& options)
 {
-
   options.DumpOption("input") ;
   options.DumpOption("input-mask") ;
   options.DumpOption("class-mean") ;
@@ -95,7 +97,6 @@ void printResult(Corrector::Pointer filter, OptionList& options)
   options.DumpOption("use-log") ;
 
   std::cout << " --degree " << filter->GetBiasFieldDegree() ;
-
   Corrector::BiasFieldType::DomainSizeType sizes = 
     filter->GetBiasFieldDomainSize() ;
   std::cout << " --size " ;
@@ -132,7 +133,7 @@ void printResult(Corrector::Pointer filter, OptionList& options)
     } 
   std::cout << std::endl ;
 }
-    
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -252,7 +253,8 @@ int main(int argc, char* argv[])
   std::cout << "Estimating the bias field..." << std::endl ;
   filter->Update() ;
 
+#if 0
   printResult(filter, options) ;
-
+#endif
   return 0 ;
 }

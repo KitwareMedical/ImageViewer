@@ -17,12 +17,12 @@ PURPOSE.  See the above copyright notices for more information.
 #ifndef __IMAGEUTILS_H
 #define __IMAGEUTILS_H
 
-#include <itkExceptionObject.h>
+#include "itkExceptionObject.h"
 #include "itkMetaImageIOFactory.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include <itkImageRegionIterator.h>
-#include <itkImageRegionIteratorWithIndex.h>
+#include "itkImageRegionIterator.h"
+#include "itkImageRegionIteratorWithIndex.h"
 #include "itkNumericTraits.h"
 
 #include "myutils.h"
