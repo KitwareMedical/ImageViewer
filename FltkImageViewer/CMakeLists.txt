@@ -18,6 +18,8 @@ IF(FLTK_LIBRARY)
      fltkShape3D
      fltkSphere3D
      fltkWindowInteractive
+     fltkTimeProbeGUI
+     fltkTimeProbesCollector
      )
 
   SOURCE_FILES(FltkImageViewer_GUI_SRCS
@@ -31,6 +33,7 @@ IF(FLTK_LIBRARY)
      fltkSlice2DDrawerGUI.fl
      fltkSlice3DDrawerGUI.fl
      fltkSphereFunctionControlGUI.fl
+     fltkTimeProbesCollectorGUI.fl
     )
 
   INCLUDE_DIRECTORIES(
