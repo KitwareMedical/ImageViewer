@@ -1,0 +1,82 @@
+#!${TCL_TCLSH}
+
+load ${CABLE_TCL_LIBRARY}
+load ${ITK_BINARY_DIR}/Examples/TclWrappedImage/libImageTcl.so
+
+
+# Create an object of itk::Image<char,3> class.
+# the Tcl equivalent type is "itkImage"
+#
+set imagePointer [ itkImage3DChar New ]
+
+
+# Try the wrap::TypeOf command
+#
+puts "This is the type of an Image SmartPointer"
+puts [ wrap::TypeOf $imagePointer ]
+
+
+
+# Create an object of itk::ImageRegion<3> class
+#
+set imageRegion [ itkImage3DRegion ]
+set size  [ $imageRegion GetSize  ]
+set start [ $imageRegion GetIndex ]
+
+
+# Use the methods on the image
+#
+# NOTE: The Smart Pointer to the image is dereferenced
+#       using the notation
+#
+#       [ $imagePointer -> ] 
+#
+[ $imagePointer -> ] GetBufferPointer
+
+
+
+
+#
+#  Typical allocation for an image
+#
+[ $imagePointer -> ] SetLargestPossibleRegion $imageRegion 
+[ $imagePointer -> ] SetRequestedRegion       $imageRegion 
+[ $imagePointer -> ] SetBufferedRegion        $imageRegion 
+[ $imagePointer -> ] Allocate
+
+
+
+#
+#  Create the Gaussian Filter 
+#
+set smoothingFilter [ itkSmoothingGaussianFilter New ]
+
+
+#
+#  Set the input of the Filter
+#
+$smoothingFilter SetInput [ $imagePointer GetPointer ]
+
+
+
+#
+#  Take the output of the filter
+#
+set smoothedImagePointer [ $ smoothingFilter GetOutput ]
+
+
+#
+#  Set the Sigma value for the Gaussian
+#
+$smoothingFilter SetSigma 1.73
+
+
+#
+#  Update the filter
+#
+$smoothingFilter Update
+
+
+
+
+
