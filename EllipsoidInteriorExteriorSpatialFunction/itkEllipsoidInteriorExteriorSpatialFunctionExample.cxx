@@ -206,7 +206,7 @@ int main()
     numInteriorPixels = numInteriorPixels1;
     }
 
-  // Volume of ellipsoid using V=(4/3)*pi*a*b*c
+  // Volume of ellipsoid using V=(4/3)*pi*(a/2)*(b/2)*(c/2)
   double volume = 4.18879013333*(axes[0]/2)*(axes[1]/2)*(axes[2]/2);
 
   // Percent difference in volume measurement and calculation.
