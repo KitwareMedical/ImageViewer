@@ -5,7 +5,7 @@
 #include "FL/fl_file_chooser.H"
 
 #include <iostream>  
-#include <fstream>
+//#include <fstream>
 #include <cstdio>
 
 #define PI 3.1415926535897932384626433832795
@@ -81,6 +81,7 @@ void
 SurfaceGeneratorBase
 ::Load(const char * filename)
 {
+/*  
   int c;
   PointType p;
   CriticalPoint cp;
@@ -89,8 +90,8 @@ SurfaceGeneratorBase
   CriticalPoint::VectorType  minimumDirection;
   CriticalPoint::CurvatureType minimumCurvature;
   CriticalPoint::CurvatureType maximumCurvature;
+
   IdentifierType pointId = 1;
-  
   std::ifstream finp;
   finp.open(filename);
   if(finp.fail()) return;
@@ -130,7 +131,7 @@ SurfaceGeneratorBase
   }
 
     finp.close();
-
+*/
 }
 
 
