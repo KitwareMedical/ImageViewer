@@ -18,6 +18,7 @@
 
 
 #include "FEMMeshApplication.h"
+#include <Fl/Fl_Ask.H>
 
 FEMMeshApplication
 ::FEMMeshApplication()
@@ -58,6 +59,41 @@ FEMMeshApplication
   Fl::check();
 }
 
+
+
+
+
+
+void
+FEMMeshApplication
+::CreateFEMMesh(void)
+{
+  this->FEMMeshApplicationBase::CreateFEMMesh();
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
+
+
+
+
+void
+FEMMeshApplication
+::DisplayFEMMesh(void)
+{
+
+  try
+    {
+    this->FEMMeshApplicationBase::DisplayFEMMesh();
+    }
+  catch( itk::ExceptionObject & excp )
+  {
+    fl_alert( excp.what() );
+    return;
+  }
+
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
 
 
 

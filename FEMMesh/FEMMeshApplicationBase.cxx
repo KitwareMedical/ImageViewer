@@ -18,6 +18,7 @@
 #include "FEMMeshApplicationBase.h"
 
 #include "vtkPolyDataMapper.h"
+#include "vtkDataSetMapper.h"
 #include "vtkSphereSource.h"
 #include "vtkActor.h"
 #include "vtkRenderer.h"
@@ -25,6 +26,8 @@
 #include "vtkUnstructuredGrid.h"
 #include "vtkPoints.h"
 #include "vtkFloatArray.h"
+
+#include "vtkItkCellMultiVisitor.h"
 
 #include "itkNumericTraits.h"
 
@@ -175,6 +178,119 @@ FEMMeshApplicationBase
 
 
 
+void
+FEMMeshApplicationBase
+::DisplayFEMMesh(void)
+{
+ 
+  typedef vtkItkCellMultiVisitor< 
+                                  FEMMeshType::CellTraits 
+                                                            > VisitorType;
+
+  typedef itk::fem::VertexCell< NodeType::CellTraits > VertexCellType;
+
+
+  // Define the Cell Visitor Types
+  typedef itk::fem::CellInterfaceVisitorImplementation<
+                                  FEMMeshType::CellTraits,
+                                  VertexCellType,
+                                  VisitorType  > VertexVisitorType;
+
+
+  // Get the number of points in the mesh
+  const unsigned int numPoints = m_FEMMesh->GetNumberOfPoints();
+  if( numPoints == 0 )
+    {
+    itkGenericExceptionMacro(<<"Attempt to display a Mesh with no points !");
+    }
+    
+  // Create a vtkUnstructuredGrid
+  vtkUnstructuredGrid * vgrid = vtkUnstructuredGrid::New();
+
+  // Create the vtkPoints object and set the number of points
+  vtkPoints * vpoints = vtkPoints::New();
+  vpoints->SetNumberOfPoints(numPoints);
+
+  // iterate over all the points in the itk mesh filling in
+  // the vtkPoints object as we go
+  FEMMeshType::PointsContainer::Pointer points = m_FEMMesh->GetPoints();
+
+  for(FEMMeshType::PointsContainer::Iterator i = points->Begin();
+      i != points->End(); ++i)
+    {
+    // Get the point index from the point container iterator
+    int idx = i->Index();
+    // Set the vtk point at the index with the the coord array from itk
+    // itk returns a const pointer, but vtk is not const correct, so
+    // we have to use a const cast to get rid of the const
+    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetDataPointer()));
+    }
+  // Set the points on the vtk grid
+  vgrid->SetPoints(vpoints);
+  
+  // Now create the cells using the MulitVisitor
+  // 1. Create a MultiVisitor
+  CellMultiVisitorType::Pointer multiVisitor = CellMultiVisitorType::New();
+
+  // 2. Create a VertexCell visitor
+  VertexVisitorType::Pointer vertexVisitor = VertexVisitorType::New();
+
+  // 3. Set up the visitors
+  int vtkCellCount = 0; // running counter for current cell being inserted into vtk
+  int numCells = m_FEMMesh->GetNumberOfCells();
+
+  int *types = new int[numCells]; // type array for vtk 
+
+  // create vtk cells and estimate the size
+  vtkCellArray* cells = vtkCellArray::New();
+  cells->EstimateSize(numCells, 4);
+
+  // Set the TypeArray CellCount and CellArray for both visitors
+  vertexVisitor->SetTypeArray( types );
+  vertexVisitor->SetCellCounter( &vtkCellCount );
+  vertexVisitor->SetCellArray( cells );
+
+  // add the visitors to the multivisitor
+  multiVisitor->AddVisitor( vertexVisitor );
+
+  // Now ask the mesh to accept the multivisitor which
+  // will Call Visit for each cell in the mesh that matches the
+  // cell types of the visitors added to the MultiVisitor
+  m_FEMMesh->Accept( multiVisitor );
+  
+  // Now set the cells on the vtk grid with the type array and cell array
+  vgrid->SetCells( types, cells );
+  
+  // Clean up vtk objects (no vtkSmartPointer ... )
+  cells->Delete();
+  vpoints->Delete();
+
+
+  // connect the vtkUnstructuredGrid to a visualization Pipeline
+
+  // map to graphics library
+  vtkDataSetMapper * mapper = vtkDataSetMapper::New();
+  mapper->SetInput( vgrid  );
+
+  // actor coordinates geometry, properties, transformation
+  vtkActor * actor = vtkActor::New();
+  actor->SetMapper( mapper );
+  actor->GetProperty()->SetColor(0,0,1); // color blue
+
+  // add the actor to the scene
+  m_Renderer->AddActor( actor );
+  m_Renderer->SetBackground(1,1,1); // Background color white
+
+  vgrid->Delete();
+  mapper->Delete();
+  actor->Delete();
+
+}
+
+
+
+
+
 
 void
 FEMMeshApplicationBase
@@ -281,6 +397,8 @@ FEMMeshApplicationBase
 
   std::cout << "Number of points = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
   std::cout << "Number of cells  = " << m_FEMMesh->GetNumberOfCells() << std::endl;
+
+  this->DisplayFEMMesh();
 
 }
 

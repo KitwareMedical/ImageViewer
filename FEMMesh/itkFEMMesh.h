@@ -56,8 +56,9 @@ public:
   itkTypeMacro(Mesh, TMesh); 
 
   /** Hold on to the type information specified by the template parameters. */
-  typedef typename TMesh::MeshTraits                    MeshTraits;
-  typedef typename TMesh::CellTraits                    CellTraits;
+  typedef typename Superclass::MeshTraits                    MeshTraits;
+  typedef typename Superclass::CellTraits                    CellTraits;
+  typedef typename Superclass::CellMultiVisitorType          CellMultiVisitorType;
 
   /** Convenient enums obtained from TMeshTraits template parameter. */
   enum {PointDimension = MeshTraits::PointDimension};
@@ -65,6 +66,7 @@ public:
   
   /** Base class for the polymorphic hierarchy of Node types */
   typedef FEMNode< CellTraits >           NodeType;
+
 
 protected:
 

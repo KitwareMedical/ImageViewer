@@ -74,6 +74,9 @@ public:
   typedef  FEMMeshType::PointType             PointType;
   typedef  FEMMeshType::PointIdentifier       PointIdentifierType;
 
+  // Type for the Multivisitor that will iterate over the Cells
+  typedef  FEMMeshType::CellMultiVisitorType  CellMultiVisitorType;
+
 public:
 
   FEMMeshApplicationBase();
@@ -82,7 +85,7 @@ public:
   virtual void CreateSphere(void);
   virtual void CreateTriangle(void);
   virtual void CreateFEMMesh(void);
-
+  virtual void DisplayFEMMesh(void);
 
 protected:
  
