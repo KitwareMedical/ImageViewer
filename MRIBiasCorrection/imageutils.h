@@ -1,35 +1,42 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    imageutils.h
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Program:   Insight Segmentation & Registration Toolkit
+Module:    imageutils.h
+Language:  C++
+Date:      $Date$
+Version:   $Revision$
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright (c) 2002 Insight Consortium. All rights reserved.
+See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #ifndef __IMAGEUTILS_H
 #define __IMAGEUTILS_H
 
 #include <itkExceptionObject.h>
-#include <MetaImageLib.h>
-#include <itkReadMetaImage.h>
-#include <itkWriteMetaImage.h>
+#include "itkMetaImageIOFactory.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
+#include <itkImageRegionIterator.h>
 #include <itkImageRegionIteratorWithIndex.h>
 
-#include "mydefs.h"
 #include "myutils.h"
 
+typedef itk::Image<float, 3> ImageType ;
+typedef itk::Image<short, 3> MaskType ;
+typedef ImageType::Pointer ImagePointer ;
+typedef MaskType::Pointer MaskPointer ;
+typedef itk::ImageFileReader< ImageType > ImageReaderType ;
+typedef itk::ImageFileReader< MaskType > MaskReaderType ;
+typedef itk::ImageFileWriter< ImageType > ImageWriterType ;
 
 class ImageIOError : public itk::ExceptionObject
 {
- public:
+public:
   ImageIOError() : itk::ExceptionObject() {}
   virtual ~ImageIOError() throw () {}
   
@@ -49,81 +56,12 @@ class ImageIOError : public itk::ExceptionObject
   std::string Operation ;
 } ;
 
-void loadImage(std::string fileName, ImagePointer image)
-  throw (ImageIOError)
-{
-  if (fileName == "")
-    {
-      throw ImageIOError(__FILE__, __LINE__, "", "Reading meta image: file name not specified") ;
-    }
-
-  try
-    {
-      typedef itk::ReadMetaImage<ImageType> Reader ;
-      Reader::Pointer reader = Reader::New() ;
-      
-      reader->SetOutput(image) ;
-      reader->SetFileName(fileName.c_str()) ;
-      reader->Update() ;
-    }
-  catch (itk::ExceptionObject)
-    {
-      throw ImageIOError(__FILE__, __LINE__, fileName, "Reading meta image: failed to read") ;
-    }
-}
-
-
-void loadMask(std::string fileName, MaskPointer mask)
-{
-  if (fileName == "")
-    {
-      throw ImageIOError(__FILE__, __LINE__, "", "Reading meta image: file name not specified") ;
-    }
-
-  try
-    {
-      typedef itk::ReadMetaImage<MaskType> Reader ;
-      Reader::Pointer reader = Reader::New() ;
-      
-      reader->SetOutput(mask) ;
-      reader->SetFileName(fileName.c_str()) ;
-      reader->Update() ;
-    }
-  catch (itk::ExceptionObject)
-    {
-      throw ImageIOError(__FILE__, __LINE__, fileName, "Reading meta image: failed to read") ;
-    }
-}
-
-void writeImage(std::string fileName, ImagePointer image)
-  throw (ImageIOError)
-{
-  if (fileName == "")
-    {
-      throw ImageIOError(__FILE__, __LINE__, "", "Writing meta image: file name not specified") ;
-    }
-
-  try
-    {
-      typedef itk::WriteMetaImage<ImageType> Writer ;
-      Writer::Pointer writer = Writer::New() ;
-      
-      writer->SetInput(image) ;
-      writer->SetFileName(fileName.c_str()) ;
-      writer->GenerateData() ;
-    }
-  catch (itk::ExceptionObject)
-    {
-      throw ImageIOError(__FILE__, __LINE__, fileName, "Writing meta image: failed to write") ;
-    }
-
-}
-
 void copyImage(ImagePointer source , ImagePointer target)
 {
   typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator ;
   ImageType::RegionType s_region = source->GetLargestPossibleRegion() ;
   ImageIterator s_iter(source, s_region ) ;
+
   
   if (target->GetLargestPossibleRegion().GetSize() != s_region.GetSize())
     {
@@ -133,7 +71,9 @@ void copyImage(ImagePointer source , ImagePointer target)
     }
       
   ImageIterator t_iter(target, s_region) ;
-  
+
+  s_iter.GoToBegin() ;
+  t_iter.GoToBegin() ;
   while (!s_iter.IsAtEnd())
     {
       t_iter.Set(s_iter.Get()) ;
@@ -159,6 +99,9 @@ void logImage(ImagePointer source, ImagePointer target)
   itk::ImageRegionIteratorWithIndex<ImageType> s_iter(source, region) ;
   itk::ImageRegionIteratorWithIndex<ImageType> t_iter(target, region) ;
   
+  s_iter.GoToBegin() ;
+  t_iter.GoToBegin() ;
+
   ImageType::PixelType pixel ;
   float log_pixel ;
   while (!s_iter.IsAtEnd())
