@@ -55,7 +55,16 @@ CellularAggregate
 ::Draw(void) const
 {
   
-  glDisable( GL_LIGHTING );
+  if( Cell::Dimension == 2 ) 
+    {
+    glDisable( GL_LIGHTING );
+    }
+
+  if( Cell::Dimension == 3 ) 
+    {
+    glEnable( GL_LIGHTING );
+    }
+
   PointType position;
 
   CellsIterator cellIt = m_Mesh->GetPointData()->Begin();
@@ -181,6 +190,8 @@ CellularAggregate
   perturbation.Fill( 0.0 );
   Add( cell, perturbation );
 }
+
+
 
 
 

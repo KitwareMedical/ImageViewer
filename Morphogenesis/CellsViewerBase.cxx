@@ -10,9 +10,21 @@ namespace bio {
 CellsViewerBase
 ::CellsViewerBase()
 {
-  m_Display.SetBackground( 0.8, 0.8, 0.9 );
+  m_Display.GetGlWindow()->SetBackground( 0.8, 0.8, 0.9 );
   m_Stop = true;
   m_StartTime = 0;
+
+  m_Image = ImageType::New();
+
+  m_SliceDrawer = SliceDrawerType::New();
+
+  m_SliceDrawer->SetInput( m_Image.GetPointer() );
+
+  m_Display.GetNotifier()->AddObserver( fltk::GlDrawEvent,
+                             m_SliceDrawer->GetDrawCommand().GetPointer() );
+
+  m_SliceDrawer->AddObserver( fltk::VolumeReslicedEvent,
+                             m_Display.GetRedrawCommand() );
 }
 
 
@@ -72,7 +84,10 @@ CellsViewerBase
 ::Run(void)
 {
 	m_Stop = false;
-  m_StartTime = clock();
+  if( !m_StartTime ) 
+  {
+    m_StartTime = clock();
+  }
   while( !m_Stop )
     {
     m_Cells->AdvanceTimeStep();

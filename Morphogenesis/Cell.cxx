@@ -28,6 +28,11 @@ double             Cell::DefaultNutrientsIntake   =     1;
 
 unsigned long      Cell::Counter = 0; // number of cells created
 
+int                Cell::DisplayList = 0;  // OpenGL display list
+
+
+
+
 
 /**
  *    Constructor Lonely Cell
@@ -88,7 +93,7 @@ Cell
 {
 
   CellularAggregate * aggregate = GetCellularAggregate();
-  // "this" will be destroyed here
+  // "this" cell will be destroyed here
   aggregate->Remove( this ); 
 
 }
@@ -171,21 +176,53 @@ Cell
 ::Draw( const PointType & position ) const
 {
 
-  const unsigned int NumberOfSides = 12;
-  const double PI = 4.0 * atan(1.0);
-  const double sectorAngle = 2.0 * PI / static_cast<double>( NumberOfSides );
+  glColor3f( m_Color.GetRed(), m_Color.GetGreen(), m_Color.GetBlue() );
 
-  glBegin( GL_LINE_LOOP );
-    glColor3f( m_Color.GetRed(), m_Color.GetGreen(), m_Color.GetBlue() );
-    for(unsigned int side=0; side < NumberOfSides; side++)
+  glPushMatrix();
+
+  switch( Dimension )
+  {
+  case 2: 
+    {
+    glTranslated( position[0], position[1], 0.0 );
+    break;
+    }
+  case 3: 
+    {
+    glTranslated( position[0], position[1], position[2] );
+    break;
+    }
+  }
+
+  const double scale = m_Radius;
+  glScaled( scale, scale, scale );
+
+  if( DisplayList )
+    {
+    glCallList( DisplayList ); // shape common to all cells
+    } 
+  else 
+    {
+    // Create the display list
+    DisplayList = glGenLists( 1 ); 
+    glNewList( DisplayList, GL_COMPILE_AND_EXECUTE );
+    switch( Dimension )
       {
-      const double angle = static_cast<double>( side ) * sectorAngle;
-      double x = m_Radius * cos( angle ) + position[0];
-      double y = m_Radius * sin( angle ) + position[1];
-      glVertex2d( x, y );
+      case 2: 
+        {
+        DrawCircle();
+        break;
+        }
+      case 3: 
+        {
+        DrawIcosaedron();
+        break;
+        }
       }
-  glEnd(); 
+    glEndList();
+    }
 
+  glPopMatrix();
 }
 
 
@@ -491,4 +528,132 @@ Cell
 }
 
 
+
+/**
+ *   Draw a circle representing a 2D cell
+ */ 
+void
+Cell
+::DrawCircle(void) const
+{
+  const unsigned int NumberOfSides = 12;
+  const double PI = 4.0 * atan(1.0);
+  const double sectorAngle = 2.0 * PI / static_cast<double>( NumberOfSides );
+
+  glBegin( GL_LINE_LOOP );
+    for(unsigned int side=0; side < NumberOfSides; side++)
+      {
+      const double angle = static_cast<double>( side ) * sectorAngle;
+      const double x = cos( angle ); 
+      const double y = sin( angle );
+      glVertex2d( x, y );
+      }
+  glEnd(); 
+}
+ 
+
+
+
+
+/**
+ *   Draw an Icosaedron representing a 3D cell
+ */ 
+void
+Cell
+::DrawIcosaedron(void) const
+{
+
+  PointType vertex[12];
+
+  const double r =                       1.0; 
+  const double a =                   r / 2.0;
+  const double b =    r * sqrt( 3.0f ) / 2.0;
+  const double c =  8.0 * atan( 1.0f ) / 5.0;
+  
+  vertex[ 0 ][ 0 ] = 0;
+  vertex[ 0 ][ 1 ] = 0;
+  vertex[ 0 ][ 2 ] = r;
+  
+  for( unsigned int i=0; i<5; i++)
+    {
+    vertex[ i+1 ][ 0 ] =   b * cos( i * c );
+    vertex[ i+1 ][ 1 ] =   b * sin( i * c );
+    vertex[ i+1 ][ 2 ] =   a;
+
+    vertex[ i+6 ][ 0 ] =  -b * cos( i * c );
+    vertex[ i+6 ][ 1 ] =   b * sin( i * c );
+    vertex[ i+6 ][ 2 ] =  -a;
+    }
+
+  vertex[ 11 ][ 0 ] =  0;
+  vertex[ 11 ][ 1 ] =  0;
+  vertex[ 11 ][ 2 ] = -r;
+  
+  // Draw triangles
+  glBegin( GL_TRIANGLE_FAN );
+    glNormal3d( vertex[  0 ][0], vertex[  0 ][1], vertex[  0 ][2] );
+    glVertex3d( vertex[  0 ][0], vertex[  0 ][1], vertex[  0 ][2] );
+    glNormal3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glVertex3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glNormal3d( vertex[  2 ][0], vertex[  2 ][1], vertex[  2 ][2] );
+    glVertex3d( vertex[  2 ][0], vertex[  2 ][1], vertex[  2 ][2] );
+    glNormal3d( vertex[  3 ][0], vertex[  3 ][1], vertex[  3 ][2] );
+    glVertex3d( vertex[  3 ][0], vertex[  3 ][1], vertex[  3 ][2] );
+    glNormal3d( vertex[  4 ][0], vertex[  4 ][1], vertex[  4 ][2] );
+    glVertex3d( vertex[  4 ][0], vertex[  4 ][1], vertex[  4 ][2] );
+    glNormal3d( vertex[  5 ][0], vertex[  5 ][1], vertex[  5 ][2] );
+    glVertex3d( vertex[  5 ][0], vertex[  5 ][1], vertex[  5 ][2] );
+    glNormal3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glVertex3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+  glEnd();
+
+  glBegin( GL_TRIANGLE_FAN );
+    glNormal3d( vertex[ 11 ][0], vertex[ 11 ][1], vertex[ 11 ][2] );
+    glVertex3d( vertex[ 11 ][0], vertex[ 11 ][1], vertex[ 11 ][2] );
+    glNormal3d( vertex[ 10 ][0], vertex[ 10 ][1], vertex[ 10 ][2] );
+    glVertex3d( vertex[ 10 ][0], vertex[ 10 ][1], vertex[ 10 ][2] );
+    glNormal3d( vertex[  9 ][0], vertex[  9 ][1], vertex[  9 ][2] );
+    glVertex3d( vertex[  9 ][0], vertex[  9 ][1], vertex[  9 ][2] );
+    glNormal3d( vertex[  8 ][0], vertex[  8 ][1], vertex[  8 ][2] );
+    glVertex3d( vertex[  8 ][0], vertex[  8 ][1], vertex[  8 ][2] );
+    glNormal3d( vertex[  7 ][0], vertex[  7 ][1], vertex[  7 ][2] );
+    glVertex3d( vertex[  7 ][0], vertex[  7 ][1], vertex[  7 ][2] );
+    glNormal3d( vertex[  6 ][0], vertex[  6 ][1], vertex[  6 ][2] );
+    glVertex3d( vertex[  6 ][0], vertex[  6 ][1], vertex[  6 ][2] );
+    glNormal3d( vertex[ 10 ][0], vertex[ 10 ][1], vertex[ 10 ][2] );
+    glVertex3d( vertex[ 10 ][0], vertex[ 10 ][1], vertex[ 10 ][2] );
+  glEnd();
+  
+  glBegin( GL_TRIANGLE_STRIP );
+    glNormal3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glVertex3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glNormal3d( vertex[  8 ][0], vertex[  8 ][1], vertex[  8 ][2] );
+    glVertex3d( vertex[  8 ][0], vertex[  8 ][1], vertex[  8 ][2] );
+    glNormal3d( vertex[  2 ][0], vertex[  2 ][1], vertex[  2 ][2] );
+    glVertex3d( vertex[  2 ][0], vertex[  2 ][1], vertex[  2 ][2] );
+    glNormal3d( vertex[  7 ][0], vertex[  7 ][1], vertex[  7 ][2] );
+    glVertex3d( vertex[  7 ][0], vertex[  7 ][1], vertex[  7 ][2] );
+    glNormal3d( vertex[  3 ][0], vertex[  3 ][1], vertex[  3 ][2] );
+    glVertex3d( vertex[  3 ][0], vertex[  3 ][1], vertex[  3 ][2] );
+    glNormal3d( vertex[  6 ][0], vertex[  6 ][1], vertex[  6 ][2] );
+    glVertex3d( vertex[  6 ][0], vertex[  6 ][1], vertex[  6 ][2] );
+    glNormal3d( vertex[  4 ][0], vertex[  4 ][1], vertex[  4 ][2] );
+    glVertex3d( vertex[  4 ][0], vertex[  4 ][1], vertex[  4 ][2] );
+    glNormal3d( vertex[ 10 ][0], vertex[ 10 ][1], vertex[ 10 ][2] );
+    glVertex3d( vertex[ 10 ][0], vertex[ 10 ][1], vertex[ 10 ][2] );
+    glNormal3d( vertex[  5 ][0], vertex[  5 ][1], vertex[  5 ][2] );
+    glVertex3d( vertex[  5 ][0], vertex[  5 ][1], vertex[  5 ][2] );
+    glNormal3d( vertex[  9 ][0], vertex[  9 ][1], vertex[  9 ][2] );
+    glVertex3d( vertex[  9 ][0], vertex[  9 ][1], vertex[  9 ][2] );
+    glNormal3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glVertex3d( vertex[  1 ][0], vertex[  1 ][1], vertex[  1 ][2] );
+    glNormal3d( vertex[  8 ][0], vertex[  8 ][1], vertex[  8 ][2] );
+    glVertex3d( vertex[  8 ][0], vertex[  8 ][1], vertex[  8 ][2] );
+  glEnd();
+
+}
+
+
+
+ 
 };  // end namespace bio

@@ -90,23 +90,19 @@ Bacteria
   siblingB->m_Generation = m_Generation + 1;
 
   // Create a perturbation for separating the daugther cells
-  double angle = static_cast<double>( rand() ) / 
-                 static_cast<double>( RAND_MAX ) *
-                 atan(1.0f) * 4.0;
-
   Cell::VectorType perturbationVector;
   double perturbationLength = m_Radius * 0.75;
-
-  perturbationVector[0] = perturbationLength * cos( angle );
-  perturbationVector[1] = perturbationLength * sin( angle );
+  for(unsigned int d=0; d<PointDimension; d++)
+    {
+    perturbationVector[d] = perturbationLength * 
+                            static_cast<double>( rand()-RAND_MAX/2.0 ) / 
+                            static_cast<double>( RAND_MAX );
+    }
 
   CellularAggregate * aggregate = GetCellularAggregate();
 
   siblingA->m_ParentIdentifier = m_SelfIdentifier;
   siblingB->m_ParentIdentifier = m_SelfIdentifier;
-
-//  aggregate->Add( siblingA,  perturbationVector );
-//  aggregate->Add( siblingB, -perturbationVector );
 
   aggregate->Add( siblingA, siblingB, perturbationVector );
 

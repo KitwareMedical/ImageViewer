@@ -1,5 +1,6 @@
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -11,6 +12,7 @@ ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/Morphogenesis
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
+${GLU_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
@@ -45,6 +47,7 @@ IView
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
+${GLU_LIBRARY}
 )
 
 IF(WIN32)

@@ -3,10 +3,11 @@
 #define __CellsViewerBase_H
 
 #include "itkObject.h"
-#include "fltkDisplayGlWindowFlatGUI.h"
+#include "fltkDisplayGlWindowGUI.h"
+#include "itkImage.h"
+#include "fltkSlice3DDrawer.h"
 #include "CellularAggregate.h"
 #include <time.h>
-
 
 namespace bio {
 
@@ -22,6 +23,13 @@ namespace bio {
 class CellsViewerBase
 {
 
+  typedef unsigned char                             PixelType;
+  
+  typedef itk::Image<PixelType, Cell::Dimension >   ImageType;
+  typedef ImageType::Pointer                        ImagePointer;
+
+  typedef fltk::Slice3DDrawer<ImageType>            SliceDrawerType;
+  typedef SliceDrawerType::Pointer                  SliceDrawerPointer;
 
 public:
 
@@ -46,7 +54,11 @@ private:
   
 	bool      m_Stop;
 
-  fltkDisplayGlWindowFlatGUI  m_Display;
+  fltkDisplayGlWindowGUI              m_Display;
+
+  ImagePointer                        m_Image;
+
+  SliceDrawerPointer                  m_SliceDrawer;
 
   CellularAggregate::Pointer  m_Cells;
 

@@ -18,8 +18,8 @@ class CellularAggregate;
  * \brief This class implement the minimal behavior 
  * of a biological cell.
  * The basic behavior of a cell is related with the
- * cell cycle. Geometrical concepts like position
- * and size are also managed by this abstract cell.
+ * cell cycle. Geometrical concepts like size and shape
+ * are also managed by this abstract cell.
  * 
  */
 class Cell  
@@ -27,7 +27,8 @@ class Cell
 
 public:
 
-  enum { PointDimension = 2 };
+  enum { Dimension = 2 };
+  enum { PointDimension = Dimension };
 
   typedef   itk::Vector<double,PointDimension>  VectorType;
   typedef   itk::Point<double,PointDimension>   PointType;
@@ -122,9 +123,16 @@ protected:
 
    static     unsigned long  Counter;
 
+   static     int         DisplayList;
+     
 private:
 
-   CellularAggregate  * m_Aggregate;
+   void DrawCircle(void) const;
+   void DrawIcosaedron(void) const;
+
+private:
+
+   CellularAggregate  *   m_Aggregate;
 
 };
 
