@@ -38,8 +38,11 @@ SET(TripleTKID_SRCS
 TripleTKMain.cxx
 TripleTK2D.cxx
 TripleTK3D.cxx
-TripleTKGUI.cxx
 TripleTKGUI_CB.cxx
+)
+
+SET(TripleTKID_GUI_SRCS
+TripleTKGUI.fld
 )
 
 LINK_LIBRARIES (
@@ -65,4 +68,6 @@ IF(UNIX)
 ENDIF(UNIX)
 
 ADD_EXECUTABLE(TripleTKID ${TripleTKID_SRCS})
+FLTK_WRAP_UI(TripleTKID     ${TripleTKID_GUI_SRCS})
+
 
