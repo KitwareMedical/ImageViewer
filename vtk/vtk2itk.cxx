@@ -17,8 +17,8 @@
 #include "vtkActor.h"
 #include "vtkRenderWindowInteractor.h"
 
-typedef itk::Mesh<float, 
-  itk::DefaultStaticMeshType< float, 3, 3, float, float > > floatMesh;
+typedef itk::Mesh<float, 3,
+  itk::DefaultStaticMeshTraits< float, 3, 3, float, float > > floatMesh;
 
 void Display(vtkUnstructuredGrid* itkgrid, vtkUnstructuredGrid* vtkgrid)
 {
@@ -74,7 +74,7 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
   for(int i =0; i < numPoints; i++)
     {
     float* apoint = vtkpoints->GetPoint(i);
-    mesh->SetPoint(i, floatMesh::Point(apoint));
+    mesh->SetPoint(i, floatMesh::PointType(apoint));
     }
   vtkCellArray* vtkcells = grid->GetCells();
   floatMesh::CellsContainerPointer cells = floatMesh::CellsContainer::New();
@@ -99,16 +99,16 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
       {
       case VTK_TRIANGLE:
         {
-        itk::TriangleCell<float, floatMesh::CellType>::Pointer t 
-        = itk::TriangleCell<float, floatMesh::CellType>::New();
+        itk::TriangleCell<float, floatMesh::CellTraits>::Pointer t 
+        = itk::TriangleCell<float, floatMesh::CellTraits>::New();
 	t->SetPointIds((unsigned long*)pts);
 	c = t;
 	break;
 	}  
       case VTK_QUAD:
         {
-        itk::QuadrilateralCell<float, floatMesh::CellType>::Pointer t 
-        = itk::QuadrilateralCell<float, floatMesh::CellType>::New();
+        itk::QuadrilateralCell<float, floatMesh::CellTraits>::Pointer t 
+        = itk::QuadrilateralCell<float, floatMesh::CellTraits>::New();
 	t->SetPointIds((unsigned long*)pts);
 	c = t;
 	break;
@@ -151,9 +151,9 @@ class VistVTKCellsClass
 public:
   // typedef the itk cells we are interested in
   typedef itk::TriangleCell<floatMesh::PixelType, 
-    floatMesh::CellType>  floatTriangleCell;
+    floatMesh::CellTraits>  floatTriangleCell;
   typedef itk::QuadrilateralCell<floatMesh::PixelType, 
-    floatMesh::CellType> floatQuadrilateralCell;
+    floatMesh::CellTraits> floatQuadrilateralCell;
 
   // Set the vtkCellArray that will be constructed
   void SetCellArray(vtkCellArray* a) 
@@ -187,14 +187,14 @@ public:
 };
   
 typedef itk::CellInterfaceVisitorImplementation<
-float, floatMesh::CellType,
-  itk::TriangleCell<floatMesh::PixelType, floatMesh::CellType >, 
+float, floatMesh::CellTraits,
+  itk::TriangleCell<floatMesh::PixelType, floatMesh::CellTraits >, 
   VistVTKCellsClass> TriangleVisitor;
 
 
 typedef itk::CellInterfaceVisitorImplementation<
-float, floatMesh::CellType,
-  itk::QuadrilateralCell<floatMesh::PixelType, floatMesh::CellType >, 
+float, floatMesh::CellTraits,
+  itk::QuadrilateralCell<floatMesh::PixelType, floatMesh::CellTraits >, 
   VistVTKCellsClass> QuadrilateralVisitor;
 
 
@@ -225,7 +225,7 @@ vtkUnstructuredGrid* MeshToUnstructuredGrid(floatMesh* mesh)
     // Set the vtk point at the index with the the coord array from itk
     // itk returns a const pointer, but vtk is not const correct, so
     // we have to use a const cast to get rid of the const
-    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetCoords()));
+    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetDataPointer()));
     }
   // Set the points on the vtk grid
   vgrid->SetPoints(vpoints);
