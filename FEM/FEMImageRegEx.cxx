@@ -56,9 +56,9 @@ ImageRegEx::ImageRegEx( )
 void ImageRegEx::RunRegistration()
 {
     std::cout << "beginning \n";  
-    std::cout << "input E  , m_Maxiters , dt , rho :" ;
+    //std::cout << "input E  , m_Maxiters , dt , rho :" ;
     
-    std::cin >> m_E >> m_Maxiters >> m_dT >> m_Rho; 
+    //std::cin >> m_E >> m_Maxiters >> m_dT >> m_Rho; 
   
     m_Solver.SetDeltatT(m_dT);  
     m_Solver.SetRho(m_Rho);    
@@ -103,7 +103,6 @@ void ImageRegEx::RunRegistration()
     
     itpackWrapper.JacobianSemiIterative(); // err 23 500 its
     
-    
     // did not converge below here:  ordered best to worst
    // itpackWrapper.SymmetricSuccessiveOverrelaxationSuccessiveOverrelaxation(); // err 53
    // itpackWrapper.SymmetricSuccessiveOverrelaxationConjugateGradient();// err 43 
@@ -146,7 +145,8 @@ void ImageRegEx::ReadImages()
   itk::ImageFileReader<ImageType>::Pointer tarfilter 
                                 = itk::ImageFileReader<ImageType>::New();
   
-  itk::MetaImageIOFactory::RegisterOneFactory();
+  // Put Your Factory Here.
+  //itk::MetaImageIOFactory::RegisterOneFactory();
     
   reffilter->SetFileName(m_ReferenceFileName); 
   reffilter->Update();
@@ -237,6 +237,7 @@ void ImageRegEx::GenRegMesh()
   m->h=1.0;     /* Crossection area */
   m->I=1.0;    /* Momemt of inertia */
   m->nu=0.; //.0;    /* poissons -- DONT CHOOSE 1.0!!*/
+  m->RhoC=1.0;
   m_Solver.mat.push_back( FEMP<Material>(&*m) );
 
  
@@ -477,13 +478,12 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
   ImgIterator wimIter( m_WarpedImage,m_Wregion );
 
   fbin=fopen(fullfname.c_str(),"wb");
-  typedef unsigned char imgtype;
-  imgtype t=0;
+  ImageDataType t=0;
   // for arbitrary dimensionality
   wimIter.GoToBegin();  
   for( ; !wimIter.IsAtEnd(); ++wimIter )
   {
-    t=(imgtype) wimIter.Get();
+    t=(ImageDataType) wimIter.Get();
     fwrite(&t,sizeof(t),1,fbin); 
   }
   fclose(fbin);     
@@ -525,18 +525,18 @@ int main()
  
   X.SetReferenceFile(m_ReferenceFileName);
   X.SetTargetFile(m_TargetFileName);
-  X.SetMeshResolution(4);
+  X.SetMeshResolution(16);
   X.SetNumberOfIntegrationPoints(4);
   X.SetWidthOfMetricRegion(3);
   X.m_Solver.SetAlpha(0.5);
   X.SetDescentDirectionPositive();
   X.SetLineSearch(false);
 
-/* Set by user interaction */  
-//  X.SetMaximumIterations(5);
-//  X.SetTimeStep(0.01);
-//  X.SetElasticity(1.0);
-
+/* typically Set by user interaction */  
+  X.SetMaximumIterations(5);
+  X.SetTimeStep(0.01);
+  X.SetElasticity(1.0);
+  X.SetRho(1.0);
   X.RunRegistration();
   X.WriteWarpedImage("E:\\Avants\\MetaImages\\result");
 
