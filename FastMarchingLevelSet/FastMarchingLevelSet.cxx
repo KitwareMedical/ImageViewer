@@ -52,6 +52,8 @@ FastMarchingLevelSet
   m_ThresholdFilter->SetUpperThreshold( 
       static_cast<InputPixelType>( upperThresholdValueInput->value() ) );
 
+  m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
+
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
 
