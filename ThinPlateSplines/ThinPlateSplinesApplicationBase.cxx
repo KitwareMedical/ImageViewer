@@ -69,6 +69,9 @@ ThinPlateSplinesApplicationBase
 ThinPlateSplinesApplicationBase
 ::~ThinPlateSplinesApplicationBase()
 {
+
+  m_TimeCollector.Hide();
+  
   m_RenderWindow->Delete();
   m_Renderer->Delete();
 
