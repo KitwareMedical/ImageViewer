@@ -1,10 +1,11 @@
-#include "itkImageFileReader.h"
-#include "itkImageFileWriter.h"
 #include "itkPNGImageIO.h"
 #include "itkRawImageIO.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
 #include "itkThresholdSegmentationLevelSetImageFilter.h"
 #include "itkCastImageFilter.h"
 #include <iostream>
+
 extern "C" {
 #include <stdio.h>
 }
