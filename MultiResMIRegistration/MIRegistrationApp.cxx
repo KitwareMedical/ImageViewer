@@ -276,7 +276,8 @@ InputImageType * imgPtr
 
   // read the file
   InputPixelType * buffer = imgPtr->GetBufferPointer();
-  imgStream.read( (char *) buffer, numPixels * sizeof(InputPixelType) );
+  imgStream.read( (unsigned char *) buffer,
+                  numPixels * sizeof(InputPixelType) );
 
   // clost the file
   imgStream.close();
@@ -650,7 +651,7 @@ const char * basename )
   
   // write image out to pgm files
   char filename[256];
-  char buffer[50];
+  unsigned char buffer[50];
   unsigned long ncol = input->GetBufferedRegion().GetSize()[0];
   unsigned long nrow = input->GetBufferedRegion().GetSize()[1];
   unsigned long nslice = input->GetBufferedRegion().GetSize()[2];
@@ -683,7 +684,7 @@ const char * basename )
     for( unsigned long i = 0; i < npixels; i++ )
       {
       double value = (double(inIter.Get()) - offset) / scale * 255;
-      char num = vnl_math_rnd( value );
+      unsigned char num = vnl_math_rnd( value );
       imgStream.put( num );
       ++inIter;
       }
