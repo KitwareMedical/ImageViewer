@@ -77,7 +77,7 @@ int main()
   itk::ImageRegionIterator<TImageType> it =
      itk::ImageRegionIterator<TImageType>(sourceImage, largestPossibleRegion);
 
-  int numImagePixels = 0;
+  unsigned long numImagePixels = 0;
   unsigned char exteriorPixelValue = 128;
   for(it.GoToBegin(); !it.IsAtEnd(); ++it)
     {
@@ -115,9 +115,12 @@ int main()
  
   spatialFunc->SetOrientation(orientation, uniqueAxisLength, symmetricAxesLength);
 
-  TImageType::IndexType seedPos;
-  const TImageType::IndexValueType pos[] = {center[0], center[1], center[2]};
-  seedPos.SetIndex(pos);
+  typedef TImageType::IndexType       IndexType;
+  typedef IndexType::IndexValueType   IndexValueType;
+  IndexType seedPos;
+  seedPos[0] = static_cast< IndexValueType >( center[0] ); 
+  seedPos[1] = static_cast< IndexValueType >( center[1] ); 
+  seedPos[2] = static_cast< IndexValueType >( center[2] ); 
 
   itk::FloodFilledSpatialFunctionConditionalIterator<TImageType, TSymEllipsoidFunctionType> 
     sfi = itk::FloodFilledSpatialFunctionConditionalIterator<TImageType,
@@ -130,36 +133,39 @@ int main()
     sfi.Set(interiorPixelValue);
     }
 
-  TImageType::PixelType apixel;
-  int numExteriorPixels = 0; // Number of pixels not filled by spatial function
-  int numInteriorPixels = 0; // Number of pixels filled by spatial function
-  int numErrorPixels = 0; // Number of pixels not set by spatial function
+  typedef TImageType::PixelType     PixelType;
+  unsigned int numExteriorPixels = 0; // Number of pixels not filled by spatial function
+  unsigned int numInteriorPixels = 0; // Number of pixels filled by spatial function
+  unsigned int numErrorPixels = 0; // Number of pixels not set by spatial function
   
-  TImageType::IndexValueType indexarray[3] = {0,0,0};
-
   // Iterate through source image and get pixel values and count pixels 
   // iterated through, not filled by spatial function, filled by spatial
   // function, and not set by the spatial function.
-  for(int x = 0; x < xExtent; x++)
+  for(unsigned long x = 0; x < xExtent; x++)
     {
-     for(int y = 0; y < yExtent; y++)
+    IndexType index;
+    index[0] = static_cast< IndexValueType >( x );
+    for(unsigned long y = 0; y < yExtent; y++)
+      {
+      index[1] = static_cast< IndexValueType >( y );
+      for(unsigned long z = 0; z < zExtent; z++)
         {
-        for(int z = 0; z < zExtent; z++)
+        index[2] = static_cast< IndexValueType >( z );
+        const PixelType apixel = sourceImage->GetPixel(index);
+        if(apixel == exteriorPixelValue) 
           {
-          indexarray[0] = x;
-          indexarray[1] = y;
-          indexarray[2] = z;
-          TImageType::IndexType index;
-          index.SetIndex(indexarray);
-          apixel = sourceImage->GetPixel(index);
-          if(apixel == exteriorPixelValue) 
           ++numExteriorPixels;
-          else if(apixel == interiorPixelValue) 
+          }
+        else if(apixel == interiorPixelValue) 
+          {
           ++numInteriorPixels;
-          else if(apixel != interiorPixelValue || apixel != exteriorPixelValue) 
+          }
+        else if(apixel != interiorPixelValue || apixel != exteriorPixelValue) 
+          {
           ++numErrorPixels;
           }
-       }
+        }
+      }
     }
 
   // Volume of ellipsoid using V=(4/3)*pi*(a/2)*(b/2)*(c/2)
