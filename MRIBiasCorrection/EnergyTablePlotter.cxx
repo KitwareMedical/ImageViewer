@@ -44,7 +44,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "myutils.h"
 #include "OptionList.h"
-#include "EnergyTable.h"
+#include "itkCompositeValleyFunction.h"
+
+typedef itk::CompositeValleyFunction EnergyFunction ;
 
 void print_usage()
 {
@@ -95,8 +97,8 @@ int main(int argc, char* argv[])
     {
       options.GetMultiDoubleOption("class-mean", &classMeans, true) ;
       options.GetMultiDoubleOption("class-sigma", &classSigmas, true) ; 
-      useLog = options.GetBooleanOption("use-log", true) ;
-      interval = options.GetIntOption("interval", true) ;
+      useLog = options.GetBooleanOption("use-log", true, true) ;
+      interval = options.GetIntOption("interval", 10, true) ;
       
       if (classMeans.size() == 0 || classSigmas.size() == 0)
         exit(0) ;
@@ -125,19 +127,20 @@ int main(int argc, char* argv[])
         }
     }
 
-  EnergyTable energy(classMeans, classSigmas) ;
+  EnergyFunction energy(classMeans, classSigmas) ;
   
   double higher = energy.GetHigherBound() ;
   double lower = energy.GetLowerBound() ;
   long noOfSamples = energy.GetNumberOfSamples() ; 
   double TableInc = (double) ((higher - lower) / 
                               (noOfSamples - 1));
+
   double d = lower;
   std::cout << "intensity\tenergy" << std::endl ;
   int i = 0 ;
   while(i < noOfSamples)
     {
-      std::cout << d << "\t" << energy.GetEnergy0(d) << std::endl ;
+      std::cout << d << "\t" << energy(d) << std::endl ;
       i += interval ;
       d += TableInc * interval ;
     }
