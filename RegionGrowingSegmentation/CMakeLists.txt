@@ -6,7 +6,6 @@ INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/RegionGrowingSegmentation
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
@@ -19,7 +18,6 @@ LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Auxiliary/MetaImage
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/RegionGrowingSegmentation
 )
@@ -40,6 +38,7 @@ ITKNumerics
 VXLNumerics
 ITKBasicFilters 
 ITKIO
+MetaIO
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
