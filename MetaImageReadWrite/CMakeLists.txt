@@ -1,12 +1,9 @@
-LINK_LIBRARIES (
-  ITKBasicFilters
-  ITKIO
-    )
-
 IF(WIN32)
-  LINK_LIBRARIES(
-    wsock32
-  )
+  IF(NOT BORLAND)
+    SET(ITK_MIRW_WSOCK32 wsock32)
+  ENDIF(NOT BORLAND)
 ENDIF(WIN32)
 
-ADD_EXECUTABLE( MetaImageReadWrite MetaImageReadWrite.cxx )
+ADD_EXECUTABLE(MetaImageReadWrite MetaImageReadWrite.cxx)
+TARGET_LINK_LIBRARIES(MetaImageReadWrite ITKBasicFilters ITKIO
+                      ${ITK_MIRW_WSOCK32})

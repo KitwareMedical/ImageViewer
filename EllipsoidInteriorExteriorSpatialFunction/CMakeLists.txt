@@ -1,38 +1,19 @@
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Examples/EllipsoidInteriorExteriorSpatialFunction
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Code/BasicFilters
-)
-
-SET(ELLIPSOID_SPATIAL_FUNCTION_SRCS
-itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx
-)
-
-LINK_LIBRARIES (
-ITKCommon
-ITKIO
-ITKBasicFilters
-)
-
 IF(WIN32)
-  LINK_LIBRARIES(
-  wsock32
-  )
+  IF(NOT BORLAND)
+    SET(LIBS wsock32)
+  ENDIF(NOT BORLAND)
 ENDIF(WIN32)
 
 IF(UNIX)
-  LINK_LIBRARIES (
-  -lm
-  )
+  SET(LIBS -lm)
 ENDIF(UNIX)
 
 ADD_EXECUTABLE(itkEllipsoidInteriorExteriorSpatialFunctionExample 
-${ELLIPSOID_SPATIAL_FUNCTION_SRCS})
-
+               itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx)
+TARGET_LINK_LIBRARIES(itkEllipsoidInteriorExteriorSpatialFunctionExample
+  ITKBasicFilters ITKIO ${LIBS}
+)
