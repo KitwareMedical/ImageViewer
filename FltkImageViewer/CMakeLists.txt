@@ -1,13 +1,15 @@
-FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.H H:/usr/local/fltk /usr/local/fltk )
+INCLUDE(${CMAKE_SOURCE_DIR}/CMake/Modules/FindFLTK.cmake)
 
 SOURCE_FILES(FltkImageViewer_SRCS
-fltkDisplayWindowGUI
+fltkDisplayGLWindowGUI
 fltkGlWindow
 fltkGlWindowInteractive
 fltkGlWindowInteractiveFlat
 fltkImageViewerGUI
 fltkLightButtonRedrawCommand
 fltkProgressBarRedrawCommand
+fltkRegularStepGradientDescent
+fltkRegularStepGradientDescentGUI
 fltkSlice3DDrawerGUI
 fltkWindowInteractive
 )
@@ -15,7 +17,7 @@ fltkWindowInteractive
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
-${FLTK_INCLUDE_DIR}
+${FLTK_INCLUDE_PATH}
 )
 
 ADD_LIBRARY(
