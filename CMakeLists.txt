@@ -16,6 +16,10 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 # select filters in itk.
 SUBDIRS (ITKFilterLib)
 
+#Build the example of how to create a static library for 
+# the multi-resolution mutual information registration framework in itk.
+SUBDIRS (ITKRegistrationLib)
+
 #Build the parameter file parser necessary for several examples that follow
 SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 
