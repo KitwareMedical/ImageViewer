@@ -31,6 +31,16 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
             xywh {0 0 100 20}
           }
           menuitem {} {
+            label Export
+            callback {ExportDrawing();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Export XFIG}
+            callback {ExportXFIG();} selected
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
             label Quit
             callback {Quit();}
             xywh {0 0 100 20} shortcut 0x80071
@@ -120,7 +130,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       Fl_Button createEggButton {
         label {Create Egg}
         callback {SelectSpecies( speciesBrowser->value()-1 );
-speciesWindow->hide();} selected
+speciesWindow->hide();}
         xywh {25 160 100 25} deactivate
       }
       Fl_Button {} {

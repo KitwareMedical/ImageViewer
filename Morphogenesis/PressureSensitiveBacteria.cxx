@@ -11,13 +11,8 @@ namespace bio {
 
 
 // Class static variables
-double    PressureSensitiveBacteria::PressureThresold = 10.0f;
-
-Cell::ColorType PressureSensitiveBacteria::LowPressureColor;
-Cell::ColorType PressureSensitiveBacteria::MediumPressureColor;
-Cell::ColorType PressureSensitiveBacteria::HighPressureColor;
-Cell::ColorType PressureSensitiveBacteria::VeryHighPressureColor;
-
+double    PressureSensitiveBacteria::PressureThresold =  5.0f;
+double    PressureSensitiveBacteria::PressureRamp     =  5.0f;
 
 
 
@@ -27,10 +22,6 @@ Cell::ColorType PressureSensitiveBacteria::VeryHighPressureColor;
 PressureSensitiveBacteria
 ::PressureSensitiveBacteria()
 {
-  m_Pressure          = 0.0f;
-  m_PreviousPressure  = 0.0f;
-  m_CycleArrest       = false;
-  m_ColorByPressure   = true;
 }
 
 
@@ -64,6 +55,8 @@ PressureSensitiveBacteria
 }
 
 
+
+
 /**
  *    Create Egg (A cell with generation counter in zero)
  */ 
@@ -76,126 +69,87 @@ PressureSensitiveBacteria
   Cell::GrowthRadiusIncrement = 0.01;
   Cell::GrowthRadiusLimit     = 2.00;
 
-  LowPressureColor.Set(      0.0, 0.0, 1.0 );
-  MediumPressureColor.Set(   0.0, 1.0, 1.0 );
-  HighPressureColor.Set(     1.0, 0.0, 0.0 );
-  VeryHighPressureColor.Set( 0.0, 1.0, 1.0 );
-
-  SetDefaultColor( LowPressureColor );
+  Cell::SphereShape = fltk::Sphere3D::New();
+  Cell::SphereShape->SetNumberOfSlices( 12 );
+  Cell::SphereShape->SetNumberOfStacks( 6 );
 
   PressureSensitiveBacteria * bacteria = new PressureSensitiveBacteria;
   bacteria->m_ParentIdentifier = 0;
   bacteria->m_SelfIdentifier = 1;
   bacteria->m_Generation = 0;
+  
+  bacteria->m_Genome = new Genome;
+  
   return bacteria;
+  
+}
+
+
+
+
+
+/**
+ *   Compute the Gene Network
+ *   This method update the level of expression of 
+ *   all the genes in the cell's genome.
+ *   see: http://www.ingeneue.org  for details
+ */ 
+void
+PressureSensitiveBacteria
+::ComputeGeneNetwork(void) 
+{
+  // Color the bacteria acording to pressure.
+  // This is done by generating pigments under 
+  // the influence of presure.
+  const double red = Genome::Sigmoide( PressureThresold, 
+                                       PressureRamp, 
+                                       m_Pressure );
+
+  if( m_Pressure > 1e-5 ) {
+  std::cout << m_Pressure  << "  ->  " << red << std::endl;
+  }
+  m_Genome->SetExpressionLevel( RedGene,      red  );
+  m_Genome->SetExpressionLevel( BlueGene,    0.0   );
+  m_Genome->SetExpressionLevel( GreenGene, 1.0-red );
+
 }
 
 
 
 
 /**
- *    Check point before division
- *    This check point will control
- *    the entrance in the division stage.
- *    It returns true when conditions
- *    required for division are satisfied.
+ *    Check point before initiating DNA replication.
+ *    This check point controls the entrance in the 
+ *    duplication of the genome by DNA synthesis, also
+ *    known as the S phase of the Cell cycle.
+ *    This method returns true when conditions required 
+ *    for DNA replication are satisfied.
  */ 
 bool
 PressureSensitiveBacteria
-::CheckPointDivision(void) 
+::CheckPointDNAReplication(void) 
 {
-  bool super = SuperClass::CheckPointDivision();
-
-  if( !super )
+  const bool parent = Prokariote::CheckPointDNAReplication();
+  if( !parent )
     {
-    return super;
+    return parent;
     }
-
-  bool here = false;
-
-  if( !m_CycleArrest )
-    {
-    if( m_Pressure < PressureThresold )
-      {
-      here = true;
-      }
-    }
-
-  return ( super && here );
-
-}
-
-
-
-/**
- *    Add a force to the cumulator for evaluating pressure
- */ 
-void
-PressureSensitiveBacteria
-::AddForce( const VectorType & force )
-{
-  double factor = 1.0 / pow( m_Radius, Cell::Dimension );
-
-  Cell::AddForce( force );
-  m_Pressure += force.GetNorm() * factor;
-
+  bool pressureOk = true;
   if( m_Pressure > PressureThresold )
     {
-    if( m_ColorByPressure )
-      {
-      m_Color = HighPressureColor;
-      }
-    m_CycleArrest = true;
-    }
-  else 
-    {
-    if( !m_CycleArrest )
-      {
-      if( m_ColorByPressure )
-        {
-        m_Color = LowPressureColor;
-        }
-      }
+    pressureOk = false;
+    // this should rather be done by relating a
+    // pressure sensitive protein with one of the 
+    // cycline kinases involved in cell cycle control.
+    std::cout << "Cell " << m_SelfIdentifier << " stopped replication ";
+    std::cout << " pressure = " << m_Pressure << std::endl;
     }
 
+  return pressureOk;
+
 }
 
 
-
-/**
- *    Clear the Pressure cumulator at 
- *    the same time the Force cumulator
- *    is cleared.
- */ 
-void
-PressureSensitiveBacteria
-::ClearForce( void )
-{
-  Cell::ClearForce();
-  m_PreviousPressure = m_Pressure;
-  m_Pressure = 0.0f;
-}
-
-
-
-
-void
-PressureSensitiveBacteria
-::SetColorByPressure( bool colorByPressure )
-{
-  m_ColorByPressure = colorByPressure;
-}
-
-
-
-void
-PressureSensitiveBacteria
-::Divide( void )
-{
-
-  SuperClass::Divide();
-}
- 
 
 
 

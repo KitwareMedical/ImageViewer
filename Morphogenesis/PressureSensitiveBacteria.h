@@ -24,34 +24,22 @@ public:
   PressureSensitiveBacteria();
   virtual ~PressureSensitiveBacteria();
 
-  virtual bool CheckPointDivision(void);
+  virtual void ComputeGeneNetwork(void);
+  virtual bool CheckPointDNAReplication(void);
 
-  virtual void ClearForce(void);
-  virtual void AddForce(const VectorType & force);
-  virtual void Divide( void );
 
   static  Cell * CreateEgg(void);
 
   static const char * GetSpeciesName(void) 
                           { return "Pressure Sensitive Bacteria"; }
-  virtual void SetColorByPressure( bool );
 
 private:
   
-  virtual Cell * CreateNew(void);
+  virtual Cell *   CreateNew(void);
 
-  double                   m_Pressure;
-  double                   m_PreviousPressure;
+  static double    PressureThresold;
+  static double    PressureRamp;
 
-  bool                     m_CycleArrest;
-  bool                     m_ColorByPressure;
-  
-  static double            PressureThresold;
-
-  static ColorType         LowPressureColor;
-  static ColorType         MediumPressureColor;
-  static ColorType         HighPressureColor;
-  static ColorType         VeryHighPressureColor;
   
 };
 

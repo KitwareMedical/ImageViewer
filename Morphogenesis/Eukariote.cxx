@@ -10,7 +10,6 @@
 namespace bio {
 
 
-unsigned long Eukariote::GrowthMaximumLatencyTime    = 50; 
 unsigned long Eukariote::DivisionMaximumLatencyTime  = 50; 
 
 
@@ -21,7 +20,6 @@ Eukariote
 ::Eukariote()
 {
   // add a random time before starting to grow
-  m_GrowthLatencyTime   = rand() % this->GetGrowthMaximumLatencyTime();
   m_DivisionLatencyTime = rand() % this->GetDivisionMaximumLatencyTime();
 }
 
@@ -49,6 +47,8 @@ void
 Eukariote
 ::Grow(void) 
 {
+  // This introduces a delay before 
+  // starting the growth process
   SuperClass::Grow();
 }
 
@@ -78,7 +78,11 @@ Eukariote
   eukariote->m_ParentIdentifier = 0;
   eukariote->m_SelfIdentifier = 1;
   eukariote->m_Generation = 0;
+  
+  eukariote->m_Genome = new Genome;
+  
   return eukariote;
+  
 }
 
 
@@ -91,9 +95,9 @@ Eukariote
  */ 
 void
 Eukariote
-::Divide(void) 
+::Mitosis(void) 
 {
-  SuperClass::Divide();
+  SuperClass::Mitosis();
 
   Eukariote * siblingA = dynamic_cast<Eukariote*>( this->CreateNew() );
   Eukariote * siblingB = dynamic_cast<Eukariote*>( this->CreateNew() );
@@ -103,6 +107,10 @@ Eukariote
 
   siblingA->m_Generation = m_Generation + 1;
   siblingB->m_Generation = m_Generation + 1;
+
+  // Pass the genome to each daughter cell
+  siblingA->m_Genome = m_Genome;
+  siblingB->m_Genome = m_GenomeCopy;
 
   // Create a perturbation for separating the daugther cells
   Cell::VectorType perturbationVector;
@@ -144,46 +152,17 @@ Eukariote
 
 
 
+
 /**
- *    Check point after division
- *    This check point will control
- *    the entrance in the growth stage.
- *    It returns true when conditions
- *    required for growth are satisfied.
+ *    Check point before initiating DNA replication (S phase)
+ *    This check point will control the entrance in the replication stage.
+ *    It returns true when conditions required for replication are satisfied
  */ 
 bool
 Eukariote
-::CheckPointGrowth(void) 
+::CheckPointDNAReplication(void) 
 {
-
-  bool super = SuperClass::CheckPointGrowth();
-  bool here  = false;
-
-  if( m_GrowthLatencyTime )
-    {
-    m_GrowthLatencyTime--;
-    }
-  else
-    {
-    here = true;
-    }
-
-  return ( super && here );
-}
-
-
-/**
- *    Check point before division
- *    This check point will control
- *    the entrance in the division stage.
- *    It returns true when conditions
- *    required for division are satisfied.
- */ 
-bool
-Eukariote
-::CheckPointDivision(void) 
-{
-  bool super = SuperClass::CheckPointDivision();
+  const bool super = SuperClass::CheckPointDNAReplication();
 
   if( !super )
     {
@@ -212,20 +191,19 @@ Eukariote
 
 /**
  *    Check point before apoptosis
- *    This check point will control
- *    the entrance in the apoptosis stage.
- *    It returns true when conditions
- *    required for apoptosis are satisfied.
+ *    This check point will control the entrance in the apoptosis stage.
+ *    It returns true when conditions required for apoptosis are satisfied.
  *    The cell will die in apoptosis.
  */ 
 bool
 Eukariote
 ::CheckPointApoptosis(void) 
 {
-  bool super = SuperClass::CheckPointApoptosis();
-  bool here  = false;
+  const bool super = SuperClass::CheckPointApoptosis();
+  const bool here  = false;
   return ( super || here );
 }
+
 
 
 
@@ -244,18 +222,6 @@ Eukariote
 
 
 /**
- *    Set Growth Latency Time
- */ 
-void
-Eukariote
-::SetGrowthMaximumLatencyTime( unsigned long latency )
-{
-  Eukariote::GrowthMaximumLatencyTime = latency;
-}
-
-
-
-/**
  *    Get Division Latency Time
  */ 
 unsigned long 
@@ -265,18 +231,6 @@ Eukariote
   return Eukariote::DivisionMaximumLatencyTime;
 }
 
-
-
-
-/**
- *    Get Growth Latency Time
- */ 
-unsigned long 
-Eukariote
-::GetGrowthMaximumLatencyTime( void )
-{
-  return Eukariote::GrowthMaximumLatencyTime; 
-}
 
 
 

@@ -121,6 +121,8 @@ public:
   virtual void SelectSpecies( unsigned int );
   virtual void AddClippingPlane();
   virtual void RemoveClippingPlane();
+  virtual void ExportDrawing( void ) const;
+  virtual void ExportXFIG( void ) const;
   
   SpeciesContainerType & GetSpecies(void);
 

@@ -14,9 +14,9 @@ CellularAggregate
 {
 
   Cell::ColorType color;
-  color.SetRed(0.0);
+  color.SetRed(1.0);
   color.SetGreen(1.0);
-  color.SetBlue(0.0);
+  color.SetBlue(1.0);
   Cell::SetDefaultColor( color );
 
   m_Mesh = MeshType::New();
@@ -80,6 +80,94 @@ CellularAggregate
     cell->Draw( position );
     cellIt++;
     }
+}
+
+
+
+void
+CellularAggregate
+::ExportXFIG(const char * filename) const
+{
+
+  std::ofstream output;
+  output.open( filename );
+
+  if(output.fail() )
+    {
+    return;
+    }
+  
+  output << "#FIG 3.2"  << std::endl;
+  output << "Landscape" << std::endl;
+  output << "Center"    << std::endl;
+  output << "Metric"    << std::endl;
+  output << "A4"        << std::endl;      
+  output << "100.00"    << std::endl;
+  output << "Single"    << std::endl;
+  output << "-2"        << std::endl;
+  output << "1200 2"    << std::endl;
+
+  PointType position;
+
+  CellsIterator cellIt = m_Mesh->GetPointData()->Begin();
+  CellsIterator end    = m_Mesh->GetPointData()->End();
+
+  while( cellIt != end )
+    {
+    Cell * cell = cellIt.Value();
+    const IdentifierType id = cell->GetSelfIdentifier();
+    m_Mesh->GetPoint( id, &position );
+    output << "1 3 0 1 0 7 50 0 -1 0.000 1 0.0000 ";  // properties
+    const float scale = 100.0;
+    unsigned int radius = static_cast<unsigned int>( cell->GetRadius()    * scale );
+    unsigned int x      = static_cast<unsigned int>( 5000.0 + position[0] * scale );
+    unsigned int y      = static_cast<unsigned int>( 5000.0 + position[1] * scale );
+    unsigned int x2     = static_cast<unsigned int>( x + radius * 0.5000 );
+    unsigned int y2     = static_cast<unsigned int>( y + radius * 0.8660 );
+    output <<    x   << " " <<    y   << " ";
+    output << radius << " " << radius << " ";
+    output <<    x   << " " <<    y   << " ";
+    output <<    x2  << " " <<    y2  << std::endl;
+    cellIt++;
+    }
+
+  output.close();
+
+}
+
+
+
+
+
+void
+CellularAggregate
+::ExportDrawing(const char * filename) const
+{
+
+  std::ofstream output;
+  output.open( filename );
+
+  if(output.fail() )
+    {
+    return;
+    }
+  
+  PointType position;
+
+  CellsIterator cellIt = m_Mesh->GetPointData()->Begin();
+  CellsIterator end    = m_Mesh->GetPointData()->End();
+
+  while( cellIt != end )
+    {
+    Cell * cell = cellIt.Value();
+    const IdentifierType id = cell->GetSelfIdentifier();
+    m_Mesh->GetPoint( id, &position );
+    output << position << "   " << cell->GetRadius() << std::endl;
+    cellIt++;
+    }
+
+  output.close();
+
 }
 
 

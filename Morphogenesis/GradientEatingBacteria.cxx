@@ -28,7 +28,6 @@ GradientEatingBacteria
 {
   m_ScheduleApoptosis    = false;
   m_ChemoAttractantLevel = 200.0f;
-  this->SetColorByPressure( false );
 }
 
 
@@ -87,24 +86,25 @@ GradientEatingBacteria
   bacteria->m_ParentIdentifier = 0;
   bacteria->m_SelfIdentifier = 1;
   bacteria->m_Generation = 0;
+  
+  bacteria->m_Genome = new Genome;
+
   return bacteria;
+  
 }
 
 
 
-
 /**
- *    Check point before division
- *    This check point will control
- *    the entrance in the division stage.
- *    It returns true when conditions
- *    required for division are satisfied.
+ *    Check point before DNA replication (S phase)
+ *    This check point will control the entrance in the replication stage.
+ *    It returns true when conditions required for replication are satisfied.
  */ 
 bool
 GradientEatingBacteria
-::CheckPointDivision(void) 
+::CheckPointDNAReplication(void) 
 {
-  bool super = SuperClass::CheckPointDivision();
+  bool super = SuperClass::CheckPointDNAReplication();
 
   if( !super )
     {
@@ -157,9 +157,9 @@ GradientEatingBacteria
 
 void
 GradientEatingBacteria
-::Divide( void )
+::Mitosis( void )
 {
-  SuperClass::Divide();
+  SuperClass::Mitosis();
 }
  
 

@@ -61,12 +61,39 @@ Bacteria
   SetDivisionMaximumLatencyTime( 100 );
   Cell::GrowthRadiusIncrement = 0.01;
   Cell::GrowthRadiusLimit     = 2.00;
+  
+  Cell::SphereShape = fltk::Sphere3D::New();
+  Cell::SphereShape->SetNumberOfSlices( 12 );
+  Cell::SphereShape->SetNumberOfStacks( 6 );
+
   Bacteria * bacteria = new Bacteria;
   bacteria->m_ParentIdentifier = 0;
   bacteria->m_SelfIdentifier = 1;
   bacteria->m_Generation = 0;
+  bacteria->m_Genome = new Genome;
+
+  bacteria->ComputeGeneNetwork();
+  bacteria->SecreteProducts();
+
   return bacteria;
 }
+
+
+/**
+ *   Compute the Gene Network
+ *   This method update the level of expression of 
+ *   all the genes in the cell's genome.
+ *   see: http://www.ingeneue.org  for details
+ */ 
+void
+Bacteria
+::ComputeGeneNetwork(void) 
+{
+  m_Genome->SetExpressionLevel( Cell::RedGene,   1.0 );
+  m_Genome->SetExpressionLevel( Cell::GreenGene, 1.0 );
+  m_Genome->SetExpressionLevel( Cell::BlueGene,  1.0 );
+}
+
 
 
 

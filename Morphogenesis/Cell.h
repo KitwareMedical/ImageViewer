@@ -6,6 +6,7 @@
 #include "itkVector.h"
 #include "itkPoint.h"
 #include "fltkSphere3D.h"
+#include "Genome.h"
 
 
 namespace bio {
@@ -35,6 +36,7 @@ public:
   typedef   itk::Point<double,PointDimension>   PointType;
   typedef   itk::RGBPixel<float>                ColorType;
   typedef   unsigned long                       IdentifierType;
+  typedef   Genome::GeneIdType                  GeneIdType;
 
 
 public:
@@ -45,6 +47,9 @@ public:
   virtual void ClearForce(void);
   virtual void AddForce(const VectorType & force);
   virtual void AdvanceTimeStep(void);
+
+  virtual void ComputeGeneNetwork(void);
+  virtual void SecreteProducts(void);
 
   virtual void SetCellularAggregate( CellularAggregate * );
 
@@ -59,7 +64,8 @@ public:
 protected:
   
   virtual void Grow(void);
-  virtual void Divide(void);
+  virtual void Mitosis(void);
+  virtual void DNAReplication(void);
   virtual void Apoptosis(void);
   
   virtual void EnergyIntake(void);
@@ -67,7 +73,8 @@ protected:
   virtual void ReceptorsReading(void);
   
   virtual bool CheckPointGrowth(void);
-  virtual bool CheckPointDivision(void);
+  virtual bool CheckPointDNAReplication(void);
+  virtual bool CheckPointMitosis(void);
   virtual bool CheckPointApoptosis(void);
 
   virtual Cell * CreateNew(void);
@@ -100,6 +107,9 @@ public:
   static void SetNutrientSelfRepairLevel( double );
   static void SetDefaultColor( const ColorType & color );
 
+  static void SetGrowthMaximumLatencyTime( unsigned long latency );
+  static unsigned long GetGrowthMaximumLatencyTime( void );
+
   static double GetGrowthRadiusLimit( void );
   static void SetMaximumGenerationLimit( unsigned long );
   
@@ -108,12 +118,19 @@ public:
 
 protected:
 
+   Genome             * m_Genome;
+   Genome             * m_GenomeCopy;
+
    VectorType           m_Force;
+   double               m_Pressure;
+
    ColorType            m_Color;
    
    double               m_Radius;
    double               m_EnergyReserveLevel;
    double               m_NutrientsReserveLevel;
+
+   unsigned long        m_GrowthLatencyTime;
 
    IdentifierType       m_ParentIdentifier;
    IdentifierType       m_SelfIdentifier;
@@ -129,9 +146,15 @@ protected:
    static     double      DefaultRadius;
    static     ColorType   DefaultColor;
 
+   static     GeneIdType  BlueGene;
+   static     GeneIdType  RedGene;
+   static     GeneIdType  GreenGene;
+
    static     double      GrowthRadiusLimit;
    static     double      GrowthRadiusIncrement;
+
    static unsigned long   MaximumGenerationLimit;
+   static unsigned long   GrowthMaximumLatencyTime;
 
    static     double      EnergySelfRepairLevel;
    static     double      NutrientSelfRepairLevel;

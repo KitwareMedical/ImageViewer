@@ -40,6 +40,7 @@ CellsViewerCommand
 CellularAggregate
 Eukariote
 GradientEatingBacteria
+Genome
 PressureSensitiveBacteria
 Prokariote
 main

@@ -23,18 +23,15 @@ public:
   virtual ~Eukariote();
 
   virtual void Grow(void);
-  virtual void Divide(void);
+  virtual void Mitosis(void);
   virtual void Apoptosis(void);
 
-  virtual bool CheckPointGrowth(void);
-  virtual bool CheckPointDivision(void);
+  virtual bool CheckPointDNAReplication(void);
   virtual bool CheckPointApoptosis(void);
 
   static  Cell * CreateEgg(void);
 
-  static void SetGrowthMaximumLatencyTime( unsigned long );
   static void SetDivisionMaximumLatencyTime( unsigned long );
-  static unsigned long GetGrowthMaximumLatencyTime(void);
   static unsigned long GetDivisionMaximumLatencyTime(void);
 
   static const char * GetSpeciesName(void) 
@@ -42,10 +39,8 @@ public:
 private:
   
   virtual Cell * CreateNew(void);
-  unsigned long m_GrowthLatencyTime;
   unsigned long m_DivisionLatencyTime;
 
-  static unsigned long GrowthMaximumLatencyTime;
   static unsigned long DivisionMaximumLatencyTime;
 
 };

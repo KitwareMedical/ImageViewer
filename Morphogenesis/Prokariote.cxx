@@ -10,7 +10,6 @@
 namespace bio {
 
 
-unsigned long Prokariote::GrowthMaximumLatencyTime    = 50; 
 unsigned long Prokariote::DivisionMaximumLatencyTime  = 50; 
 
 
@@ -21,7 +20,6 @@ Prokariote
 ::Prokariote()
 {
   // add a random time before starting to grow
-  m_GrowthLatencyTime   = rand() % this->GetGrowthMaximumLatencyTime();
   m_DivisionLatencyTime = rand() % this->GetDivisionMaximumLatencyTime();
 }
 
@@ -78,7 +76,11 @@ Prokariote
   prokariote->m_ParentIdentifier = 0;
   prokariote->m_SelfIdentifier = 1;
   prokariote->m_Generation = 0;
+  
+  prokariote->m_Genome = new Genome;
+  
   return prokariote;
+  
 }
 
 
@@ -91,9 +93,9 @@ Prokariote
  */ 
 void
 Prokariote
-::Divide(void) 
+::Mitosis(void) 
 {
-  SuperClass::Divide();
+  SuperClass::Mitosis();
 
   Prokariote * siblingA = dynamic_cast<Prokariote*>( this->CreateNew() );
   Prokariote * siblingB = dynamic_cast<Prokariote*>( this->CreateNew() );
@@ -103,6 +105,10 @@ Prokariote
 
   siblingA->m_Generation = m_Generation + 1;
   siblingB->m_Generation = m_Generation + 1;
+
+  // Pass the genome to each daughter cell
+  siblingA->m_Genome = m_Genome;
+  siblingB->m_Genome = m_GenomeCopy;
 
   // Create a perturbation for separating the daugther cells
   Cell::VectorType perturbationVector;
@@ -145,45 +151,15 @@ Prokariote
 
 
 /**
- *    Check point after division
- *    This check point will control
- *    the entrance in the growth stage.
- *    It returns true when conditions
- *    required for growth are satisfied.
+ *    Check point before DNA replication (S phase)
+ *    This check point will control the entrance in the replication stage.
+ *    It returns true when conditions required for replication are satisfied.
  */ 
 bool
 Prokariote
-::CheckPointGrowth(void) 
+::CheckPointDNAReplication(void) 
 {
-
-  bool super = SuperClass::CheckPointGrowth();
-  bool here  = false;
-
-  if( m_GrowthLatencyTime )
-    {
-    m_GrowthLatencyTime--;
-    }
-  else
-    {
-    here = true;
-    }
-
-  return ( super && here );
-}
-
-
-/**
- *    Check point before division
- *    This check point will control
- *    the entrance in the division stage.
- *    It returns true when conditions
- *    required for division are satisfied.
- */ 
-bool
-Prokariote
-::CheckPointDivision(void) 
-{
-  bool super = SuperClass::CheckPointDivision();
+  bool super = SuperClass::CheckPointDNAReplication();
 
   if( !super )
     {
@@ -204,6 +180,7 @@ Prokariote
   return ( super && here );
 
 }
+
 
 
 
@@ -241,18 +218,6 @@ Prokariote
 
 
 /**
- *    Set Growth Latency Time
- */ 
-void
-Prokariote
-::SetGrowthMaximumLatencyTime( unsigned long latency )
-{
-  Prokariote::GrowthMaximumLatencyTime = latency;
-}
-
-
-
-/**
  *    Get Division Latency Time
  */ 
 unsigned long 
@@ -260,70 +225,6 @@ Prokariote
 ::GetDivisionMaximumLatencyTime( void )
 {
   return Prokariote::DivisionMaximumLatencyTime;
-}
-
-
-
-
-/**
- *    Get Growth Latency Time
- */ 
-unsigned long 
-Prokariote
-::GetGrowthMaximumLatencyTime( void )
-{
-  return Prokariote::GrowthMaximumLatencyTime; 
-}
-
-
-
-
-/**
- *    Set Division Latency Time
- */ 
-void
-Prokariote
-::SetDivisionLatencyTime( unsigned long latency )
-{
-  m_DivisionLatencyTime = latency;
-}
-
-
-
-
-/**
- *    Set Growth Latency Time
- */ 
-void
-Prokariote
-::SetGrowthLatencyTime( unsigned long latency )
-{
-  m_GrowthLatencyTime = latency;
-}
-
-
-
-/**
- *    Get Division Latency Time
- */ 
-unsigned long 
-Prokariote
-::GetDivisionLatencyTime( void )
-{
-  return m_DivisionLatencyTime;
-}
-
-
-
-
-/**
- *    Get Growth Latency Time
- */ 
-unsigned long 
-Prokariote
-::GetGrowthLatencyTime( void )
-{
-  return m_GrowthLatencyTime; 
 }
 
 

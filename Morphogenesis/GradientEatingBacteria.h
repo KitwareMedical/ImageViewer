@@ -24,12 +24,12 @@ public:
   GradientEatingBacteria();
   virtual ~GradientEatingBacteria();
 
-  virtual bool CheckPointDivision(void);
+  virtual bool CheckPointDNAReplication(void);
 
   virtual void ClearForce(void);
   virtual void AddForce(const VectorType & force);
   virtual void ReceptorsReading(void);
-  virtual void Divide( void );
+  virtual void Mitosis( void );
 
   static  Cell * CreateEgg(void);
 

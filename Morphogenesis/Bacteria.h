@@ -23,6 +23,7 @@ public:
   virtual ~Bacteria();
 
   static  Cell * CreateEgg(void);
+  virtual void ComputeGeneNetwork(void);
 
   static const char * GetSpeciesName(void) 
                           { return "Primitive Bacteria"; }

@@ -130,6 +130,8 @@ public:
   unsigned int GetNumberOfCells(void) const;
  
   void Draw(void) const;
+  void ExportDrawing(const char * filename) const;
+  void ExportXFIG(const char * filename) const;
   void SetGrowthRadiusLimit( double value );
   void SetGrowthRadiusIncrement( double value );
   

@@ -307,7 +307,7 @@ CellsViewerBase
 ::AddClippingPlane( void )
 {
   std::string planeName;
-  const char * name = fl_input("Name for the Clipping Plane");
+  const char * name = fl_input("Name for the Clipping Plane","Plane 1");
   if( !name )
     {
     return;
@@ -372,6 +372,43 @@ CellsViewerBase
     }
 
 }
+
+
+
+/**
+ *    Export positions and radii of cells
+ *    To be overloaded in a subclass
+ */ 
+void
+CellsViewerBase
+::ExportDrawing( void ) const
+{
+  const char * filename = fl_file_chooser("","","");
+  if( !filename )
+    {
+    return;
+    }
+  m_Cells->ExportDrawing( filename );
+}
+
+
+
+/**
+ *    Export positions and radii of cells in XFIG format
+ *    To be overloaded in a subclass
+ */ 
+void
+CellsViewerBase
+::ExportXFIG( void ) const
+{
+  const char * filename = fl_file_chooser("","","");
+  if( !filename )
+    {
+    return;
+    }
+  m_Cells->ExportXFIG( filename );
+}
+
 
 
 

@@ -21,6 +21,8 @@ double             Cell::GrowthRadiusIncrement =       0.01; // microns
 double             Cell::GrowthRadiusLimit     =       2.0; // microns
 unsigned long      Cell::MaximumGenerationLimit =      30L; // 30th generation 
 
+unsigned long      Cell::GrowthMaximumLatencyTime    = 50; 
+
 double             Cell::NutrientSelfRepairLevel  =      0; 
 double             Cell::EnergySelfRepairLevel    =      0; 
 
@@ -33,8 +35,9 @@ unsigned long      Cell::Counter = 0; // number of cells created
 
 int                Cell::DisplayList = 0;  // OpenGL display list
 
-
-
+Cell::GeneIdType   Cell::RedGene   = "Red";
+Cell::GeneIdType   Cell::GreenGene = "Green";
+Cell::GeneIdType   Cell::BlueGene  = "Blue";
 
 
 /**
@@ -44,6 +47,9 @@ Cell
 ::Cell()
 {
 
+  m_Genome      = 0;
+  m_GenomeCopy  = 0;
+  
   m_Radius      = DefaultRadius;
   m_Color       = DefaultColor;
   
@@ -54,11 +60,14 @@ Cell
   m_SelfIdentifier = Counter;  
 
   m_Generation     = 0;
-  m_CycleState     = M;  // cells are created in Mitosis state
+  m_CycleState     = Gap1;  // cells are created in Gap1 state
 
   // Start with minimum reserves
   m_NutrientsReserveLevel = NutrientSelfRepairLevel + DefaultNutrientsIntake;
   m_EnergyReserveLevel    = EnergySelfRepairLevel   + DefaultEnergyIntake;
+
+  // delay before starting to grow after Mitosis
+  m_GrowthLatencyTime   = rand() % this->GetGrowthMaximumLatencyTime();
 
   // too young to die...
   m_MarkedForRemoval = false;
@@ -83,9 +92,23 @@ Cell
  */ 
 void
 Cell
-::Divide(void) 
+::Mitosis(void) 
 {
 }
+
+
+
+/**
+ *    DNA Replication 
+ */ 
+void
+Cell
+::DNAReplication(void) 
+{
+  m_GenomeCopy = new Genome;
+  m_GenomeCopy->Copy( *m_Genome );
+}
+
 
 
 
@@ -97,6 +120,12 @@ void
 Cell
 ::Apoptosis(void) 
 {
+
+  delete m_Genome;
+  delete m_GenomeCopy;
+
+  m_Genome     = 0;
+  m_GenomeCopy = 0;
 
   CellularAggregate * aggregate = GetCellularAggregate();
   // "this" cell will be destroyed here
@@ -122,20 +151,43 @@ Cell
 
 
 /**
- *    Check point before division
- *    This check point will control
- *    the entrance in the division stage.
- *    It returns true when conditions
- *    required for division are satisfied.
+ *    Check point before initiating DNA replication.
+ *    This check point controls the entrance in the 
+ *    duplication of the genome by DNA synthesis, also
+ *    known as the S phase of the Cell cycle.
+ *    This method returns true when conditions required 
+ *    for DNA replication are satisfied.
  */ 
 bool
 Cell
-::CheckPointDivision(void) 
+::CheckPointDNAReplication(void) 
 {
   const bool fatality = (m_Generation < MaximumGenerationLimit );
   const bool radius   = (m_Radius >= GrowthRadiusLimit);
   return ( radius && fatality );
 }
+
+
+
+/**
+ *    Check point before dividing the cell in two daughter cells
+ *    at this point DNA replication has already been performed
+ *    as well as DNA proofreading and error corrections. This 
+ *    check point in principle shoult test if the resulting 
+ *    genomes satisfy the quality standards of a living cell. 
+ */
+bool
+Cell
+::CheckPointMitosis(void) 
+{
+  const bool DNAProofRead = ( m_GenomeCopy && m_Genome );
+  if( !DNAProofRead ) 
+  {
+    std::cerr << "PANIC: DNA failed ! " << std::endl;
+  }
+  return DNAProofRead;
+}
+
 
 
 
@@ -194,7 +246,11 @@ Cell
   cell->m_ParentIdentifier = 0;
   cell->m_SelfIdentifier = 1;
   cell->m_Generation = 0;
+
+  cell->m_Genome = new Genome;
+
   return cell;
+  
 }
 
 
@@ -280,8 +336,8 @@ Cell
         }
       case 3: 
         {
-        //DrawSphere();
-        DrawIcosaedron();
+        DrawSphere();
+        //DrawIcosaedron();
         break;
         }
       }
@@ -307,6 +363,12 @@ void
 Cell
 ::Grow(void) 
 {
+  if( m_GrowthLatencyTime )
+  {
+    m_GrowthLatencyTime--;
+    return;
+  }
+
   if ( m_NutrientsReserveLevel > NutrientSelfRepairLevel &&
        m_EnergyReserveLevel    > EnergySelfRepairLevel       )
     {
@@ -321,13 +383,41 @@ Cell
 
 
 /**
+ *    Set Growth Latency Time
+ */ 
+void
+Cell
+::SetGrowthMaximumLatencyTime( unsigned long latency )
+{
+  Cell::GrowthMaximumLatencyTime = latency;
+}
+
+
+
+
+/**
+ *    Get Growth Latency Time
+ */ 
+unsigned long 
+Cell
+::GetGrowthMaximumLatencyTime( void ) 
+{
+  return Cell::GrowthMaximumLatencyTime;
+}
+
+
+
+
+
+/**
  *    Clear the cumulator for applied forces
  */ 
 void
 Cell
 ::ClearForce(void) 
 {
-  m_Force.Fill( 0.0 );
+  m_Force.Fill( 0.0f );
+  m_Pressure  = 0.0f;
 }
 
 
@@ -437,7 +527,9 @@ void
 Cell
 ::AddForce( const VectorType & force )
 {
-  m_Force += force;
+  double factor = 1.0 / pow( m_Radius, Cell::Dimension );
+  m_Force    += force;
+  m_Pressure += force.GetNorm() * factor;
 }
 
 
@@ -519,6 +611,16 @@ Cell
   // get input from the environment
   this->ReceptorsReading(); 
 
+  // update the level of expression of all the
+  // genes in the gene network
+  this->ComputeGeneNetwork();
+
+  // this methods produce the effects of gene
+  // activation and protein synthesis. It is
+  // mostly used for secreting proteins already
+  // synthetized in the ComputeGeneNetwork method.
+  this->SecreteProducts();
+
   // If this happens, it is an
   // emergency situation: Do it first.
   if( this->CheckPointApoptosis() )
@@ -530,16 +632,11 @@ Cell
   switch( m_CycleState )
   {
   case M: // Mitosis
-    {
-    if( this->CheckPointGrowth() )
-      {
-      m_CycleState = Gap1;
-      }
+    m_CycleState = Gap1;
     break;
-    }
   case Gap1: // Gap 1 : growing
     {
-    if( this->CheckPointDivision() )
+    if( this->CheckPointDNAReplication() )
       {
       m_CycleState = S;
       }
@@ -550,9 +647,13 @@ Cell
     m_CycleState = Gap2;
     break;
   case Gap2:
-    m_CycleState = M;
+    if( this->CheckPointMitosis() )
+      {
+      m_CycleState = M;
+      }
     break;
   case Gap0:
+    // The cell is in cell cycle arrest
     m_CycleState = Gap0;
     break;
   case Apop:
@@ -566,6 +667,10 @@ Cell
   switch( m_CycleState )
   {
   case M:  // Mitosis
+    // This is a terminal action. The implementation of the cell 
+    // is destroyed after division. Our abstraction assumes that 
+    // the cell disapears and two new cell are created.
+    this->Mitosis();
     break;
   case Gap1:
     // Eat and grow
@@ -576,18 +681,15 @@ Cell
   case Gap0:
     this->NutrientsIntake();
     this->EnergyIntake();
-   break;
+    break;
   case S:
-    this->Divide();
-    // this is a terminal action
-    // the cell is destroyed after
-    // division.
-   break; 
+    this->DNAReplication();
+    break; 
   case Gap2:
-   break;
+    break;
   case Apop:
-   this->Apoptosis();
-   break;
+    this->Apoptosis();
+    break;
   }
 }
 
@@ -625,6 +727,35 @@ Cell
 ::ReceptorsReading(void) 
 {
 }
+
+
+
+/**
+ *   Compute the Gene Network
+ *   This method update the level of expression of 
+ *   all the genes in the cell's genome.
+ *   see: http://www.ingeneue.org  for details
+ */ 
+void
+Cell
+::ComputeGeneNetwork(void) 
+{
+}
+
+
+/**
+ *   Secrete synthetized products resulting from 
+ *   the gene network update
+ */ 
+void
+Cell
+::SecreteProducts(void) 
+{
+  m_Color.SetRed(    m_Genome->GetExpressionLevel( RedGene   ) );
+  m_Color.SetGreen(  m_Genome->GetExpressionLevel( GreenGene ) );
+  m_Color.SetBlue(   m_Genome->GetExpressionLevel( BlueGene  ) );
+}
+
 
 
 
