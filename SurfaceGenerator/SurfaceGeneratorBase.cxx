@@ -169,12 +169,12 @@ SurfaceGeneratorBase
     for( unsigned int v=0; v<vStep; v++ )
       {
 
-      const double cu = u * PI / ( 2.0 * uStep ) + randomLevel * rand();
-      const double cv = v * PI / ( 2.0 * vStep ) + randomLevel * rand();
+      const double cu = u * PI / ( 1.0 * uStep ) + randomLevel * rand();
+      const double cv = v * PI / ( 0.5 * vStep ) + randomLevel * rand();
 
-      const double x = a * cos( cu ) * sin( cv );
-      const double y = b * cos( cu ) * cos( cv );
-      const double z = c * sin( cu );
+      const double x = a * sin( cu ) * sin( cv );
+      const double y = b * sin( cu ) * cos( cv );
+      const double z = c * cos( cu );
 
       PointType p;
       p = x, y, z;
