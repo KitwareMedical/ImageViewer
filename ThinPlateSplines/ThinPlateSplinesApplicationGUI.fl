@@ -7,17 +7,18 @@ gridy 5
 snap 3
 class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplicationBase}
 } {
-  Function {ThinPlateSplinesApplicationGUI()} {} {
+  Function {ThinPlateSplinesApplicationGUI()} {open
+  } {
     Fl_Window controlWindow {
       label {Finite Elements Rendering} open
-      xywh {258 123 843 543} resizable
+      xywh {110 167 1010 554} resizable
       code0 {\#include "ThinPlateSplinesApplicationBase.h"} visible
     } {
       Fl_Menu_Bar {} {open
-        xywh {0 0 840 25}
+        xywh {0 0 1010 25}
       } {
         submenu {} {
-          label File open
+          label File
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -27,7 +28,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           }
         }
         submenu {} {
-          label View open
+          label View
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -37,13 +38,23 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           }
         }
         submenu {} {
-          label Create open
+          label Create
           xywh {10 10 100 20}
         } {
           menuitem {} {
             label ThinPlateSplines
-            callback {this->CreateSpline();} selected
+            callback {this->CreateSpline();}
             xywh {10 10 100 20}
+          }
+        }
+        submenu {} {
+          label Time
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label {Time Probes}
+            callback {this->ShowTimeProbes();}
+            xywh {0 0 100 20}
           }
         }
       }
@@ -55,6 +66,56 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           code0 {\#include "vtkFlRenderWindowInteractor.h"}
           code1 {m_FlRenderWindowInteractor->SetRenderWindow( m_RenderWindow );}
           class vtkFlRenderWindowInteractor
+        }
+      }
+      Fl_Group {} {
+        label {Target LandMarks}
+        xywh {830 310 165 185} box ENGRAVED_FRAME
+      } {
+        Fl_Counter targetLandMarkIdCounter {
+          label {LandMark Id}
+          callback {this->SelectTargetLandMark();}
+          xywh {850 345 130 25} align 1 minimum 0 maximum 10000 step 1
+        }
+        Fl_Value_Input xTargetValueInput {
+          label {x :}
+          callback {this->UpdateSelectedTargetLandMark();}
+          xywh {867 390 110 25}
+        }
+        Fl_Value_Input yTargetValueInput {
+          label {y :}
+          callback {this->UpdateSelectedTargetLandMark();}
+          xywh {867 415 110 25}
+        }
+        Fl_Value_Input zTargetValueInput {
+          label {z :}
+          callback {this->UpdateSelectedTargetLandMark();}
+          xywh {867 440 110 25}
+        }
+      }
+      Fl_Group {} {
+        label {Source LandMarks}
+        xywh {831 90 165 185} box ENGRAVED_FRAME
+      } {
+        Fl_Counter sourceLandMarkIdCounter {
+          label {LandMark Id}
+          callback {this->SelectSourceLandMark();}
+          xywh {851 125 130 25} align 1 minimum 0 maximum 10000 step 1
+        }
+        Fl_Value_Input xSourceValueInput {
+          label {x :}
+          callback {this->UpdateSelectedSourceLandMark();}
+          xywh {868 170 110 25}
+        }
+        Fl_Value_Input ySourceValueInput {
+          label {y :}
+          callback {this->UpdateSelectedSourceLandMark();}
+          xywh {868 195 110 25}
+        }
+        Fl_Value_Input zSourceValueInput {
+          label {z :}
+          callback {this->UpdateSelectedSourceLandMark();} selected
+          xywh {868 220 110 25}
         }
       }
     }
