@@ -776,8 +776,21 @@ template <class ImagePixelType, class OverlayPixelType>
 void GLSliceView<ImagePixelType, OverlayPixelType>::resize(int x, int 
                                                            y, int w, int h)
   {
+  // Force the window to keep the same aspect ratio as the image
+  if(cImData)
+    {
+    SizeType size = cImData->GetBufferedRegion().GetSize();
+    float imRatio = (float)size[0]/(float)size[1];
+    float winRatio = (float)w/(float)h;    
+    if(imRatio < winRatio)
+      {
+      w = (int)((float)h*(float)size[0]/(float)size[1]);
+      }
+    }
+
   SliceView<ImagePixelType>::resize(x, y, w, h);
   Fl_Gl_Window::resize(x, y, w, h);
+  Fl::check();
   this->update();
   this->redraw();
   }
@@ -814,11 +827,23 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       return;
       }
     
-    
-    float scale0 = cW/(float)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
-    float scale1 = cW/(float)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
+
+    // Compute the aspect ratio of the image
+    float imRatio = (float)cDimSize[0]/(float)cDimSize[1];
+    float winRatio = (float)cW/(float)cH;
+  
+    int mincWcH = cW;
+    unsigned int order = 0;
+    if(imRatio<winRatio)
+      {
+      order = 1;
+      mincWcH = cH;
+      }
+  
+    float scale0 = mincWcH/(float)cDimSize[order] * cWinZoom
+      * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[order]);
+    float scale1 = mincWcH/(float)cDimSize[order] * cWinZoom
+      * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[order]);
     
     
     glRasterPos2i((cFlipX[cWinOrientation])?cW:0,
