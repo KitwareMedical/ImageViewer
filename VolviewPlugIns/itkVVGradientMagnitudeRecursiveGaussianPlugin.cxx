@@ -87,7 +87,7 @@ void VV_PLUGIN_EXPORT vvGradientMagnitudeRecursiveGaussianInit(vtkVVPluginInfo *
   // setup information that never changes
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
-  info->Name = "Gradient Magnitude";
+  info->Name = "Gradient Magnitude IIR";
   info->TerseDocumentation = "Gradient Magnitude IIR";
   info->FullDocumentation = 
     "This filter applies IIR filters to compute the equivalent of convolving the input image with the derivatives of a Gaussian kernel and then computing the magnitude of the resulting gradient.";
