@@ -41,10 +41,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __MYDEFS_H
 #define __MYDEFS_H
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 
-typedef itk::PhysicalImage<float, 3> ImageType ;
-typedef itk::PhysicalImage<unsigned char, 3> MaskType ;
+typedef itk::Image<float, 3> ImageType ;
+typedef itk::Image<unsigned char, 3> MaskType ;
 typedef ImageType::Pointer ImagePointer ;
 typedef MaskType::Pointer MaskPointer ;
 

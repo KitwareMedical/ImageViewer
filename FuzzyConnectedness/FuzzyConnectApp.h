@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __FuzzyConnectApp_h
 #define __FuzzyConnectApp_h
 
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkFuzzyConnectednessImageFilter.h"
 #include <string>
 
@@ -69,14 +69,14 @@ public:
   /**
    * InputImageType is the raw image type
    */
-  typedef itk::PhysicalImage<InputPixelType,ImageDimension>
+  typedef itk::Image<InputPixelType,ImageDimension>
     InputImageType;
   typedef InputImageType::Pointer InputImagePointer;
 
   /**
    * BinaryImageType is the binary image type
    */
-  typedef itk::PhysicalImage<bool,ImageDimension>
+  typedef itk::Image<bool,ImageDimension>
     BinaryImageType;
   typedef BinaryImageType::Pointer BinaryImagePointer;
 

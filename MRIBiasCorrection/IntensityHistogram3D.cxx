@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <map>
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkReadMetaImage.h>
 #include <itkSimpleImageRegionIterator.h>
 

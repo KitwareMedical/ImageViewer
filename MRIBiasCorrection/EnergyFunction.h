@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <vnl/vnl_vector.h>
 
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkSimpleImageRegionIterator.h>
 
 #include "EnergyTable.h"
