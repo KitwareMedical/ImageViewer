@@ -17,7 +17,7 @@
 #include "fltkTimeProbesCollector.h"
 #include "fltkTimeProbeGUI.h"
 #include <iostream>
-#include <strstrea.h>
+#include <strstream>
 
 namespace fltk 
 {
