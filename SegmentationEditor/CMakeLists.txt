@@ -2,7 +2,7 @@ PROJECT( SegmentationEditor )
 
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
-INCLUDE (${ITK_SOURCE_DIR}/Applications/SegmentationEditor/WST.cmake)
+INCLUDE (${SegmentationEditor_SOURCE_DIR}/WST.cmake)
 
 # Link in with ITK
 INCLUDE_DIRECTORIES ( ${SegmentationEditor_SOURCE_DIR}/../vtkITK/Common )
