@@ -126,7 +126,7 @@ ceExtractorConsoleBase
                               m_ParametricSpace->GetOutput() );
 
   m_SpatialFunctionControl->SetSpatialFunction( 
-      m_SpatialFunctionFilter->GetSpatialFunction().GetPointer() );
+      m_SpatialFunctionFilter->GetSpatialFunction() );
 
 
   m_SpatialFunctionControl->SetAngleZ( 20.0f );
@@ -140,7 +140,7 @@ ceExtractorConsoleBase
   m_InverseParametricFilter = InverseParametricFilterType::New();
 
   m_InverseParametricFilter->SetInput( 
-      m_SpatialFunctionFilter->GetOutput().GetPointer() );
+      m_SpatialFunctionFilter->GetOutput() );
 
 }
 

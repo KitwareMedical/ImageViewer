@@ -84,15 +84,15 @@ liFilterConsole2D
   smoothedButton->Observe( m_Smoothed.GetPointer() );
   modulusButton->Observe( m_Modulus.GetPointer() );
 
-  m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), smoothedButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), smoothedButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand());
 
   this->ShowStatus("Let's start by loading an image...");
 

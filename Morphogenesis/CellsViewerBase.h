@@ -126,8 +126,8 @@ public:
   
   SpeciesContainerType & GetSpecies(void);
 
-  itk::Command::Pointer GetRedrawCommand(void);
-  itk::Object::Pointer GetNotifier(void);
+  itk::Command * GetRedrawCommand(void);
+  itk::Object  * GetNotifier(void);
   
 protected:
   SubstratesType                      m_Substrates;

@@ -85,7 +85,7 @@ ceExtractorConsole
   m_ParametricSpaceSamplesShape = PointSetShapeType::New();
 
   m_ParametricSpaceSamplesShape->SetPointSet( 
-                          m_ParametricSpace->GetOutput().GetPointer() );
+                          m_ParametricSpace->GetOutput() );
   
   // OpenGL display list mode
   m_ParametricSpaceSamplesShape->SetCompileMode( fltk::Shape3D::compileExecute ); 
@@ -97,7 +97,7 @@ ceExtractorConsole
   m_ExtractedParametricSpaceSamplesShape = PointSetShapeType::New();
 
   m_ExtractedParametricSpaceSamplesShape->SetPointSet( 
-                          m_SpatialFunctionFilter->GetOutput().GetPointer() );
+                          m_SpatialFunctionFilter->GetOutput() );
 
   progressSlider->Observe( m_Reader.GetPointer() );
   progressSlider->Observe( m_H1x.GetPointer() );
@@ -137,31 +137,31 @@ ceExtractorConsole
   extractedParametricPointsButton->Observe( m_SpatialFunctionFilter.GetPointer() );
   curve2DPointsButton->Observe( m_InverseParametricFilter.GetPointer() );
 
-  m_Reader->AddObserver( itk::ModifiedEvent(), HxyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1xyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), maxEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), minEigenValueButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), maxEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), parametricSpaceButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), extractedParametricPointsButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), curve2DPointsButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxyButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xyButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), maxEigenValueButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), minEigenValueButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), maxEigenVectorButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), gradientOnEigenVectorButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), parametricSpaceButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), extractedParametricPointsButton->GetRedrawCommand() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), curve2DPointsButton->GetRedrawCommand() );
 
 
   // Register the PointSet as a Drawer in the OpenGL window
   m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
                          fltk::GlDrawEvent(), 
-                         m_ParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
+                         m_ParametricSpaceSamplesShape->GetDrawCommand() );
 
   // Notify the OpenGL window when the set of points changes
   m_ParametricSpace->AddObserver( itk::EndEvent(),
-                        m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+                        m_ParametricSpaceViewer.GetRedrawCommand() );
 
 
   fltk::Shape3D::ColorType  parametricSpacePointsColor;
@@ -186,25 +186,25 @@ ceExtractorConsole
   m_ImageSpaceSamplesShape->SetColor( curve2DColor );
 
   m_ImageSpaceSamplesShape->SetPointSet(
-                  m_InverseParametricFilter->GetOutput().GetPointer() );
+                  m_InverseParametricFilter->GetOutput() );
 
   m_Viewer_Extracted_Points->GetNotifier()->AddObserver(
                   fltk::GlDrawEvent(), 
-                  m_ImageSpaceSamplesShape->GetDrawCommand().GetPointer() );
+                  m_ImageSpaceSamplesShape->GetDrawCommand() );
   
   m_InverseParametricFilter->AddObserver( 
                   itk::EndEvent(),
-                  m_Viewer_Extracted_Points->GetRedrawCommand().GetPointer() );
+                  m_Viewer_Extracted_Points->GetRedrawCommand() );
 
   // Register the SpatialFunctionControl as a Drawer in the OpenGL window
   m_ParametricSpaceViewer.GetNotifier()->AddObserver( 
                   fltk::GlDrawEvent(), 
-                  m_SpatialFunctionControl->GetDrawCommand().GetPointer() );
+                  m_SpatialFunctionControl->GetDrawCommand() );
 
   // Notify the OpenGL window when the spatial function changes
   m_SpatialFunctionControl->AddObserver( 
                   fltk::RedrawEvent(),
-                  m_ParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+                  m_ParametricSpaceViewer.GetRedrawCommand() );
 
 
   
@@ -215,11 +215,11 @@ ceExtractorConsole
   
   m_SpatialFunctionControl->AddObserver( 
                   fltk::RedrawEvent(),
-                  m_ExtractedParametricSpaceViewer.GetRedrawCommand().GetPointer() );
+                  m_ExtractedParametricSpaceViewer.GetRedrawCommand() );
 
   m_ExtractedParametricSpaceViewer.GetNotifier()->AddObserver( 
                   fltk::GlDrawEvent(), 
-                  m_ExtractedParametricSpaceSamplesShape->GetDrawCommand().GetPointer() );
+                  m_ExtractedParametricSpaceSamplesShape->GetDrawCommand() );
 
   m_SpatialFunctionControl->SetParametersFromGUI();
   

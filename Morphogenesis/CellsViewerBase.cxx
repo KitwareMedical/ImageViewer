@@ -249,15 +249,11 @@ void CellsViewerBase
 /**
  *    Return the Command assigned to redraw
  */ 
-itk::Command::Pointer
+itk::Command *
 CellsViewerBase
 ::GetRedrawCommand(void)
 {
-  itk::Command::Pointer command;
-  
-  command = m_Display.GetRedrawCommand();
-
-  return command.GetPointer();
+  return m_Display.GetRedrawCommand();
 }
 
 
@@ -265,11 +261,11 @@ CellsViewerBase
 /**
  *    Return and object that accept observers
  */ 
-itk::Object::Pointer
+itk::Object *
 CellsViewerBase
 ::GetNotifier(void)
 {
-  return m_Display.GetNotifier().GetPointer();
+  return m_Display.GetNotifier();
 }
 
 
@@ -497,11 +493,11 @@ CellsViewerBase
 
   SliceDrawerPointer substrateSliceDrawer = SliceDrawerType::New();
     
-  substrateSliceDrawer->SetInput( imageReader->GetOutput().GetPointer() );
+  substrateSliceDrawer->SetInput( imageReader->GetOutput() );
 
   m_Display.GetNotifier()->AddObserver( 
              fltk::GlDrawEvent(),
-             substrateSliceDrawer->GetDrawCommand().GetPointer() );
+             substrateSliceDrawer->GetDrawCommand() );
 
   substrateSliceDrawer->AddObserver( 
                            fltk::VolumeReslicedEvent(),
@@ -509,12 +505,12 @@ CellsViewerBase
  
   
   m_Substrates[ substrateName ] 
-                  = imageReader->GetOutput().GetPointer();
+                  = imageReader->GetOutput();
   
   m_SubstrateSliceDrawer[ substrateName ] 
                   = substrateSliceDrawer.GetPointer();
 
-  m_Cells->AddSubstrate( imageReader->GetOutput().GetPointer() );
+  m_Cells->AddSubstrate( imageReader->GetOutput() );
 
   substrateSliceDrawer->SetLabel( substrateName.c_str() );
   substrateSliceDrawer->Show();

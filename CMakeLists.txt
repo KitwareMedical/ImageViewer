@@ -39,7 +39,7 @@ ENDIF(HAS_METAIMAGE)
 # Test the conditions for building the Extractor of 2D curves
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(Curves2DExtractor)
+#    SUBDIRS(Curves2DExtractor)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 

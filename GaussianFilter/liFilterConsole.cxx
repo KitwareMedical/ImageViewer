@@ -92,20 +92,20 @@ liFilterConsole
   laplacianButton->Observe( m_Add.GetPointer() );
   modulusButton->Observe( m_Modulus.GetPointer() );
 
-  m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), HzButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), HxyButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), HyzButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), HzxButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H1zButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), H2zButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
-  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), HyButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), HzButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), HxyButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), HyzButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), HzxButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1xButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1yButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H1zButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), H2zButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand());
+  m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand());
 
   this->ShowStatus("Let's start by loading an image...");
 
