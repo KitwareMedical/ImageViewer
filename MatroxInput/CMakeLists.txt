@@ -40,8 +40,8 @@ LINK_DIRECTORIES(
 
 
 LINK_LIBRARIES (
-  FltkImageViewer
-  vtkFltk
+  ITKFltkImageViewer
+  ITKVtkFltk
   vtkRendering
   vtkGraphics	  
   vtkHybrid	  
