@@ -22,7 +22,8 @@
 
 #include "itkImage.h"
 #include "itkCastImageFilter.h"
-#include "itkShapeDetectionLevelSetFilter.h"
+#include "itkFastMarchingImageFilter.h"
+#include "itkShapeDetectionLevelSetImageFilter.h"
 #include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
 #include "itkSigmoidImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
@@ -82,9 +83,10 @@ public:
                                     InternalImageType>  DerivativeFilterType;
 
   /** ShapeDetection filter used to evolve the contours */
-  typedef   itk::ShapeDetectionLevelSetFilter< 
+  typedef   itk::ShapeDetectionLevelSetImageFilter< 
                                    InternalImageType, 
-                                   InternalImageType >     ShapeDetectionFilterType;
+                                   InternalImageType,
+                                   InternalPixelType >     ShapeDetectionFilterType;
 
   /** Filter to compute negative exponential of the gradient magnitude */
   typedef   itk::SigmoidImageFilter< 

@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0100 
+version 1.0103 
 header_name {.h} 
 code_name {.cxx}
 class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
@@ -8,7 +8,7 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
   } {
     Fl_Window consoleWindow {
       label {Shape Detection Segmentation Level Set} open
-      xywh {332 65 795 305}
+      xywh {495 138 795 305}
       code0 {\#include <ShapeDetectionLevelSetBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -61,10 +61,10 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
           xywh {325 79 80 11} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {440 80 10 100} box UP_BOX color 4
+          xywh {445 80 10 120} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {open
+      Fl_Group controlsGroup {
         xywh {0 5 785 240} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -161,27 +161,28 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
         }
         Fl_Value_Input shapeDetectionIterationsValueInput {
           label Iterations
-          callback {m_ShapeDetectionFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
-          xywh {448 43 33 23} labelsize 12 maximum 500 step 1 value 10 textsize 12
+          callback {m_ShapeDetectionFilter->SetMaximumIterations( static_cast<unsigned int>( o->value() ) );}
+          xywh {455 43 39 23} labelsize 12 maximum 5000 step 1 value 100 textsize 12
         }
         Fl_Value_Input fastMarchingStoppingValueInput {
           label Stopping
           callback {m_FastMarchingFilter->SetStoppingValue( o->value() );}
           xywh {262 155 39 23} labelsize 12 maximum 100 step 0.1 value 10 textsize 12
         }
-        Fl_Group {} {open
-          xywh {436 151 125 80} box ENGRAVED_BOX
-        } {
-          Fl_Check_Button shapeDetectionNarrowBandingCheckButton {
-            label NarrowBanding
-            callback {m_ShapeDetectionFilter->SetNarrowBanding( static_cast<unsigned int>( o->value() ) );} selected
-            xywh {446 159 109 32} down_box DOWN_BOX value 1 labelsize 12
-          }
-          Fl_Value_Input shapeDetectionBandWidthValueInput {
-            label {Band Width}
-            callback {m_ShapeDetectionFilter->SetNarrowBandwidth( o->value() );}
-            xywh {516 192 33 28} labelsize 12 maximum 500 step 1 value 12 textsize 12
-          }
+        Fl_Value_Input shapeDetectionRMSErrorValueInput {
+          label {RMS Error}
+          callback {m_ShapeDetectionFilter->SetMaximumRMSError( o->value() );}
+          xywh {455 20 39 23} labelsize 12 maximum 5 step 0.001 value 0.02 textsize 12
+        }
+        Fl_Value_Input shapeDetectionCurvatureScalingValueInput {
+          label {Curvature Scaling}
+          callback {m_ShapeDetectionFilter->SetCurvatureScaling( o->value() );}
+          xywh {439 160 50 23} labelsize 12 align 8 maximum 5 step 0.01 value 0.1 textsize 12
+        }
+        Fl_Value_Input shapeDetectionPropagationScalingValueInput {
+          label {Propagation Scaling}
+          callback {m_ShapeDetectionFilter->SetPropagationScaling( o->value() );} selected
+          xywh {439 183 50 23} labelsize 12 align 8 maximum 10 step 0.1 value 1 textsize 12
         }
       }
       Fl_Slider progressSlider {

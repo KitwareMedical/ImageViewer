@@ -50,14 +50,17 @@ ShapeDetectionLevelSet
   m_SigmoidFilter->SetBeta(  sigmoidBetaValueInput->value()  );
 
   this->SetZeroSetValue( zeroSetValueInput->value() );
-  m_ShapeDetectionFilter->SetNumberOfIterations( 
+  m_ShapeDetectionFilter->SetMaximumIterations( 
         static_cast<unsigned int>( shapeDetectionIterationsValueInput->value() ) );
 
-  m_ShapeDetectionFilter->SetNarrowBandwidth( 
-               shapeDetectionIterationsValueInput->value() );
+  m_ShapeDetectionFilter->SetMaximumRMSError( 
+               shapeDetectionRMSErrorValueInput->value() );
 
-  m_ShapeDetectionFilter->SetNarrowBanding( 
-       static_cast<int>( shapeDetectionNarrowBandingCheckButton->value() ) );
+  m_ShapeDetectionFilter->SetCurvatureScaling(
+               shapeDetectionCurvatureScalingValueInput->value() );
+
+  m_ShapeDetectionFilter->SetPropagationScaling(
+               shapeDetectionPropagationScalingValueInput->value() );
 
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
 

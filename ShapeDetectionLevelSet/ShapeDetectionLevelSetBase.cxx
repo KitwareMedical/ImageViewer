@@ -56,10 +56,10 @@ ShapeDetectionLevelSetBase
 
   m_ShapeDetectionFilter = ShapeDetectionFilterType::New();
   m_ShapeDetectionFilter->SetInput(  m_FastMarchingFilter->GetOutput() );
-  m_ShapeDetectionFilter->SetEdgeImage(   m_SigmoidFilter->GetOutput() );
+  m_ShapeDetectionFilter->SetFeatureImage(   m_SigmoidFilter->GetOutput() );
 
-  m_ShapeDetectionFilter->NarrowBandingOn();
-  m_ShapeDetectionFilter->SetTimeStepSize( 0.125 );
+  m_ShapeDetectionFilter->SetMaximumRMSError( 0.02 );
+  m_ShapeDetectionFilter->SetMaximumIterations( 100 );
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_ShapeDetectionFilter->GetOutput() );
