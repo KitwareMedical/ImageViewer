@@ -355,7 +355,7 @@ bool ImageRegLMEx::ReadConfigFile(const char* fname, SolverType& mySolver)
 void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   // Outputs the displacement field for the index provided (0=x,1=y,2=z)
 {
-/*  // Initialize the caster to the displacement field
+  // Initialize the caster to the displacement field
   IndexSelectCasterType::Pointer fieldCaster = IndexSelectCasterType::New();
   fieldCaster->SetInput( m_Field );
   fieldCaster->SetIndex( index );
@@ -381,7 +381,7 @@ void ImageRegLMEx::WriteDisplacementField(unsigned int index)
   writer->SetFileName(outfile);
   writer->Write();
 
-  std::cout << "...done" << std::endl;*/
+  std::cout << "...done" << std::endl;
 }
 
 
@@ -928,7 +928,7 @@ int main()
 {
   itk::fem::ImageRegLMEx X; // Declare the registration class
 
-  X.ConfigFileName="/u/tessa/itk/Insight/Examples/FEM/FEMregLMparams.txt";
+  X.ConfigFileName="U://itk//Insight//Examples//FEM//FEMregLMparams.txt";
   if (!X.ReadConfigFile(X.ConfigFileName,X.m_Solver)) { return -1; }
 
   X.RunRegistration();
