@@ -65,7 +65,7 @@ public:
   /**
    * Observer Command
    */
-  virtual void SetImage(ImageType * image);
+  virtual void SetImage(const ImageType * image);
   
 
   /**
@@ -115,7 +115,7 @@ protected:
 
 
 private:
-  typename ImageType::Pointer              m_Image;
+  typename ImageType::ConstPointer         m_Image;
   typename ObserverCommandType::Pointer    m_RedrawCommand; 
   unsigned long                            m_Tag;
   bool m_FlipY ;

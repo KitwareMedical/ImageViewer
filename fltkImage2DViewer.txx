@@ -61,7 +61,7 @@ Image2DViewer<ImagePixelType>
 template <class ImagePixelType>
 void
 Image2DViewer<ImagePixelType>
-::SetImage(ImageType * image)
+::SetImage(const ImageType * image)
 {
  
   if( m_Image && m_Tag )
