@@ -48,6 +48,8 @@ public:
   typedef typename ImageType::SizeType     SizeType;
   typedef typename ImageType::IndexType    IndexType;
   
+  typedef itk::ColorTable<float>                ColorTableType;
+  typedef typename ColorTableType::Pointer      ColorTablePointer;
   
   
 protected:
@@ -59,8 +61,7 @@ protected:
   
   unsigned char * cWinOverlayData;
   
-  typedef itk::ColorTable<float>                ColorTableType;
-  typedef typename ColorTableType::Pointer      ColorTablePointer;
+
   
   ColorTablePointer      cColorTable;
   
