@@ -18,6 +18,9 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
                                 InternalImageType,  
                                 InternalImageType >   FilterType;
  
+  const unsigned int numberOfIterations = atoi(  info->GetGUIProperty(info, 0, VVP_GUI_VALUE ) );
+  const float        timeStep           = atof(  info->GetGUIProperty(info, 1, VVP_GUI_VALUE ) );
+
   try 
   {
   switch( info->InputVolumeScalarType )
@@ -25,11 +28,11 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
     case VTK_UNSIGNED_CHAR:
       {
       VolView::PlugIn::FilterModuleWithCasting< unsigned char, FilterType > module;
-      module.SetPlugInfo( info );
+      module.SetPluginInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
-      module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
+      module.GetFilter()->SetNumberOfIterations( numberOfIterations );
+      module.GetFilter()->SetTimeStep( timeStep );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -37,11 +40,11 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
     case VTK_UNSIGNED_SHORT:
       {
       VolView::PlugIn::FilterModuleWithCasting< unsigned short, FilterType > module;
-      module.SetPlugInfo( info );
+      module.SetPluginInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
-      module.GetFilter()->SetNumberOfIterations( atoi( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetTimeStep(           atof( info->GUIItems[ 1 ].CurrentValue) );
+      module.GetFilter()->SetNumberOfIterations( numberOfIterations );
+      module.GetFilter()->SetTimeStep( timeStep );
       // Execute the filter
       module.ProcessData( pds );
       break; 
@@ -50,7 +53,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
   }
   catch( itk::ExceptionObject & except )
   {
-    info->DisplayError( info, except.what() ); 
+    info->SetProperty( info, VVP_ERROR, except.what() ); 
     return -1;
   }
   return 0;
@@ -61,19 +64,19 @@ static int UpdateGUI(void *inf)
 {
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
-  info->GUIItems[0].Label = "Number of Iterations";
-  info->GUIItems[0].GUIType = VV_GUI_SCALE;
-  info->GUIItems[0].Default = "5";
-  info->GUIItems[0].Help = "Number of times that the diffusion approximation will be computed. The more iterations, the stronger the smoothing";
-  info->GUIItems[0].Hints = "1 100 1";
+  info->SetGUIProperty(info, 0, VVP_GUI_LABEL, "Number of Iterations");
+  info->SetGUIProperty(info, 0, VVP_GUI_TYPE, VVP_GUI_SCALE);
+  info->SetGUIProperty(info, 0, VVP_GUI_DEFAULT, "5");
+  info->SetGUIProperty(info, 0, VVP_GUI_HELP, "Number of times that the diffusion approximation will be computed. The more iterations, the stronger the smoothing");
+  info->SetGUIProperty(info, 0, VVP_GUI_HINTS , "1 100 1");
 
-  info->GUIItems[1].Label = "Time Step";
-  info->GUIItems[1].GUIType = VV_GUI_SCALE;
-  info->GUIItems[1].Default = "0.125";
-  info->GUIItems[1].Help = "Discretization of time for approximating the diffusion process.";
-  info->GUIItems[1].Hints = "0.01 1.0 0.005";
+  info->SetGUIProperty(info, 1, VVP_GUI_LABEL, "Time Step");
+  info->SetGUIProperty(info, 1, VVP_GUI_TYPE, VVP_GUI_SCALE);
+  info->SetGUIProperty(info, 1, VVP_GUI_DEFAULT, "0.125");
+  info->SetGUIProperty(info, 1, VVP_GUI_HELP, "Discretization of time for approximating the diffusion process.");
+  info->SetGUIProperty(info, 1, VVP_GUI_HINTS , "0.01 1.0 0.005");
 
-  info->RequiredZOverlap = 0;
+  info->SetProperty(info, VVP_REQUIRED_Z_OVERLAP, "0");
   
   info->OutputVolumeScalarType = info->InputVolumeScalarType;
   info->OutputVolumeNumberOfComponents = 
@@ -96,20 +99,18 @@ void VV_PLUGIN_EXPORT vvITKCurvatureFlowInit(vtkVVPluginInfo *info)
   // setup information that never changes
   info->ProcessData = ProcessData;
   info->UpdateGUI = UpdateGUI;
-  info->Name = "Curvature Flow (ITK)";
-  info->TerseDocumentation = "Anisotropic diffusion smoothing";
-  info->FullDocumentation = 
-    "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of iso-contours in the image. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
-  info->SupportsInPlaceProcessing = 0;
-  info->SupportsProcessingPieces = 0;
-  info->RequiredZOverlap = 0;
+  info->SetProperty(info, VVP_NAME, "Curvature Flow (ITK)");
+  info->SetProperty(info, VVP_TERSE_DOCUMENTATION,
+                                 "Anisotropic diffusion smoothing");
+  info->SetProperty(info, VVP_FULL_DOCUMENTATION,
+    "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the curvature of iso-contours in the image. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.");
+  info->SetProperty(info, VVP_SUPPORTS_IN_PLACE_PROCESSING, "0");
+  info->SetProperty(info, VVP_SUPPORTS_PROCESSING_PIECES,   "0");
+  info->SetProperty(info, VVP_NUMBER_OF_GUI_ITEMS,          "2");
+  info->SetProperty(info, VVP_REQUIRED_Z_OVERLAP,           "0");
+  info->SetProperty(info, VVP_PER_VOXEL_MEMORY_REQUIRED,    "8");
   
-  // Number of bytes required in intermediate memory per voxel
-  info->PerVoxelMemoryRequired = 8; // actually depends on the input pixel size
-  
-  /* setup the GUI components */
-  info->NumberOfGUIItems = 2;
-  info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));
 }
 
 }
+

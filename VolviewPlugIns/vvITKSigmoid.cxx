@@ -24,10 +24,10 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Transforming intensities with a Sigmoid function...");
       // Set the parameters on it
-      module.GetFilter()->SetAlpha(          atof( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetBeta(           atof( info->GUIItems[ 1 ].CurrentValue) );
-      module.GetFilter()->SetOutputMinimum(  atoi( info->GUIItems[ 2 ].CurrentValue) );
-      module.GetFilter()->SetOutputMaximum(  atoi( info->GUIItems[ 3 ].CurrentValue) );
+      module.GetFilter()->SetAlpha(          atof( info->GetGUIProperty(info, 0, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetBeta(           atof( info->GetGUIProperty(info, 1, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetOutputMinimum(  atoi( info->GetGUIProperty(info, 2, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetOutputMaximum(  atoi( info->GetGUIProperty(info, 3, VVP_GUI_VALUE )) );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -41,10 +41,10 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Transforming intensities with a Sigmoid function...");
       // Set the parameters on it
-      module.GetFilter()->SetAlpha(          atof( info->GUIItems[ 0 ].CurrentValue) );
-      module.GetFilter()->SetBeta(           atof( info->GUIItems[ 1 ].CurrentValue) );
-      module.GetFilter()->SetOutputMinimum(  atoi( info->GUIItems[ 2 ].CurrentValue) );
-      module.GetFilter()->SetOutputMaximum(  atoi( info->GUIItems[ 3 ].CurrentValue) );
+      module.GetFilter()->SetAlpha(          atof( info->GetGUIProperty(info, 0, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetBeta(           atof( info->GetGUIProperty(info, 1, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetOutputMinimum(  atoi( info->GetGUIProperty(info, 2, VVP_GUI_VALUE )) );
+      module.GetFilter()->SetOutputMaximum(  atoi( info->GetGUIProperty(info, 3, VVP_GUI_VALUE )) );
       // Execute the filter
       module.ProcessData( pds );
       break; 
@@ -53,7 +53,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
   }
   catch( itk::ExceptionObject & except )
   {
-    info->DisplayError( info, except.what() ); 
+    info->SetProperty( info, VVP_ERROR, except.what() ); 
     return -1;
   }
   return 0;
@@ -62,19 +62,25 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 
 static int UpdateGUI(void *inf)
 {
+  char tmp[1024];
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
-  info->GUIItems[0].Label = "Alpha";
-  info->GUIItems[0].GUIType = VV_GUI_SCALE;
-  info->GUIItems[0].Default = "5";
-  info->GUIItems[0].Help = "Factor that defines the width of the Sigmoid in the range scale. Setting a small alpha results in a step transion on the Sigmoid function. A large alpha value produces a very smooth and low slanted Sigmoid.";
-  info->GUIItems[0].Hints = "-100 100 0.1";
+  info->SetGUIProperty(info, 0, VVP_GUI_LABEL, "Alpha");
+  info->SetGUIProperty(info, 0, VVP_GUI_TYPE, VVP_GUI_SCALE);
+  info->SetGUIProperty(info, 0, VVP_GUI_DEFAULT, "5");
+  info->SetGUIProperty(info, 0, VVP_GUI_HELP, "Factor that defines the width of the Sigmoid in the range scale. Setting a small alpha results in a step transion on the Sigmoid function. A large alpha value produces a very smooth and low slanted Sigmoid.");
+  info->SetGUIProperty(info, 0, VVP_GUI_HINTS , "-100 100 0.1");
 
-  info->GUIItems[1].Label = "Beta";
-  info->GUIItems[1].GUIType = VV_GUI_SCALE;
-  info->GUIItems[1].Default = "128";
-  info->GUIItems[1].Help = "Origin of the Sigmoid function in the range scale. It cooresponds to the intensity of the imput image that will be mapped almost linearly to the output image. Intensities far from this value will be transformed non-linearly.";
-  info->GUIItems[1].Hints = "0 255 1";
+  info->SetGUIProperty(info, 1, VVP_GUI_LABEL, "Beta");
+  info->SetGUIProperty(info, 1, VVP_GUI_TYPE, VVP_GUI_SCALE);
+  const float meanValue = (info->InputVolumeScalarRange[1] - 
+                           info->InputVolumeScalarRange[0]) / 2.0;
+  sprintf(tmp,"%f",meanValue);
+  info->SetGUIProperty(info, 1, VVP_GUI_DEFAULT, tmp );
+  info->SetGUIProperty(info, 1, VVP_GUI_HELP, "Origin of the Sigmoid function in the range scale. It cooresponds to the intensity of the imput image that will be mapped almost linearly to the output image. Intensities far from this value will be transformed non-linearly.");
+  sprintf(tmp,"%f %f %f",info->InputVolumeScalarTypeRange[0], 1.0,
+                         info->InputVolumeScalarTypeRange[1] );
+  info->SetGUIProperty(info, 1, VVP_GUI_HINTS , tmp );
 
   info->GUIItems[2].Label = "Output Minimum";
   info->GUIItems[2].GUIType = VV_GUI_SCALE;

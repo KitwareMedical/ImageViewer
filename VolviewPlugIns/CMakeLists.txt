@@ -49,18 +49,18 @@ SET (LIBRARY_OUTPUT_PATH ${VolviewPlugIns_BINARY_DIR}/bin CACHE PATH "Single out
 
 # list all plugins here
 SET (PLUGINS 
-  vvITKConfidenceConnected
-  vvITKConnectedThreshold
-  vvITKCurvatureAnisotropicDiffusion
+#  vvITKConfidenceConnected
+#  vvITKConnectedThreshold
+#  vvITKCurvatureAnisotropicDiffusion
   vvITKCurvatureFlow 
-  vvITKFastMarching
-  vvITKFastMarchingModule
-  vvITKGradientAnisotropicDiffusion
-  vvITKGradientMagnitude
-  vvITKGradientMagnitudeRecursiveGaussian
-  vvITKIntensityWindowing
+#  vvITKFastMarching
+#  vvITKFastMarchingModule
+#  vvITKGradientAnisotropicDiffusion
+#  vvITKGradientMagnitude
+#  vvITKGradientMagnitudeRecursiveGaussian
+#  vvITKIntensityWindowing
   vvITKMedian
-  vvITKSigmoid
+#  vvITKSigmoid
   )
 
 

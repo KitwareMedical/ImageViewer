@@ -25,10 +25,6 @@ PARTICULAR PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE IS PROVIDED ON AN
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 =========================================================================*/
-// .NAME vtkVVPluginAPI - a C API for plugins to add their own algorithms
-// .SECTION Description
-// This API provides a way for filters to be added to volview at runtime 
-
 #ifndef vtkVVPluginAPI_h
 #define vtkVVPluginAPI_h
 
@@ -36,6 +32,49 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 extern "C" {
 #endif
 
+/*=========================================================================
+
+The following are the different types of parameters that the plugin API
+  supports 
+  
+VVP_ERROR 
+
+VVP_NAME - a short name for the plugin to be used in the menu to select it 
+
+VVP_TERSE_DOCUMENTATION - a short one sentence description of the plugin 
+
+VVP_FULL_DOCUMENTATION 
+  a long description of the plugin and how it works, can be very long 
+
+VVP_SUPPORTS_IN_PLACE_PROCESSING
+  does this plugin support processing the data in place. Normally the output
+  volume is a separate block of memory from the input data. But for some
+  filters they can write the output directly onto the input volume. This is
+  called InPlace processing
+
+VVP_SUPPORTS_PROCESSING_PIECES 
+  does this plugin support procesing the data in pieces (slabs) 
+
+VVP_NUMBER_OF_GUI_ITEMS 
+  specify the GUI for this plugin. How many elements are there? 
+
+VVP_PRODUCES_MESH_ONLY - does this plugin only produce a mesh? 
+
+VVP_REQUIRED_Z_OVERLAP
+  for plugins that support processing pieces, does it require any Z axis
+  overlap. If so how many slices of overlap are required 
+
+VVP_PER_VOXEL_MEMORY_REQUIRED
+  an estimate of how much memory per input voxel component will be
+  consumed by the filter in bytes. This does not include the input and
+  output volumes but does include intermediate results. 
+
+VVP_ABORT_PROCESSING  
+  a flag indicating that the plugin should abort processing
+
+=========================================================================*/
+
+  
 /* These types are returned by GetDataType to indicate pixel type. */
 #ifndef VTK_VOID  
 #define VTK_VOID            0
@@ -55,9 +94,32 @@ extern "C" {
   
 /* the following defines enumerate the different GUI components supported by
  * plugins.  */
-#define VV_GUI_SCALE    0
-#define VV_GUI_CHOICE   1
-#define VV_GUI_CHECKBOX 2
+#define VV_GUI_SCALE     0
+#define VVP_GUI_SCALE    "scale"
+#define VV_GUI_CHOICE    1
+#define VVP_GUI_CHOICE   "choice"
+#define VV_GUI_CHECKBOX  2
+#define VVP_GUI_CHECKBOX "checkbox"
+
+#define VVP_ERROR                         0
+#define VVP_NAME                          1
+#define VVP_TERSE_DOCUMENTATION           2
+#define VVP_FULL_DOCUMENTATION            3
+#define VVP_SUPPORTS_IN_PLACE_PROCESSING  4
+#define VVP_SUPPORTS_PROCESSING_PIECES    5 
+#define VVP_NUMBER_OF_GUI_ITEMS           6
+#define VVP_PRODUCES_MESH_ONLY            7
+#define VVP_REQUIRED_Z_OVERLAP            8
+#define VVP_PER_VOXEL_MEMORY_REQUIRED     9
+#define VVP_ABORT_PROCESSING             10  
+  
+#define VVP_GUI_LABEL   0
+#define VVP_GUI_TYPE    1
+#define VVP_GUI_DEFAULT 2
+#define VVP_GUI_HELP    3
+#define VVP_GUI_HINTS   4
+#define VVP_GUI_VALUE   5
+  
   
 /*=========================================================================
 CM_PLUGIN_EXPORT should be used by the Init function of all plugins
@@ -70,6 +132,8 @@ CM_PLUGIN_EXPORT should be used by the Init function of all plugins
 
 /*=========================================================================
 Finally we define the key data structures and function prototypes
+The first struture here is the vtkVVProcessDataStruct. This structure
+gets passed into the ProcessData function.
 =========================================================================*/
   typedef struct {
     /* the input data pointer */
@@ -93,49 +157,29 @@ Finally we define the key data structures and function prototypes
     float *MeshScalars;
   } vtkVVProcessDataStruct;
 
-  typedef int (*VV_PROCESS_DATA_FUNCTION)(void *info, 
-                                          vtkVVProcessDataStruct *pds);
-  typedef int (*VV_UPDATE_GUI_FUNCTION)(void *info);
-  
-  /* this is the data structure describing one GUI element. */
   typedef struct {
-    /* the label for this widget */
-    const char *Label; 
-    /* what type of GUI item should this be, menu, slider etc */    
-    int GUIType;         
-    /* the initial value for the widget */
-    const char *Default;
-    /* a help string for baloon help for this widget */
-    const char *Help;
-    /* this string is where additional information required to setup the GUI
-     * element is specified. What goes in the Hints varies depending on the
-     * type of the GUI item. For a slider it is the range of the slider
-     * e.g. "0 255" */
-    const char *Hints;
-    /* this is where the current value of the GUI item will be stored */
-    char CurrentValue[1024];
-  } vtkVVGUIItem;
-  
-  typedef struct {
-    /* these members are passed in by VolView for use by the plugin */
+    /* these three members should not used by the plugin */
     unsigned char magic1;
     unsigned char magic2;
-    /* a pointer to the vtkVVPLugin object */
     void *Self;
-    /* characteristics of the input data */
+
+    /* these are the characteristics of the input data */
     int InputVolumeScalarType;
     int InputVolumeNumberOfComponents;
     int InputVolumeDimensions[3];
     float InputVolumeSpacing[3];
     float InputVolumeOrigin[3];
-
-    /* a flag indicating that the plugin should abort processing */
-    int AbortProcessing;
+    double InputVolumeScalarRange[2]; /* actual scalar range */
+    double InputVolumeScalarTypeRange[2]; /* possible scalar range */
     
-    /* these are the methods that a plugin can invoke on VolView */
-    /* when an error occurs, call this function to display the error string */
-    void  (*DisplayError) (void *info, const char *err);
+    /* specify the charateristics of the output data */
+    int OutputVolumeScalarType;
+    int OutputVolumeNumberOfComponents;
+    int OutputVolumeDimensions[3];
+    float OutputVolumeSpacing[3];
+    float OutputVolumeOrigin[3];
 
+    /* these are the methods that a plugin can invoke on VolView */
     /* the following function can be called to update progress */
     void  (*UpdateProgress) (void *info, float progress, const char *msg);
 
@@ -143,56 +187,17 @@ Finally we define the key data structures and function prototypes
     /* following function to assign the polygonal data to VolView */
     /* after which they can free any local memory that was being used */
     void  (*AssignPolygonalData) (void *info, vtkVVProcessDataStruct *pds);
-    
-    /* these members must be set by the plugin */
-    /* a short name for the plugin to be used in the menu to select it */
-    const char *Name;
 
-    /* a short one sentence description of the plugin */
-    const char *TerseDocumentation;
+    /* memory safe way to set/get properties */
+    void        (*SetProperty) (void *info, int property, const char *value);
+    const char *(*GetProperty) (void *info, int property);
+    void        (*SetGUIProperty) (void *info, int num, int property, 
+                                   const char *value);
+    const char *(*GetGUIProperty) (void *info, int num, int property);
 
-    /* a long description of the plugin and how it works, can be very long */
-    const char *FullDocumentation;
-
-    /* does this plugin support procesing the data in pieces (slabs) */
-    int SupportsProcessingPieces;
-
-    /* does this plugin support processing the data in place. Normally the
-     * output volume is a separate block of memory from the input data. But
-     * for some filters they can write the output directly onto the input
-     * volume. This is called InPlace processing */
-    int SupportsInPlaceProcessing;
-
-    /* an estimate of how much memory per input voxel component will be
-     * consumed by the filter in bytes. This does not include the input and
-     * output volumes but does include intermediate results. */
-    float PerVoxelMemoryRequired;
-    
-    /* does this plugin only produce a mesh ? */
-    int ProducesMeshOnly;
-    
-    /* for plugins that support processing pieces, does it require any Z axis
-     * overlap. If so how many slices of overlap are required */
-    int RequiredZOverlap;
-
-    /* specify the charateristics of the output data */
-    int OutputVolumeScalarType;
-    int OutputVolumeNumberOfComponents;
-    int OutputVolumeDimensions[3];
-    float OutputVolumeSpacing[3];
-    float OutputVolumeOrigin[3];
-    
-    /* specify the GUI for this plugin. How many elements are there? */
-    int NumberOfGUIItems;
-
-    /* allocate an array of vtkVVGUIItem structures and fill them in */
-    vtkVVGUIItem *GUIItems;
-    
-    /* this is the function you must provide to process the data */
-    VV_PROCESS_DATA_FUNCTION ProcessData;
-
-    /* this is the function you must provide to update the GUI */
-    VV_UPDATE_GUI_FUNCTION UpdateGUI;
+    /* you must implement the two following functions */
+    int (*ProcessData) (void *info, vtkVVProcessDataStruct *pds);
+    int (*UpdateGUI)   (void *info);
 
   } vtkVVPluginInfo;
 

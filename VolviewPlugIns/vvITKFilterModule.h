@@ -4,7 +4,7 @@
 #ifndef _vvITKFilterModule_h
 #define _vvITKFilterModule_h
 
-#include "vtkVVPluginAPI.h"
+#include "vvITKFilterModuleBase.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -12,7 +12,7 @@
 #include "itkImage.h"
 #include "itkImportImageFilter.h"
 #include "itkImageRegionConstIterator.h"
-#include "itkCommand.h"
+
 
 namespace VolView
 {
@@ -21,7 +21,7 @@ namespace PlugIn
 {
 
 template <class TFilterType >
-class FilterModule {
+class FilterModule : public FilterModuleBase {
 
 public:
 
@@ -46,9 +46,6 @@ public:
   typedef ImportFilterType::RegionType    RegionType;
 
 
-  // Command/Observer intended to update the progress
-  typedef itk::MemberCommand< FilterModule >  CommandType;
-
 
 public:
 
@@ -57,9 +54,6 @@ public:
     {
     m_ImportFilter       = ImportFilterType::New();
     m_Filter             = FilterType::New();
-    m_CommandObserver    = CommandType::New();
-    m_Info               = 0;
-    m_UpdateMessage      = "Processing the filter...";
     m_Filter->ReleaseDataFlagOn();
     }
 
@@ -77,41 +71,6 @@ public:
   }
 
 
-
-  void SetUpdateMessage( const char * message )
-  {
-     m_UpdateMessage = message;
-  }
-
-  void 
-  ProgressUpdate( itk::Object * caller, const itk::EventObject & event )
-  {
-
-    if( typeid( itk::ProgressEvent ) != typeid( event ) )
-      {
-      return;
-      }
-
-    itk::ProcessObject::Pointer process =
-              dynamic_cast< itk::ProcessObject *>( caller );
-
-    const float progress = process->GetProgress();
-
-    m_Info->UpdateProgress(m_Info, progress, m_UpdateMessage.c_str()); 
-
-  }
-
-
-
-  /**  Set the Plugin Info structure */
-  void
-  SetPlugInfo( vtkVVPluginInfo * info )
-  {
-    m_Info = info;
-  }
-
-
-
   /**  ProcessData performs the actual filtering on the data */
   void 
   ProcessData( const vtkVVProcessDataStruct * pds )
@@ -123,18 +82,16 @@ public:
     double     origin[3];
     double     spacing[3];
 
-    size[0]     =  m_Info->InputVolumeDimensions[0];
-    size[1]     =  m_Info->InputVolumeDimensions[1];
+    size[0]     =  this->GetPluginInfo()->InputVolumeDimensions[0];
+    size[1]     =  this->GetPluginInfo()->InputVolumeDimensions[1];
     size[2]     =  pds->NumberOfSlicesToProcess;
 
     for(unsigned int i=0; i<3; i++)
       {
-      origin[i]   =  m_Info->InputVolumeOrigin[i];
-      spacing[i]  =  m_Info->InputVolumeSpacing[i];
+      origin[i]   =  this->GetPluginInfo()->InputVolumeOrigin[i];
+      spacing[i]  =  this->GetPluginInfo()->InputVolumeSpacing[i];
       start[i]    =  0;
       }
-
-    std::cout << "Size = " << size << std::endl;
 
     RegionType region;
 
@@ -162,8 +119,7 @@ public:
     m_Filter->SetInput( m_ImportFilter->GetOutput() );
 
     // Set the Observer for updating progress in the GUI
-    m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
-    m_Filter->AddObserver( itk::ProgressEvent(), m_CommandObserver );
+    m_Filter->AddObserver( itk::ProgressEvent(), this->GetCommandObserver() );
 
     // Execute the filter
     m_Filter->Update();
@@ -192,9 +148,6 @@ public:
 private:
     typename ImportFilterType::Pointer    m_ImportFilter;
     typename FilterType::Pointer          m_Filter;
-    typename CommandType::Pointer         m_CommandObserver;
-    vtkVVPluginInfo                     * m_Info;
-    std::string                           m_UpdateMessage;
 };
 
 
