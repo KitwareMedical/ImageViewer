@@ -8,7 +8,6 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
-SUBDIRS(MetaImage2D3D)
 
 # Add an option to build or not build the Image Registration example
 OPTION(BUILD_IMAGE_REGISTRATION "Build the image registration example")
@@ -46,6 +45,12 @@ OPTION(BUILD_METAIMAGE_2D3D "Build the principal axes example")
 IF(BUILD_METAIMAGE_2D3D)
 SUBDIRS(MetaImage2D3DViewer)
 ENDIF(BUILD_METAIMAGE_2D3D)
+
+# Add an option to build or not build the TripleTKImageDisplay example
+OPTION(BUILD_TRIPLETKID "Build the Triple TK Image Displayexample")
+IF(BUILD_TRIPLETKID)
+SUBDIRS(TripleTKImageDisplay)
+ENDIF(BUILD_TRIPLETKID)
 
 
 LINK_LIBRARIES (
