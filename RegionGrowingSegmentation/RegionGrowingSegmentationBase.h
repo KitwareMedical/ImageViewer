@@ -17,21 +17,20 @@
 #ifndef REGIONGROWINGSEGMENTATIONBASE
 #define REGIONGROWINGSEGMENTATIONBASE
 
-#include <itkImageFileReader.h>
-#include <itkImageFileWriter.h>
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
 
-#include <itkImage.h>
-#include <itkCastImageFilter.h>
-#include <itkExtractImageFilter.h>
+#include "itkImage.h"
+#include "itkCastImageFilter.h"
+#include "itkExtractImageFilter.h"
 
-#include <itkConnectedThresholdImageFilter.h>
-#include <itkConfidenceConnectedImageFilter.h>
-#include <itkSimpleFuzzyConnectednessScalarImageFilter.h>
+#include "itkConnectedThresholdImageFilter.h"
+#include "itkConfidenceConnectedImageFilter.h"
+#include "itkSimpleFuzzyConnectednessScalarImageFilter.h"
 
-#include <itkCurvatureFlowImageFilter.h>
-#include <itkGradientAnisotropicDiffusionImageFilter.h>
-#include <itkCurvatureAnisotropicDiffusionImageFilter.h>
-
+#include "itkCurvatureFlowImageFilter.h"
+#include "itkGradientAnisotropicDiffusionImageFilter.h"
+#include "itkCurvatureAnisotropicDiffusionImageFilter.h"
 
 
 /**
@@ -109,7 +108,6 @@ public:
   typedef   itk::SimpleFuzzyConnectednessScalarImageFilter< 
                  InternalImageType, 
                  InternalImageType >     FuzzyConnectedImageFilterType;
-
 
 public:
   RegionGrowingSegmentationBase();
