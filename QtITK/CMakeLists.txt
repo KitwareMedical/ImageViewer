@@ -17,19 +17,6 @@ INCLUDE_DIRECTORIES(
 ${QT_INCLUDE_DIR}
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/Numerics
-${ITK_BINARY_DIR}/Code/Numerics/vxl
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Utilities
-${ITK_BINARY_DIR}/Utilities/png
-${ITK_BINARY_DIR}/Utilities/zlib
-${ITK_BINARY_DIR}/Utilities/MetaIO
-)
-
 LINK_LIBRARIES (
 ITKIO
 ${QT_QT_LIBRARY}
