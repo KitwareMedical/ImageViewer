@@ -63,20 +63,41 @@ public:
 
   virtual void draw(void);  // overload fltk methods
   virtual int  handle(int);
+  virtual void  handlePopUpMenu( void );
   
   void SetBackground(GLfloat r, GLfloat g, GLfloat b);
   void SetBackground(const ColorType & color);
   void Allocate( unsigned int nx, unsigned int ny );
+  void Update( void );
   
   const ColorType & GetBackground(void) const;
 
   DataType * GetBuffer(void) 
   { return m_Buffer; }
 
+  unsigned int GetWidth(void) const;
+  unsigned int GetHeight(void) const;
+  void SetWidth(unsigned int);
+  void SetHeight(unsigned int);
+  void FitWindowToImage(void);
+  void FitImageToWindow(void);
+  void IntensityWindowing(void);
+  void SetIntensityWindow( Fl_Window * window );
+  void SetParentWindow( Fl_Window * window );
+  void PanningEventHandling(int & p1x, int & p1y);
+  void ZoomingEventHandling(int & p1x, int & p1y);
+
 private:
 
   ColorType          m_Background;
   DataType        *  m_Buffer;
+  unsigned int       m_Width;
+  unsigned int       m_Height;
+  double             m_Zoom;
+  int                m_ShiftX;
+  int                m_ShiftY;
+  Fl_Window       *  m_IntensityWindow;
+  Fl_Window       *  m_ParentWindow;
 
 };
 

@@ -2,12 +2,42 @@
 
 #include "fltkImage2DViewerGUI.h"
 
+inline void fltkImage2DViewerGUI::cb_Min_i(Fl_Value_Slider* o, void*) {
+  SetMin( o->value() );
+}
+void fltkImage2DViewerGUI::cb_Min(Fl_Value_Slider* o, void* v) {
+  ((fltkImage2DViewerGUI*)(o->parent()->user_data()))->cb_Min_i(o,v);
+}
+
+inline void fltkImage2DViewerGUI::cb_Max_i(Fl_Value_Slider* o, void*) {
+  SetMax( o->value() );
+}
+void fltkImage2DViewerGUI::cb_Max(Fl_Value_Slider* o, void* v) {
+  ((fltkImage2DViewerGUI*)(o->parent()->user_data()))->cb_Max_i(o,v);
+}
+
 fltkImage2DViewerGUI::fltkImage2DViewerGUI() {
   Fl_Window* w;
   { Fl_Window* o = externalWindow = new Fl_Window(454, 367);
     w = o;
     o->user_data((void*)(this));
     imageViewer = new fltk::Image2DViewerWindow(0, 0, 450, 365);
+    o->end();
+    o->resizable(o);
+  }
+  { Fl_Window* o = intensityWindow = new Fl_Window(553, 105, "Intensity Windowing");
+    w = o;
+    o->user_data((void*)(this));
+    { Fl_Value_Slider* o = new Fl_Value_Slider(60, 25, 460, 25, "Min ");
+      o->type(1);
+      o->callback((Fl_Callback*)cb_Min);
+      o->align(FL_ALIGN_LEFT);
+    }
+    { Fl_Value_Slider* o = new Fl_Value_Slider(60, 55, 460, 25, "Max ");
+      o->type(1);
+      o->callback((Fl_Callback*)cb_Max);
+      o->align(FL_ALIGN_LEFT);
+    }
     o->end();
   }
 }
@@ -31,4 +61,10 @@ void fltkImage2DViewerGUI::Hide(void) {
 void fltkImage2DViewerGUI::Redraw(void) {
   imageViewer->redraw();
 Fl::check();
+}
+
+void fltkImage2DViewerGUI::SetMin(double val) {
+}
+
+void fltkImage2DViewerGUI::SetMax(double val) {
 }

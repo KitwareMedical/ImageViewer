@@ -49,7 +49,8 @@ template <class ImagePixelType>
 Image2DViewer<ImagePixelType>
 ::Image2DViewer()
 {
-
+  imageViewer->SetIntensityWindow( intensityWindow );
+  imageViewer->SetParentWindow( externalWindow );
 }
 
 
@@ -86,7 +87,6 @@ Image2DViewer<ImagePixelType>
 ::Update(void) 
 {
 
-std::cout << "Update()" << std::endl;
   if( !m_Image )
     {
     return;
@@ -95,8 +95,8 @@ std::cout << "Update()" << std::endl;
   ImageType::RegionType region  = m_Image->GetRequestedRegion();
   ImageType::SizeType   size    = region.GetSize();  
 
-  if(    size[0] != static_cast<unsigned int>(imageViewer->w())
-      || size[1] != static_cast<unsigned int>(imageViewer->h())  )
+  if(    size[0] != static_cast<unsigned int>(imageViewer->GetWidth())
+      || size[1] != static_cast<unsigned int>(imageViewer->GetHeight())  )
   {
     this->externalWindow->size(size[0],size[1]);
     imageViewer->Allocate( size[0], size[1] );
@@ -143,6 +143,10 @@ std::cout << "Update()" << std::endl;
     dest -= 2 * totalWidth;
   
   }
+
+  imageViewer->redraw();
+  Fl::check();
+
 }
 
 
