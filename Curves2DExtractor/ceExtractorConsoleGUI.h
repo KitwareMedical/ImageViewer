@@ -9,9 +9,9 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Counter.H>
+#include <FL/Fl_Button.H>
 #include <fltkProgressBar.h>
 #include <FL/Fl_Output.H>
-#include <FL/Fl_Button.H>
 
 class ceExtractorConsoleGUI : public ceExtractorConsoleBase {
 public:
@@ -68,6 +68,21 @@ private:
   inline void cb_H1xyButton_i(fltk::LightButton*, void*);
   static void cb_H1xyButton(fltk::LightButton*, void*);
 public:
+  fltk::LightButton *maxEigenValueButton;
+private:
+  inline void cb_maxEigenValueButton_i(fltk::LightButton*, void*);
+  static void cb_maxEigenValueButton(fltk::LightButton*, void*);
+public:
+  fltk::LightButton *minEigenValueButton;
+private:
+  inline void cb_minEigenValueButton_i(fltk::LightButton*, void*);
+  static void cb_minEigenValueButton(fltk::LightButton*, void*);
+public:
+  fltk::LightButton *maxEigenVectorButton;
+private:
+  inline void cb_maxEigenVectorButton_i(fltk::LightButton*, void*);
+  static void cb_maxEigenVectorButton(fltk::LightButton*, void*);
+public:
   fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;
   fltk::LightButton *loadButton;
@@ -91,5 +106,8 @@ public:
   virtual void ShowGradientModulus( void );
   virtual void ShowCrossDerivativeXY( void );
   virtual void ShowSmoothed( void );
+  virtual void ShowMaxEigenValue( void );
+  virtual void ShowMinEigenValue( void );
+  virtual void ShowMaxEigenVector( void );
 };
 #endif

@@ -7,21 +7,22 @@ gridy 5
 snap 3
 class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
 } {
-  Function {ceExtractorConsoleGUI()} {} {
+  Function {ceExtractorConsoleGUI()} {selected
+  } {
     Fl_Window consoleWindow {
-      label {Gaussian Filter Console} open
-      xywh {68 183 757 391}
+      label {Gaussian Filter Console}
+      xywh {365 120 837 391}
       code0 {\#include <ceExtractorConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {5 5 745 255}
+        xywh {5 5 825 255}
       } {
         Fl_Box {} {
-          xywh {410 180 45 10} box UP_BOX color 4
+          xywh {445 167 56 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {416 70 51 10} box UP_BOX color 4
+          xywh {416 103 51 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {117 100 45 10} box UP_BOX color 4
@@ -42,34 +43,40 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {112 100 10 55} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {415 45 10 35} box UP_BOX color 4
+          xywh {415 90 10 35} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {380 45 45 10} box UP_BOX color 4
+          xywh {380 90 45 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {375 70 45 10} box UP_BOX color 4
+          xywh {380 115 45 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {355 155 70 10} box UP_BOX color 4
+          xywh {410 155 10 55} box UP_BOX color 221
         }
         Fl_Box {} {
-          xywh {350 180 75 10} box UP_BOX color 4
+          xywh {445 155 10 35} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {415 155 10 35} box UP_BOX color 4
+          xywh {425 184 10 39} box UP_BOX color 221
+        }
+        Fl_Box {} {
+          xywh {380 155 75 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {380 180 75 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {260 46 55 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {260 71 55 10} box UP_BOX color 4
+          xywh {260 90 55 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {260 180 53 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {260 205 53 10} box UP_BOX color 4
+          xywh {260 227 53 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {260 113 55 10} box UP_BOX color 4
@@ -78,14 +85,38 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {265 156 50 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {260 45 10 170} box UP_BOX color 4
+          xywh {260 45 10 192} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {60 60 10 65} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {410 200 90 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {425 214 75 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {375 228 125 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {585 173 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {585 203 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {585 233 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {585 174 10 68} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {550 215 45 10} box UP_BOX color 4
+        }
       }
       Fl_Group controlsGroup {
-        xywh {5 5 745 255} box DOWN_FRAME deactivate
+        xywh {5 5 825 255} box DOWN_FRAME deactivate
       } {
         Fl_Light_Button inputButton {
           label Input
@@ -96,7 +127,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button H1xButton {
           label {Gradient X}
           callback {ShowFilteredX();}
-          xywh {295 40 100 24} type Normal value 1 selection_color 1
+          xywh {295 85 100 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Counter {} {
@@ -107,7 +138,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button H1yButton {
           label {Gradient Y}
           callback {ShowFilteredY();}
-          xywh {295 64 100 24} type Normal value 1 selection_color 1
+          xywh {295 109 100 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button H2xButton {
@@ -125,13 +156,13 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button laplacianButton {
           label Laplacian
           callback {ShowLaplacian();}
-          xywh {440 170 89 25} type Normal value 1 selection_color 1
+          xywh {475 159 89 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button modulusButton {
           label Modulus
           callback {ShowGradientModulus();}
-          xywh {445 65 85 25} type Normal value 1 selection_color 1
+          xywh {445 96 85 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button HxButton {
@@ -147,23 +178,45 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button HxyButton {
           label {Smooth XY}
           callback {ShowSmoothed();}
-          xywh {295 106 98 24} type Normal value 1 selection_color 1
+          xywh {295 36 98 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button H1xyButton {
           label {Cross XY}
           callback {ShowCrossDerivativeXY();}
-          xywh {295 198 101 25} type Normal value 1 selection_color 1
+          xywh {295 220 101 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button maxEigenValueButton {
+          label {Max Eigen Value}
+          callback {ShowMaxEigenValue();}
+          xywh {610 165 142 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button minEigenValueButton {
+          label {Min Eigen Value}
+          callback {ShowMinEigenValue();}
+          xywh {610 195 142 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Button {} {
+          label {Eigen Value Computation}
+          xywh {470 190 105 55} box ROUND_UP_BOX align 128
+        }
+        Fl_Light_Button maxEigenVectorButton {
+          label {Max Eigen Vector}
+          callback {ShowMaxEigenVector();}
+          xywh {610 225 142 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
       }
       Fl_Slider progressSlider {
-        xywh {5 324 735 15} type {Horz Fill} selection_color 2
+        xywh {5 324 825 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 349 735 25}
+        xywh {5 349 825 25}
       }
       Fl_Light_Button loadButton {
         label Load
@@ -205,6 +258,12 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
   } {}
   Function {ShowCrossDerivativeXY( void )} {return_type {virtual void}
   } {}
-  Function {ShowSmoothed( void )} {selected return_type {virtual void}
+  Function {ShowSmoothed( void )} {return_type {virtual void}
+  } {}
+  Function {ShowMaxEigenValue( void )} {return_type {virtual void}
+  } {}
+  Function {ShowMinEigenValue( void )} {return_type {virtual void}
+  } {}
+  Function {ShowMaxEigenVector( void )} {return_type {virtual void}
   } {}
 } 

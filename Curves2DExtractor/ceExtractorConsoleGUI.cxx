@@ -72,6 +72,27 @@ void ceExtractorConsoleGUI::cb_H1xyButton(fltk::LightButton* o, void* v) {
   ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H1xyButton_i(o,v);
 }
 
+inline void ceExtractorConsoleGUI::cb_maxEigenValueButton_i(fltk::LightButton*, void*) {
+  ShowMaxEigenValue();
+}
+void ceExtractorConsoleGUI::cb_maxEigenValueButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_maxEigenValueButton_i(o,v);
+}
+
+inline void ceExtractorConsoleGUI::cb_minEigenValueButton_i(fltk::LightButton*, void*) {
+  ShowMinEigenValue();
+}
+void ceExtractorConsoleGUI::cb_minEigenValueButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_minEigenValueButton_i(o,v);
+}
+
+inline void ceExtractorConsoleGUI::cb_maxEigenVectorButton_i(fltk::LightButton*, void*) {
+  ShowMaxEigenVector();
+}
+void ceExtractorConsoleGUI::cb_maxEigenVectorButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_maxEigenVectorButton_i(o,v);
+}
+
 inline void ceExtractorConsoleGUI::cb_loadButton_i(fltk::LightButton*, void*) {
   Load();
 }
@@ -95,15 +116,15 @@ void ceExtractorConsoleGUI::cb_Execute(Fl_Button* o, void* v) {
 
 ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
   Fl_Window* w;
-  { Fl_Window* o = consoleWindow = new Fl_Window(757, 391, "Gaussian Filter Console");
+  { Fl_Window* o = consoleWindow = new Fl_Window(837, 391, "Gaussian Filter Console");
     w = o;
     o->user_data((void*)(this));
-    { Fl_Group* o = Connectors = new Fl_Group(5, 5, 745, 255);
-      { Fl_Box* o = new Fl_Box(410, 180, 45, 10);
+    { Fl_Group* o = Connectors = new Fl_Group(5, 5, 825, 255);
+      { Fl_Box* o = new Fl_Box(445, 167, 56, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(416, 70, 51, 10);
+      { Fl_Box* o = new Fl_Box(416, 103, 51, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -131,27 +152,35 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(415, 45, 10, 35);
+      { Fl_Box* o = new Fl_Box(415, 90, 10, 35);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(380, 45, 45, 10);
+      { Fl_Box* o = new Fl_Box(380, 90, 45, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(375, 70, 45, 10);
+      { Fl_Box* o = new Fl_Box(380, 115, 45, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(355, 155, 70, 10);
+      { Fl_Box* o = new Fl_Box(410, 155, 10, 55);
+        o->box(FL_UP_BOX);
+        o->color(221);
+      }
+      { Fl_Box* o = new Fl_Box(445, 155, 10, 35);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(350, 180, 75, 10);
+      { Fl_Box* o = new Fl_Box(425, 184, 10, 39);
+        o->box(FL_UP_BOX);
+        o->color(221);
+      }
+      { Fl_Box* o = new Fl_Box(380, 155, 75, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(415, 155, 10, 35);
+      { Fl_Box* o = new Fl_Box(380, 180, 75, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -159,7 +188,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(260, 71, 55, 10);
+      { Fl_Box* o = new Fl_Box(260, 90, 55, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -167,7 +196,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(260, 205, 53, 10);
+      { Fl_Box* o = new Fl_Box(260, 227, 53, 10);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -179,7 +208,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(260, 45, 10, 170);
+      { Fl_Box* o = new Fl_Box(260, 45, 10, 192);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -187,9 +216,41 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
+      { Fl_Box* o = new Fl_Box(410, 200, 90, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(425, 214, 75, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(375, 228, 125, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(585, 173, 45, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(585, 203, 45, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(585, 233, 45, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(585, 174, 10, 68);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(550, 215, 45, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
       o->end();
     }
-    { Fl_Group* o = controlsGroup = new Fl_Group(5, 5, 745, 255);
+    { Fl_Group* o = controlsGroup = new Fl_Group(5, 5, 825, 255);
       o->box(FL_DOWN_FRAME);
       o->deactivate();
       { fltk::LightButton* o = inputButton = new fltk::LightButton(27, 116, 69, 30, "Input");
@@ -198,7 +259,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_inputButton);
       }
-      { fltk::LightButton* o = H1xButton = new fltk::LightButton(295, 40, 100, 24, "Gradient X");
+      { fltk::LightButton* o = H1xButton = new fltk::LightButton(295, 85, 100, 24, "Gradient X");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -211,7 +272,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->callback((Fl_Callback*)cb_Sigma);
         o->align(FL_ALIGN_TOP);
       }
-      { fltk::LightButton* o = H1yButton = new fltk::LightButton(295, 64, 100, 24, "Gradient Y");
+      { fltk::LightButton* o = H1yButton = new fltk::LightButton(295, 109, 100, 24, "Gradient Y");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -229,13 +290,13 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H2yButton);
       }
-      { fltk::LightButton* o = laplacianButton = new fltk::LightButton(440, 170, 89, 25, "Laplacian");
+      { fltk::LightButton* o = laplacianButton = new fltk::LightButton(475, 159, 89, 25, "Laplacian");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_laplacianButton);
       }
-      { fltk::LightButton* o = modulusButton = new fltk::LightButton(445, 65, 85, 25, "Modulus");
+      { fltk::LightButton* o = modulusButton = new fltk::LightButton(445, 96, 85, 25, "Modulus");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -251,25 +312,47 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->value(1);
         o->selection_color(1);
       }
-      { fltk::LightButton* o = HxyButton = new fltk::LightButton(295, 106, 98, 24, "Smooth XY");
+      { fltk::LightButton* o = HxyButton = new fltk::LightButton(295, 36, 98, 24, "Smooth XY");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_HxyButton);
       }
-      { fltk::LightButton* o = H1xyButton = new fltk::LightButton(295, 198, 101, 25, "Cross XY");
+      { fltk::LightButton* o = H1xyButton = new fltk::LightButton(295, 220, 101, 25, "Cross XY");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H1xyButton);
       }
+      { fltk::LightButton* o = maxEigenValueButton = new fltk::LightButton(610, 165, 142, 25, "Max Eigen Value");
+        o->type(0);
+        o->value(1);
+        o->selection_color(1);
+        o->callback((Fl_Callback*)cb_maxEigenValueButton);
+      }
+      { fltk::LightButton* o = minEigenValueButton = new fltk::LightButton(610, 195, 142, 25, "Min Eigen Value");
+        o->type(0);
+        o->value(1);
+        o->selection_color(1);
+        o->callback((Fl_Callback*)cb_minEigenValueButton);
+      }
+      { Fl_Button* o = new Fl_Button(470, 190, 105, 55, "Eigen Value Computation");
+        o->box(FL_ROUND_UP_BOX);
+        o->align(FL_ALIGN_WRAP);
+      }
+      { fltk::LightButton* o = maxEigenVectorButton = new fltk::LightButton(610, 225, 142, 25, "Max Eigen Vector");
+        o->type(0);
+        o->value(1);
+        o->selection_color(1);
+        o->callback((Fl_Callback*)cb_maxEigenVectorButton);
+      }
       o->end();
     }
-    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 735, 15);
+    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 825, 15);
       o->type(3);
       o->selection_color(2);
     }
-    statusTextOutput = new Fl_Output(5, 349, 735, 25);
+    statusTextOutput = new Fl_Output(5, 349, 825, 25);
     { fltk::LightButton* o = loadButton = new fltk::LightButton(30, 45, 69, 30, "Load");
       o->type(0);
       o->value(1);
@@ -322,4 +405,13 @@ void ceExtractorConsoleGUI::ShowCrossDerivativeXY( void ) {
 }
 
 void ceExtractorConsoleGUI::ShowSmoothed( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowMaxEigenValue( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowMinEigenValue( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowMaxEigenVector( void ) {
 }
