@@ -129,7 +129,7 @@ int main()
   registrator->SetNumberOfLevels( 4 );
 
   unsigned int niter[4] = { 100, 50, 50, 20 };
-  double rates[4] = { 0.25, 0.5, 0.025, 0.005 };
+  double rates[4] = { 0.25, 0.05, 0.025, 0.005 };
 
   registrator->SetNumberOfIterations( niter );
   registrator->SetLearningRates( rates );
@@ -156,8 +156,8 @@ int main()
 
 
   // set metric related parameters
-  method->GetMetric()->SetTargetStandardDeviation( 20.0 );
-  method->GetMetric()->SetReferenceStandardDeviation( 20.0 );
+  method->GetMetric()->SetTargetStandardDeviation( 5.0 );
+  method->GetMetric()->SetReferenceStandardDeviation( 5.0 );
   method->GetMetric()->SetNumberOfSpatialSamples( 50 );
 
 
