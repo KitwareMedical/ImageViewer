@@ -12,6 +12,8 @@ vtkITKConfidenceConnectedImageFilter.cxx
 vtkITKIsolatedConnectedImageFilter.cxx
 vtkITKDanielssonDistanceMapImageFilter.cxx
 vtkITKPDEDeformableRegistrationFilter.h
+vtkITKThresholdSegmentationLevelSetImageFilter.h
+vtkITKLaplacianSegmentationLevelSetImageFilter.h
 vtkITKImageToImageFilter.h
 vtkITKImageToImageFilterUSUL.h
 vtkITKImageToImageFilterUSUS.h
