@@ -1,0 +1,81 @@
+//--------------------------------------------
+//
+//     Project: Operating Room
+//
+//     Author:  Luis Ibanez
+//
+//     Division of Neurosugery
+//     Department of Surgery
+//     University of North Carolina
+//     Chapel Hill, NC 27599
+//
+//--------------------------------------------
+
+
+#include <liVertebralSegmentRegistrator.h>
+
+
+namespace li {
+
+
+//----------------------------------------------------
+//
+//    Creator
+//
+//----------------------------------------------------
+VertebralSegmentRegistrator::VertebralSegmentRegistrator() 
+{
+
+  m_VertebralSegment  = VertebralSegment::New();
+
+  m_VolumeRegistrator = VolumeRegistrationMethod::New();
+
+}
+
+
+
+
+//----------------------------------------------------
+//
+//    Destructor
+//
+//----------------------------------------------------
+
+VertebralSegmentRegistrator::~VertebralSegmentRegistrator() 
+{
+   
+}
+
+
+
+
+//----------------------------------------------------
+//
+//    Get Vertebral Segment
+//
+//----------------------------------------------------
+VertebralSegment::Pointer 
+VertebralSegmentRegistrator::GetVertebralSegment( void ) 
+{
+  return m_VertebralSegment;
+}
+
+
+
+//----------------------------------------------------
+//
+//    Get Volume Registrator
+//
+//----------------------------------------------------
+VertebralSegmentRegistrator::VolumeRegistrationMethod::Pointer
+VertebralSegmentRegistrator::GetVolumeRegistrator( void ) 
+{
+  return m_VolumeRegistrator;
+}
+
+
+
+} // end namespace li
+
+
+

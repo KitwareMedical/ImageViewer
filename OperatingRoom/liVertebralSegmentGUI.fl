@@ -1,0 +1,424 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class liVertebralSegmentGUI {open
+} {
+  decl {li::VertebralSegment::Pointer m_VertebralSegment;} {}
+  decl {li::VertebralSegmentRegistrator::Pointer m_VertebralSegmentRegistrator;} {}
+  decl {li::VertebralSampleGenerator m_SampleGenerator;} {}
+  decl {fltk::RegularStepGradientDescent< li::VertebralSegmentRegistrator::VolumeRegistrationOptimizer > m_VolumeRegistrationOptimizerGUI;} {}
+  Function {liVertebralSegmentGUI()} {} {
+    code {m_VertebralSegmentRegistrator = li::VertebralSegmentRegistrator::New();} {}
+    Fl_Window vertebraWindow {
+      label {Vertebra Window}
+      xywh {721 179 518 373}
+      code0 {\#include <liVertebralSegment.h>}
+      code1 {\#include <liCommandEvents.h>}
+      code2 {\#include <liVertebralSampleGenerator.h>} visible
+    } {
+      Fl_Tabs {} {
+        xywh {10 55 505 315}
+      } {
+        Fl_Group {} {
+          label Body
+          xywh {25 75 485 295}
+        } {
+          Fl_Group {} {
+            label Upper
+            xywh {194 100 134 215} box ENGRAVED_BOX
+          } {
+            Fl_Counter UpperEndYRadiusCounter {
+              label {Y Radius}
+              callback {m_VertebralSegment->GetVertebralBody()->SetUpperEndYRadius(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {199 105 122 25} minimum 5 maximum 30 value 15
+            }
+            Fl_Counter UpperEndXRadiusCounter {
+              label {X Radius}
+              callback {m_VertebralSegment->GetVertebralBody()->SetUpperEndXRadius(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {199 145 122 25} minimum 5 maximum 30 value 15
+            }
+            Fl_Counter UpperEndYConcavityDepthCounter {
+              label {Conc.Depth}
+              callback {m_VertebralSegment->GetVertebralBody()->SetUpperEndYConcavityDepth(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {199 185 122 25} minimum 0.1 maximum 30 step 1 value 10
+            }
+            Fl_Counter UpperEndYConcavityWidthCounter {
+              label {Conc.Width}
+              callback {m_VertebralSegment->GetVertebralBody()->SetUpperEndYConcavityWidth(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {199 225 122 25} minimum 0.01 maximum 2 step 0.01 value 0.1
+              code0 {o->lstep( 0.1 );}
+            }
+            Fl_Counter UpperEndInclinationCounter {
+              label Inclination
+              callback {m_VertebralSegment->GetVertebralBody()->SetUpperEndInclination(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {199 265 122 25} minimum -5 maximum 5
+            }
+          }
+          Fl_Group {} {
+            label Lower
+            xywh {50 100 136 215} box ENGRAVED_BOX
+          } {
+            Fl_Counter LowerEndYRadiusCounter {
+              label {Y Radius}
+              callback {m_VertebralSegment->GetVertebralBody()->SetLowerEndYRadius(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {55 105 124 25} minimum 5 maximum 30 value 15
+            }
+            Fl_Counter LowerEndXRadiusCounter {
+              label {X Radius}
+              callback {m_VertebralSegment->GetVertebralBody()->SetLowerEndXRadius(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {55 145 124 25} minimum 5 maximum 30 value 15
+            }
+            Fl_Counter LowerEndYConcavityDepthCounter {
+              label {Conc.Depth}
+              callback {m_VertebralSegment->GetVertebralBody()->SetLowerEndYConcavityDepth(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {55 185 124 25} minimum 0.1 maximum 30 step 1 value 10
+            }
+            Fl_Counter LowerEndYConcavityWidthCounter {
+              label {Conc.Width}
+              callback {m_VertebralSegment->GetVertebralBody()->SetLowerEndYConcavityWidth(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {55 225 124 25} minimum 0.01 maximum 2 step 0.01 value 0.1
+              code0 {o->lstep( 0.1 );}
+            }
+            Fl_Counter LowerEndInclinationCounter {
+              label Inclination
+              callback {m_VertebralSegment->GetVertebralBody()->SetLowerEndInclination(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {55 265 124 25} minimum -5 maximum 5
+            }
+          }
+          Fl_Counter SectorsCounter {
+            label {Sectors }
+            callback {m_VertebralSegment->GetVertebralBody()->SetSectorsNumber(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {410 285 75 25} type Simple align 4 minimum 6 maximum 50 step 1 value 6
+          }
+          Fl_Counter LevelsCounter {
+            label {Levels   }
+            callback {m_VertebralSegment->GetVertebralBody()->SetLevelsNumber(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {410 250 75 25} type Simple align 4 minimum 5 maximum 50 step 1 value 5
+          }
+          Fl_Group {} {
+            label Middle
+            xywh {350 100 135 90} box ENGRAVED_BOX
+          } {
+            Fl_Counter MiddleYRadiusCounter {
+              label {Y Radius}
+              callback {m_VertebralSegment->GetVertebralBody()->SetMiddleYRadius(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {355 105 120 25} minimum 0.1 maximum 1 step 0.01 value 0.8
+              code0 {o->lstep( 0.1 );}
+            }
+            Fl_Counter MiddleXRadiusCounter {
+              label {X Radius}
+              callback {m_VertebralSegment->GetVertebralBody()->SetMiddleXRadius(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {355 145 125 25} minimum 0.1 maximum 1 step 0.01 value 0.7
+              code0 {o->lstep( 0.1 );}
+            }
+          }
+          Fl_Counter HeightCounter {
+            label Height
+            callback {m_VertebralSegment->GetVertebralBody()->SetHeight(o->value());
+m_VertebralSegment->GetVertebralBody()->GeneratePoints();
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {360 200 125 25} minimum 5 maximum 30 value 15
+          }
+          Fl_Choice {} {
+            label {Display }
+            xywh {402 323 85 25}
+          } {
+            menuitem {} {
+              label Surface
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::triangles );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Lines
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::lines );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Points
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::points );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {10 10 100 20}
+            }
+            menuitem {} {
+              label None
+              callback {m_VertebralSegment->GetVertebralBody()->SetDrawingMode( li::Shape3D::none );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {20 20 100 20}
+            }
+          }
+          Fl_Button {} {
+            label Color
+            callback {li::Shape3D::ColorType color =
+              m_VertebralSegment->GetVertebralBody()->GetColor();
+double red   = color.GetRed();
+double green = color.GetGreen();
+double blue  = color.GetBlue();
+fl_color_chooser("Vertebral Body Color",red,green,blue);
+color.SetRed( red );
+color.SetGreen( green );
+color.SetBlue( blue );
+m_VertebralSegment->GetVertebralBody()->SetColor( color );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {250 325 75 25}
+            code0 {\#include <Fl/fl_color_chooser.h>}
+          }
+        }
+        Fl_Group {} {
+          label Pedicles open
+          xywh {15 85 490 280} hide
+        } {
+          Fl_Counter VerticalPositionCounter {
+            label {Vertical   }
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetVerticalPosition(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 105 165 27} align 4 minimum -20 maximum 30
+          }
+          Fl_Counter HorizontalPositionCounter {
+            label {Horizontal }
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetHorizontalPosition(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 132 165 27} align 4 minimum 0 maximum 30 value 10
+          }
+          Fl_Counter VerticalAngleCounter {
+            label {Vert.Angle}
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetVerticalAngle(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 200 165 27} align 4 minimum -40 maximum 20
+          }
+          Fl_Counter HorizontalAngleCounter {
+            label {Horz.Angle}
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetHorizontalAngle(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 227 165 27} align 4 minimum -20 maximum 60
+          }
+          Fl_Counter LengthCounter {
+            label {Length  }
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetLength(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 263 165 27} align 4 minimum 1 maximum 40 value 10
+          }
+          Fl_Counter VerticalRadiusCounter {
+            label {Vertical Radius}
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetVerticalRadius(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 290 165 27} align 4 minimum 1 maximum 40 value 5
+          }
+          Fl_Counter HorizontalRadiusCounter {
+            label {Horizontal Radius}
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetHorizontalRadius(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 317 165 27} align 4 minimum 1 maximum 40 value 5
+          }
+          Fl_Choice {} {
+            label {Display }
+            xywh {396 168 85 25}
+          } {
+            menuitem {} {
+              label Surface
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::triangles );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {15 15 100 20}
+            }
+            menuitem {} {
+              label Lines
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::lines );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {15 15 100 20}
+            }
+            menuitem {} {
+              label Points
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::points );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {25 25 100 20}
+            }
+            menuitem {} {
+              label None
+              callback {m_VertebralSegment->GetVertebralPedicle()->SetDrawingMode( li::Shape3D::none );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+              xywh {35 35 100 20}
+            }
+          }
+          Fl_Counter PedicleSectorsCounter {
+            label {Sectors }
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetNumberOfSectors(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {400 110 75 25} type Simple align 4 minimum 6 maximum 50 step 1 value 6
+          }
+          Fl_Button {} {
+            label Color
+            callback {li::Shape3D::ColorType color =
+              m_VertebralSegment->GetVertebralPedicle()->GetColor();
+double red   = color.GetRed();
+double green = color.GetGreen();
+double blue  = color.GetBlue();
+fl_color_chooser("Vertebral Body Color",red,green,blue);
+color.SetRed( red );
+color.SetGreen( green );
+color.SetBlue( blue );
+m_VertebralSegment->GetVertebralPedicle()->SetColor( color );
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {400 215 75 25}
+            code0 {\#include <Fl/fl_color_chooser.h>}
+          }
+          Fl_Counter FrontalPositionCounter {
+            label {Frontal }
+            callback {m_VertebralSegment->GetVertebralPedicle()->SetFrontalPosition(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {146 159 165 27} align 4 minimum 0 maximum 30 value 10
+          }
+        }
+        Fl_Group {} {
+          label Articulation open
+          xywh {35 80 480 290} hide
+        } {
+          Fl_Counter ShiftCounter {
+            label {Shift  }
+            callback {m_VertebralSegment->SetShift(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {180 100 150 25} align 4 minimum 0 maximum 40 value 30
+          }
+          Fl_Counter RotationCounter {
+            label {Rotation }
+            callback {m_VertebralSegment->SetRotation(o->value());
+m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
+            xywh {180 140 150 25} align 4 minimum -45 maximum 45
+          }
+        }
+        Fl_Group {} {
+          label {Spinusl Process} open
+          xywh {35 80 480 195} hide
+        } {}
+        Fl_Group {} {
+          label {Tranverse Process} open
+          xywh {35 80 480 195} hide
+        } {}
+        Fl_Group {} {
+          label Samples open
+          xywh {15 80 500 275} hide
+          code0 {\#include <itkPhysicalImage.h>}
+        } {
+          Fl_Button {} {
+            label {Show Sample Generator}
+            callback {m_SampleGenerator.Show();}
+            xywh {155 135 180 35} align 128
+          }
+          Fl_Button {} {
+            label {Generate Samples}
+            callback {m_SampleGenerator.GenerateSamples();}
+            xywh {155 175 180 35} align 128
+          }
+          Fl_Button {} {
+            label {Update Parameters}
+            callback {m_SampleGenerator.UpdateParameters();}
+            xywh {155 215 180 35} align 128
+          }
+          Fl_Check_Button {} {
+            label {  Samples Visible}
+            callback {m_VertebralSegment->SetSamplesVisible( (o->value())?true:false );}
+            xywh {170 265 155 30} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX value 1 selection_color 2
+          }
+          Fl_Check_Button {} {
+            label {  Axis Visible}
+            callback {m_VertebralSegment->SetAxisVisible( (o->value())?true:false );}
+            xywh {170 298 155 30} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX value 1 selection_color 2
+          }
+          Fl_Button {} {
+            label {Registration Controls}
+            callback {m_VolumeRegistrationOptimizerGUI.Show();}
+            xywh {155 95 180 35} align 128
+            code0 {\#include <fltkRegularStepGradientDescent.h>}
+            code1 {\#include <liVertebralSegmentRegistrator.h>}
+          }
+        }
+      }
+      Fl_Output NameOutput {
+        label {Vertebra }
+        xywh {105 15 200 25}
+      }
+    }
+  }
+  Function {~liVertebralSegmentGUI()} {} {}
+  Function {Show(void)} {return_type void
+  } {
+    code {vertebraWindow->show();} {}
+  }
+  Function {Hide(void)} {return_type void
+  } {
+    code {vertebraWindow->hide();
+m_SampleGenerator.Hide();} {}
+  }
+  Function {SetVertebralSegment( li::VertebralSegment * segment )} {return_type void
+  } {
+    code {m_VertebralSegment = segment;
+UpperEndYRadiusCounter->value( m_VertebralSegment->GetVertebralBody()->GetUpperEndYRadius());
+UpperEndXRadiusCounter->value( m_VertebralSegment->GetVertebralBody()->GetUpperEndXRadius());
+UpperEndYConcavityWidthCounter->value( m_VertebralSegment->GetVertebralBody()->GetUpperEndYConcavityWidth());
+UpperEndYConcavityDepthCounter->value( m_VertebralSegment->GetVertebralBody()->GetUpperEndYConcavityDepth());
+UpperEndInclinationCounter->value( m_VertebralSegment->GetVertebralBody()->GetUpperEndInclination());
+LowerEndYRadiusCounter->value( m_VertebralSegment->GetVertebralBody()->GetLowerEndYRadius());
+LowerEndXRadiusCounter->value( m_VertebralSegment->GetVertebralBody()->GetLowerEndXRadius());
+LowerEndYConcavityWidthCounter->value( m_VertebralSegment->GetVertebralBody()->GetLowerEndYConcavityWidth());
+LowerEndYConcavityDepthCounter->value( m_VertebralSegment->GetVertebralBody()->GetLowerEndYConcavityDepth());
+LowerEndInclinationCounter->value( m_VertebralSegment->GetVertebralBody()->GetLowerEndInclination());
+MiddleXRadiusCounter->value( m_VertebralSegment->GetVertebralBody()->GetMiddleXRadius());
+MiddleYRadiusCounter->value( m_VertebralSegment->GetVertebralBody()->GetMiddleYRadius());
+HeightCounter->value( m_VertebralSegment->GetVertebralBody()->GetHeight() );
+LevelsCounter->value( m_VertebralSegment->GetVertebralBody()->GetLevelsNumber() );
+SectorsCounter->value( m_VertebralSegment->GetVertebralBody()->GetSectorsNumber() );
+NameOutput->value( m_VertebralSegment->GetName() );
+ShiftCounter->value( m_VertebralSegment->GetShift() );
+RotationCounter->value( m_VertebralSegment->GetRotation() );
+VerticalPositionCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetVerticalPosition() );
+HorizontalPositionCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetHorizontalPosition() );
+VerticalAngleCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetVerticalAngle() );
+HorizontalAngleCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetHorizontalAngle() );
+LengthCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetLength() );
+PedicleSectorsCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetNumberOfSectors() );
+VerticalRadiusCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetVerticalRadius() );
+HorizontalRadiusCounter->value( m_VertebralSegment->GetVertebralPedicle()->GetHorizontalRadius() );
+m_SampleGenerator.SetVertebralSegment( segment );
+m_VolumeRegistrationOptimizerGUI.SetOptimizer( m_VertebralSegmentRegistrator->GetVolumeRegistrator()->GetOptimizer() );
+m_VertebralSegmentRegistrator->GetVolumeRegistrator()->SetTarget( m_SampleGenerator.GetPointSet() );} {selected
+    }
+  }
+  Function {SetVolume( li::VertebralSegmentRegistrator::VolumeImageType * image )} {return_type void
+  } {
+    code {m_VertebralSegmentRegistrator->GetVolumeRegistrator()->SetReference( image );} {}
+  }
+  Function {SetImage( li::VertebralSegmentRegistrator::FluoroscopicImageType * image )} {return_type void
+  } {}
+} 

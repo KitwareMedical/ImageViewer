@@ -1,0 +1,35 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class liSampleGeneratorCollectionGUI {open : {public liSampleGeneratorCollectionBase}
+} {
+  Function {liSampleGeneratorCollectionGUI()} {} {
+    Fl_Window controlWindow {
+      label Generator open
+      xywh {546 161 209 186}
+      code0 {\#include <liSampleGeneratorCollectionBase.h>} visible
+    } {
+      Fl_Browser generatorsBrowser {
+        callback {ShowSampleGenerator();} selected
+        xywh {20 20 170 120} type Hold
+      }
+      Fl_Button {} {
+        label Close
+        callback {Hide();}
+        xywh {60 150 95 25}
+      }
+    }
+  }
+  Function {~liSampleGeneratorCollectionGUI()} {open return_type virtual
+  } {}
+  Function {Show(void)} {return_type {virtual void}
+  } {}
+  Function {Hide(void)} {return_type {virtual void}
+  } {}
+  Function {ShowSampleGenerator(void)} {return_type {virtual void}
+  } {}
+} 

@@ -1,0 +1,100 @@
+INCLUDE(${CMAKE_SOURCE_DIR}/CMake/Modules/FindFLTK.cmake)
+
+INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
+${ITK_SOURCE_DIR}/Code/BasicFilters
+${ITK_SOURCE_DIR}/Code/Algorithms
+${ITK_SOURCE_DIR}/Unsupported/MetaImage
+${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
+${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
+${ITK_SOURCE_DIR}/Examples/OperatingRoom
+${FLTK_INCLUDE_PATH}
+)
+
+LINK_DIRECTORIES(
+${ITK_BINARY_DIR}/Code/Common
+${ITK_BINARY_DIR}/Code/BasicFilters
+${ITK_BINARY_DIR}/Code/Algorithms
+${ITK_BINARY_DIR}/Unsupported/MetaImage
+${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
+${ITK_BINARY_DIR}/Examples/OperatingRoom
+${FLTK_LIB_PATH}
+)
+
+SOURCE_FILES(OperatingRoom_SRCS
+liBox3D
+liC_Arm3D
+liCommandGLRedrawModel
+liCommandGLRedrawModelFixed
+liCommandGLRedrawModelSensitive
+liCommandUpdateImageIntensifier
+liCommandUpdateSpineModelGUI
+liCommandUpdateRegistratorFieldOfView
+liCone3D
+liCylinder3D
+liFluoroscopyCArm
+liFluoroscopyCArmMobile
+liFluoroscopyCArmMobileGUI
+liFluoroscopyUnitView
+liFluoroscopyUnitViewGUI
+liLight
+liOperatingRoomModel
+liOperatingRoomView
+liOperatingRoomViewGUI
+liPatient
+liPointSet3D
+liSampleGenerator
+liSampleGeneratorBase
+liSampleGeneratorBodyPlane
+liSampleGeneratorBodyPlaneGUI
+liSampleGeneratorCollection
+liSampleGeneratorCollectionBase
+liSampleGeneratorCollectionGUI
+liSampleGeneratorGUI
+liSampleGeneratorPedicle
+liSampleGeneratorPedicleGUI
+liShape3D
+liSpineInterventionConfiguration
+liSpineInterventionConfigurationGUI
+liSpineModel
+liSpineModelGUI
+liSurgeryTable
+liSurgeryTableGUI
+liVectorTubes3D
+liVertebralBody
+liVertebralPedicle
+liVertebralSampleGenerator
+liVertebralSegment
+liVertebralSegmentGUI
+liVertebralSegmentRegistrator
+liVesselsModelGUI
+liVesselsRegistrator
+liTube3D
+main
+)
+
+LINK_LIBRARIES (
+ITKCommon
+ITKBasicFilters 
+MetaImageIO
+VXLNumerics
+FltkImageViewer
+fltk
+)
+
+IF(WIN32)
+  LINK_LIBRARIES(
+  wsock32
+  opengl32
+  glu32
+  )
+ENDIF(WIN32)
+
+IF(UNIX)
+  LINK_LIBRARIES (
+  -lm
+  )
+ENDIF(UNIX)
+
+ADD_EXECUTABLE(OperatingRoom OperatingRoom_SRCS)
+

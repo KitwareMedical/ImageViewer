@@ -1,0 +1,53 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class liSampleGeneratorPedicleGUI {open : {public liSampleGenerator}
+} {
+  Function {liSampleGeneratorPedicleGUI()} {} {
+    Fl_Window parametersWindow {
+      label {Pedicle Parameters} open
+      xywh {611 292 200 126}
+      code0 {\#include <liSampleGenerator.h>} visible
+    } {
+      Fl_Value_Input radiusInput {
+        label {Radius :   }
+        xywh {94 11 95 25}
+      }
+      Fl_Value_Input widthInput {
+        label {Width   :   }
+        xywh {94 38 95 25}
+      }
+      Fl_Value_Input falloffInput {
+        label {Falloff   :   }
+        xywh {94 65 95 25}
+      }
+      Fl_Value_Input thresholdInput {
+        label {Threshold  : }
+        xywh {94 92 95 25}
+      }
+    }
+  }
+  Function {~liSampleGeneratorPedicleGUI()} {return_type virtual
+  } {}
+  Function {GetRadius(void)} {return_type {virtual double}
+  } {
+    code {return radiusInput->value();} {}
+  }
+  Function {GetWidth(void)} {return_type {virtual double}
+  } {
+    code {return widthInput->value();} {}
+  }
+  Function {GetFalloff(void)} {return_type {virtual double}
+  } {
+    code {return falloffInput->value();} {}
+  }
+  Function {GetThreshold(void)} {return_type {virtual double}
+  } {
+    code {return thresholdInput->value();} {selected
+    }
+  }
+} 

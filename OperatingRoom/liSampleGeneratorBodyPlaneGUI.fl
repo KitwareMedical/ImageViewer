@@ -1,0 +1,61 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class liSampleGeneratorBodyPlaneGUI {open : {public liSampleGenerator}
+} {
+  Function {liSampleGeneratorBodyPlaneGUI()} {} {
+    Fl_Window parametersWindow {
+      label {BodyBottom Parameters}
+      xywh {579 111 201 162}
+      code0 {\#include <liSampleGenerator.h>} visible
+    } {
+      Fl_Value_Input radiusInput {
+        label {Radius :   }
+        xywh {91 13 95 25}
+      }
+      Fl_Value_Input widthInput {
+        label {Width   :   }
+        xywh {91 40 95 25}
+      }
+      Fl_Value_Input falloffInput {
+        label {Falloff   :   }
+        xywh {91 94 95 25}
+      }
+      Fl_Value_Input thresholdInput {
+        label {Threshold  : }
+        xywh {91 121 95 25}
+      }
+      Fl_Value_Input cutArcInput {
+        label {Cut arc   :   }
+        xywh {91 67 95 25}
+      }
+    }
+  }
+  Function {~liSampleGeneratorBodyPlaneGUI()} {return_type virtual
+  } {}
+  Function {GetRadius(void) const} {return_type {virtual double}
+  } {
+    code {return radiusInput->value();} {}
+  }
+  Function {GetWidth(void) const} {return_type {virtual double}
+  } {
+    code {return widthInput->value();} {}
+  }
+  Function {GetCutArc(void) const} {return_type {virtual double}
+  } {
+    code {return cutArcInput->value();} {}
+  }
+  Function {GetFalloff(void) const} {return_type {virtual double}
+  } {
+    code {return falloffInput->value();} {}
+  }
+  Function {GetThreshold(void) const} {return_type {virtual double}
+  } {
+    code {return thresholdInput->value();} {selected
+    }
+  }
+} 

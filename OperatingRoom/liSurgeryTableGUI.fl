@@ -1,0 +1,86 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class SurgeryTableGUI {open
+} {
+  decl {li::SurgeryTable::Pointer m_Table;} {}
+  Function {SurgeryTableGUI()} {} {
+    Fl_Window controlWindow {
+      label {Surgery Table Controls}
+      xywh {682 173 301 103}
+      code0 {\#include <liSurgeryTable.h>} visible
+    } {
+      Fl_Adjuster heightAdjuster {
+        label {Height        }
+        callback {heightValueOutput->value( o->value() );
+m_Table->SetVertical( o->value() );} selected
+        xywh {97 19 120 20} align 4 maximum 500 step 0.01 value 50
+      }
+      Fl_Value_Output heightValueOutput {
+        xywh {220 19 50 20} value 250
+      }
+      Fl_Adjuster lateralAdjuster {
+        label {Lateral       }
+        callback {lateralValueOutput->value( o->value() );
+m_Table->SetLateral( o->value() );}
+        xywh {97 41 120 20} align 4 minimum -150 maximum 150 step 0.01
+      }
+      Fl_Value_Output lateralValueOutput {
+        xywh {220 41 50 20}
+      }
+      Fl_Adjuster cranioCaudalAdjuster {
+        label {Cran/Caud }
+        callback {cranioCaudalValueOutput->value( o->value() );
+m_Table->SetAxial( o->value() );}
+        xywh {97 63 120 20} align 4 maximum 1000 step 0.01 value 600
+      }
+      Fl_Value_Output cranioCaudalValueOutput {
+        xywh {220 63 50 20} value 250
+      }
+      Fl_Button {} {
+        callback {const double value = 50.0f;
+heightAdjuster->value( value );
+heightValueOutput->value( value );
+m_Table->SetVertical( value );}
+        xywh {272 19 8 20}
+      }
+      Fl_Button {} {
+        callback {lateralAdjuster->value( 0 );
+lateralValueOutput->value( o->value() );
+m_Table->SetLateral( o->value() );}
+        xywh {272 41 8 20}
+      }
+      Fl_Button {} {
+        callback {const double value = 600.0f;
+cranioCaudalAdjuster->value( value );
+cranioCaudalValueOutput->value( value );
+m_Table->SetAxial( value );}
+        xywh {272 63 8 20}
+      }
+    }
+  }
+  Function {~SurgeryTableGUI()} {return_type virtual
+  } {}
+  Function {Show(void)} {return_type void
+  } {
+    code {controlWindow->show();} {}
+  }
+  Function {Hide(void)} {return_type void
+  } {
+    code {controlWindow->hide();} {}
+  }
+  Function {SetTable( li::SurgeryTable * table)} {return_type void
+  } {
+    code {m_Table = table;
+heightValueOutput->value( m_Table->GetVertical() );
+heightAdjuster->value( m_Table->GetVertical() );
+lateralValueOutput->value( m_Table->GetLateral() );
+lateralAdjuster->value( m_Table->GetLateral() );
+cranioCaudalValueOutput->value( m_Table->GetAxial() );
+cranioCaudalAdjuster->value( m_Table->GetAxial() );} {}
+  }
+} 

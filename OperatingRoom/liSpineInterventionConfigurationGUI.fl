@@ -1,0 +1,123 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class SpineInterventionConfigurationGUI {open
+} {
+  decl {li::SpineInterventionConfiguration::Pointer m_Configuration;} {}
+  Function {SpineInterventionConfigurationGUI()} {} {
+    Fl_Window controlWindow {
+      label {Spine Intervention}
+      xywh {604 186 301 103}
+      code0 {\#include <liSpineInterventionConfiguration.h>} visible
+    } {
+      Fl_Menu_Bar {} {
+        xywh {1 2 300 25}
+      } {
+        submenu {} {
+          label File
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label {Load Fluoroscopy}
+            callback {m_Configuration->LoadFluoroscopy();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Load Volume}
+            callback {m_Configuration->LoadVolume();}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label {Load Spine Model}
+            callback {m_Configuration->LoadSpineModel();}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label {Load Vessels Model}
+            callback {m_Configuration->LoadVesselsModel();}
+            xywh {20 20 100 20} divider
+          }
+          menuitem {} {
+            label {Save Spine Model}
+            callback {m_Configuration->SaveSpineModel();}
+            xywh {20 20 100 20} divider
+          }
+          menuitem {} {
+            label Quit
+            callback {Hide();}
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label Views
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label Room
+            callback {m_Configuration->ShowRoomView();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Fluoroscopy
+            callback {m_Configuration->ShowFluoroscopyView();}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Volume
+            callback {m_Configuration->ShowVolumeView();}
+            xywh {10 10 100 20}
+          }
+        }
+        submenu {} {
+          label Controls
+          xywh {10 10 100 20}
+        } {
+          menuitem {} {
+            label Table
+            callback {m_Configuration->ShowTableControls();}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label Fluoroscopy
+            callback {m_Configuration->ShowFluoroscopyControls();}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label {Spine Model}
+            callback {m_Configuration->ShowSpineControls();}
+            xywh {20 20 100 20}
+          }
+          menuitem {} {
+            label {Vessels Model}
+            callback {m_Configuration->ShowVesselsControls();}
+            xywh {30 30 100 20}
+          }
+          menuitem {} {
+            label Slicer
+            callback {m_Configuration->ShowVolumeSlicer();} selected
+            xywh {30 30 100 20}
+          }
+        }
+      }
+    }
+  }
+  Function {~SpineInterventionConfigurationGUI()} {return_type virtual
+  } {}
+  Function {Show(void)} {return_type void
+  } {
+    code {controlWindow->show();} {}
+  }
+  Function {Hide(void)} {return_type void
+  } {
+    code {controlWindow->hide();
+m_Configuration->Hide();} {}
+  }
+  Function {SetConfiguration( li::SpineInterventionConfiguration * configuration )} {return_type void
+  } {
+    code {m_Configuration = configuration;} {}
+  }
+} 

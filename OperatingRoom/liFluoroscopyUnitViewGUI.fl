@@ -1,0 +1,46 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class FluoroscopyUnitViewGUI {open
+} {
+  Function {FluoroscopyUnitViewGUI()} {} {
+    Fl_Window ViewWindow {
+      label {Fluoroscopy View}
+      xywh {546 206 490 460} resizable visible
+    } {
+      Fl_Box fluoroscopyUnitViewWindow {
+        xywh {5 10 480 440} resizable
+        code0 {\#include <liFluoroscopyUnitView.h>}
+        class {li::FluoroscopyUnitView}
+      }
+    }
+  }
+  Function {~FluoroscopyUnitViewGUI()} {return_type virtual
+  } {}
+  Function {Show(void)} {return_type void
+  } {
+    code {ViewWindow->show();
+fluoroscopyUnitViewWindow->show();} {}
+  }
+  Function {Hide(void)} {return_type void
+  } {
+    code {ViewWindow->hide();} {}
+  }
+  Function {GetWindow(void)} {return_type {fltk::GlWindow *}
+  } {
+    code {return fluoroscopyUnitViewWindow;} {}
+  }
+  Function {SetFluoroscopyImage( const li::FluoroscopyUnitView::ImageType * image )} {return_type void
+  } {
+    code {fluoroscopyUnitViewWindow->SetFluoroscopyImage( image );} {}
+  }
+  Function {GetRedrawCommand(void)} {return_type {fltk::GlWindow::RedrawCommandType::Pointer}
+  } {
+    code {return fluoroscopyUnitViewWindow->GetRedrawCommand();} {selected
+    }
+  }
+} 

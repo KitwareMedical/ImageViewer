@@ -1,0 +1,222 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class VesselsModelGUI {open
+} {
+  decl {li::VectorTubes3D::Pointer m_Vessels;} {}
+  decl {li::VesselsRegistrator::Pointer m_Registrator;} {}
+  decl {fltk::RegularStepGradientDescent<
+    li::VesselsRegistrator::RegistrationOptimizer > m_OptimizerGUI;} {}
+  Function {VesselsModelGUI()} {open
+  } {
+    code {m_Vessels = li::VectorTubes3D::New();
+m_Registrator = li::VesselsRegistrator::New();
+m_OptimizerGUI.SetOptimizer( m_Registrator->GetRegistrator()->GetOptimizer() );} {}
+    Fl_Window controlWindow {
+      label Vessels open
+      xywh {781 115 304 200}
+      code0 {\#include <liVectorTubes3D.h>} visible
+    } {
+      Fl_Tabs {} {open
+        xywh {10 15 280 175}
+      } {
+        Fl_Group {} {
+          label {External Offset}
+          xywh {10 40 280 150} align 129
+        } {
+          Fl_Value_Output xExternalOffsetValueOutput {
+            xywh {205 65 65 25}
+          }
+          Fl_Value_Output yExternalOffsetValueOutput {
+            xywh {205 92 65 25}
+          }
+          Fl_Value_Output zExternalOffsetValueOutput {
+            xywh {205 119 65 25}
+          }
+          Fl_Adjuster xExternalOffsetAdjuster {
+            label {X : }
+            callback {xExternalOffsetValueOutput->value( o->value() );
+UpdateExternalOffset();}
+            xywh {65 65 135 25} align 4 minimum -500 maximum 500 step 0.01
+          }
+          Fl_Adjuster yExternalOffsetAdjuster {
+            label {Y : }
+            callback {yExternalOffsetValueOutput->value( o->value() );
+UpdateExternalOffset();}
+            xywh {65 92 135 25} align 4 minimum -500 maximum 500 step 0.01
+          }
+          Fl_Adjuster zExternalOffsetAdjuster {
+            label {Z : }
+            callback {zExternalOffsetValueOutput->value( o->value() );
+UpdateExternalOffset();}
+            xywh {65 119 135 25} align 4 minimum -500 maximum 500 step 0.01
+          }
+        }
+        Fl_Group {} {
+          label {Internal Offset}
+          xywh {10 40 280 150} hide
+        } {
+          Fl_Value_Output xInternalOffsetValueOutput {
+            xywh {205 65 65 25}
+          }
+          Fl_Value_Output yInternalOffsetValueOutput {
+            xywh {205 92 65 25}
+          }
+          Fl_Value_Output zInternalOffsetValueOutput {
+            xywh {205 119 65 25}
+          }
+          Fl_Adjuster xInternalOffsetAdjuster {
+            label {X : }
+            xywh {65 65 135 25} align 4 minimum -500 maximum 500 step 0.01
+          }
+          Fl_Adjuster yInternalOffsetAdjuster {
+            label {Y : }
+            xywh {65 92 135 25} align 4 minimum -500 maximum 500 step 0.01
+          }
+          Fl_Adjuster zInternalOffsetAdjuster {
+            label {Z : }
+            xywh {65 119 135 25} align 4 minimum -500 maximum 500 step 0.01
+          }
+        }
+        Fl_Group {} {
+          label Display open
+          xywh {10 40 280 150} hide
+        } {
+          Fl_Choice {} {
+            label {Draw Mode : } open
+            xywh {140 61 100 25}
+          } {
+            menuitem {} {
+              label None
+              callback {m_Vessels->SetDrawingMode( li::Shape3D::none );
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Points
+              callback {m_Vessels->SetDrawingMode( li::Shape3D::points );
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+              xywh {10 10 100 20}
+            }
+            menuitem {} {
+              label Lines
+              callback {m_Vessels->SetDrawingMode( li::Shape3D::lines );
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+              xywh {20 20 100 20}
+            }
+            menuitem {} {
+              label Triangles
+              callback {m_Vessels->SetDrawingMode( li::Shape3D::triangles );
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+              xywh {30 30 100 20}
+            }
+            menuitem {} {
+              label SurfacePoints
+              callback {m_Vessels->SetDrawingMode( li::Shape3D::surfacepoints );
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+              xywh {40 40 100 20}
+            }
+          }
+          Fl_Check_Button displayClusterCheckButton {
+            label {  Display Cluster}
+            callback {SetDisplayPointSet();}
+            xywh {80 101 145 30} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX selection_color 2
+          }
+          Fl_Button {} {
+            label Registration
+            callback {ShowRegistrationControl()}
+            xywh {80 145 145 25}
+            code0 {\#include <liVesselsRegistrator.h>}
+            code1 {\#include <fltkRegularStepGradientDescent.h>}
+          }
+        }
+        Fl_Group {} {
+          label Browse open
+          xywh {10 40 280 150} hide
+        } {
+          Fl_Scroll {} {open
+            xywh {25 50 255 125} box DOWN_BOX
+          } {
+            Fl_Tile {} {open
+              xywh {25 50 255 125}
+            } {}
+          }
+        }
+      }
+    }
+  }
+  Function {~VesselsModelGUI()} {return_type virtual
+  } {}
+  Function {Show(void)} {return_type {virtual void}
+  } {
+    code {controlWindow->show();} {}
+  }
+  Function {Hide(void)} {return_type {virtual void}
+  } {
+    code {controlWindow->hide();} {}
+  }
+  Function {SetExternalOffset(double x,double y,double z)} {return_type {virtual void}
+  } {
+    code {xExternalOffsetValueOutput->value( x );
+yExternalOffsetValueOutput->value( y );
+zExternalOffsetValueOutput->value( z );
+xExternalOffsetAdjuster->value( x );
+yExternalOffsetAdjuster->value( y );
+zExternalOffsetAdjuster->value( z );} {}
+  }
+  Function {SetInternalOffset(double x,double y,double z)} {return_type {virtual void}
+  } {
+    code {xInternalOffsetValueOutput->value( x );
+yInternalOffsetValueOutput->value( y );
+zInternalOffsetValueOutput->value( z );
+xInternalOffsetAdjuster->value( x );
+yInternalOffsetAdjuster->value( y );
+zInternalOffsetAdjuster->value( z );} {}
+  }
+  Function {SetVesselsModel(li::VectorTubes3D * vessels )} {return_type {virtual void}
+  } {
+    code {m_Vessels = vessels;
+li::Tube3D::VectorType offset = m_Vessels->GetExternalOffset();
+SetExternalOffset( offset[0], offset[1], offset[2] );
+m_Registrator->SetVessels( m_Vessels );} {}
+  }
+  Function {UpdateExternalOffset(void)} {return_type {virtual void}
+  } {
+    code {li::Tube3D::VectorType offset;
+offset[0] = xExternalOffsetAdjuster->value();
+offset[1] = yExternalOffsetAdjuster->value();
+offset[2] = zExternalOffsetAdjuster->value();
+m_Vessels->SetExternalOffset( offset );
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );} {}
+  }
+  Function {SetDisplayPointSet(void)} {return_type {virtual void}
+  } {
+    code {if( displayClusterCheckButton->value() )
+{
+  m_Vessels->SetDisplayPointSet( true );
+}
+else
+{
+  m_Vessels->SetDisplayPointSet( false );
+}
+
+m_Vessels->InvokeEvent( li::VesselsChangedEvent );} {}
+  }
+  Function {ShowRegistrationControl(void)} {return_type {virtual void}
+  } {
+    code {m_OptimizerGUI.Show();} {}
+  }
+  Function {SetImage( li::VesselsRegistrator::FluoroscopicImageType * image )} {return_type {virtual void}
+  } {
+    code {m_Registrator->SetImage( image );} {}
+  }
+  Function {GetRegistrator(void)} {return_type {li::VesselsRegistrator::Pointer}
+  } {
+    code {return m_Registrator} {selected
+    }
+  }
+} 
