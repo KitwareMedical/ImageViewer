@@ -26,5 +26,6 @@ public:
   int IsVisible(void);
   fltk::GlWindow::RedrawCommandType::Pointer GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
+  fltk::GlWindowInteractive * GetGlWindow(void);
 };
 #endif

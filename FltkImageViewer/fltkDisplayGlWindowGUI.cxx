@@ -64,3 +64,7 @@ fltk::GlWindow::RedrawCommandType::Pointer fltkDisplayGlWindowGUI::GetRedrawComm
 itk::Object::Pointer fltkDisplayGlWindowGUI::GetNotifier(void) {
   return drawWindow->GetNotifier();
 }
+
+fltk::GlWindowInteractive * fltkDisplayGlWindowGUI::GetGlWindow(void) {
+  return drawWindow;
+}

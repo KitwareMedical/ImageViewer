@@ -5,11 +5,11 @@ code_name {.cxx}
 gridx 5 
 gridy 5 
 snap 3
-class fltkDisplayGlWindowGUI {open selected private
+class fltkDisplayGlWindowGUI {open private
 } {
   Function {fltkDisplayGlWindowGUI()} {} {
     Fl_Window parentWindow {open
-      private xywh {498 178 565 585} resizable visible
+      private xywh {230 114 565 585} resizable visible
     } {
       Fl_Box drawWindow {
         private xywh {0 0 565 585} resizable
@@ -66,8 +66,12 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->GetRedrawCommand().GetPointer();} {}
   }
-  Function {GetNotifier(void)} {return_type {itk::Object::Pointer}
+  Function {GetNotifier(void)} {selected return_type {itk::Object::Pointer}
   } {
     code {return drawWindow->GetNotifier();} {}
+  }
+  Function {GetGlWindow(void)} {return_type {fltk::GlWindowInteractive *}
+  } {
+    code {return drawWindow;} {}
   }
 } 
