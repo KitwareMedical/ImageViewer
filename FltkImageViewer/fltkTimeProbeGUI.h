@@ -17,9 +17,9 @@
 #ifndef __fltkTimeProbeGUI_h
 #define __fltkTimeProbeGUI_h
 
-#include <Fl/Fl_Tile.H>
-#include <Fl/Fl_Button.H>
-#include <Fl/Fl_Value_Output.H>
+#include <FL/Fl_Tile.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Value_Output.H>
 #include <string>
 
 
