@@ -1,4 +1,5 @@
 SOURCE_FILES( VTKITKCommon_SRCS
+vtkITKAntiAliasBinaryImageFilter.h
 vtkITKMutualInformationTransform.cxx
 vtkITKWatershedImageFilter.cxx
 vtkITKNormalizeImageFilter.cxx
