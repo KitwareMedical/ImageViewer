@@ -21,7 +21,7 @@
 #include<MetaImageLib.h>
 #include<itkImage.h>
 #include<itkProcessObject.h>
-#include<itkSimpleImageRegionIterator.h>
+#include<itkImageRegionIteratorWithIndex.h>
 
 
 template <class T>
@@ -75,10 +75,11 @@ loadImage(char *fname)
  image->Allocate();
 
 
- itk::SimpleImageRegionIterator< ImageType > it(image, region);
- int i;
- for(i = 0; !it.IsAtEnd(); i++, ++it)
-   it.Set(imIO->Get(i));
+ itk::ImageRegionIteratorWithIndex< ImageType > it(image, region);
+ for(unsigned int i = 0; !it.IsAtEnd(); i++, ++it)
+   {
+   it.Set( static_cast< ImageType::PixelType >( imIO->Get(i) ));
+   }
 
 
  return image;
