@@ -17,7 +17,6 @@
 #include <fstream>
 #include "itkAntiAliasBinaryImageFilter.h"
 #include "itkZeroCrossingImageFilter.h"
-#include "itkRawImageIO.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkImageRegionIterator.h"
@@ -52,13 +51,6 @@ int main(int argc, char *argv[] )
 
   itk::ImageFileReader<BinaryImageType>::Pointer reader
     = itk::ImageFileReader<BinaryImageType>::New();
-
-  itk::RawImageIO<InputDataType, 3>::Pointer input_io
-    = itk::RawImageIO<InputDataType, 3>::New();
-
-  itk::RawImageIO<float, 3>::Pointer output_io
-    = itk::RawImageIO<float, 3>::New();
-
 
 
   unsigned long size[3];
@@ -98,25 +90,11 @@ int main(int argc, char *argv[] )
   // Construct and run the pipeline.
   try {
       
-    // Set up the io classes and the filter
-    input_io->SetDimensions(0, size[0]);
-    input_io->SetDimensions(1, size[1]);
-    input_io->SetDimensions(2, size[2]);
-    input_io->SetFileTypeToBinary();
-    input_io->SetByteOrderToLittleEndian();
-    input_io->SetFileDimensionality(3);
-    input_io->SetNumberOfComponents(1);
-    
-    reader->SetImageIO(input_io);
     reader->SetFileName(input_filename.c_str());
     
     antialiaser->SetInput(reader->GetOutput());
     antialiaser->SetMaximumRMSError(max_error);
     antialiaser->SetNumberOfLayers(number_of_layers);
-
-    output_io->SetByteOrderToLittleEndian();
-    output_io->SetFileTypeToBinary();
-    output_io->SetFileDimensionality(3);
 
     if (output_type == 1)  // output zero crossings of the level set image
       {
@@ -124,14 +102,12 @@ int main(int argc, char *argv[] )
         zerocrossings->SetForegroundValue(1.0);
         zerocrossings->SetBackgroundValue(-1.0);
 
-        writer->SetImageIO(output_io);
         writer->SetFileName(output_filename.c_str());
         writer->SetInput(zerocrossings->GetOutput());
         writer->Write();
       }
     else // output the level set image
       {
-        writer->SetImageIO(output_io);
         writer->SetFileName(output_filename.c_str());
    
         writer->SetInput(antialiaser->GetOutput());

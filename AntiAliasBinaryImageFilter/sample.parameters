@@ -1,5 +1,5 @@
-(INPUT_FILENAME  "sample_input.64x64x64.char"  )
-(OUTPUT_FILENAME "sample_output.64x64x64.float" )
+(INPUT_FILENAME  "sample_input.64x64x64.mha"  )
+(OUTPUT_FILENAME "sample_output.64x64x64.mha" )
 
 (IMAGE_SIZE 64 64 64)  // The size of the input image
 

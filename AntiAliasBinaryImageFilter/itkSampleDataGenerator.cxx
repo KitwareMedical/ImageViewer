@@ -16,7 +16,6 @@
 =========================================================================*/
 #include <fstream>
 #include "itkImage.h"
-#include "itkRawImageIO.h"
 #include "itkImageFileWriter.h"
 
 const unsigned int V_WIDTH  = 64;
@@ -83,16 +82,12 @@ int main()
   evaluate_function(image, sphere);
 
   // Write to a file.
-  itk::RawImageIO<char, 3>::Pointer output_io = itk::RawImageIO<char, 3>::New();
-  output_io->SetFileTypeToBinary();
-  output_io->SetByteOrderToLittleEndian();
-  output_io->SetFileDimensionality(3);
 
   itk::ImageFileWriter<BinaryImageType>::Pointer writer =
     itk::ImageFileWriter<BinaryImageType>::New();
-  writer->SetImageIO(output_io);
-  writer->SetFileName("sample_input.64x64x64.char");
+  writer->SetFileName("sample_input.mha");
   writer->SetInput(image);
   writer->Write();
+
   return 0;
 }

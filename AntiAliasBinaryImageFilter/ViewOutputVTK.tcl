@@ -11,8 +11,8 @@ set X 63
 set Y 63
 set Z 63
 
-set img_data1 "sample_input.64x64x64.char"
-set img_data2 "sample_output.64x64x64.float"
+set img_data1 "sample_input.64x64x64.raw"
+set img_data2 "sample_output.64x64x64.raw"
 
 vtkImageReader imgReader1
 imgReader1 SetDataExtent 0 $X 0 $Y 0 $Z
