@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0009 
+version 1.0010 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -14,7 +14,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
       Fl_Button {} {
-        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        label {H:/usr/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif} selected
         xywh {10 75 110 75} box FLAT_BOX labeltype image
       }
       Fl_Menu_Bar {} {
@@ -84,7 +84,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       xywh {852 76 249 146} visible
     } {
       Fl_Browser substratesBrowser {
-        callback {ShowSubstrate( o->text( o->value() ) );} selected
+        callback {ShowSubstrate( o->text( o->value() ) );}
         xywh {15 15 220 115} type Select
       }
     }
