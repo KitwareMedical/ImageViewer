@@ -14,7 +14,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
       Fl_Button {} {
-        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.xpm} selected
+        label {C:/cygwin/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif} selected
         xywh {10 75 110 75} box FLAT_BOX labeltype image
       }
       Fl_Menu_Bar {} {
@@ -81,7 +81,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
     }
     Fl_Window substratesWindow {
       label Substrates open
-      xywh {852 76 249 146} visible
+      xywh {771 76 249 146} visible
     } {
       Fl_Browser substratesBrowser {
         callback {ShowSubstrate( o->text( o->value() ) );}
