@@ -32,7 +32,7 @@ vtkIO
 vtkFiltering
 vtkCommon
 ITKFltkImageViewer
-vtkFltk
+ITKVtkFltk
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}
