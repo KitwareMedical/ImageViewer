@@ -124,6 +124,10 @@ IF(HAS_METAIMAGE)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
+# Add an option to build or not build the FEM - Mesh example
+IF(USE_VTK_FILE)
+  SUBDIRS(FEMMesh)
+ENDIF(USE_VTK_FILE)
 
 
 # Add an option to build the Tcl Wrap for the stl string class
