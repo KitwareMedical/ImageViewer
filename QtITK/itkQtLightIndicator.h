@@ -4,7 +4,7 @@
 
 namespace itk {
 
-class QtLightIndicator : public ::QButton
+  class QtLightIndicator : public QButton
 {
 
   Q_OBJECT
@@ -19,19 +19,19 @@ public slots:
   void Start()
     {
     QColor yellow(255,255,0);
-    this->setPaletteBackgroundColor( yellow );
+    this->setBackgroundColor( yellow );
     }
 
   void Modified()
     {
     QColor red(255,0,0);
-    this->setPaletteBackgroundColor( red );
+    this->setBackgroundColor( red );
     }
 
   void End()
     {
     QColor green(0,255,0);
-    this->setPaletteBackgroundColor( green );
+    this->setBackgroundColor( green );
     }
 
 };
