@@ -107,7 +107,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
         }
         Fl_Counter lowerThresholdCounter {
           label Lower
-          callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );} selected
+          callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );}
           xywh {643 61 121 25} labelsize 12 align 4 minimum 0 maximum 65535 step 1 value 100 textsize 12
           code0 {o->lstep(10.0);}
         }
@@ -174,12 +174,12 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
         Fl_Value_Input curvatureFlowTimeStepValueInput {
           label TimeStep
           callback {m_CurvatureFlowImageFilter->SetTimeStep( o->value() );}
-          xywh {234 59 55 25} labelsize 12 maximum 10 value 0.125 textsize 12
+          xywh {234 59 55 25} labelsize 12 maximum 10 value 0.25 textsize 12
         }
         Fl_Value_Input curvatureFlowIterationsValueInput {
           label Iterations
           callback {m_CurvatureFlowImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
-          xywh {234 84 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
+          xywh {234 84 55 25} labelsize 12 minimum 1 maximum 1000 value 10 textsize 12
         }
         Fl_Button {} {
           label {Gradient Anisotropic Diffusion}
@@ -194,22 +194,22 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
         Fl_Value_Input curvatureAnisotropicDiffusionTimeStepValueInput {
           label TimeStep
           callback {m_CurvatureAnisotropicDiffusionImageFilter->SetTimeStep( o->value() );}
-          xywh {232 304 55 25} labelsize 12 maximum 10 value 0.125 textsize 12
+          xywh {232 304 55 25} labelsize 12 maximum 10 value 0.25 textsize 12
         }
         Fl_Value_Input gradientAnisotropicDiffusionTimeStepValueInput {
           label TimeStep
           callback {m_GradientAnisotropicDiffusionImageFilter->SetTimeStep( o->value() );}
-          xywh {237 171 55 25} labelsize 12 maximum 10 value 0.125 textsize 12
+          xywh {237 171 55 25} labelsize 12 maximum 10 value 0.25 textsize 12
         }
         Fl_Value_Input gradientAnisotropicDiffusionIterationsValueInput {
           label Iterations
           callback {m_GradientAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
-          xywh {237 196 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
+          xywh {237 196 55 25} labelsize 12 minimum 1 maximum 1000 value 10 textsize 12
         }
         Fl_Value_Input curvatureAnisotropicDiffusionIterationsValueInput {
           label Iterations
           callback {m_CurvatureAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
-          xywh {232 329 55 25} labelsize 12 minimum 1 maximum 100 value 1 textsize 12
+          xywh {232 329 55 25} labelsize 12 minimum 1 maximum 100 value 10 textsize 12
         }
         Fl_Value_Input gradientAnisotropicDiffusionConductanceValueInput {
           label Conductance
@@ -271,8 +271,8 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
       }
       Fl_Value_Input iterationsConfidenceValueInput {
         label Iterations
-        callback {m_ConfidenceConnectedImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
-        xywh {697 193 55 25} labelsize 12 minimum 1 maximum 100 value 2 textsize 12
+        callback {m_ConfidenceConnectedImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );} selected
+        xywh {697 193 55 25} labelsize 12 minimum 1 maximum 100 value 10 textsize 12
       }
       Fl_Value_Input fuzzyMeanValueInput {
         label Mean
