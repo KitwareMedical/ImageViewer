@@ -21,6 +21,7 @@ IF(HAS_FLTK)
      fltkWindowInteractive
      fltkTimeProbeGUI
      fltkTimeProbesCollector
+     fltkUtils
      )
 
   SOURCE_FILES(FltkImageViewer_GUI_SRCS
@@ -39,7 +40,6 @@ IF(HAS_FLTK)
     )
 
   INCLUDE_DIRECTORIES(
-     ${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
      ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
      ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
      ${FLTK_INCLUDE_PATH}
