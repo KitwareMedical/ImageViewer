@@ -1,19 +1,20 @@
 % Configuration file for ITK FEM registration example
 
-3	% Number of levels in the multi-res pyramid
-3	% Maximum Level to use in the pyramid 
-2 4 8  %	% elts per dim each level
-190000 490000 690000   % Elasticity
-1.e3 1.e3 1.e3 %2.e2	% Rho
-8 8 8    	% NumberOfIntegrationPoints
-1 1 1  	  % WidthOfMetricRegion
-35 35 35 	% MaximumIterations
+4	% Number of levels in the multi-res pyramid
+4	% Maximum Level to use in the pyramid 
+2 4 8 12  %	% elts per dim each level
+1.e6 1.e6 1.e6 1.e6 %90000   % Elasticity
+1.e3 1.e3  2.e3 2.e3	% Rho
+10 10 10 10    	% NumberOfIntegrationPoints
+1 1 1 1  	  % WidthOfMetricRegion
+15 15 25 25 	% MaximumIterations
+1     % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
 1.	% Alpha
-0	% DescentDirection
+1	% DescentDirection
 1	% DoLineSearch
-1	% frequency of line search
+7	% frequency of line search
 1.	% TimeStep
-1.e-12  % Energy Reduction Factor
+1.e-15  % Energy Reduction Factor
 2     % dimension of images
 128	% Nx (image x dimension)
 128	% Ny (image y dimension)

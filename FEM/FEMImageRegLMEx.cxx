@@ -145,18 +145,6 @@ int main()
   // Read Raw Files 
   ReadRawImageFiles(X);
   
-  // Choose the similarity metric
-
-  typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType0;
-  typedef itk::NormalizedCorrelationImageToImageMetric<ImageType,ImageType> MetricType1;
-  typedef itk::PatternIntensityImageToImageMetric<ImageType,ImageType> MetricType2;
-  typedef itk::MutualInformationImageToImageMetric<ImageType,ImageType> MetricType3;
-  typedef MetricType0 MetricType;
-  MetricType::Pointer msqp=MetricType::New();
-  msqp->SetScaleGradient(1.0); // this is the default(?)
-  X.SetMetric(msqp.GetPointer());
-
-
   // Choose the material properties
   itk::fem::MaterialLinearElasticity::Pointer m;
   m=itk::fem::MaterialLinearElasticity::New();
@@ -172,6 +160,7 @@ int main()
   ElementType::Pointer e1=ElementType::New();
   e1->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
   X.SetElement(e1);
+  X.SetMaterial(m);
 
   // Register the images
   X.RunRegistration();
