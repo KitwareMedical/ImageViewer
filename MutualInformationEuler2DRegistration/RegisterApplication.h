@@ -8,6 +8,7 @@
 
 #include "Preprocessor.h"
 #include "MIEuler2DRegistrator.h"
+#include "MIAffine2DRegistrator.h"
 #include "OutputGenerator.h"
 
 class RegisterApplication
@@ -24,13 +25,13 @@ public:
   typedef itk::ImageFileWriter< InputImageType > ImageWriterType ;
   typedef itk::FlipImageFilter< InputImageType > ImageFlipperType ;
 
-  typedef Preprocessor< InputImageType, OutputImageType > 
-  PreprocessorType ;
-  typedef MIEuler2DRegistrator< OutputImageType, OutputImageType > 
-    RegistratorType ;
+  typedef Preprocessor< InputImageType, OutputImageType > PreprocessorType ;
+
+  typedef MIEuler2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+//  typedef MIAffine2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+
   typedef PreprocessorType::AffineTransformType TransformType ;
-  typedef OutputGenerator< InputImageType > 
-    GeneratorType ;
+  typedef OutputGenerator< InputImageType > GeneratorType ;
 
   typedef enum 
   {
