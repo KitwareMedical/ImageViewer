@@ -5,8 +5,7 @@ INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Unsupported/MetaImage
-${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
+${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/Curves2DExtractor
 ${FLTK_INCLUDE_PATH}
@@ -17,9 +16,8 @@ LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Unsupported/MetaImage
+${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
-${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/Curves2DExtractor
 )
 
@@ -32,8 +30,7 @@ ceExtractorConsoleGUI
 LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
-MetaImageIO
-IView
+ITKIO
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}

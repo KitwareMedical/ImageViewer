@@ -124,7 +124,8 @@ ceExtractorConsoleBase
 
   m_ScalarProduct->SetInput1( m_Gradient->GetOutput() );
   m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
-  
+//  m_ScalarProduct->SetInput1( m_Eigen->GetMaxEigenVector() );
+//  m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
 
   m_ParametricSpace = ParametricSpaceFilterType::New();
 

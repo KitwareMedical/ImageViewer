@@ -40,10 +40,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 
-#include <ceExtractorConsole.h>
+#include "ceExtractorConsole.h"
+#include "fltkLightButtonRedrawCommand.h"
+#include "itkMetaImageIOFactory.h"
 #include <FL/fl_file_chooser.H>
-#include <fltkLightButtonRedrawCommand.h>
-#include <itkFileIOMetaImage.h>
  
 
 
@@ -56,9 +56,8 @@ ceExtractorConsole
 ::ceExtractorConsole()
 {
  
-  itk::FileIOMetaImageFactory * factory = new itk::FileIOMetaImageFactory;
-  itk::ObjectFactoryBase * factoryBase = static_cast<itk::ObjectFactoryBase *>( factory );
-  itk::ObjectFactoryBase::RegisterFactory( factoryBase );
+  itk::MetaImageIOFactory::RegisterOneFactory();
+
   
   typedef fltk::LightButtonRedrawCommand  CommandButton;
 

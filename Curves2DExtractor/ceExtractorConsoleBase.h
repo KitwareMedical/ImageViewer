@@ -46,8 +46,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define ce_FilterConsoleBase_h
 
 #include <itkImage.h>
-#include <itkFileIOToImageFilter.h>
-#include <itkWriteMetaImage.h>
 #include <itkRecursiveGaussianImageFilter.h>
 #include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
 #include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
@@ -58,6 +56,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkMultiplyImageFilter.h>
 #include <itkImageToParametricSpaceFilter.h>
 #include <itkMesh.h>
+#include <itkMetaImageIOFactory.h>
+#include <itkImageFileReader.h>
 
 
 class ceExtractorConsoleBase 
@@ -80,7 +80,7 @@ public:
 
   typedef   itk::Mesh< int, 3 >                   MeshType;
     
-  typedef   itk::FileIOToImageFilter< 
+  typedef   itk::ImageFileReader< 
                             InputImageType >       VolumeReaderType;
 
 
