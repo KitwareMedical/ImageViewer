@@ -37,6 +37,7 @@
     m_ConfidenceConnectedImageViewer            = InternalImageViewerType::New();
     m_FuzzyConnectedImageViewer                 = InternalImageViewerType::New();
     m_HomogeneousImageViewer                    = InternalImageViewerType::New();
+    m_ComposedImageViewer                       = InternalImageViewerType::New();
     m_InputImageViewer                          = InputImageViewerType::New();
 
 
@@ -65,6 +66,9 @@
     m_HomogeneousImageViewer->SetClickCallBack( (void *)this, ClickSelectCallback );
     m_HomogeneousImageViewer->SetImage( m_NullImageFilter->GetOutput() );
     m_HomogeneousImageViewer->SetInteractionMode( fltk::Image2DViewerWindow::ClickMode );
+
+    m_ComposedImageViewer->SetLabel("Overlaped Contours");
+    m_ComposedImageViewer->SetImage( m_MaximumImageFilter->GetOutput() );
 
     // Initialize ITK filter with GUI values
     m_ConnectedThresholdImageFilter->SetLower( 
@@ -112,6 +116,8 @@
     homogeneousImageButton->Observe( m_NullImageFilter.GetPointer() );
     thresholdConnectedImageButton->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
     confidenceConnectedImageButton->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
+    composedImageButton->Observe( m_SobelImageFilter.GetPointer() );
+    composedImageButton->Observe( m_MaximumImageFilter.GetPointer() );
     fuzzyConnectedImageButton->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
     curvatureFlowImageButton->Observe( m_CurvatureFlowImageFilter.GetPointer() );
     gradientAnisotropicDiffusionImageButton->Observe( m_GradientAnisotropicDiffusionImageFilter.GetPointer() );
@@ -126,6 +132,8 @@
     progressSlider->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
     progressSlider->Observe( m_ConfidenceConnectedImageFilter.GetPointer() );
     progressSlider->Observe( m_FuzzyConnectedImageFilter.GetPointer() );
+    progressSlider->Observe( m_SobelImageFilter.GetPointer() );
+    progressSlider->Observe( m_MaximumImageFilter.GetPointer() );
 
   }
 
@@ -298,6 +306,24 @@
     m_ConfidenceConnectedImageViewer->Show();
 
   }
+
+
+   
+  /************************************
+   *
+   *  Show Composed Image
+   *
+   ***********************************/
+  void
+  RegionGrowingSegmentation2D
+  ::ShowComposedImage( void )
+  {
+    m_MaximumImageFilter->Update();
+    m_ComposedImageViewer->SetImage( m_MaximumImageFilter->GetOutput() );  
+    m_ComposedImageViewer->Show();
+
+  }
+
 
 
 

@@ -58,6 +58,13 @@ RegionGrowingSegmentationBase2D
   m_FuzzyConnectedImageFilter = FuzzyConnectedImageFilterType::New();
   m_FuzzyConnectedImageFilter->SetInput( m_NullImageFilter->GetOutput() );
 
+  m_SobelImageFilter = SobelImageFilterType::New();
+  m_SobelImageFilter->SetInput( m_ConfidenceConnectedImageFilter->GetOutput() );
+
+  m_MaximumImageFilter = MaximumImageFilterType::New();
+  m_MaximumImageFilter->SetInput1( m_CastImageFilter->GetOutput() );
+  m_MaximumImageFilter->SetInput2( m_SobelImageFilter->GetOutput() );
+
   m_InputImageIsLoaded  = false;
 
 }

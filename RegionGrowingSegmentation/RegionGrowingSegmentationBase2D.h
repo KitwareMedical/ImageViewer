@@ -31,6 +31,9 @@
 #include <itkGradientAnisotropicDiffusionImageFilter.h>
 #include <itkCurvatureAnisotropicDiffusionImageFilter.h>
 
+#include <itkSobelEdgeDetectionImageFilter.h>
+#include <itkMaximumImageFilter.h>
+
 
 
 /**
@@ -104,6 +107,17 @@ public:
                  InternalImageType, 
                  InternalImageType >     FuzzyConnectedImageFilterType;
 
+  /** Sobel Filter for extracting the contour of a segmented region */
+  typedef   itk::SobelEdgeDetectionImageFilter<
+                 InternalImageType, 
+                 InternalImageType >     SobelImageFilterType;
+
+  /** Maximum Filter for composing the edge with the original image */
+  typedef   itk::MaximumImageFilter<
+                 InternalImageType, 
+                 InternalImageType,
+                 InternalImageType >     MaximumImageFilterType;
+
 
 public:
   RegionGrowingSegmentationBase2D();
@@ -140,6 +154,10 @@ protected:
   ConfidenceConnectedImageFilterType::Pointer m_ConfidenceConnectedImageFilter;
 
   FuzzyConnectedImageFilterType::Pointer      m_FuzzyConnectedImageFilter;
+
+  SobelImageFilterType::Pointer               m_SobelImageFilter;
+
+  MaximumImageFilterType::Pointer             m_MaximumImageFilter;
 
 };
 

@@ -66,17 +66,14 @@ public:
   virtual void ShowStatus(const char * text);
 
   virtual void ShowInputImage(void);
-
   virtual void ShowConnectedThresholdImage(void);
-
   virtual void ShowConfidenceConnectedImage(void);
-
   virtual void ShowFuzzyConnectedImage(void);
-
   virtual void ShowHomogeneousImage(void);
   virtual void ShowCurvatureFlowImage(void);
   virtual void ShowGradientAnisotropicDiffusionImage(void);
   virtual void ShowCurvatureAnisotropicDiffusionImage(void);
+  virtual void ShowComposedImage(void);
 
   virtual void Quit(void);
 
@@ -93,6 +90,7 @@ private:
   InternalImageViewerPointer     m_ConfidenceConnectedImageViewer;
   InternalImageViewerPointer     m_FuzzyConnectedImageViewer;
   InternalImageViewerPointer     m_HomogeneousImageViewer;
+  InternalImageViewerPointer     m_ComposedImageViewer;
 
   InputImageViewerPointer        m_InputImageViewer;
 

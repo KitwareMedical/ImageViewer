@@ -8,7 +8,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
   } {
     Fl_Window consoleWindow {
       label {Region Growing Segmentation} open
-      xywh {1 82 1079 459}
+      xywh {196 88 1079 459}
       code0 {\#include <RegionGrowingSegmentationBase2D.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -84,8 +84,11 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
         Fl_Box {} {
           xywh {348 277 83 10} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {846 142 60 10} box UP_BOX color 4
+        }
       }
-      Fl_Group controlsGroup {open
+      Fl_Group controlsGroup {
         xywh {5 5 1065 385} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -118,7 +121,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
           code0 {o->lstep( 10.0 );}
         }
         Fl_Group seedGroup {
-          label {Seed Point} open
+          label {Seed Point}
           xywh {453 183 95 142} box ENGRAVED_BOX align 17
         } {
           Fl_Value_Output xSeedPointValueOutput {
@@ -255,6 +258,12 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
             xywh {393 269 26 26} type Radio down_box DIAMOND_DOWN_BOX selection_color 2
           }
         }
+        Fl_Light_Button composedImageButton {
+          label {Display Composed}
+          callback {this->ShowComposedImage();}
+          xywh {885 129 79 36} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
+        }
       }
       Fl_Slider progressSlider {
         xywh {10 397 1060 15} type {Horz Fill} selection_color 2
@@ -271,7 +280,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
       }
       Fl_Value_Input iterationsConfidenceValueInput {
         label Iterations
-        callback {m_ConfidenceConnectedImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );} selected
+        callback {m_ConfidenceConnectedImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
         xywh {697 193 55 25} labelsize 12 minimum 1 maximum 100 value 10 textsize 12
       }
       Fl_Value_Input fuzzyMeanValueInput {
@@ -331,5 +340,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
   Function {ShowCurvatureAnisotropicDiffusionImage( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientAnisotropicDiffusionImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowComposedImage( void )} {selected return_type {virtual void}
   } {}
 } 
