@@ -26,13 +26,13 @@ ${FLTK_LIB_PATH}
 # here if we didn't find VTK.
 INCLUDE(${USE_VTK_FILE})
 LINK_LIBRARIES( 
-  vtkCommon
-  vtkFiltering
+  vtkRendering
   vtkGraphics	  
   vtkHybrid	  
   vtkImaging
   vtkIO
-  vtkRendering
+  vtkFiltering
+  vtkCommon
   FltkImageViewer
 )
 
