@@ -144,8 +144,8 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
           class {fltk::LightButton}
         }
         Fl_Box {} {
-          label {../../Documentation/Art/itkLogoSmall.gif}
-          xywh {465 172 103 68} box DOWN_FRAME labeltype image
+          label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
+          xywh {465 172 103 68} labeltype image
         }
       }
       Fl_Slider progressSlider {
