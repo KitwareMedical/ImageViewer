@@ -28,6 +28,14 @@ IF(HAS_METAIMAGE)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
+# Add an option to build or not build the Gaussian Filter GUI example
+IF(HAS_METAIMAGE)
+  IF(HAS_FLTKIMAGEVIEWER)
+    SUBDIRS(Curves2DExtractor)
+  ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_METAIMAGE)
+
+
 # Add an option to build or not build the Image Guided Intervention example
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
