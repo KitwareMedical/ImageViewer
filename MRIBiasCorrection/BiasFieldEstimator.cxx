@@ -35,7 +35,7 @@ void print_usage()
   print_line("       [--input-mask file]" ) ;
   print_line("       [--degree int] [--coefficients c0,..,cn]" ) ;
   print_line("       [--growth double] [--shrink double] ") ;
-  print_line("       [--volume-max-iteration int] [--inter-slice-max-iteration int]");
+  print_line("       [--volume-max-iteration int]");
   print_line("       [--init-step-size double] ");
 
   print_line("");
@@ -66,9 +66,6 @@ void print_usage()
   print_line("        [default grow^(-0.25)]" ) ; 
   print_line("--volume-max-iteration int") ;
   print_line("        maximal number of iterations for 3D volume correction") ;
-  print_line("        [default 20]" ) ;
-  print_line("--inter-slicemax-iteration int") ;
-  print_line("        maximal number of iterations for each inter-slice correction") ;
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
   print_line("        inital step size [default 1.02]" );
@@ -158,7 +155,6 @@ int main(int argc, char* argv[])
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
   int volumeMaximumIteration = 20; 
-  int interSliceMaximumIteration = 20; 
   double initialRadius = 1.02;
   double grow  = 1.05;
   double shrink = pow(grow, -0.25);
@@ -187,7 +183,6 @@ int main(int argc, char* argv[])
 
       // get optimizer options
       volumeMaximumIteration = options.GetIntOption("volume-max-iteration", 20, false) ;
-      interSliceMaximumIteration = options.GetIntOption("inter-slice-max-iteration", 20, false) ;
       grow = options.GetDoubleOption("grow", 1.05, false) ;
       shrink = pow(grow, -0.25) ;
       shrink = options.GetDoubleOption("shrink", shrink, false) ;
@@ -237,7 +232,6 @@ int main(int argc, char* argv[])
   filter->SetOptimizerGrowthFactor(grow) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
   filter->SetVolumeCorrectionMaximumIteration(volumeMaximumIteration) ;
-  filter->SetInterSliceCorrectionMaximumIteration(interSliceMaximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;
   // this member function call is not necessary since the filter's internal
   // InterSliceIntensityCorrection() member sets the bias field degree to
