@@ -118,7 +118,6 @@ int main(int argc, char* argv[])
   std::string maskFileName = "";
   bool maskAvailable = false ;
   double binSize ;
-  int ret ;
 
   try
     {
