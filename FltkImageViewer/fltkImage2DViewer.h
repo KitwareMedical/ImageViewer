@@ -41,10 +41,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __fltkImage2DViewer_h
 #define __fltkImage2DViewer_h
 
-#include "fltkImage2DViewerGUI.h"
 #include "itkObject.h"
 #include "itkImage.h"
-#include "fltkImage2DViewerUpdateCommand.h"
+#include "fltkImage2DViewerGUI.h"
+#include "itkCommand.h"
 
 namespace fltk {
 
@@ -81,18 +81,37 @@ public:
    */
   typedef itk::Image< ImagePixelType, 2 >   ImageType;
   
+  
   /**
    * Observer Command
    */
-  typedef Image2DViewerUpdateCommand        ObserverCommandType;
+  typedef itk::SimpleMemberCommand< Self >      ObserverCommandType;
+
 
   /**
    * Observer Command
    */
   virtual void SetImage(ImageType * image);
   
+
+  /**
+   * Update the image rendering
+   */
   virtual void Update(void);
 
+  /**
+   * Return the notifier of the Window, in order
+   * to register additional drawers
+   */
+  itk::Object::Pointer GetNotifier(void);
+
+  /**
+   * Return the Command responsible for redrawing
+   * the window. This command is intended to be registered
+   * as observer of the objects whose changes will modify 
+   * the display of the image.
+   */
+  itkGetObjectMacro( RedrawCommand, ObserverCommandType );
 
 protected:
   
@@ -102,7 +121,7 @@ protected:
 
 private:
   typename ImageType::Pointer              m_Image;
-  typename ObserverCommandType::Pointer    m_Command;
+  typename ObserverCommandType::Pointer    m_RedrawCommand; 
   unsigned long                            m_Tag;
 
 };

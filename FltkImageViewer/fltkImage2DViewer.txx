@@ -49,13 +49,15 @@ template <class ImagePixelType>
 Image2DViewer<ImagePixelType>
 ::Image2DViewer()
 {
+
   imageViewer->SetIntensityWindow( intensityWindow );
   imageViewer->SetParentWindow( externalWindow );
   
-  m_Command = ObserverCommandType::New();
-  m_Command->SetViewer( this );
-
+  m_RedrawCommand = ObserverCommandType::New();
+  m_RedrawCommand->SetCallbackFunction( this, &Self::Update );
+  
   m_Tag = 0L;
+
 }
 
 
@@ -64,6 +66,16 @@ template <class ImagePixelType>
 Image2DViewer<ImagePixelType>
 ::~Image2DViewer()
 {
+}
+
+
+  
+template <class ImagePixelType>
+itk::Object::Pointer
+Image2DViewer<ImagePixelType>
+::GetNotifier(void)
+{
+  return imageViewer->GetNotifier();
 }
 
 
@@ -84,9 +96,9 @@ Image2DViewer<ImagePixelType>
   if(m_Image->GetSource())
   {
     m_Tag = m_Image->GetSource()->AddObserver( 
-      itk::Command::EndEvent, m_Command );
+      itk::Command::EndEvent, m_RedrawCommand );
   }
-
+ 
   Update();
 
 }
@@ -118,8 +130,6 @@ Image2DViewer<ImagePixelType>
     imageViewer->Allocate( size[0], size[1] );
   }
 
-  fltk::Image2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
-
   typedef itk::MinimumMaximumImageCalculator<ImageType> MinMaxCalculatorType;
   MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
   MinMaxCalculator->SetImage(m_Image);
@@ -134,25 +144,26 @@ Image2DViewer<ImagePixelType>
 
  
   itk::ImageLinearConstIteratorWithIndex< ImageType > 
-                                        it( m_Image,region );
+                                        it( m_Image, region );
+
+  const int bytesPerPixel = imageViewer->GetNumberOfBytesPerPixel();
 
   it.SetDirection( 0 );
 
-  const unsigned int totalSize = size[0]*size[1]*4;
-  const unsigned int totalWidth = size[0]*4;
+  const unsigned int totalSize  = size[0] * size[1] * bytesPerPixel;
+  const unsigned int totalWidth = size[0] * bytesPerPixel;
+
+  fltk::Image2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
   unsigned char * dest = buffer + totalSize - totalWidth;
 
-
+  it.GoToBegin();
   while( !it.IsAtEnd() )  // Should only have one slice...but anyway.
   {
     while( !it.IsAtEndOfLine() ) 
     {
-       double value = ( it.Get() - min ) * factor;
+       const double value = ( it.Get() - min ) * factor;
        const unsigned char valuec = static_cast<unsigned char>( value );
       *dest++ = valuec;
-      *dest++ = valuec;
-      *dest++ = valuec;
-      *dest++ = 255;
       ++it;
     }
     it.NextLine();
