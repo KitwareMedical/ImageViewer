@@ -22,6 +22,7 @@
 #include "itkExceptionObject.h"
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkSimilarityIndexImageFilter.h"
+#include "itkHausdorffDistanceImageFilter.h"
 
 namespace itk
 {
@@ -90,8 +91,19 @@ ValidationOutput<TImage>
 
   overlap->Update();
 
+
+  typedef itk::HausdorffDistanceImageFilter<ImageType,ImageType> DistanceType;
+  DistanceType::Pointer distance = DistanceType::New();
+
+  distance->SetInput1( threshold1->GetOutput() );
+  distance->SetInput2( threshold2->GetOutput() );
+
+  distance->Update();
+
   std::cout << m_PatientID.c_str() 
-            << " Overlap: " << overlap->GetSimilarityIndex() << std::endl;
+            << " Overlap: " << overlap->GetSimilarityIndex() 
+            << " Distance: " << distance->GetHausdorffDistance()
+            << std::endl;
 
   // Write out the overlap
   FILE * file;
@@ -113,7 +125,8 @@ ValidationOutput<TImage>
     throw err;
     }
 
-  fprintf( file, "%s\t%.5f\n", m_PatientID.c_str(), overlap->GetSimilarityIndex() );
+  fprintf( file, "%s\t%.5f\t%3.3f\n", m_PatientID.c_str(), overlap->GetSimilarityIndex(),
+    distance->GetHausdorffDistance() );
 
   fclose( file );
 
