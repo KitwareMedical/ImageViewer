@@ -56,10 +56,9 @@ integer.  (But see below for hooks to change these parameters.)
 #include "itkByteSwapper.h"
 #include "itkPhysicalImage.h"
 #include "itkImageMomentsCalculator.h"
-#include "itkResampleImageFilter.h"             // DEBUG
+#include "itkResampleImageFilter.h"
 #include "itkSimpleImageRegionIterator.h"
 #include "itkLinearInterpolateImageFunction.h"
-
 
 enum {NDimensions = 3};
 
@@ -107,8 +106,8 @@ main(int argc, char *argv[])
     /* Allocate an image object to store the input file in */
     ImageIndexType base = {{0,0,0}};
     ImageSizeType  size = {{ImageWidth, ImageHeight, NumberOfSlices}};
-    double spacing[3] = {1.0, 0.9375, 0.9375};   // Pixel size
-    double origin [3] = {0.0, 0.0, 0.0};         // Location of (0,0,0) pixel
+    double spacing[3] = {1.0, 1.0, 1.0};      // Pixel size
+    double origin [3] = {0.0, 0.0, 0.0};      // Location of (0,0,0) pixel
     ImageType::Pointer image = ImageType::New();
     ImageRegionType region;
     region.SetIndex(base);
@@ -179,15 +178,9 @@ main(int argc, char *argv[])
         std::cout << cpa << "\n";
     }
 
-    /* Allocate resampled image (same size as original) */
-    ImageType::Pointer resamp = ImageType::New();
-    resamp->SetLargestPossibleRegion(region);
-    resamp->SetBufferedRegion(region);
-    resamp->Allocate();
-
     /* Compute the transform from principal axes to original axes */
     double pi = 3.14159265359;
-    AffineTransformType trans = resamp->GetIndexToPhysicalTransform();
+    AffineTransformType trans;
     itk::Vector<double,3> center;
     center[0] = -ImageWidth / 2.0;
     center[1] = -ImageHeight / 2.0;
@@ -214,21 +207,18 @@ main(int argc, char *argv[])
 
     /* Resample image in principal axes coordinates */
     std::cout << "Resampling the image" << std::endl;
-    PointType pos;                       // Position in resampled image
-    ImageIndexType ipos;                 // Ditto, but as index
-    PointType opos;                      // Position in original image
-    for (long slice = 0; slice < NumberOfSlices; slice++) {
-        pos[2] = ipos[2] = slice;
-        for (long row = 0; row < ImageHeight; row++) {
-            pos[1] = ipos[1] = row;
-            for (long col = 0; col < ImageWidth; col++) {
-                pos[0] = ipos[0] = col;
-                opos = trans.Transform(pos);
-                value = (PixelType)(interp->Evaluate(opos));
-                resamp->SetPixel(ipos, value);
-            }
-        }
-    }
+    itk::ResampleImageFilter< ImageType, ImageType >::Pointer resample;
+    resample = itk::ResampleImageFilter< ImageType, ImageType >::New();
+    resample->SetInput(image);
+    resample->SetSize(size);
+    resample->SetTransform(&trans);
+    resample->SetInterpolator(interp);
+
+    // Run the resampling filter
+    resample->Update();
+
+    // Extract the output image
+   ImageType::Pointer resamp = resample->GetOutput();
 
     /* Open the output file */
     /* FIXME: Translate into C++ */
