@@ -71,8 +71,8 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   m_Preprocessor->SetInputFixedImage( m_Parser->GetSubjectImage() );
   m_Preprocessor->SetInputMovingImage( m_Parser->GetAtlasImage() );
 
-  m_Preprocessor->SetNumberOfHistogramLevels( m_Parser->GetNumberOfHistogramLevels() );
-  m_Preprocessor->SetNumberOfMatchPoints( m_Parser->GetNumberOfMatchPoints() );
+  m_Preprocessor->SetNumberOfHistogramLevels( this->GetNumberOfHistogramLevels() );
+  m_Preprocessor->SetNumberOfMatchPoints( this->GetNumberOfMatchPoints() );
 }
 
 
