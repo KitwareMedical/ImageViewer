@@ -84,7 +84,9 @@ MIAffine2DRegistrator<TFixedImage,TMovingImage>
     m_Transform->GetNumberOfParameters() );
   scales.Fill(1.0);
   
-  // euler angles in 2D has 3 parameters the last two is for x, y offset
+  // Affine Transform in 2D has 6 parameters 
+  // the first 4 are coefficients of the rotation matrix
+  // the last 2 are the components of a translation
   scales[0] = m_RotationScale ;
   scales[1] = m_RotationScale ;
   scales[2] = m_RotationScale ;
