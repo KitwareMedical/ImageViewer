@@ -7,6 +7,7 @@ RegisterApplication::RegisterApplication()
   m_FixedImageReader = ImageReaderType::New() ;
   m_MovingImageReader = ImageReaderType::New() ;
   m_RegisteredImageWriter = ImageWriterType::New() ;
+  m_RegisteredImageWriter->SetImageIO( itk::PNGImageIO::New() );
 
   m_FixedImageFlipper = ImageFlipperType::New() ;
   m_MovingImageFlipper = ImageFlipperType::New() ;
