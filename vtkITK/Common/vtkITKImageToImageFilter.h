@@ -6,7 +6,6 @@
 #define __vtkITKImageToImageFilter_h
 
 
-#include "vtkImageToImageFilter.h"
 #include "vtkImageImport.h"
 #include "vtkImageExport.h"
 #include "itkCommand.h"
@@ -31,7 +30,7 @@
   std::cerr << message.str() << std::endl; \
   }
 
-class VTK_EXPORT vtkITKImageToImageFilter : public vtkImageToImageFilter
+class VTK_EXPORT vtkITKImageToImageFilter : public vtkProcessObject
 {
 public:
   static vtkITKImageToImageFilter *New()
@@ -39,7 +38,7 @@ public:
      return new vtkITKImageToImageFilter;
    };
   
-  vtkTypeMacro(vtkITKImageToImageFilter,vtkImageToImageFilter);
+  vtkTypeMacro(vtkITKImageToImageFilter,vtkProcessObject);
 
   void PrintSelf(ostream& os, vtkIndent indent)
   {
@@ -94,6 +93,20 @@ public:
   };
   
   // Description:
+  // Pass SetNumberOfThreads.
+  void SetNumberOfThreads(int val)
+  {
+    this->m_Process->SetNumberOfThreads(val);
+  };
+  
+  // Description:
+  // Pass SetNumberOfThreads.
+  int GetNumberOfThreads()
+  {
+    return this->m_Process->GetNumberOfThreads();
+  };
+  
+  // Description:
   // This method returns the cache to make a connection
   // It justs feeds the request to the sub filter.
   virtual vtkImageData *GetOutput() { return this->vtkImporter->GetOutput(); };
@@ -106,7 +119,6 @@ public:
   // Set the Input of the filter.
   virtual void SetInput(vtkImageData *Input)
   {
-    this->vtkProcessObject::SetNthInput(0, Input);
     this->vtkExporter->SetInput(Input);
   };
 
@@ -118,7 +130,7 @@ public:
         this->GetOutput(0)->Update();
         if ( this->GetOutput(0)->GetSource() )
           {
-          this->SetErrorCode( this->GetOutput(0)->GetSource()->GetErrorCode() );
+          //          this->SetErrorCode( this->GetOutput(0)->GetSource()->GetErrorCode() );
           }
         }
     }
@@ -177,7 +189,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.5 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.6 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
