@@ -20,6 +20,7 @@
 
 
 #include "itkMesh.h"
+#include "itkFEMNode.h"
 
 namespace itk {
 namespace fem {
@@ -41,15 +42,52 @@ class FEMMesh : public TMesh
 {
 
 public:
+   /** Standard typedefs. */
+  typedef FEMMesh                   Self;
+  typedef TMesh                     Superclass;
+  typedef SmartPointer<Self>        Pointer;
+  typedef SmartPointer<const Self>  ConstPointer;
+    
+  /** Method for creation through the object factory. */
+  itkNewMacro(Self);
+
+  /** Standard part of every itk Object.
+    \todo probably a fully resolved type should be used here... */
+  itkTypeMacro(Mesh, TMesh); 
+
+  /** Hold on to the type information specified by the template parameters. */
+  typedef typename TMesh::MeshTraits                    MeshTraits;
+  typedef typename TMesh::CellTraits                    CellTraits;
+
+  /** Convenient enums obtained from TMeshTraits template parameter. */
+  enum {PointDimension = MeshTraits::PointDimension};
+  enum {MaxTopologicalDimension = MeshTraits::MaxTopologicalDimension};
+  
+  /** Base class for the polymorphic hierarchy of Node types */
+  typedef FEMNode< CellTraits >           NodeType;
 
 protected:
 
+  /** Constructor for use by New() method. */
   FEMMesh();
   virtual ~FEMMesh();
-            
+  void PrintSelf(std::ostream& os, Indent indent) const;
+     
+private:
+  FEMMesh(const Self&); //purposely not implemented
+  void operator=(const Self&); //purposely not implemented
+          
 };
 
 
+ 
+template <typename TMesh>
+void
+FEMMesh<TMesh>
+::PrintSelf(std::ostream& os, Indent indent) const
+{
+  Superclass::PrintSelf(os, indent);
+}
 
 
 
