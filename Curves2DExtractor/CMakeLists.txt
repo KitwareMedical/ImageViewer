@@ -51,13 +51,13 @@ FLTK_WRAP_UI(Curves2DExtractorLib FLTK_GUI_Files_SRCS )
 
 
 LINK_LIBRARIES (
+Curves2DExtractorLib
 ITKCommon
 ITKBasicFilters 
 ITKIO
 itkpng
 itkzlib
 FltkImageViewer
-Curves2DExtractorLib
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}
