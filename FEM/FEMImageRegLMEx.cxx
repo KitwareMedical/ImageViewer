@@ -273,13 +273,13 @@ int ImageRegLMEx::GenRegMesh()
    * created nodem_Solver. 
    */
 //  MembraneC02D::Pointer e1;
-  Element2DC0LinearQuadrilateralStress::Pointer e1;
+  ElementType::Pointer e1;
   
   unsigned int ctGN=0,jct=0,ict=0;
     for (unsigned int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
       ict=0;
       for (unsigned int i=0; i<=m_Nx-m_MeshResolution;i=i+m_MeshResolution){ 
-        e1=Element2DC0LinearQuadrilateralStress::New();
+        e1=ElementType::New();
         e1->GN=ctGN;  ctGN++;
         e1->SetNode(0,dynamic_cast<Node*>( &*m_Solver.node.Find(ctGN+jct-1) ));
         e1->SetNode(1,dynamic_cast<Node*>( &*m_Solver.node.Find(ctGN+jct) ));

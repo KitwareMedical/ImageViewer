@@ -110,6 +110,7 @@ public:
   typedef unsigned char ImageDataType;
   typedef Image< unsigned char, 2 > ImageType;
   enum { ImageDimension = 2 };
+  typedef itk::fem::Element2DC0LinearQuadrilateralStress ElementType;
   typedef itk::Vector<Float,ImageDimension> VectorType;
   typedef itk::Image<VectorType,ImageDimension> FieldType;
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType; 
