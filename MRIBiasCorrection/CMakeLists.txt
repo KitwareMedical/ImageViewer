@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/io
+${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
@@ -73,6 +73,7 @@ ${ITK_BINARY_DIR}/Unsupported/MetaImage
 
 LINK_LIBRARIES (
 ITKCommon
+ITKIO
 ITKBasicFilters
 ITKStatistics
 MetaImageIO
