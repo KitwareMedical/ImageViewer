@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0009 
+version 1.0010 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -7,13 +7,18 @@ gridy 5
 snap 3
 class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
-  Function {CellsViewerGUI()} {} {
+  Function {CellsViewerGUI()} {open
+  } {
     Fl_Window controlWindow {
-      label {Control Panel} open
+      label {Control Panel} open selected
       xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
-      Fl_Menu_Bar {} {open
+      Fl_Button {} {
+        label {/usr/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        xywh {10 75 110 75} box FLAT_BOX labeltype image
+      }
+      Fl_Menu_Bar {} {
         xywh {0 0 250 25}
       } {
         submenu {} {
@@ -37,7 +42,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
         } {
           menuitem {} {
             label {Cellular Aggregate Controls}
-            callback {ShowCellularAggregateControls();} selected
+            callback {ShowCellularAggregateControls();}
             xywh {0 0 100 20}
           }
           menuitem {} {
@@ -73,10 +78,6 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       Fl_Value_Output timeValueOutput {
         label {Time : }
         xywh {180 120 60 25}
-      }
-      Fl_Button {} {
-        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.xpm}
-        xywh {5 70 110 75} box FLAT_BOX labeltype image
       }
     }
   }
