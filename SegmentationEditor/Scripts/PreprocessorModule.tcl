@@ -712,7 +712,12 @@ $PreprocessorGlobals(gradient_magnitude) SetProgressMethod \
     } else {
         $PreprocessorGlobals(gradient_magnitude) SetInput [$PreprocessorGlobals(curvature_diffuser) GetOutput]
     }
+    $PreprocessorGlobals(gradient_magnitude) Update
+
     $PreprocessorGlobals(discrete_gaussian) SetInput [$PreprocessorGlobals(gradient_magnitude) GetOutput]
+
+    $PreprocessorGlobals(discrete_gaussian) Update
+
     $PreprocessorGlobals(gradient_writer) SetInput [$PreprocessorGlobals(discrete_gaussian) GetOutput] 
 
     $PreprocessorGlobals(discrete_gaussian) SetVariance [$PreprocessorGlobals(variance_entry) get] \
