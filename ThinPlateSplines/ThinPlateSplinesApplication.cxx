@@ -42,8 +42,8 @@ ThinPlateSplinesApplication
 ::CreateLandMarks()
 {
   this->ThinPlateSplinesApplicationBase::CreateLandMarks();
-  targetLandMarkIdCounter->range( 0, m_TargetLandMarks.size()-1 );
-  sourceLandMarkIdCounter->range( 0, m_TargetLandMarks.size()-1 );
+  targetLandMarkIdCounter->range( 0, m_TargetLandMarks->GetNumberOfPoints()-1 );
+  sourceLandMarkIdCounter->range( 0, m_SourceLandMarks->GetNumberOfPoints()-1 );
   this->SelectSourceLandMark();
   this->SelectTargetLandMark();
 }
@@ -95,9 +95,17 @@ ThinPlateSplinesApplication
   const CoordinateRepresentationType x =  xTargetValueInput->value();
   const CoordinateRepresentationType y =  yTargetValueInput->value();
   const CoordinateRepresentationType z =  zTargetValueInput->value();
-  m_TargetLandMarks[ landMarkId ][0] = x;
-  m_TargetLandMarks[ landMarkId ][1] = y;
-  m_TargetLandMarks[ landMarkId ][2] = z;
+
+  PointSetType::PointsContainer::Pointer targetLandmarks = 
+                                            m_TargetLandMarks->GetPoints();
+
+  PointType & landmark = targetLandmarks->ElementAt( landMarkId );
+  landmark[0] = x;
+  landmark[1] = y;
+  landmark[2] = z;
+
+  this->RemoveActors();
+  this->CreateSourcePoints();
   this->DisplayLandMarks();
   m_FlRenderWindowInteractor->redraw();
   Fl::check();
@@ -108,14 +116,24 @@ void
 ThinPlateSplinesApplication
 ::SelectTargetLandMark()
 {
-  const unsigned int landMarkId = targetLandMarkIdCounter->value();
-  const CoordinateRepresentationType x = m_TargetLandMarks[ landMarkId ][0];
-  const CoordinateRepresentationType y = m_TargetLandMarks[ landMarkId ][1];
-  const CoordinateRepresentationType z = m_TargetLandMarks[ landMarkId ][2];
+  const unsigned int landMarkId = 
+          static_cast<unsigned int>( targetLandMarkIdCounter->value() );
+
+  PointSetType::PointsContainer::Pointer targetLandmarks = 
+                                            m_TargetLandMarks->GetPoints();
+
+  PointType & landmark = targetLandmarks->ElementAt( landMarkId );
+
+  const CoordinateRepresentationType x = landmark[0];
+  const CoordinateRepresentationType y = landmark[1];
+  const CoordinateRepresentationType z = landmark[2];
+
   xTargetValueInput->value( x );
   yTargetValueInput->value( y );
   zTargetValueInput->value( z );
+
   Fl::check();
+
 }
 
 
@@ -125,13 +143,23 @@ void
 ThinPlateSplinesApplication
 ::UpdateSelectedSourceLandMark()
 {
-  const unsigned int landMarkId = sourceLandMarkIdCounter->value();
+  const unsigned int landMarkId = 
+          static_cast<unsigned int>( sourceLandMarkIdCounter->value() );
+
   const CoordinateRepresentationType x =  xSourceValueInput->value();
   const CoordinateRepresentationType y =  ySourceValueInput->value();
   const CoordinateRepresentationType z =  zSourceValueInput->value();
-  m_SourceLandMarks[ landMarkId ][0] = x;
-  m_SourceLandMarks[ landMarkId ][1] = y;
-  m_SourceLandMarks[ landMarkId ][2] = z;
+
+  PointSetType::PointsContainer::Pointer sourceLandmarks = 
+                                            m_SourceLandMarks->GetPoints();
+
+  PointType & landmark = sourceLandmarks->ElementAt( landMarkId );
+  landmark[0] = x;
+  landmark[1] = y;
+  landmark[2] = z;
+
+  this->RemoveActors();
+  this->CreateSourcePoints();
   this->DisplayLandMarks();
   m_FlRenderWindowInteractor->redraw();
   Fl::check();
@@ -142,13 +170,22 @@ void
 ThinPlateSplinesApplication
 ::SelectSourceLandMark()
 {
-  const unsigned int landMarkId = sourceLandMarkIdCounter->value();
-  const CoordinateRepresentationType x = m_SourceLandMarks[ landMarkId ][0];
-  const CoordinateRepresentationType y = m_SourceLandMarks[ landMarkId ][1];
-  const CoordinateRepresentationType z = m_SourceLandMarks[ landMarkId ][2];
+  const unsigned int landMarkId = 
+          static_cast<unsigned int>( sourceLandMarkIdCounter->value() );
+
+  PointSetType::PointsContainer::Pointer sourceLandmarks = 
+                                            m_SourceLandMarks->GetPoints();
+
+  PointType & landmark = sourceLandmarks->ElementAt( landMarkId );
+
+  const CoordinateRepresentationType x = landmark[0];
+  const CoordinateRepresentationType y = landmark[1];
+  const CoordinateRepresentationType z = landmark[2];
+
   xSourceValueInput->value( x );
   ySourceValueInput->value( y );
   zSourceValueInput->value( z );
+
   Fl::check();
 }
 

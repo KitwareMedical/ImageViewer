@@ -27,7 +27,7 @@
 #include "vtkTubeFilter.h"
 #include "vtkGlyph3D.h"
 #include "vtkSphereSource.h"
-
+#include "vtkUnstructuredGrid.h"
 
 #include "itkNumericTraits.h"
 
@@ -41,9 +41,13 @@ ThinPlateSplinesApplicationBase
 
   m_Renderer = 0;
   this->CreateRenderer();
+
+  m_SourceLandMarks = PointSetType::New();
+  m_TargetLandMarks = PointSetType::New();
   
   m_VTKSourceLandMarks   = vtkPoints::New();
   m_VTKTargetLandMarks   = vtkPoints::New();
+
   m_VTKPointsToTransform = vtkPoints::New();
   m_VTKLinesToTransform  = vtkCellArray::New();
 
@@ -100,6 +104,7 @@ ThinPlateSplinesApplicationBase
     (*actor)->Delete();
     actor++;
     }
+  m_ActorsToDelete.clear();
 }
 
 
@@ -163,8 +168,15 @@ ThinPlateSplinesApplicationBase
 ::CreateLandMarks(void)
 {
 
-  m_SourceLandMarks.clear();
-  m_TargetLandMarks.clear();
+  PointSetType::PointsContainer::Pointer sourceLandMarks = 
+                                   m_SourceLandMarks->GetPoints();
+
+  PointSetType::PointsContainer::Pointer targetLandMarks = 
+                                   m_TargetLandMarks->GetPoints();
+
+  typedef PointSetType::PointIdentifier  PointIdType;
+
+  PointIdType landmarkId = itk::NumericTraits< PointIdType >::Zero;
 
   const unsigned int nx =  6;
   const unsigned int ny =  6;
@@ -187,11 +199,12 @@ ThinPlateSplinesApplicationBase
         CoordinateRepresentationType rx = x;
         rx -= nx + deltax;
         p[0] = rx;
-        m_SourceLandMarks.push_back( p );
+        sourceLandMarks->InsertElement( landmarkId, p );
         rx  =  x;
         rx  += deltax;
         p[0] = rx;
-        m_TargetLandMarks.push_back( p );
+        targetLandMarks->InsertElement( landmarkId, p );
+        landmarkId++;
         }
       }
     }
@@ -214,25 +227,28 @@ ThinPlateSplinesApplicationBase
   m_VTKSourceLandMarks = vtkPoints::New();
   m_VTKTargetLandMarks = vtkPoints::New();
 
-  const unsigned int numberOfLandMarks = m_SourceLandMarks.size();
+  const unsigned int numberOfLandMarks = m_SourceLandMarks->GetNumberOfPoints();
 
-  if( numberOfLandMarks != m_TargetLandMarks.size() )
+  if( numberOfLandMarks != m_TargetLandMarks->GetNumberOfPoints() )
     {
     itkGenericExceptionMacro( << "Number of Source Landmarks != Target Landmarks " );
     }
 
-  m_VTKSourceLandMarks->Allocate( numberOfLandMarks );
-  m_VTKTargetLandMarks->Allocate( numberOfLandMarks );
+  m_VTKSourceLandMarks->Allocate( numberOfLandMarks + 2  );
+  m_VTKTargetLandMarks->Allocate( numberOfLandMarks + 2  );
 
   vtkIdType pointId = itk::NumericTraits< vtkIdType >::Zero; 
 
-  PointArrayType::iterator tlm = m_TargetLandMarks.begin();
-  PointArrayType::iterator slm = m_SourceLandMarks.begin();
-  PointArrayType::iterator end = m_SourceLandMarks.end();
+  typedef PointSetType::PointsContainer::Iterator  PointIteratorType;
+  PointIteratorType slm = m_SourceLandMarks->GetPoints()->Begin();
+  PointIteratorType end = m_SourceLandMarks->GetPoints()->End();
+  PointIteratorType tlm = m_TargetLandMarks->GetPoints()->Begin();
   while( slm != end )
     {
-    m_VTKSourceLandMarks->InsertNextPoint( (*slm)[0],(*slm)[1],(*slm)[2] );
-    m_VTKTargetLandMarks->InsertNextPoint( (*tlm)[0],(*tlm)[1],(*tlm)[2] );
+    PointType & srclm = slm.Value();
+    PointType & trglm = tlm.Value();
+    m_VTKSourceLandMarks->InsertNextPoint( srclm[0], srclm[1], srclm[2] );
+    m_VTKTargetLandMarks->InsertNextPoint( trglm[0], trglm[1], trglm[2] );
     ++slm;
     ++tlm;
     ++pointId;
@@ -250,8 +266,6 @@ ThinPlateSplinesApplicationBase
 
   this->TransferLandMarksToVTK();
    
-  this->RemoveActors();
-
   vtkSphereSource * typicalSphere = vtkSphereSource::New();
   typicalSphere->SetRadius(0.05);
 
@@ -321,7 +335,7 @@ void
 ThinPlateSplinesApplicationBase
 ::CreateSourcePoints(void)
 {
-
+  
   m_PointsToTransform.clear();
 
   m_VTKPointsToTransform->Delete();
@@ -330,13 +344,15 @@ ThinPlateSplinesApplicationBase
   m_VTKLinesToTransform->Delete();
   m_VTKLinesToTransform = vtkCellArray::New();
 
-  const unsigned int fac = 2;
+  const unsigned int fac = 10;
 
   const unsigned int nx =  6 * fac;
   const unsigned int ny =  6 * fac;
   const unsigned int nz =  1;
 
-  CoordinateRepresentationType deltax = 1.0f;
+  CoordinateRepresentationType deltax = 1.5f;
+
+  m_VTKPointsToTransform->SetNumberOfPoints( nx * ny * nz );
 
   vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
 
@@ -349,31 +365,24 @@ ThinPlateSplinesApplicationBase
       {
       CoordinateRepresentationType ry = y;
       ry /= fac;
-      ry -= ny/(2*fac);
+      ry -= ny/(2*fac)+0.5;
       p[1] = ry;
-      vtkIdType endpoints[2];
       for(unsigned int x=0; x<nx; x++)
         {
         CoordinateRepresentationType rx = x;
         rx /= fac;
         rx -= nx/fac + deltax;
         p[0] = rx;
-        std::cout << pointCounter << " : " << p << std::endl;
         m_PointsToTransform.push_back( p );
-        m_VTKPointsToTransform->InsertNextPoint( p[0], p[1], p[2] );
+        m_VTKPointsToTransform->SetPoint( pointCounter, p[0], p[1], p[2] );
+        m_VTKLinesToTransform->InsertNextCell( VTK_VERTEX, &pointCounter );
         pointCounter++;
-        if( x > 0 )
-          {
-          endpoints[0] = pointCounter-1;
-          endpoints[1] = pointCounter;
-//std::cout << endpoints[0] << " -> " << endpoints[1] << std::endl;
-          m_VTKLinesToTransform->InsertNextCell( VTK_LINE, endpoints );
-          }
         }
       }
     }
 
 }
+
 
 
  
@@ -382,13 +391,19 @@ ThinPlateSplinesApplicationBase
 ::DisplayPoints(void)
 {
 
-  vtkPolyData * sourcePolyData = vtkPolyData::New();
-  sourcePolyData->SetPoints( m_VTKPointsToTransform );
-  sourcePolyData->SetLines( m_VTKLinesToTransform );
+  vtkUnstructuredGrid * sourceGrid = vtkUnstructuredGrid::New();
+  sourceGrid->SetPoints( m_VTKPointsToTransform );
+  const unsigned int numberOfCells = m_VTKLinesToTransform->GetNumberOfCells(); 
+  int * cellTypes = new int[ numberOfCells ];
+  for(unsigned int i=0; i<numberOfCells; i++)
+    {
+    cellTypes[i] = VTK_VERTEX;
+    }
+  sourceGrid->SetCells( cellTypes, m_VTKLinesToTransform );
 
   // map to graphics library
-  vtkPolyDataMapper * sourceMapper   = vtkPolyDataMapper::New();
-  sourceMapper->SetInput( sourcePolyData );
+  vtkDataSetMapper * sourceMapper   = vtkDataSetMapper::New();
+  sourceMapper->SetInput( sourceGrid );
 
   vtkPolyData * targetPolyData = vtkPolyData::New();
 //  targetPolyData->SetPoints( m_VTKPointsTransformed );
@@ -401,11 +416,12 @@ ThinPlateSplinesApplicationBase
   vtkActor * sourceActor = vtkActor::New();
   sourceActor->SetMapper( sourceMapper );
   sourceActor->GetProperty()->SetRepresentationToPoints();
-  sourceActor->GetProperty()->SetColor(0,0,1); 
+  sourceActor->GetProperty()->SetColor(1,0,0); 
 
   // actor coordinates geometry, properties, transformation
   vtkActor * targetActor = vtkActor::New();
   targetActor->SetMapper( targetMapper );
+  targetActor->GetProperty()->SetRepresentationToPoints();
   targetActor->GetProperty()->SetColor(1,0,0); 
 
   // add the actor to the scene
@@ -416,11 +432,12 @@ ThinPlateSplinesApplicationBase
   m_ActorsToDelete.insert( targetActor );
 
   sourceMapper->Delete();
-  sourcePolyData->Delete();
+  sourceGrid->Delete();
 
   targetMapper->Delete();
   targetPolyData->Delete();
   
+  delete [] cellTypes;
 
 }
 

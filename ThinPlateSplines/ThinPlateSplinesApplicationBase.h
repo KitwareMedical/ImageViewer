@@ -25,6 +25,7 @@
 #include "itkPoint.h"
 #include "vtkPoints.h"
 #include "fltkTimeProbesCollector.h"
+#include "itkThinPlateSplineKernelTransform.h"
 
 #include <set>
 
@@ -46,6 +47,22 @@ public:
 
   typedef std::vector< PointType >            PointArrayType;
       
+  typedef char PointDataType;
+  typedef char CellDataType;
+  typedef float InterpolationWeightType;
+
+  typedef itk::DefaultStaticMeshTraits< 
+                              PointDataType,
+                              PointsDimension,
+                              PointsDimension,
+                              CoordinateRepresentationType,
+                              InterpolationWeightType,
+                              CellDataType >      MeshTraits;
+
+  typedef itk::PointSet< MeshTraits >       PointSetType;
+  typedef PointSetType::Pointer             PointSetPointer;
+
+
 public:
 
   ThinPlateSplinesApplicationBase();
@@ -72,8 +89,8 @@ protected:
 
   PointArrayType    m_Points;   // Points to pass though the transformation
 
-  PointArrayType    m_SourceLandMarks;   
-  PointArrayType    m_TargetLandMarks;   
+  PointSetPointer   m_SourceLandMarks;   
+  PointSetPointer   m_TargetLandMarks;   
 
   PointArrayType    m_PointsToTransform;   
   
@@ -87,12 +104,13 @@ protected:
 
   virtual void    MapPoints(void);
   virtual void    CreateSourcePoints(void);
+  virtual void    RemoveActors(void);
 
 private:
 
   void TransferLandMarksToVTK(void);
   void CreateRenderer(void);
-  void RemoveActors(void);
+
 
   typedef std::set< vtkActor * >  ActorsArrayType;
   ActorsArrayType                 m_ActorsToDelete;
