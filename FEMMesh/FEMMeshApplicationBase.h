@@ -35,6 +35,7 @@ public:
 
   enum { PointsDimension              = 3 };
   enum { MaximumTopologicalDimension  = 3 };
+  enum { DisplacementDimension        = 3 };
 
   // Type used for representing the coordinates of points
   // in geometric space
@@ -47,7 +48,11 @@ public:
   // PointDataType is the type that will be used for the
   // Degrees of Freedom (or DisplacementField) of the 
   // FEM problem.
-  typedef float           PointDataType;
+  typedef float           DisplacementRepresentationType;
+  typedef itk::Vector< DisplacementRepresentationType,
+                       DisplacementDimension >  DisplacementType;
+
+  typedef DisplacementType               PointDataType;
 
   // For FEM it is expected that eventual values stored
   // at the Cells will be of the same type that those

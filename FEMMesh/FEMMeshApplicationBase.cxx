@@ -34,6 +34,7 @@
 #include "itkNumericTraits.h"
 #include "itkCellInterfaceVisitor.h"
 
+#include "itkFEMElementBar2D.h"
 
 
 FEMMeshApplicationBase
@@ -44,6 +45,8 @@ FEMMeshApplicationBase
 
   // a renderer and render window
   m_RenderWindow->AddRenderer( m_Renderer );
+
+  m_Renderer->SetBackground( 1, 1, 1 );
 
   m_FEMMesh = FEMMeshType::New();
 
@@ -84,7 +87,6 @@ FEMMeshApplicationBase
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
-  m_Renderer->SetBackground(1,1,1); // Background color white
 
   sphere->Delete();
   mapper->Delete();
@@ -165,7 +167,6 @@ FEMMeshApplicationBase
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
-  m_Renderer->SetBackground(1,1,1); // Background color white
 
 
   triangle->Delete();
@@ -282,7 +283,6 @@ FEMMeshApplicationBase
 
   // add the actor to the scene
   m_Renderer->AddActor( actor );
-  m_Renderer->SetBackground(1,1,1); // Background color white
 
   vgrid->Delete();
   mapper->Delete();
@@ -310,7 +310,7 @@ FEMMeshApplicationBase
 
   // Start numbering points
   PointIdentifierType pointId = 
-              ::itk::NumericTraits<PointIdentifierType>::Zero;
+              itk::NumericTraits<PointIdentifierType>::Zero;
 
 
   PointType           point;
@@ -366,7 +366,56 @@ FEMMeshApplicationBase
 
   pointId++;
 
+
+
+  // Create the array of values to associate with the points.
+  // In this particular case we are using Vectors that represent
+  // displacementes in 3D.  It could be anything because this is 
+  // a template parameter for the mesh.
+  typedef FEMMeshType::PointDataContainer DisplacementsContainerType;
+  DisplacementsContainerType::Pointer displacementContainer = 
+                                        DisplacementsContainerType::New();
+
+  const unsigned int numberOfPoints = m_FEMMesh->GetNumberOfPoints();
+
+  PointIdentifierType displacementId = itk::NumericTraits< PointIdentifierType >::Zero;
+  displacementContainer->Reserve( numberOfPoints ); 
+  for(unsigned int p=0; p<numberOfPoints; p++) 
+    {
+    DisplacementType displacement;
+    displacement.Fill( itk::NumericTraits< DisplacementRepresentationType >::Zero );
+    displacementContainer->SetElement( displacementId, displacement );
+    ++displacementId;
+    }
+
+  m_FEMMesh->SetPointData( displacementContainer );
+
   std::cout << "Number of points = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
+
+  //-----------------------------------------------
+  // Now we can add Elements to the FEMMesh ...
+  //-----------------------------------------------
+
+  // For example a Bar2D type is defined here
+  typedef itk::fem::FEMElementBar2D< 
+                              FEMMeshType, 
+                              DisplacementDimension  >   ElementBarType;
+
+  //  Create the Bar
+  ElementBarType::Pointer bar1 = ElementBarType::New();
+
+  // Associate the Bar with two of the current points
+  bar1->SetPointId(0, 2 ); // associate first point with mesh point  #2
+  bar1->SetPointId(1, 3 ); // associate second point with mesh point #3
+
+  // Add the bar to the list of Elements. This is done by inserting the 
+  // Bar as a Cells in the mesh. The ElementBar derives from LineCell<>
+  // so its pointer is a valid derived class from CellInterface<>
+
+  CellIdentifierType cellId = itk::NumericTraits< CellIdentifierType >::Zero;
+  m_FEMMesh->SetCell( cellId++, bar1.GetPointer() ); // GetPointer() returns a normal pointer
+
+
   std::cout << "Number of cells  = " << m_FEMMesh->GetNumberOfCells() << std::endl;
 
   this->DisplayFEMMesh();
