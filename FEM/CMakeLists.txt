@@ -42,16 +42,16 @@ IF(FEM_VISUALIZATION)
 ADD_DEFINITIONS( -DFEM_BUILD_VISUALIZATION /D "_AFXDLL" )
 ENDIF(FEM_VISUALIZATION)
 
-SOURCE_FILES(FEMImageRegEx_SRCS
-  FEMImageRegEx.cxx
+SOURCE_FILES(FEMImageRegLMEx_SRCS
+  FEMImageRegLMEx.cxx
 )
 
 # Header and template source files for FEM project
 # we can only include them if compiling on windows
 IF(NOT UNIX)
 IF(WIN32)
-SOURCE_FILES(FEMImageRegEx_SRCS 
-  FEMImageRegEx.h
+SOURCE_FILES(FEMImageRegLMEx_SRCS 
+  FEMImageRegLMEx.h
 )
 ENDIF(WIN32)
 ENDIF(NOT UNIX)
@@ -62,6 +62,5 @@ ENDIF(NOT UNIX)
 # Create project files for all examples
 ADD_EXECUTABLE(FEMRead FEMRead.cxx)
 ADD_EXECUTABLE(FEMTruss FEMTruss.cxx)
-ADD_EXECUTABLE(FEMImageRegEx FEMImageRegEx_SRCS)
-ADD_EXECUTABLE(FEMImageRegLMEx FEMImageRegLMEx.cxx)
+ADD_EXECUTABLE(FEMImageRegLMEx FEMImageRegLMEx_SRCS)
 ADD_EXECUTABLE(FEMSolverHyperbolicExample FEMSolverHyperbolicExample.cxx)
