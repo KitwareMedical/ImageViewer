@@ -21,10 +21,7 @@
 #endif
 
 #include "itkFEM.h"
-#include "itkFEMItpackLinearSystemWrapper.h"
 #include <iostream>
-#include <fstream>
-#include <string>
 
 using namespace itk::fem;
 using namespace std;
