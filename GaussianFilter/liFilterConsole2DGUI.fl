@@ -1,17 +1,14 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0011 
+version 1.0100 
 header_name {.h} 
-code_name {.cxx} 
-gridx 5 
-gridy 5 
-snap 3
+code_name {.cxx}
 class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
 } {
   Function {liFilterConsole2DGUI()} {open
   } {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console} open
-      xywh {21 112 614 322}
+      xywh {21 112 610 320}
       code0 {\#include <liFilterConsole2DBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -156,17 +153,17 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
         Fl_Button {} {
           label {@>}
           callback {this->SaveModulus();}
-          xywh {560 44 25 25} labeltype SYMBOL_LABEL
+          xywh {560 44 25 25}
         }
         Fl_Button {} {
           label {@>}
           callback {this->SaveSmoothed();} selected
-          xywh {560 80 25 24} labeltype SYMBOL_LABEL
+          xywh {560 80 25 24}
         }
         Fl_Button {} {
           label {@>}
           callback {this->SaveLaplacian();}
-          xywh {560 115 25 25} labeltype SYMBOL_LABEL
+          xywh {560 115 25 25}
         }
       }
       Fl_Slider progressSlider {

@@ -20,6 +20,7 @@
 #include <itkMetaImageIOFactory.h>
 #include <itkPNGImageIO.h>
 #include <itkPNGImageIOFactory.h>
+#include <itkDicomImageIOFactory.h>
 
 
 
@@ -122,8 +123,9 @@ liFilterConsole2DBase
   m_WriterModulus->SetImageIO(   itk::PNGImageIO::New() );
   m_WriterLaplacian->SetImageIO( itk::PNGImageIO::New() );
 
-  // Register a producer of MetaImage readers
+  // Register producers of readers
   itk::MetaImageIOFactory::RegisterOneFactory();
+  itk::DicomImageIOFactory::RegisterOneFactory();
   itk::PNGImageIOFactory::RegisterOneFactory();
 
 }
