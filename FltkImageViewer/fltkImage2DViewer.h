@@ -79,7 +79,7 @@ public:
    * Return the notifier of the Window, in order
    * to register additional drawers
    */
-  itk::Object::Pointer GetNotifier(void);
+  itk::Object * GetNotifier(void);
 
   /**
    * Return the Command responsible for redrawing

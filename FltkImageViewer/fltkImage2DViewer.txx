@@ -47,7 +47,7 @@ Image2DViewer<ImagePixelType>
 
   
 template <class ImagePixelType>
-itk::Object::Pointer
+itk::Object *
 Image2DViewer<ImagePixelType>
 ::GetNotifier(void)
 {

@@ -48,7 +48,7 @@ public:
   void SaveImage( void );
   void SaveImage( const char * filename );
   RedrawCommandType * GetRedrawCommand(void);
-  itk::Object::Pointer GetNotifier(void);
+  itk::Object * GetNotifier(void);
 
 private:
 

@@ -67,9 +67,9 @@ drawWindow->size(nx,ny);} {}
     code {return drawWindow->GetRedrawCommand();} {selected
     }
   }
-  Function {GetNotifier(void)} {return_type {itk::Object::Pointer}
+  Function {GetNotifier(void)} {return_type {itk::Object *}
   } {
-    code {return drawWindow->GetNotifier().GetPointer();} {}
+    code {return drawWindow->GetNotifier();} {}
   }
   Function {GetGlWindow(void)} {return_type {virtual fltk::GlWindowInteractiveFlat *}
   } {
