@@ -87,8 +87,8 @@ Cell
   m_EnergyReserveLevel    = EnergySelfRepairLevel   + DefaultEnergyIntake;
 
   // delay before starting to grow after Mitosis
-  m_GrowthLatencyTime   = 
-       vnl_sample_uniform( 0, this->GetGrowthMaximumLatencyTime() );
+  m_GrowthLatencyTime   = static_cast<unsigned long>( 
+       vnl_sample_uniform( 0UL, this->GetGrowthMaximumLatencyTime()) );
 
   // too young to die...
   m_MarkedForRemoval = false;

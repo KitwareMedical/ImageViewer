@@ -88,7 +88,7 @@ protected:
   void MarkForRemoval(void);
 
   typedef enum {
-                  M = 1,
+                  M = 1UL,
                   Gap1,
                   S,
                   Gap2,
