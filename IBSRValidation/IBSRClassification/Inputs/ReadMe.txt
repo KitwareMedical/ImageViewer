@@ -1,9 +1,10 @@
 This file shows the systax followed in the parameter files. 
-The parameter files are needed for the Gaussian Classifier based applications and are generated
+The parameter files are needed for the Gaussian Classifier based applications involving 2 channels and are generated
 apriori manually.
 
 #NumberOfClasses (number of tissue type + 1 for background)
-0 1173 1255 1323 (each #corresponds to the mean of background, tissue type 1,2 and 3)
-0 2156 1120 581  (each #corresponds to the variance of background, tissue type 1,2 and 3)
-0 254 6979 3974 (each #corresponds to the number of samples of background, tissue type 1,2 and 3 in the model)
+#0 #0 #1 #1 #2 #2 #3 #3 #4 #4 (each #corresponds to the mean of channel 1 & 2, for tissue type 1-4 & #0 for background)
+#0 #0 #0 #0 #1 #1 #1 #1 #2 #2 #2 #2 #3 #3 #3 #3 #4 #4 #4 #4 (each group of 4 numbers corresponds to the covariances in two channel data, tissue type 1-4 & #0 for background)
+
+#0 #1 #2 #3 #4 (each #corresponds to the number of samples of background, tissue type 1-4 in the model)
 

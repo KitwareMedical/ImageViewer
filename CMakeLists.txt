@@ -35,6 +35,9 @@ SUBDIRS(MIValidation)
 # Build the IBSR Validation applications
 SUBDIRS(IBSRValidation)
 
+# Build the multichannel tissue classification validation
+SUBDIRS(MultichannelTissueClassificationValidation)
+
 # Build the RawImageReadWrite example
 SUBDIRS(RawImageReadWrite)
 
