@@ -535,7 +535,8 @@ void Shape3D::Redraw(void) const
 void Shape3D::InvokeEvent( unsigned long event ) const
 {
   
-  this->itk::Object::InvokeEvent( event );
+  const itk::Object * super = this;
+  super->InvokeEvent( event );
 
   if( m_Father ) 
   {
