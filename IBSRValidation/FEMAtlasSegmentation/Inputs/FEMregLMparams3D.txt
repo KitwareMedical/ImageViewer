@@ -2,11 +2,11 @@
 
 3	% Number of levels in the multi-res pyramid
 1	% Maximum Level to use in the pyramid 
-8 4 2  %	% elts per dim each level
-1.e6 1.e6 1.e6   % Elasticity
-1.e3 1.e3 1.e3 %2.e2	% Rho
+2 2 2  %	% elts per dim each level
+1.e2 1.e2 1.e2   % Elasticity
+1.e0 1.e0 1.e0 %2.e2	% Rho
 5 10 10    	% NumberOfIntegrationPoints
-1 1 1  	  % WidthOfMetricRegion
+5 5 5  	  % WidthOfMetricRegion
 15 15 15 	% MaximumIterations
 1     % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
 1.	% Alpha

@@ -1,0 +1,25 @@
+C:\temp\IBSR\20Normals_T1_8bit\
+C:\temp\IBSR\20Normals_T1_8bit\
+C:\temp\output.txt
+10 128 128 0 91 200 11
+18 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+11 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+27 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+22 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+21 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+14 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+13 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+15 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+16 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+17 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+19 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+20 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+23 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+24 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+25 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+26 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+12 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+28 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+29 128 128 0 91 C:\temp\FEMregLMparams3D.txt
+
+
