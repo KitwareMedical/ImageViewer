@@ -86,7 +86,6 @@ public:
   /**   Voronoi region around a bio::Cell */
   typedef itk::CellInterface<  MeshType::CellPixelType, 
                                MeshType::CellTraits >     CellInterfaceType;
-  typedef CellInterfaceType::CellAutoPointer              CellAutoPointer;
   typedef itk::PolygonCell<  CellInterfaceType >          VoronoiRegionType;
   typedef VoronoiRegionType::SelfAutoPointer              VoronoiRegionAutoPointer;
 
