@@ -69,6 +69,47 @@ RGBImage2DViewer<ImagePixelType>
       m_ImageSize = image->GetRequestedRegion().GetSize() ;
       this->externalWindow->size(m_ImageSize[0], m_ImageSize[1]);
       imageViewer->Allocate( m_ImageSize[0], m_ImageSize[1] );
+
+      // Fill the Image
+ 
+  itk::ImageLinearConstIteratorWithIndex< ImageType > 
+                                        it( image, image->GetRequestedRegion() );
+
+  const int bytesPerPixel = imageViewer->GetNumberOfBytesPerPixel();
+
+  it.SetDirection( 0 );
+
+  const unsigned int totalSize  =
+    m_ImageSize[0] * m_ImageSize[1] * bytesPerPixel;
+
+  const unsigned int totalWidth = m_ImageSize[0] * bytesPerPixel;
+
+  fltk::RGBImage2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
+
+
+      unsigned char * dest = buffer + totalSize + 3 - totalWidth;
+      it.GoToBegin();
+      while( !it.IsAtEnd() )  // Should only have one slice...but anyway.
+        {
+          while( !it.IsAtEndOfLine() ) 
+            { 
+              const double valueR = it.Get().GetRed();//( it.Get() - min ) * factor;
+              const unsigned char valuecR = static_cast<unsigned char>( valueR );
+              *dest = valuecR;
+              dest++;
+              const double valueG = it.Get().GetGreen();//( it.Get() - min ) * factor;
+              const unsigned char valuecG = static_cast<unsigned char>( valueG );
+              *dest = valuecG;
+              dest++;
+              const double valueB = it.Get().GetBlue();//( it.Get() - min ) * factor;
+              const unsigned char valuecB = static_cast<unsigned char>( valueB );
+              *dest = valuecB;
+              dest++;
+              ++it;
+            }
+          it.NextLine();
+          dest -= 2 * totalWidth;
+        }
     }
 
   if( m_Image && m_Tag )
