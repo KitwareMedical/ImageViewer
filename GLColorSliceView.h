@@ -130,8 +130,6 @@ SetInputImage(ImageType * newImData)
   cSpacing[1] = cImData->GetSpacing()[1];
   cSpacing[2] = cImData->GetSpacing()[2];
 
-  cImData_size = cImData->GetLargestPossibleRegion().GetSize();
-
   //calculating cDataMax and cDataMin
   IndexType ind;
   ind[0] = 0; 
@@ -337,7 +335,7 @@ update()
   int ti = (int)( (int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
   if( ti <= - (int) cDimSize[ cWinOrder[0] ] ) 
     {
-    ti = -cDimSize[ cWinOrder[0] ] + 1;
+    ti = -(int)cDimSize[ cWinOrder[0] ] + 1;
     }
   else if( ti >= (int)cDimSize[ cWinOrder[0] ]) 
     {
@@ -356,7 +354,7 @@ update()
                          - winWidth/2);
   if( ti <= - static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
     {
-    ti = -cDimSize[ cWinOrder[1] ] + 1;
+    ti = -(int)cDimSize[ cWinOrder[1] ] + 1;
     }
   else if( ti >= static_cast<int>(cDimSize[ cWinOrder[1] ] ) ) 
     {

@@ -62,7 +62,6 @@ protected:
   unsigned char * cWinOverlayData;
   
 
-  SizeType               cImData_size;
   ColorTablePointer      cColorTable;
   
 public:
@@ -148,7 +147,7 @@ public:
       return;
       }
 
-    SizeType   size   = region.GetSize();
+    SizeType   imSize   = region.GetSize();
 
     // If the overlay has been set and the size is different from the new image,
     // it is removed.
@@ -156,9 +155,9 @@ public:
     {  
       SizeType  overlay_size   = cOverlayData->GetLargestPossibleRegion().GetSize();
       
-      if((overlay_size[0] != size[0])
-        ||  (overlay_size[1] != size[1])
-        ||  (overlay_size[2] != size[2])
+      if((overlay_size[0] != imSize[0])
+        ||  (overlay_size[1] != imSize[1])
+        ||  (overlay_size[2] != imSize[2])
         )
         {
          if(cWinOverlayData != NULL)
@@ -171,15 +170,13 @@ public:
     }
 
     cImData = newImData;
-
-    cDimSize[0]=size[0];
-    cDimSize[1]=size[1];
-    cDimSize[2]=size[2];
+    cDimSize[0]=imSize[0];
+    cDimSize[1]=imSize[1];
+    cDimSize[2]=imSize[2];
     cSpacing[0]=cImData->GetSpacing()[0];
     cSpacing[1]=cImData->GetSpacing()[1];
     cSpacing[2]=cImData->GetSpacing()[2];
       
-    cImData_size = cImData->GetLargestPossibleRegion().GetSize();
     //calculating cDataMax and cDataMin    
     IndexType ind;
     ind[0] = 0; 
@@ -249,27 +246,24 @@ public:
     cWinSizeY = cWinSizeX;
     cWinMaxY  = cWinSizeY - 1;
     
-    cWinDataSizeX = cDimSize[0];
-    cWinDataSizeY = cDimSize[1];
+    cWinDataSizeX = cWinMaxX;//cDimSize[0];
+    cWinDataSizeY = cWinMaxY;//cDimSize[1];
     
     if(cWinImData != NULL)
       {
       delete [] cWinImData;
       }
-    
     cWinImData = new unsigned char[ cWinDataSizeX * cWinDataSizeY ];
-    
+
     if(cWinZBuffer != NULL) 
       {
       delete [] cWinZBuffer;
       }
-    
     cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
     
     cViewImData  = true;
     cValidImData = true;
     
-    this->update();
 }
 
 
@@ -300,7 +294,6 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 
   SizeType   newoverlay_size   = newoverlay_region.GetSize();
 
-
   if( cValidImData 
       &&  (newoverlay_size[0] == cDimSize[0])
       &&  (newoverlay_size[1] == cDimSize[1])
@@ -321,9 +314,6 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 
     const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY * 4;
     cWinOverlayData = new unsigned char[ bufferSize ];
-
-    this->update();
-
     }
   else // return a warning
     {
@@ -473,7 +463,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   int ti = (int)( (int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
   if( ti <= - (int) cDimSize[ cWinOrder[0] ] ) 
     {
-    ti = -cDimSize[ cWinOrder[0] ] + 1;
+    ti = -(int)cDimSize[ cWinOrder[0] ] + 1;
     }
   else if( ti >= (int)cDimSize[ cWinOrder[0] ]) 
     {
@@ -491,7 +481,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
   ti = static_cast<int>( static_cast<int>(cWinCenter[ cWinOrder[1] ]) - winWidth/2);
   if( ti <= - static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
     {
-    ti = -cDimSize[ cWinOrder[1] ] + 1;
+    ti = -(int)cDimSize[ cWinOrder[1] ] + 1;
     }
   else if( ti >= static_cast<int>(cDimSize[ cWinOrder[1] ] ) ) 
     {
