@@ -7,7 +7,7 @@ if {[info commands rtExMath] != "rtExMath"} {
 # Take window level parameters from viewer
 proc InitializeWindowLevelInterface {} {
    global sliceNumber
-
+   global indentity
    # Get parameters from viewer
    set w [map1 GetColorWindow]
    set l [map1 GetColorLevel]
@@ -39,6 +39,7 @@ proc InitializeWindowLevelInterface {} {
     label .wl.f3.checkerLabel -text "Checkers"
     scale .wl.f3.ch -orient horizontal -from 1 -to 100 -command SetCheckerboard -variable checkerboard
    checkbutton .wl.swapCheck -text "Swap Checkers" -command SwapCheckers
+   checkbutton .wl.swapRegister -text "Register On/Off" -command SwapRegister  -variable identity
 
    # resolutions less than 1.0
    if {$w < 10} {
@@ -64,6 +65,7 @@ proc InitializeWindowLevelInterface {} {
    pack .wl.f3 -side top
    pack .wl.f3.checkerLabel .wl.f3.ch -side left
    pack .wl.swapCheck -side top
+   pack .wl.swapRegister -side top
    pack .ex.exit -side left
 }
    
@@ -84,6 +86,16 @@ proc SwapCheckers {} {
 
     renWin Render
 
+}
+
+proc SwapRegister {} {
+  global identity
+    if {$identity == 0} { 
+        reslice SetResliceTransform identity
+    } else {
+        reslice SetResliceTransform transform
+    }
+    renWin Render
 }
 
 proc SetSlice { slice } {

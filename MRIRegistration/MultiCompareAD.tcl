@@ -49,6 +49,8 @@ vtkImageChangeInformation centerImage2
 
 # define the tyransform found by MRIRegistration
 vtkTransform transform
+vtkTransform identity
+set identity 1
 if {[info exists matrix] == 0} {
 eval  transform Translate $translate
       transform RotateZ $rotateZ
