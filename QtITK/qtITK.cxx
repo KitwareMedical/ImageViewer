@@ -57,11 +57,11 @@ int main(int argc, char **argv)
   QWidget qb;
   qb.resize(620,100);
 
-  const int buttonWidth  = 70;
-  const int buttonHeight = 30;
-  const int buttonSpace  = 80;
+  const int buttonHeight =  30;
+  const int buttonWidth  = 100;
+  const int buttonSpace  = 100;
 
-  int horizontalPosition = 30;
+  int horizontalPosition =  60;
 
   QPushButton  bb( "Start", &qb );
   bb.setGeometry( horizontalPosition, 20, buttonWidth, buttonHeight );
