@@ -63,6 +63,12 @@ IF(BUILD_SHAPE_DETECTION)
 SUBDIRS(ShapeDetection)
 ENDIF(BUILD_SHAPE_DETECTION)
 
+# Add an option to build or not build the MRI Registration example
+OPTION(BUILD_MRI_REGISTRATION "Build the MRI Registration example")
+IF(BUILD_MRI_REGISTRATION)
+SUBDIRS(MRIRegistration)
+ENDIF(BUILD_MRI_REGISTRATION)
+
 LINK_LIBRARIES (
 VXLNumerics
 ITKCommon
