@@ -205,7 +205,6 @@ main(int argc, char *argv[])
     PointType pos;                       // Position in resampled image
     ImageIndexType ipos;                 // Ditto, but as index
     PointType opos;                      // Position in original image
-    double    dpos[NDimensions];         // Ditto, but as double
     for (long slice = 0; slice < NumberOfSlices; slice++) {
         pos[2] = ipos[2] = slice;
         for (long row = 0; row < ImageHeight; row++) {
@@ -213,10 +212,7 @@ main(int argc, char *argv[])
             for (long col = 0; col < ImageWidth; col++) {
                 pos[0] = ipos[0] = col;
                 opos = trans.Transform(pos);
-                for (int i = 0; i < NDimensions; ++i) {
-                    dpos[i] = opos[i];
-                }
-                value = (PixelType)(interp->Evaluate(dpos));
+                value = (PixelType)(interp->Evaluate(opos));
                 resamp->SetPixel(ipos, value);
             }
         }
