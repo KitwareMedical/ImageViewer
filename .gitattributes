@@ -1,3 +1,4 @@
 .git*            export-ignore
 
+*.jpg           -crlf
 *.pdf           -crlf
