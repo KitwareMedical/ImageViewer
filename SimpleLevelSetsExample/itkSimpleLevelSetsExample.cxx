@@ -150,7 +150,7 @@ public:
   /**
    * Run-time type information (and related methods)
    */
-  itkTypeMacro( MorphFunction, LevelSet2DFunction );
+  itkTypeMacro( MorphFilter, DenseFiniteDifferenceImageFilter );
   
   /**
    * Method for creation through the object factory.
