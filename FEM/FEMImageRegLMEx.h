@@ -57,7 +57,7 @@
 namespace itk {
 namespace fem {
 
-/** \class ImageRegEx 
+/** \class ImageRegLMEx 
     \brief FEM Image registration example class.
 
      The image registration problem is modeled here with the finite element method.
@@ -101,7 +101,7 @@ namespace fem {
      to always output unsigned char.
 
 */
-class ImageRegEx
+class ImageRegLMEx
 {
 public:
   
@@ -149,10 +149,14 @@ public:
   /** Applies the warp to the reference image */
   void  WarpImage();      
 
+  /** Writes the displacement field to a file */
+  void WriteDispField();
+
   /** Set the following parameters to run the example */
   void SetReferenceFile(const char* r) {m_ReferenceFileName=r;}
   void SetTargetFile(const char* t) {m_TargetFileName=t;}
   void SetLandmarkFile(const char* l) {m_LandmarkFileName=l; }
+  void SetResultsFile(const char* r) {m_ResultsFileName=r;}
   void SetMeshResolution(unsigned int i){ m_MeshResolution=i;}
   void SetNumberOfIntegrationPoints(unsigned int i){ m_NumberOfIntegrationPoints=i;}
   void SetWidthOfMetricRegion(unsigned int i) { m_MetricWidth=i;}
@@ -169,6 +173,7 @@ public:
   const char* m_ReferenceFileName;  
   const char* m_TargetFileName;
   const char* m_LandmarkFileName;
+  const char* m_ResultsFileName;
 
   unsigned int m_MeshResolution; // determines resolution of mesh
   unsigned int m_NumberOfIntegrationPoints;
@@ -225,7 +230,7 @@ A. Stroud (1971), Approximate Calculation of Multiple Integrals,
 Prentice-Hall.
   */
 
-  ImageRegEx( ); 
+  ImageRegLMEx( ); 
  
 
 };

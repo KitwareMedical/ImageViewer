@@ -23,16 +23,14 @@
 #include "FEMImageRegLMEx.h"
 #include <strstream>
 
-#define LANDMARKS 1
-
 namespace itk {
 namespace fem {
    
 // Register load class.
-typedef  ImageMetricLoad<ImageRegEx::ImageType,ImageRegEx::ImageType> LMClass2;
+typedef  ImageMetricLoad<ImageRegLMEx::ImageType,ImageRegLMEx::ImageType> LMClass2;
 template class itk::fem::ImageMetricLoadImplementation<LMClass2>;
 
-ImageRegEx::ImageRegEx( )
+ImageRegLMEx::ImageRegLMEx( )
 {
   m_FileCount=0;    
   m_Nx=256;
@@ -64,7 +62,7 @@ ImageRegEx::ImageRegEx( )
 }
 
 
-void ImageRegEx::RunRegistration()
+void ImageRegLMEx::RunRegistration()
 {
     std::cout << "beginning \n";  
     m_Solver.SetDeltatT(m_dT);  
@@ -139,7 +137,7 @@ void ImageRegEx::RunRegistration()
   
 }
 
-void ImageRegEx::ReadImages()
+void ImageRegLMEx::ReadImages()
 {
   // DEFINE INPUT FILES
  
@@ -194,8 +192,13 @@ void ImageRegEx::ReadImages()
 
 }
 
+void ImageRegLMEx::WriteDispField()
+{
+  ;
+}
 
-void ImageRegEx::WarpImage()
+
+void ImageRegLMEx::WarpImage()
 {
  // -------------------------------------------------------
   std::cout << "Warping image" << std::endl;
@@ -227,7 +230,7 @@ void ImageRegEx::WarpImage()
 
 }
 
-int ImageRegEx::GenRegMesh()
+int ImageRegLMEx::GenRegMesh()
 {
 
   
@@ -395,7 +398,7 @@ int ImageRegEx::GenRegMesh()
 }
 
 
-void ImageRegEx::IterativeSolve()
+void ImageRegLMEx::IterativeSolve()
 {
 //  m_Energy=9.e9;
 if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
@@ -443,13 +446,13 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere
    GetVectorField();
    WarpImage();
-   //WriteWarpedImage("e:\\tessa\\temp\\result");
+   WriteWarpedImage(m_ResultsFileName);
   } 
   
 }
 
 
-void ImageRegEx::GetVectorField()
+void ImageRegLMEx::GetVectorField()
 {
 
   m_FieldSize[0] = m_Nx;
@@ -503,7 +506,7 @@ void ImageRegEx::GetVectorField()
 }
 
 
-void ImageRegEx::WriteWarpedImage(const char* fname)
+void ImageRegLMEx::WriteWarpedImage(const char* fname)
 {
 
   // for image output
@@ -544,7 +547,7 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
   
 }
 
-void ImageRegEx::MultiResSolve()
+void ImageRegLMEx::MultiResSolve()
 {
      
   typedef DiscreteGaussianImageFilter<ImageType, ImageType>  SmootherType;
@@ -609,11 +612,12 @@ void ImageRegEx::MultiResSolve()
 
 int main() 
 {
-  const char* m_ReferenceFileName;
-  const char* m_TargetFileName;
-  const char* m_LandmarkFileName;
+  const char* ReferenceFileName;
+  const char* TargetFileName;
+  const char* LandmarkFileName;
+  const char* ResultsFileName;
 
-  itk::fem::ImageRegEx X; // Declare the registration clasm_Solver.
+  itk::fem::ImageRegLMEx X; // Declare the registration clasm_Solver.
  
   X.m_Solver.SetAlpha(0.5);
   X.SetDescentDirectionMinimize();// for Mean Squares
@@ -646,13 +650,15 @@ int main()
   // & landmark files.  You will also need to uncomment the first 4
   // lines of Solver::Read() in itkFEMSolver.cxx
 
-  m_ReferenceFileName = "/mnt/data/tessa/temp/img1.raw";
-  m_TargetFileName = "/mnt/data/tessa/temp/img2.raw";
-  m_LandmarkFileName = "/mnt/data/tessa/temp/e15326s16i1_2.regLM"; 
+  ReferenceFileName = "/mnt/data/tessa/temp/img1.raw";
+  TargetFileName = "/mnt/data/tessa/temp/img2.raw";
+  LandmarkFileName = "/mnt/data/tessa/temp/e15326s16i1_2.regLM"; 
+  ResultsFileName = "/mnt/data/tessa/temp/result";
 
-  X.SetReferenceFile(m_ReferenceFileName);
-  X.SetTargetFile(m_TargetFileName);
-  X.SetLandmarkFile(m_LandmarkFileName);
+  X.SetReferenceFile(ReferenceFileName);
+  X.SetTargetFile(TargetFileName);
+  X.SetLandmarkFile(LandmarkFileName);
+  X.SetResultsFile(ResultsFileName);
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
@@ -664,7 +670,7 @@ int main()
   X.m_MinSmoothing=12.;
   X.m_SmoothingStep=4.0;
   X.RunRegistration();
-  X.WriteWarpedImage("/mnt/data/tessa/temp/result");
+  X.WriteWarpedImage(ResultsFileName);
 
   return 0;
 }
