@@ -1,7 +1,7 @@
 E:\Insight-clean\WorkDirData\IBSRClassification\20Normals_T1
 E:\Insight-clean\WorkDirData\IBSRClassification\20Normals_T1_brain
 E:\Insight-clean\WorkDirData\IBSRClassification\20Normals_T1_seg
-E:\Insight-clean\Insight\Examples\IBSRValidation\IBSRClassification\Results\MRFGaussianIBSRoutput.txt
+E:\Insight-clean\Insight\Applications\IBSRValidation\IBSRClassification\Results\MRFGaussianIBSRoutput.txt
 1
 11_3   1 63 1 58  E:\Insight-clean\WorkDir\IBSRClassification\brainstrip\param11_3.txt
 100_23 1 63 0 53 E:\Insight-clean\WorkDir\IBSRClassification\brainstrip\param100_23.txt

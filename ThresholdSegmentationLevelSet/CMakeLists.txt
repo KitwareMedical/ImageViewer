@@ -1,12 +1,13 @@
+PROJECT( ThresholdSegmentationLevelSet )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
 ${ITK_SOURCE_DIR}/Auxiliary/vtk
-${ITK_SOURCE_DIR}/Examples/ThresholdSegmentationLevelSet
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/VtkFltk
-${ITK_BINARY_DIR}/Examples/ThresholdSegmentationLevelSet
+${ThresholdSegmentationLevelSet_SOURCE_DIR}
+${ThresholdSegmentationLevelSet_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )

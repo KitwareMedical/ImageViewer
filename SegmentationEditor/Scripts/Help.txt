@@ -32,7 +32,7 @@ The interface given here contains several distinct modules, available through th
 
 REFERENCES
 
-For more information, see the Examples web pages at www.itk.org.  More detailed information on the filters and algorithms used herein is also available at www.itk.org under the online manual pages (Documentation section).
+For more information, see the Applications web pages at www.itk.org.  More detailed information on the filters and algorithms used herein is also available at www.itk.org under the online manual pages (Documentation section).
 
 
 NOTES

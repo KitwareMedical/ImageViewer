@@ -1,8 +1,10 @@
+PROJECT( MIValidation )
+
 INCLUDE_REGULAR_EXPRESSION(".*")
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
+${MIValidation_SOURCE_DIR}/../MultiResMIRegistration/Common
+${MIValidation_SOURCE_DIR}/../IBSRValidation/Common
 )
 
 SET( MIValidation_SRCS

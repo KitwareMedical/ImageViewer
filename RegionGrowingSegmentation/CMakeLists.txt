@@ -1,12 +1,13 @@
+PROJECT( RegionGrowingSegmentation )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
 ${ITK_SOURCE_DIR}/Auxiliary/vtk
-${ITK_SOURCE_DIR}/Examples/RegionGrowingSegmentation
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/VtkFltk
-${ITK_BINARY_DIR}/Examples/RegionGrowingSegmentation
+${RegionGrowingSegmentation_SOURCE_DIR}
+${RegionGrowingSegmentation_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )

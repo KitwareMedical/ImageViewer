@@ -1,9 +1,10 @@
+PROJECT( ImageRegistration )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_SOURCE_DIR}/Examples/ImageRegistration
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/ImageRegistration
+${ImageRegistration_SOURCE_DIR}
+${ImageRegistration_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )

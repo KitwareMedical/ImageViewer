@@ -1,3 +1,4 @@
+PROJECT( TripleTKImageDisplay )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -9,7 +10,7 @@ ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 ${GLU_INCLUDE_PATH}
-${ITK_SOURCE_DIR}/Examples/TripleTKImageDisplay
+${TripleTKImageDisplay_SOURCE_DIR}
 )
 
 LINK_DIRECTORIES(

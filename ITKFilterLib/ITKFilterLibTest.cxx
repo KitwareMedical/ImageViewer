@@ -21,7 +21,7 @@
 
 /**
  * This test demonstrates how to use the .lib created in 
- *   Examples/ITKFilterLib.  That .lib wraps multiple itk filters
+ *   Applications/ITKFilterLib.  That .lib wraps multiple itk filters
  *   so that they can be easily called from outside of itk (even
  *   from ANIS C).
  **/

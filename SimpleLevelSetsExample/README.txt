@@ -15,7 +15,7 @@ Run CMake in this directory, or make sure that the line
 
 SUBDIRS(SimpleLevelSetsExample)
 
-is included in the Examples/CMakeLists.txt file.
+is included in the Applications/CMakeLists.txt file.
 
 
 III. COMMAND LINE ARGUMENTS

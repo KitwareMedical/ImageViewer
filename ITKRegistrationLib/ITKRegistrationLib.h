@@ -23,7 +23,7 @@
  * registration module of ITK.   Via this wrapping that registration
  * module can be called from c.   For details on the parameters, etc
  * of the registration method, see its example in 
- * Insight/Examples/MultiResMIRegistration.
+ * Insight/Applications/MultiResMIRegistration.
  **/
 
 extern bool ITKRegistrationLib(int * fixedDimSize, float * fixedOrigin, 

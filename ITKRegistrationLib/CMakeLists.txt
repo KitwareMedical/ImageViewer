@@ -2,7 +2,7 @@
 # Uncomment the following lines to compile this using CMake
 #   if you move this outside of the Insight directory structure
 ### HERE:  Modified this line to give an appropriate name
-#PROJECT(ITKRegistrationLib)
+PROJECT(ITKRegistrationLib)
 
 # 
 # Find ITK
@@ -18,8 +18,8 @@
 #INCLUDE_REGULAR_EXPRESSION(".*")
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
+${ITKRegistrationLib_SOURCE_DIR}/../MultiResMIRegistration/Common
+${ITKRegistrationLib_SOURCE_DIR}/../IBSRValidation/Common
 )
 
 

@@ -1,8 +1,10 @@
+PROJECT(EllipsoidInteriorExteriorSpatialFunction)
+
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Examples/EllipsoidInteriorExteriorSpatialFunction
+${EllipsoidInteriorExteriorSpatialFunction_SOURCE_DIR}
 )
 
 LINK_DIRECTORIES(

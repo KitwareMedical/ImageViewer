@@ -1,12 +1,13 @@
+PROJECT(FastMarchingLevelSet)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
 ${ITK_SOURCE_DIR}/Auxiliary/vtk
-${ITK_SOURCE_DIR}/Examples/FastMarchingLevelSet
+${FastMarchingLevelSet_SOURCE_DIR}
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/VtkFltk
-${ITK_BINARY_DIR}/Examples/FastMarchingLevelSet
+${FastMarchingLevelSet_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )

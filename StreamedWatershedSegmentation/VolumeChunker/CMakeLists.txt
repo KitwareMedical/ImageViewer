@@ -6,13 +6,13 @@ chunks.cxx
 ADD_LIBRARY(chunks chunk_SRCS)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/ParameterFileParser
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/VolumeChunker
+${StreamedWatershedSegmentation_SOURCE_DIR}/ParameterFileParser
+${StreamedWatershedSegmentation_SOURCE_DIR}/VolumeChunker
 )
 
 LINK_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/ParameterFileParser
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/VolumeChunker
+${StreamedWatershedSegmentation_SOURCE_DIR}/ParameterFileParser
+${StreamedWatershedSegmentation_SOURCE_DIR}/VolumeChunker
 )
 
 LINK_LIBRARIES (

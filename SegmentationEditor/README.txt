@@ -22,7 +22,7 @@ will cause this application to build:
 
 2. To run this application:
 
- cd INSIGHT_SOURCE/Examples/SegmentationEditor/Scripts
+ cd INSIGHT_SOURCE/Applications/SegmentationEditor/Scripts
  INSIGHT_BUILD/bin/WSTITK Main.tcl
 
  where "INSIGHT_SOURCE" is the path to your Insight source tree and
@@ -30,7 +30,7 @@ will cause this application to build:
 
 
 3. The rest of the documentation you will need is displayed by the program
-itself.  Also see the documentation in the Examples section of the
+itself.  Also see the documentation in the Applications section of the
 www.itk.org website.
 
 

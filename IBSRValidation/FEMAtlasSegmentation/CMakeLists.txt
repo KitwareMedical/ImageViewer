@@ -1,3 +1,4 @@
+PROJECT( FEMAtlasSegmentation )
 
 SET(FEMBrainStripApp_SRCS
   Code/FEMBrainStripValidationApp.cxx
@@ -24,8 +25,8 @@ ENDIF(WIN32)
 ENDIF(NOT UNIX)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/FEMAtlasSegmentation
+${FEMAtlasSegmentation_SOURCE_DIR}/../Common
+${FEMAtlasSegmentation_SOURCE_DIR}/../FEMAtlasSegmentation
 )
 
 SOURCE_GROUP("Source Files Template" ./*.txx)

@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
+${ITK_SOURCE_DIR}/Applications/MRIBiasCorrection
 )
 
 SET(ImageCorrector_SRCS

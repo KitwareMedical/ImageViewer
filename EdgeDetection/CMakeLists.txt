@@ -1,5 +1,7 @@
+PROJECT(EdgeDetection)
+
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/EdgeDetection
+${EdgeDetection_SOURCE_DIR}
 )
 
 LINK_DIRECTORIES(

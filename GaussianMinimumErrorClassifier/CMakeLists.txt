@@ -1,6 +1,8 @@
+PROJECT(GaussianMinimumErrorClassifier)
+
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
-${ITK_SOURCE_DIR}/Examples/GaussianMinimumErrorClassifier
+${GaussianMinimumErrorClassifier_SOURCE_DIR}
+${GaussianMinimumErrorClassifier_SOURCE_DIR}/../MRIBiasCorrection
 )
 
 LINK_LIBRARIES (
@@ -9,7 +11,7 @@ ITKIO
 )
 
 SET (GaussianMinimumErrorClassifier_SRCS
-${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection/OptionList.cxx
+${GaussianMinimumErrorClassifier_SOURCE_DIR}/../MRIBiasCorrection/OptionList.cxx
 MaximumLikelihoodRatioDecisionRule.cxx
 GaussianMinimumErrorClassifier.cxx
 )

@@ -1,6 +1,6 @@
 E:/Insight-clean/WorkDirData/MultichannelTissueClassificationValidation
 _FLw.raw
 _T2w.raw
-E:/Insight-clean/Insight/Examples/MultichannelTissueClassificationValidation/Results/KmeansMSoutput.txt
+E:/Insight-clean/Insight/Applications/MultichannelTissueClassificationValidation/Results/KmeansMSoutput.txt
 2
 phantom 11 NoParamFile.txt

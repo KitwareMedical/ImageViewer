@@ -1,13 +1,14 @@
+PROJECT( ThinPlateSplines )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/Numerics
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
-${ITK_SOURCE_DIR}/Examples/ThinPlateSplines
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
-${ITK_BINARY_DIR}/Examples/ThinPlateSplines
+${ThinPlateSplines_SOURCE_DIR}
+${ThinPlateSplines_BINARY_DIR}
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}

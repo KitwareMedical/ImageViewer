@@ -1,7 +1,8 @@
+PROJECT( AtlasSegmentation )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/AtlasSegmentation
+${AtlasSegmentation_SOURCE_DIR}/../Common
+${AtlasSegmentation_SOURCE_DIR}
 )
 
 ADD_EXECUTABLE(BrainStripValidationApp Code/BrainStripValidationApp.cxx)

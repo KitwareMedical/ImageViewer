@@ -1,12 +1,14 @@
+PROJECT( StreamedWatershedSegmentation )
+
 SUBDIRS(
 ParameterFileParser
 VolumeChunker
 )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/ParameterFileParser
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/VolumeChunker
+${StreamedWatershedSegmentation_SOURCE_DIR}
+${StreamedWatershedSegmentation_SOURCE_DIR}/ParameterFileParser
+${StreamedWatershedSegmentation_SOURCE_DIR}/VolumeChunker
 )
 
 

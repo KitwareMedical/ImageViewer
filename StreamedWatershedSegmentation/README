@@ -138,7 +138,7 @@ color data.  The largest dataset we processed was 150 slices of the abdomen
 section of the Fullcolor dataset at full resolution.  These slices were cropped
 (1600x800x150) to remove some of the uninteresting background material at the
 edges and then split into 8x4x1 sub-volumes using the vhchunker application
-found in Examples/StreamedWatershedSegmentation/VolumeChunker.
+found in Applications/StreamedWatershedSegmentation/VolumeChunker.
 
 The sub-volume chunks were converted to floating point data and padded 13
 pixels on each edge.  We then processed each chunk with 13 iterations of the

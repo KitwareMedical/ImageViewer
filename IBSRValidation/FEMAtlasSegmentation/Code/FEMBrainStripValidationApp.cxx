@@ -26,7 +26,7 @@
 #include "itkImage.h"
 #include "itkExceptionObject.h"       
 
-// to use:  FEMBrainStripValidationApp U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\input_1.txt 
+// to use:  FEMBrainStripValidationApp U:\itk\Insight\Applications\IBSRValidation\FEMAtlasSegmentation\Inputs\input_1.txt 
 typedef itk::Image<unsigned char,3> ImageType;
 typedef itk::Image<unsigned char, 3> LabelImageType;
 typedef itk::Image<float, 3> RealImageType;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     std::cout << "Parameter file name missing" << std::endl;
     std::cout << std::endl;
     std::cout << "Usage:  FEMBrainStripValidationApp param.file" << std::endl;
-    paramname="U:\\itk\\Insight\\Examples\\IBSRValidation\\FEMAtlasSegmentation\\Inputs\\myinput_resample.txt";
+    paramname="U:\\itk\\Insight\\Applications\\IBSRValidation\\FEMAtlasSegmentation\\Inputs\\myinput_resample.txt";
 //    return 1;
     } else paramname=argv[1];
 

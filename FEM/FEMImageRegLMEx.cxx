@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     std::cout << "Parameter file name missing" << std::endl;
     std::cout << std::endl;
     std::cout << "Usage:  FEMImageRegLMEx param.file" << std::endl;
-    paramname="U:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt";
+    paramname="U:\\itk\\Insight\\Applications\\FEM\\FEMregLMparams.txt";
     } else paramname=argv[1];
   
 // Register the correct load implementation with the element typed visitor dispatcher. 
@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
   RegistrationType::Pointer X= RegistrationType::New(); // Declare the registration class
 
   X->SetConfigFileName(paramname);
-  //X->SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
+  //X->SetConfigFileName("c:\\itk\\Insight\\Applications\\FEM\\FEMregLMparams.txt");
   if (  !X->ReadConfigFile( (X->GetConfigFileName()).c_str() ) ) { return -1; }
  
   // Read Raw Files 

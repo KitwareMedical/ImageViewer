@@ -1,6 +1,7 @@
+PROJECT( ShapeDetection )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
+${ShapeDetection_SOURCE_DIR}/../IBSRValidation/Common
 )
 
 LINK_LIBRARIES (

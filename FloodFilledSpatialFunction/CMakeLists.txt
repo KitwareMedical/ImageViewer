@@ -1,5 +1,7 @@
+PROJECT(FloodFilledSpatialFunction)
+
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/FloodFilledSpatialFunction
+${FloodFilledSpatialFunction_SOURCE_DIR}
 )
 
 

@@ -19,8 +19,8 @@
   application used for the study described above.
 
   Note that there is also a dependency on source code in
-  Insight/Examples/MultiResMIRegistration/Common
-  Insight/Examples/IBSRValidation/Common
+  Insight/Applications/MultiResMIRegistration/Common
+  Insight/Applications/IBSRValidation/Common
 
 
   Inputs:

@@ -1,11 +1,12 @@
+PROJECT( MutualInformationEuler2DRegistration )
 
 INCLUDE_REGULAR_EXPRESSION(".*")
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_SOURCE_DIR}/Examples/MutualInformationEuler2DRegistration
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/MutualInformationEuler2DRegistration
+${MutualInformationEuler2DRegistration_SOURCE_DIR}
+${MutualInformationEuler2DRegistration_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )

@@ -1,7 +1,8 @@
+PROJECT( IBSRClassification )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/IBSRClassification
+${IBSRClassification_SOURCE_DIR}/../Common
+${IBSRClassification_SOURCE_DIR}
 )
 
 LINK_LIBRARIES (
@@ -10,11 +11,11 @@ ITKIO
 )
 
 ADD_EXECUTABLE(GaussianIBSRClassificationApp 
- Code/GaussianClassifierValidationApp.cxx)
+               Code/GaussianClassifierValidationApp.cxx)
 ADD_EXECUTABLE(KmeansIBSRClassificationApp 
- Code/KmeansClassifierValidationApp.cxx)
+               Code/KmeansClassifierValidationApp.cxx)
 ADD_EXECUTABLE(MRFGaussianIBSRClassificationApp 
- Code/MRFGaussianClassifierValidationApp.cxx)
+               Code/MRFGaussianClassifierValidationApp.cxx)
 ADD_EXECUTABLE(MRFKmeansIBSRClassificationApp 
- Code/MRFKmeansClassifierValidationApp.cxx)
+               Code/MRFKmeansClassifierValidationApp.cxx)
 

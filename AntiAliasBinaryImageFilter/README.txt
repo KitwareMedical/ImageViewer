@@ -19,7 +19,7 @@ Insight build, then this example should build automatically.
 
 Note:
 This example uses the
-Examples/StreamedWatershedSegmentation/ParameterFileParser library. There is a
+Applications/StreamedWatershedSegmentation/ParameterFileParser library. There is a
 dependency switch in CMakeLists.txt which ensures that the ParameterFileParser
 library is build before this example is built.
 

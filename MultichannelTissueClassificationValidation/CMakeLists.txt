@@ -1,6 +1,8 @@
+PROJECT( MultichannelTissueClassificationValidation )
+
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/MultichannelTissueClassificationValidation/Common
-${ITK_SOURCE_DIR}/Examples/MultichannelTissueClassificationValidation/Code
+${MultichannelTissueClassificationValidation_SOURCE_DIR}/Common
+${MultichannelTissueClassificationValidation_SOURCE_DIR}/Code
 )
 
 LINK_LIBRARIES (

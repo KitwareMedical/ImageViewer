@@ -1,8 +1,9 @@
+PROJECT( RawImageReaderViewer )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_SOURCE_DIR}/Examples/RawImageReaderViewer
+${RawImageReaderViewer_SOURCE_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )

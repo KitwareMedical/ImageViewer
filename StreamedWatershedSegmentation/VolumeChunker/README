@@ -8,7 +8,7 @@ I. Introduction
 The code in this directory provides a way to split up large files of raw,
 binary data into smaller files, or ``chunks'' of data.  It was written
 specifically for use with the streaming watershed code contained in the
-Examples/StreamedWatershedSegmentation.
+Applications/StreamedWatershedSegmentation.
 
 Vocabulary:  
 

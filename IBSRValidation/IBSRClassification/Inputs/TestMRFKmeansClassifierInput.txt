@@ -1,7 +1,7 @@
 E:\Insight-clean\WorkDirData\IBSRClassification\20Normals_T1
 E:\Insight-clean\WorkDirData\IBSRClassification\20Normals_T1_brain
 E:\Insight-clean\WorkDirData\IBSRClassification\20Normals_T1_seg
-E:\Insight-clean\Insight\Examples\IBSRValidation\IBSRClassification\Results\MRFKMeansIBSRoutput.txt
+E:\Insight-clean\Insight\Applications\IBSRValidation\IBSRClassification\Results\MRFKMeansIBSRoutput.txt
 1
 11_3   1 63 1 58  NoParamFile.txt
 100_23 1 63 0 53 NoParamFile.txt

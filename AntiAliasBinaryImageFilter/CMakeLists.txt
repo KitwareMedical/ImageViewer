@@ -1,5 +1,7 @@
+PROJECT(AntiAliasBinaryImageFilter)
+
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/StreamedWatershedSegmentation/ParameterFileParser
+${AntiAliasBinaryImageFilter_SOURCE_DIR}
 )
 
 LINK_LIBRARIES (

@@ -1,6 +1,7 @@
-
+PROJECT( FuzzyConnectedness )
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
+${FuzzyConnectedness_SOURCE_DIR}
+${FuzzyConnectedness_SOURCE_DIR}/../IBSRValidation/Common
 )
 
 SET( FuzzyConnect_SRCS

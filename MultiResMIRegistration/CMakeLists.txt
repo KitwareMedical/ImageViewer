@@ -1,8 +1,10 @@
+PROJECT( MultiResMIRegistration )
+
 INCLUDE_REGULAR_EXPRESSION(".*")
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
-${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
+${MultiResMIRegistration_SOURCE_DIR}/Common
+${MultiResMIRegistration_SOURCE_DIR}/../IBSRValidation/Common
 )
 
 ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration.cxx )
