@@ -70,8 +70,8 @@ int vtkBinaryVolume::WriteToDisk(const char *fn)
   std::ofstream out;
   out.open(fn);
   if (! out ) return -1;
-  out.write((unsigned char *)e, sizeof(int) * 6);
-  out.write((unsigned char *)this->GetScalarPointer(), volume_size_in_bytes);
+  out.write((char *)e, sizeof(int) * 6);
+  out.write((char *)this->GetScalarPointer(), volume_size_in_bytes);
   out.close();
 
   std::cout << "vtkBinaryVolume::WriteToDisk: header size is "
@@ -105,13 +105,13 @@ int vtkBinaryVolume::ReadFromDisk(const char *fn)
   std::ifstream in;
   in.open(fn);
   if (! in ) return -1;
-  in.read((unsigned char *)e, sizeof(int) * 6);
+  in.read((char *)e, sizeof(int) * 6);
   if ( in.gcount() != sizeof(int) * 6) return -3;
 
   // check size
   for (unsigned i = 0; i < 6; ++i) { if (e[i] != c[i]) return -2; }
   
-  in.read((unsigned char *)this->GetScalarPointer(), volume_size_in_bytes);
+  in.read((char *)this->GetScalarPointer(), volume_size_in_bytes);
 
   if (in.gcount() != volume_size_in_bytes) return -3;
 

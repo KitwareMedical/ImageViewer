@@ -17,7 +17,7 @@
 #ifndef __vtkLookupTableEquivalencyHash_h_
 #define __vtkLookupTableEquivalencyHash_h_
 
-#include <hash_map>
+#include "itk_hash_map.h"
 #include <list>
 
 struct merge_t
@@ -37,8 +37,8 @@ class vtkLookupTableEquivalencyHash
 public:
   typedef vtkLookupTableEquivalencyHash Self;
 
-  typedef hash_map<unsigned long, unsigned long,
-    hash<unsigned long> > HashTableType;
+  typedef itk::hash_map<unsigned long, unsigned long,
+    itk::hash<unsigned long> > HashTableType;
   typedef HashTableType::iterator Iterator;
   typedef HashTableType::const_iterator ConstIterator;
   typedef HashTableType::value_type ValueType;
