@@ -61,6 +61,9 @@ SUBDIRS(PNGImageReadWrite)
 # Build the ExtractImageRegion example
 SUBDIRS(ExtractImageRegion)
 
+# Build the DICOMApp example to output raw and png versions of DICOM file
+SUBDIRS(DICOMApp)
+
 # Build the simple ImageViewer example. This requires GLUT to be installed
 IF(GLUT_FOUND)
   SUBDIRS(ImageViewer)
