@@ -39,17 +39,67 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
 #include "itkWatershedImageFilter.h"
-#include "itkGradientAnisotropicDiffusionImageFilter.h"
+#include "itkCurvatureAnisotropicDiffusionImageFilter.h"
 #include "itkGradientMagnitudeImageFilter.h"
 #include "itkImageRegionIterator.h"
 #include "itkRawImageWriter.h"
 #include <fstream>
 #include <string>
+#include "itkCommand.h"
 
 extern "C" {
 #include <string.h>
 #include <stdio.h>
 }
+
+namespace itk {
+class PrintProgressCommand : public Command
+{
+public:
+  /** Smart pointer declaration methods */
+  typedef PrintProgressCommand Self;
+  typedef Command Superclass;
+  typedef itk::SmartPointer<Self>  Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
+  itkTypeMacro( PrintProgressCommand, Command );
+  itkNewMacro(Self);
+
+  /** Standard Command virtual methods */
+  void Execute(Object *caller, const EventObject &event);
+  void Execute(const Object *caller, const EventObject &event);
+
+protected:
+  PrintProgressCommand() {}
+  virtual ~PrintProgressCommand() {}
+  
+private:
+};
+  
+void PrintProgressCommand
+::Execute(Object *caller, const EventObject &event)
+{
+  ProcessObject *po = dynamic_cast<ProcessObject *>(caller);
+  if (! po) return;
+  
+  if( typeid(event) == typeid ( ProgressEvent)  )
+    {
+      std::cout << "Progress at " << po->GetProgress() * 100 << "% " <<std::endl;;
+    }
+}
+
+void PrintProgressCommand
+::Execute(const Object *caller, const EventObject &event)
+{
+  ProcessObject *po = dynamic_cast<ProcessObject *>(const_cast<Object *>(caller));
+  if (! po) return;
+  
+  if( typeid(event) == typeid ( ProgressEvent)  )
+    {
+      std::cout << "Progress at " << po->GetProgress() * 100<< "% "<< std::endl;;
+    }
+}
+}// namespace itk
+
 
 /**
  * The following is a very simple (& slow) pgm reader
@@ -140,21 +190,25 @@ int main(int argc, char *argv[])
   float conductance_term, lower_threshold, flood_level;
   unsigned int diffusion_iterations;
   typedef pgm_reader::ImageType ImageType;
+  typedef itk::Image<unsigned long, 2> UnsignedImageType;
+  std::string outname;
+  itk::PrintProgressCommand::Pointer c = itk::PrintProgressCommand::New();
 
   
-  if (argc != 7)
-    pgm_reader::die ("Use: watershed input_file output_file conductance_term diffusion_iterations lower_threshold flood_level");
+  if (argc != 6)
+  pgm_reader::die ("Use: watershed input_file output_file_prefix conductance_term diffusion_iterations lower_threshold");
   sscanf(argv[3], "%f", &conductance_term);
   sscanf(argv[4], "%d", &diffusion_iterations);
   sscanf(argv[5], "%f", &lower_threshold);
-  sscanf(argv[6], "%f", &flood_level);
+  //  sscanf(argv[6], "%f", &flood_level);
   
   pgm_reader reader;
   ImageType::Pointer input_image = reader.read(argv[1]);
 
+  //  input_image->DebugOn();
   // Set up an anisotropic diffusion image filter.
-  itk::GradientAnisotropicDiffusionImageFilter<ImageType, ImageType>::Pointer
-    diffusion = itk::GradientAnisotropicDiffusionImageFilter<ImageType,
+  itk::CurvatureAnisotropicDiffusionImageFilter<ImageType, ImageType>::Pointer
+    diffusion = itk::CurvatureAnisotropicDiffusionImageFilter<ImageType,
     ImageType>::New();
   diffusion->SetTimeStep(0.125f);
   diffusion->SetIterations(diffusion_iterations);
@@ -163,30 +217,66 @@ int main(int argc, char *argv[])
   // Set the following line to the number of processors on your machine
   // to multithread the diffusion.
   //
-  //  diffusion->SetNumberOfThreads(2);
+  //    diffusion->SetNumberOfThreads(2);
   //
-  
+
   diffusion->SetInput(input_image);
-  
+
   // Set up a gradient magnitude image filter.
   itk::GradientMagnitudeImageFilter<ImageType, ImageType>::Pointer magnitude
     = itk::GradientMagnitudeImageFilter<ImageType, ImageType>::New();
   magnitude->SetInput(diffusion->GetOutput());
-  
+
   // Set up the watershed image filter.
-  itk::WatershedImageFilter<ImageType, ImageType>::Pointer watershed
-    = itk::WatershedImageFilter<ImageType, ImageType>::New();
+  itk::WatershedImageFilter<ImageType>::Pointer watershed
+    = itk::WatershedImageFilter<ImageType>::New();
   watershed->SetThreshold(lower_threshold);
-  watershed->SetLevel(flood_level);
+  watershed->SetLevel(0.50);
   watershed->SetInput(magnitude->GetOutput());
-  
+  watershed->AddObserver(itk::ProgressEvent(), c);
+
   // Set up a .raw format writer.
-  itk::RawImageWriter<ImageType>::Pointer writer =
-    itk::RawImageWriter<ImageType>::New();
-  writer->SetFileName(argv[2]);
+  std::cout << "Calculating at Level 0.50" << std::endl;
+  outname = std::string(argv[2]) + "0.50.raw";
+  itk::RawImageWriter<UnsignedImageType>::Pointer writer =
+    itk::RawImageWriter<UnsignedImageType>::New();
+  writer->SetFileName(outname.c_str());
   writer->SetInput(watershed->GetOutput());
   
   // Execute the pipeline and spit out the results.
+  writer->Write();
+
+  // Now modify the level parameter and spit out a
+  // range of labeled images at differing levels
+  // in the segmentation hierarchy
+  std::cout << "Calculating at Level 0.40" << std::endl;
+  watershed->SetLevel(0.40);
+  outname = std::string(argv[2]) + "0.40.raw";
+  writer->SetFileName(outname.c_str());
+  writer->Write();
+
+  std::cout << "Calculating at Level 0.30" << std::endl;
+  watershed->SetLevel(0.30);
+  outname = std::string(argv[2]) + "0.30.raw";
+  writer->SetFileName(outname.c_str());
+  writer->Write();
+
+  std::cout << "Calculating at Level 0.20" << std::endl;
+  watershed->SetLevel(0.20);
+  outname = std::string(argv[2]) + "0.20.raw";
+  writer->SetFileName(outname.c_str());
+  writer->Write();
+
+  std::cout << "Calculating at Level 0.10" << std::endl;
+  watershed->SetLevel(0.10);
+  outname = std::string(argv[2]) + "0.10.raw";
+  writer->SetFileName(outname.c_str());
+  writer->Write();
+
+  std::cout << "Calculating at Level 0.05" << std::endl;
+  watershed->SetLevel(0.05);
+  outname = std::string(argv[2]) + "0.05.raw";
+  writer->SetFileName(outname.c_str());
   writer->Write();
   
   return 0;
