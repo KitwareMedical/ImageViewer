@@ -1,0 +1,68 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class fltkSlice3DDrawerGUI {open : {public itk::Object}
+} {
+  Function {fltkSlice3DDrawerGUI()} {} {
+    Fl_Window VolumeWindow {
+      label {Data Volume} selected
+      xywh {545 171 475 107}
+      code0 {\#include <itkObject.h>} visible
+    } {
+      Fl_Scrollbar xScrollBar {
+        label {X : }
+        callback {SelectSliceX();}
+        xywh {35 23 345 20} type Horizontal box DOWN_BOX align 4
+      }
+      Fl_Scrollbar yScrollBar {
+        label {Y : }
+        callback {SelectSliceY();}
+        xywh {35 43 345 20} type Horizontal box DOWN_BOX align 4
+      }
+      Fl_Scrollbar zScrollBar {
+        label {Z : }
+        callback {SelectSliceZ();}
+        xywh {35 63 345 20} type Horizontal box DOWN_BOX align 4
+      }
+      Fl_Value_Output xValueOutput {
+        xywh {385 23 40 20}
+      }
+      Fl_Check_Button xCheckButton {
+        callback {SelectSliceX();
+SelectSliceX();}
+        xywh {425 18 30 30} down_box DIAMOND_DOWN_BOX selection_color 2 align 0
+      }
+      Fl_Check_Button yCheckButton {
+        callback {SelectSliceY();
+SelectSliceY();}
+        xywh {425 38 30 30} down_box DIAMOND_DOWN_BOX selection_color 2 align 0
+      }
+      Fl_Check_Button zCheckButton {
+        callback {SelectSliceZ();
+SelectSliceZ();}
+        xywh {425 58 30 30} down_box DIAMOND_DOWN_BOX selection_color 2 align 0
+      }
+      Fl_Value_Output yValueOutput {
+        xywh {385 43 40 20}
+      }
+      Fl_Value_Output zValueOutput {
+        xywh {385 63 40 20}
+      }
+    }
+  }
+  Function {~fltkSlice3DDrawerGUI()} {} {}
+  Function {Show(void)} {return_type {virtual void}
+  } {}
+  Function {Hide(void)} {return_type {virtual void}
+  } {}
+  Function {SelectSliceX(void)} {return_type {virtual void}
+  } {}
+  Function {SelectSliceY(void)} {return_type {virtual void}
+  } {}
+  Function {SelectSliceZ(void)} {return_type {virtual void}
+  } {}
+} 

@@ -1,0 +1,199 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0010 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class fltkImageViewerGUI {open
+} {
+  Function {fltkImageViewerGUI()} {} {}
+  Function {~fltkImageViewerGUI()} {return_type virtual
+  } {}
+  Function {createGUI()} {} {
+    Fl_Window iviewWindow {
+      xywh {855 28 298 401} labelsize 10 resizable visible
+    } {
+      Fl_Group glWindowGroup {
+        xywh {0 25 260 320}
+      } {
+        Fl_Box {} {
+          label {3D Win}
+          xywh {0 25 260 250} box EMBOSSED_BOX
+          code0 {\#include <GLSliceView.h>}
+          code1 {CreateGLSliceView( glWindowGroup, o );}
+          class Fl_Gl_Window
+        }
+        Fl_Choice orientationChoice {
+          callback {setOrientation();} open
+          xywh {20 325 50 20}
+        } {
+          menuitem {} {
+            label X
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Y
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Z
+            xywh {0 0 100 20}
+          }
+        }
+      }
+      Fl_Menu_Bar {} {
+        xywh {0 0 260 25}
+        code0 {addMenuBarOptions();}
+      } {
+        submenu {} {
+          label Filter selected
+          xywh {0 0 100 20}
+          code0 {addFilterMenuOptions();}
+        } {
+          menuitem {} {
+            label Value
+            callback {imageMode(itk::IMG_VAL);}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Log
+            callback {imageMode(itk::IMG_LOG);}
+            xywh {10 10 100 20}
+          }
+          menuitem {} {
+            label MIP
+            callback {imageMode(itk::IMG_MIP);}
+            xywh {20 20 100 20}
+          }
+        }
+      }
+      Fl_Value_Slider sliceNumberSlider {
+        label Slice
+        callback {selectSlice((unsigned int)o->value());}
+        xywh {270 25 20 250} type {Vert Knob} labelsize 10 align 1 step 1 textsize 9
+      }
+      Fl_Value_Slider intensityWindowingMinSlider {
+        callback {setIntensityWindowingMin(o->value());}
+        xywh {0 360 300 20} type {Horz Fill} selection_color 32 labeltype NO_LABEL labelsize 9 step 1 value 1 textsize 9
+      }
+      Fl_Value_Slider intensityWindowingMaxSlider {
+        callback {setIntensityWindowingMax(o->value());}
+        xywh {0 380 300 20} type {Horz Fill} color 55 selection_color 47 labeltype NO_LABEL labelsize 9 step 1 value 1 textsize 9
+      }
+      Fl_Button {} {
+        label {Zoom In}
+        callback {zoomIn();}
+        xywh {170 280 55 20} labelsize 10
+      }
+      Fl_Button {} {
+        label {Zoom Out}
+        callback {zoomOut();}
+        xywh {170 335 55 20} labelsize 10
+      }
+      Fl_Button {} {
+        label U
+        callback {shiftUp();}
+        xywh {110 280 35 35} box DIAMOND_UP_BOX labelsize 10
+      }
+      Fl_Button {} {
+        label Reset
+        callback {centerWindow();}
+        xywh {180 305 35 25} box ROUND_UP_BOX labelsize 10
+      }
+      Fl_Button {} {
+        label R
+        callback {shiftRight();}
+        xywh {130 300 35 35} box DIAMOND_UP_BOX labelsize 10
+      }
+      Fl_Button {} {
+        label L
+        callback {shiftLeft();}
+        xywh {90 300 35 35} box DIAMOND_UP_BOX labelsize 10
+      }
+      Fl_Button {} {
+        label D
+        callback {shiftDown();}
+        xywh {110 320 35 35} box DIAMOND_UP_BOX labelsize 10
+      }
+      Fl_Button {} {
+        label Points
+        callback {showClickedPointsWindow();}
+        xywh {15 290 55 20} labelsize 10
+      }
+    }
+    Fl_Window clickedPointsWindow {
+      label {Clicked Points}
+      xywh {548 26 291 405} visible
+    } {
+      Fl_Browser clickedPointsBrowser {
+        xywh {10 15 270 345} textfont 4
+      }
+      Fl_Button {} {
+        label Update
+        callback {updateClickedPoints();}
+        xywh {27 370 65 25}
+      }
+      Fl_Button {} {
+        label Clear
+        callback {clearClickedPoints();}
+        xywh {115 370 65 25}
+      }
+      Fl_Button {} {
+        label Close
+        callback {clickedPointsWindow->hide();}
+        xywh {200 370 65 25}
+      }
+    }
+  }
+  Function {CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w )} {return_type {virtual void}
+  } {}
+  Function {addMenuBarOptions(void)} {return_type {virtual void}
+  } {}
+  Function {addFilterMenuOptions()} {return_type {virtual void}
+  } {}
+  Function {addFileMenuOptions()} {return_type {virtual void}
+  } {}
+  Function {open(void)} {return_type {virtual void}
+  } {}
+  Function {SetImage( itk::ImageBase<3> * img )} {return_type {virtual void}
+  } {}
+  Function {show(void)} {return_type {virtual void}
+  } {}
+  Function {hide(void)} {return_type {virtual void}
+  } {}
+  Function {update(void)} {return_type {virtual void}
+  } {}
+  Function {synchronize(void)} {return_type {virtual void}
+  } {}
+  Function {imageMode(itk::ImageModeType mode)} {return_type {virtual void}
+  } {}
+  Function {selectSlice(unsigned int)} {return_type {virtual void}
+  } {}
+  Function {setIntensityWindowingMin(float)} {return_type {virtual void}
+  } {}
+  Function {setIntensityWindowingMax(float)} {return_type {virtual void}
+  } {}
+  Function {centerWindow(void)} {return_type {virtual void}
+  } {}
+  Function {zoomIn(void)} {return_type {virtual void}
+  } {}
+  Function {zoomOut(void)} {return_type {virtual void}
+  } {}
+  Function {shiftUp(void)} {return_type {virtual void}
+  } {}
+  Function {shiftDown(void)} {return_type {virtual void}
+  } {}
+  Function {shiftLeft(void)} {return_type {virtual void}
+  } {}
+  Function {shiftRight(void)} {return_type {virtual void}
+  } {}
+  Function {setOrientation(void)} {return_type {virtual void}
+  } {}
+  Function {showClickedPointsWindow(void)} {return_type {virtual void}
+  } {}
+  Function {clearClickedPoints(void)} {return_type {virtual void}
+  } {}
+  Function {updateClickedPoints(void)} {return_type {virtual void}
+  } {}
+} 
