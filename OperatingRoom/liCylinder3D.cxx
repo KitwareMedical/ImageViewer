@@ -14,7 +14,7 @@
 
 
 #include <liCylinder3D.h>
-#include <cmath>
+#include <vcl_cmath.h>
 
 
 namespace li {

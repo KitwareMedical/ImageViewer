@@ -14,7 +14,7 @@
 
 
 #include <liC_Arm3D.h>
-#include <cmath>
+#include <vcl_cmath.h>
 
 namespace li {
 

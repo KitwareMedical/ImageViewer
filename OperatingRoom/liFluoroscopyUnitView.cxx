@@ -18,7 +18,7 @@
 #include <itkImageSliceConstIteratorWithIndex.h>
 #include <itkImageRegionConstIteratorWithIndex.h>
 #include <GL/glu.h>
-#include <cmath>
+#include <vcl_cmath.h>
 
 
 namespace li {
