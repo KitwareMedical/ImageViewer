@@ -393,7 +393,7 @@ liImageRegistrationConsole
     transformationParameters[counter++] = offset[k];
   }
 
-  m_ImageMapper->GetTransformation()->SetParameters(
+  m_TargetMapper->GetTransformation()->SetParameters(
                                               transformationParameters);
 
 
@@ -415,11 +415,13 @@ liImageRegistrationConsole
 ::GenerateReference( void )
 {
   
-  referenceButton->value( 0 );
+  referenceButton->selection_color( FL_RED );
+  referenceButton->value( 1 );
   referenceButton->redraw();
   
   liImageRegistrationConsoleBase::GenerateReference();
   
+  referenceButton->selection_color( FL_GREEN );
   referenceButton->value( 1 );
   referenceButton->redraw();
 
@@ -441,11 +443,13 @@ liImageRegistrationConsole
 ::GenerateMappedReference( void )
 {
   
-  mappedReferenceButton->value( 0 );
+  mappedReferenceButton->selection_color( FL_RED );
+  mappedReferenceButton->value( 1 );
   mappedReferenceButton->redraw();
   
   liImageRegistrationConsoleBase::GenerateMappedReference();
   
+  mappedReferenceButton->selection_color( FL_GREEN );
   mappedReferenceButton->value( 1 );
   mappedReferenceButton->redraw();
 

@@ -36,7 +36,8 @@ liImageRegistrationConsoleBase
   
   m_ReferenceImage        = ReferenceType::New();
   m_MappedReferenceImage  = MappedReferenceType::New();
-  m_ImageMapper           = MapperType::New();
+  m_TargetMapper          = TargetMapperType::New();
+  m_ReferenceMapper       = ReferenceMapperType::New();
 
   m_MutualInformationMethod = 
                         MutualInformationRegistrationMethodType::New();
@@ -152,7 +153,7 @@ liImageRegistrationConsoleBase
 
   m_ReferenceImage->Allocate();
 
-  m_ImageMapper->SetDomain( m_TargetImage );
+  m_TargetMapper->SetDomain( m_TargetImage );
 
 
   this->UpdateTransformationParameters();
@@ -191,7 +192,7 @@ liImageRegistrationConsoleBase
     PixelType value;
     try 
     {
-      value = m_ImageMapper->Evaluate( point );
+      value = m_TargetMapper->Evaluate( point );
     }
     catch( itk::MapperException )
     {      
@@ -203,7 +204,7 @@ liImageRegistrationConsoleBase
   }
 
   this->ShowProgress( 1.0 );
-  this->ShowStatus("Image Transformation done");
+  this->ShowStatus("Target Image Transformation done");
 
 }
 
@@ -266,28 +267,88 @@ liImageRegistrationConsoleBase
     return;
   }
   
+  const double translationScale = 1e4;
+
   switch( m_SelectedMethod )
   {
   case mutualInformation:
+    {
     m_MutualInformationMethod->SetReference( m_ReferenceImage );
     m_MutualInformationMethod->SetTarget(    m_TargetImage    );
+
+    TargetType::SizeType size;
+    size = m_TargetImage->GetRequestedRegion().GetSize();
+
+    // set the transformation centers
+    MutualInformationRegistrationMethodType::PointType transCenter;
+    for( unsigned int j = 0; j < ImageDimension; j++ )
+      {
+      transCenter[j] = double(size[j]) / 2;
+      }
+
+    m_MutualInformationMethod->SetTargetTransformationCenter( transCenter );
+    m_MutualInformationMethod->SetReferenceTransformationCenter( transCenter );
+
+    // set optimization related parameters
+    m_MutualInformationMethod->SetNumberOfIterations( 1000 );
+    m_MutualInformationMethod->SetLearningRate( 0.2 );
+
+    // set metric related parameters
+    m_MutualInformationMethod->GetMetric()->SetTargetStandardDeviation( 20.0 );
+    m_MutualInformationMethod->GetMetric()->SetReferenceStandardDeviation( 20.0 );
+    m_MutualInformationMethod->GetMetric()->SetNumberOfSpatialSamples( 50 );
+
     m_MutualInformationMethod->StartRegistration();
+
+    m_ReferenceMapper->GetTransformation()->SetParameters(
+        m_MutualInformationMethod->GetOptimizer()->GetCurrentPosition() );
+
     break;
+    }
+
   case normalizedCorrelation:
+    {
     m_NormalizedCorrelationMethod->SetReference( m_ReferenceImage );
     m_NormalizedCorrelationMethod->SetTarget(    m_TargetImage    );
+    m_NormalizedCorrelationMethod->SetTranslationScale( translationScale );
     m_NormalizedCorrelationMethod->StartRegistration();
+
+    m_ReferenceMapper->GetTransformation()->SetParameters(
+        m_NormalizedCorrelationMethod->GetOptimizer()->GetCurrentPosition() );
+
     break;
+    }
+
   case patternIntensity:
+    {
     m_PatternIntensityMethod->SetReference( m_ReferenceImage );
     m_PatternIntensityMethod->SetTarget(    m_TargetImage    );
+    m_PatternIntensityMethod->SetTranslationScale( translationScale );
     m_PatternIntensityMethod->StartRegistration();
+
+    m_ReferenceMapper->GetTransformation()->SetParameters(
+        m_PatternIntensityMethod->GetOptimizer()->GetCurrentPosition() );
+
     break;
+    }
+
   case meanSquares:
+    {
     m_MeansSquaresMethod->SetReference( m_ReferenceImage );
     m_MeansSquaresMethod->SetTarget(    m_TargetImage    );
+    m_MeansSquaresMethod->SetTranslationScale( translationScale );
+    m_MeansSquaresMethod->GetOptimizer()->SetMaximumStepLength( 1.0  );
+    m_MeansSquaresMethod->GetOptimizer()->SetMinimumStepLength( 1e-3 );
+    m_MeansSquaresMethod->GetOptimizer()->SetGradientMagnitudeTolerance( 1e-8 );
+    m_MeansSquaresMethod->GetOptimizer()->SetMaximumNumberOfIterations( 200 );
     m_MeansSquaresMethod->StartRegistration();
+
+    m_ReferenceMapper->GetTransformation()->SetParameters(
+        m_MeansSquaresMethod->GetOptimizer()->GetCurrentPosition() );
+
     break;
+    }
+
   }
 
 
@@ -307,6 +368,78 @@ void
 liImageRegistrationConsoleBase 
 ::GenerateMappedReference( void )
 {
+
+  this->ShowStatus("Transforming the reference image...");
+
+
+  //  Allocate the reference accordingly
+  m_MappedReferenceImage = MappedReferenceType::New();
+
+  m_MappedReferenceImage->SetLargestPossibleRegion(
+      m_TargetImage->GetLargestPossibleRegion() );
+
+  m_MappedReferenceImage->SetBufferedRegion(
+      m_TargetImage->GetBufferedRegion() );
+
+  // Process all the buffered data
+  m_MappedReferenceImage->SetRequestedRegion(
+      m_TargetImage->GetBufferedRegion() ); 
+
+  m_MappedReferenceImage->Allocate();
+
+  m_ReferenceMapper->SetDomain( m_ReferenceImage );
+
+
+  this->UpdateTransformationParameters();
+
+  typedef ReferenceType::IndexType  IndexType;
+
+  ReferenceIteratorType it( 
+              m_MappedReferenceImage,
+              m_MappedReferenceImage->GetRequestedRegion() );
+  
+  float percent = 0.0;
+
+  const unsigned long totalPixels =
+        m_MappedReferenceImage->GetOffsetTable()[ImageDimension];
+
+  const unsigned long hundreth = totalPixels / 100;
+  unsigned long counter = 0;
+
+  it.Begin();
+
+  while( ! it.IsAtEnd() )
+  {
+
+    if( counter > hundreth ) 
+    {
+      counter = 0;
+      percent += 0.01;
+      this->ShowProgress( percent );
+    }
+    
+    IndexType index = it.GetIndex();
+    PointType point;
+    for(unsigned int i=0; i<ImageDimension; i++)
+    {
+      point[i] = index[i];
+    }
+    PixelType value;
+    try 
+    {
+      value = m_ReferenceMapper->Evaluate( point );
+    }
+    catch( itk::MapperException )
+    {      
+      value = 0.0;
+    }
+    it.Set( value );
+    ++it;
+    ++counter;
+  }
+
+  this->ShowProgress( 1.0 );
+  this->ShowStatus("Reference Image Transformation done");
 
 }
 

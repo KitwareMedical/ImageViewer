@@ -25,8 +25,8 @@ void liImageRegistrationConsoleGUI::cb_About(Fl_Menu_* o, void* v) {
 
 Fl_Menu_Item liImageRegistrationConsoleGUI::menu_[] = {
  {"File", 0,  0, 0, 64, 0, 0, 14, 0},
- {"Load", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Load, 0, 0, 0, 0, 14, 0},
- {"Quit", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Quit, 0, 0, 0, 0, 14, 0},
+ {"Load", 0x80066,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Load, 0, 0, 0, 0, 14, 0},
+ {"Quit", 0x80071,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Quit, 0, 0, 0, 0, 14, 0},
  {0},
  {"Help", 0,  0, 0, 64, 0, 0, 14, 0},
  {"About...", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_About, 0, 0, 0, 0, 14, 0},
@@ -1815,7 +1815,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_targetButton);
       }
-      { Fl_Button* o = new Fl_Button(685, 215, 105, 45, "Start Regisration");
+      { Fl_Button* o = new Fl_Button(685, 215, 105, 45, "Start Registration");
         o->box(FL_ROUND_UP_BOX);
         o->callback((Fl_Callback*)cb_Start);
         o->align(FL_ALIGN_WRAP);
@@ -1855,7 +1855,9 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
         o->align(FL_ALIGN_TOP|FL_ALIGN_INSIDE);
         xRotation = new Fl_Value_Input(58, 224, 50, 25, "X : ");
         yRotation = new Fl_Value_Input(58, 249, 50, 25, "Y : ");
-        zRotation = new Fl_Value_Input(58, 274, 50, 25, "Z : ");
+        { Fl_Value_Input* o = zRotation = new Fl_Value_Input(58, 274, 50, 25, "Z : ");
+          o->value(1);
+        }
         angleRotation = new Fl_Value_Input(59, 198, 50, 25, "A : ");
         o->end();
       }
@@ -1870,7 +1872,7 @@ liImageRegistrationConsoleGUI::liImageRegistrationConsoleGUI() {
       { Fl_Choice* o = new Fl_Choice(345, 105, 165, 30);
         o->menu(menu_1);
       }
-      { Fl_Button* o = new Fl_Button(685, 265, 105, 45, "Stop Regisration");
+      { Fl_Button* o = new Fl_Button(685, 265, 105, 45, "Stop Registration");
         o->box(FL_ROUND_UP_BOX);
         o->callback((Fl_Callback*)cb_Stop);
         o->align(FL_ALIGN_WRAP);

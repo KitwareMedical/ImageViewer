@@ -105,7 +105,7 @@ public:
   typedef   itk::FileIOToImageFilter< 
                             InputImageType >             ImageReaderType;
 
-  typedef   itk::Vector< double, ImageDimension * (ImageDimension + 1) >   TransformationParametersType;
+  typedef   itk::Point< double, ImageDimension * (ImageDimension + 1) >   TransformationParametersType;
 
   typedef   itk::AffineRegistrationTransform< 
                                       double,
@@ -114,7 +114,11 @@ public:
                                       >                TransformationType;
 
   typedef   itk::ImageMapper< TargetType, 
-                              TransformationType > MapperType;
+                              TransformationType > TargetMapperType;
+
+
+  typedef   itk::ImageMapper< ReferenceType, 
+                              TransformationType > ReferenceMapperType;
 
 
   typedef   itk::SimpleImageRegionIterator< 
@@ -163,7 +167,9 @@ protected:
 
   MappedReferenceType::Pointer                    m_MappedReferenceImage;
 
-  MapperType::Pointer                             m_ImageMapper;
+  TargetMapperType::Pointer                       m_TargetMapper;
+
+  ReferenceMapperType::Pointer                    m_ReferenceMapper;
 
   bool                                            m_ImageLoaded;
 

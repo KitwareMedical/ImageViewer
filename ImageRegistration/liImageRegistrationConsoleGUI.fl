@@ -5,7 +5,7 @@ code_name {.cxx}
 gridx 5 
 gridy 5 
 snap 3
-class liImageRegistrationConsoleGUI {open selected : {public liImageRegistrationConsoleBase}
+class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBase}
 } {
   Function {liImageRegistrationConsoleGUI()} {} {
     Fl_Window consoleWindow {
@@ -14,7 +14,7 @@ class liImageRegistrationConsoleGUI {open selected : {public liImageRegistration
       code0 {\#include <liImageRegistrationConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
-      Fl_Menu_Bar {} {
+      Fl_Menu_Bar {} {selected
         xywh {0 0 845 25}
       } {
         submenu {} {
@@ -24,12 +24,12 @@ class liImageRegistrationConsoleGUI {open selected : {public liImageRegistration
           menuitem {} {
             label Load
             callback {Load();}
-            xywh {0 0 100 20}
+            xywh {0 0 100 20} shortcut 0x80066
           }
           menuitem {} {
             label Quit
             callback {Quit();}
-            xywh {10 10 100 20}
+            xywh {10 10 100 20} shortcut 0x80071
           }
         }
         submenu {} {
@@ -99,7 +99,7 @@ class liImageRegistrationConsoleGUI {open selected : {public liImageRegistration
           class {fltk::LightButton}
         }
         Fl_Button {} {
-          label {Start Regisration}
+          label {Start Registration}
           callback {Execute();}
           xywh {685 215 105 45} box ROUND_UP_BOX align 128
         }
@@ -144,7 +144,7 @@ class liImageRegistrationConsoleGUI {open selected : {public liImageRegistration
           }
           Fl_Value_Input zRotation {
             label {Z : }
-            xywh {58 274 50 25}
+            xywh {58 274 50 25} value 1
           }
           Fl_Value_Input angleRotation {
             label {A : }
@@ -193,7 +193,7 @@ class liImageRegistrationConsoleGUI {open selected : {public liImageRegistration
           }
         }
         Fl_Button {} {
-          label {Stop Regisration}
+          label {Stop Registration}
           callback {Stop();}
           xywh {685 265 105 45} box ROUND_UP_BOX align 128
         }
