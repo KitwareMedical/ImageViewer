@@ -22,7 +22,7 @@ SUBDIRS (ITKRegistrationLib)
 # Build the BasicIOAndFilter example
 SUBDIRS(BasicIOAndFilter)
 
-#Build the parameter file parser necessary for several examples that follow
+#Build the parameter file parser necessary for several applications that follow
 SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 
 # Build the StreamedWatershedSegmentation example
@@ -66,7 +66,7 @@ IF(GLUT_FOUND)
   SUBDIRS(ImageViewer)
 ENDIF(GLUT_FOUND)
   
-# Examples requiring MetaImages and Fltk GUI 
+# Applications requiring MetaImages and Fltk GUI 
 IF(HAS_FLTK)
   IF(HAS_FLTKIMAGEVIEWER)
     SUBDIRS(DistanceMapFilter)
@@ -101,7 +101,7 @@ SUBDIRS(MetaImageReadWrite)
 SUBDIRS(MRIBiasCorrection)
 
 
-# Add an option to build FEM examples
+# Add an option to build FEM applications
 SUBDIRS(FEM)
 
 # Add an option to build or not build the FuzzyConnectedness example
