@@ -1,17 +1,15 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0011 
+version 1.0100 
 header_name {.h} 
-code_name {.cxx} 
-gridx 5 
-gridy 5 
-snap 3
+code_name {.cxx}
 class fltkImage2DViewerGUI {open
 } {
-  Function {fltkImage2DViewerGUI()} {} {
+  Function {fltkImage2DViewerGUI()} {open
+  } {
     Fl_Window externalWindow {open
       xywh {512 175 454 367} resizable visible
     } {
-      Fl_Box imageViewer {selected
+      Fl_Box imageViewer {
         xywh {0 0 450 365}
         code0 {\#include <fltkImage2DViewerWindow.h>}
         class {fltk::Image2DViewerWindow}
@@ -19,17 +17,17 @@ class fltkImage2DViewerGUI {open
     }
     Fl_Window intensityWindow {
       label {Intensity Windowing} open
-      xywh {304 616 553 105} hide
+      xywh {304 616 501 52} hide
     } {
-      Fl_Value_Slider {} {
+      Fl_Value_Slider minimumSlider {
         label {Min }
-        callback {SetMin( o->value() );}
-        xywh {60 25 460 25} type Horizontal align 4
+        callback {this->RenderImage( minimumSlider->value(), maximumSlider->value() );}
+        xywh {33 7 460 16} type Horizontal labelsize 12 align 4
       }
-      Fl_Value_Slider {} {
+      Fl_Value_Slider maximumSlider {
         label {Max }
-        callback {SetMax( o->value() );}
-        xywh {60 55 460 25} type Horizontal align 4
+        callback {this->RenderImage( minimumSlider->value(), maximumSlider->value() );}
+        xywh {33 24 460 17} type Horizontal labelsize 12 align 4
       }
     }
   }
@@ -53,10 +51,8 @@ imageViewer->show();} {}
     code {imageViewer->redraw();
 Fl::check();} {}
   }
-  Function {SetMin(double val)} {return_type {virtual void}
-  } {}
-  Function {SetMax(double val)} {return_type {virtual void}
-  } {}
   Function {Update(void)} {return_type {virtual void}
+  } {}
+  Function {RenderImage( double min, double max )} {open selected return_type {virtual void}
   } {}
 } 

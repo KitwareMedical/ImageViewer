@@ -74,6 +74,12 @@ public:
   virtual void Update(void);
 
   /**
+   *  Apply Intensity windowing and Render the image 
+   */
+  void RenderImage( double selectedMin, double selectedMax );
+
+
+  /**
    * Return the notifier of the Window, in order
    * to register additional drawers
    */
