@@ -14,7 +14,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
       xywh {10 20 1010 538} resizable
       code0 {\#include "ThinPlateSplinesApplicationBase.h"} visible
     } {
-      Fl_Menu_Bar {} {
+      Fl_Menu_Bar {} {open
         xywh {0 0 1010 25}
       } {
         submenu {} {
@@ -44,6 +44,16 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           menuitem {} {
             label {Time Probes}
             callback {this->ShowTimeProbes();}
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label Parameters open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label {Elastic Body Spline}
+            callback {elasticBodySplineParametersWindow->show();}
             xywh {0 0 100 20}
           }
         }
@@ -116,7 +126,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
         xywh {855 500 125 25}
       }
       Fl_Group {} {
-        label {Spline Kernels} open
+        label {Spline Kernels}
         xywh {830 65 165 80} box ENGRAVED_FRAME
       } {
         Fl_Choice splineKernelVTKChoice {
@@ -124,7 +134,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           xywh {875 105 110 25}
         } {
           menuitem {} {
-            label R selected
+            label R
             xywh {15 15 100 20}
           }
           menuitem {} {
@@ -151,6 +161,16 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
         }
       }
     }
+    Fl_Window elasticBodySplineParametersWindow {
+      label {Elastic Body Spline Parameters} selected
+      xywh {249 94 293 100} visible
+    } {
+      Fl_Value_Slider {} {
+        label Alpha
+        callback {m_ElasticBodySplineTransformITK->SetAlpha( o->value() );}
+        xywh {25 45 240 20} type {Horz Knob} align 1 maximum 2
+      }
+    }
   }
   Function {~ThinPlateSplinesApplicationGUI()} {return_type virtual
   } {
@@ -161,9 +181,10 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
     code {controlWindow->show();
 m_FlRenderWindowInteractor->show();} {}
   }
-  Function {Hide(void)} {return_type {virtual void}
+  Function {Hide(void)} {open return_type {virtual void}
   } {
-    code {controlWindow->hide();} {}
+    code {controlWindow->hide();
+elasticBodySplineParametersWindow->hide();} {}
   }
   Function {Quit(void)} {return_type {virtual void}
   } {
