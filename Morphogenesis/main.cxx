@@ -4,7 +4,7 @@
 int main()
 {
 
-  TissueViewer * viewer = new TissueViewer();
+  bio::TissueViewer * viewer = new bio::TissueViewer();
 
   
   viewer->Show();

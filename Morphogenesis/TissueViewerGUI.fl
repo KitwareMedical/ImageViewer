@@ -12,10 +12,10 @@ class TissueViewerGUI {open
       label {Tissue Window} open
       xywh {386 200 435 416} resizable visible
     } {
-      Fl_Box tissueView {
+      Fl_Box tissueView {selected
         xywh {5 5 425 405} box DOWN_BOX color 115
         code0 {\#include "TissueViewerWindow.h"}
-        class TissueViewerWindow
+        class {bio::TissueViewerWindow}
       }
     }
     Fl_Window controlWindow {
@@ -37,7 +37,7 @@ class TissueViewerGUI {open
         }
       }
       Fl_Button {} {
-        label {>} selected
+        label {>}
         xywh {50 45 65 30}
       }
     }

@@ -1,6 +1,9 @@
 #include "Tissue.h"
 
 
+namespace bio {
+
+
 Tissue
 ::Tissue()
 {
@@ -31,4 +34,5 @@ Tissue
 }
 
 
+}; // end namespace bio
 

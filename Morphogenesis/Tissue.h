@@ -4,6 +4,7 @@
 #include "Cell.h"
 #include <list>
 
+namespace bio {
 
 class Tissue 
 {
@@ -25,6 +26,6 @@ private:
 
 };
 
-
+}; // end namespace bio
 
 #endif

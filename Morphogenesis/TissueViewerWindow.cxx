@@ -2,6 +2,10 @@
 
 #include <Fl/fl_draw.H>
 
+
+namespace bio  {
+
+
 TissueViewerWindow
 ::TissueViewerWindow(int x,int y,int w,int h, const char *l):
 Fl_Box(x,y,w,h,l)
@@ -39,3 +43,5 @@ TissueViewerWindow
 }
 
 
+
+};  // end namespace bio

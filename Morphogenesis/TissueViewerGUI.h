@@ -12,7 +12,7 @@ class TissueViewerGUI {
 public:
   TissueViewerGUI();
   Fl_Window *tissueWindow;
-  TissueViewerWindow *tissueView;
+  bio::TissueViewerWindow *tissueView;
   Fl_Window *controlWindow;
   static Fl_Menu_Item menu_[];
 private:

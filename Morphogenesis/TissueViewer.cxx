@@ -1,6 +1,10 @@
 #include "TissueViewer.h"
 
 
+namespace bio {
+
+
+
 TissueViewer::TissueViewer()
 {
   m_Stop = true;
@@ -65,4 +69,9 @@ TissueViewer
 {
 	m_Stop = true;
 }
+
+
+
+}; // end namespace bio
+
 

@@ -21,7 +21,7 @@ TissueViewerGUI::TissueViewerGUI() {
   { Fl_Window* o = tissueWindow = new Fl_Window(435, 416, "Tissue Window");
     w = o;
     o->user_data((void*)(this));
-    { TissueViewerWindow* o = tissueView = new TissueViewerWindow(5, 5, 425, 405);
+    { bio::TissueViewerWindow* o = tissueView = new bio::TissueViewerWindow(5, 5, 425, 405);
       o->box(FL_DOWN_BOX);
       o->color(115);
     }

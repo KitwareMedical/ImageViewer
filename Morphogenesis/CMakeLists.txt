@@ -23,7 +23,7 @@ ${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/Morphogenesis
 )
 
-SOURCE_FILES(Morphogenesis_SRCS)
+SOURCE_FILES(Morphogenesis_SRCS
 Cell
 Tissue
 TissueViewer
@@ -54,5 +54,5 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(Morphogenesis Morphogenesis_SRCS))
+ADD_EXECUTABLE(Morphogenesis Morphogenesis_SRCS)
 

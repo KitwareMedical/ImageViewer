@@ -5,6 +5,9 @@
 #include <Fl/Fl_Box.H>
 
 
+namespace bio {
+  
+
 class TissueViewerWindow : public Fl_Box
 {
 
@@ -22,6 +25,7 @@ private:
 
 };
 
+}; // end namespace bio
 
 
 #endif

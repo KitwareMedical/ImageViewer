@@ -4,6 +4,8 @@
 #include "Tissue.h"
 #include "TissueViewerGUI.h"
 
+namespace bio {
+
 
 class TissueViewer : public TissueViewerGUI 
 {
@@ -25,5 +27,8 @@ private:
 	bool     m_Stop;
 };
 
+
+
+}; // end namespace bio
 
 #endif
