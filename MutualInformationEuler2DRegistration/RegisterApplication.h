@@ -11,6 +11,7 @@
 #include "MISimilarity2DRegistrator.h"
 #include "MIAffine2DRegistrator.h"
 #include "MIScaleRegistrator.h"
+#include "MIThinPlateSplineRegistrator.h"
 #include "OutputGenerator.h"
 
 class RegisterApplication
@@ -33,6 +34,7 @@ public:
 //  typedef MIAffine2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 //  typedef MISimilarity2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 //  typedef MIScaleRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+//  typedef MIThinPlateSplineRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 
   typedef PreprocessorType::AffineTransformType TransformType ;
   typedef OutputGenerator< InputImageType > GeneratorType ;
