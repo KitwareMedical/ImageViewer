@@ -206,7 +206,7 @@ static const short yycheck[] = {     3,
      0,     3,    11
 };
 /* -*-C-*-  Note some compilers choke on comments on `#line' lines.  */
-#line 3 "/usr/lib/bison.simple"
+/*#line 3 "/usr/lib/bison.simple"*/
 /* This file comes from bison-1.28.  */
 
 /* Skeleton output parser for bison,
