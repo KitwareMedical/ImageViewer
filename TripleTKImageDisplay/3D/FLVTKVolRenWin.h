@@ -26,6 +26,7 @@
 #include <vtkActor.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkOutlineFilter.h>
+#include <vtkProperty.h>
 
 #include "VTKVolRen.h"
 #include "FLVTKWin.h"
