@@ -69,12 +69,12 @@ Shape3D::Shape3D()
   m_RestoreTransform  = false;
   
   m_DrawCommand = DrawCommandType::New();
-  m_DrawCommand->SetCallbackFunction( this, &(Self::glDraw) );
+  m_DrawCommand->SetCallbackFunction( this, &Self::glDraw );
 
   m_DisplayListUpdateCommand = DisplayListUpdateCommandType::New();
   m_DisplayListUpdateCommand->SetCallbackFunction( 
                                   this, 
-                                  &(Self::ScheduleToUpdateDisplayList) );
+                                  &Self::ScheduleToUpdateDisplayList );
         
 }
 

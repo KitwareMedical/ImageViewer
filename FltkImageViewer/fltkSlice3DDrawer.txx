@@ -69,7 +69,7 @@ Slice3DDrawer<TImage>
   texturesGenerated = false;
 
   m_DrawCommand = DrawCommandType::New();
-  m_DrawCommand->SetCallbackFunction( this, &(Self::glDraw) );
+  m_DrawCommand->SetCallbackFunction( this, &Self::glDraw );
 
 }
 
