@@ -45,50 +45,78 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fltkSlice3DDrawerGUI.h>
 #include <fltkGlDrawer.h>
 #include <itkImage.h>
-#include <fltkUpdater.h>
+
 
 
 namespace fltk {
 
 
-template <class ImagePixelType>
+template <class TImage>
 class Slice3DDrawer : public fltkSlice3DDrawerGUI, 
-                      public GlDrawer, 
-                      public liUpdater
+                      public GlDrawer
 {
 public:
 
    /**
    * Standard "Self" typedef.
    */
-  typedef Slice3DDrawer<ImagePixelType>       Self;
+  typedef Slice3DDrawer<TImage>       Self;
+
+ 
+  /**
+   *  Type of the image to draw slices from
+   */
+  typedef  TImage   ImageType;
+ 
+
+  /**
+   * Standard "Superclass" typedef.
+   */
+  typedef fltkSlice3DDrawerGUI  Superclass;
+
 
   /** 
    * Smart pointer typedef support.
    */
-  typedef SmartPointer<Self>  Pointer;
+  typedef itk::SmartPointer<Self>  Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
+
+  /** 
+   * Run-time type information (and related methods).
+   */
+  itkTypeMacro(Slice3DDrawer, fltkSlice3DDrawerGUI);
+
+
+  /**
+   * Method for creation through the object factory.
+   */
+  itkNewMacro(Self);  
+
+
+  /**
+   *  Pixel type from the image
+   */
+  typedef  typename ImageType::PixelType  PixelType;
  
-  typedef itk::Image< ImagePixelType, 3 >   ImageType;
+
+  /**
+   *  Region Type from the image
+   */
+  typedef  typename ImageType::RegionType  RegionType;
  
 
   /**
-   *  Creation through the factory
+   *  Index Type from the image
    */
-   itkNewMacro( Self );
-
-
+  typedef  typename ImageType::IndexType  IndexType;
+ 
+  
   /**
-   * Default constructor
+   *  Size Type from the image
    */
-   Slice3DDrawer();
-
-
-  /**
-   * Destructor
-   */
-  ~Slice3DDrawer();
-
+  typedef  typename ImageType::SizeType  SizeType;
+ 
 
   /**
    * Set Input Image
@@ -133,7 +161,7 @@ public:
   /**
    * Draw the target in Open Gl
    */
-   void glDraw(void);
+   void glDraw(void) const;
 
 
   /**
@@ -154,10 +182,24 @@ public:
    void BindTextureZ(void);
 
 
+protected:
+
+  /**
+   * Default constructor
+   */
+   Slice3DDrawer();
+
+
+  /**
+   * Destructor
+   */
+  ~Slice3DDrawer();
+
+
 
 private:
 
-   ImageType::Pointer      m_Volume;
+   typename ImageType::Pointer      m_Image;
    
    int                    m_Nx;
    int                    m_Ny;
@@ -175,6 +217,10 @@ private:
    float                  m_Cy;
    float                  m_Cz;
    
+   float                  m_Ox;  // Origin in World Coordinates
+   float                  m_Oy;
+   float                  m_Oz;
+   
    unsigned char        * m_SliceX;
    unsigned char        * m_SliceY;
    unsigned char        * m_SliceZ;
@@ -182,11 +228,11 @@ private:
    unsigned char        * m_TextureX;
    unsigned char        * m_TextureY;  
    unsigned char        * m_TextureZ;
-   GLuint                  m_TextureName[3];
+   mutable GLuint         m_TextureName[3];
 
-   ImagePixelType         m_Max_Value;
+   PixelType              m_Max_Value;
 
-   bool                   texturesGenerated;
+   mutable bool           texturesGenerated;
 
 };
 
