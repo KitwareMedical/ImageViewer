@@ -150,7 +150,8 @@ Allocate(unsigned int nx,unsigned int ny)
     delete [] m_Buffer;
     }
 
-  m_Buffer = new unsigned char[ nx * ny ];
+  size(nx,ny);
+  m_Buffer = new unsigned char[ nx * ny * 4 ]; // *4 for RGBA
 
 }
 
@@ -169,26 +170,31 @@ void Image2DViewerWindow::draw(void)
   {
     return;
   }
+  if(!valid())
+  {
+    
+    glViewport( 0, 0, w(), h() );
 
-  glViewport( 0, 0, w(), h() );
-
-  glClearColor(
+    glClearColor(
       m_Background.GetRed(),
       m_Background.GetGreen(),
       m_Background.GetBlue(),
       1.0);
   
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-  const GLdouble width = 150.0;
-  const GLdouble height = width * h() / w();
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+  }
+  const GLdouble width = w();
+  const GLdouble height = h();
   glOrtho( -width, width, -height, height, -20000, 10000 );
+  
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
-
-
+  
+  glDrawPixels( width, height, 
+                GL_RGBA, GL_UNSIGNED_BYTE, m_Buffer);
 }
 
   
