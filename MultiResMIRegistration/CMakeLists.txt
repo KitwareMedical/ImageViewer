@@ -1,3 +1,5 @@
+INCLUDE_REGULAR_EXPRESSION(".*")
+
 SUBDIRS( SampleInputs )
 
 INCLUDE_DIRECTORIES(
@@ -32,4 +34,4 @@ VanderbiltValidation/VanderbiltModality )
 
 
 ADD_EXECUTABLE(MultiResMIRegistration Common/MultiResMIRegistration )
-ADD_EXECUTABLE(VanderbiltValidation   VanderbiltValidation_SRCS )
+ADD_EXECUTABLE(VanderbiltValidation/VanderbiltValidation   VanderbiltValidation_SRCS )
