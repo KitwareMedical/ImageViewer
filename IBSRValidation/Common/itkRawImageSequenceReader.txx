@@ -19,7 +19,7 @@
 #include "itkRawImageSequenceReader.h"
 
 #include "itkObjectFactory.h"
-#include "itkSimpleImageRegionIterator.h"
+#include "itkImageRegionIterator.h"
 #include "itkImageIOFactory.h"
 #include "itkConvertPixelBuffer.h"
 
