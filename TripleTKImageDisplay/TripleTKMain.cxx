@@ -16,6 +16,7 @@
 =========================================================================*/
 #include "TripleTKMain.h"
 #include <metaITKUtils.h>
+#include "itkImageFileReader.h"
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -239,15 +240,12 @@ int main()
   ImageType::Pointer input_image;
 
   //Load the image
-  //typedef FileIOToImageFilter<ImageType> LoaderType;
-  //ObjectFactoryBase::RegisterFactory(new FileIOMetaImageFactory);
-  //LoaderType::Pointer loader = LoaderType::New();
+  typedef ImageFileReader<ImageType> LoaderType;
+  LoaderType::Pointer loader = LoaderType::New();
   //set mh* file
-  //loader->SetFileName(metaImageFileName); 
-  //loader->Update();
-  //input_image  = loader->GetOutput(); 
-
-  input_image = metaITKUtilLoadImage3D<short>(metaImageFileName, MET_SHORT);
+  loader->SetFileName( metaImageFileName ); 
+  loader->Update();
+  input_image  = loader->GetOutput(); 
 
   std::cout << "Showing Images..." << std::endl;
 

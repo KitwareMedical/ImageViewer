@@ -49,6 +49,7 @@ TripleTKGUI.fld
 )
 
 LINK_LIBRARIES (
+ITKIO
 ITKCommon
 ITKBasicFilters 
 VXLNumerics
