@@ -17,6 +17,12 @@
 #ifndef __Cellular_Aggregate_H
 #define __Cellular_Aggregate_H
 
+// Disable warning for long symbol names in this file only
+#ifdef _MSC_VER
+#pragma warning ( disable : 4786 )
+#endif
+
+
 #include <iostream>
 #include "itkDefaultDynamicMeshTraits.h"
 #include "itkMesh.h"
