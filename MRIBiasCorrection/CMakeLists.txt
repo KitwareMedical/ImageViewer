@@ -67,7 +67,7 @@ BiasCorrector
 LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Numerics/Statistics
-${ITK_BINARY_DIR}/Unsupported/MetaImage
+${ITK_BINARY_DIR}/Auxiliary/MetaImage
 )
 
 
