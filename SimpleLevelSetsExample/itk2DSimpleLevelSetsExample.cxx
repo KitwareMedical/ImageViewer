@@ -30,8 +30,8 @@ extern "C" {
  * modeling framework.  Speed function input to the level-set equation
  * is a distance transform between the two shapes.
  */
-const int HEIGHT = (256);
-const int WIDTH  = (256);
+const unsigned int HEIGHT = (256);
+const unsigned int WIDTH  = (256);
 
 #define RADIUS (vnl_math_min(HEIGHT, WIDTH)/4)
 

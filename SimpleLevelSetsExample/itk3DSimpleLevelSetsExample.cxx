@@ -24,9 +24,9 @@ extern "C" {
 #include "stdio.h"
 }
 
-const int V_WIDTH  = 64;
-const int V_HEIGHT = 64;
-const int V_DEPTH  = 64;
+const unsigned int V_WIDTH  = 64;
+const unsigned int V_HEIGHT = 64;
+const unsigned int V_DEPTH  = 64;
 
 #define T_RADIUS (V_WIDTH/10.0)
 #define XY_RADIUS (V_WIDTH/3.0)
@@ -311,8 +311,16 @@ void main(int argc, char** argv)
     ImageType::Pointer vol_init = ImageType::New();
     ImageType::Pointer vol_target = ImageType::New();
     
-    ImageType::SizeType sz = {V_WIDTH,V_HEIGHT,V_DEPTH};
-    ImageType::IndexType idx = { 0, 0, 0};
+    ImageType::SizeType sz;
+    sz[0] = V_WIDTH;
+    sz[1] = V_HEIGHT;
+    sz[2] = V_DEPTH;
+    
+    ImageType::IndexType idx;
+    idx[0] = 0;
+    idx[1] = 0;
+    idx[2] = 0;
+    
     ImageType::RegionType reg;  
     reg.SetSize(sz);
     reg.SetIndex(idx);
@@ -323,7 +331,6 @@ void main(int argc, char** argv)
     vol_target->SetRegions(reg);
     vol_target->Allocate();
     
-    char  in[20], out[20];   
     if (argc < 4)
       {
         std::cout << "Usage:"<<argv[0]
