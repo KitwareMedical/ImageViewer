@@ -8,7 +8,7 @@ class ThresholdSegmentationLevelSetGUI {open : {public ThresholdSegmentationLeve
   } {
     Fl_Window consoleWindow {
       label {Threshold Segmentation Level Set} open
-      xywh {183 296 735 280}
+      xywh {183 261 735 280}
       code0 {\#include <ThresholdSegmentationLevelSetBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -16,65 +16,48 @@ class ThresholdSegmentationLevelSetGUI {open : {public ThresholdSegmentationLeve
         xywh {0 0 725 210}
       } {
         Fl_Box {} {
-          xywh {545 55 95 10} box UP_BOX color 4
+          xywh {545 79 95 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {100 55 62 10} box UP_BOX color 4
+          xywh {80 79 82 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {220 54 185 11} box UP_BOX color 4
+          xywh {220 78 185 11} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {open
-        xywh {5 5 725 200} deactivate
+      Fl_Group controlsGroup {
+        xywh {5 5 725 209} deactivate
       } {
         Fl_Light_Button inputImageButton {
           label {Input Image}
           callback {ShowInputImage();}
-          xywh {150 42 84 39} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {150 66 84 39} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
-        }
-        Fl_Group seedGroup {
-          label {Seed Point}
-          xywh {265 81 95 114} box ENGRAVED_BOX align 17
-        } {
-          Fl_Value_Output xSeedPointValueOutput {
-            label {X }
-            xywh {293 106 55 25} labelsize 12 step 0.01 textsize 12
-          }
-          Fl_Value_Output ySeedPointValueOutput {
-            label {Y }
-            xywh {293 133 55 25} labelsize 12 step 0.01 textsize 12
-          }
-          Fl_Value_Output zSeedPointValueOutput {
-            label {Z }
-            xywh {293 160 55 25} labelsize 12 step 0.01 textsize 12
-          }
         }
         Fl_Button {} {
           label {Threshold Segmentation}
           callback {m_ThresholdLevelSetFilter->Update();}
-          xywh {385 41 170 37} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {325 66 230 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button thresholdedImageButton {
           label Display
           callback {this->ShowThresholdedImage();}
-          xywh {620 45 90 31} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {620 69 90 31} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Light_Button thresholdedImageVTKButton {
           label {VTK Render}
           callback {ShowThresholdedImageWithVTK();}
-          xywh {620 85 90 30} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {620 109 90 30} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Value_Output iterationValueOutput {
-          label Iteration selected
-          xywh {488 130 55 25} labelsize 12 textsize 12
+          label Iteration
+          xywh {370 185 55 25} labelsize 12 textsize 12
         }
         Fl_Value_Output rmsValueOutput {
           label RMS
-          xywh {460 156 83 25} labelsize 12 textsize 12
+          xywh {460 185 83 25} labelsize 12 textsize 12
         }
       }
       Fl_Slider progressSlider {
@@ -88,7 +71,7 @@ class ThresholdSegmentationLevelSetGUI {open : {public ThresholdSegmentationLeve
       Fl_Value_Input lowerThresholdValueInput {
         label {Lower Threshold}
         callback {m_ThresholdLevelSetFilter->SetLowerThreshold( o->value() );}
-        xywh {488 104 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
+        xywh {488 129 55 25} labelsize 12 minimum 1 maximum 255 value 250 textsize 12
       }
       Fl_Button {} {
         label Quit
@@ -98,12 +81,27 @@ class ThresholdSegmentationLevelSetGUI {open : {public ThresholdSegmentationLeve
       Fl_Button {} {
         label Load
         callback {this->LoadInputImage();}
-        xywh {30 44 81 35} box ROUND_UP_BOX labelsize 12 align 128
+        xywh {30 68 81 35} box ROUND_UP_BOX labelsize 12 align 128
       }
       Fl_Value_Input upperThresholdValueInput {
         label {Upper Threshold}
         callback {m_ThresholdLevelSetFilter->SetUpperThreshold( o->value() );}
-        xywh {488 78 55 25} labelsize 12 minimum 1 maximum 100 value 2.5 textsize 12
+        xywh {488 103 55 25} labelsize 12 minimum 1 maximum 255 value 200 textsize 12
+      }
+      Fl_Value_Input isoSurfaceValueInput {
+        label {Iso-Surface}
+        callback {m_ThresholdLevelSetFilter->SetIsoSurfaceValue( o->value() );}
+        xywh {488 155 55 25} labelsize 12 step 0.01 value 0.5 textsize 12
+      }
+      Fl_Value_Input maxIterationsValueInput {
+        label {Max Iterations}
+        callback {m_ThresholdLevelSetFilter->SetMaximumIterations( static_cast<int>(o->value()) );}
+        xywh {486 13 55 25} labelsize 12 minimum 1 maximum 10000 step 1 value 200 textsize 12
+      }
+      Fl_Value_Input maxRMSValueInput {
+        label {Target RMS}
+        callback {m_ThresholdLevelSetFilter->SetMaximumRMSError( o->value() );} selected
+        xywh {486 40 55 25} labelsize 12 maximum 10 step 0.01 value 0.2 textsize 12
       }
     }
   }

@@ -64,6 +64,14 @@ ThresholdSegmentationLevelSet
 
   m_ThresholdLevelSetFilter->AddObserver( itk::IterationEvent(), iterationCommand );      
 
+  /** synchronize the filter with the parameters in the GUI */
+  m_ThresholdLevelSetFilter->SetMaximumIterations( 
+          static_cast<int>( maxIterationsValueInput->value() ) );
+  m_ThresholdLevelSetFilter->SetLowerThreshold( lowerThresholdValueInput->value() );
+  m_ThresholdLevelSetFilter->SetUpperThreshold( upperThresholdValueInput->value() );
+  m_ThresholdLevelSetFilter->SetIsoSurfaceValue( isoSurfaceValueInput->value() );
+  m_ThresholdLevelSetFilter->SetMaximumRMSError( maxRMSValueInput->value() );
+
 }
 
 
@@ -266,12 +274,10 @@ void
 ThresholdSegmentationLevelSet
 ::SelectSeedPoint(float x, float y, float z)
 {
-  xSeedPointValueOutput->value( x );
-  ySeedPointValueOutput->value( y );
-  zSeedPointValueOutput->value( z );
 
   typedef SeedImageType::IndexType IndexType;
   IndexType seed;
+
   seed[0] = static_cast<IndexType::IndexValueType>( x );
   seed[1] = static_cast<IndexType::IndexValueType>( y );
   seed[2] = static_cast<IndexType::IndexValueType>( z );
