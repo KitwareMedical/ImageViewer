@@ -72,6 +72,7 @@ public:
   // Pass modified message to itk filter
   void Modified()
   {
+    this->Superclass::Modified();
     if (this->m_Process)
       {
       m_Process->Modified();
@@ -189,7 +190,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.6 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.7 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
