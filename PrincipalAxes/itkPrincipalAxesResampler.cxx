@@ -107,13 +107,18 @@ main(int argc, char *argv[])
     /* Allocate an image object to store the input file in */
     ImageIndexType base = {{0,0,0}};
     ImageSizeType  size = {{ImageWidth, ImageHeight, NumberOfSlices}};
+    double spacing[3] = {1.0, 0.9375, 0.9375};   // Pixel size
+    double origin [3] = {0.0, 0.0, 0.0};         // Location of (0,0,0) pixel
     ImageType::Pointer image = ImageType::New();
     ImageRegionType region;
     region.SetIndex(base);
     region.SetSize(size);
     image->SetLargestPossibleRegion(region);
     image->SetBufferedRegion(region);
+    image->SetRequestedRegion(region);
     image->Allocate();
+    image->SetOrigin(origin);
+    image->SetSpacing(spacing);
 
     /* Read the image file into an itkImage object */
     /* FIXME: Find or write Insightful tools for this */
@@ -122,6 +127,7 @@ main(int argc, char *argv[])
     unsigned long point[3];      // Location of current pixel
     PixelType *buff = new PixelType[ImageWidth];  // Input/output buffer
     PixelType value;             // Value of pixel
+    PixelType maxval = 0;        // Maximum pixel value in image
     size_t count;
     for (long slice = 0; slice < NumberOfSlices; slice++) {
         point[2] = slice;
@@ -140,9 +146,15 @@ main(int argc, char *argv[])
                 point[0] = col;
                 index.SetIndex(point);
                 image->SetPixel(index, buff[col]);
+                if (buff[col] > maxval)
+                    maxval = buff[col];
             }
         }
     }
+
+    /* Print the maximum pixel value found.  (This is useful for detecting
+       all-zero images, which confuse the moments calculation.) */
+    std::cout << "   Max pixel value: " << maxval << std::endl;
 
     /* Close the input file */
     fclose(infile);
