@@ -460,7 +460,6 @@ void
 SurfaceGeneratorBase
 ::Save(void) const
 {
-  const char * filename = fl_file_chooser("","","");
 
 }
 
