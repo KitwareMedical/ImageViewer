@@ -43,7 +43,7 @@ ITKCommon
 ITKNumerics
 VXLNumerics
 ITKBasicFilters 
-MetaImageIO
+ITKIO
 IView
 FltkImageViewer
 ${FLTK_LIBRARY}
