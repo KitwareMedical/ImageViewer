@@ -121,8 +121,9 @@ void PrintElementCoordinates(SolverHyperbolic& S, char comment, ofstream& of, in
 
       // FIXME: this will generate errors in IDL - needs to be comma-delimited
       Element::VectorType nc = (*e)->GetNodeCoordinates(n);
-      //of << comment << "node " << n << " = " << nc << std::endl;
+
       for (unsigned int d=0, dof; ( dof = (*e)->GetNode(n)->GetDegreeOfFreedom(d) ) != Element::InvalidDegreeOfFreedomID; d++) {
+  std::cout << S.GetSolution(dof) << std::endl;
         nc[d] += S.GetSolution(dof);
       }
       of << nc;
@@ -191,25 +192,18 @@ int main(int ac, char** av)
   // Number of solver iterations
   int niter = 100;
 
-  // Choose a linear system wrapper
-  int w = 0;
+  // Choose a linear system wrapper (0 - sparse VNL, 1 - dense VNL, 2 - Itpack)
+  int w = 2;  
 
   // Output comments and file extension
   char comment;
   char* outfile = new char[strlen(outpath)+20];
-  if (MATLAB_OUTPUT) { 
-    comment = MATLAB_COMMENT;
-    strcpy(outfile, outpath);
-    strcat(outfile, "shout.m");
-  }
-  else if (IDL_OUTPUT) { 
-    comment = IDL_COMMENT; 
-    strcpy(outfile, outpath);
-    strcat(outfile, "shout.pro");
-  }
-  else { 
-    comment = DEFAULT_COMMENT; 
-  }
+  if (MATLAB_OUTPUT) { comment = MATLAB_COMMENT; }
+  else if (IDL_OUTPUT) { comment = IDL_COMMENT;  }
+  else { comment = DEFAULT_COMMENT; }
+
+  strcpy(outfile, outpath);
+  strcat(outfile, "shout.data");
 
   if (ac < 2)
   // Display the menu
@@ -275,7 +269,7 @@ int main(int ac, char** av)
 
     std::cout << comment << "Solver()" << std::endl;
     SolverHyperbolic SH;
-    SH.SetTimeStep(.5);
+    SH.SetTimeStep(.05);
 
     std::cout << comment << "Read()" << std::endl;
     SH.Read(f);
@@ -325,16 +319,33 @@ int main(int ac, char** av)
       return EXIT_FAILURE;
     }
     
-    // Print the number of iterations to the file
-    of << "niter = " << niter << ";" << std::endl << std::endl;
     
-    for (int nit = 0; nit < niter; nit++) {
-      //std::cout << comment << "AssembleF()" << std::endl;
-      SH.AssembleF();            // Assemble the global load vector F
+    // Create the 4D storage for the element coordinates
+    Solver::ElementArray::iterator elit = SH.el.begin();
+    unsigned char nelems = SH.el.size();
+    unsigned char nndel = (*elit)->GetNumberOfNodes();
+    unsigned char ndof = (*elit)->GetNumberOfDegreesOfFreedomPerNode();
 
-      //std::cout << comment << "Solver::Solve()"<< std::endl;
+    of << static_cast<unsigned char>(niter) << nelems << nndel << ndof;
+
+    for (int nit = 0; nit < niter; nit++) {
+      SH.AssembleF();            // Assemble the global load vector F
       SH.Solve();                // Iteratively solve the system Mu'' + Cu' + Ku=F for u
-    
+
+      int ctr = 0;
+      for (Solver::ElementArray::iterator ee = SH.el.begin(); ee != SH.el.end(); ee++) {
+  for (unsigned int n=0; n < (*ee)->GetNumberOfNodes(); n++) {
+    Element::VectorType nc = (*ee)->GetNode(n)->GetCoordinates();
+    for (unsigned int dof = 0; dof < (*ee)->GetNumberOfDegreesOfFreedomPerNode(); dof++) {
+      double ans = nc[dof] + SH.GetSolution((*ee)->GetNode(n)->GetDegreeOfFreedom(dof));
+      for (unsigned i = 0; i < sizeof(double); i++) {
+        of << reinterpret_cast<unsigned char*>(&ans)[i];
+      }
+    }
+  }
+  ctr++;
+      }
+
       std::cout << comment << " Iteration " << nit << std::endl;
 #if DEBUG_FEM_TESTS
       PrintK(SH, comment, of);
@@ -342,10 +353,16 @@ int main(int ac, char** av)
 #endif
 
 #if OUTPUT
-      PrintElementCoordinates(SH, comment, of, nit);
+      //PrintElementCoordinates(SH, comment, of, nit);
 #endif
     }
 
+#if OUTPUT
+//     for (unsigned int n=0; n < (nelems*niter*nndel*ndof*sizeof(e[0][0][0][0])); n++) {
+//       of << reinterpret_cast<unsigned char*>(&e[0][0][0][0])[n];
+//     }
+#endif
+    
 // #if OUTPUT
 //    PrintNodalCoordinates(SH, comment, of);
 //    PrintElementCoordinates(SH, comment, of);
