@@ -22,9 +22,11 @@
 * See the class definition for details...
 */
 
-#include<itkImage.h>
-#include<fltkUtils.h>
-#include<list>
+#include <itkImage.h>
+#include <fltkUtils.h>
+#include <list>
+#include <FL/fl_file_chooser.H>
+#include <fstream>
 
 using namespace itk;
 
@@ -337,6 +339,18 @@ template <class imType>
     
     void  clearClickedPointsStored(){cClickedPoints.clear();}
     
+    void  saveClickedPointsStored() {
+      const char * filename = fl_file_chooser("Please select a file name","*.*","");
+      std::ofstream fpoints( filename );
+      std::list< ClickPoint >::const_iterator point = cClickedPoints.begin();
+      while( point != cClickedPoints.end() )
+        {
+        fpoints << point->x << "  " << point->y << "  " << point->z << std::endl;
+        ++point;
+        }
+      fpoints.close();
+      };
+
     void            boxMin(float minX, float minY, float minZ);
     virtual void    boxMax(float maxX, float maxY, float maxZ);
     void            clickBoxCallBack(
@@ -1691,29 +1705,29 @@ int SliceView<imType>::handle(int event)
               this->update();
               break;
             }
-          return 1;
-          break;
-            case 'q':
+            return 1;
+            break;
+          case 'q':
               iwMax(cIWMax-(float)0.02*(cDataMax-cDataMin));
               this->update();
               return 1;
               break;
-            case 'w':
+          case 'w':
               iwMax(cIWMax+(float)0.02*(cDataMax-cDataMin));
               this->update();
               return 1;
               break;
-            case 'a':
+          case 'a':
               iwMin(cIWMin-(float)0.02*(cDataMax-cDataMin));
               this->update();
               return 1;
               break;
-            case 's':
+          case 's':
               iwMin(cIWMin+(float)0.02*(cDataMax-cDataMin));
               this->update();
               return 1;
               break;
-            case 'i':
+          case 'i':
               {
               int newY;
               if(cFlipY[cWinOrientation])
@@ -1726,7 +1740,7 @@ int SliceView<imType>::handle(int event)
               return 1;
               break;
               }
-            case 'm':
+          case 'm':
               {
               int newY;
               if(cFlipY[cWinOrientation])
@@ -1739,7 +1753,7 @@ int SliceView<imType>::handle(int event)
               return 1;
               break;
               }
-            case 'j':
+          case 'j':
               {
               int newX;
               if(cFlipX[cWinOrientation])
@@ -1752,7 +1766,7 @@ int SliceView<imType>::handle(int event)
               return 1;
               break;
               }
-            case 'k':
+          case 'k':
               {
               int newX;
               if(cFlipX[cWinOrientation])
@@ -1765,37 +1779,41 @@ int SliceView<imType>::handle(int event)
               return 1;
               break;
               }
-            case 't':
+          case 't':
               Transpose(!cTranspose[cWinOrientation]);
               this->update();
               return 1;
               break;
-            case 'A':
+          case 'A':
               cViewAxisLabel = !cViewAxisLabel;
               this->update();
               return 1;
               break;
-            case 'C':
+          case 'C':
               cViewCrosshairs = !cViewCrosshairs;
               this->update();
               return 1;
               break;
-            case 'V':
+          case 'V':
               cViewValue = !cViewValue;
               this->update();
               return 1;
               break;
-            case 'D':
+          case 'D':
               cViewDetails = !cViewDetails;
               this->update();
               return 1;
               break;
-            case 'O':
+          case 'O':
               cViewOverlayData = !cViewOverlayData;
               this->update();
               return 1;
               break;
-            case 'h':
+          case 'p':
+              this->saveClickedPointsStored();
+              return 1;
+              break;
+          case 'h':
             ifuShowText(" \
 SliceViewer\n \
 ===========\n \
@@ -1838,6 +1856,8 @@ Options: (press a key in the window)\n \
   I - View image values as the user clicks in the window\n \
   D - View image details as an overlay on the image\n \
   O - View a color overlay (application dependent)\n \
+  \n \
+  p - Save the clicked points in a file \n \
   \n \
   l - Toggle how the data is the window is viewed:\n \
         Modes cycle between the following views: \n \
