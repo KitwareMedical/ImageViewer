@@ -92,8 +92,8 @@ public:
   typedef std::vector<DoubleMatrixType> DoubleMatrixArrayType; 
 
   /** Array of strings */
-  typedef typename std::string                   StringType; 
-  typedef typename std::vector< StringType >     StringVectorType; 
+  typedef std::string                   StringType; 
+  typedef std::vector< StringType >     StringVectorType; 
 
   /** Set IBSR images directory. */
   itkSetStringMacro( ImageDirectoryName );
