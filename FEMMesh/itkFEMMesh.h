@@ -59,7 +59,6 @@ public:
   /** Hold on to the type information specified by the template parameters. */
   typedef typename Superclass::MeshTraits                    MeshTraits;
   typedef typename Superclass::CellTraits                    CellTraits;
-  typedef typename Superclass::CellMultiVisitorType          CellMultiVisitorType;
   typedef typename Superclass::CellsContainer                CellsContainer;
   typedef typename Superclass::CellIdentifier                CellIdentifier;
   typedef typename Superclass::CellIdentifier                ElementIdentifier;
@@ -75,15 +74,16 @@ public:
   typedef ElementBaseType::Pointer                                ElementBasePointer;
   typedef VectorContainer< CellIdentifier , ElementBasePointer  > ElementsContainer;
   typedef ElementsContainer::Iterator                             ElementsContainerIterator;
+  typedef ElementBaseType::MultiVisitor                           ElementMultiVisitorType;
  
   itkGetObjectMacro( ElementsContainer, ElementsContainer );
   itkSetObjectMacro( ElementsContainer, ElementsContainer );
 
 
-  /** This method iterates over all the cells in the mesh and has
-   *  each cell Accept the MultiVisitor. See MultiVisitor for more 
+  /** This method iterates over all the element in the FEMMesh and has
+   *  each element Accept the MultiVisitor. See MultiVisitor for more 
    *  information.  (Note, this follows the Visitor Design Pattern.) */
-  virtual void Accept(CellMultiVisitorType* mv);
+  virtual void Accept(ElementMultiVisitorType* mv);
 
 
 protected:

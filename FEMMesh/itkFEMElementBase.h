@@ -21,6 +21,22 @@
 
 
 #include "vnl/vnl_matrix.h"
+#include "itkFEMElementVisitor.h"
+
+
+// Define a macro for ElementsBase sub-classes to use
+// to define the Accept and GetTopologyId virtuals used
+// by the MultiVisitor class
+#define itkElementVisitMacro(TopologyId) \
+  static int GetTopologyId() {return TopologyId;}\
+  virtual void Accept(unsigned long elementid, typename FEMElementBase< TFEMMesh >::MultiVisitor* mv)\
+    {\
+      FEMElementVisitor<TFEMMesh>::Pointer v = mv->GetVisitor(TopologyId);\
+      if(v)\
+        {\
+        v->VisitFromElement(elementid,this);\
+        }\
+    }
 
 
 namespace itk {
@@ -40,8 +56,6 @@ public:
   /** Standard class typedefs. */
   typedef FEMElementBase            Self;
   typedef LightObject               Superclass;
-//  typedef SmartPointer<Self>        Pointer;
-//  typedef SmartPointer<const Self>  ConstPointer;
   typedef        Self  *   Pointer;
   typedef  const Self  *   ConstPointer;
 
@@ -51,7 +65,7 @@ public:
 
 
   /** Run-time type information (and related methods). */
- itkTypeMacro(Image, ImageBase);
+  itkTypeMacro(Image, ImageBase);
  
   // this type is used to represent components of the load
   // and the Stiffness matrix
@@ -66,6 +80,11 @@ public:
   /** Type of the displacement field at each point */
   typedef TFEMMesh                                  FEMMeshType;
   typedef typename FEMMeshType::PixelType           DisplacementType;
+
+  /**  Cell Visitor interfaces */
+  enum CellType {VERTEX_ELEMENT=0, LINE_ELEMENT, TRIANGLE_ELEMENT, 
+        QUADRILATERAL_ELEMENT, POLYGON_ELEMENT, TETRAHEDRON_ELEMENT, 
+        HEXAHEDRON_ELEMENT, LAST_ITK_ELEMENT, MAX_ITK_ELEMENTS=255};
 
   /**
    * Return the number of components of the Displacement field
@@ -94,10 +113,70 @@ public:
   virtual MatrixType GetMassMatrix( void ) const 
     { return MatrixType(); }
 
+  /** \brief A visitor that can visit different cell types in a mesh.
+   * CellInterfaceVisitor instances can be registered for each
+   * type of cell that needs to be visited.
+   *
+   * \ingroup MeshAccess */
+  class MultiVisitor : public LightObject
+  { 
+  public:
+    /**  Visitor type, because VisualC++ 6.0 does not like
+     *  Visitor being a nested type of CellInterfaceVisitor   */
+    typedef FEMElementVisitor< TFEMMesh > VisitorType;
 
-  /** This must be implemented by all sub-classes of CellInterface */
-  typedef typename FEMMeshType::CellMultiVisitorType    CellMultiVisitorType;
-  virtual void Accept(unsigned long cellId, CellMultiVisitorType * )= 0; 
+    /** Standard class typedefs.   */
+    typedef MultiVisitor       Self;
+    typedef SmartPointer<Self>  Pointer;
+      
+    /** Method for creation through the object factory.   */
+    //itkNewMacro(Self);
+    static  Pointer New(void) { return new Self; }
+  
+    /** Run-time type information (and related methods).   */
+    itkTypeMacro(MultiVisitor,LightObject);
+  
+    /** Typedefs for the visitor class.   */
+    typedef typename VisitorType::Pointer VisitorPointer;
+
+  public:
+    VisitorPointer GetVisitor(int id)
+      {
+        if(id <= LAST_ITK_ELEMENT)
+          {
+          return m_Visitors[id];
+          }
+        else
+          {
+          std::map<int, VisitorType::Pointer>:: iterator pos = m_UserDefined.find(id);
+          if(pos != m_UserDefined.end())
+            {
+            return (*pos).second;
+            }
+          }
+        return 0;
+      }
+    void AddVisitor(VisitorType* v)
+      {
+        int id = v->GetElementTopologyId();
+        if(id <= LAST_ITK_ELEMENT)
+          {
+          m_Visitors[id] = v;
+          }
+        else
+          {
+          m_UserDefined.insert(std::map<int, VisitorPointer>::value_type(id,v));
+          }
+      }
+    ~MultiVisitor() {}
+  protected:
+    VisitorPointer m_Visitors[LAST_ITK_ELEMENT]; // fixed array set to the size from the enum
+    std::map<int,VisitorPointer> m_UserDefined;  // user defined element types go here
+  };
+
+
+  /** This must be implemented by all sub-classes of FEMElementBase */
+  virtual void Accept(unsigned long cellId, MultiVisitor * )= 0; 
   
 
 protected:

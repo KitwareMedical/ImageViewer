@@ -52,7 +52,7 @@ FEMMesh<TMesh>
 template <typename TMesh>
 void
 FEMMesh<TMesh>
-::Accept(CellMultiVisitorType* mv)
+::Accept( ElementMultiVisitorType* mv)
 {
   if(!m_ElementsContainer)
     {
@@ -61,7 +61,6 @@ FEMMesh<TMesh>
   for(ElementsContainerIterator i = m_ElementsContainer->Begin();
       i != m_ElementsContainer->End(); ++i)
     {
-//    if(i->Value().GetPointer())
     if( i->Value() )
       {
       i->Value()->Accept(i->Index(), mv);

@@ -34,8 +34,7 @@ namespace fem {
  * This element is defined by two points and a MaterialStandard object.
  */
 template < typename TFEMMesh >
-class FEMElementTriangleHeat : 
-        public FEMElementTriangle< TFEMMesh, 1 >
+class FEMElementTriangleHeat : public FEMElementTriangle< TFEMMesh >
 {
 
 public:
@@ -63,7 +62,7 @@ public:
   typedef typename BaseCellType::PointIdIterator      PointIdIterator;
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
 
-  typedef FEMElementTriangle< FEMMeshType, 1 >        Superclass;
+  typedef FEMElementTriangle< FEMMeshType  >              Superclass;
 
   typedef typename Superclass::MatrixType                 MatrixType;
   typedef typename Superclass::LoadsVectorType            LoadsVectorType;
@@ -74,8 +73,19 @@ public:
   typedef typename Superclass::DisplacementType           DisplacementType;
 
 
-  
+  /** Define the method to accept a visitor for this particular element type */
+  itkElementVisitMacro(TRIANGLE_ELEMENT);
+
+
   /**
+   * Return the number of components of the Displacement field
+   * also known as degrees of freedom (DOF) for a derived element class
+   */
+  virtual unsigned int GetNumberOfDisplacementComponents( void ) const 
+             { return 3; } // three points, one scalar per point 
+
+  
+    /**
    * Element stiffness matrix
    */
   MatrixType GetStiffnessMatrix( const FEMMeshType * mesh ) const
@@ -89,7 +99,7 @@ public:
 
     MatrixType stiffnessMatrix( NumberOfDisplacementComponents, NumberOfDisplacementComponents);
     
-    PointIdConstIterator Id = this->GetPointIds(); 
+    PointIdConstIterator Id = this->GetCell().GetPointIds(); 
     typename PointsContainer::ConstPointer points = mesh->GetPoints();
 
     PointType point0;

@@ -30,6 +30,7 @@
 #include "vtkTubeFilter.h"
 
 #include "vtkItkCellMultiVisitor.h"
+#include "vtkItkElementMultiVisitor.h"
 
 #include "itkNumericTraits.h"
 #include "itkCellInterfaceVisitor.h"
@@ -54,8 +55,6 @@ FEMMeshApplicationBase
   m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
   m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
   m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 20.0 ); 
-
-  m_FEMMesh = FEMMeshType::New();
 
   m_HeatSolver = HeatSolverType::New();
 
@@ -188,249 +187,6 @@ FEMMeshApplicationBase
 
 
 
-void
-FEMMeshApplicationBase
-::DisplayFEMMesh2(void)
-{
- 
-  typedef vtkItkCellMultiVisitor< 
-                              CellDataType, 
-                              CellTraits 
-                                            > 
-                                              VisitorType;
-
-  
-
-  // Define the Cell Visitor Types
-  typedef itk::CellInterfaceVisitorImplementation<
-                                              PointDataType,
-                                              CellTraits,
-                                              LineCellType,
-                                              VisitorType  
-                                                      >  LineVisitorType;
-
-
-  // Get the number of points in the mesh
-  const unsigned int numPoints = m_FEMMesh->GetNumberOfPoints();
-  if( numPoints == 0 )
-    {
-    itkGenericExceptionMacro(<<"Attempt to display a Mesh with no points !");
-    }
-    
-  // Create a vtkUnstructuredGrid
-  vtkUnstructuredGrid * vgrid = vtkUnstructuredGrid::New();
-
-  // Create the vtkPoints object and set the number of points
-  vtkPoints * vpoints = vtkPoints::New();
-  vpoints->SetNumberOfPoints(numPoints);
-
-  // iterate over all the points in the itk mesh filling in
-  // the vtkPoints object as we go
-  FEMMeshType::PointsContainer::Pointer points = m_FEMMesh->GetPoints();
-
-  for(FEMMeshType::PointsContainer::Iterator i = points->Begin();
-      i != points->End(); ++i)
-    {
-    // Get the point index from the point container iterator
-    int idx = i->Index();
-    // Set the vtk point at the index with the the coord array from itk
-    // itk returns a const pointer, but vtk is not const correct, so
-    // we have to use a const cast to get rid of the const
-    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetDataPointer()));
-    }
-  // Set the points on the vtk grid
-  vgrid->SetPoints(vpoints);
-  
-  // Now create the cells using the MulitVisitor
-  // 1. Create a MultiVisitor
-  CellMultiVisitorType::Pointer multiVisitor = CellMultiVisitorType::New();
-
-  // 2. Create a LineCell visitor
-  LineVisitorType::Pointer lineVisitor = LineVisitorType::New();
-
-  // 3. Set up the visitors
-  int vtkCellCount = 0; // running counter for current cell being inserted into vtk
-  int numCells = m_FEMMesh->GetNumberOfCells();
-
-  int *types = new int[numCells]; // type array for vtk 
-
-  // create vtk cells and estimate the size
-  vtkCellArray* cells = vtkCellArray::New();
-  cells->EstimateSize(numCells, 4);
-
-  // Set the TypeArray CellCount and CellArray for both visitors
-  lineVisitor->SetTypeArray( types );
-  lineVisitor->SetCellCounter( &vtkCellCount );
-  lineVisitor->SetCellArray( cells );
-
-  // add the visitors to the multivisitor
-  multiVisitor->AddVisitor( lineVisitor );
-
-  // Now ask the mesh to accept the multivisitor which
-  // will Call Visit for each cell in the mesh that matches the
-  // cell types of the visitors added to the MultiVisitor
-  m_FEMMesh->Accept( multiVisitor );
-  
-  // Now set the cells on the vtk grid with the type array and cell array
-  vgrid->SetCells( types, cells );
-  
-  // Clean up vtk objects (no vtkSmartPointer ... )
-  cells->Delete();
-  vpoints->Delete();
-
-
-  // connect the vtkUnstructuredGrid to a visualization Pipeline
-
-  // map to graphics library
-  vtkDataSetMapper * mapper = vtkDataSetMapper::New();
-  mapper->SetInput( vgrid  );
-
-  // actor coordinates geometry, properties, transformation
-  vtkActor * actor = vtkActor::New();
-  actor->SetMapper( mapper );
-  actor->GetProperty()->SetColor(0,0,1); // color blue
-
-  // add the actor to the scene
-  m_Renderer->AddActor( actor );
-
-  vgrid->Delete();
-  mapper->Delete();
-  actor->Delete();
-
-}
-
-
-
-
-
-
-void
-FEMMeshApplicationBase
-::CreateFEMMesh2(void)
-{
-
-  // Create the FEMMesh that will hold both the Geometric 
-  // and the Physical representation of the problem 
-  m_FEMMesh = FEMMeshType::New();
-
-
-
-  // In this section we create Points and the Nodes associated with them
-
-  // Start numbering points
-  PointIdentifierType pointId = 
-              itk::NumericTraits<PointIdentifierType>::Zero;
-
-
-  PointType           point;
-
-
-  // BTW we are making just a pyramid here
-
-  const float baseLength  = 10.0f;
-  const float a           = baseLength / 2.0f;
-
-  // First point of the base
-  point[0] = -a; 
-  point[1] = -a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  pointId++;
-
-  // Second point of the base
-  point[0] =  a; 
-  point[1] = -a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  pointId++;
-
-  // Third point of the base
-  point[0] =  a; 
-  point[1] =  a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  pointId++;
-
-  // Fourth point of the base
-  point[0] = -a; 
-  point[1] =  a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  pointId++;
-
-  // point at the top of the pyramid 
-  point[0] = 0.0;
-  point[1] = 0.0; 
-  point[2] = 10;
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  pointId++;
-
-
-
-  // Create the array of values to associate with the points.
-  // In this particular case we are using Vectors that represent
-  // displacementes in 3D.  It could be anything because this is 
-  // a template parameter for the mesh.
-  typedef FEMMeshType::PointDataContainer DisplacementsContainerType;
-  DisplacementsContainerType::Pointer displacementContainer = 
-                                        DisplacementsContainerType::New();
-
-  const unsigned int numberOfPoints = m_FEMMesh->GetNumberOfPoints();
-
-  PointIdentifierType displacementId = itk::NumericTraits< PointIdentifierType >::Zero;
-  displacementContainer->Reserve( numberOfPoints ); 
-  for(unsigned int p=0; p<numberOfPoints; p++) 
-    {
-    DisplacementType displacement;
-    displacement.Fill( itk::NumericTraits< DisplacementRepresentationType >::Zero );
-    displacementContainer->SetElement( displacementId, displacement );
-    ++displacementId;
-    }
-
-  m_FEMMesh->SetPointData( displacementContainer );
-
-
-  //-----------------------------------------------
-  // Now we can add Elements to the FEMMesh ...
-  //-----------------------------------------------
-
-  // For example a Bar2D type is defined here
-  typedef itk::fem::FEMElementBar2D< 
-                              FEMMeshType, 
-                              DisplacementDimension  >   ElementBarType;
-
-  //  Create the Bar
-  ElementBarType::Pointer bar1 = ElementBarType::New();
-
-  // Associate the Bar with two of the current points
-  bar1->SetPointId(0, 2 ); // associate first point with mesh point  #2
-  bar1->SetPointId(1, 3 ); // associate second point with mesh point #3
-
-  // Add the bar to the list of Elements. This is done by inserting the 
-  // Bar as a Cells in the mesh. The ElementBar derives from LineCell<>
-  // so its pointer is a valid derived class from CellInterface<>
-
-  CellIdentifierType cellId = itk::NumericTraits< CellIdentifierType >::Zero;
-  m_FEMMesh->SetCell( cellId++, bar1 ); 
-
-
-
-  this->DisplayFEMMesh();
-
-}
-
-
-
 
 void
 FEMMeshApplicationBase
@@ -532,17 +288,19 @@ FEMMeshApplicationBase
       const HeatPointIdentifier point2 =   x   + ( (y+1) * pointsPerRow );
       const HeatPointIdentifier point3 = (x+1) + ( (y+1) * pointsPerRow );
 
-      HeatElementType::Pointer cellA = HeatElementType::New();
-      cellA->SetPointId( 0, point0 );
-      cellA->SetPointId( 1, point1 );
-      cellA->SetPointId( 2, point3 );
-      elements->SetElement( elementId++, cellA );
+      HeatElementType::Pointer elementA = HeatElementType::New();
+      HeatElementType::BaseCellType & cellA = elementA->GetCell();
+      cellA.SetPointId( 0, point0 );
+      cellA.SetPointId( 1, point1 );
+      cellA.SetPointId( 2, point3 );
+      elements->SetElement( elementId++, elementA );
 
-      HeatElementType::Pointer cellB = HeatElementType::New();
-      cellB->SetPointId( 0, point0 );
-      cellB->SetPointId( 1, point3 );
-      cellB->SetPointId( 2, point2 );
-      elements->SetElement( elementId++, cellB );
+      HeatElementType::Pointer elementB = HeatElementType::New();
+      HeatElementType::BaseCellType & cellB = elementB->GetCell();
+      cellB.SetPointId( 0, point0 );
+      cellB.SetPointId( 1, point3 );
+      cellB.SetPointId( 2, point2 );
+      elements->SetElement( elementId++, elementB );
 
       }
     }
@@ -566,25 +324,16 @@ FEMMeshApplicationBase
 ::DisplayFEMMesh(void)
 {
 
-  const unsigned int degreesOfFreedomPerPoint = 1;
-  typedef itk::fem::FEMElementTriangle< 
-                        HeatMeshType, 
-                        degreesOfFreedomPerPoint >  HeatElementType;
+  typedef itk::fem::FEMElementTriangle< HeatMeshType >  HeatElementType;
  
-  typedef vtkItkCellMultiVisitor< 
-                              HeatSolverType::DisplacementType, 
-                              HeatMeshType::CellTraits 
-                                            > 
-                                              HeatVisitorType;
-
+  typedef vtkItkElementMultiVisitor< HeatMeshType >     HeatVisitorType;
   
 
   // Define the Cell Visitor Types
-  typedef itk::CellInterfaceVisitorImplementation<
-                                              HeatSolverType::DisplacementType,
-                                              HeatElementType::CellTraits,
-                                              HeatElementType,
-                                              HeatVisitorType  
+  typedef itk::fem::FEMElementVisitorImplementation<
+                                          HeatMeshType,
+                                          HeatElementType,
+                                          HeatVisitorType  
                                                       >  HeatTriangleVisitorType;
 
   // Get the number of points in the mesh
@@ -625,8 +374,8 @@ FEMMeshApplicationBase
 
   // Now create the cells using the MulitVisitor
   // 1. Create a MultiVisitor
-  typedef HeatMeshType::CellMultiVisitorType       HeatCellMultiVisitorType;
-  HeatCellMultiVisitorType::Pointer multiVisitor = HeatCellMultiVisitorType::New();
+  typedef HeatMeshType::ElementMultiVisitorType       HeatCellMultiVisitorType;
+  HeatCellMultiVisitorType::Pointer multiVisitor    = HeatCellMultiVisitorType::New();
 
   // 2. Create a LineCell visitor
   HeatTriangleVisitorType::Pointer triangleVisitor = HeatTriangleVisitorType::New();
@@ -679,8 +428,9 @@ FEMMeshApplicationBase
   // add the actor to the scene
   m_Renderer->AddActor( actor );
 
-  vgrid->Delete();
+
   mapper->Delete();
   actor->Delete();
+  vgrid->Delete();
 
 }

@@ -36,19 +36,16 @@ namespace fem {
  *
  * This element is defined by two points and a MaterialStandard object.
  */
-template < typename TFEMMesh, unsigned int NDisplacementComponentsPerPoint >
+template < typename TFEMMesh >
 class FEMElementTriangle : 
         public FEMElement< TriangleCell < typename TFEMMesh::PixelType,
                                           typename TFEMMesh::CellTraits >,
-                           TFEMMesh,
-                           NDisplacementComponentsPerPoint >
+                           TFEMMesh >
 {
 
 public:
 
-  typedef FEMElementTriangle< 
-                TFEMMesh, 
-                NDisplacementComponentsPerPoint >  Self;
+  typedef FEMElementTriangle< TFEMMesh >  Self;
 
   typedef         Self * Pointer;
   typedef const   Self * ConstPointer;
@@ -72,9 +69,7 @@ public:
   typedef typename BaseCellType::PointIdIterator      PointIdIterator;
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
 
-  typedef FEMElement< BaseCellType, 
-                      FEMMeshType,
-                      NDisplacementComponentsPerPoint >   Superclass;
+  typedef FEMElement< BaseCellType, FEMMeshType >         Superclass;
 
   typedef typename Superclass::MatrixType                 MatrixType;
   typedef typename Superclass::LoadsVectorType            LoadsVectorType;
@@ -91,10 +86,8 @@ public:
    */
   LoadsVectorType GetExternalLoads(LoadElement * l) const;
 
-  /** This must be implemented by all sub-classes of CellInterface */
-  typedef typename FEMMeshType::CellMultiVisitorType    CellMultiVisitorType;
-  virtual void Accept(unsigned long cellId, CellMultiVisitorType* visitor) 
-      { this->BaseCellType::Accept( cellId, visitor ); }
+  /** Declare the methods for visitors */
+  itkElementVisitMacro(TRIANGLE_ELEMENT);
 
 protected:
   /** Default constructor of an element */

@@ -31,11 +31,8 @@ namespace fem {
  * \brief Base class for Elements in a FEM system.
  * 
  */
-template <    typename TCell, 
-              typename TFEMMesh, 
-              unsigned int NDisplacementComponentsPerPoint  >
-class FEMElement : public TCell, 
-                   public FEMElementBase< TFEMMesh >
+template <    typename TCell, typename TFEMMesh > 
+class FEMElement : public FEMElementBase< TFEMMesh >
 {
 
 public:
@@ -55,7 +52,7 @@ public:
   // note that we cannot use "CellType" here because there 
   // is already an enum called "CellType" defined in CellInterface<>
   typedef TCell                                     BaseCellType;
-  typedef BaseCellType                              Superclass;
+  typedef FEMElementBase< TFEMMesh >                Superclass;
 
   typedef typename FEMMeshType::PointsContainer     PointsContainer;
   typedef typename FEMMeshType::PointDataContainer  PointDataContainer;
@@ -63,25 +60,32 @@ public:
   typedef typename FEMMeshType::PointIdentifier     PointIdentifier;
   
 
-  /**  Number of components of the displacemente field at one point */
-  enum { NumberOfDisplacementComponentsPerPoint = NDisplacementComponentsPerPoint };
-
-  /**
-   * Return the number of components of the Displacement field
-   * also known as degrees of freedom (DOF) for a derived element class
-   */
-  unsigned int GetNumberOfDisplacementComponents( void ) const
-    { return this->GetNumberOfPoints() * NumberOfDisplacementComponentsPerPoint; }
-
-
   /**
    *  The Cell return the displacement associated with the ith point
    *  of its list of points
    */
   const DisplacementType & 
      GetDisplacement(unsigned int i,FEMMeshType *mesh ) const
-      { const PointIdentifier Id = *( this->GetPointIds() + i );
+      { const PointIdentifier Id = *( m_Cell.GetPointIds() + i );
         return mesh->GetPointData()->ElementAt( Id ); }
+
+  /** Return a reference to the internal cell of the Element 
+      Note that the Element *has* a Cell as an ivar 
+      \sa GetCellPointer   */
+  BaseCellType & GetCell(void) 
+      { return m_Cell; }
+  const BaseCellType & GetCell(void) const
+      { return m_Cell; }
+
+  /** Return a pointer to the internal cell of the Element 
+      Note that the Element *has* a Cell as an ivar not just a pointer    
+      \sa GetCell                                  */
+  BaseCellType * GetCellPointer(void) 
+      { return & m_Cell; }
+
+protected:
+
+  BaseCellType        m_Cell;
 
 
 };

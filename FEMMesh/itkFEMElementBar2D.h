@@ -35,17 +35,16 @@ namespace fem {
  *
  * This element is defined by two points and a MaterialStandard object.
  */
-template < typename TFEMMesh, unsigned int NDisplacementComponentsPerPoint >
+template < typename TFEMMesh >
 class FEMElementBar2D : 
         public FEMElement< LineCell < typename TFEMMesh::PixelType,
                                       typename TFEMMesh::CellTraits >,
-                           TFEMMesh,
-                           NDisplacementComponentsPerPoint >
+                           TFEMMesh >
 {
 
 public:
 
-  typedef  FEMElementBar2D< TFEMMesh, NDisplacementComponentsPerPoint > Self;
+  typedef  FEMElementBar2D< TFEMMesh > Self;
   typedef         Self * Pointer;
   typedef  const  Self * ConstPointer;
   
@@ -55,7 +54,7 @@ public:
    * Number of Components of the Displacement Field
    * (also known as number of degrees of freedom)
    */
-  enum { NumberOfDisplacementComponents = 4 };
+  enum { NumberOfDisplacementFieldComponents = 4 };
 
   typedef TFEMMesh                                FEMMeshType;
   typedef typename FEMMeshType::CellTraits        CellTraits;
@@ -70,8 +69,7 @@ public:
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
 
   typedef FEMElement< BaseCellType, 
-                      FEMMeshType,
-                      NDisplacementComponentsPerPoint >   Superclass;
+                      FEMMeshType >                       Superclass;
 
   typedef typename Superclass::MatrixType                 MatrixType;
   typedef typename Superclass::LoadsVectorType            LoadsVectorType;
@@ -82,14 +80,25 @@ public:
   typedef typename Superclass::DisplacementType           DisplacementType;
 
 
-  
+  /**
+   * Return the number of components of the Displacement field
+   * also known as degrees of freedom (DOF) for a derived element class
+   */
+  unsigned int GetNumberOfDisplacementComponents( void ) const 
+                                                            { return 4; }
+
+  /** Define the Accept method for the visitor */
+  itkElementVisitMacro(LINE_ELEMENT);
+
+
   /**
    * Element stiffness matrix
    */
   MatrixType GetStiffnessMatrix( const FEMMeshType * mesh ) const
   {
 
-    MatrixType stiffnessMatrix( NumberOfDisplacementComponents, NumberOfDisplacementComponents);
+    MatrixType stiffnessMatrix( NumberOfDisplacementFieldComponents, 
+                                NumberOfDisplacementFieldComponents  );
     
     PointIdConstIterator Id = this->GetPointIds(); 
     typename PointsContainer::ConstPointer points = mesh->GetPoints();
@@ -116,10 +125,6 @@ public:
   LoadsVectorType GetExternalLoads(LoadElement * l) const;
 
 
-  /** This must be implemented by all sub-classes of CellInterface */
-  typedef typename FEMMeshType::CellMultiVisitorType    CellMultiVisitorType;
-  virtual void Accept(unsigned long cellId, CellMultiVisitorType* visitor) 
-      { this->BaseCellType::Accept( cellId, visitor ); }
   
 protected:
   /** Default constructor of an element */
