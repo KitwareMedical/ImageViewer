@@ -18,8 +18,8 @@ set DEF_VV_VAR 2.0
 set DEF_ROT_STEP 0.005
 set DEF_TRA_STEP 100
 
-set GEVTK_DATA_ROOT c:/lorensen/GEVTKData
 set GEVTK_DATA_ROOT /projects/vtk/GEVTKproduction/GEVTKData
+set GEVTK_DATA_ROOT c:/lorensen/GEVTKData
 #
 # Read in the test data.
 #
@@ -76,9 +76,9 @@ vtkITKNormalizeImageFilter normalizeTarget
 vtkITKMutualInformationTransform mutual
     mutual SetSourceImage [normalizeSource GetOutput]
     mutual SetTargetImage [normalizeTarget GetOutput]
-    mutual SetNumberOfIterations 10
+    mutual SetNumberOfIterations 50
     mutual SetNumberOfSamples 50
-    mutual SetLearningRate .001
+    mutual SetLearningRate .01
     mutual SetTranslateScale 64
 
 vtkImageReslice newSlicer
@@ -97,7 +97,7 @@ vtkImageCheckerboard checkers
 
 vtkImageMapper imageMapperSource
     imageMapperSource SetInput [checkers GetOutput]
-    imageMapperSource SetZSlice 10
+    imageMapperSource SetZSlice 45
     imageMapperSource SetColorWindow $colorWindow
     imageMapperSource SetColorLevel $colorLevel
 
@@ -119,3 +119,19 @@ iren Initialize
 renWin Render
 # Prevent the tk window from showing up then start the event loop
 wm withdraw .
+vtkTransform a
+proc go {m n} {
+  shrinkSource SetShrinkFactors $n $n 1
+  shrinkSource SetShrinkFactors $n $n 1
+    if {$n == 4} { set l .01 }
+    if {$n == 3} { set l .05 }
+    if {$n == 2} { set l .001 }
+    if {$n == 1} { set l .005 }
+    mutual SetLearningRate $l
+    for {set i 0} { $i < $m } {incr i} {
+    mutual Modified
+    renWin Render
+    eval a SetMatrix [mutual GetMatrix]
+        puts "[a GetOrientation]"
+    }
+}
