@@ -63,8 +63,9 @@ public:
   typedef typename ImageType::PixelType PixelType;
 
   /** Set the input image. */
-  itkSetObjectMacro( InputImage, ImageType );
-  
+  virtual void SetInputImage( const ImageType * ptr )
+    { m_InputImage = ptr; }
+      
   /** Set the filename. */
   itkSetStringMacro( FileName );
 
@@ -87,7 +88,7 @@ private:
   std::string  m_FileName;
   bool         m_BigEndian;
 
-  typename ImageType::Pointer m_InputImage;
+  typename ImageType::ConstPointer m_InputImage;
 
 };
 
