@@ -17,7 +17,7 @@
 #include <itkPhysicalImage.h>
 
 // Multifunction slice-based display class
-#include <DisplayLib/IViewGUIBase.h>
+#include <IViewGUIBase.h>
 
 //include <ImageIOLib/FileSaveGUI.h>
 #include <deque>
@@ -25,16 +25,13 @@
 //FileIO
 #include <IViewUtils.h>
 
-using namespace std;
-using namespace itk;
-
 
 typedef PhysicalImage<float,3> ImageType;
 typedef PhysicalImage<unsigned char,3> OverlayType;
 
-typedef deque<ImageType::Pointer> DequeOfImages;
+typedef std::deque<ImageType::Pointer> DequeOfImages;
 
-typedef deque<OverlayType::Pointer> DequeOfOverlays;
+typedef std::deque<OverlayType::Pointer> DequeOfOverlays;
 
 
 
@@ -165,7 +162,7 @@ void tkRemoveCB(void)
     UpdateDisplayWindow();
     }
   else
-    cerr << "Error: can't delete only image in set\n";
+    std::cerr << "Error: can't delete only image in set" << std::endl;
 }
 
 void tkSaveCB(void)
