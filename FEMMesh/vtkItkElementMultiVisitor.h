@@ -26,7 +26,9 @@
 #include "vtkTriangle.h"
 
 
+#include "itkFEMElementLine.h"
 #include "itkFEMElementTriangle.h"
+#include "itkFEMElementQuadrilateral.h"
 
 
 
@@ -47,7 +49,9 @@ class vtkItkElementMultiVisitor
 public:
 
   // typedef the itkElements we are interested in
-  typedef itk::fem::FEMElementTriangle< TMesh >       TriangleElementType;
+  typedef itk::fem::FEMElementLine< TMesh >             LineElementType;
+  typedef itk::fem::FEMElementTriangle< TMesh >         TriangleElementType;
+  typedef itk::fem::FEMElementQuadrilateral< TMesh >    QuadrilateralElementType;
 
 
   // Set the vtkElementArray that will be constructed
@@ -77,6 +81,25 @@ public:
   //
 
 
+  // Visit a line and create the VTK_LINE cell 
+  void Visit(unsigned long cellId, LineElementType * t)
+    {
+    vtkIdType numberOfPoints = 2;
+    vtkIdType pointIds[numberOfPoints];
+    typedef TriangleElementType::BaseCellType CellType;
+    CellType & cell = t->GetCell();
+    CellType::PointIdConstIterator pts = cell.PointIdsBegin();
+    for(vtkIdType i=0; i<numberOfPoints; i++, pts++)
+      {
+      pointIds[i] = *pts;
+      }
+    m_Cells->InsertNextCell( numberOfPoints, pointIds ); 
+    m_TypeArray[*m_LastCell] = VTK_LINE;
+    (*m_LastCell)++;
+    }
+
+
+
   // Visit a line and create the VTK_TRIANGLE cell 
   void Visit(unsigned long cellId, TriangleElementType * t)
     {
@@ -93,6 +116,28 @@ public:
     m_TypeArray[*m_LastCell] = VTK_TRIANGLE;
     (*m_LastCell)++;
     }
+
+
+
+  // Visit a line and create the VTK_QUAD cell 
+  void Visit(unsigned long cellId, QuadrilateralElementType * t)
+    {
+    vtkIdType numberOfPoints = 4;
+    vtkIdType pointIds[numberOfPoints];
+    typedef QuadrilateralElementType::BaseCellType CellType;
+    CellType & cell = t->GetCell();
+    CellType::PointIdConstIterator pts = cell.PointIdsBegin();
+    for(vtkIdType i=0; i<numberOfPoints; i++, pts++)
+      {
+      pointIds[i] = *pts;
+      }
+    m_Cells->InsertNextCell( numberOfPoints, pointIds ); 
+    m_TypeArray[*m_LastCell] = VTK_QUAD;
+    (*m_LastCell)++;
+    }
+
+
+
 
 
 };
