@@ -163,7 +163,7 @@ Slice3DDrawer<TImage>
   yScrollBar->linesize( 1 );
   zScrollBar->linesize( 1 );
 
-  typedef  itk::SimpleImageRegionIterator< ImageType > IteratorType;
+  typedef  itk::ImageRegionIteratorWithIndex< ImageType > IteratorType;
 
   IteratorType it( m_Image, m_Image->GetRequestedRegion() );
 
