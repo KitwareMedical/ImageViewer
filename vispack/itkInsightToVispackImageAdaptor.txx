@@ -29,7 +29,7 @@ InsightToVispackImageAdaptor<TInputImage>
   TPixelScalarValueType* outputIterator
     = this->GetOutput()->repRef()->bufferRef();
   
-  for (it.Begin() ; !it.IsAtEnd(); ++it, ++outputIterator)
+  for (it = it.Begin() ; !it.IsAtEnd(); ++it, ++outputIterator)
     {
       *outputIterator =  ScalarTraits<typename TInputImage::PixelType>
         ::GetScalar( *it );

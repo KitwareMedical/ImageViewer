@@ -43,8 +43,10 @@ public:
   typedef SmartPointer<Self> Pointer;
 
   /**
-   * Typename typedef for the output image scalar pixel type
+   * Typename typedef for the output image scalar & vector pixel type
    */
+  typedef typename TOutputImage::VectorValueType  TPixelVectorValueType;
+
   typedef typename TOutputImage::ScalarValueType  TPixelScalarValueType;
 
   /** 
@@ -74,6 +76,22 @@ public:
     return m_Input;
   }
 
+  /**
+   *
+   */
+  virtual unsigned int GetHeight()
+  {
+    return m_Input->height();
+  }
+
+  /**
+   *
+   */
+  virtual unsigned int GetWidth()
+  {
+    return m_Input->width();
+  }
+  
 protected:
   VispackToInsightImageAdaptor() {}
   ~VispackToInsightImageAdaptor() {}
@@ -84,7 +102,6 @@ protected:
 
 private:
   VISImage<TPixelScalarValueType> *m_Input;
-  
 };
 
 

@@ -21,13 +21,14 @@ VispackToInsightImageAdaptor<TOutputImage>
 ::GenerateOutputInformation()
 {
   cout << "VispackToInsightImageAdaptor::GenerateOutputInformation" << endl;
+  cout << "input has address " << this->GetInput() << endl;
   TOutputImage *output;
   typename TOutputImage::Index index = {0};
   typename TOutputImage::Size size;
   float m_Spacing[2];
   float m_Origin[2];
-  size[0] = this->GetInput()->width();
-  size[1] = this->GetInput()->height();  
+  size[0] = this->GetWidth();
+  size[1] = this->GetHeight();  
 
   cout << "Size[0] = " << size[0] << endl;
   cout << "Size[1] = " << size[1] << endl;
@@ -74,8 +75,10 @@ VispackToInsightImageAdaptor<TOutputImage>
     = this->GetInput()->rep()->buffer();
   for ( ; !scalarIterator.IsAtEnd(); ++scalarIterator, ++inputIterator)
     {
-      ScalarTraits<typename TOutputImage::PixelType>::SetScalar(
-                                        *scalarIterator, *inputIterator);
+      //      ScalarTraits<typename TOutputImage::PixelType>::SetScalar(
+      //                                        *scalarIterator,
+      //                                        *inputIterator);
+      *scalarIterator = *inputIterator;
     }
 }
 } // end namespace itk
