@@ -20,6 +20,7 @@
 #include "itkMetaImageIOFactory.h"
 #include "itkPNGImageIOFactory.h"
 #include <FL/fl_file_chooser.H>
+#include <FL/fl_ask.H>
  
 
 
@@ -282,7 +283,7 @@ ceExtractorConsole
   {
     ceExtractorConsoleBase::Load( filename );
   }
-  catch( ... )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+  catch(...)
   {
     this->ShowStatus("Problems reading file format");
     controlsGroup->deactivate();
@@ -775,7 +776,14 @@ ceExtractorConsole
 
   this->ShowStatus("Filtering Image with a Gaussian...");
 
-  ceExtractorConsoleBase::Execute();
+  try 
+    {
+    ceExtractorConsoleBase::Execute();
+    }
+  catch ( itk::ExceptionObject & expt )
+    {
+    fl_alert( expt.GetDescription() );
+    }
 
 
   this->ShowStatus("Filtering done ");
