@@ -174,8 +174,8 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 {
   float iwDiff  = glSliceView->iwMax() - glSliceView->iwMin();
   float b       = (float)((int)log10(iwDiff)-2);
-  double iwMin  = ((int)(glSliceView->iwMin()*pow(10, -b)))/pow(10,-b);
-  double iwMax  = ((int)(glSliceView->iwMax()*pow(10, -b)))/pow(10,-b);
+  double iwMin  = ((int)(glSliceView->iwMin()*pow((float)10, (float)-b)))/pow((float)10,(float)-b);
+  double iwMax  = ((int)(glSliceView->iwMax()*pow((float)10, (float)-b)))/pow((float)10,(float)-b);
   double iwStep = (iwMax-iwMin)/100.0;
   sliceNumberSlider->range( 0.0f, glSliceView->numSlices() );
   intensityWindowingMinSlider->range(iwMin-iwStep,iwMax+iwStep);
