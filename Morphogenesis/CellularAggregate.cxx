@@ -14,8 +14,8 @@ CellularAggregate
 {
 
   Cell::ColorType color;
-  color.SetRed(0.9);
-  color.SetGreen(0.0);
+  color.SetRed(0.0);
+  color.SetGreen(1.0);
   color.SetBlue(0.0);
   Cell::SetDefaultColor( color );
 
@@ -26,7 +26,9 @@ CellularAggregate
   m_Mesh->SetCells( VoronoiRegionsContainer::New() );
 
   m_Iteration = 0;
-  m_ClosestPointComputationInterval = 500;
+  m_ClosestPointComputationInterval = 40;
+
+  m_FrictionForce = 1.0f;
 
 }
 
@@ -70,12 +72,12 @@ CellularAggregate
   CellsIterator cellIt = m_Mesh->GetPointData()->Begin();
   CellsIterator end    = m_Mesh->GetPointData()->End();
 
-	while( cellIt != end )
+  while( cellIt != end )
     {
     Cell * cell = cellIt.Value();
     const IdentifierType id = cell->GetSelfIdentifier();
     m_Mesh->GetPoint( id, &position );
-		cell->Draw( position );
+    cell->Draw( position );
     cellIt++;
     }
 }
@@ -184,6 +186,18 @@ CellularAggregate
 
 void
 CellularAggregate
+::SetEgg( Cell * cell )
+{
+  VectorType perturbation;
+  perturbation.Fill( 0.0 );
+  Add( cell, perturbation );
+}
+
+
+
+
+void
+CellularAggregate
 ::Add( Cell * cell )
 {
   VectorType perturbation;
@@ -206,11 +220,8 @@ CellularAggregate
   const IdentifierType cellAId = cellA->GetSelfIdentifier();
   const IdentifierType cellBId = cellB->GetSelfIdentifier();
 
-  VoronoiRegionPointer voronoiPointerA = GetVoronoi( cellAId );
-  VoronoiRegionPointer voronoiPointerB = GetVoronoi( cellBId );
-
-  voronoiPointerA->AddPointId( cellB->GetSelfIdentifier() );
-  voronoiPointerB->AddPointId( cellA->GetSelfIdentifier() );
+  this->GetVoronoi( cellAId )->AddPointId( cellBId );
+  this->GetVoronoi( cellBId )->AddPointId( cellAId );
 
 }
  
@@ -345,6 +356,7 @@ CellularAggregate
     ++cell;
     }
 
+  Cell::ResetCounter();
 }
 
 
@@ -375,7 +387,7 @@ CellularAggregate
   CellsIterator cell = m_Mesh->GetPointData()->Begin();
   CellsIterator end  = m_Mesh->GetPointData()->End();
 
-	while( cell != end )
+  while( cell != end )
     {
     cell.Value()->ClearForce();
     ++cell;
@@ -396,13 +408,17 @@ CellularAggregate
 
   PointType position;
 
-	while( cellIt != end )
+  while( cellIt != end )
     {
     Cell * cell = cellIt.Value();
     IdentifierType cellId = cell->GetSelfIdentifier();
     m_Mesh->GetPoint( cellId, &position );
-    position += cell->GetForce() / 2.0;
-		m_Mesh->SetPoint( cellId, position );
+    const VectorType force = cell->GetForce(); 
+    if( force.GetNorm() > m_FrictionForce )
+      {
+      position += force / 50.0;
+      }
+    m_Mesh->SetPoint( cellId, position );
     cellIt++;
     }
 
@@ -424,7 +440,7 @@ CellularAggregate
   CellsConstIterator   end         = m_Mesh->GetPointData()->End();
 
   // compute forces 
-	while( cell1It != end )
+  while( cell1It != end )
     {
 
     const IdentifierType cell1Id = cell1It.Index();
@@ -461,11 +477,17 @@ CellularAggregate
       Cell::VectorType relativePosition = position1 - position2;
 
       const double distance = relativePosition.GetNorm();
-      const double factor   = 1.0/distance;
-      
-      if( distance < rA + rB )
+
+      if( distance < (rA + rB) / 2.0 )
         {
-        Cell::VectorType force = relativePosition * factor;
+          const double factor = 2.0 * Cell::GetGrowthRadiusLimit() / distance;
+        Cell::VectorType force = relativePosition * factor ;
+        cell1->AddForce(  force );
+        cell2->AddForce( -force );
+        }
+      else if( distance < rA + rB )
+        {
+        Cell::VectorType force = relativePosition;
         cell1->AddForce(  force );
         cell2->AddForce( -force );
         }
@@ -491,7 +513,7 @@ CellularAggregate
 
   PointsConstIterator   point1It = beginPoints;
 
-	while( point1It != endPoints )
+  while( point1It != endPoints )
     {
 
     PointType  position1 = point1It.Value();
@@ -587,6 +609,64 @@ CellularAggregate
     }
       
 }
+
+
+
+void
+CellularAggregate
+::AddSubstrate( SubstrateType * substrate )
+{
+  SubstratePointer smartPointer( substrate );
+  m_Substrates.push_back( smartPointer );
+}
+
+
+
+
+CellularAggregate::SubstratesVector &
+CellularAggregate
+::GetSubstrates( void )
+{
+  return m_Substrates;
+}
+
+
+
+
+CellularAggregate::SubstrateValueType 
+CellularAggregate
+::GetSubstrateValue( Cell::IdentifierType cellId, unsigned int substrateId )
+{
+
+  PointType cellPosition;
+  bool cellPositionExists = m_Mesh->GetPoint( cellId, &cellPosition );
+  if( !cellPositionExists ) 
+    {
+    std::cerr << " Cell position doesn't exist for cell Id = ";
+    std::cerr << cellId << std::endl;
+    return itk::NumericTraits< SubstrateValueType >::Zero;
+    }
+
+  SubstratePointer    substrate = m_Substrates[ substrateId ];
+
+  SubstrateType::IndexType index;
+  typedef SubstrateType::IndexType::IndexValueType IndexValueType;
+
+  SubstrateType::SizeType  substratSize = 
+                    substrate->GetBufferedRegion().GetSize();
+
+  for(unsigned int i=0; i<Cell::Dimension; i++)
+    {
+    index[i] = static_cast< IndexValueType > (
+                    substratSize[i] / 2.0 + cellPosition[i] );
+    }
+
+  SubstrateValueType  value     = substrate->GetPixel( index );
+  
+  return value;
+}
+
+
 
 
 

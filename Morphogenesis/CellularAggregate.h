@@ -6,8 +6,10 @@
 #include <iostream>
 #include "itkDefaultDynamicMeshTraits.h"
 #include "itkMesh.h"
+#include "itkImage.h"
 #include "Cell.h"
 #include "itkPolygonCell.h"
+#include <vector>
 
 
 
@@ -116,10 +118,16 @@ public:
 
   typedef VoronoiRegionType::Pointer VoronoiRegionPointer;
 
+  typedef double                                          ImagePixelType;
+  typedef itk::Image<ImagePixelType, Cell::Dimension >    SubstrateType;
+  typedef SubstrateType::Pointer                          SubstratePointer;
+  typedef ImagePixelType                                  SubstrateValueType;
+
+  typedef std::vector< SubstratePointer >                 SubstratesVector;
 
 public:
 
-	unsigned int GetNumberOfCells(void) const;
+  unsigned int GetNumberOfCells(void) const;
  
   void Draw(void) const;
   void SetGrowthRadiusLimit( double value );
@@ -130,6 +138,7 @@ public:
 
   virtual void AdvanceTimeStep(void);
 
+  virtual void SetEgg( Cell * cell );
   virtual void Add( Cell * cell );
   virtual void Add( Cell * cell, const VectorType & perturbation );
   virtual void Add( Cell * cellA, Cell *cellB, const VectorType & perturbation );
@@ -143,9 +152,16 @@ public:
   virtual void Show(void);
   virtual void Hide(void);
 
+  virtual void AddSubstrate( SubstrateType * substrate );
+  virtual SubstratesVector & GetSubstrates( void );
+  virtual SubstrateValueType GetSubstrateValue( Cell::IdentifierType cellId,
+                                                unsigned int substrateId );
+
+  virtual void KillAll(void);
+
 protected:
 
-	CellularAggregate();
+  CellularAggregate();
   virtual ~CellularAggregate();
   CellularAggregate( const Self & ) {}
   void operator=(const Self&) {}
@@ -155,11 +171,14 @@ protected:
   virtual void UpdatePositions(void);
   virtual void ComputeClosestPoints(void);
   virtual void ClearForces(void);
-  virtual void KillAll(void);
   
 private:
 
-  MeshPointer    m_Mesh;
+  MeshPointer           m_Mesh;
+
+  SubstratesVector      m_Substrates;
+
+  double                m_FrictionForce;
 
   unsigned long  m_Iteration;
   unsigned long  m_ClosestPointComputationInterval;
