@@ -21,7 +21,7 @@
 #include <itkImageFileReader.h>
 #include <itkMetaImageIO.h>
 
-#include <itkSimpleImageRegionIterator.h>
+#include <itkImageRegionIterator.h>
 
 int main(int argc, char **argv)
   {
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   im->Allocate();
 
   // Set some values in the image
-  itk::SimpleImageRegionIterator< ImageType > it(im, 
+  itk::ImageRegionIterator< ImageType > it(im, 
         im->GetLargestPossibleRegion());
 
   it.GoToBegin();
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     }
 
   // See if the data read is valid
-  itk::SimpleImageRegionIterator< ImageType > itOut(imOut, 
+  itk::ImageRegionIterator< ImageType > itOut(imOut, 
         imOut->GetLargestPossibleRegion());
 
   it.GoToBegin();
