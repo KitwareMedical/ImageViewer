@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   if( argc < 6 ) 
     {
     std::cerr << std::endl;
-    std::cerr << "Usage:  RawImageReadWrite  inputImageFile.raw   sizeX   sizeY   sizeZ   outputImageFile.raw" << std::endl;
+    std::cerr << "Usage:  RawImageReadWritePNG  inputImageFile.raw   sizeX   sizeY   sizeZ   outputImageFilesPrefix" << std::endl;
     std::cerr << std::endl;
     return -1;
     }
