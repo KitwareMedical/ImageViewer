@@ -210,8 +210,6 @@ public:
   float m_SmoothingStep;// smoothing step size
   Float m_dT; // time step
   Float m_E;  // elasticity 
-  unsigned int m_Nx; // image x size
-  unsigned int m_Ny; // image y size
   ImageType::SizeType ImageSize; // image size
   Float m_Energy; // current value of energy
   Float m_MinE;  // minimum recorded energy
