@@ -80,7 +80,6 @@ public:
 
   /** Type of the displacement field at each point */
   typedef TFEMMesh                                  FEMMeshType;
-  typedef typename FEMMeshType::PixelType           DisplacementType;
 
   /**  Cell Visitor interfaces */
   enum CellType {VERTEX_ELEMENT=0, LINE_ELEMENT, TRIANGLE_ELEMENT, 
