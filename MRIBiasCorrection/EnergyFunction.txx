@@ -123,9 +123,7 @@ EnergyFunction<TImage, TImageMask>
       region.SetIndex(index) ;
     }
 
-  itk::SimpleImageRegionIterator<ImageType> 
-    iIter(m_Image, region) ;
-  iIter.Begin() ;
+  itk::ImageRegionIteratorWithIndex<ImageType> iIter(m_Image, region) ;
 
   m_BiasField->SetCoefficients(parameters) ;
   //dump(m_BiasField->GetCoefficients()) ;
@@ -144,7 +142,7 @@ EnergyFunction<TImage, TImageMask>
     }
   else
     {
-      itk::SimpleImageRegionIterator<MaskType> 
+      itk::ImageRegionIteratorWithIndex<MaskType> 
         mIter(m_Mask, region) ;
       mIter.Begin() ;
       while (!iIter.IsAtEnd())

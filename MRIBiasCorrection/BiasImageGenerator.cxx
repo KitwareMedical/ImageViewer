@@ -111,8 +111,7 @@ void generateBiasImage(BiasField& biasField, ImagePointer output)
   BiasField::SimpleForwardIterator bIter(&biasField) ;
   bIter.Begin() ;
 
-  itk::SimpleImageRegionIterator<ImageType> oIter(output, region) ;
-  oIter.Begin() ;
+  itk::ImageRegionIteratorWithIndex<ImageType> oIter(output, region) ;
 
   while (!oIter.IsAtEnd())
     {

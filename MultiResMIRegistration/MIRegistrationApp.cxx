@@ -349,7 +349,6 @@ ImageType * output )
 
   InputIterator inIter( input, region );
 
-  inIter = inIter.Begin();
   while( !inIter.IsAtEnd() )
     {
     sum += inIter.Get();
@@ -368,8 +367,8 @@ ImageType * output )
   // walk both the input and output
   OutputIterator outIter( output, region );
 
-  inIter = inIter.Begin();
-  outIter = outIter.Begin();
+  inIter.GoToBegin();
+  outIter.GoToBegin();
 
   while( !inIter.IsAtEnd() )
     {
@@ -422,8 +421,6 @@ MIRegistrationApp
   Iterator inIter( m_RegisteredImage, 
     m_RegisteredImage->GetBufferedRegion() );
   
-  inIter = inIter.Begin();
-
   while( !inIter.IsAtEnd() )
     {
     typedef InputImageType::IndexType IndexType;
@@ -629,7 +626,6 @@ const char * basename )
 
   InputIterator inIter( input, input->GetBufferedRegion() );
 
-  inIter = inIter.Begin();
   InputPixelType minValue = inIter.Get();
   InputPixelType maxValue = minValue;
   while( !inIter.IsAtEnd() )
@@ -655,7 +651,7 @@ const char * basename )
   unsigned int nchar = strlen(buffer);
   unsigned long npixels = nrow * ncol;
 
-  inIter = inIter.Begin();
+  inIter.GoToBegin();
 
   for( unsigned int k = 0; k < nslice; k++ )
     {

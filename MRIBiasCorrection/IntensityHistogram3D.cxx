@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <itkImage.h>
 #include <itkReadMetaImage.h>
-#include <itkSimpleImageRegionIterator.h>
+#include <itkImageRegionIteratorWithIndex.h>
 
 #include "mydefs.h"
 #include "imageutils.h"
@@ -157,14 +157,11 @@ int main(int argc, char* argv[])
 
   Histogram bins ;
 
-  itk::SimpleImageRegionIterator<ImageType> 
+  itk::ImageRegionIteratorWithIndex<ImageType> 
     iter(image, image->GetLargestPossibleRegion()) ;
-  itk::SimpleImageRegionIterator<MaskType>
+  itk::ImageRegionIteratorWithIndex<MaskType>
     mask_iter(mask, mask->GetLargestPossibleRegion()) ;
   
-  iter.Begin() ;
-  mask_iter.Begin() ;
-
   ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize() ;
   int sliceSize = size[0] * size[1] ;
   int pixelCount = 0 ;

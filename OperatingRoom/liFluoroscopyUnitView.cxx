@@ -16,7 +16,7 @@
 #include <liCommandEvents.h>
 #include <itkPoint.h>
 #include <itkImageSliceConstIterator.h>
-#include <itkSimpleImageRegionConstIterator.h>
+#include <itkImageRegionConstIteratorWithIndex.h>
 #include <GL/glu.h>
 #include <cmath>
 
@@ -276,12 +276,10 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
     return;
   }
 
-  itk::SimpleImageRegionConstIterator< ImageType > 
+  itk::ImageRegionConstIteratorWithIndex< ImageType > 
                                         at( m_Image,
                                             m_Image->GetBufferedRegion() );
 
-  at.Begin();
-  
   ImageType::PixelType max = at.Get();
   ImageType::PixelType min = at.Get();
 
@@ -316,7 +314,6 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
 
   const float factor = 255.0 / (max - min );
 
-  it.Begin();
   while( !it.IsAtEnd() )  // Should only have one slice...but anyway.
   {
     while( !it.IsAtEndOfSlice() )

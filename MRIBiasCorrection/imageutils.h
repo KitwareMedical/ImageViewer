@@ -45,7 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <MetaImageLib.h>
 #include <itkReadMetaImage.h>
 #include <itkWriteMetaImage.h>
-#include <itkSimpleImageRegionIterator.h>
+#include <itkImageRegionIteratorWithIndex.h>
 
 #include "mydefs.h"
 #include "myutils.h"
@@ -157,7 +157,7 @@ void writeImage(std::string fileName, ImagePointer image)
 
 void copyImage(ImagePointer source , ImagePointer target)
 {
-  typedef itk::SimpleImageRegionIterator<ImageType> ImageIterator ;
+  typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator ;
   ImageType::RegionType s_region = source->GetLargestPossibleRegion() ;
   ImageIterator s_iter(source, s_region ) ;
   
@@ -169,9 +169,6 @@ void copyImage(ImagePointer source , ImagePointer target)
     }
       
   ImageIterator t_iter(target, s_region) ;
-  
-  s_iter.Begin() ;
-  t_iter.Begin() ;
   
   while (!s_iter.IsAtEnd())
     {
@@ -195,11 +192,8 @@ void logImage(ImagePointer source, ImagePointer target)
       target->Allocate() ;
     }
 
-  itk::SimpleImageRegionIterator<ImageType> s_iter(source, region) ;
-  itk::SimpleImageRegionIterator<ImageType> t_iter(target, region) ;
-  
-  s_iter.Begin() ;
-  t_iter.Begin() ;
+  itk::ImageRegionIteratorWithIndex<ImageType> s_iter(source, region) ;
+  itk::ImageRegionIteratorWithIndex<ImageType> t_iter(target, region) ;
   
   ImageType::PixelType pixel ;
   float log_pixel ;

@@ -146,7 +146,7 @@ public:
                               TransformType > ReferenceMapperType;
 
 
-  typedef   itk::SimpleImageRegionIterator< 
+  typedef   itk::ImageRegionIteratorWithIndex< 
                                 ReferenceType >    ReferenceIteratorType;
 
 

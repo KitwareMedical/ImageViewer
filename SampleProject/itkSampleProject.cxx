@@ -106,7 +106,6 @@ int main()
   displacement[1] =	3;
 
   IteratorType ri(img,region);
-  ri.Begin();
   while(!ri.IsAtEnd())
   {
     p[0] = ri.GetIndex()[0];

@@ -108,19 +108,16 @@ void correctBias(ImagePointer input, MaskPointer mask,
       maskAvailable = false ;
     }
   
-  itk::SimpleImageRegionIterator<ImageType> iIter(input, region) ;
-  iIter.Begin() ;
+  itk::ImageRegionIteratorWithIndex<ImageType> iIter(input, region) ;
   
   BiasField::SimpleForwardIterator bIter(&biasField) ;
-  bIter.Begin() ;
 
-  itk::SimpleImageRegionIterator<ImageType> oIter(output, region) ;
-  oIter.Begin() ;
+  itk::ImageRegionIteratorWithIndex<ImageType> oIter(output, region) ;
 
   if (maskAvailable)
     {
-      itk::SimpleImageRegionIterator<MaskType> mIter(mask, region) ;
-      mIter.Begin() ;
+      itk::ImageRegionIteratorWithIndex<MaskType> mIter(mask, region) ;
+      mIter.GotoBegin() ;
       // mask diff image
       while (!oIter.IsAtEnd())
         {

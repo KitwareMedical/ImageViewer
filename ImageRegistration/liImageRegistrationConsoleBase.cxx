@@ -196,8 +196,6 @@ liImageRegistrationConsoleBase
   const unsigned long hundreth = totalPixels / 100;
   unsigned long counter = 0;
 
-  it.Begin();
-
   while( ! it.IsAtEnd() )
   {
 
@@ -427,8 +425,6 @@ liImageRegistrationConsoleBase
 
   const unsigned long hundreth = totalPixels / 100;
   unsigned long counter = 0;
-
-  it.Begin();
 
   while( ! it.IsAtEnd() )
   {

@@ -129,17 +129,16 @@ void updateSlice(ImagePointer image, MaskPointer mask,
       mask->GetLargestPossibleRegion().GetSize())
     maskAvailable = false ;
 
-  itk::SimpleImageRegionIterator<ImageType> iIter(image, region) ;
-  iIter.Begin() ;
+  itk::ImageRegionIteratorWithIndex<ImageType> iIter(image, region) ;
   
   BiasField::SimpleForwardIterator bIter(&biasField) ;
   bIter.Begin() ;
 
   if (maskAvailable)
     {
-      itk::SimpleImageRegionIterator<MaskType> 
+      itk::ImageRegionIteratorWithIndex<MaskType> 
         mIter(mask, region) ;
-      mIter.Begin() ;
+      mIter.GoToBegin() ;
       // mask diff image
       while (!iIter.IsAtEnd())
         {
