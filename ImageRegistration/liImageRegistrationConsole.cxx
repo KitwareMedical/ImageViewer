@@ -345,4 +345,79 @@ liImageRegistrationConsole
 
 
 
+ 
+/************************************
+ *
+ *  Update the parameters of the 
+ *  Transformation
+ *
+ ***********************************/
+void
+liImageRegistrationConsole
+::UpdateTransformationParameters( void )
+{
+
+  ParametersType transformationParameters;
+
+  transformationParameters[0] = xTranslation->value();
+  transformationParameters[1] = yTranslation->value();
+  transformationParameters[2] = zTranslation->value();
+
+  this->m_ImageMapper->GetTransformation()->SetParameters(
+                                              transformationParameters);
+
+
+}
+
+
+
+
+ 
+/************************************
+ *
+ *  Generate Reference Image
+ *  Modify button colors and then
+ *  delegate to base class
+ *
+ ***********************************/
+void
+liImageRegistrationConsole
+::GenerateReference( void )
+{
+  
+  referenceButton->value( 0 );
+  referenceButton->redraw();
+  
+  liImageRegistrationConsoleBase::GenerateReference();
+  
+  referenceButton->value( 1 );
+  referenceButton->redraw();
+
+}
+
+
+
+
+ 
+/************************************
+ *
+ *  Generate Mapped Reference Image
+ *  Modify button colors and then
+ *  delegate to base class
+ *
+ ***********************************/
+void
+liImageRegistrationConsole
+::GenerateMappedReference( void )
+{
+  
+  mappedReferenceButton->value( 0 );
+  mappedReferenceButton->redraw();
+  
+  liImageRegistrationConsoleBase::GenerateMappedReference();
+  
+  mappedReferenceButton->value( 1 );
+  mappedReferenceButton->redraw();
+
+}
 

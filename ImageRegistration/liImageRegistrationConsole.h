@@ -49,6 +49,9 @@ public:
   virtual void ShowMappedReference(void);
   virtual void ShowAbout(void);
   virtual void Execute(void);
+  virtual void UpdateTransformationParameters(void);
+  virtual void GenerateReference(void);
+  virtual void GenerateMappedReference(void);
 
 private:
 
