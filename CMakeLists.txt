@@ -4,6 +4,10 @@ INCLUDE_REGULAR_EXPRESSION("^.*$")
 #on a PNG image
 SUBDIRS (AnisotropicDiffusionImageFilter)
 
+#Build the example of how to do simple feature extraction of gradient edges
+#on a PNG image
+SUBDIRS (GradientMagnitudeImageFilter)
+
 #Build the example of how to create a static library for 
 # select filters in itk.
 SUBDIRS (ITKFilterLib)
