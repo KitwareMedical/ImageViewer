@@ -94,9 +94,11 @@ ReadMetaImage<TOutputImage>
     dimSize[i] = metaImage.DimSize(i);
     }
 
-  const unsigned long startPosition[] = { 0, 0, 0 };
   typename TOutputImage::IndexType start;
-  start.SetIndex( startPosition );
+  start[0] = 0;
+  start[1] = 0;
+  start[2] = 0;
+
 
   Region region;
   
