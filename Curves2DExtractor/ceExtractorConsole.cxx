@@ -890,7 +890,6 @@ int main()
   ceExtractorConsole * console = new ceExtractorConsole();
 
   console->Show();
-  console->Load("./DSA.mha");
   console->SetSigma( 4.0 );
   console->ShowInput();
 
