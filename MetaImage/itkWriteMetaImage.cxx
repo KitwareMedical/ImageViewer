@@ -15,6 +15,7 @@
 =========================================================================*/
 
 #include "itkImage.h"
+#include "itkPhysicalImage.h"
 #include <itkScalar.h>
 
 #define ITK_MANUAL_INSTANTIATION
@@ -33,7 +34,7 @@ namespace itk
  *   Type Code for char
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<signed char,2> >
 ::GetTypeCode(void) const
 {
@@ -44,7 +45,7 @@ WriteMetaImage<Image<signed char,2> >
  *   Type Code for char
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<signed char,3> >
 ::GetTypeCode(void) const
 {
@@ -55,7 +56,7 @@ WriteMetaImage<Image<signed char,3> >
  *   Type Code for unsigned char
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<unsigned char,2> >
 ::GetTypeCode(void) const
 {
@@ -66,7 +67,7 @@ WriteMetaImage<Image<unsigned char,2> >
  *   Type Code for unsigned char
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<unsigned char,3> >
 ::GetTypeCode(void) const
 {
@@ -77,7 +78,7 @@ WriteMetaImage<Image<unsigned char,3> >
  *   Type Code for float
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<float,2> >
 ::GetTypeCode(void) const
 {
@@ -88,7 +89,7 @@ WriteMetaImage<Image<float,2> >
  *   Type Code for float
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<float,3> >
 ::GetTypeCode(void) const
 {
@@ -99,7 +100,7 @@ WriteMetaImage<Image<float,3> >
  *   Type Code for float
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<Scalar<float>,3> >
 ::GetTypeCode(void) const
 {
@@ -110,7 +111,7 @@ WriteMetaImage<Image<Scalar<float>,3> >
  *   Type Code for unsigned short
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<unsigned short,2> >
 ::GetTypeCode(void) const
 {
@@ -121,7 +122,7 @@ WriteMetaImage<Image<unsigned short,2> >
  *   Type Code for unsigned short
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<unsigned short,3> >
 ::GetTypeCode(void) const
 {
@@ -132,7 +133,7 @@ WriteMetaImage<Image<unsigned short,3> >
  *   Type Code for short
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<short,2> >
 ::GetTypeCode(void) const
 {
@@ -143,8 +144,127 @@ WriteMetaImage<Image<short,2> >
  *   Type Code for short
  */
 template <>
-MET_Type 
+MET_Type
 WriteMetaImage<Image<short,3> >
+::GetTypeCode(void) const
+{
+  return MET_SHORT;
+}
+
+// Now we gotta do the same for physical image variants...
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<signed char,2> >
+::GetTypeCode(void) const
+{
+  return MET_CHAR;
+}
+
+/**
+ *   Type Code for char
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<signed char,3> >
+::GetTypeCode(void) const
+{
+  return MET_CHAR;
+}
+
+/**
+ *   Type Code for unsigned char
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<unsigned char,2> >
+::GetTypeCode(void) const
+{
+  return MET_UCHAR;
+}
+
+/**
+ *   Type Code for unsigned char
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<unsigned char,3> >
+::GetTypeCode(void) const
+{
+  return MET_UCHAR;
+}
+
+/**
+ *   Type Code for float
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<float,2> >
+::GetTypeCode(void) const
+{
+  return MET_FLOAT;
+}
+
+/**
+ *   Type Code for float
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<float,3> >
+::GetTypeCode(void) const
+{
+  return MET_FLOAT;
+}
+
+/**
+ *   Type Code for float
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<Scalar<float>,3> >
+::GetTypeCode(void) const
+{
+  return MET_FLOAT;
+}
+
+/**
+ *   Type Code for unsigned short
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<unsigned short,2> >
+::GetTypeCode(void) const
+{
+  return MET_USHORT;
+}
+
+/**
+ *   Type Code for unsigned short
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<unsigned short,3> >
+::GetTypeCode(void) const
+{
+  return MET_USHORT;
+}
+
+/**
+ *   Type Code for short
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<short,2> >
+::GetTypeCode(void) const
+{
+  return MET_SHORT;
+}
+
+/**
+ *   Type Code for short
+ */
+template <>
+MET_Type
+WriteMetaImage<PhysicalImage<short,3> >
 ::GetTypeCode(void) const
 {
   return MET_SHORT;
