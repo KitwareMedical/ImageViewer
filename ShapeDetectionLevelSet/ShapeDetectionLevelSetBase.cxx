@@ -58,7 +58,7 @@ ShapeDetectionLevelSetBase
   m_ShapeDetectionFilter->SetInput(  m_FastMarchingFilter->GetOutput() );
   m_ShapeDetectionFilter->SetEdgeImage(   m_SigmoidFilter->GetOutput() );
 
-  //  m_ShapeDetectionFilter->NarrowBandingOn();
+  m_ShapeDetectionFilter->NarrowBandingOn();
   m_ShapeDetectionFilter->SetTimeStepSize( 0.125 );
 
   m_ThresholdFilter = ThresholdFilterType::New();

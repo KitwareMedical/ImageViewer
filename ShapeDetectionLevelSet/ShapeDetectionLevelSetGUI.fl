@@ -61,7 +61,7 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
           xywh {325 79 80 11} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {
+      Fl_Group controlsGroup {selected
         xywh {0 5 785 236} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -149,17 +149,22 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
         Fl_Value_Input sigmoidBetaValueInput {
           label Beta
           callback {m_SigmoidFilter->SetBeta( o->value() );}
-          xywh {305 42 35 22} labelsize 12 maximum 50 step 0.1 value 3 textsize 12
+          xywh {305 42 35 22} labelsize 12 maximum 50 step 0.1 value 5 textsize 12
         }
         Fl_Value_Input sigmoidAlphaValueInput {
           label Alpha
           callback {m_SigmoidFilter->SetAlpha( o->value() );}
-          xywh {305 19 35 23} labelsize 12 minimum -10 maximum 10 step 0.1 value -2 textsize 12
+          xywh {305 19 35 23} labelsize 12 minimum -10 maximum 10 step 0.1 value -1 textsize 12
         }
         Fl_Value_Input shapeDetectionIterationsValueInput {
           label Iterations
-          callback {m_ShapeDetectionFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );} selected
+          callback {m_ShapeDetectionFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
           xywh {448 43 33 23} labelsize 12 maximum 500 step 1 value 10 textsize 12
+        }
+        Fl_Value_Input fastMarchingStoppingValueInput {
+          label Stopping
+          callback {m_FastMarchingFilter->SetStoppingValue( o->value() );}
+          xywh {262 155 39 23} labelsize 12 maximum 100 step 0.1 value 10 textsize 12
         }
       }
       Fl_Slider progressSlider {

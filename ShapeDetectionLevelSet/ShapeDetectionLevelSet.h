@@ -57,9 +57,6 @@ public:
   typedef fltk::ImageViewer< InternalPixelType, 
                                     ThresholdPixelType >   SegmentedImageViewerType;
 
-  typedef fltk::ImageViewer< ThresholdPixelType, 
-                                    OverlayPixelType >     ThresholdedImageViewerType;
-
   typedef fltk::VTKImageViewer< ThresholdPixelType >       VTKImageViewerType;
 
 
@@ -97,7 +94,7 @@ public:
 
 private:
 
-  ThresholdedImageViewerType      m_ThresholdedImageViewer;
+  SegmentedImageViewerType        m_ThresholdedImageViewer;
 
   SegmentedImageViewerType        m_FastMarchingImageViewer;
   

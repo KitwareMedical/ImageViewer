@@ -55,6 +55,8 @@ ShapeDetectionLevelSet
 
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
 
+  m_FastMarchingFilter->SetStoppingValue( fastMarchingStoppingValueInput->value() );
+
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
 
@@ -237,7 +239,6 @@ ShapeDetectionLevelSet
   this->RunShapeDetection();
   m_OutputLevelSetViewer.SetImage( m_ShapeDetectionFilter->GetOutput() );  
   m_OutputLevelSetViewer.Show();
-  m_OutputLevelSetViewer.SetOverlayOpacity( 0.5 );
 
 }
 
@@ -302,11 +303,12 @@ void
 ShapeDetectionLevelSet
 ::ShowThresholdedImage( void )
 {
+  m_CastImageFilter->Update();
   m_ThresholdFilter->Update();
   m_ThresholdedImageViewer.SetImage( m_CastImageFilter->GetOutput() );
   m_ThresholdedImageViewer.SetOverlay( m_ThresholdFilter->GetOutput() );  
   m_ThresholdedImageViewer.Show();
-
+  m_ThresholdedImageViewer.SetOverlayOpacity( 0.5 );
 
 }
 
