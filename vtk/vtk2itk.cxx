@@ -121,16 +121,18 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
       {
       case VTK_TRIANGLE:
         {
-        itk::TriangleCell<float, floatMesh::CellTraits>::Pointer t 
-        = itk::TriangleCell<float, floatMesh::CellTraits>::New();
+        typedef itk::CellInterface<float, floatMesh::CellTraits> CellInterfaceType;
+        typedef itk::TriangleCell<CellInterfaceType> TriangleCellType;
+        TriangleCellType::Pointer t = TriangleCellType::New();
         t->SetPointIds((unsigned long*)pts);
         c = t;
         break;
         }  
       case VTK_QUAD:
         {
-        itk::QuadrilateralCell<float, floatMesh::CellTraits>::Pointer t 
-        = itk::QuadrilateralCell<float, floatMesh::CellTraits>::New();
+        typedef itk::CellInterface<float, floatMesh::CellTraits> CellInterfaceType;
+        typedef itk::QuadrilateralCell<CellInterfaceType> QuadrilateralCellType;
+        QuadrilateralCellType::Pointer t = QuadrilateralCellType::New();
         t->SetPointIds((unsigned long*)pts);
         c = t;
         break;
@@ -172,10 +174,12 @@ class VistVTKCellsClass
   int* m_TypeArray;
 public:
   // typedef the itk cells we are interested in
-  typedef itk::TriangleCell<floatMesh::PixelType, 
-    floatMesh::CellTraits>  floatTriangleCell;
-  typedef itk::QuadrilateralCell<floatMesh::PixelType, 
-    floatMesh::CellTraits> floatQuadrilateralCell;
+  typedef itk::CellInterface<
+                      floatMesh::PixelType, 
+                      floatMesh::CellTraits >  CellInterfaceType;
+
+  typedef itk::TriangleCell<CellInterfaceType>      floatTriangleCell;
+  typedef itk::QuadrilateralCell<CellInterfaceType> floatQuadrilateralCell;
 
   // Set the vtkCellArray that will be constructed
   void SetCellArray(vtkCellArray* a) 
@@ -210,13 +214,13 @@ public:
   
 typedef itk::CellInterfaceVisitorImplementation<
 float, floatMesh::CellTraits,
-  itk::TriangleCell<floatMesh::PixelType, floatMesh::CellTraits >, 
+  itk::TriangleCell< itk::CellInterface<floatMesh::PixelType, floatMesh::CellTraits > >, 
   VistVTKCellsClass> TriangleVisitor;
 
 
 typedef itk::CellInterfaceVisitorImplementation<
 float, floatMesh::CellTraits,
-  itk::QuadrilateralCell<floatMesh::PixelType, floatMesh::CellTraits >, 
+  itk::QuadrilateralCell< itk::CellInterface<floatMesh::PixelType, floatMesh::CellTraits > >, 
   VistVTKCellsClass> QuadrilateralVisitor;
 
 
