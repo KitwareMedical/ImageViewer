@@ -2,8 +2,8 @@ ITK WATERSHED SEGMENTATION EXAMPLE
 
 This application demonstrates the use of several Itk filters to perform
 watershed segmentation of a 2D grayscale image.  The document
-InsightDocuments/User/AlgorithmsGuide/WatershedSegmentationGuide.ps provides a
-brief explanation of the segmentation algorithm and its use.  Watershed.ps is
+InsightDocuments/Web/HTML/WatershedSegmentationExample provides a
+brief explanation of the segmentation algorithm and its use and is
 also illustrated with some sample images.  All the information needed to build
 and run the sample application is contained in this document.
 
