@@ -317,7 +317,7 @@ void Tube3D::DrawGeometry(void) const
 //    Read from a file
 //
 //--------------------------------------------------
-int Tube3D::Read( ifstream & is )
+int Tube3D::Read( Shape3D::IfstreamType & is )
 {
 
   Clear();

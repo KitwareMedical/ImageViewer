@@ -261,7 +261,7 @@ void VectorTubes3D::DrawGeometry(void) const
 void VectorTubes3D::Load( const char * filename )
 {
 
-  std::ifstream ifs;
+  Shape3D::IfstreamType ifs;
   ifs.open( filename );
   if( ifs.fail() ) 
   {

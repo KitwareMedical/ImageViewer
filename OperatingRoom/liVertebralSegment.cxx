@@ -233,7 +233,7 @@ VertebralSegment::GetVertebralPedicle( void )
 //
 //----------------------------------------------------
 int 
-VertebralSegment::Write( std::ofstream &os, int level ) const 
+VertebralSegment::Write( Shape3D::OfstreamType &os, int level ) const 
 {
 
   int stat = 1;

@@ -315,7 +315,7 @@ void VertebralPedicle::DrawGeometry(void) const
 //
 //----------------------------------------------------
 int 
-VertebralPedicle::Write( std::ofstream &os, int level ) const 
+VertebralPedicle::Write( Shape3D::OfstreamType &os, int level ) const 
 {
 
   int stat = 1;

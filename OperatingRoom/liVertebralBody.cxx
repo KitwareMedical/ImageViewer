@@ -51,7 +51,7 @@ VertebralBody::VertebralBody()
 //  ofx.open("hi");
 //  ofx.close();
 
-  std::ifstream ifx;
+  Shape3D::IfstreamType ifx;
   ifx.open("hi");
   ifx.close();
 }
