@@ -29,6 +29,7 @@
 #include "vnl/vnl_math.h"
 
 #include <string>
+#include <stdio.h>
 
 
 ShapeDetectApp
