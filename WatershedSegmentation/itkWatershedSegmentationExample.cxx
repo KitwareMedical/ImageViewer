@@ -18,7 +18,8 @@
 #include "itkCurvatureAnisotropicDiffusionImageFilter.h"
 #include "itkGradientMagnitudeImageFilter.h"
 #include "itkImageRegionIterator.h"
-#include "itkRawImageWriter.h"
+#include "itkRawImageIO.h"
+#include "itkImageFileWriter.h"
 #include <fstream>
 #include <string>
 #include "itkCommand.h"
@@ -58,8 +59,9 @@ void PrintProgressCommand
   if (! po) return;
   
   if( typeid(event) == typeid ( ProgressEvent)  )
-    {
-      std::cout << "Progress at " << po->GetProgress() * 100 << "% " <<std::endl;;
+    { 
+      std::cout << ".";
+      std::cout.flush();
     }
 }
 
@@ -71,7 +73,8 @@ void PrintProgressCommand
   
   if( typeid(event) == typeid ( ProgressEvent)  )
     {
-      std::cout << "Progress at " << po->GetProgress() * 100<< "% "<< std::endl;;
+      std::cout << ".";
+      std::cout.flush();
     }
 }
 }// namespace itk
@@ -172,7 +175,6 @@ int main(int argc, char *argv[])
   std::string outname;
   itk::PrintProgressCommand::Pointer c = itk::PrintProgressCommand::New();
 
-  
   if (argc != 6)
   pgm_reader::die ("Use: watershed input_file output_file_prefix conductance_term diffusion_iterations lower_threshold");
   sscanf(argv[3], "%f", &conductance_term);
@@ -182,8 +184,16 @@ int main(int argc, char *argv[])
   
   pgm_reader reader;
   ImageType::Pointer input_image = reader.read(argv[1]);
-
-  //  input_image->DebugOn();
+  
+  // Set up the file writer
+  itk::RawImageIO<unsigned long, 2>::Pointer rawio = itk::RawImageIO<unsigned long, 2>::New();
+  rawio->SetByteOrderToLittleEndian();
+  rawio->SetFileDimensionality(2);
+  rawio->SetFileTypeToBinary();
+  itk::ImageFileWriter<UnsignedImageType>::Pointer writer =
+    itk::ImageFileWriter<UnsignedImageType>::New();
+  writer->SetImageIO(rawio);
+  
   // Set up an anisotropic diffusion image filter.
   itk::CurvatureAnisotropicDiffusionImageFilter<ImageType, ImageType>::Pointer
     diffusion = itk::CurvatureAnisotropicDiffusionImageFilter<ImageType,
@@ -191,13 +201,6 @@ int main(int argc, char *argv[])
   diffusion->SetTimeStep(0.125f);
   diffusion->SetIterations(diffusion_iterations);
   diffusion->SetConductanceParameter(conductance_term);
-
-  // Set the following line to the number of processors on your machine
-  // to multithread the diffusion.
-  //
-  //    diffusion->SetNumberOfThreads(2);
-  //
-
   diffusion->SetInput(input_image);
 
   // Set up a gradient magnitude image filter.
@@ -213,49 +216,51 @@ int main(int argc, char *argv[])
   watershed->SetInput(magnitude->GetOutput());
   watershed->AddObserver(itk::ProgressEvent(), c);
 
-  // Set up a .raw format writer.
-  std::cout << "Calculating at Level 0.50" << std::endl;
+  std::cout << "Calculating at Level 0.50";
   outname = std::string(argv[2]) + "0.50.raw";
-  itk::RawImageWriter<UnsignedImageType>::Pointer writer =
-    itk::RawImageWriter<UnsignedImageType>::New();
   writer->SetFileName(outname.c_str());
   writer->SetInput(watershed->GetOutput());
   
   // Execute the pipeline and spit out the results.
   writer->Write();
-
+  
   // Now modify the level parameter and spit out a
   // range of labeled images at differing levels
   // in the segmentation hierarchy
-  std::cout << "Calculating at Level 0.40" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Calculating at Level 0.40";
   watershed->SetLevel(0.40);
   outname = std::string(argv[2]) + "0.40.raw";
   writer->SetFileName(outname.c_str());
   writer->Write();
 
-  std::cout << "Calculating at Level 0.30" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Calculating at Level 0.30";
   watershed->SetLevel(0.30);
   outname = std::string(argv[2]) + "0.30.raw";
   writer->SetFileName(outname.c_str());
   writer->Write();
 
-  std::cout << "Calculating at Level 0.20" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Calculating at Level 0.20";
   watershed->SetLevel(0.20);
   outname = std::string(argv[2]) + "0.20.raw";
   writer->SetFileName(outname.c_str());
   writer->Write();
 
-  std::cout << "Calculating at Level 0.10" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Calculating at Level 0.10";
   watershed->SetLevel(0.10);
   outname = std::string(argv[2]) + "0.10.raw";
   writer->SetFileName(outname.c_str());
   writer->Write();
 
-  std::cout << "Calculating at Level 0.05" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Calculating at Level 0.05";
   watershed->SetLevel(0.05);
   outname = std::string(argv[2]) + "0.05.raw";
   writer->SetFileName(outname.c_str());
   writer->Write();
-  
+  std::cout << std::endl;
   return 0;
 }

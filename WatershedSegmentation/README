@@ -133,3 +133,7 @@ spread close label values far apart in the RGB range.  A hashing scheme that
 puts more weight on least-significant integer bits is a good way to accomplish
 this.
 
+The application itkWSRawToPNG uses the hashing scheme described above to convert the 
+raw output of itkWatershedSegmentationExample into a color PNG image, which can be
+viewed using any standard image viewer such as xv.
+
