@@ -122,7 +122,6 @@ ceExtractorConsole
   m_ExtractedParametricSpaceSamplesShape->SetPointSet( 
                           m_SpatialFunctionFilter->GetOutput().GetPointer() );
 
-
   progressSlider->Observe( m_Reader.GetPointer() );
   progressSlider->Observe( m_H1x.GetPointer() );
   progressSlider->Observe( m_H1y.GetPointer() );
@@ -320,6 +319,9 @@ ceExtractorConsole
   controlsGroup->activate();
 
   m_InputViewer->Update();
+
+
+  m_Reader->InvokeEvent( itk::EndEvent() );
 
 }
 
@@ -803,45 +805,6 @@ ceExtractorConsole
   this->ShowStatus("Filtering done ");
   
 }
-
-
-
-
-
-
-
-
-
-
-
-/**
- *
- *   Main program 
- *
- */
-int main()
-{
-
-  ceExtractorConsole * console = new ceExtractorConsole();
-
-  console->Show();
-  console->SetSigma( 4.0 );
-  console->ShowInput();
-
-  Fl::run();
-
-  delete console;
-  
-  return 0;
-
-}
-
-
-
-
-
-
-
 
 
 
