@@ -37,14 +37,17 @@ RegionGrowingSegmentationBase
   m_CastImageFilter = CastImageFilterType::New();
   m_CastImageFilter->SetInput( m_ImageReader->GetOutput() );
 
+  m_ExtractImageFilter = ExtractImageFilterType::New();
+  m_ExtractImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+
   m_CurvatureFlowImageFilter = CurvatureFlowImageFilterType::New();
-  m_CurvatureFlowImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+  m_CurvatureFlowImageFilter->SetInput( m_ExtractImageFilter->GetOutput() );
 
   m_CurvatureAnisotropicDiffusionImageFilter = CurvatureAnisotropicDiffusionImageFilterType::New();
-  m_CurvatureAnisotropicDiffusionImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+  m_CurvatureAnisotropicDiffusionImageFilter->SetInput( m_ExtractImageFilter->GetOutput() );
   
   m_GradientAnisotropicDiffusionImageFilter = GradientAnisotropicDiffusionImageFilterType::New();
-  m_GradientAnisotropicDiffusionImageFilter->SetInput( m_CastImageFilter->GetOutput() );
+  m_GradientAnisotropicDiffusionImageFilter->SetInput( m_ExtractImageFilter->GetOutput() );
   
   m_NullImageFilter = NullImageFilterType::New();
   m_NullImageFilter->SetInput( m_CurvatureFlowImageFilter->GetOutput() );

@@ -61,26 +61,28 @@ public:
   RegionGrowingSegmentation();
   virtual ~RegionGrowingSegmentation();
 
-  virtual void LoadInputImage(void);
+  virtual void LoadInputImage();
 
-  virtual void ShowConsole(void);
+  virtual void ShowConsole();
 
   virtual void ShowStatus(const char * text);
 
-  virtual void ShowInputImage(void);
+  virtual void ShowInputImage();
 
-  virtual void ShowConnectedThresholdImage(void);
+  virtual void ShowConnectedThresholdImage();
 
-  virtual void ShowConfidenceConnectedImage(void);
+  virtual void ShowConfidenceConnectedImage();
 
-  virtual void ShowFuzzyConnectedImage(void);
+  virtual void ShowFuzzyConnectedImage();
 
-  virtual void ShowHomogeneousImage(void);
-  virtual void ShowCurvatureFlowImage(void);
-  virtual void ShowGradientAnisotropicDiffusionImage(void);
-  virtual void ShowCurvatureAnisotropicDiffusionImage(void);
+  virtual void ShowHomogeneousImage();
+  virtual void ShowCurvatureFlowImage();
+  virtual void ShowGradientAnisotropicDiffusionImage();
+  virtual void ShowCurvatureAnisotropicDiffusionImage();
 
-  virtual void Quit(void);
+  virtual void Quit();
+
+  virtual void UpdateExtract();
 
   virtual void SelectSeedPoint( float x, float y, float z );
   

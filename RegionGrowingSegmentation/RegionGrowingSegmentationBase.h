@@ -22,6 +22,7 @@
 
 #include <itkImage.h>
 #include <itkCastImageFilter.h>
+#include <itkExtractImageFilter.h>
 
 #include <itkConnectedThresholdImageFilter.h>
 #include <itkConfidenceConnectedImageFilter.h>
@@ -64,6 +65,11 @@ public:
   typedef   itk::CastImageFilter< 
                  InputImageType, 
                  InternalImageType >     CastImageFilterType;
+
+  /** Extract Image Filter used to restrict the computation to a region */
+  typedef   itk::ExtractImageFilter<
+                 InternalImageType,
+                 InternalImageType >     ExtractImageFilterType;
 
   /** Null filter used to select smoothing filter */
   typedef   itk::CastImageFilter< 
@@ -126,6 +132,8 @@ protected:
   bool                                        m_InputImageIsLoaded;
 
   CastImageFilterType::Pointer                m_CastImageFilter;
+
+  ExtractImageFilterType::Pointer             m_ExtractImageFilter;
 
   NullImageFilterType::Pointer                m_NullImageFilter;
 

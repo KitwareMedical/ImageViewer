@@ -207,6 +207,21 @@ RegionGrowingSegmentation
 
   controlsGroup->activate();
 
+  InputImageType::RegionType region = m_ImageReader->GetOutput()->GetBufferedRegion();
+
+  InputImageType::IndexType start = region.GetIndex();
+  InputImageType::SizeType  size  = region.GetSize();
+ 
+  xStartValueInput->value( start[0] );
+  yStartValueInput->value( start[1] );
+  zStartValueInput->value( start[2] );
+
+  xEndValueInput->value( start[0]+size[0] );
+  yEndValueInput->value( start[1]+size[1] );
+  zEndValueInput->value( start[2]+size[2] );
+
+  this->UpdateExtract();
+
 }
 
 
@@ -432,6 +447,39 @@ RegionGrowingSegmentation
 
 
   
+/******************************************************
+ *
+ *  Define the Extraction region from the input image
+ *
+ ******************************************************/
+void
+RegionGrowingSegmentation
+::UpdateExtract()
+{
+
+  typedef InputImageType::IndexType IndexType;
+  typedef InputImageType::SizeType  SizeType;
+
+  IndexType start;
+  SizeType  size;
+ 
+  start[0] = static_cast<IndexType::IndexValueType>( xStartValueInput->value() );
+  start[1] = static_cast<IndexType::IndexValueType>( yStartValueInput->value() );
+  start[2] = static_cast<IndexType::IndexValueType>( zStartValueInput->value() );
+
+  size[0] = static_cast<SizeType::SizeValueType>( xEndValueInput->value() ) - start[0];
+  size[1] = static_cast<SizeType::SizeValueType>( yEndValueInput->value() ) - start[1];
+  size[2] = static_cast<SizeType::SizeValueType>( zEndValueInput->value() ) - start[2];
+
+  InputImageType::RegionType region;
+
+  region.SetIndex( start );
+  region.SetSize( size );
+
+  m_ExtractImageFilter->SetExtractionRegion( region );
+
+}
+
 
 
 /*  Finaly the main() that will instantiate the application  */

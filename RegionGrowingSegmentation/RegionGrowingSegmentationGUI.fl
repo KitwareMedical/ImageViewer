@@ -4,22 +4,21 @@ header_name {.h}
 code_name {.cxx}
 class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase}
 } {
-  Function {RegionGrowingSegmentationGUI()} {open
-  } {
+  Function {RegionGrowingSegmentationGUI()} {} {
     Fl_Window consoleWindow {
-      label {Region Growing Segmentation} open
-      xywh {4 20 1079 459}
+      label {Region Growing Segmentation}
+      xywh {4 20 970 455}
       code0 {\#include <RegionGrowingSegmentationBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {0 0 1070 390}
+        xywh {0 0 975 390}
       } {
         Fl_Box {} {
           xywh {725 38 108 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {55 55 9 90} box UP_BOX color 4
+          xywh {55 40 9 105} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {575 36 68 10} box UP_BOX color 4
@@ -84,14 +83,17 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Box {} {
           xywh {348 277 83 10} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {55 140 9 105} box UP_BOX color 4
+        }
       }
-      Fl_Group controlsGroup {selected
-        xywh {5 5 1065 385} deactivate
+      Fl_Group controlsGroup {
+        xywh {5 5 952 390} deactivate
       } {
         Fl_Light_Button inputImageButton {
           label {Input Image}
           callback {ShowInputImage();}
-          xywh {20 129 78 39} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {17 71 84 39} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Light_Button thresholdConnectedImageButton {
@@ -137,7 +139,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         Fl_Button {} {
           label {Curvature Flow}
           callback {m_CurvatureFlowImageFilter->Update();}
-          xywh {140 22 165 37} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {140 23 165 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button homogeneousImageButton {
           label {Homogeneous Image}
@@ -235,7 +237,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           xywh {314 271 68 24} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
-        Fl_Group homogenizerGroup {open
+        Fl_Group homogenizerGroup {
           xywh {390 20 50 285}
         } {
           Fl_Check_Button {} {
@@ -251,14 +253,54 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
             xywh {393 269 26 26} type Radio down_box DIAMOND_DOWN_BOX selection_color 2
           }
         }
+        Fl_Button {} {
+          label Extract
+          callback {m_ExtractImageFilter->Update();}
+          xywh {17 128 83 37} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Group {} {
+          label Region
+          xywh {13 197 90 175} box ENGRAVED_BOX align 17
+        } {
+          Fl_Value_Input xStartValueInput {
+            label {X }
+            callback {this->UpdateExtract();}
+            xywh {43 220 45 21} labelsize 12 textsize 12
+          }
+          Fl_Value_Input yStartValueInput {
+            label {Y }
+            callback {this->UpdateExtract();}
+            xywh {43 242 45 21} labelsize 12 textsize 12
+          }
+          Fl_Value_Input zStartValueInput {
+            label {Z }
+            callback {this->UpdateExtract();}
+            xywh {43 264 45 21} labelsize 12 textsize 12
+          }
+          Fl_Value_Input xEndValueInput {
+            label {X }
+            callback {this->UpdateExtract();}
+            xywh {43 296 45 21} labelsize 12 textsize 12
+          }
+          Fl_Value_Input yEndValueInput {
+            label {Y }
+            callback {this->UpdateExtract();}
+            xywh {43 318 45 21} labelsize 12 textsize 12
+          }
+          Fl_Value_Input zEndValueInput {
+            label {Z }
+            callback {this->UpdateExtract();}
+            xywh {43 341 45 21} labelsize 12 textsize 12
+          }
+        }
       }
       Fl_Slider progressSlider {
-        xywh {10 397 1060 15} type {Horz Fill} selection_color 2
+        xywh {10 397 943 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {10 420 1060 25}
+        xywh {10 420 944 25}
       }
       Fl_Value_Input multiplierValueInput {
         label Multiplier
@@ -298,7 +340,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
       Fl_Button {} {
         label Load
         callback {this->LoadInputImage();}
-        xywh {25 53 81 35} box ROUND_UP_BOX labelsize 12 align 128
+        xywh {20 20 81 35} box ROUND_UP_BOX labelsize 12 align 128
       }
     }
   }
@@ -327,5 +369,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   Function {ShowCurvatureAnisotropicDiffusionImage( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientAnisotropicDiffusionImage( void )} {return_type {virtual void}
+  } {}
+  Function {UpdateExtract()} {open selected return_type {virtual void}
   } {}
 } 
