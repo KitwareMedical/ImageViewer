@@ -38,6 +38,10 @@ IF(HAS_FLTK)
      fltkTimeProbesCollectorGUI.fl
     )
 
+  IF(WIN32)
+    ADD_DEFINITIONS(-DWIN32)
+  ENDIF(WIN32)
+
   INCLUDE_DIRECTORIES(
      ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
      ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
