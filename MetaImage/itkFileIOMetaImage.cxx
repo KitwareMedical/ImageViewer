@@ -105,13 +105,13 @@ void FileIOMetaImage::Load2DSlice(const std::string fileName,
 
   m_MetaImage = new MetaImage();
   if (fileName == "")
-  {
+    {
     m_MetaImage->OpenMetaFile(m_FileName.c_str());
-  }
+    }
   else
-  {
+    {
     m_MetaImage->OpenMetaFile(fileName.c_str());
-  }
+    }
 
   memmove(m_FileData, ((char *) m_MetaImage->Get()) + sliceNum*GetSliceStride(),
           GetSliceStride());
@@ -257,7 +257,9 @@ void FileIOMetaImage::CopyAcquisitionParamsToImageIO (MetaImage* fromHere)
   SetDate(fromHere->Date());
   SetModality(fromHere->Modality());
   SetOrientation(fromHere->Orientation());
-  SetImageOrigin(fromHere->Position());
+  double pos[MET_IMAGEPOS_SIZE];
+  for ( int i=0; i<MET_IMAGEPOS_SIZE; i++) {pos[i]=fromHere->Position()[i];}
+  SetOrigin(pos);
   SetPatientPosition(fromHere->PatPosition());
   SetSequenceID(fromHere->SequenceID());
   SetElementSize(fromHere->ElemSize());
@@ -271,7 +273,9 @@ void FileIOMetaImage::CopyAcquisitionParamsToMetaImage (MetaImage* toHere)
   toHere->Modality(GetModality());
   toHere->Orientation(GetOrientation());
   toHere->PatPosition(GetPatientPosition());
-  toHere->Position(GetImageOrigin());
+  float pos[MET_IMAGEPOS_SIZE];
+  for ( int i=0; i<MET_IMAGEPOS_SIZE; i++) {pos[i]=GetOrigin()[i];}
+  toHere->Position(pos);
   toHere->SequenceID(GetSequenceID());
   toHere->ElemSize(GetElementSize());
   toHere->ElemSpacing(GetElementSpacing());
@@ -383,7 +387,7 @@ float* FileIOMetaImage::GetOrientation() const
   return (float*) m_Orientation;
 }
 
-void FileIOMetaImage::SetImageOrigin(const float* newValue)
+void FileIOMetaImage::SetOrigin(const double* newValue)
 {
   int i;
 
@@ -400,14 +404,14 @@ void FileIOMetaImage::SetImageOrigin(const float* newValue)
   }
 }
 
-const float* FileIOMetaImage::GetImageOrigin() const
+const double* FileIOMetaImage::GetOrigin() const
 {
-  return (float*) m_ImagePosition;
+  return (double*) m_ImagePosition;
 }
 
-const float* FileIOMetaImage::GetImageSpacing() const
+const double* FileIOMetaImage::GetSpacing() const
 {
-  return (float*) m_ElementSpacing;
+  return (double*) m_ElementSpacing;
 }
 
 void FileIOMetaImage::SetPatientPosition(const float* newValue)

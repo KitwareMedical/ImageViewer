@@ -109,17 +109,17 @@ public:
   /**
    * Specify the image position
    */
-  void SetImageOrigin(const float* newValue);
+  void SetOrigin(const double* newValue);
 
   /**
    * Get the image position
    */
-  const float* GetImageOrigin() const;
+  const double* GetOrigin() const;
 
   /**
    * Get the image spacing
    */
-  const float* GetImageSpacing() const;
+  const double* GetSpacing() const;
 
   /**
    * Specify the patient orientation
@@ -175,12 +175,12 @@ protected:
   std::string m_Comment;
   std::string m_Date;
   MET_ModType m_Modality;
-  float m_ImagePosition[MET_IMAGEPOS_SIZE];
+  double m_ImagePosition[MET_IMAGEPOS_SIZE];
   float m_Orientation[MET_ORIENTATION_SIZE];
   float m_PatientPosition[MET_PATIENTPOS_SIZE];
   float m_SequenceID[MET_SEQUENCEID_SIZE];
   float m_ElementSize[MET_ELEMENTSIZE_SIZE];
-  float m_ElementSpacing[MET_ELEMENTSPACING_SIZE];
+  double m_ElementSpacing[MET_ELEMENTSPACING_SIZE];
 
   MetaImage* m_MetaImage;
   AtomicPixelType ConvertMET_TypeToAtomicPixelType (const MET_Type value) const;
