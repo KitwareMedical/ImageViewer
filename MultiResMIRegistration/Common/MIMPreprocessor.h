@@ -119,7 +119,7 @@ public:
   /** Returns true if a permute is required. Return false otherwise */
   bool NeedToPermute()
     {
-    for ( int j = 0; j < ImageDimension; j++ )
+    for ( unsigned int j = 0; j < ImageDimension; j++ )
       {
       if ( static_cast<int>(m_PermuteOrder[j]) != j ) { return true; }
       }
@@ -129,7 +129,7 @@ public:
   /** Returns true if flipping is required. Return false otherwise */
   bool NeedToFlip()
     {
-    for ( int j = 0; j < ImageDimension; j++ )
+    for ( unsigned int j = 0; j < ImageDimension; j++ )
       {
       if ( m_FlipAxes[j] ) { return true; }
       }
