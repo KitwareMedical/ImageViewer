@@ -17,7 +17,7 @@ Some important configuration details:
 
      * FLTK version 1.1.2 is required
 
-     * Qt version is required
+     * Qt  version 2.3 is required
 
 Building with any other configurations is liable to give problems. 
 Unfortunately, developers are unlikely to help with problems due to
