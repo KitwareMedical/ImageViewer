@@ -130,6 +130,7 @@ liFilterConsoleBase
   // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
 
+
 }
 
 

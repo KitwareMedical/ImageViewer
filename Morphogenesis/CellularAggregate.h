@@ -81,12 +81,14 @@ public:
   typedef PointDataContainer::ConstIterator       CellsConstIterator;
   typedef VoronoiRegionsContainer::ConstIterator  VoronoiConstIterator;
   typedef MeshType::PointIdentifier               IdentifierType;
+  typedef MeshType::CellAutoPointer               CellAutoPointer;
 
   /**   Voronoi region around a bio::Cell */
   typedef itk::CellInterface<  MeshType::CellPixelType, 
                                MeshType::CellTraits >     CellInterfaceType;
+  typedef CellInterfaceType::CellAutoPointer              CellAutoPointer;
   typedef itk::PolygonCell<  CellInterfaceType >          VoronoiRegionType;
-  typedef VoronoiRegionType::Pointer                      VoronoiRegionPointer;
+  typedef VoronoiRegionType::SelfAutoPointer              VoronoiRegionAutoPointer;
 
   /** Convenient typedefs. */
   typedef double                                          ImagePixelType;
@@ -116,7 +118,7 @@ public:
   
   virtual void Remove( Cell * cell );
   
-  virtual VoronoiRegionType::Pointer GetVoronoi( IdentifierType cellId ) const;
+  virtual void GetVoronoi( IdentifierType cellId, VoronoiRegionAutoPointer & ) const;
 
   void DumpContent( std::ostream & os ) const;
 
