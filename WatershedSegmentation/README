@@ -1,10 +1,11 @@
 ITK WATERSHED SEGMENTATION EXAMPLE
 
 This application demonstrates the use of several Itk filters to perform
-watershed segmentation of a 2D grayscale image.  The document watershed.ps
-provides a brief explanation of the segmentation algorithm and its use.
-Watershed.ps is also illustrated with some sample images.  All the information
-needed to build and run the sample application is contained in this document.
+watershed segmentation of a 2D grayscale image.  The document
+Insight/Documents/watershed.ps provides a brief explanation of the segmentation
+algorithm and its use.  Watershed.ps is also illustrated with some sample
+images.  All the information needed to build and run the sample application is
+contained in this document.
 
 -----------------------------------------------------------------------------
 TO BUILD THIS APPLICATION
@@ -135,5 +136,6 @@ EXTENDING THIS EXAMPLE
 The itkWatershedImageFilter is designed to work with
 itkRelabelWatershedImageFilter to relabel the basic output at different "flood
 levels." See the Doxygen documentation for these two classes and the file
-watershed.ps for more information.   Once the initial segmentation is done, this 
-relabeling is comparatively fast and can be done interactively.
+Insight/Documents/watershed.ps for more information.  Once the initial
+segmentation is done, this relabeling is comparatively fast and can be done
+interactively.
