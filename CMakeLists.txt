@@ -45,7 +45,7 @@ INCLUDE_DIRECTORIES(
 
 ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS})
 
-TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${GLU_LIBRARY}
+TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_glu_LIBRARY}
                       ${OPENGL_LIBRARIES})
 
 # Take the list of GUI files, generate .cxx and .h from them and add
