@@ -161,12 +161,14 @@ SurfaceGeneratorBase
   // Ellipsoid's coefficients
   const unsigned int uStep = 100;
   const unsigned int vStep = 100;
+  
   const double randomLevel = 0.01 / RAND_MAX;;
 
   for( unsigned int u=0; u<uStep; u++ )
     {
     for( unsigned int v=0; v<vStep; v++ )
       {
+
       const double cu = u * PI / ( 2.0 * uStep ) + randomLevel * rand();
       const double cv = v * PI / ( 2.0 * vStep ) + randomLevel * rand();
 
@@ -254,25 +256,35 @@ SurfaceGeneratorBase
       CriticalPoint::VectorType  maximumDirection;
       CriticalPoint::VectorType  minimumDirection;
 
-      maximumDirection[0]  = ia * ib * (  ic * x * z );
-      maximumDirection[1]  = ia * ib * (   ic * y * z );
-      maximumDirection[2]  = ia * ib * ( - ia * x2 - ib * y2 );
+      minimumDirection[0]  = ia * ib * (  ic * x * z );
+      minimumDirection[1]  = ia * ib * (   ic * y * z );
+      minimumDirection[2]  = ia * ib * ( - ia * x2 - ib * y2 );
+       
+      minimumDirection[0] += L * k1 * ( ia * ic * x * z );
+      minimumDirection[1] += L * k1 * ( ib * ic * y * z );
+      minimumDirection[2] += L * k1 * ( - ia2 * x2 - ib2 * y2 );
 
-      maximumDirection[0] += L * k1 * ( ia * ic * x * z );
-      maximumDirection[1] += L * k1 * ( ib * ic * y * z );
-      maximumDirection[2] += L * k1 * ( - ia2 * x2 - ib2 * y2 );
 
+      maximumDirection[0] = ia * ib * ( -y * ( ia*ib*x2 + ib2*y2 + ic2*z2 ));
+      maximumDirection[1] = ia * ib * (  x * ( ia2*x2 + ia*ib*y2 + ic2*z2 ));
+      maximumDirection[2] = ia * ib * ( ic * ( ab ) * x * y * z );
+         
+      maximumDirection[0] += L3 * k1 * ( -ib * y );
+      maximumDirection[1] += L3 * k1 * (  ia * x );
+      maximumDirection[2] += 0.0;
 
-      minimumDirection[0] = ia * ib * ( -y * ( ia*ib*x2 + ib2*y2 + ic2*z2 ));
-      minimumDirection[1] = ia * ib * (  x * ( ia2*x2 + ia*ib*y2 + ic2*z2 ));
-      minimumDirection[2] = ia * ib * ( ic * ( ab ) * x * y * z );
-
-      minimumDirection[0] += L3 * k1 * ( -ib * y );
-      minimumDirection[1] += L3 * k1 * (  ia * x );
-      minimumDirection[2] += 0.0;
-
+      
       maximumDirection.Normalize();
       minimumDirection.Normalize();
+
+      if( fabs ( maximumDirection * minimumDirection ) > 1e-4 || 
+          fabs ( normal           * maximumDirection ) > 1e-4 || 
+          fabs ( normal           * minimumDirection ) > 1e-4 )
+        {
+        std::cout << "Not completly orthogonal ";
+        std::cout << normal << "  " << maximumDirection;
+        std::cout << "  " << minimumDirection << std::endl;  
+        }
 
       cp.SetMaximumDirection( maximumDirection );
       cp.SetMinimumDirection( minimumDirection );
