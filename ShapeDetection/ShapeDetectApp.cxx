@@ -44,7 +44,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkByteSwapper.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageMapper.h"
-#include "itkRawImageWriter.h"
 #include "itkExceptionObject.h"
 
 #include "itkFastMarchingImageFilter.h"
@@ -257,8 +256,8 @@ ShapeDetectApp
 
   NodeType node;
   
-  node.value = 0.0;
-  node.index = m_Seed;
+  node.SetValue( 0.0 );
+  node.SetIndex( m_Seed );
   trialPoints->InsertElement(0, node);
   
   m_DetectionFilter->SetTrialPoints( trialPoints );

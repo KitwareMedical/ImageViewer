@@ -43,7 +43,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkByteSwapper.h"
 #include "itkImageRegionIterator.h"
 #include "itkImageMapper.h"
-#include "itkRawImageWriter.h"
 #include "itkExceptionObject.h"
 
 #include "vnl/vnl_math.h"
@@ -259,10 +258,10 @@ FuzzyConnectApp
 
   m_ObjectMean = double( m_InputImage->GetPixel( m_Seed ) );
 
-	m_Filter->SetParameters( m_ObjectMean, m_ObjectVariance,
+  m_Filter->SetParameters( m_ObjectMean, m_ObjectVariance,
     m_DiffMean, m_DiffVariance, m_Weight );
 
-	m_Filter->SetThreshold( m_Threshold );
+  m_Filter->SetThreshold( m_Threshold );
 
   m_Filter->Update();
  
