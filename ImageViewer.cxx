@@ -107,6 +107,10 @@ int main(int argc, char **argv)
   tkWin->show();
   tkWin->update();
 
+  // force a first redraw
+  Fl::check();
+  tkWin->update();
+
   Fl::run();
   
   return 1;
