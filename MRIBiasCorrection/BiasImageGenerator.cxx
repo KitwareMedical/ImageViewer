@@ -125,8 +125,6 @@ void generateBiasImage(BiasField& biasField, ImagePointer output)
 
 int main(int argc, char* argv[])
 {
-  int ret ;
-  double d_ret ;
 
   if (argc <= 1)
     {
