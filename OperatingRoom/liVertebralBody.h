@@ -36,7 +36,7 @@
 namespace li {
 
 
-/** This class implements a 3D model of a generic Vertebral Body. /
+/** This class implements a 3D model of a generic Vertebral Body. */
 class ITK_EXPORT VertebralBody : public fltk::Shape3D 
 {
 public:
