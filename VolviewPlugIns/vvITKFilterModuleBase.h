@@ -51,7 +51,7 @@ public:
     const float lower = info->InputVolumeScalarRange[0];
     const float upper = info->InputVolumeScalarRange[1];
     sprintf(tmp,"%f %f %f", lower, upper, 1.0 ); 
-    return static_cast<const char *>( tmp );
+    return tmp;
   }
 
 
@@ -62,8 +62,47 @@ public:
     const float lower = info->InputVolumeScalarTypeRange[0];
     const float upper = info->InputVolumeScalarTypeRange[1];
     sprintf(tmp,"%f %f %f", lower, upper, 1.0 ); 
-    return static_cast<const char *>( tmp );
+    return tmp;
   }
+
+
+  static 
+  const char * GetInputVolumeScalarMinimum( const vtkVVPluginInfo  * info )
+  {
+    static char tmp[1024];
+    const float value = info->InputVolumeScalarRange[0];
+    sprintf(tmp,"%f", value); 
+    return tmp;
+  }
+
+
+  static 
+  const char * GetInputVolumeScalarMaximum( const vtkVVPluginInfo  * info )
+  {
+    static char tmp[1024];
+    const float value = info->InputVolumeScalarRange[1];
+    sprintf(tmp,"%f", value); 
+    return tmp;
+  }
+
+  static 
+  const char * GetInputVolumeScalarTypeMinimum( const vtkVVPluginInfo  * info )
+  {
+    static char tmp[1024];
+    const float value = info->InputVolumeScalarTypeRange[0];
+    sprintf(tmp,"%f", value); 
+    return tmp;
+  }
+
+  static 
+  const char * GetInputVolumeScalarTypeMaximum( const vtkVVPluginInfo  * info )
+  {
+    static char tmp[1024];
+    const float value = info->InputVolumeScalarTypeRange[1];
+    sprintf(tmp,"%f", value); 
+    return tmp;
+  }
+
 
   static 
   const char * GetInputVolumeDimension( const vtkVVPluginInfo  * info, int axis )
@@ -71,9 +110,8 @@ public:
     static char tmp[1024];
     const float limit = info->InputVolumeDimensions[ axis ];
     sprintf(tmp,"%f %f %f", 0.0, limit, 1.0 ); 
-    return static_cast<const char *>( tmp );
+    return tmp;
   }
-
 
   void SetUpdateMessage( const char * message )
   {
