@@ -35,7 +35,33 @@ FluoroscopyUnitView
 {
   m_Zoom = 1.0;
   m_Notifier = itk::LightObject::New();
-  m_ImageBackground = 0;
+  m_ImageBackground   = 0;
+  m_TextureBackground = 0;
+  m_TextureScaled     = 0;
+  m_TextureState      = TextureNotLoaded;
+}
+
+
+
+//--------------------------------------------
+//
+//    Destructor
+//
+//--------------------------------------------
+FluoroscopyUnitView
+::~FluoroscopyUnitView()
+{
+
+  if( m_TextureBackground )
+  {
+    delete [] m_TextureBackground;
+  }
+
+  if( m_ImageBackground )
+  {
+    delete [] m_ImageBackground;
+  }
+
 }
 
 
@@ -232,6 +258,11 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
     delete [] m_ImageBackground;
   }
   
+  if( m_TextureBackground )
+  {
+    delete [] m_TextureBackground;
+  }
+  
   ImageType::SizeType size = m_Image->GetBufferedRegion().GetSize();
   
   m_ImageBackgroundWidth  = size[0];
@@ -269,7 +300,8 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
   }
   
 
-  m_ImageBackground = new unsigned char [ totalSize ];
+  m_ImageBackground   = new unsigned char [ totalSize     ];
+  m_TextureBackground = new unsigned char [ totalSize * 4 ];  // RGB + A
   
   itk::ImageSliceConstIterator< ImageType > 
                                         it( m_Image,
@@ -280,6 +312,8 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
 
   unsigned char * dest = m_ImageBackground + totalSize - m_ImageBackgroundWidth;
 
+  unsigned char * texture = m_TextureBackground;
+
   const float factor = 255.0 / (max - min );
 
   it.Begin();
@@ -289,7 +323,13 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
     {
       while( !it.IsAtEndOfLine() ) 
       {
-        *dest = (unsigned char)( ( it.Get() - min ) * factor );
+        const unsigned char value = 
+                (unsigned char)( ( it.Get() - min ) * factor );
+        *dest = value;
+        *texture++ = value;
+        *texture++ = value;
+        *texture++ = value;
+        *texture++ = 255;
         ++it;
         ++dest;
       }
@@ -298,6 +338,8 @@ FluoroscopyUnitView::SetFluoroscopyImage( const ImageType * image )
     }
     it.NextSlice();
   }
+
+  m_TextureState = TextureLoaded;
 
 }
 
@@ -320,65 +362,50 @@ void FluoroscopyUnitView::draw(void)
   glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
   glEnable( GL_NORMALIZE );
   glEnable( GL_DEPTH_TEST );
+  
   glShadeModel( GL_SMOOTH );
   
   glClearColor((GLfloat)0.0,(GLfloat)0.0,(GLfloat)0.0,(GLfloat)1.0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-  if( m_Image ) 
+  if( m_TextureState == TextureLoaded ) 
   {
-    ImageType::SizeType size = m_Image->GetBufferedRegion().GetSize();
 
-    const unsigned long imageNx = size[0];
-    const unsigned long imageNy = size[1];
+    const GLint level  = 0;  // Level-of-Detail (sub-sampling...)
+    const GLint border = 0;  // Texture image border
 
-    glMatrixMode( GL_PROJECTION );
-    glPushMatrix();
-        glLoadIdentity();
-        glOrtho(0,w(),0,h(),-1,1);
+    GLint textureNx = (GLint)pow(2, floor( log(m_ImageBackgroundWidth )/log(2.0)+1 ) );
+    GLint textureNy = (GLint)pow(2, floor( log(m_ImageBackgroundHeight)/log(2.0)+1 ) );
+    
+    if( m_TextureScaled )
+    {
+      delete [] m_TextureScaled;
+    }
+    m_TextureScaled = new unsigned char [ 4 * textureNx * textureNy ];
 
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);  
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 
-    const GLfloat imgZoom = m_Zoom * ((GLfloat)h()) / imageNy;
+    glBindTexture(GL_TEXTURE_2D, m_TextureName );
 
-    const int imageXpos = (int)( ( w() - imageNx * imgZoom ) / 2.0 );
-    const int imageYpos = (int)( ( h() - imageNy * imgZoom ) / 2.0 );
+    gluScaleImage( GL_RGBA, 
+                   m_ImageBackgroundWidth, 
+                   m_ImageBackgroundHeight,
+                   GL_UNSIGNED_BYTE, 
+                   m_TextureBackground,
+                   textureNx, 
+                   textureNy,
+                   GL_UNSIGNED_BYTE, m_TextureScaled);
 
-    const int imageIsLSB    = 0;
-    const int imageByteSwap = 0;
+    glTexImage2D(GL_TEXTURE_2D,level,GL_RGBA,
+                 textureNx, textureNy,
+                 border,GL_RGBA,GL_UNSIGNED_BYTE,m_TextureScaled);
 
-    glRasterPos2i(0,0);
-    // this allows negative raster positions
-    glBitmap(0,0,0,0,imageXpos,imageYpos,NULL);
+    m_TextureState = TextureBinded;
 
-    glPixelStorei( GL_UNPACK_LSB_FIRST, imageIsLSB );
-    glPixelStorei( GL_UNPACK_SWAP_BYTES, imageByteSwap );
-    glPixelStorei( GL_UNPACK_ROW_LENGTH, imageNx );
-
-    glPixelStorei( GL_UNPACK_SKIP_ROWS, 0 );
-    glPixelStorei( GL_UNPACK_SKIP_PIXELS, 0 );
-    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-
-    glDisable( GL_DEPTH_TEST );
-
-    glPixelZoom( imgZoom, imgZoom );
-
-    glDrawPixels( m_ImageBackgroundWidth,
-                  m_ImageBackgroundHeight,
-                  GL_LUMINANCE,
-                  GL_UNSIGNED_BYTE,
-                  m_ImageBackground );
-
-    glMatrixMode( GL_PROJECTION );
-    glPopMatrix();
-
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-
-    glEnable( GL_DEPTH_TEST );
-    glClear(GL_DEPTH_BUFFER_BIT);
   }
 
 
@@ -402,6 +429,23 @@ void FluoroscopyUnitView::draw(void)
 
   gluPerspective( fieldOfView, aspect, nearPlane, farPlane );
 
+  VectorType lineOfSight = m_SourcePosition - m_DetectorPosition;
+
+  GLfloat lightPosition[4];
+  lightPosition[0] = 0.0;
+  lightPosition[1] = 0.0;
+  lightPosition[2] = 1.0;   // directional light along Z
+  lightPosition[3] = 0.0;
+
+  GLfloat specular[]      = {   0.0, 0.0, 0.0, 0.0 };
+  GLfloat diffuse[]       = {   0.9, 0.9, 0.9, 0.0 };
+
+  glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuse );
+  glLightfv( GL_LIGHT0, GL_SPECULAR, specular );
+  glLightfv( GL_LIGHT0, GL_POSITION, lightPosition );
+
+  glEnable( GL_LIGHT0 );
+
   gluLookAt( m_SourcePosition[0],
              m_SourcePosition[1],
              m_SourcePosition[2],
@@ -412,31 +456,56 @@ void FluoroscopyUnitView::draw(void)
              m_DetectorVerticalDirection[1],
              m_DetectorVerticalDirection[2]  );
 
+
   glGetFloatv( GL_PROJECTION_MATRIX, m_ProjectionMatrix );
+
+  lightPosition[0] = lineOfSight[0];
+  lightPosition[1] = lineOfSight[1];
+  lightPosition[2] = lineOfSight[2];
+  glLightfv( GL_LIGHT0, GL_POSITION, lightPosition );
 
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
 
-  VectorType lineOfSight = m_SourcePosition - m_DetectorPosition;
-  
-  GLfloat lightPosition[] = {   lineOfSight[0],
-                                lineOfSight[1],
-                                lineOfSight[2], 
-                                0.0  };
- 
-  GLfloat specular[]      = {   0.0, 0.0, 0.0, 0.0 };
-  GLfloat diffuse[]       = {   0.9, 0.9, 0.9, 0.0 };
-
-  glLightfv( GL_LIGHT0, GL_SPECULAR, specular );
-  glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuse );
-  glLightfv( GL_LIGHT0, GL_POSITION, lightPosition );
-
-  glEnable( GL_LIGHT0 );
-  glEnable( GL_LIGHTING );
-
   glGetFloatv( GL_MODELVIEW_MATRIX, m_ModelMatrix );
 
+
+
+  // Draw the object as viewed by the Fluoroscopy Unit
   m_Notifier->InvokeEvent( GLDrawEvent  );
+
+  
+
+  if( m_TextureState == TextureBinded )
+  {
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    gluPerspective( fieldOfView, aspect, nearPlane, farPlane );
+    
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+ 
+    lightPosition[0] = 0.0;
+    lightPosition[1] = 0.0;
+    lightPosition[2] = 1.0;   // directional light along Z
+    lightPosition[3] = 0.0;
+
+    glLightfv( GL_LIGHT0, GL_POSITION, lightPosition );
+
+    GLfloat focalDistance = lineOfSight.GetNorm();
+    GLfloat pnx =   m_DetectorRadius;
+    GLfloat pny =   m_DetectorRadius;
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture( GL_TEXTURE_2D, m_TextureName );
+    glBegin( GL_QUADS );
+      glNormal3f( 0.0,0.0,1.0); glTexCoord2f( 0.0, 0.0 ); glVertex3f( -pnx,  pny, -focalDistance );
+      glNormal3f( 0.0,0.0,1.0); glTexCoord2f( 0.0, 1.0 ); glVertex3f( -pnx, -pny, -focalDistance );
+      glNormal3f( 0.0,0.0,1.0); glTexCoord2f( 1.0, 1.0 ); glVertex3f(  pnx, -pny, -focalDistance );
+      glNormal3f( 0.0,0.0,1.0); glTexCoord2f( 1.0, 0.0 ); glVertex3f(  pnx,  pny, -focalDistance );
+    glEnd();
+    glDisable( GL_TEXTURE_2D );
+  }
+
 
 }
 

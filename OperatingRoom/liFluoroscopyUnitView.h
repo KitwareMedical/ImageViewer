@@ -39,6 +39,11 @@ public:
 	FluoroscopyUnitView(int x,int y,int w,int h, const char * label=0);
 	
   /**
+   *  Constructor
+   */
+  virtual ~FluoroscopyUnitView();
+	
+  /**
    *  Point type for 3D 
    */
   typedef itk::Point< double, 3 > PointType; 
@@ -51,9 +56,18 @@ public:
 
 
   /**
+   *  Define a state machine to setup the texture background
+   */
+  typedef enum {
+                  TextureNotLoaded,
+                  TextureLoaded,
+                  TextureBinded
+                                    } TextureState;
+
+
+  /**
    *  Image type for real fluoroscopy
    */
-  // Azucar
   //typedef itk::PhysicalImage< unsigned char, 2 > ImageType; 
   typedef itk::PhysicalImage< unsigned short, 2 > ImageType; 
 
@@ -193,8 +207,13 @@ private:
    *  up side down correction
    */
   unsigned char * m_ImageBackground;
+  unsigned char * m_TextureBackground;
+  unsigned char * m_TextureScaled;
   int             m_ImageBackgroundWidth;
   int             m_ImageBackgroundHeight;
+  TextureState    m_TextureState;
+
+  mutable GLuint  m_TextureName;
 
   /**
    *  Matrices for projection and rigid 3D transform

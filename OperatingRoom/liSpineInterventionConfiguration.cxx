@@ -245,10 +245,15 @@ SpineInterventionConfiguration::~SpineInterventionConfiguration()
 void
 SpineInterventionConfiguration::Show() 
 {
-//  ShowRoomView();
+  // the room has to be displayed in order to 
+  // computer the world coordinates of the 
+  // fluoroscopy unit source and detector 
+  ShowRoomView();
+  
 //  ShowFluoroscopyView();
 //  ShowFluoroscopyControls();
 //  ShowTableControls();
+
 }
 
 
@@ -262,6 +267,11 @@ void
 SpineInterventionConfiguration::ShowRoomView() 
 {
   m_OperatingRoomViewGUI.Show();
+
+  // This event is sent to inform the Fluoroscopic Unit View
+  // of the source and detector position in world coordinates
+  m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
+                          li::FluoroscopyUnitMovedEvent );
 }
 
 
