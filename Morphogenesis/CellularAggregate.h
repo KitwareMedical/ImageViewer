@@ -130,10 +130,12 @@ public:
 
   virtual void AdvanceTimeStep(void);
 
-  virtual void Add( Cell * cell, const VectorType & perturbation );
-  virtual void Add( Cell * cell, Cell *cell, const VectorType & perturbation );
   virtual void Add( Cell * cell );
+  virtual void Add( Cell * cell, const VectorType & perturbation );
+  virtual void Add( Cell * cellA, Cell *cellB, const VectorType & perturbation );
+  
   virtual void Remove( Cell * cell );
+  
   virtual VoronoiRegionType::Pointer GetVoronoi( IdentifierType cellId ) const;
 
   void DumpContent( std::ostream & os ) const;
