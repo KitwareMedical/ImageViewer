@@ -9,10 +9,9 @@ ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Utilities/zlib
 ${ITK_SOURCE_DIR}/Utilities/png
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/Morphogenesis
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/Morphogenesis
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
