@@ -191,13 +191,13 @@ main(int argc, char *argv[])
         moments.GetPrincipalAxesToPhysicalAxesTransform();
     if (verbose) {
         std::cout << "Principal axes to physical axes transform" << std::endl;
-        pa2phys->PrintSelf( std::cout );
+        pa2phys->Print( std::cout );
     }
     trans->Compose(pa2phys);
     trans->Compose(image->GetPhysicalToIndexTransform());
     if (verbose) {
         std::cout << "Backprojection transform:" << std::endl;
-        trans->PrintSelf( std::cout );
+        trans->Print( std::cout );
     }
 
     /* Create and initialize the interpolator */
