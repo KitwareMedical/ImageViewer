@@ -1,8 +1,3 @@
-INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
-INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
-
-
 LINK_LIBRARIES (
   ITKBasicFilters
   ITKIO
