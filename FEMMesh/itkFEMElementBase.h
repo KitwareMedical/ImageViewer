@@ -20,7 +20,7 @@
 #define __itkFEMElementBase_h
 
 
-#include "vnl/vnl_matrix.h"
+#include "itkMatrix.h"
 #include "itkFEMElementVisitor.h"
 #include "itkFEMMaterialStandard.h"
 
@@ -38,6 +38,38 @@
         v->VisitFromElement(elementid,this);\
         }\
     }
+
+
+
+
+// This macro is intended to be used by the derived classes.
+// It facilitates the declaration of all the types required there 
+#define itkFEMElementTypesMacro( baseCellType )   \
+  typedef TFEMMesh                                FEMMeshType;  \
+  typedef typename FEMMeshType::CellTraits        CellTraits;     \
+  typedef typename FEMMeshType::PointType         PointType;      \
+  typedef typename FEMMeshType::PixelType         PixelType;      \
+  typedef typename FEMMeshType::CoordRepType      CoordinateRepresentationType;   \
+  enum    { PointDimension = PointType::PointDimension }; \
+  typedef baseCellType< PixelType, CellTraits >       BaseCellType;    \
+  typedef typename BaseCellType::PointIdIterator      PointIdIterator;      \
+  typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;   \
+  typedef FEMElement< BaseCellType, FEMMeshType >         Superclass;     \
+  typedef typename Superclass::MatrixType                 MatrixType;     \
+  typedef typename Superclass::LoadsVectorType            LoadsVectorType;    \
+  typedef typename Superclass::PointsContainer            PointsContainer;    \
+  typedef typename Superclass::PointDataContainer         PointDataContainer;   \
+  typedef typename Superclass::CellsContainer             CellsContainer;   \
+  typedef Point< CoordinateRepresentationType,                              \
+                 ParametricSpaceDimension >        ParametricPointType;     \
+  typedef Matrix< CoordinateRepresentationType,                   \
+                  PointDimension, ParametricSpaceDimension > JacobianMatrixType; \
+  typedef FixedArray< RealType,                                                   \
+                      NumberOfDisplacementComponents >    ShapeFunctionsArrayType; \
+  typedef Matrix< RealType, NumberOfDisplacementComponents,                  \
+                        ParametricSpaceDimension   >  ShapeFunctionsDerivativesType; \
+
+
 
 
 namespace itk {
