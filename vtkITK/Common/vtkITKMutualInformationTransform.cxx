@@ -56,7 +56,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.2 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.3 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------
@@ -176,7 +176,6 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   metric->SetNumberOfSpatialSamples( self->GetNumberOfSamples() );
 
   fixedItkImporter->Update();
-  cout << "Fixed is done!" << endl;
   movingItkImporter->Update();
 
   // Connect up the components
@@ -186,7 +185,7 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   registration->SetInterpolator(interpolator);
   registration->SetFixedImage(fixedItkImporter->GetOutput());
   registration->SetMovingImage(movingItkImporter->GetOutput());
-  cout << "Moving is done!" << endl;
+
   // Setup the optimizer
   optimizer->SetScales(scales);
   optimizer->MaximizeOn();
@@ -197,7 +196,6 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   // Start registration
 
   registration->StartRegistration();
-  cout << "All done!" << endl;
 
   // Get the results
   RegistrationType::ParametersType solution = 
@@ -223,6 +221,8 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   matrix->Element[3][1] = 0;
   matrix->Element[3][2] = 0;
   matrix->Element[3][3] = 1;
+
+  self->Modified();
 }
 
 //----------------------------------------------------------------------------
