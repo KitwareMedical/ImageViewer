@@ -57,6 +57,7 @@ SET (PLUGINS
   vvITKGradientMagnitudeRecursiveGaussian
   vvITKMedian
   vvITKSigmoid
+  vvITKConnectedThreshold
   )
 
 
