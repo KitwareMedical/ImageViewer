@@ -26,6 +26,7 @@
 #include "vtkPoints.h"
 #include "fltkTimeProbesCollector.h"
 #include "itkThinPlateSplineKernelTransform.h"
+#include "itkThinPlateR2LogRSplineKernelTransform.h"
 #include "itkElasticBodySplineKernelTransform.h"
 #include "itkVolumeSplineKernelTransform.h"
 #include "vtkThinPlateSplineTransform.h"
@@ -54,7 +55,15 @@ public:
                               CoordinateRepresentationType,
                               PointsDimension >  ThinPlateSplineTransformType;
 
-  typedef ThinPlateSplineTransformType::Pointer  ThinPlateSplineTransformPointer;
+  typedef itk::ThinPlateR2LogRSplineKernelTransform< 
+                              CoordinateRepresentationType,
+                              PointsDimension >  ThinPlateR2LogRSplineTransformType;
+
+  typedef ThinPlateSplineTransformType::Pointer  
+                                          ThinPlateSplineTransformPointer;
+
+  typedef ThinPlateR2LogRSplineTransformType::Pointer  
+                                        ThinPlateR2LogRSplineTransformPointer;
 
   typedef ThinPlateSplineTransformType::PointSetType      PointSetType;
   typedef PointSetType::Pointer                           PointSetPointer;
@@ -126,6 +135,7 @@ protected:
   virtual void    MapPointsITK(void);
   virtual void    MapPointsElasticBodySplineITK(void);
   virtual void    MapPointsThinPlateSplineITK(void);
+  virtual void    MapPointsThinPlateR2LogRSplineITK(void);
   virtual void    MapPointsVolumeSplineITK(void);
   virtual void    MapPointsVTK(void);
   virtual void    CreateSourcePoints(void);
@@ -134,11 +144,13 @@ protected:
 
   ThinPlateSplineTransformPointer     m_ThinPlateSplineTransformITK;
 
+  ThinPlateR2LogRSplineTransformPointer m_ThinPlateR2LogRSplineTransformITK;
+
   ElasticBodySplineTransformPointer   m_ElasticBodySplineTransformITK;
 
   VolumeSplineTransformPointer        m_VolumeSplineTransformITK;
 
-  vtkThinPlateSplineTransform   *  m_ThinPlateSplineTransformVTK;
+  vtkThinPlateSplineTransform       * m_ThinPlateSplineTransformVTK;
 
 private:
 

@@ -59,6 +59,8 @@ ThinPlateSplinesApplicationBase
 
   m_ThinPlateSplineTransformITK = ThinPlateSplineTransformType::New();
 
+  m_ThinPlateR2LogRSplineTransformITK = ThinPlateR2LogRSplineTransformType::New();
+
   m_ElasticBodySplineTransformITK = ElasticBodySplineTransformType::New();
 
   m_VolumeSplineTransformITK = VolumeSplineTransformType::New();
@@ -403,6 +405,7 @@ ThinPlateSplinesApplicationBase
   
 
 
+
 void
 ThinPlateSplinesApplicationBase
 ::MapPointsThinPlateSplineITK(void)
@@ -431,6 +434,36 @@ ThinPlateSplinesApplicationBase
   this->ConvertITKMappedPointsToVTK();
 
 }
+
+void
+ThinPlateSplinesApplicationBase
+::MapPointsThinPlateR2LogRSplineITK(void)
+{
+  m_ThinPlateR2LogRSplineTransformITK->SetSourceLandmarks( m_SourceLandMarks.GetPointer() );
+  m_ThinPlateR2LogRSplineTransformITK->SetTargetLandmarks( m_TargetLandMarks.GetPointer() );
+  m_ThinPlateR2LogRSplineTransformITK->ComputeWMatrix();
+
+  PointArrayType::iterator point = m_PointsToTransform.begin();
+  PointArrayType::iterator end   = m_PointsToTransform.end();
+
+  m_PointsTransformedByITK.clear();
+
+  m_TimeCollector.Start("ITK Thin Plate R2LogR Spline");
+
+  while( point != end )
+    {
+    m_PointsTransformedByITK.push_back( 
+         m_ThinPlateR2LogRSplineTransformITK->TransformPoint( *point )
+                  );
+    ++point;
+    }
+
+  m_TimeCollector.Stop("ITK Thin Plate R2LogR Spline");
+
+  this->ConvertITKMappedPointsToVTK();
+
+}
+
 
 
 void

@@ -48,7 +48,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           }
         }
         submenu {} {
-          label Parameters open
+          label Parameters
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -138,17 +138,21 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
             xywh {15 15 100 20}
           }
           menuitem {} {
-            label {R*R*log(R)}
+            label {R2.Log(R)}
             xywh {25 25 100 20}
           }
         }
         Fl_Choice splineKernelITKChoice {
-          label {ITK  }
+          label {ITK  } selected
           xywh {875 75 110 25}
         } {
           menuitem {} {
             label {Thin Plate}
             xywh {5 5 100 20}
+          }
+          menuitem {} {
+            label {Thin Plate R2.LogR}
+            xywh {15 15 100 20}
           }
           menuitem {} {
             label {Elastic Body}
@@ -162,8 +166,8 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
       }
     }
     Fl_Window elasticBodySplineParametersWindow {
-      label {Elastic Body Spline Parameters} selected
-      xywh {249 94 293 100} visible
+      label {Elastic Body Spline Parameters}
+      xywh {249 94 293 100} hide
     } {
       Fl_Value_Slider {} {
         label Alpha
