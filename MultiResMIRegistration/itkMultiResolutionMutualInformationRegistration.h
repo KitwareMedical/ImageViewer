@@ -152,6 +152,16 @@ public:
    typedef TTarget TargetType;
 
   /**
+   * RegistrationType typedef support
+   */
+  typedef typename Superclass::RegistrationType RegistrationType;
+
+  /**
+   * TargetImageDimension enumeration
+   */
+  enum{ TargetImageDimension = Superclass::TargetImageDimension };
+
+  /**
    * Set the number of multi-resolution computation levels.
    * This sets the levels for both the target and reference
    * pyramids.
@@ -172,6 +182,12 @@ public:
    */
   itkSetVectorMacro( LearningRates, double, this->GetNumberOfLevels() );
 
+  /**
+   * Set the translation scales for each level.
+   * The number of levels must be set before calling this method.
+   */
+  itkSetVectorMacro( TranslationScales, double, this->GetNumberOfLevels() );
+
 protected:
 
   MultiResolutionMutualInformationRegistration();
@@ -181,15 +197,21 @@ protected:
   void PrintSelf(std::ostream&os, Indent indent);
 
   /**
-   * Run the internal registration algorithm at the
+   * Initialize the internal registration algorithm at the
    * specified level. Subclasses may override this method.
    */
-  virtual void OneLevelRegistration(unsigned int level);
+  virtual void OneLevelPreRegistration(unsigned int level);
+
+  /**
+   * Post registration routine. Subclasse may override this method.
+   */
+  virtual void OneLevelPostRegistration(unsigned int level);
 
 private:
 
   std::vector<double>           m_LearningRates;
   std::vector<unsigned int>     m_NumberOfIterations;
+  std::vector<double>           m_TranslationScales;
 
 };
 

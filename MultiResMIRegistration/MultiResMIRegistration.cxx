@@ -47,8 +47,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 int main()
 {
   //Allocate Images
-  typedef itk::PhysicalImage<unsigned char,2>           ReferenceType;
-  typedef itk::PhysicalImage<unsigned char,2>           TargetType;
+  typedef float PixelType;
+  typedef itk::PhysicalImage<float,2>           ReferenceType;
+  typedef itk::PhysicalImage<float,2>           TargetType;
   enum { ImageDimension = ReferenceType::ImageDimension };
 
   ReferenceType::SizeType size = {{100,100}};
@@ -100,7 +101,7 @@ int main()
 	  d += displacement;
 	  const double x = d[0];
 	  const double y = d[1];
-    ri.Set( (unsigned char)( 200.0 * exp( - ( x*x + y*y )/(s*s) ) ) );
+    ri.Set( (PixelType)( 200.0 * exp( - ( x*x + y*y )/(s*s) ) ) );
     ++ri;
   }
 
@@ -113,7 +114,7 @@ int main()
 	d = p-center;
 	const double x = d[0];
 	const double y = d[1];
-    ti.Set( (unsigned char)( 200.0 * exp( - ( x*x + y*y )/(s*s) ) ) );
+    ti.Set( (PixelType)( 200.0 * exp( - ( x*x + y*y )/(s*s) ) ) );
     ++ti;
   }
 
@@ -142,17 +143,16 @@ int main()
 
   unsigned int niter[4] = { 200, 100, 100, 50 };
   double rates[4] = { 1e-5, 1e-6, 1e-7, 1e-8 };
+  double scales[4] = { 1000, 1000, 100, 100 };
 
   registrator->SetNumberOfIterations( niter );
   registrator->SetLearningRates( rates );
+  registrator->SetTranslationScales( scales );
 
 
   MRRegistrationType::RegistrationPointer method = 
     registrator->GetInternalRegistrationMethod();
 
-  // set translation scale
-  const double transScale = 1000;
-  method->SetTranslationScale( transScale );
 
   // set metric related parameters
   method->GetMetric()->SetTargetStandardDeviation( 5.0 );
@@ -190,7 +190,7 @@ int main()
     }
   for( unsigned int j = 4; j < 6; j++ )
     {
-    if( vnl_math_abs( solution[j] * transScale - trueParameters[j] ) > 1.0 )
+    if( vnl_math_abs( solution[j] - trueParameters[j] ) > 1.0 )
       {
       pass = false;
       }
