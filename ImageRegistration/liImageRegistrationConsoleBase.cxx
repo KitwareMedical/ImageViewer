@@ -181,7 +181,7 @@ liImageRegistrationConsoleBase
   m_TargetMapper->SetDomain( m_TargetImage );
 
 
-  this->UpdateTransformationParameters();
+  this->UpdateTransformParameters();
 
   typedef ReferenceType::IndexType  IndexType;
 
@@ -215,11 +215,11 @@ liImageRegistrationConsoleBase
       point[i] = index[i];
     }
     PixelType value;
-    try 
+    if( m_TargetMapper->IsInside( point ) )
     {
-      value = m_TargetMapper->Evaluate( point );
+      value = m_TargetMapper->Evaluate();
     }
-    catch( itk::MapperException )
+    else
     {      
       value = 0.0;
     }
@@ -304,15 +304,12 @@ liImageRegistrationConsoleBase
     TargetType::SizeType size;
     size = m_TargetImage->GetRequestedRegion().GetSize();
 
-    // set the transformation centers
+    // set the transform centers
     MutualInformationRegistrationMethodType::PointType transCenter;
     for( unsigned int j = 0; j < ImageDimension; j++ )
       {
       transCenter[j] = double(size[j]) / 2;
       }
-
-    m_MutualInformationMethod->SetTargetTransformationCenter( transCenter );
-    m_MutualInformationMethod->SetReferenceTransformationCenter( transCenter );
 
     // set optimization related parameters
     m_MutualInformationMethod->SetNumberOfIterations( 1000 );
@@ -325,7 +322,7 @@ liImageRegistrationConsoleBase
 
     m_MutualInformationMethod->StartRegistration();
 
-    m_ReferenceMapper->GetTransformation()->SetParameters(
+    m_ReferenceMapper->GetTransform()->SetParameters(
         m_MutualInformationMethod->GetOptimizer()->GetCurrentPosition() );
 
     break;
@@ -338,7 +335,7 @@ liImageRegistrationConsoleBase
     m_NormalizedCorrelationMethod->SetTranslationScale( translationScale );
     m_NormalizedCorrelationMethod->StartRegistration();
 
-    m_ReferenceMapper->GetTransformation()->SetParameters(
+    m_ReferenceMapper->GetTransform()->SetParameters(
         m_NormalizedCorrelationMethod->GetOptimizer()->GetCurrentPosition() );
 
     break;
@@ -351,7 +348,7 @@ liImageRegistrationConsoleBase
     m_PatternIntensityMethod->SetTranslationScale( translationScale );
     m_PatternIntensityMethod->StartRegistration();
 
-    m_ReferenceMapper->GetTransformation()->SetParameters(
+    m_ReferenceMapper->GetTransform()->SetParameters(
         m_PatternIntensityMethod->GetOptimizer()->GetCurrentPosition() );
 
     break;
@@ -368,7 +365,7 @@ liImageRegistrationConsoleBase
     m_MeansSquaresMethod->GetOptimizer()->SetMaximumNumberOfIterations( 200 );
     m_MeansSquaresMethod->StartRegistration();
 
-    m_ReferenceMapper->GetTransformation()->SetParameters(
+    m_ReferenceMapper->GetTransform()->SetParameters(
         m_MeansSquaresMethod->GetOptimizer()->GetCurrentPosition() );
 
     break;
@@ -415,7 +412,7 @@ liImageRegistrationConsoleBase
   m_ReferenceMapper->SetDomain( m_ReferenceImage );
 
 
-  this->UpdateTransformationParameters();
+  this->UpdateTransformParameters();
 
   typedef ReferenceType::IndexType  IndexType;
 
@@ -450,11 +447,11 @@ liImageRegistrationConsoleBase
       point[i] = index[i];
     }
     PixelType value;
-    try 
+    if( m_TargetMapper->IsInside( point ) )
     {
-      value = m_ReferenceMapper->Evaluate( point );
+      value = m_ReferenceMapper->Evaluate();
     }
-    catch( itk::MapperException )
+    else
     {      
       value = 0.0;
     }
@@ -473,12 +470,12 @@ liImageRegistrationConsoleBase
 /************************************
  *
  *  Update the parameters of the 
- *  Transformation
+ *  Transform
  *
  ***********************************/
 void
 liImageRegistrationConsoleBase 
-::UpdateTransformationParameters( void )
+::UpdateTransformParameters( void )
 {
 
 }

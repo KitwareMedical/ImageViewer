@@ -130,30 +130,30 @@ public:
   typedef   itk::FileIOToImageFilter< 
                             InputImageType >             ImageReaderType;
 
-  typedef   itk::Point< double, ImageDimension * (ImageDimension + 1) >   TransformationParametersType;
+  typedef   itk::Point< double, ImageDimension * (ImageDimension + 1) >   TransformParametersType;
 
   typedef   itk::AffineRegistrationTransform< 
                                       double,
                                       ImageDimension,
-                                      TransformationParametersType 
-                                      >                TransformationType;
+                                      TransformParametersType 
+                                      >                TransformType;
 
   typedef   itk::ImageMapper< TargetType, 
-                              TransformationType > TargetMapperType;
+                              TransformType > TargetMapperType;
 
 
   typedef   itk::ImageMapper< ReferenceType, 
-                              TransformationType > ReferenceMapperType;
+                              TransformType > ReferenceMapperType;
 
 
   typedef   itk::SimpleImageRegionIterator< 
                                 ReferenceType >    ReferenceIteratorType;
 
 
-  typedef  TransformationType::PointType          PointType;
+  typedef  TransformType::InputPointType          PointType;
 
 
-  typedef  TransformationType::ParametersType      ParametersType;
+  typedef  TransformType::ParametersType      ParametersType;
 
 
 public:
@@ -167,7 +167,7 @@ public:
   virtual void Stop(void);
   virtual void GenerateReference(void);
   virtual void GenerateMappedReference(void);
-  virtual void UpdateTransformationParameters(void);
+  virtual void UpdateTransformParameters(void);
   virtual void SelectRegistrationMethod( RegistrationMethodType method );
 
 protected:

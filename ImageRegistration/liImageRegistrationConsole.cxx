@@ -365,12 +365,12 @@ liImageRegistrationConsole
 /************************************
  *
  *  Update the parameters of the 
- *  Transformation
+ *  Transform
  *
  ***********************************/
 void
 liImageRegistrationConsole
-::UpdateTransformationParameters( void )
+::UpdateTransformParameters( void )
 {
 
   typedef   itk::AffineTransform<double,3> TransformType;
@@ -418,7 +418,7 @@ liImageRegistrationConsole
     transformationParameters[counter++] = offset[k];
   }
 
-  m_TargetMapper->GetTransformation()->SetParameters(
+  m_TargetMapper->GetTransform()->SetParameters(
                                               transformationParameters);
 
 
