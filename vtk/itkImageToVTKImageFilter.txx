@@ -109,7 +109,7 @@ ImageToVTKImageFilter<TInputImage>
  * Get the exporter filter
  */
 template <class TInputImage>
-template <class TInputImage>::ExporterFilterType *
+ImageToVTKImageFilter<TInputImage>::ExporterFilterType *
 ImageToVTKImageFilter<TInputImage>
 ::GetExporter() const
 {
