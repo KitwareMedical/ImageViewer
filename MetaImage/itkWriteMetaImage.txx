@@ -13,6 +13,9 @@
   See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
+#ifndef _itkWriteMetaImage_txx
+#define _itkWriteMetaImage_txx
+
 #include "itkWriteMetaImage.h"
 #include "itkObjectFactory.h"
 #include <fstream>
@@ -144,3 +147,5 @@ WriteMetaImage<TInputImage>
 
 
 } // end namespace itk
+
+#endif

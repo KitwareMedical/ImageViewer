@@ -13,6 +13,9 @@
   See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
+#ifndef _itkInsightToVispackRGBImageAdaptor_txx
+#define _itkInsightToVispackRGBImageAdaptor_txx
+
 #include "itkVectorComponentDataAccessor.h"
 
 namespace itk
@@ -66,3 +69,5 @@ InsightToVispackRGBImageAdaptor<TInputImage>
 }
 
 } // end namespace itk
+
+#endif

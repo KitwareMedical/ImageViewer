@@ -13,6 +13,9 @@
   See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
+#ifndef _itkReadMetaImage_txx
+#define _itkReadMetaImage_txx
+
 #include "itkReadMetaImage.h"
 #include "itkObjectFactory.h"
 #include "itkSimpleImageRegionIterator.h"
@@ -114,3 +117,5 @@ ReadMetaImage<TOutputImage>
 }
 
 } // end namespace itk
+
+#endif

@@ -13,6 +13,9 @@
   See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
+#ifndef _itkVispackSource_txx
+#define _itkVispackSource_txx
+
 #include "itkVispackSource.h"
 #include "itkObjectFactory.h"
 
@@ -125,3 +128,5 @@ VispackSource<TPixel, VImageDimension>
 
 
 } // end namespace itk
+
+#endif
