@@ -128,7 +128,7 @@ Slice3DDrawer<TImage>
  * Get Draw Command
  */
 template <class TImage>
-Slice3DDrawer<TImage>::DrawCommandPointer
+typename Slice3DDrawer<TImage>::DrawCommandPointer
 Slice3DDrawer<TImage>
 ::GetDrawCommand(void) 
 {

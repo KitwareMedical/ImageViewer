@@ -58,7 +58,7 @@ WidgetRedrawCommand<TWidget>
 //
 //--------------------------------------------------
 template <class TWidget>
-WidgetRedrawCommand<TWidget>::WidgetType *
+typename WidgetRedrawCommand<TWidget>::WidgetType *
 WidgetRedrawCommand<TWidget>
 ::GetWidget( void )
 {

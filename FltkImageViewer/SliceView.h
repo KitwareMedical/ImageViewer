@@ -494,7 +494,7 @@ SliceView<imType>::~SliceView()
 //
 //
 template <class imType>
-const SliceView<imType>::ImageConstPointer &
+const typename SliceView<imType>::ImageConstPointer &
 SliceView<imType>
 ::GetInputImage(void) const
   {
@@ -505,7 +505,7 @@ SliceView<imType>
 
 
 template <class imType>
-SliceView<imType>::ImagePointer 
+typename SliceView<imType>::ImagePointer 
 SliceView<imType>
 ::GetInputImage(void)
   {

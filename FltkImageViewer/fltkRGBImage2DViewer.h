@@ -114,12 +114,12 @@ private:
   typename ObserverCommandType::Pointer    m_RedrawCommand; 
   unsigned long                            m_Tag;
 
-  ImageType::RegionType m_ImageRegion ;
-  ImageType::SizeType m_ImageSize ;
+  typename ImageType::RegionType m_ImageRegion ;
+  typename ImageType::SizeType m_ImageSize ;
   
-  ChannelImageType::Pointer m_RedImage ;
-  ChannelImageType::Pointer m_GreenImage ;
-  ChannelImageType::Pointer m_BlueImage ;
+  typename ChannelImageType::Pointer m_RedImage ;
+  typename ChannelImageType::Pointer m_GreenImage ;
+  typename ChannelImageType::Pointer m_BlueImage ;
 
   bool m_FlipY ;
 };

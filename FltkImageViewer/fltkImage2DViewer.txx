@@ -77,7 +77,7 @@ Image2DViewer<ImagePixelType>
   }
 
   typedef itk::MinimumMaximumImageCalculator<ImageType> MinMaxCalculatorType;
-  MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
+  typename MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
   MinMaxCalculator->SetImage(m_Image);
   MinMaxCalculator->Compute();
 
@@ -120,7 +120,7 @@ Image2DViewer<ImagePixelType>
   }
 
   typedef itk::MinimumMaximumImageCalculator<ImageType> MinMaxCalculatorType;
-  MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
+  typename MinMaxCalculatorType::Pointer MinMaxCalculator =  MinMaxCalculatorType::New();
   MinMaxCalculator->SetImage(m_Image);
   MinMaxCalculator->Compute();
 

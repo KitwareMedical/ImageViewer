@@ -127,7 +127,7 @@ Slice2DDrawer<TImage>
  * Get Draw Command
  */
 template <class TImage>
-Slice2DDrawer<TImage>::DrawCommandPointer
+typename Slice2DDrawer<TImage>::DrawCommandPointer
 Slice2DDrawer<TImage>
 ::GetDrawCommand(void) 
 {
