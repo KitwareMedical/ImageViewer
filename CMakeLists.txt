@@ -1,5 +1,8 @@
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
+# Look for OpenGL
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindOpenGL.cmake)
+
 #Build the example of how to create a static library for 
 # select filters in itk.
 SUBDIRS (ITKFilterLib)
