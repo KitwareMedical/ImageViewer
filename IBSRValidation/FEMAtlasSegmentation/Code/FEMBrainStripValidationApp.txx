@@ -1,3 +1,4 @@
+
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
@@ -68,6 +69,61 @@ void
 FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 ::InitializePreprocessor()
 {
+  bool Resample=false;
+
+  if ( Resample){  
+  
+  typedef ImageType::SizeType                 ImageSizeType;
+  typedef itk::AffineTransform<double,ImageDimension>   AffineTransformType;
+  typedef itk::LinearInterpolateImageFunction<ImageType,double>  InterpolatorType;
+
+  // Create an affine transformation
+  AffineTransformType::Pointer aff = AffineTransformType::New();
+  aff->Scale(1.);
+
+  // Create a linear interpolation image function
+  InterpolatorType::Pointer interp = InterpolatorType::New();
+  interp->SetInputImage(m_Parser->GetSubjectImage());
+  
+  // Create and configure a resampling filter
+  itk::ResampleImageFilter< ImageType, LabelImageType >::Pointer resample;
+  resample = itk::ResampleImageFilter< ImageType, LabelImageType >::New();
+  resample->SetInput(m_Parser->GetSubjectImage());
+  ImageSizeType size={{128,128,91}};
+  resample->SetSize(size);
+  resample->SetTransform(aff.GetPointer());
+  resample->SetInterpolator(interp.GetPointer());
+
+  // Run the resampling filter
+  resample->Update();
+
+  typedef typename LabelImageType::PixelType PType;
+  itk::RawImageIO<PType,ImageDimension>::Pointer io;
+  itk::ImageFileWriter<LabelImageType>::Pointer writer;
+  io = itk::RawImageIO<PType,ImageDimension>::New();
+  writer = itk::ImageFileWriter<LabelImageType>::New();
+  writer->SetImageIO(io);
+  std::string fn1=m_ImageDirectoryName+"/SmallAIR/whead"+m_SubjectPatientID+".img";
+  writer->SetFileName(fn1.c_str());
+  writer->SetInput(resample->GetOutput() ); 
+  writer->Write();
+
+
+  InterpolatorType::Pointer interp2 = InterpolatorType::New();
+  interp2->SetInputImage(m_Parser->GetSubjectLabelImage());
+  resample->SetInterpolator(interp2.GetPointer());
+  resample->SetInput(m_Parser->GetSubjectLabelImage());
+   // Run the resampling filter
+  resample->Update();
+
+  std::string fn2=m_ImageDirectoryName+"/SmallAIR/brain"+m_SubjectPatientID+".img";
+  writer->SetFileName(fn2.c_str());
+  writer->SetInput(resample->GetOutput() ); 
+  writer->Write();
+
+  return;
+  }
+
   m_Preprocessor->SetInputFixedImage( m_Parser->GetSubjectImage() );
   m_Preprocessor->SetInputMovingImage( m_Parser->GetAtlasImage() );
 
@@ -118,6 +174,7 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 
   m_Generator->SetOutputFileName( m_OutputFileName.c_str() );
   m_Generator->SetAppendOutputFile( m_AppendOutputFile );
+
 /*
   typedef typename LabelImageType::PixelType PType;
   itk::RawImageIO<PType,ImageDimension>::Pointer io;
@@ -137,7 +194,9 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   writer2->SetFileName("E:\\Avants\\MetaImages\\junk128x128d.raw");
   writer2->SetInput(m_Labeler->GetOutputLabelImage()); 
   writer2->Write();
- */
+
+ 
+*/
 
 }
 
