@@ -50,7 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "vtkImageToImageFilter.h"
 
-class VTK_EXPORT vtkImageStatistics : public vtkImageToImageFilter
+class vtkImageStatistics : public vtkImageToImageFilter
 {
 public:
   static vtkImageStatistics *New();
