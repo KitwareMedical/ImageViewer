@@ -25,7 +25,7 @@
 #include <FL/Fl_Multiline_Output.H>
 
 #include "fltkUtils.h"
-
+#include <string>
 #include <iostream>
 
 /*
