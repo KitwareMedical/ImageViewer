@@ -13,9 +13,9 @@ LINK_LIBRARIES(
 
 LINK_LIBRARIES(VXLNumerics ITKCommon ITKIO ITKNumerics)
 
-SOURCE_FILES(MIRegistration_SRCS
+SET(MIRegistration_SRCS
 OptionList
 MIRegistration
 )
 
-ADD_EXECUTABLE(MIRegistration MIRegistration_SRCS)
+ADD_EXECUTABLE(MIRegistration ${MIRegistration_SRCS})

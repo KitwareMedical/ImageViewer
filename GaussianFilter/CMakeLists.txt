@@ -22,33 +22,29 @@ ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/GaussianFilter
 )
 
-SOURCE_FILES(GaussianFilter_SRCS
+SET(GaussianFilter_SRCS
 liFilterConsole.cxx
 liFilterConsoleBase.cxx
 GaussianFilter.cxx
 )
 
-SOURCE_FILES(GaussianFilter2D_SRCS
+SET(GaussianFilter2D_SRCS
 liFilterConsole2D.cxx
 liFilterConsole2DBase.cxx
 GaussianFilter2D.cxx
 )
 
-SOURCE_FILES(GaussianFilter_GUI_SRCS
+SET(GaussianFilter_GUI_SRCS
 liFilterConsoleGUI.fl
 )
 
-SOURCE_FILES(GaussianFilter2D_GUI_SRCS
+SET(GaussianFilter2D_GUI_SRCS
 liFilterConsole2DGUI.fl
 )
 
 LINK_LIBRARIES (
-ITKCommon
 ITKBasicFilters 
 ITKIO
-MetaIO
-itkpng
-itkzlib
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
@@ -61,16 +57,12 @@ IF(WIN32)
   )
 ENDIF(WIN32)
 
-IF(UNIX)
-  LINK_LIBRARIES (
-  ${CMAKE_X_LIBS} -lm
-  )
-ENDIF(UNIX)
 
-ADD_EXECUTABLE(GaussianFilter   GaussianFilter_SRCS)
-ADD_EXECUTABLE(GaussianFilter2D GaussianFilter2D_SRCS)
+ADD_EXECUTABLE(GaussianFilter   ${GaussianFilter_SRCS})
+ADD_EXECUTABLE(GaussianFilter2D ${GaussianFilter2D_SRCS})
 
-FLTK_WRAP_UI(GaussianFilter     GaussianFilter_GUI_SRCS)
-FLTK_WRAP_UI(GaussianFilter2D   GaussianFilter2D_GUI_SRCS)
+FLTK_WRAP_UI(GaussianFilter     ${GaussianFilter_GUI_SRCS})
+FLTK_WRAP_UI(GaussianFilter2D   ${GaussianFilter2D_GUI_SRCS})
+
 
 

@@ -237,10 +237,6 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
       Fl_Output statusTextOutput {
         xywh {5 349 735 25}
       }
-      Fl_Box {} {
-        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
-        xywh {620 235 120 80} labeltype image
-      }
       Fl_Button {} {
         label Quit
         callback {Quit();}

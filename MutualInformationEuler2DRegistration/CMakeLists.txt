@@ -4,30 +4,12 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE_REGULAR_EXPRESSION(".*")
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Utilities/png
-${ITK_SOURCE_DIR}/Utilities/zlib
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/MutualInformationEuler2DRegistration
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/MutualInformationEuler2DRegistration
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
-)
-
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Utilities/png
-${ITK_BINARY_DIR}/Utilities/zlib
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/Numerics
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/MutualInformationEuler2DRegistration
 )
 
 
@@ -54,20 +36,19 @@ ENDIF(WIN32)
 
 IF(UNIX)
   LINK_LIBRARIES (
-  ${CMAKE_X_LIBS} -lm
+  ${CMAKE_X_LIBS}
   )
 ENDIF(UNIX)
 
-SOURCE_FILES(MutualInformationEuler2DRegistration_SRCS
+SET(MutualInformationEuler2DRegistration_SRCS
 RegisterApplication.cxx
 RegisterWindow.cxx
 register.cxx
 )
 
-SOURCE_FILES(MutualInformationEuler2DRegistration_GUI_SRCS
+SET(MutualInformationEuler2DRegistration_GUI_SRCS
 registerGUI.fl
 )
 
-ADD_EXECUTABLE(MutualInformationEuler2DRegistration MutualInformationEuler2DRegistration_SRCS)
-
-FLTK_WRAP_UI(MutualInformationEuler2DRegistration MutualInformationEuler2DRegistration_GUI_SRCS)
+ADD_EXECUTABLE(MutualInformationEuler2DRegistration ${MutualInformationEuler2DRegistration_SRCS})
+FLTK_WRAP_UI(MutualInformationEuler2DRegistration ${MutualInformationEuler2DRegistration_GUI_SRCS})

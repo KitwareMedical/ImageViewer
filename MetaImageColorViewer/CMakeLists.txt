@@ -2,7 +2,7 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 
-SOURCE_FILES ( MetaImageColorViewer_SRCS
+SET ( MetaImageColorViewer_SRCS
   MetaImageColorViewer.cxx
   )
 
@@ -12,17 +12,6 @@ INCLUDE_DIRECTORIES (
   ${OPENGL_INCLUDE_PATH}
 )
 
-LINK_LIBRARIES (
-  ITKCommon
-  ITKBasicFilters
-  VXLNumerics
-  FltkImageViewer
-  ITKIO
-  MetaIO
-  ${FLTK_LIBRARY}
-  ${OPENGL_LIBRARY}
-  ${GLU_LIBRARY}
-)
 
 IF(WIN32)
   LINK_LIBRARIES(
@@ -30,13 +19,21 @@ IF(WIN32)
   )
 ENDIF(WIN32)
 
-ADD_EXECUTABLE( MetaImageColorViewer MetaImageColorViewer_SRCS )
+ADD_EXECUTABLE( MetaImageColorViewer ${MetaImageColorViewer_SRCS} )
+TARGET_LINK_LIBRARIES (MetaImageColorViewer
+  ITKBasicFilters
+  FltkImageViewer
+  ITKIO
+  ${FLTK_LIBRARY}
+  ${OPENGL_LIBRARY}
+  ${GLU_LIBRARY}
+)
 
-SOURCE_FILES(MetaImageColorViewer_GUI_SRCS
+SET(MetaImageColorViewer_GUI_SRCS
   MetaImageColorViewerGUI.fld
   )
 
 IF(HAS_FLTK)
-  FLTK_WRAP_UI( MetaImageColorViewer MetaImageColorViewer_GUI_SRCS )
+  FLTK_WRAP_UI( MetaImageColorViewer ${MetaImageColorViewer_GUI_SRCS} )
 ENDIF(HAS_FLTK)
 

@@ -37,13 +37,13 @@ LINK_LIBRARIES(
   vtkFltk
 )
 
-SOURCE_FILES(ThinPlateSplinesApplication_SRCS
+SET(ThinPlateSplinesApplication_SRCS
 ThinPlateSplinesApplicationBase.cxx
 ThinPlateSplinesApplication.cxx
 main.cxx
 )
 
-SOURCE_FILES(ThinPlateSplinesApplication_GUI_SRCS
+SET(ThinPlateSplinesApplication_GUI_SRCS
 ThinPlateSplinesApplicationGUI.fl
 )
 
@@ -68,8 +68,8 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(ThinPlateSplines ThinPlateSplinesApplication_SRCS)
+ADD_EXECUTABLE(ThinPlateSplines ${ThinPlateSplinesApplication_SRCS})
 
-FLTK_WRAP_UI(ThinPlateSplines ThinPlateSplinesApplication_GUI_SRCS)
+FLTK_WRAP_UI(ThinPlateSplines ${ThinPlateSplinesApplication_GUI_SRCS})
 
 

@@ -103,10 +103,6 @@ class SpineInterventionConfigurationGUI {open
           }
         }
       }
-      Fl_Button {} {
-        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif} selected
-        xywh {185 30 110 70} box FLAT_BOX labeltype image
-      }
     }
   }
   Function {~SpineInterventionConfigurationGUI()} {return_type virtual

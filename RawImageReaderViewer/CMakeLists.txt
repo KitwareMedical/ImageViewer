@@ -2,10 +2,6 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/RawImageReaderViewer
@@ -13,22 +9,9 @@ ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/RawImageReaderViewer
-)
-
 LINK_LIBRARIES (
-ITKCommon
 ITKBasicFilters 
 ITKIO
-MetaIO
-itkpng
-itkzlib
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
@@ -48,17 +31,17 @@ IF(UNIX)
 ENDIF(UNIX)
 
 
-SOURCE_FILES(RawImageReaderViewer_SRCS
+SET(RawImageReaderViewer_SRCS
 itkRawImageReaderViewer.cxx
 RawImageReaderViewer.cxx
 )
 
-SOURCE_FILES(RawImageReaderViewer_GUI_SRCS
+SET(RawImageReaderViewer_GUI_SRCS
 itkRawImageReaderViewerGUI.fl
 )
 
-ADD_EXECUTABLE(RawImageReaderViewer   RawImageReaderViewer_SRCS)
+ADD_EXECUTABLE(RawImageReaderViewer   ${RawImageReaderViewer_SRCS})
 
-FLTK_WRAP_UI(RawImageReaderViewer   RawImageReaderViewer_GUI_SRCS)
+FLTK_WRAP_UI(RawImageReaderViewer   ${RawImageReaderViewer_GUI_SRCS})
 
 

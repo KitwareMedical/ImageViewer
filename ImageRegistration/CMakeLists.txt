@@ -3,9 +3,6 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/ImageRegistration
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
@@ -14,32 +11,20 @@ ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/ImageRegistration
-)
-
-SOURCE_FILES(ImageRegistration_SRCS
+SET(ImageRegistration_SRCS
 liImageRegistrationConsole.cxx
 liImageRegistrationConsoleBase.cxx
 ImageRegistration.cxx
 )
 
-SOURCE_FILES(ImageRegistration_GUI_SRCS
+SET(ImageRegistration_GUI_SRCS
 liImageRegistrationConsoleGUI.fl
 )
 
 LINK_LIBRARIES (
-VXLNumerics
-ITKCommon
 ITKNumerics
-VXLNumerics
 ITKBasicFilters 
 ITKIO
-MetaIO
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
@@ -54,11 +39,11 @@ ENDIF(WIN32)
 
 IF(UNIX)
   LINK_LIBRARIES (
-  ${CMAKE_X_LIBS} -lm
+  ${CMAKE_X_LIBS}
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(ImageRegistration ImageRegistration_SRCS)
+ADD_EXECUTABLE(ImageRegistration ${ImageRegistration_SRCS})
 
-FLTK_WRAP_UI( ImageRegistration ImageRegistration_GUI_SRCS )
+FLTK_WRAP_UI( ImageRegistration ${ImageRegistration_GUI_SRCS} )
 

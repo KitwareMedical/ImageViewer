@@ -28,13 +28,13 @@ ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/GradientRecursiveGaussianFilter
 )
 
-SOURCE_FILES(GradientRecursiveGaussianFilter_SRCS
+SET(GradientRecursiveGaussianFilter_SRCS
 GradientRecursiveGaussianFilterBase.cxx
 GradientRecursiveGaussianFilter.cxx
 main.cxx
 )
 
-SOURCE_FILES(GradientRecursiveGaussianFilter_GUI_SRCS
+SET(GradientRecursiveGaussianFilter_GUI_SRCS
 GradientRecursiveGaussianFilterGUI.fl
 )
 
@@ -64,9 +64,9 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(GradientRecursiveGaussianFilter GradientRecursiveGaussianFilter_SRCS)
+ADD_EXECUTABLE(GradientRecursiveGaussianFilter ${GradientRecursiveGaussianFilter_SRCS})
 
-FLTK_WRAP_UI(GradientRecursiveGaussianFilter  GradientRecursiveGaussianFilter_GUI_SRCS)
+FLTK_WRAP_UI(GradientRecursiveGaussianFilter  ${GradientRecursiveGaussianFilter_GUI_SRCS})
 
 
 

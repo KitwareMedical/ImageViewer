@@ -1,4 +1,4 @@
-SOURCE_FILES( WSTCommon_SRCS
+SET( WSTCommon_SRCS
 vtkBinaryVolume.cxx
 vtkBinaryVolumeLogic.cxx
 vtkBoundingBox.cxx
@@ -17,33 +17,25 @@ vtkLookupTableEquivalencyHash.cxx
 vtkITKWatershedFilterAndWriter.h
 )
 
-WRAP_EXCLUDE_FILES(
-vtkLookupTableEquivalencyHash
-vtkBoundingBoxHash.h
-)
 
-ADD_LIBRARY ( vtkWSTCommon WSTCommon_SRCS )
+SET_SOURCE_FILES_PROPERTIES(
+vtkLookupTableEquivalencyHash.cxx  WRAP_EXCLUDE)
+
+ADD_LIBRARY ( vtkWSTCommon ${WSTCommon_SRCS} )
 
 # Link in with ITK
-INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Code/Numerics/ )
 INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Examples/vtkITK/Common/ )
 INCLUDE_DIRECTORIES ( ${ITK_SOURCE_DIR}/Examples/SegmentationEditor/Common/ )
 
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Examples/Examples/SegmentationEditor/Common )
 LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Examples/Examples/vtkITK/Common )
-LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Algorithms )
-LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/BasicFilters )
-LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Common )
-LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/IO )
-LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Numerics )
-LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Numerics/Statistics )
 
 
 # if we are wrapping into Tcl then add the library and extra 
 # source files
 #
-  VTK_WRAP_TCL(vtkWSTCommonTCL WSTCommonTCL_SRCS WSTCommon_SRCS)
-  ADD_LIBRARY ( vtkWSTCommonTCL WSTCommonTCL_SRCS )
+  VTK_WRAP_TCL(vtkWSTCommonTCL WSTCommonTCL_SRCS ${WSTCommon_SRCS})
+  ADD_LIBRARY ( vtkWSTCommonTCL ${WSTCommonTCL_SRCS} )
   TARGET_LINK_LIBRARIES (vtkWSTCommonTCL 
                          vtkFilteringTCL 
                          vtkCommonTCL 

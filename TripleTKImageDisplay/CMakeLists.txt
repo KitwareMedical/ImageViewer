@@ -33,7 +33,7 @@ LINK_LIBRARIES(
   vtkFltk
 )
 
-SOURCE_FILES(TripleTKID_SRCS
+SET(TripleTKID_SRCS
 3D/FLVTKWin.cxx
 TripleTKMain.cxx
 TripleTK2D.cxx
@@ -64,5 +64,5 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(TripleTKID TripleTKID_SRCS)
+ADD_EXECUTABLE(TripleTKID ${TripleTKID_SRCS})
 

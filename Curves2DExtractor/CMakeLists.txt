@@ -17,36 +17,24 @@ ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/Curves2DExtractor
-${ITK_BINARY_DIR}/Utilities/png
-${ITK_BINARY_DIR}/Utilities/zlib
-${ITK_BINARY_DIR}/Utilities/MetaIO
-)
 
-
-SOURCE_FILES(Curves2DExtractor_SRCS
+SET(Curves2DExtractor_SRCS
 ceExtractorConsole.cxx
 ceExtractorConsoleBase.cxx
 )
 
-SOURCE_FILES(FLTK_GUI_Files_SRCS
+SET(FLTK_GUI_Files_SRCS
 ceExtractorConsoleGUI.fl
 )
 
 
-ADD_LIBRARY(Curves2DExtractorLib Curves2DExtractor_SRCS)
+ADD_LIBRARY(Curves2DExtractorLib ${Curves2DExtractor_SRCS})
 
 #
 # Take the list of GUI files, generate .cxx and .h from 
 # them and add them to the build process of the target
 #
-FLTK_WRAP_UI(Curves2DExtractorLib FLTK_GUI_Files_SRCS )
+FLTK_WRAP_UI(Curves2DExtractorLib ${FLTK_GUI_Files_SRCS} )
 
 
 
@@ -72,7 +60,7 @@ ENDIF(WIN32)
 
 IF(UNIX)
   LINK_LIBRARIES (
-  ${CMAKE_X_LIBS} -lm
+  ${CMAKE_X_LIBS}
   )
 ENDIF(UNIX)
 

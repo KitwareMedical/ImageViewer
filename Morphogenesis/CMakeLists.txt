@@ -2,12 +2,6 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Utilities/zlib
-${ITK_SOURCE_DIR}/Utilities/png
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/Morphogenesis
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
@@ -18,17 +12,11 @@ ${GLU_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Utilities/png
-${ITK_BINARY_DIR}/Utilities/zlib
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/Morphogenesis
 )
 
-SOURCE_FILES(Morphogenesis_SRCS
+SET(Morphogenesis_SRCS
 Bacteria.cxx
 BacterialColony.cxx
 Cell.cxx
@@ -45,18 +33,14 @@ Prokariote.cxx
 main.cxx
 )
 
-SOURCE_FILES(Morphogenesis_GUI_SRCS
+SET(Morphogenesis_GUI_SRCS
 BacterialColonyGUI.fl
 CellsViewerGUI.fl
 )
 
 LINK_LIBRARIES (
-ITKCommon
 ITKBasicFilters 
 ITKIO
-MetaIO
-itkpng
-itkzlib
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
@@ -76,7 +60,7 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(Morphogenesis Morphogenesis_SRCS)
+ADD_EXECUTABLE(Morphogenesis ${Morphogenesis_SRCS})
 
-FLTK_WRAP_UI(Morphogenesis  Morphogenesis_GUI_SRCS)
+FLTK_WRAP_UI(Morphogenesis  ${Morphogenesis_GUI_SRCS})
 

@@ -2,10 +2,6 @@ INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/OperatingRoom
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
@@ -15,16 +11,7 @@ ${OPENGL_INCLUDE_PATH}
 ${GLU_INCLUDE_PATH}
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Examples/OperatingRoom
-)
-
-SOURCE_FILES(OperatingRoom_SRCS
+SET(OperatingRoom_SRCS
 liC_Arm3D.cxx
 liCommandGLRedrawModelFixed.cxx
 liCommandGLRedrawModelSensitive.cxx
@@ -60,7 +47,7 @@ liTube3D.cxx
 main.cxx
 )
 
-SOURCE_FILES(OperatingRoom_GUI_SRCS
+SET(OperatingRoom_GUI_SRCS
 liVesselsModelGUI.fl
 liVertebralSegmentGUI.fl
 liSurgeryTableGUI.fl
@@ -99,7 +86,7 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(OperatingRoom OperatingRoom_SRCS)
+ADD_EXECUTABLE(OperatingRoom ${OperatingRoom_SRCS})
 
-FLTK_WRAP_UI(OperatingRoom OperatingRoom_GUI_SRCS)
+FLTK_WRAP_UI(OperatingRoom ${OperatingRoom_GUI_SRCS})
 

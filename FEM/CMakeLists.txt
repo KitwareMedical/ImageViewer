@@ -1,30 +1,4 @@
-INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Numerics/FEM
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Code/Numerics
-${ITK_SOURCE_DIR}/Code/Numerics/vxl
-${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
-${ITK_BINARY_DIR}/Code/Numerics/vxl/vcl
-)
-
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Numerics/FEM
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/Numerics
-${ITK_BINARY_DIR}/Code/Numerics/FEM
-${ITK_BINARY_DIR}/Code/Numerics/vxl
-${ITK_BINARY_DIR}/Code/Numerics/vxl/vcl
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-)
-
 LINK_LIBRARIES (
-  VXLNumerics
   FEM
   ITKCommon
   ITKNumerics
@@ -37,7 +11,7 @@ IF(FEM_VISUALIZATION)
 ADD_DEFINITIONS( -DFEM_BUILD_VISUALIZATION /D "_AFXDLL" )
 ENDIF(FEM_VISUALIZATION)
 
-SOURCE_FILES(FEMImageRegLMEx_SRCS
+SET(FEMImageRegLMEx_SRCS
   FEMImageRegLMEx.cxx
 )
 
@@ -45,7 +19,7 @@ SOURCE_FILES(FEMImageRegLMEx_SRCS
 # we can only include them if compiling on windows
 IF(NOT UNIX)
 IF(WIN32)
-SOURCE_FILES(FEMImageRegLMEx_SRCS 
+SET(FEMImageRegLMEx_SRCS ${FEMImageRegLMEx_SRCS}
   FEMImageRegLMEx.h
 )
 ENDIF(WIN32)
@@ -57,5 +31,5 @@ ENDIF(NOT UNIX)
 # Create project files for all examples
 ADD_EXECUTABLE(FEMRead FEMRead.cxx)
 ADD_EXECUTABLE(FEMTruss FEMTruss.cxx)
-ADD_EXECUTABLE(FEMImageRegLMEx FEMImageRegLMEx_SRCS)
+ADD_EXECUTABLE(FEMImageRegLMEx ${FEMImageRegLMEx_SRCS})
 ADD_EXECUTABLE(FEMSolverHyperbolicExample FEMSolverHyperbolicExample.cxx)

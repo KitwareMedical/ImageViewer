@@ -2,11 +2,6 @@
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/Numerics
-${ITK_SOURCE_DIR}/Code/Numerics/FEM
-${ITK_SOURCE_DIR}/Code/Numerics/vxl
-${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
 ${ITK_SOURCE_DIR}/Examples/FEMMesh
 ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
 ${FLTK_INCLUDE_PATH}
@@ -14,9 +9,6 @@ ${OPENGL_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/Numerics
-${ITK_BINARY_DIR}/Code/Numerics/FEM
 ${FLTK_LIB_PATH}
 )
 
@@ -33,14 +25,14 @@ LINK_LIBRARIES(
   vtkFltk
 )
 
-SOURCE_FILES(FEMMeshApplication_SRCS
+SET(FEMMeshApplication_SRCS
 itkFEMHeatConduction2D.cxx
 FEMMeshApplicationBase.cxx
 FEMMeshApplication.cxx
 main.cxx
 )
 
-SOURCE_FILES(FEMMeshApplication_GUI_SRCS
+SET(FEMMeshApplication_GUI_SRCS
 FEMMeshApplicationGUI.fl
 )
 
@@ -65,8 +57,8 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(FEMMesh FEMMeshApplication_SRCS)
+ADD_EXECUTABLE(FEMMesh ${FEMMeshApplication_SRCS})
 
-FLTK_WRAP_UI(FEMMesh FEMMeshApplication_GUI_SRCS)
+FLTK_WRAP_UI(FEMMesh $(FEMMeshApplication_GUI_SRCS})
 
 

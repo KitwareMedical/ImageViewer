@@ -20,31 +20,11 @@
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Examples/MultiResMIRegistration/Common
 ${ITK_SOURCE_DIR}/Examples/IBSRValidation/Common
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Algorithms
-)
-
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/Numerics
-)
-
-LINK_LIBRARIES (
-Example_ITKRegistrationLib
-VXLNumerics
-ITKNumerics
-ITKCommon
-ITKIO
-ITKBasicFilters 
 )
 
 
 ### HERE:  Modified this line
-ADD_LIBRARY(Example_ITKRegistrationLib ITKRegistrationLib )
-
+ADD_LIBRARY(Example_ITKRegistrationLib ITKRegistrationLib.cxx )
+TARGET_LINK_LIBRARIES(Example_ITKRegistrationLib ITKNumerics ITKIO ITKBasicFilters ITKCommon )
 ADD_EXECUTABLE(Example_ITKRegistrationLibTest ITKRegistrationLibTest.cxx)
+TARGET_LINK_LIBRARIES(Example_ITKRegistrationLibTest Example_ITKRegistrationLib)

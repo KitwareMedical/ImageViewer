@@ -26,14 +26,6 @@
 
 # -- End uncomment --
 
-LINK_DIRECTORIES (
-${ITK_BINARY_DIR}/Code/Common
-${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Code/Numerics
-)
-
 LINK_LIBRARIES (
 Example_ITKFilterLib
 )
@@ -48,6 +40,9 @@ ITKBasicFilters
 
 
 ADD_LIBRARY( Example_ITKFilterLib ITKFilterLib )
-
+TARGET_LINK_LIBRARIES(Example_ITKFilterLib ITKCommon ITKNumerics ITKIO ITKBasicFilters)
 ADD_EXECUTABLE( Example_ITKFilterLibTest ITKFilterLibTest.cxx )
+TARGET_LINK_LIBRARIES(Example_ITKFilterLibTest Example_ITKFilterLib)
+
+
 

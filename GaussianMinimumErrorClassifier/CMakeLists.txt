@@ -1,33 +1,17 @@
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Code/Common
-${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Utilities/MetaIO
-${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Code/BasicFilters
-${ITK_SOURCE_DIR}/Code/Numerics
-${ITK_SOURCE_DIR}/Code/Numerics/Statistics
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
 ${ITK_SOURCE_DIR}/Examples/GaussianMinimumErrorClassifier
 )
 
-LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Code/BasicFilters
-${ITK_BINARY_DIR}/Code/Numerics/vxl
-)
-
-
 LINK_LIBRARIES (
-VXLNumerics
-ITKCommon
 ITKBasicFilters
 ITKIO
-MetaIO
 )
 
-SOURCE_FILES (GaussianMinimumErrorClassifier_SRCS
+SET (GaussianMinimumErrorClassifier_SRCS
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection/OptionList.cxx
 MaximumLikelihoodRatioDecisionRule.cxx
 GaussianMinimumErrorClassifier.cxx
 )
 
-ADD_EXECUTABLE(GaussianMinimumErrorClassifier GaussianMinimumErrorClassifier_SRCS)
+ADD_EXECUTABLE(GaussianMinimumErrorClassifier ${GaussianMinimumErrorClassifier_SRCS})

@@ -16,7 +16,6 @@
 =========================================================================*/
 #ifndef __vtkLookupTableEquivalencyHash_h_
 #define __vtkLookupTableEquivalencyHash_h_
-
 #include "itk_hash_map.h"
 #include <list>
 
@@ -31,10 +30,10 @@ struct merge_t
 typedef std::list<merge_t> merge_list_t;
 
 typedef std::list<unsigned long> unsigned_long_list_t;
-
 class ITK_EXPORT vtkLookupTableEquivalencyHash
 {
 public:
+
   typedef vtkLookupTableEquivalencyHash Self;
 
   typedef itk::hash_map<unsigned long, unsigned long,
@@ -42,7 +41,6 @@ public:
   typedef HashTableType::iterator Iterator;
   typedef HashTableType::const_iterator ConstIterator;
   typedef HashTableType::value_type ValueType;
-  
   /**
    * ``Flattens'' the equivalency table by eliminating all redundant and
    * recursive equivalencies.  I.e. the set { 2=1; 3=2; 4=3 } is converted
@@ -93,7 +91,6 @@ public:
   
 protected:
   HashTableType m_HashMap;
-  
 };
 
 

@@ -11,7 +11,7 @@ ${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Code/BasicFilters
 )
 
-SOURCE_FILES(ELLIPSOID_SPATIAL_FUNCTION_SRCS
+SET(ELLIPSOID_SPATIAL_FUNCTION_SRCS
 itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx
 )
 
@@ -33,5 +33,6 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(itkEllipsoidInteriorExteriorSpatialFunctionExample ELLIPSOID_SPATIAL_FUNCTION_SRCS)
+ADD_EXECUTABLE(itkEllipsoidInteriorExteriorSpatialFunctionExample 
+${ELLIPSOID_SPATIAL_FUNCTION_SRCS})
 
