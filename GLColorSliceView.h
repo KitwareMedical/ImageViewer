@@ -104,31 +104,31 @@ SetInputImage(ImageType * newImData)
 
   // If the overlay has been set and the size is different from the new image,
   // it is removed.
-  if( cValidOverlayData)
+  if( this->cValidOverlayData)
   {  
-    SizeType  overlay_size   = cOverlayData->GetLargestPossibleRegion().GetSize();
+    SizeType  overlay_size   = this->cOverlayData->GetLargestPossibleRegion().GetSize();
       
     if((overlay_size[0] != size[0])
        ||  (overlay_size[1] != size[1])
        ||  (overlay_size[2] != size[2])
       )
       {
-       if(cWinOverlayData != NULL)
+       if(this->cWinOverlayData != NULL)
         {
-        delete [] cWinOverlayData;
+        delete [] this->cWinOverlayData;
         }
-       cWinOverlayData       = NULL;
-       cValidOverlayData     = false;
+       this->cWinOverlayData       = NULL;
+       this->cValidOverlayData     = false;
       }       
   }
     
-  cImData = newImData;
-  cDimSize[0] = size[0];
-  cDimSize[1] = size[1];
-  cDimSize[2] = size[2];
-  cSpacing[0] = cImData->GetSpacing()[0];
-  cSpacing[1] = cImData->GetSpacing()[1];
-  cSpacing[2] = cImData->GetSpacing()[2];
+  this->cImData = newImData;
+  this->cDimSize[0] = size[0];
+  this->cDimSize[1] = size[1];
+  this->cDimSize[2] = size[2];
+  this->cSpacing[0] = this->cImData->GetSpacing()[0];
+  this->cSpacing[1] = this->cImData->GetSpacing()[1];
+  this->cSpacing[2] = this->cImData->GetSpacing()[2];
 
   //calculating cDataMax and cDataMin
   IndexType ind;
@@ -136,34 +136,34 @@ SetInputImage(ImageType * newImData)
   ind[1] = 0; 
   ind[2] = 0;
   
-  cDataMax = cImData->GetPixel(ind)[0];
-  cDataMin = cDataMax;
+  this->cDataMax = this->cImData->GetPixel(ind)[0];
+  this->cDataMin = this->cDataMax;
   RGBPixel<ImagePixelType> tfv;
   double tf;
     
     
-  for( unsigned int i=0; i<cDimSize[0]; i++ )
+  for( unsigned int i=0; i<this->cDimSize[0]; i++ )
     {
     ind[0] = i;
-    for(unsigned int j=0; j<cDimSize[1]; j++ )
+    for(unsigned int j=0; j<this->cDimSize[1]; j++ )
       {
       ind[1] = j;
-      for( unsigned int k=0; k<cDimSize[2]; k++ )
+      for( unsigned int k=0; k<this->cDimSize[2]; k++ )
         {
         ind[2] = k;
-        tfv = cImData->GetPixel(ind);
+        tfv = this->cImData->GetPixel(ind);
         for( unsigned int l=0; l<3; l++)
           {
           tf = (double)(tfv[l]);
-          if(tf > cDataMax) 
+          if(tf > this->cDataMax) 
             {
-            cDataMax = tf;
+            this->cDataMax = tf;
             }
           else 
             {
-            if(tf < cDataMin)
+            if(tf < this->cDataMin)
               {
-              cDataMin = tf;
+              this->cDataMin = tf;
               }
             }
           }
@@ -171,58 +171,58 @@ SetInputImage(ImageType * newImData)
       }
     }
   
-  cIWMin      = cDataMin;
-  cIWMax      = cDataMax;
-  cIWModeMin  = IW_MIN;
-  cIWModeMax  = IW_MAX;
+  this->cIWMin      = this->cDataMin;
+  this->cIWMax      = this->cDataMax;
+  this->cIWModeMin  = IW_MIN;
+  this->cIWModeMax  = IW_MAX;
     
-  cImageMode = IMG_VAL;
+  this->cImageMode = IMG_VAL;
     
-  cWinZoom = 1;
-  cWinOrientation = 2;
-  cWinOrder[0] = 0;
-  cWinOrder[1] = 1;
-  cWinOrder[2] = 2;
+  this->cWinZoom = 1;
+  this->cWinOrientation = 2;
+  this->cWinOrder[0] = 0;
+  this->cWinOrder[1] = 1;
+  this->cWinOrder[2] = 2;
   
-  cWinCenter[0] = cDimSize[0]/2;
-  cWinCenter[1] = cDimSize[1]/2;
-  cWinCenter[2] = 0;
+  this->cWinCenter[0] = this->cDimSize[0]/2;
+  this->cWinCenter[1] = this->cDimSize[1]/2;
+  this->cWinCenter[2] = 0;
   
-  cWinMinX  = 0;
-  cWinSizeX = cDimSize[0];
-  if(cWinSizeX<cDimSize[1])
+  this->cWinMinX  = 0;
+  this->cWinSizeX = this->cDimSize[0];
+  if(this->cWinSizeX<this->cDimSize[1])
     {
-    cWinSizeX = cDimSize[1];
+    this->cWinSizeX = this->cDimSize[1];
     }
-  if(cWinSizeX<cDimSize[2])
+  if(this->cWinSizeX<this->cDimSize[2])
     {
-    cWinSizeX = cDimSize[2];
+    this->cWinSizeX = this->cDimSize[2];
     }
-  cWinMaxX  = cWinSizeX - 1;
+  this->cWinMaxX  = this->cWinSizeX - 1;
   
-  cWinMinY  = 0;
-  cWinSizeY = cWinSizeX;
-  cWinMaxY  = cWinSizeY - 1;
+  this->cWinMinY  = 0;
+  this->cWinSizeY = this->cWinSizeX;
+  this->cWinMaxY  = this->cWinSizeY - 1;
   
-  cWinDataSizeX = cDimSize[0];
-  cWinDataSizeY = cDimSize[1];
+  this->cWinDataSizeX = this->cDimSize[0];
+  this->cWinDataSizeY = this->cDimSize[1];
   
-  if(cWinImData != NULL)
+  if(this->cWinImData != NULL)
     {
-    delete [] cWinImData;
-    }
-  
-  cWinImData = new unsigned char[ cWinDataSizeX * cWinDataSizeY * 3 ];
-  
-  if(cWinZBuffer != NULL) 
-    {
-    delete [] cWinZBuffer;
+    delete [] this->cWinImData;
     }
   
-  cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
+  this->cWinImData = new unsigned char[ this->cWinDataSizeX * this->cWinDataSizeY * 3 ];
   
-  cViewImData  = true;
-  cValidImData = true;
+  if(this->cWinZBuffer != NULL) 
+    {
+    delete [] this->cWinZBuffer;
+    }
+  
+  this->cWinZBuffer = new unsigned short[ this->cWinDataSizeX * this->cWinDataSizeY ];
+  
+  this->cViewImData  = true;
+  this->cValidImData = true;
     
   update();
   }
@@ -233,73 +233,73 @@ template <class ImagePixelType, class OverlayPixelType>
 void GLColorSliceView<ImagePixelType, OverlayPixelType>::
 clickSelect(float newX, float newY, float newZ)
   {    
-  cClickSelect[0] = newX;
-  if(cClickSelect[0]<0) 
+  this->cClickSelect[0] = newX;
+  if(this->cClickSelect[0]<0) 
     {
-    cClickSelect[0] = 0;
+    this->cClickSelect[0] = 0;
     }
-  if(cClickSelect[0] >= cDimSize[0])
+  if(this->cClickSelect[0] >= this->cDimSize[0])
     {
-    cClickSelect[0] = cDimSize[0]-1;
-    }
-
-  cClickSelect[1] = newY;
-  if(cClickSelect[1]<0)
-    {
-    cClickSelect[1] = 0;
-    }
-  if(cClickSelect[1] >= cDimSize[1])
-    {
-    cClickSelect[1] = cDimSize[1]-1;
+    this->cClickSelect[0] = this->cDimSize[0]-1;
     }
 
-  cClickSelect[2] = newZ;
-
-  if(cClickSelect[2]<0)
+  this->cClickSelect[1] = newY;
+  if(this->cClickSelect[1]<0)
     {
-    cClickSelect[2] = 0;
+    this->cClickSelect[1] = 0;
     }
-  if(cClickSelect[2] >= cDimSize[2])
+  if(this->cClickSelect[1] >= this->cDimSize[1])
     {
-    cClickSelect[2] = cDimSize[2]-1;
+    this->cClickSelect[1] = this->cDimSize[1]-1;
+    }
+
+  this->cClickSelect[2] = newZ;
+
+  if(this->cClickSelect[2]<0)
+    {
+    this->cClickSelect[2] = 0;
+    }
+  if(this->cClickSelect[2] >= this->cDimSize[2])
+    {
+    this->cClickSelect[2] = this->cDimSize[2]-1;
     }
 
   typename ImageType::IndexType ind;
 
-  ind[0] = (unsigned long)cClickSelect[0];
-  ind[1] = (unsigned long)cClickSelect[1];
-  ind[2] = (unsigned long)cClickSelect[2];
-  cClickSelectV = cImData->GetPixel(ind)[0];
+  ind[0] = (unsigned long)this->cClickSelect[0];
+  ind[1] = (unsigned long)this->cClickSelect[1];
+  ind[2] = (unsigned long)this->cClickSelect[2];
+  this->cClickSelectV = this->cImData->GetPixel(ind)[0];
   cClickSelectR = cImData->GetPixel(ind)[0];
   cClickSelectG = cImData->GetPixel(ind)[1];
   cClickSelectB = cImData->GetPixel(ind)[2];
       
   /*if length of list is equal to max, remove the earliest point stored */
-  if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
+  if((this->maxClickPoints>0)&&(this->cClickedPoints.size() == this->maxClickPoints))
     {
-    cClickedPoints.pop_back();
+    this->cClickedPoints.pop_back();
     }
   
-  ClickPoint point( cClickSelect[0], 
-                    cClickSelect[1], 
-                    cClickSelect[2], 
-                    cClickSelectV     );
+  ClickPoint point( this->cClickSelect[0], 
+                    this->cClickSelect[1], 
+                    this->cClickSelect[2], 
+                    this->cClickSelectV     );
 
-  cClickedPoints.push_front( point );
+  this->cClickedPoints.push_front( point );
 
-  if(cClickSelectCallBack != NULL)
+  if(this->cClickSelectCallBack != NULL)
     {
-      cClickSelectCallBack(cClickSelect[0], cClickSelect[1], 
-                           cClickSelect[2], cClickSelectV);
+      this->cClickSelectCallBack(this->cClickSelect[0], this->cClickSelect[1], 
+                           this->cClickSelect[2], this->cClickSelectV);
     }
-  if(cClickSelectArgCallBack != NULL)
+  if(this->cClickSelectArgCallBack != NULL)
     {
-    cClickSelectArgCallBack(cClickSelect[0], cClickSelect[1], 
-                              cClickSelect[2], cClickSelectV,
-                              cClickSelectArg);
+    this->cClickSelectArgCallBack(this->cClickSelect[0], this->cClickSelect[1], 
+                              this->cClickSelect[2], this->cClickSelectV,
+                              this->cClickSelectArg);
     }
 
-  if(cViewValue || cViewCrosshairs)
+  if(this->cViewValue || this->cViewCrosshairs)
     {
     this->redraw();
     }
@@ -325,52 +325,52 @@ template <class ImagePixelType, class OverlayPixelType>
 void GLColorSliceView<ImagePixelType, OverlayPixelType>::
 update()
   {
-  if( !cValidImData ) 
+  if( !this->cValidImData ) 
     {
     return;
     }
   
-  int winWidth = (int)( cDimSize[ cWinOrder[0] ] / cWinZoom );
-  cWinSizeX = ( (int) winWidth);
-  int ti = (int)( (int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
-  if( ti <= - (int) cDimSize[ cWinOrder[0] ] ) 
+  int winWidth = (int)( this->cDimSize[ this->cWinOrder[0] ] / this->cWinZoom );
+  this->cWinSizeX = ( (int) winWidth);
+  int ti = (int)( (int)this->cWinCenter[ this->cWinOrder[0] ] - winWidth/2);
+  if( ti <= - (int) this->cDimSize[ this->cWinOrder[0] ] ) 
     {
-    ti = -(int)cDimSize[ cWinOrder[0] ] + 1;
+    ti = -(int)this->cDimSize[ this->cWinOrder[0] ] + 1;
     }
-  else if( ti >= (int)cDimSize[ cWinOrder[0] ]) 
+  else if( ti >= (int)this->cDimSize[ this->cWinOrder[0] ]) 
     {
-    ti = cDimSize[ cWinOrder[0] ] - 1;
+    ti = this->cDimSize[ this->cWinOrder[0] ] - 1;
     }
-  cWinMinX = ti;
-  cWinMaxX = cDimSize[ cWinOrder[0] ] - 1; // here
-  if( cWinMaxX >= static_cast<int>( cDimSize[ cWinOrder[0] ] ) )
+  this->cWinMinX = ti;
+  this->cWinMaxX = this->cDimSize[ this->cWinOrder[0] ] - 1; // here
+  if( this->cWinMaxX >= static_cast<int>( this->cDimSize[ this->cWinOrder[0] ] ) )
     {
-    cWinMaxX = cDimSize[ cWinOrder[0] ] - 1;
+    this->cWinMaxX = this->cDimSize[ this->cWinOrder[0] ] - 1;
     }
   
-  winWidth = static_cast<int>( cDimSize[ cWinOrder[1] ] / cWinZoom );
-  cWinSizeY = ( static_cast<int>( winWidth) );
-  ti = static_cast<int>( static_cast<int>(cWinCenter[ cWinOrder[1] ]) 
+  winWidth = static_cast<int>( this->cDimSize[ this->cWinOrder[1] ] / this->cWinZoom );
+  this->cWinSizeY = ( static_cast<int>( winWidth) );
+  ti = static_cast<int>( static_cast<int>(this->cWinCenter[ this->cWinOrder[1] ]) 
                          - winWidth/2);
-  if( ti <= - static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
+  if( ti <= - static_cast<int>( this->cDimSize[ this->cWinOrder[1] ] ) ) 
     {
-    ti = -(int)cDimSize[ cWinOrder[1] ] + 1;
+    ti = -(int)this->cDimSize[ this->cWinOrder[1] ] + 1;
     }
-  else if( ti >= static_cast<int>(cDimSize[ cWinOrder[1] ] ) ) 
+  else if( ti >= static_cast<int>(this->cDimSize[ this->cWinOrder[1] ] ) ) 
     {
-    ti = cDimSize[ cWinOrder[1] ] - 1;
+    ti = this->cDimSize[ this->cWinOrder[1] ] - 1;
     } 
-  cWinMinY = ti;
-  cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
-  if( cWinMaxY >= static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
+  this->cWinMinY = ti;
+  this->cWinMaxY = this->cDimSize[ this->cWinOrder[1] ] - 1;
+  if( this->cWinMaxY >= static_cast<int>( this->cDimSize[ this->cWinOrder[1] ] ) ) 
     {
-    cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
+    this->cWinMaxY = this->cDimSize[ this->cWinOrder[1] ] - 1;
     }
   
-  memset( cWinImData, 0, cWinDataSizeX*cWinDataSizeY*3 );
-  if( cValidOverlayData ) 
+  memset( this->cWinImData, 0, this->cWinDataSizeX*this->cWinDataSizeY*3 );
+  if( this->cValidOverlayData ) 
     {
-    memset(cWinOverlayData, 0, cWinDataSizeX*cWinDataSizeY*4);
+    memset(this->cWinOverlayData, 0, this->cWinDataSizeX*this->cWinDataSizeY*4);
     }
   
   IndexType ind;
@@ -380,60 +380,60 @@ update()
   itk::RGBPixel<ImagePixelType> tfv;
   float tf[3];
   
-  ind[ cWinOrder[ 2 ] ] = cWinCenter[ cWinOrder[ 2 ] ];
-  int startK = cWinMinY;
+  ind[ this->cWinOrder[ 2 ] ] = this->cWinCenter[ this->cWinOrder[ 2 ] ];
+  int startK = this->cWinMinY;
   if(startK<0)
     startK = 0;
-  int startJ = cWinMinX;
+  int startJ = this->cWinMinX;
   if(startJ<0)
     startJ = 0;
-  for(int k=startK; k <= cWinMaxY; k++)
+  for(int k=startK; k <= this->cWinMaxY; k++)
     {
-    ind[cWinOrder[1]] = k;
+    ind[this->cWinOrder[1]] = k;
     
-    if(k-cWinMinY >= (int)cWinDataSizeY)
+    if(k-this->cWinMinY >= (int)this->cWinDataSizeY)
       continue;
 
-    for(int j=startJ; j <= cWinMaxX; j++) 
+    for(int j=startJ; j <= this->cWinMaxX; j++) 
       {
-      ind[cWinOrder[0]] = j;
+      ind[this->cWinOrder[0]] = j;
       
-      if(j-cWinMinX >= (int)cWinDataSizeX)
+      if(j-this->cWinMinX >= (int)this->cWinDataSizeX)
          continue;
 
-      tfv = cImData->GetPixel(ind);
-      switch( cImageMode ) 
+      tfv = this->cImData->GetPixel(ind);
+      switch( this->cImageMode ) 
         {
         default:
         case IMG_VAL:
-          tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-          tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-          tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+          tf[0] = (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[1] = (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[2] = (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
           break;
         case IMG_INV:
-          tf[0] = (float)((cIWMax-(float)tfv[0])/(cIWMax-cIWMin)*255);
-          tf[1] = (float)((cIWMax-(float)tfv[1])/(cIWMax-cIWMin)*255);
-          tf[2] = (float)((cIWMax-(float)tfv[2])/(cIWMax-cIWMin)*255);
+          tf[0] = (float)((this->cIWMax-(float)tfv[0])/(this->cIWMax-this->cIWMin)*255);
+          tf[1] = (float)((this->cIWMax-(float)tfv[1])/(this->cIWMax-this->cIWMin)*255);
+          tf[2] = (float)((this->cIWMax-(float)tfv[2])/(this->cIWMax-this->cIWMin)*255);
           break;
         case IMG_LOG:
-          tf[0] = (float)(log((float)tfv[0]-cIWMin+0.00000001)
-                          /log(cIWMax-cIWMin+0.00000001)*255);
-          tf[1] = (float)(log((float)tfv[1]-cIWMin+0.00000001)
-                          /log(cIWMax-cIWMin+0.00000001)*255);
-          tf[2] = (float)(log((float)tfv[2]-cIWMin+0.00000001)
-                          /log(cIWMax-cIWMin+0.00000001)*255);
+          tf[0] = (float)(log((float)tfv[0]-this->cIWMin+0.00000001)
+                          /log(this->cIWMax-this->cIWMin+0.00000001)*255);
+          tf[1] = (float)(log((float)tfv[1]-this->cIWMin+0.00000001)
+                          /log(this->cIWMax-this->cIWMin+0.00000001)*255);
+          tf[2] = (float)(log((float)tfv[2]-this->cIWMin+0.00000001)
+                          /log(this->cIWMax-this->cIWMin+0.00000001)*255);
           break;
         case IMG_DX:
           if(ind[0]>0) 
             {
-            tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[0] = (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[1] = (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[2] = (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
             ind[0]--;
-            tfv = cImData->GetPixel(ind);
-            tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[2] -= (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+            tfv = this->cImData->GetPixel(ind);
+            tf[0] -= (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[1] -= (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[2] -= (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
             ind[0]++;
             tf[0] += 128;
             tf[1] += 128;
@@ -449,14 +449,14 @@ update()
         case IMG_DY:
           if(ind[1]>0) 
             {
-            tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[0] = (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[1] = (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[2] = (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
             ind[1]--;
-            tfv = cImData->GetPixel(ind);
-            tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[2] -= (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+            tfv = this->cImData->GetPixel(ind);
+            tf[0] -= (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[1] -= (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[2] -= (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
             ind[1]++;
             tf[0] += 128;
             tf[1] += 128;
@@ -472,14 +472,14 @@ update()
         case IMG_DZ:
           if(ind[2]>0) 
             {
-            tf[0] = (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[1] = (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[2] = (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+            tf[0] = (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[1] = (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[2] = (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
             ind[2]--;
-            tfv = cImData->GetPixel(ind);
-            tf[0] -= (float)(((float)tfv[0]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[1] -= (float)(((float)tfv[1]-cIWMin)/(cIWMax-cIWMin)*255);
-            tf[2] -= (float)(((float)tfv[2]-cIWMin)/(cIWMax-cIWMin)*255);
+            tfv = this->cImData->GetPixel(ind);
+            tf[0] -= (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[1] -= (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf[2] -= (float)(((float)tfv[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
             ind[2]++;
             tf[0] += 128;
             tf[1] += 128;
@@ -494,47 +494,47 @@ update()
           break;
         case IMG_BLEND:
           {
-          const int tempval = (int)cWinCenter[cWinOrder[2]]-1;
-          int tmpI = ind[cWinOrder[2]];
-          ind[cWinOrder[2]] = (tempval < 0 ) ? 0 : tempval;
-          tfv = cImData->GetPixel(ind);
+          const int tempval = (int)this->cWinCenter[this->cWinOrder[2]]-1;
+          int tmpI = ind[this->cWinOrder[2]];
+          ind[this->cWinOrder[2]] = (tempval < 0 ) ? 0 : tempval;
+          tfv = this->cImData->GetPixel(ind);
           tf[0] = (float)(tfv[0]);
           tf[1] = (float)(tfv[1]);
           tf[2] = (float)(tfv[2]);
           
-          ind[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
-          tfv = cImData->GetPixel(ind);
+          ind[this->cWinOrder[2]] = this->cWinCenter[this->cWinOrder[2]];
+          tfv = this->cImData->GetPixel(ind);
           tf[0] += (float)(tfv[0])*2;
           tf[1] += (float)(tfv[1])*2;
           tf[2] += (float)(tfv[2])*2;
           
-          const int tempval1 = (int)cDimSize[cWinOrder[2]]-1;
-          const int tempval2 = (int)cWinCenter[cWinOrder[2]]+1;
-          ind[cWinOrder[2]] = (tempval1 < tempval2 ) ? tempval1 : tempval2;
-          tfv = cImData->GetPixel(ind);
+          const int tempval1 = (int)this->cDimSize[this->cWinOrder[2]]-1;
+          const int tempval2 = (int)this->cWinCenter[this->cWinOrder[2]]+1;
+          ind[this->cWinOrder[2]] = (tempval1 < tempval2 ) ? tempval1 : tempval2;
+          tfv = this->cImData->GetPixel(ind);
           tf[0] += (float)(tfv[0]);
           tf[1] += (float)(tfv[1]);
           tf[2] += (float)(tfv[2]);
           
-          tf[0] = (float)((tf[0]/4-cIWMin)/(cIWMax-cIWMin)*255);
-          tf[1] = (float)((tf[1]/4-cIWMin)/(cIWMax-cIWMin)*255);
-          tf[2] = (float)((tf[2]/4-cIWMin)/(cIWMax-cIWMin)*255);
-          ind[cWinOrder[2]] = tmpI;
+          tf[0] = (float)((tf[0]/4-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[1] = (float)((tf[1]/4-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[2] = (float)((tf[2]/4-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          ind[this->cWinOrder[2]] = tmpI;
           break;
           }
         case IMG_MIP:
-          tf[0] = cIWMin;
-          tf[1] = cIWMin;
-          tf[2] = cIWMin;
-          m = (j-cWinMinX) + (k-cWinMinY)*cWinDataSizeX;
-          cWinZBuffer[m] = 0;
-          int tmpI = ind[cWinOrder[2]];
+          tf[0] = this->cIWMin;
+          tf[1] = this->cIWMin;
+          tf[2] = this->cIWMin;
+          m = (j-this->cWinMinX) + (k-this->cWinMinY)*this->cWinDataSizeX;
+          this->cWinZBuffer[m] = 0;
+          int tmpI = ind[this->cWinOrder[2]];
           float tfp = 0;
           float tft = tf[0]+tf[1]+tf[2];
-          for(l=0; l<(int)cDimSize[cWinOrder[2]]; l++) 
+          for(l=0; l<(int)this->cDimSize[this->cWinOrder[2]]; l++) 
             {
-            ind[cWinOrder[2]] = l;        
-            tfv = cImData->GetPixel(ind);
+            ind[this->cWinOrder[2]] = l;        
+            tfv = this->cImData->GetPixel(ind);
             tfp = (float)tfv[0] 
                   + tfv[1] 
                   + tfv[2];
@@ -543,13 +543,13 @@ update()
               tf[0] = (float)(tfv[0]);
               tf[1] = (float)(tfv[1]);
               tf[2] = (float)(tfv[2]);
-              cWinZBuffer[m] = (unsigned short)l;
+              this->cWinZBuffer[m] = (unsigned short)l;
               }
             }
-          tf[0] = (float)((tf[0]-cIWMin)/(cIWMax-cIWMin)*255);
-          tf[1] = (float)((tf[1]-cIWMin)/(cIWMax-cIWMin)*255);
-          tf[2] = (float)((tf[2]-cIWMin)/(cIWMax-cIWMin)*255);
-          ind[cWinOrder[2]] = tmpI;
+          tf[0] = (float)((tf[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[1] = (float)((tf[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[2] = (float)((tf[2]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          ind[this->cWinOrder[2]] = tmpI;
           break;
         }
       
@@ -558,7 +558,7 @@ update()
         {
         if( tf[c] > 255 )
           {
-          switch(cIWModeMax) 
+          switch(this->cIWModeMax) 
             {
             case IW_MIN:
               tf[c] = 0;
@@ -580,7 +580,7 @@ update()
           {
           if( tf[c] < 0 )
             {
-            switch(cIWModeMin) 
+            switch(this->cIWModeMin) 
               {
               default:
               case IW_MIN:
@@ -601,65 +601,65 @@ update()
           }
         }
         
-      l = (j-cWinMinX)*3 + (k-cWinMinY)*cWinDataSizeX*3;
-      cWinImData[l+0] = (unsigned char)tf[0];
-      cWinImData[l+1] = (unsigned char)tf[1];
-      cWinImData[l+2] = (unsigned char)tf[2];
+      l = (j-this->cWinMinX)*3 + (k-this->cWinMinY)*this->cWinDataSizeX*3;
+      this->cWinImData[l+0] = (unsigned char)tf[0];
+      this->cWinImData[l+1] = (unsigned char)tf[1];
+      this->cWinImData[l+2] = (unsigned char)tf[2];
       
-      if( cValidOverlayData ) 
+      if( this->cValidOverlayData ) 
         {
-        l = (j-cWinMinX)*4 + (k-cWinMinY)*cWinDataSizeX*4;
-        if(cImageMode == IMG_MIP)
+        l = (j-this->cWinMinX)*4 + (k-this->cWinMinY)*this->cWinDataSizeX*4;
+        if(this->cImageMode == IMG_MIP)
           {
-          ind[cWinOrder[2]] = cWinZBuffer[(j-cWinMinX) + 
-                              (k-cWinMinY)*cWinDataSizeX];
+          ind[this->cWinOrder[2]] = this->cWinZBuffer[(j-this->cWinMinX) + 
+                              (k-this->cWinMinY)*this->cWinDataSizeX];
           }
         
         if( sizeof( OverlayPixelType ) == 1 )
           {
-          m = (int)*((unsigned char *)&(cOverlayData->GetPixel(ind)));
+          m = (int)*((unsigned char *)&(this->cOverlayData->GetPixel(ind)));
           if( m > 0 ) {
             m = m - 1;
-            cWinOverlayData[l+0] = 
-              (unsigned char)(cColorTable->GetColorComponent(m, 'r')*255);
-            cWinOverlayData[l+1] = 
-              (unsigned char)(cColorTable->GetColorComponent(m, 'g')*255);
-            cWinOverlayData[l+2] = 
-              (unsigned char)(cColorTable->GetColorComponent(m, 'b')*255);
-            cWinOverlayData[l+3] = 
-              (unsigned char)(cOverlayOpacity*255);
+            this->cWinOverlayData[l+0] = 
+              (unsigned char)(this->cColorTable->GetColorComponent(m, 'r')*255);
+            this->cWinOverlayData[l+1] = 
+              (unsigned char)(this->cColorTable->GetColorComponent(m, 'g')*255);
+            this->cWinOverlayData[l+2] = 
+              (unsigned char)(this->cColorTable->GetColorComponent(m, 'b')*255);
+            this->cWinOverlayData[l+3] = 
+              (unsigned char)(this->cOverlayOpacity*255);
             }
           }
         else 
           {
-          if(((unsigned char *)&(cOverlayData->GetPixel(ind)))[0]
-            + ((unsigned char *)&(cOverlayData->GetPixel(ind)))[1]
-            + ((unsigned char *)&(cOverlayData->GetPixel(ind)))[2] > 0)
+          if(((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[0]
+            + ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[1]
+            + ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[2] > 0)
             {
             if( sizeof( OverlayPixelType ) == 3 )
               {
-              cWinOverlayData[l+0] = 
-                ((unsigned char *)&(cOverlayData->GetPixel(ind)))[0];
-              cWinOverlayData[l+1] = 
-                ((unsigned char *)&(cOverlayData->GetPixel(ind)))[1];
-              cWinOverlayData[l+2] = 
-                ((unsigned char *)&(cOverlayData->GetPixel(ind)))[2];
-              cWinOverlayData[l+3] = 
-                (unsigned char)(cOverlayOpacity*255);
+              this->cWinOverlayData[l+0] = 
+                ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[0];
+              this->cWinOverlayData[l+1] = 
+                ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[1];
+              this->cWinOverlayData[l+2] = 
+                ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[2];
+              this->cWinOverlayData[l+3] = 
+                (unsigned char)(this->cOverlayOpacity*255);
               }
             else 
               {
               if( sizeof( OverlayPixelType ) == 4 ) 
                 {
-                cWinOverlayData[l+0] = 
-                  ((unsigned char *)&(cOverlayData->GetPixel(ind)))[0];
-                cWinOverlayData[l+1] = 
-                  ((unsigned char *)&(cOverlayData->GetPixel(ind)))[1];
-                cWinOverlayData[l+2] = 
-                  ((unsigned char *)&(cOverlayData->GetPixel(ind)))[2];
-                cWinOverlayData[l+3] = 
+                this->cWinOverlayData[l+0] = 
+                  ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[0];
+                this->cWinOverlayData[l+1] = 
+                  ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[1];
+                this->cWinOverlayData[l+2] = 
+                  ((unsigned char *)&(this->cOverlayData->GetPixel(ind)))[2];
+                this->cWinOverlayData[l+3] = 
                   (unsigned char)(((unsigned char *)
-                  &(cOverlayData->GetPixel(ind)))[3]*cOverlayOpacity);
+                  &(this->cOverlayData->GetPixel(ind)))[3]*this->cOverlayOpacity);
                 }
               }
             }
@@ -678,7 +678,7 @@ template <class ImagePixelType, class OverlayPixelType>
 void GLColorSliceView<ImagePixelType, OverlayPixelType>::
 draw()
   {
-  if( !valid() )
+  if( !this->valid() )
     {
     glClearColor((float)0.0, (float)0.0, (float)0.0, (float)0.0);          
     glShadeModel(GL_FLAT);
@@ -695,80 +695,80 @@ draw()
     glLoadIdentity();
     
     glMatrixMode(GL_PROJECTION);
-    ortho();
+    this->ortho();
     
-    if( !cImData ) 
+    if( !this->cImData ) 
       {
       return;
       }
     
-    float scale0 = cW/(float)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
-    float scale1 = cW/(float)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
+    float scale0 = this->cW/(float)this->cDimSize[0] * this->cWinZoom
+      * fabs(this->cSpacing[this->cWinOrder[0]])/fabs(this->cSpacing[0]);
+    float scale1 = this->cW/(float)this->cDimSize[0] * this->cWinZoom
+      * fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0]);
     
     
-    glRasterPos2i((cFlipX[cWinOrientation])?cW:0,
-      (cFlipY[cWinOrientation])?cH:0);  
-    glPixelZoom((cFlipX[cWinOrientation])?-scale0:scale0,
-      (cFlipY[cWinOrientation])?-scale1:scale1);
+    glRasterPos2i((this->cFlipX[this->cWinOrientation])?this->cW:0,
+      (this->cFlipY[this->cWinOrientation])?this->cH:0);  
+    glPixelZoom((this->cFlipX[this->cWinOrientation])?-scale0:scale0,
+      (this->cFlipY[this->cWinOrientation])?-scale1:scale1);
     
-    if( cValidImData && cViewImData )
+    if( this->cValidImData && this->cViewImData )
       {
-      glDrawPixels( cWinDataSizeX, cWinDataSizeY, 
+      glDrawPixels( this->cWinDataSizeX, this->cWinDataSizeY, 
                     GL_RGB, GL_UNSIGNED_BYTE, 
-                    cWinImData );
+                    this->cWinImData );
       }
     
-    if( cValidOverlayData && cViewOverlayData ) 
+    if( this->cValidOverlayData && this->cViewOverlayData ) 
       {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glDrawPixels(cWinDataSizeX, cWinDataSizeY, GL_RGBA, 
-        GL_UNSIGNED_BYTE, cWinOverlayData);
+      glDrawPixels(this->cWinDataSizeX, this->cWinDataSizeY, GL_RGBA, 
+        GL_UNSIGNED_BYTE, this->cWinOverlayData);
       glDisable(GL_BLEND);
       }
     
-    if( cViewAxisLabel ) 
+    if( this->cViewAxisLabel ) 
       {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.2, 0.2, 0.78, (float)0.75);
       gl_font(FL_TIMES_BOLD, 12);
       
-      if( !cFlipX[cWinOrientation] )
+      if( !this->cFlipX[this->cWinOrientation] )
         {
-        const int y = static_cast<int>(  cH/2-gl_height()/2  );
-        gl_draw( cAxisLabelX[cWinOrientation],
-          cW-(gl_width(cAxisLabelX[cWinOrientation])+10), 
+        const int y = static_cast<int>(  this->cH/2-gl_height()/2  );
+        gl_draw( this->cAxisLabelX[this->cWinOrientation],
+          this->cW-(gl_width(this->cAxisLabelX[this->cWinOrientation])+10), 
           static_cast<float>( y ) );
         }
       else
         {
-        const int y = static_cast<int>( cH/2-gl_height()/2  );
-        gl_draw( cAxisLabelX[cWinOrientation],
-          (gl_width(cAxisLabelX[cWinOrientation])+10),
+        const int y = static_cast<int>( this->cH/2-gl_height()/2  );
+        gl_draw( this->cAxisLabelX[this->cWinOrientation],
+          (gl_width(this->cAxisLabelX[this->cWinOrientation])+10),
           static_cast<float>( y ));
         }
       
-      if(!cFlipY[cWinOrientation])
+      if(!this->cFlipY[this->cWinOrientation])
         {
-        const int y = static_cast<int>( cH-gl_height()-10 ) ;
-        gl_draw( cAxisLabelY[cWinOrientation],
-          cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
+        const int y = static_cast<int>( this->cH-gl_height()-10 ) ;
+        gl_draw( this->cAxisLabelY[this->cWinOrientation],
+          this->cW/2-(gl_width(this->cAxisLabelY[this->cWinOrientation])/2),
           static_cast<float>(y) );
         }
       else
         {
         const int y = static_cast<int>( gl_height()+10 );
-        gl_draw( cAxisLabelY[cWinOrientation], 
-          cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
+        gl_draw( this->cAxisLabelY[this->cWinOrientation], 
+          this->cW/2-(gl_width(this->cAxisLabelY[this->cWinOrientation])/2),
           static_cast<float>(y));
         }
       
       glDisable(GL_BLEND);
       }
-    if( cViewValue ) 
+    if( this->cViewValue ) 
       {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -778,9 +778,9 @@ draw()
       if((ImagePixelType)1.1==1.1)
         {
         sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f,%03f,%0.3f", 
-          cClickSelect[0],
-          cClickSelect[1], 
-          cClickSelect[2], 
+          this->cClickSelect[0],
+          this->cClickSelect[1], 
+          this->cClickSelect[2], 
           (float)cClickSelectR,
           (float)cClickSelectG,
           (float)cClickSelectB);
@@ -788,83 +788,83 @@ draw()
       else
         {
         sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %d,%d,%d", 
-          cClickSelect[0],
-          cClickSelect[1], 
-          cClickSelect[2], 
+          this->cClickSelect[0],
+          this->cClickSelect[1], 
+          this->cClickSelect[2], 
           (int)cClickSelectR,
           (int)cClickSelectG,
           (int)cClickSelectB);
         }
       gl_draw( s,
-        (int)(cW-(gl_width(s)+2)), 2);
+        (int)(this->cW-(gl_width(s)+2)), 2);
       glDisable(GL_BLEND);
       
       }
-    if( cViewDetails )
+    if( this->cViewDetails )
       {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.9, 0.4, 0.1, (float)0.75);
       gl_font(FL_TIMES_BOLD, 12);
       char s[80];
-      if(cWinOrientation == 0)
-        sprintf(s, "X - Slice: %3d", cWinCenter[0]);
-      else if(cWinOrientation == 1)
-        sprintf(s, "Y - Slice: %3d", cWinCenter[1]);
+      if(this->cWinOrientation == 0)
+        sprintf(s, "X - Slice: %3d", this->cWinCenter[0]);
+      else if(this->cWinOrientation == 1)
+        sprintf(s, "Y - Slice: %3d", this->cWinCenter[1]);
       else
-        sprintf(s, "Z - Slice: %3d", cWinCenter[2]);
+        sprintf(s, "Z - Slice: %3d", this->cWinCenter[2]);
       gl_draw( s, 2, 2+5*(gl_height()+2) );
       sprintf(s, "Dims: %3d x %3d x %3d", 
-        (int)cDimSize[0], (int)cDimSize[1], (int)cDimSize[2]);
+        (int)this->cDimSize[0], (int)this->cDimSize[1], (int)this->cDimSize[2]);
       gl_draw( s, 2, 2+4*(gl_height()+2) );
       sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f", 
-        cSpacing[0], cSpacing[1], cSpacing[2]);
+        this->cSpacing[0], this->cSpacing[1], this->cSpacing[2]);
       gl_draw( s, 2, 2+3*(gl_height()+2) );
-      sprintf(s, "Int. Range: %0.3f - %0.3f", (float)cDataMin, 
-              (float)cDataMax);
+      sprintf(s, "Int. Range: %0.3f - %0.3f", (float)this->cDataMin, 
+              (float)this->cDataMax);
       gl_draw( s, 2, 2+2*(gl_height()+2) );
       sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)", 
-        (float)cIWMin, IWModeTypeName[cIWModeMin], 
-        (float)cIWMax, IWModeTypeName[cIWModeMax]);
+        (float)this->cIWMin, IWModeTypeName[this->cIWModeMin], 
+        (float)this->cIWMax, IWModeTypeName[this->cIWModeMax]);
       gl_draw( s, 2, 2+1*(gl_height()+2) );
-      sprintf(s, "View Mode: %s", ImageModeTypeName[cImageMode]);
+      sprintf(s, "View Mode: %s", ImageModeTypeName[this->cImageMode]);
       gl_draw( s, 2, 2+0*(gl_height()+2) );
       glDisable(GL_BLEND);
       }
-    if( cViewCrosshairs 
-      && static_cast<int>(cClickSelect[cWinOrder[2]]) == 
-         static_cast<int>( sliceNum() ) )
+    if( this->cViewCrosshairs 
+      && static_cast<int>(this->cClickSelect[this->cWinOrder[2]]) == 
+         static_cast<int>( this->sliceNum() ) )
       {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
       int x;
-      if(cFlipX[cWinOrientation])
+      if(this->cFlipX[this->cWinOrientation])
         {
-        x = (int)(cW - (cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
+        x = (int)(this->cW - (this->cClickSelect[this->cWinOrder[0]] - this->cWinMinX) * scale0);
         }
       else
         {
-        x = (int)((cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
+        x = (int)((this->cClickSelect[this->cWinOrder[0]] - this->cWinMinX) * scale0);
         }
       int y;
-      if(cFlipY[cWinOrientation])
+      if(this->cFlipY[this->cWinOrientation])
         {
-        y = (int)(cH - (cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
+        y = (int)(this->cH - (this->cClickSelect[this->cWinOrder[1]] - this->cWinMinY) * scale1);
         }
       else
         {
-        y = (int)((cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
+        y = (int)((this->cClickSelect[this->cWinOrder[1]] - this->cWinMinY) * scale1);
         }
       glBegin(GL_LINES);
       glVertex2d(0, y);
       glVertex2d(x-2, y);
       glVertex2d(x+2, y);
-      glVertex2d(cW-1, y);
+      glVertex2d(this->cW-1, y);
       glVertex2d(x, 0);
       glVertex2d(x, y-2);
       glVertex2d(x, y+2);
-      glVertex2d(x, cH-1);
+      glVertex2d(x, this->cH-1);
       glEnd();
       glDisable(GL_BLEND);
       }
