@@ -18,7 +18,7 @@
 
 
 #include "fltkProgressBar.h"
-#include "itkLightProcessObject.h"
+#include "itkProcessObject.h"
 #include <FL/Fl.H>
 
 
@@ -53,8 +53,8 @@ ProgressBar::ProcessEvent( itk::Object * caller,
 {
   if( typeid( itk::ProgressEvent )   ==  typeid( event ) )
     {
-    ::itk::LightProcessObject::Pointer  process = 
-             dynamic_cast< itk::LightProcessObject *>( caller );
+    ::itk::ProcessObject::Pointer  process = 
+             dynamic_cast< itk::ProcessObject *>( caller );
     this->value( process->GetProgress() );
     this->redraw();
     Fl::check();
@@ -70,8 +70,8 @@ ProgressBar::ConstProcessEvent( const itk::Object * caller,
 {
   if( typeid( itk::ProgressEvent )   ==  typeid( event ) ) 
     {
-    itk::LightProcessObject::ConstPointer  process = 
-              dynamic_cast< const itk::LightProcessObject *>( caller );
+    itk::ProcessObject::ConstPointer  process = 
+              dynamic_cast< const itk::ProcessObject *>( caller );
     this->value( process->GetProgress() );
     this->redraw();
     Fl::check();
