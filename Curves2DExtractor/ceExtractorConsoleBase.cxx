@@ -119,11 +119,19 @@ ceExtractorConsoleBase
   m_Eigen->SetInput2( m_H1xy->GetOutput() );
   m_Eigen->SetInput3( m_H2y->GetOutput() );
       
+
   m_ScalarProduct = ScalarProductFilterType::New();
 
   m_ScalarProduct->SetInput1( m_Gradient->GetOutput() );
   m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
   
+
+  m_ParametricSpace = ParametricSpaceFilterType::New();
+
+  m_ParametricSpace->SetInput( 0, m_Hxy->GetOutput() );
+  m_ParametricSpace->SetInput( 1, m_Eigen->GetMaxEigenValue() );
+  m_ParametricSpace->SetInput( 2, m_ScalarProduct->GetOutput() );
+
 }
 
 

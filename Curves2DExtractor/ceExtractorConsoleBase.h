@@ -56,6 +56,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkEigenAnalysis2DImageFilter.h>
 #include <itkGradientRecursiveGaussianImageFilter.h>
 #include <itkMultiplyImageFilter.h>
+#include <itkImageToParametricSpaceFilter.h>
+#include <itkMesh.h>
 
 
 class ceExtractorConsoleBase 
@@ -76,6 +78,8 @@ public:
   typedef   itk::Image< VectorType, 2 >           VectorImageType;
   typedef   itk::Image< CovariantVectorType, 2 >  CovariantVectorImageType;
 
+  typedef   itk::Mesh< int, 3 >                   MeshType;
+    
   typedef   itk::FileIOToImageFilter< 
                             InputImageType >       VolumeReaderType;
 
@@ -121,6 +125,10 @@ public:
                                       VectorImageType, 
                                       ImageType >  ScalarProductFilterType;
 
+  typedef   itk::ImageToParametricSpaceFilter< ImageType, MeshType >
+                                                  ParametricSpaceFilterType;
+
+
 
 public:
 
@@ -157,6 +165,9 @@ protected:
   GradientFilterType::Pointer               m_Gradient;
 
   ScalarProductFilterType::Pointer     m_ScalarProduct;
+
+  ParametricSpaceFilterType::Pointer m_ParametricSpace;
+
 
   bool                                   m_ImageLoaded;
 
