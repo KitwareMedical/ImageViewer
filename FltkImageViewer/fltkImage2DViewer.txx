@@ -51,6 +51,11 @@ Image2DViewer<ImagePixelType>
 {
   imageViewer->SetIntensityWindow( intensityWindow );
   imageViewer->SetParentWindow( externalWindow );
+  
+  m_Command = ObserverCommandType::New();
+  m_Command->SetViewer( this );
+
+  m_Tag = 0L;
 }
 
 
@@ -59,7 +64,6 @@ template <class ImagePixelType>
 Image2DViewer<ImagePixelType>
 ::~Image2DViewer()
 {
-
 }
 
 
@@ -71,8 +75,13 @@ Image2DViewer<ImagePixelType>
 ::SetImage(ImageType * image)
 {
   
+  if( m_Image && m_Tag )
+    {
+    m_Image->GetSource()->RemoveObserver( m_Tag );
+    }
   m_Image = image;
-
+  m_Tag = m_Image->GetSource()->AddObserver( 
+      itk::Command::EndEvent, m_Command );
   Update();
 
 }

@@ -68,3 +68,6 @@ void fltkImage2DViewerGUI::SetMin(double val) {
 
 void fltkImage2DViewerGUI::SetMax(double val) {
 }
+
+void fltkImage2DViewerGUI::Update(void) {
+}

@@ -26,5 +26,6 @@ public:
   void Redraw(void);
   virtual void SetMin(double val);
   virtual void SetMax(double val);
+  virtual void Update(void);
 };
 #endif

@@ -44,12 +44,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "fltkImage2DViewerGUI.h"
 #include "itkObject.h"
 #include "itkImage.h"
+#include "fltkImage2DViewerUpdateCommand.h"
 
 namespace fltk {
 
 template <class ImagePixelType>
 class Image2DViewer : public itk::Object, public fltkImage2DViewerGUI
 {
+
 public:
 
    /**
@@ -74,9 +76,21 @@ public:
   itkNewMacro(Self);  
 
  
+  /**
+   * Image Type
+   */
   typedef itk::Image< ImagePixelType, 2 >   ImageType;
   
+  /**
+   * Observer Command
+   */
+  typedef Image2DViewerUpdateCommand        ObserverCommandType;
+
+  /**
+   * Observer Command
+   */
   virtual void SetImage(ImageType * image);
+  
   virtual void Update(void);
 
 
@@ -87,7 +101,10 @@ protected:
 
 
 private:
-  ImageType::Pointer  m_Image;
+  ImageType::Pointer              m_Image;
+  ObserverCommandType::Pointer    m_Command;
+  unsigned long                   m_Tag;
+
 };
 
 
