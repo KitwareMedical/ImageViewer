@@ -88,7 +88,7 @@ int main()
   //-----Create ellipsoid in sourceImage-----------------
 
   // Symmetric Ellipsoid spatial function typedef
-  typedef itk::SymmetricEllipsoidInteriorExteriorSpatialFunction<double, dimension> TSymEllipsoidFunctionType;
+  typedef itk::SymmetricEllipsoidInteriorExteriorSpatialFunction<dimension> TSymEllipsoidFunctionType;
   
   // Point position typedef
   typedef TSymEllipsoidFunctionType::InputType TSymEllipsoidFunctionVectorType;
