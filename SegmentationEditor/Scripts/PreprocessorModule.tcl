@@ -33,6 +33,7 @@ set PreprocessorGlobals(default_lookup_table_high) 255.0
 set PreprocessorGlobals(default_conductance_parameter) 1.0
 set PreprocessorGlobals(default_iterations)  1
 set PreprocessorGlobals(default_time_step)   0.125
+set PreprocessorGlobals(curvature_default_time_step)   0.0625
 set PreprocessorGlobals(default_variance_parameter)   0.0
 set PreprocessorGlobals(diffusion_label)     "Noise reduction"
 set PreprocessorGlobals(source_label)        "Source data"
@@ -430,7 +431,7 @@ proc PreprocessorInitialize {} {
     # Curvature based anisotropic diffusion filter
     #
     vtkITKCurvatureAnisotropicDiffusionImageFilter CurvaturePreprocessorDiffuser
-    CurvaturePreprocessorDiffuser SetTimeStep $PreprocessorGlobals(default_time_step)
+    CurvaturePreprocessorDiffuser SetTimeStep $PreprocessorGlobals(curvature_default_time_step)
     CurvaturePreprocessorDiffuser SetConductanceParameter \
         $PreprocessorGlobals(default_conductance_parameter)
     CurvaturePreprocessorDiffuser SetNumberOfIterations $PreprocessorGlobals(default_iterations)
