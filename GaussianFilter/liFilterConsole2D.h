@@ -45,17 +45,17 @@ public:
   virtual void Execute(void);
 
 private:
-  InputImageViewerType           * m_InputViewer;
+  InputImageViewerType::Pointer      m_InputViewer;
 
-  ImageViewerType           * m_Viewer_H1x;
-  ImageViewerType           * m_Viewer_H1y;
+  ImageViewerType::Pointer           m_Viewer_H1x;
+  ImageViewerType::Pointer           m_Viewer_H1y;
 
-  ImageViewerType           * m_Viewer_H2x;
-  ImageViewerType           * m_Viewer_H2y;
+  ImageViewerType::Pointer           m_Viewer_H2x;
+  ImageViewerType::Pointer           m_Viewer_H2y;
 
-  ImageViewerType           * m_Viewer_Laplacian;
+  ImageViewerType::Pointer           m_Viewer_Laplacian;
 
-  ImageViewerType           * m_Viewer_Gradient_Modulus;
+  ImageViewerType::Pointer           m_Viewer_Gradient_Modulus;
 
 };
 
