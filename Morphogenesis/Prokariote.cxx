@@ -37,8 +37,8 @@ Prokariote
 ::Prokariote()
 {
   // add a random time before starting to grow
-  m_DivisionLatencyTime = 
-      vnl_sample_uniform( 0, this->GetDivisionMaximumLatencyTime() );
+  m_DivisionLatencyTime = static_cast<unsigned long>(
+      vnl_sample_uniform( 0, this->GetDivisionMaximumLatencyTime() ) );
 }
 
 
