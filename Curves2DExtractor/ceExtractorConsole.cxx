@@ -104,9 +104,12 @@ ceExtractorConsole
   m_Viewer_Gradient_On_EigenVector->SetLabel( "Gradient Projected on EigenVector" );
 
 
+  m_ParametricSpaceViewer.SetLabel("Parametric Space");
+
   fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
                             progressSlider->GetRedrawCommand().GetPointer();
 
+  m_Reader->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_H1x->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
   m_H1y->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
   m_H2x->AddObserver( itk::Command::ProgressEvent, progressUpdateCommand );
@@ -120,7 +123,9 @@ ceExtractorConsole
   m_Eigen->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Gradient->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_ScalarProduct->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_ParametricSpace->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
                               
+  m_Reader->AddObserver( itk::Command::StartEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::StartEvent, HxButton->GetRedrawCommand().GetPointer() );
   m_Hy->AddObserver(  itk::Command::StartEvent, HyButton->GetRedrawCommand().GetPointer() );
@@ -137,7 +142,10 @@ ceExtractorConsole
   m_Eigen->AddObserver( itk::Command::StartEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_ScalarProduct->AddObserver( itk::Command::StartEvent, 
                                 gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_ParametricSpace->AddObserver(  itk::Command::StartEvent, 
+                                   parametricSpaceButton->GetRedrawCommand().GetPointer() );
 
+  m_Reader->AddObserver( itk::Command::EndEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::EndEvent, HxButton->GetRedrawCommand().GetPointer() );
   m_Hy->AddObserver(  itk::Command::EndEvent, HyButton->GetRedrawCommand().GetPointer() );
@@ -154,7 +162,10 @@ ceExtractorConsole
   m_Eigen->AddObserver( itk::Command::EndEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_ScalarProduct->AddObserver( itk::Command::EndEvent, 
                                 gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_ParametricSpace->AddObserver(  itk::Command::EndEvent, 
+                                   parametricSpaceButton->GetRedrawCommand().GetPointer() );
 
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, loadButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
   m_Hy->AddObserver(  itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
@@ -173,8 +184,9 @@ ceExtractorConsole
   m_H1xy->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_H1xy->AddObserver( itk::Command::ModifiedEvent, 
                                 gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_ParametricSpace->AddObserver(  itk::Command::ModifiedEvent, 
+                                   parametricSpaceButton->GetRedrawCommand().GetPointer() );
 
-  m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HyButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HxyButton->GetRedrawCommand().GetPointer() );
@@ -189,6 +201,7 @@ ceExtractorConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, parametricSpaceButton->GetRedrawCommand().GetPointer() );
 
   this->ShowStatus("Let's start by loading an image...");
 
@@ -289,6 +302,7 @@ ceExtractorConsole
   m_Viewer_Max_EigenValue->Hide();
   m_Viewer_Min_EigenValue->Hide();
   m_Viewer_Gradient_On_EigenVector->Hide();
+  m_ParametricSpaceViewer.Hide();
 }
 
 
@@ -563,6 +577,21 @@ ceExtractorConsole
 
 
 
+ 
+/************************************
+ *
+ *  Show the Parametric Space
+ *
+ ***********************************/
+void
+ceExtractorConsole
+::ShowParametricSpace( void )
+{
+
+  m_ParametricSpace->Update(); 
+  m_ParametricSpaceViewer.Show();
+
+}
 
  
 /************************************

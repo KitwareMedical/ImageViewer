@@ -7,16 +7,15 @@ gridy 5
 snap 3
 class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
 } {
-  Function {ceExtractorConsoleGUI()} {open
-  } {
+  Function {ceExtractorConsoleGUI()} {} {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console} open
-      xywh {88 193 837 391}
+      xywh {254 516 878 391}
       code0 {\#include <ceExtractorConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {5 5 825 255}
+        xywh {5 5 865 255}
       } {
         Fl_Box {} {
           xywh {445 167 56 10} box UP_BOX color 4
@@ -120,9 +119,24 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Box {} {
           xywh {415 130 170 10} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {380 45 380 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {780 55 10 80} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {810 55 10 155} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {720 200 100 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {725 125 65 10} box UP_BOX color 4
+        }
       }
-      Fl_Group controlsGroup {selected
-        xywh {5 5 825 255} box DOWN_FRAME deactivate
+      Fl_Group controlsGroup {
+        xywh {5 5 865 255} box DOWN_FRAME deactivate
       } {
         Fl_Light_Button inputButton {
           label Input
@@ -221,14 +235,20 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {575 120 180 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
+        Fl_Light_Button parametricSpaceButton {
+          label {Parametric Space}
+          callback {ShowParametricSpace();} selected
+          xywh {745 35 115 35} type Normal value 1 selection_color 1 align 148
+          class {fltk::LightButton}
+        }
       }
       Fl_Slider progressSlider {
-        xywh {5 324 825 15} type {Horz Fill} selection_color 2
+        xywh {5 324 865 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 349 825 25}
+        xywh {5 349 865 25}
       }
       Fl_Light_Button loadButton {
         label Load
@@ -279,5 +299,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
   Function {ShowMaxEigenVector( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientOnEigenVector( void )} {return_type {virtual void}
+  } {}
+  Function {ShowParametricSpace( void )} {return_type {virtual void}
   } {}
 } 

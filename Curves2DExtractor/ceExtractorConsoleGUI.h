@@ -88,6 +88,11 @@ private:
   inline void cb_gradientOnEigenVectorButton_i(fltk::LightButton*, void*);
   static void cb_gradientOnEigenVectorButton(fltk::LightButton*, void*);
 public:
+  fltk::LightButton *parametricSpaceButton;
+private:
+  inline void cb_parametricSpaceButton_i(fltk::LightButton*, void*);
+  static void cb_parametricSpaceButton(fltk::LightButton*, void*);
+public:
   fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;
   fltk::LightButton *loadButton;
@@ -115,5 +120,6 @@ public:
   virtual void ShowMinEigenValue( void );
   virtual void ShowMaxEigenVector( void );
   virtual void ShowGradientOnEigenVector( void );
+  virtual void ShowParametricSpace( void );
 };
 #endif

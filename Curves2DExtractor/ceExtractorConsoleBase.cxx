@@ -266,11 +266,7 @@ ceExtractorConsoleBase
 
   m_Modulus->Update();
   
-  m_Eigen->Update();
-
-  m_Gradient->Update();
-
-  m_ScalarProduct->Update();
+  m_ParametricSpace->Update();
 
 }
 

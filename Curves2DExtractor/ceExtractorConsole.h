@@ -45,8 +45,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ce_ExtractorConsole_h
 #define ce_ExtractorConsole_h
 
-#include <fltkImage2DViewer.h>
 #include <ceExtractorConsoleGUI.h>
+#include <fltkImage2DViewer.h>
+#include <fltkDisplayGlWindowGUI.h>
 
 
 
@@ -55,13 +56,11 @@ class ceExtractorConsole : public ceExtractorConsoleGUI
 
 public:
 
-  typedef fltk::Image2DViewer< PixelType > ImageViewerType;
-
+  typedef fltk::Image2DViewer< PixelType >      ImageViewerType;
   typedef fltk::Image2DViewer< InputPixelType > InputImageViewerType;
-
-  typedef ImageViewerType::Pointer ImageViewerPointer;
-
-  typedef InputImageViewerType::Pointer InputImageViewerPointer;
+  typedef ImageViewerType::Pointer              ImageViewerPointer;
+  typedef InputImageViewerType::Pointer         InputImageViewerPointer;
+  typedef fltkDisplayGlWindowGUI                GlDisplayType;
 
 public:
   ceExtractorConsole();
@@ -83,6 +82,7 @@ public:
   virtual void ShowMaxEigenValue(void);
   virtual void ShowMinEigenValue(void);
   virtual void ShowGradientOnEigenVector(void);
+  virtual void ShowParametricSpace(void);
   virtual void Execute(void);
 
 private:
@@ -108,6 +108,8 @@ private:
   ImageViewerPointer           m_Viewer_Min_EigenValue;
 
   ImageViewerPointer           m_Viewer_Gradient_On_EigenVector;
+
+  GlDisplayType                m_ParametricSpaceViewer;
 
 };
 

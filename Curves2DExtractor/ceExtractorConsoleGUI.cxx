@@ -100,6 +100,13 @@ void ceExtractorConsoleGUI::cb_gradientOnEigenVectorButton(fltk::LightButton* o,
   ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_gradientOnEigenVectorButton_i(o,v);
 }
 
+inline void ceExtractorConsoleGUI::cb_parametricSpaceButton_i(fltk::LightButton*, void*) {
+  ShowParametricSpace();
+}
+void ceExtractorConsoleGUI::cb_parametricSpaceButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_parametricSpaceButton_i(o,v);
+}
+
 inline void ceExtractorConsoleGUI::cb_loadButton_i(fltk::LightButton*, void*) {
   Load();
 }
@@ -123,10 +130,10 @@ void ceExtractorConsoleGUI::cb_Execute(Fl_Button* o, void* v) {
 
 ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
   Fl_Window* w;
-  { Fl_Window* o = consoleWindow = new Fl_Window(837, 391, "Gaussian Filter Console");
+  { Fl_Window* o = consoleWindow = new Fl_Window(878, 391, "Gaussian Filter Console");
     w = o;
     o->user_data((void*)(this));
-    { Fl_Group* o = Connectors = new Fl_Group(5, 5, 825, 255);
+    { Fl_Group* o = Connectors = new Fl_Group(5, 5, 865, 255);
       { Fl_Box* o = new Fl_Box(445, 167, 56, 10);
         o->box(FL_UP_BOX);
         o->color(4);
@@ -263,9 +270,29 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
+      { Fl_Box* o = new Fl_Box(380, 45, 380, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(780, 55, 10, 80);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(810, 55, 10, 155);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(720, 200, 100, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(725, 125, 65, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
       o->end();
     }
-    { Fl_Group* o = controlsGroup = new Fl_Group(5, 5, 825, 255);
+    { Fl_Group* o = controlsGroup = new Fl_Group(5, 5, 865, 255);
       o->box(FL_DOWN_FRAME);
       o->deactivate();
       { fltk::LightButton* o = inputButton = new fltk::LightButton(27, 116, 69, 30, "Input");
@@ -368,13 +395,20 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_gradientOnEigenVectorButton);
       }
+      { fltk::LightButton* o = parametricSpaceButton = new fltk::LightButton(745, 35, 115, 35, "Parametric Space");
+        o->type(0);
+        o->value(1);
+        o->selection_color(1);
+        o->callback((Fl_Callback*)cb_parametricSpaceButton);
+        o->align(132|FL_ALIGN_INSIDE);
+      }
       o->end();
     }
-    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 825, 15);
+    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 865, 15);
       o->type(3);
       o->selection_color(2);
     }
-    statusTextOutput = new Fl_Output(5, 349, 825, 25);
+    statusTextOutput = new Fl_Output(5, 349, 865, 25);
     { fltk::LightButton* o = loadButton = new fltk::LightButton(30, 45, 69, 30, "Load");
       o->type(0);
       o->value(1);
@@ -439,4 +473,7 @@ void ceExtractorConsoleGUI::ShowMaxEigenVector( void ) {
 }
 
 void ceExtractorConsoleGUI::ShowGradientOnEigenVector( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowParametricSpace( void ) {
 }
