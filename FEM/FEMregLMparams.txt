@@ -2,25 +2,25 @@
 
 4	% Number of levels in the multi-res pyramid
 4	% Maximum Level to use in the pyramid 
-2 4 8 12  %	% elts per dim each level
-1.e6 1.e6 1.e6 1.e6 %90000   % Elasticity
-1.e3 1.e3  2.e3 2.e3	% Rho
-10 10 10 10    	% NumberOfIntegrationPoints
+4 4 8 16  %	% elts per dim each level
+1.e2 1.e2 1.e2 1.e2 %1.e6 1.e6 1.e6 1.e6 %90000   % Elasticity
+1.e0 1.e0 1.e0 1.e0 %1.e3 1.e3  2.e3 2.e3	% Rho
+5 10 10 10    	% NumberOfIntegrationPoints
 1 1 1 1  	  % WidthOfMetricRegion
-15 15 25 25 	% MaximumIterations
-1     % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
+25 25 25 25 	% MaximumIterations
+0  0   % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
 1.	% Alpha
 1	% DescentDirection
 1	% DoLineSearch
-7	% frequency of line search
+1	% frequency of line search
 1.	% TimeStep
 1.e-15  % Energy Reduction Factor
 2     % dimension of images
-128	% Nx (image x dimension)
-128	% Ny (image y dimension)
+256	% Nx (image x dimension)
+256	% Ny (image y dimension)
 91      % Nz (image z dimension - not used if 2D)
-E:\\Avants\\MetaImages\\brain_slice1smth.im % 	% ReferenceFileName
-E:\\Avants\\MetaImages\\brain_slice2smth.im % 		% TargetFileName
+E:\\Avants\\MetaImages\\brain_slice1.im % 	% ReferenceFileName
+E:\\Avants\\MetaImages\\brain_slice1warp.im % 		% TargetFileName
 0	% UseLandmarks - read the file name below if this is true
 /mnt/data/tessa/temp/e15326s16i1_2.regLM	% LandmarkFileName
 E:\\Avants\\MetaImages\\result	% ResultsFileName
