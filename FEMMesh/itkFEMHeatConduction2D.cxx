@@ -19,7 +19,8 @@
 =========================================================================*/
 
 #include "itkFEMHeatConduction2D.h"
-#include "itkFEMElementBase.h"
+#include "itkFEMElementTriangleHeatConductionVisitor.h"
+#include "itkFEMElementQuadrilateralHeatConductionVisitor.h"
 
 
 namespace itk {
@@ -57,8 +58,69 @@ FEMHeatConduction2D
 ::AssembleMasterEquation(void)
 {
 
-   // Here instantiate all the visitors and
-   // send them to walk through the mesh
+  // Instantiate Visitors
+
+  // Types for Triangles
+  typedef itk::fem::FEMElementTriangle< 
+                            FEMMeshType >  TriangleElementType;
+ 
+  typedef itk::fem::FEMElementTriangleHeatConductionVisitor< 
+                            FEMMeshType >  TriangleHeatConductionVisitorType;
+
+  
+  typedef itk::fem::FEMElementVisitorImplementation<
+                                        FEMMeshType,
+                                        TriangleElementType,
+                                        TriangleHeatConductionVisitorType  
+                                            >  TriangleHeatConductionVisitorImplementationType;
+
+
+  TriangleHeatConductionVisitorImplementationType::Pointer triangleVisitor = 
+                                  TriangleHeatConductionVisitorImplementationType::New();
+
+
+
+  // Types for Quadrilaterals
+  typedef itk::fem::FEMElementQuadrilateral< 
+                            FEMMeshType >  QuadrilateralElementType;
+ 
+  typedef itk::fem::FEMElementQuadrilateralHeatConductionVisitor< 
+                            FEMMeshType >  QuadrilateralHeatConductionVisitorType;
+
+  
+  typedef itk::fem::FEMElementVisitorImplementation<
+                                        FEMMeshType,
+                                        QuadrilateralElementType,
+                                        QuadrilateralHeatConductionVisitorType  
+                                            >  QuadrilateralHeatConductionVisitorImplementationType;
+
+
+  QuadrilateralHeatConductionVisitorImplementationType::Pointer quadrilateralVisitor = 
+                                  QuadrilateralHeatConductionVisitorImplementationType::New();
+
+
+
+  triangleVisitor->SetMesh( m_Mesh );
+  quadrilateralVisitor->SetMesh( m_Mesh );
+
+
+  // Create a MultiVisitor
+  typedef FEMMeshType::ElementMultiVisitorType       MultiVisitorType;
+
+  MultiVisitorType::Pointer multiVisitor    = MultiVisitorType::New();
+
+
+  multiVisitor->AddVisitor( triangleVisitor );
+  multiVisitor->AddVisitor( quadrilateralVisitor );
+
+
+
+  // Now ask the mesh to accept the multivisitor which
+  // will Call Visit for each cell in the mesh that matches the
+  // cell types of the visitors added to the MultiVisitor
+  m_Mesh->Accept( multiVisitor );
+  
+  std::cout << "Heat Conduction Visitors Done ! " << std::endl;
 
 }
 
