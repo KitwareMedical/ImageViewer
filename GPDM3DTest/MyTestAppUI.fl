@@ -1,0 +1,559 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0100 
+header_name {.h} 
+code_name {.cxx}
+class MyTestAppInterface {open : MySegmentation
+} {
+  Function {MyTestAppInterface()} {open
+  } {
+    Fl_Window mainwin {
+      label Main open
+      xywh {458 43 750 551} box DOWN_BOX resizable
+      code0 {\#include "MySegmentation.h"} visible
+    } {
+      Fl_Button execute {
+        label Execute
+        callback {this->segment();}
+        private xywh {20 165 100 25}
+      }
+      Fl_Button load {
+        label Load
+        callback {this->LoadImage();
+currentslice->value("0");
+if (slices > 1) nload->activate();}
+        private xywh {20 45 100 25}
+      }
+      Fl_Button Display {
+        label Display
+        callback {this->display();}
+        private xywh {20 205 100 25}
+      }
+      Fl_Menu_Bar {} {open
+        xywh {0 0 750 20}
+      } {
+        submenu {} {
+          label File open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label New
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Open
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Save
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Save as}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Close
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Exit
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label Setting open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label {Gibbs Model}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Deformable Model}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Seed
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label Display open
+          xywh {0 0 100 20}
+        } {}
+        submenu {} {
+          label Model open
+          xywh {0 0 100 20}
+        } {
+          submenu {} {
+            label Gibbs open
+            xywh {0 0 100 20}
+          } {
+            menuitem {} {
+              label Run
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Stat
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Save
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Update
+              xywh {0 0 100 20}
+            }
+          }
+          submenu {} {
+            label Deformable open
+            xywh {0 0 100 20}
+          } {
+            menuitem {} {
+              label {Gradient Map}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label {Gradient Fit}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label {Balloon Fit}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label {Comb ined Fit}
+              xywh {0 0 100 20}
+            }
+          }
+        }
+      }
+      Fl_Button Set {
+        label Set
+        callback {this->setpar();}
+        private xywh {20 85 100 25}
+      }
+      Fl_Light_Button Seed {
+        label {Pick Seed}
+        callback {this->ClearClicked();
+this->PickSeed();}
+        private xywh {20 125 100 25}
+      }
+      Fl_Button save {
+        label Save
+        callback {this->SaveResult();}
+        private xywh {20 245 100 25}
+      }
+      Fl_Button nload {
+        label {Load Next}
+        callback {this->LoadNextImage(++cslices);}
+        private xywh {20 285 100 25} deactivate
+      }
+      Fl_Output currentslice {
+        label {Slice:}
+        private xywh {45 510 95 25} box FLAT_BOX color 48
+      }
+      Fl_Box {} {
+        label {Gibbs Fitting}
+        xywh {15 40 110 275} box DOWN_FRAME align 5
+      }
+      Fl_Box {} {
+        label {Deformable Fitting}
+        xywh {15 340 165 155} box DOWN_FRAME align 5
+      }
+      Fl_Button updatedisplay {
+        label {Update Display}
+        private xywh {20 345 155 25} deactivate
+      }
+      Fl_Button dsetting {
+        label {Deformable Setting}
+        callback {dfsetting->show();
+setgradient->activate();}
+        private xywh {20 385 155 25}
+      }
+      Fl_Button dfitting {
+        label {Deformable Fitting }
+        callback {//viewer->loadnormals(m_dfilter->GetNormals());
+//viewer->loadobject(m_meshsource->GetOutput());
+//viewer->redraw();
+DeformableFit();
+dfitting->deactivate();
+updatedisplay->activate();}
+        private xywh {20 465 155 25} deactivate
+      }
+      Fl_Button setgradient {
+        label {Set Gradient}
+        callback {SetGradient();
+grfilter->SetInput( m_DataImage );
+grfilter->SetSigma( 2.0 );
+gtomfilter->SetInput(grfilter->GetOutput());
+gfilter->SetInput(gtomfilter->GetOutput());
+gfilter->Update();
+myMeshSource::Pointer m_meshsource = myMeshSource::New();
+myDFilterType::Pointer m_dfilter = myDFilterType::New();
+m_dfilter->SetInput(m_meshsource->GetOutput());
+m_dfilter->SetGradient(gfilter->GetOutput());
+m_meshsource->SetBinaryImage( m_ClassImage );
+m_meshsource->SetObjectValue( 255 );
+
+m_dfilter->SetStiffness(m_Stiffness);
+m_dfilter->SetGradientMagnitude(m_GradientMagnitude);
+m_dfilter->SetTimeStep(m_TimeStep);
+m_dfilter->SetStepThreshold(m_StepThreshold);
+m_dfilter->SetScale(m_Scale);
+m_dfilter->Update();
+
+dfitting->activate();
+setgradient->deactivate();
+viewer->loadObject(m_dfilter->GetOutput());
+viewer->loadNormals(m_dfilter->GetNormals());
+viewer->redraw();
+//viewer->redraw();}
+        private xywh {20 425 155 25} deactivate
+      }
+      Fl_Group vcontrol {
+        label vcontrol open
+        xywh {285 475 325 60} align 0
+      } {
+        Fl_Slider xpan {
+          label xpan
+          callback {viewer->panx(((Fl_Slider *)o)->value());
+viewer->redraw();}
+          xywh {310 485 275 20} type {Horz Knob} box PLASTIC_DOWN_BOX labeltype NO_LABEL align 0 minimum -100 maximum 100 step 1
+          code0 {\#include <stdio.h>}
+        }
+        Fl_Roller vrot {
+          label vrot
+          callback {viewer->h_angle(((Fl_Roller *)o)->value());
+viewer->redraw();}
+          xywh {310 505 275 20} type Horizontal box PLASTIC_DOWN_BOX align 0 minimum -180 maximum 180 step 1
+        }
+      }
+      Fl_Box viewer {
+        label vframe
+        xywh {220 20 440 440}
+        code0 {\#include "My3DView.h"}
+        class My3DView
+      }
+      Fl_Group hcontrol {
+        label hcontrol open
+        xywh {670 65 65 360} labeltype NO_LABEL align 0
+      } {
+        Fl_Slider ypan {
+          label ypan
+          callback {viewer->pany(((Fl_Slider *)o)->value());
+viewer->redraw();}
+          xywh {685 120 20 275} type {Vert Knob} box PLASTIC_DOWN_BOX labeltype NO_LABEL align 0 minimum -100 maximum 100 step 1
+        }
+        Fl_Roller hrot {
+          label hrot
+          callback {viewer->v_angle(((Fl_Roller *)o)->value());
+viewer->redraw();}
+          xywh {705 120 20 275} box PLASTIC_DOWN_BOX labeltype NO_LABEL align 0 minimum -180 maximum 180 step 1
+        }
+      }
+      Fl_Value_Slider viewzoom {
+        label zoom
+        callback {viewer->size=((Fl_Value_Slider *)o)->value();
+viewer->redraw();}
+        xywh {160 40 20 270} type {Vert Knob} box PLASTIC_DOWN_BOX minimum 1 maximum 50 step 0.1 value 1
+      }
+    }
+    Fl_Window setting {
+      label Setting open
+      xywh {622 199 196 193} hide
+    } {
+      Fl_Group iscolor {open
+        private xywh {-5 135 205 60} box DOWN_BOX
+      } {
+        Fl_Check_Button rgb {
+          label RGB
+          private xywh {35 150 25 25} type Radio down_box DOWN_BOX value 1
+        }
+        Fl_Check_Button gray {
+          label Grayvalue
+          private xywh {95 150 25 25} type Radio down_box DOWN_BOX
+        }
+      }
+      Fl_Value_Input width {
+        label {Width:}
+        private xywh {65 10 85 25} maximum 400 value 256
+      }
+      Fl_Value_Input height {
+        label {Height:}
+        private xywh {65 50 85 25} maximum 400 value 256
+      }
+      Fl_Value_Input slice {
+        label {Slices:}
+        private xywh {65 90 85 25} maximum 400 value 1
+      }
+    }
+    Fl_Window gsetting {
+      label {Gibbs Setting} open
+      xywh {503 52 375 460} box SHADOW_BOX visible
+    } {
+      Fl_Group {} {
+        label sampling open
+        xywh {10 15 180 100} box DOWN_BOX align 21
+      } {
+        Fl_Value_Input radius {
+          label {Radius:}
+          private xywh {80 45 100 25} box PLASTIC_DOWN_BOX maximum 20 value 10
+        }
+        Fl_Value_Input classnum {
+          label {Classes:}
+          private xywh {80 80 100 25} box PLASTIC_DOWN_BOX maximum 8 value 2
+        }
+      }
+      Fl_Group {} {
+        label {Gibbs Loop} open
+        xywh {195 15 170 100} box DOWN_FRAME align 21
+      } {
+        Fl_Value_Input step {
+          label {Steps:}
+          private xywh {255 45 100 25} box PLASTIC_DOWN_BOX maximum 100 value 1
+        }
+        Fl_Value_Input errorrate {
+          label {Error:}
+          private xywh {255 80 100 25} box PLASTIC_DOWN_BOX maximum 25
+        }
+      }
+      Fl_Group {} {
+        label Parameters open
+        xywh {10 120 355 290} box DOWN_FRAME align 21
+      } {
+        Fl_Value_Input gradient {
+          label {Gradient:} selected
+          private xywh {80 150 100 25} box PLASTIC_DOWN_BOX maximum 20 value 6
+        }
+        Fl_Value_Input regionlimit {
+          label {Region:}
+          private xywh {255 150 100 25} box PLASTIC_DOWN_BOX maximum 1000 value 100
+        }
+        Fl_Group {} {
+          label {Weight I} open
+          xywh {15 180 345 85} box DOWN_FRAME align 21
+        } {
+          Fl_Value_Slider weight_grad {
+            label {Gradient Weight}
+            private xywh {135 205 210 20} type Horizontal box PLASTIC_UP_BOX align 4 maximum 5 value 1
+          }
+          Fl_Value_Slider weight_gibbs {
+            label {Gibbs Weight}
+            private xywh {135 235 210 20} type Horizontal box PLASTIC_UP_BOX align 4 maximum 5 value 1
+          }
+        }
+        Fl_Group {} {
+          label {Boundary Weight} open
+          xywh {15 270 345 135} box DOWN_FRAME align 21
+        } {
+          Fl_Value_Slider weight_c1 {
+            label {Type I}
+            private xywh {50 305 25 90} box PLASTIC_UP_BOX align 5 maximum 10 step 0.1
+          }
+          Fl_Value_Slider weight_c2 {
+            label {Type II}
+            private xywh {100 305 25 90} box PLASTIC_UP_BOX align 5 maximum 10 step 0.1
+          }
+          Fl_Value_Slider weight_c3 {
+            label {Type III}
+            private xywh {150 305 25 90} box PLASTIC_UP_BOX align 5 maximum 10 step 0.1
+          }
+          Fl_Value_Slider weight_b {
+            label {Type IV}
+            private xywh {200 305 25 90} box PLASTIC_UP_BOX align 5 maximum 10 step 0.1
+          }
+          Fl_Value_Slider weight_o {
+            label Other
+            private xywh {300 305 25 90} box PLASTIC_UP_BOX align 5 maximum 10 step 0.1 value 5
+          }
+          Fl_Value_Slider weight_w {
+            label {Type V}
+            private xywh {250 305 25 90} box PLASTIC_UP_BOX align 5 maximum 10 step 0.1
+          }
+        }
+      }
+      Fl_Button ok {
+        label Ok
+        callback {m_Region = regionlimit->value();
+m_Radius = radius->value();
+m_ClassNum = classnum->value()+1;
+m_Gradient = gradient->value();
+m_Step = step->value();
+m_WeightOfClique[0]=weight_c1->value();
+m_WeightOfClique[1]=weight_c2->value();
+m_WeightOfClique[2]=weight_c3->value();
+m_WeightOfClique[3]=weight_b->value();
+m_WeightOfClique[4]=weight_w->value();
+m_WeightOfClique[5]=weight_o->value();
+
+gsetting->hide();
+return;}
+        private xywh {150 420 100 25} box PLASTIC_UP_BOX
+      }
+      Fl_Button cancel {
+        label Cancel
+        callback {gsetting->hide();
+return;}
+        private xywh {265 420 100 25} box PLASTIC_UP_BOX
+      }
+    }
+    Fl_Window dfsetting {
+      label {Deformable Model Setting} open
+      xywh {-32000 -32000 498 232} hide
+    } {
+      Fl_Value_Input maggradient {
+        label {Gradient Magnitude:}
+        private xywh {375 25 100 25} box PLASTIC_DOWN_BOX maximum 20 value 1
+      }
+      Fl_Value_Input scalex {
+        label {Scale X:}
+        private xywh {183 65 50 25} box PLASTIC_DOWN_BOX maximum 20 value 1
+      }
+      Fl_Value_Input vstiffness {
+        label {Vertical Stiffness:}
+        private xywh {145 145 100 25} box PLASTIC_DOWN_BOX maximum 20 value 0.0001
+      }
+      Fl_Value_Input hstiffness {
+        label {Hrizon Stiffness:}
+        private xywh {375 145 100 25} box PLASTIC_DOWN_BOX maximum 20 value 0.04
+      }
+      Fl_Button dfok {
+        label Ok
+        callback {m_Stiffness[0] = vstiffness->value();
+m_Stiffness[1] = hstiffness->value();
+m_GradientMagnitude = maggradient->value();
+m_Scale[0] = scalex->value();
+m_Scale[1] = scaley->value();
+m_Scale[2] = scalez->value();
+m_TimeStep = timestep->value();
+m_StepThreshold = stepthreshold->value();
+dfsetting->hide();
+return;}
+        private xywh {255 185 100 25} box PLASTIC_UP_BOX
+      }
+      Fl_Button dfcancel {
+        label Cancel
+        callback {dfsetting->hide();
+return;}
+        private xywh {375 185 100 25} box PLASTIC_UP_BOX
+      }
+      Fl_Value_Input stepthreshold {
+        label {Step Threshold:}
+        private xywh {375 105 100 25} box PLASTIC_DOWN_BOX maximum 20 value 30
+      }
+      Fl_Value_Input timestep {
+        label {Time Step:}
+        private xywh {145 105 100 25} box PLASTIC_DOWN_BOX maximum 20 value 0.001
+      }
+      Fl_Value_Input scaley {
+        label {Scale Y:}
+        private xywh {304 65 50 25} box PLASTIC_DOWN_BOX maximum 20 value 1
+      }
+      Fl_Value_Input scalez {
+        label {Scale Z:}
+        private xywh {425 65 50 25} box PLASTIC_DOWN_BOX maximum 20 value 1
+      }
+    }
+  }
+  Function {~MyTestAppInterface()} {open
+  } {}
+  Function {segment()} {open return_type {virtual void}
+  } {
+    code {this->init();
+  if ( !m_GibbsFilter ) m_GibbsFilter = GibbsFilterType::New();
+  m_GibbsFilter->SetNumberOfClasses(m_ClassNum);
+  m_GibbsFilter->SetMaximumNumberOfIterations(m_Step);
+//  m_GibbsFilter->SetErrorTollerance(0.00);
+  m_GibbsFilter->SetClusterSize(m_Region);
+  m_GibbsFilter->SetBoundaryGradient(m_Gradient);
+  m_GibbsFilter->SetObjectLabel(1);
+ 
+  m_GibbsFilter->SetInput(m_GPImage);
+  m_GibbsFilter->SetClassifier( myClassifier ); 
+
+  //Since a suvervised classifier is used, it requires a training image
+  m_GibbsFilter->SetTrainingImage(m_ClassImage);  
+
+  //Kick off the Gibbs labeller function
+  m_GibbsFilter->Modified();
+  m_GibbsFilter->Update();
+
+  if (cslices == slices) gpmaskcreated = true;} {}
+  }
+  Function {display()} {open
+  } {
+    code {showdm = false;
+this->ShowResult();} {}
+  }
+  Function {Show()} {open
+  } {
+    code {mainwin->show();} {}
+  }
+  Function {init()} {open
+  } {
+    code {//create the initial class image
+  m_ClassImage = ImageType3D::New();
+  ImageType3D::SizeType  classImgSize = {{cols, rows, 1}};
+  ImageType3D::IndexType classindex;
+  classindex.Fill(0);
+  ImageType3D::RegionType classregion;
+
+  classregion.SetSize(classImgSize);
+  classregion.SetIndex(classindex);
+
+  m_ClassImage->SetLargestPossibleRegion(classregion);
+  m_ClassImage->SetBufferedRegion(classregion);
+  m_ClassImage->Allocate();
+
+  // setup the iterators
+  typedef  itk::ImageRegionIteratorWithIndex<ImageType3D>  ClassImageIterator;
+
+  ClassImageIterator classIt( m_ClassImage, m_ClassImage->GetBufferedRegion() );
+  classIt.GoToBegin();
+
+  //--------------------------------------------------------------------------
+
+  unsigned int numPoints=m_Viewer->numClickedPointsStored();
+  ClickPoint *point;
+
+  int i = 0;
+  while ( !classIt.IsAtEnd() ) {
+    classIt.Set(0);  
+    for ( int j = 0; j < numPoints; j++ ) {
+      point=m_Viewer->getClickedPoint(j);
+      if (((i%cols-(int)(point->x))*(i%cols-(int)(point->x))+
+        (i/cols-((int)point->y))*(i/cols-(int)(point->y))) < m_Radius*m_Radius) 
+        classIt.Set(j+1);
+    }
+
+    ++classIt;
+    i++;
+  }
+
+//setup the classifier
+  applyEstimateModel = ImageGaussianModelEstimatorType::New();
+
+  applyEstimateModel->SetNumberOfModels(m_ClassNum);
+  applyEstimateModel->SetInputImage(m_GPImage);
+  applyEstimateModel->SetTrainingImage(m_ClassImage);
+  applyEstimateModel->Update();
+
+  membershipFunctions = applyEstimateModel->GetMembershipFunctions();
+
+  if (!myDecisionRule) myDecisionRule = DecisionRuleType::New();
+
+//  if ( myClassifier ) delete myClassifier;
+  myClassifier = ClassifierType::New();
+
+  myClassifier->SetNumberOfClasses(m_ClassNum);
+  myClassifier->SetDecisionRule((DecisionRuleBasePointer) myDecisionRule);
+  for ( i=0; i<m_ClassNum; i++ ) 
+    myClassifier->AddMembershipFunction(membershipFunctions[i]);} {}
+  }
+  Function {setpar()} {open
+  } {
+    code {gsetting->show();} {}
+  }
+} 
