@@ -17,7 +17,6 @@
 
 
 #include <liFilterConsoleBase.h>
-#include <itkMetaImageIOFactory.h>
 #include <itkMetaImageIO.h>
 
 
@@ -132,10 +131,6 @@ liFilterConsoleBase
   m_Writer_Laplacian->SetInput( m_Add->GetOutput() );
   
   
-  // Register a producer of MetaImage readers
-  itk::MetaImageIOFactory::RegisterOneFactory();
-
-
 }
 
 
