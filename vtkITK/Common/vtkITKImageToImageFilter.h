@@ -99,7 +99,7 @@ public:
   virtual vtkImageData *GetOutput() { return this->vtkImporter->GetOutput(); };
   virtual vtkImageData *GetOutput(int idx)
   {
-    return (vtkImageData *) this->vtkImageSource::GetOutput(idx);
+    return (vtkImageData *) this->vtkImporter->GetOutput(idx);
   };
   
   // Description:
@@ -109,6 +109,19 @@ public:
     this->vtkProcessObject::SetNthInput(0, Input);
     this->vtkExporter->SetInput(Input);
   };
+
+  // Description: Override vtkSource's Update so that we can access this class's GetOutput(). vtkSource's GetOutput is not virtual.
+  void Update()
+    {
+      if (this->GetOutput(0))
+        {
+        this->GetOutput(0)->Update();
+        if ( this->GetOutput(0)->GetSource() )
+          {
+          this->SetErrorCode( this->GetOutput(0)->GetSource()->GetErrorCode() );
+          }
+        }
+    }
 
 protected:
   vtkITKImageToImageFilter()
@@ -164,7 +177,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.4 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.5 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
