@@ -11,27 +11,24 @@
 
 #include "itkImage.h"
 #include "itkImportImageFilter.h"
-#include "itkCastImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkCommand.h"
 
 
-template <class TPixelType, class TFilterType >
+template <class TFilterType >
 class FilterModule {
 
 public:
 
    // Instantiate the image types
-  typedef TPixelType                     InputPixelType;
-  typedef TFilterType                    FilterType;
-
-  typedef typename FilterType::InputImageType     InternalImageType;
-  typedef typename InternalImageType::PixelType   InternalPixelType;
+  typedef TFilterType                             FilterType;
+  typedef typename FilterType::InputImageType     InputImageType;
+  typedef typename FilterType::OutputImageType    OutputImageType;
+  typedef typename InputImageType::PixelType      InputPixelType;
+  typedef typename OutputImageType::PixelType     OutputPixelType;
 
   itkStaticConstMacro( Dimension, unsigned int, 
-         itk::GetImageDimension< InternalImageType >::ImageDimension );
-
-  typedef itk::Image< InputPixelType,    Dimension > InputImageType;
+         itk::GetImageDimension< InputImageType >::ImageDimension );
 
   // Instantiate the ImportImageFilter
   // This filter is used for building an ITK image using 
@@ -42,16 +39,6 @@ public:
   typedef ImportFilterType::SizeType      SizeType;
   typedef ImportFilterType::IndexType     IndexType;
   typedef ImportFilterType::RegionType    RegionType;
-
-  // Instantiate the CastImageFilter
-  // This filter is used for converting the pixel type from the input
-  // data buffer into the input pixel type of the filter.
-  typedef itk::CastImageFilter< InputImageType, 
-                                InternalImageType > CastFilterType;
-
-
-  // Instantiate the filter type
-  typedef TFilterType           FilterType;
 
 
   // Command/Observer intended to update the progress
@@ -64,7 +51,6 @@ public:
   FilterModule() 
     {
     m_ImportFilter       = ImportFilterType::New();
-    m_CastFilter         = CastFilterType::New();
     m_Filter             = FilterType::New();
     m_CommandObserver    = CommandType::New();
     m_Info               = 0;
@@ -118,6 +104,8 @@ public:
     m_Info = info;
   }
 
+
+
   /**  ProcessData performs the actual filtering on the data */
   void 
   ProcessData( const vtkVVProcessDataStruct * pds )
@@ -165,8 +153,7 @@ public:
                                       totalNumberOfPixels,
                                       importFilterWillDeleteTheInputBuffer );
 
-    m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
-    m_Filter->SetInput( m_CastFilter->GetOutput() );
+    m_Filter->SetInput( m_ImportFilter->GetOutput() );
 
     // Set the Observer for updating progress in the GUI
     m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
@@ -176,27 +163,19 @@ public:
     m_Filter->Update();
 
     // Copy the data (with casting) to the output buffer provided by the Plug In API
-    typename InternalImageType::ConstPointer outputImage =
+    typename OutputImageType::ConstPointer outputImage =
                                                m_Filter->GetOutput();
 
-    typedef itk::ImageRegionConstIterator< InternalImageType >  OutputIteratorType;
+    typedef itk::ImageRegionConstIterator< OutputImageType >  OutputIteratorType;
 
     OutputIteratorType ot( outputImage, outputImage->GetBufferedRegion() );
 
-    InputPixelType * outData = (InputPixelType *)(pds->outData);
+    OutputPixelType * outData = (OutputPixelType *)(pds->outData);
 
     ot.GoToBegin(); 
     while( !ot.IsAtEnd() )
       {
-      // NOTE: some combination of ClampMacro and 
-      // NumericTraits should be used here. 
-      // The code below is ok only for unsigned types in the InputPixelType...
-      InternalPixelType value = ot.Get();
-      if( value < itk::NumericTraits<InternalPixelType>::Zero ) 
-        {
-        value = itk::NumericTraits<InternalPixelType>::Zero;
-        }
-      *outData = static_cast< InputPixelType >( value );
+      *outData = ot.Get();
       ++ot;
       ++outData;
       }
@@ -206,15 +185,10 @@ public:
 
 private:
     typename ImportFilterType::Pointer    m_ImportFilter;
-    typename CastFilterType::Pointer      m_CastFilter;
     typename FilterType::Pointer          m_Filter;
-
     typename CommandType::Pointer         m_CommandObserver    ;
-
     vtkVVPluginInfo                     * m_Info;
-
     std::string                           m_UpdateMessage;
-  
 };
 
 
