@@ -2,7 +2,7 @@
 
 #include <sstream>
 #include <RegisterWindow.h>
-#include <FL/fl_file_chooser.h>
+#include <FL/fl_file_chooser.H>
 
 RegisterWindow::RegisterWindow()
 {
@@ -282,8 +282,6 @@ void RegisterWindow::Execute(void)
 
 void RegisterWindow::UpdateParameters(void)
 {
-
-  int sizeY = m_FixedImage->GetLargestPossibleRegion().GetSize()[1] ;
 
   m_RegionBegin.resize(ImageDimension) ;
   m_RegionEnd.resize(ImageDimension) ;
