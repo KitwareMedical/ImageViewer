@@ -20,11 +20,13 @@
 #include "itkFEMLinearSystemWrapperDenseVNL.h"
 
 #include "itkImage.h"
-#include "itkFileIOMetaImage.h"
-#include "itkWriteMetaImage.h"
 #include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h"
-#include "itkMetaImageIOFactory.h"
+/* Meta Image stuff 
+ *#include "itkFileIOMetaImage.h"
+ *#include "itkWriteMetaImage.h"
+ *#include "itkMetaImageIOFactory.h"
+ */
 
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
@@ -91,7 +93,10 @@ namespace fem {
         Choose the time step to control the size of the deformation at each step.
         Choose enough iterations to allow the solution to converge (this may be automated).
 
-     We read metaimages and output raw images.
+     Reading images is up to the user.  Either set the images using 
+     SetReferenceImage or see the ReadImages() function.  Outputs are raw images.
+     Change the ImageDataType typedef to output your type or keep it the same
+     to always output unsigned char.
 
      FIXMEs :  We should be able to vary the region size of the metric at run-time,
      allowing a kind of multi-resolution approach.
@@ -105,6 +110,7 @@ public:
   typedef SolverCrankNicolson SolverType;
   enum Sign { positive = 1, negative = -1 };
   typedef double Float;
+  typedef unsigned char ImageDataType;
   typedef Image< unsigned char, 2 > ImageType;
   enum { ImageDimension = 2 };
   typedef itk::Vector<Float,ImageDimension> VectorType;
