@@ -32,8 +32,9 @@
 
 #include "itkNumericTraits.h"
 
-#include "itkFEM2DDeformationNode.h"
+#include "itkFEMDisplacementNode.h"
 #include "itkFEMLineCell.h"
+#include "itkFEMElementBar2D.h"
 
 
 
@@ -350,20 +351,7 @@ FEMMeshApplicationBase
   m_PointsToBeDeleted.insert( point2 );
 
 
-  // Note that the numberOfNodes is not necessarily equal to
-  // the numberOfPoints because the geometry and the degrees
-  // of freedom do not have to be represented with shape 
-  // functions of the same order.
-  typedef itk::fem::FEM2DDeformationNode Deformation2DNodeType;
-  Deformation2DNodeType * node1 = new Deformation2DNodeType;
-  Deformation2DNodeType * node2 = new Deformation2DNodeType;
-  m_FEMMesh->AddNode( node1 );
-  m_FEMMesh->AddNode( node2 );
-
-  m_NodesToBeDeleted.insert( node1 );
-  m_NodesToBeDeleted.insert( node2 );
-
-
+  // Create and Insert  a linear Cell
   typedef itk::fem::FEMLineCell< PointsDimension > LineCellType;
   LineCellType * cell1 = new LineCellType;
   cell1->SetPoint( 0, point1 );
@@ -372,7 +360,33 @@ FEMMeshApplicationBase
   m_FEMMesh->AddCell( cell1 );
 
   m_CellsToBeDeleted.insert( cell1 );
+
   
+  // Create and Insert  a Bar2D Element
+  typedef itk::fem::FEMElementBar2D         BarElementType;
+  BarElementType * barElement1 = new BarElementType;
+
+  m_FEMMesh->AddElement( barElement1 );
+
+  m_ElementsToBeDeleted.insert( barElement1 );
+ 
+
+  // Note that the numberOfNodes is not necessarily equal to
+  // the numberOfPoints because the geometry and the degrees
+  // of freedom do not have to be represented with shape 
+  // functions of the same order.
+  typedef BarElementType::NodeType      BarElementNodeType;
+  BarElementNodeType * node1 = new BarElementNodeType;
+  BarElementNodeType * node2 = new BarElementNodeType;
+  m_FEMMesh->AddNode( node1 );
+  m_FEMMesh->AddNode( node2 );
+
+  barElement1->SetNode( 0, node1 );  // the bar uses these two nodes
+  barElement1->SetNode( 1, node2 );
+
+  m_NodesToBeDeleted.insert( node1 );
+  m_NodesToBeDeleted.insert( node2 );
+
 
 
   std::cout << "Number of points    = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
