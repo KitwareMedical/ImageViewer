@@ -10,8 +10,6 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
-# Some examples need VTK.
-INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindVTK.cmake)
 
 # Add an option to build or not build the Watershed example
 OPTION(BUILD_WATERSHED_SEGMENTATION "Build the watershed segmentation" OFF)
@@ -77,16 +75,16 @@ SUBDIRS(FuzzyConnectedness)
 SUBDIRS(ShapeDetection)
 
 # The MRI Registration example needs VTK
-# IF (USE_VTK_FILE)
-#  SUBDIRS(MRIRegistration)
-# ENDIF (USE_VTK_FILE)
+IF (HAS_VTK)
+  SUBDIRS(MRIRegistration)
+ENDIF (HAS_VTK)
 
 # Add an option to build or not build the TripleTKImageDisplay example.
 # It needs VTK.
 IF(HAS_METAIMAGE)
-  IF(USE_VTK_FILE)
+  IF(HAS_VTK)
     SUBDIRS(TripleTKImageDisplay)
-  ENDIF(USE_VTK_FILE)
+  ENDIF(HAS_VTK)
 ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the
@@ -128,9 +126,9 @@ ENDIF(HAS_METAIMAGE)
 OPTION(BUILD_FEM_MESH_EXAMPLE "Build the FEM-Mesh example" OFF)
 IF(BUILD_FEM_MESH_EXAMPLE)
   IF(HAS_FLTKIMAGEVIEWER)
-    IF(USE_VTK_FILE)
+    IF(HAS_VTK)
       SUBDIRS(FEMMesh)
-    ENDIF(USE_VTK_FILE)
+    ENDIF(HAS_VTK)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(BUILD_FEM_MESH_EXAMPLE)
 MARK_AS_ADVANCED( BUILD_FEM_MESH_EXAMPLE )
@@ -140,12 +138,11 @@ MARK_AS_ADVANCED( BUILD_FEM_MESH_EXAMPLE )
 OPTION(BUILD_THINPLATESPLINES_EXAMPLE "Build the ThinPlateSplines example" OFF)
 IF(BUILD_THINPLATESPLINES_EXAMPLE)
   IF(HAS_FLTKIMAGEVIEWER)
-    IF(USE_VTK_FILE)
+    IF(HAS_VTK)
       SUBDIRS(ThinPlateSplines)
-    ENDIF(USE_VTK_FILE)
+    ENDIF(HAS_VTK)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(BUILD_THINPLATESPLINES_EXAMPLE)
-MARK_AS_ADVANCED( BUILD_THINPLATESPLINES_EXAMPLE )
 
 
 # Add an option to build the Tcl Wrap for the stl string class

@@ -1,5 +1,5 @@
-INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindGLU.cmake)
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -46,6 +46,7 @@ IView
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
+${GLU_LIBRARY}
 )
 
 IF(WIN32)

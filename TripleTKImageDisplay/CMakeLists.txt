@@ -1,4 +1,3 @@
-INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 INCLUDE_DIRECTORIES(

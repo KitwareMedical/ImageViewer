@@ -1,6 +1,3 @@
-# Include FLTK
-INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
-
 # Include OpenGL
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
