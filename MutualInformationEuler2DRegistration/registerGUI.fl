@@ -67,7 +67,7 @@ class RegisterGUI {open : {public RegisterApplication}
         }
         Fl_Button buStartRegistration {
           label {Start Registration}
-          callback {this->Execute()}
+          callback {this->Execute()} selected
           xywh {15 85 180 30}
         }
         Fl_Button buAdvancedOptions {
@@ -109,13 +109,13 @@ class RegisterGUI {open : {public RegisterApplication}
           xywh {230 185 175 30} labelsize 12
         }
       }
-      Fl_Output outStatus {selected
+      Fl_Output outStatus {
         xywh {15 230 400 45} type Multiline labelsize 12 textsize 12
       }
     }
     Fl_Window winAdvancedOptions {
       label {Advaned options} open
-      xywh {506 168 364 356} labelsize 12 visible
+      xywh {206 415 364 356} labelsize 12 visible
     } {
       Fl_Return_Button buUpdateAdvancedOptions {
         label OK
@@ -210,6 +210,24 @@ class RegisterGUI {open : {public RegisterApplication}
       Fl_Value_Input inTranslationScale {
         label {Translation Scale}
         xywh {170 125 85 25} labelsize 12 textsize 12
+      }
+    }
+    Fl_Window iterationsWindow {
+      label {Iterations Feedback} open
+      xywh {588 414 483 391} resizable visible
+    } {
+      Fl_Browser iterationsBrowser {
+        xywh {15 15 445 320} resizable
+      }
+      Fl_Button {} {
+        label Clear
+        callback {iterationsBrowser->clear();}
+        xywh {79 348 130 30}
+      }
+      Fl_Button {} {
+        label Close
+        callback {iterationsWindow->hide();}
+        xywh {270 348 130 30}
       }
     }
   }
