@@ -1,0 +1,22 @@
+SEGMENTER MODULE INSTRUCTIONS
+
+This module runs data through the actual watershed segmentation algorithm.  The output is a labeled image of unsiged long integers which represents the basic, oversegmented image, and a tree of merges among segments which allow for real-time resegmentation at different scales.
+
+First choose the source data you want to use.  In almost all cases you will want to choose the "gradient_volume" tag, which is the output of the gradient image filter generated as the last step in the Preprocessor module.
+
+The next step is to choose the parameters for the segmentation.  The "Maximum flood level" parameter specifies to what extent the tree of segment merges is calculated.  Usually you will only be interested in a certain range of merges among segments.  For example, say you are looking for very fine-grained structures in an image.  Merging to a high scale level in this case would be wasted effort since the structures you are interested are probably obscured after a very low scale level.  All the continuous scale levels up to the "Maximum flood level" you specify will be available in your final output.  
+
+It is important to note that the generation of the scale levels is the most time consuming part of the segmentation process, so it is wise to be conservative in setting this parameter, especially with large data sets.  The parameter is expressed at a range from 0.0 to 1.0, which 1.0 being the full scale of merges.  A good value to start with is about 10%, or 0.10.
+
+The lower threshold is a preprocessing step which thresholds small values out of the image.  This is useful for further suppression of background noise and is very important in reducing the amount of oversegmentation in the basic segmentation of the image, which reduces the complexity of the merging hierarchy and increases the speed of the segmentation.
+
+Lower threshold is expressed as a value from 0.0 to 1.0, i.e. no thresholding at all up to 100% of the height of the image.  Lower values are recommended to start.  Start with about a 1% threshold level (0.01) and work up or down from there.
+
+Once you have specified parameters, click the "Start" button.  The output will appear in the preview window. 
+
+
+A NOTE ON PROCESSING TIMES
+
+The time the algorithm takes to run is very sensitive to the amount of complexity in the image.  A small difference in the lower threshold value, for example, could change execution time from a minute or two into several hours for a large volume.  As a general rule, eliminate as much detail in the image as you can afford to, either through more smoothing or by using a higher threshold value.
+
+

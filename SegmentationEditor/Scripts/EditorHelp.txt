@@ -1,0 +1,81 @@
+SEGMENTATION EDITOR MODULE
+
+This module allows you to manipulate the output of the segmentation module to produce labeled volumes.
+
+To begin the editing process, you must choose the source, segmentation, and tree (scale information) to use.  The "Source data" is the original image data on which the segmenation is based.  The "Segmentation" data is the base labeled image data produced by the watershed segmentation algorithm.  The "Tree" data is the tree of merges calculated by the watershed segmentation algorithm that is used to visualize the output at different scales.
+
+If you have just been through the preprocessing and segmenting modules, the relevant data sets will be displayed in the source windows above.  Choose the source data tag you wish to use for comparison purposes and press the "select" button.  The tag will be displayed after the "Using source data:" message.  The "segmentation" and "segmentation_tree" tags have already been selected for you, but you can change these if you have loaded in a segmentation under a different name.
+
+If nothing is displayed in the windows above, you will need to create a new session or load in an existing session.  See the Data module for more information.
+
+Once you have selected the data sets to use, click the "Start" button.
+
+
+EDITOR CONSOLE WINDOW
+
+This section describes the controls you will see in the Editor window.
+
+INTRODUCTION
+
+The purpose of the editor is to facilitate a construction of a labeled image using a combination of automatic and hand labeling of voxels.  Think of the regions produced by the watershed filter as pieces of a 3D puzzle which you can assemble into a labeled image, which is then fine-tuned or augmented by hand painting of regions.
+
+The controls of the editor are described in detail below, but the basic idea is this: Regions in the left-hand window can be selected with the mouse and their corresponding pixels labeled (or unlabeled) in the image in the center window.  In addition to painting by region (3D), you can paint by hand (2D) to fill in gaps or erase unwanted areas.  At any point the resulting 3D volume can be rendered in a separate window.  The labeled image is stored as a binary volume which can be saved to disk and loaded back into the editor.
+
+
+
+INTERACTING WITH WINDOWS
+
+There are three data windows, numbered below from the left side of the screen.  The "Show Help" button will also give you this information.
+
+Segmentation Window -- This window displays the segmentation data at whichever scale is selected via the "Scale" slider.  Left-Click  on this window will select one of the colored regions (after selecting it will highlight in white).  Shift-Left-Click allows you to select multiple regions at one time.
+
+Source Window -- This window displays the color data from which the segmentation was constructed.  The binary mask of the segmentation is overlayed in blue on this window.  Left-Click freehand draws pixels into the binary volume.  Right-Click freehand erases pixels from the binary volume.  The size of the paintbrush is controlled by the "Paint Radius" slider. Middle-Click Selects the region at that location in the Segmentation Window.  Shift-Middle-Click allows you to select multiple regions in the Segmentation Window.
+
+Binary Mask Window --  This window displays the segmentation that you are constructing.  No meaningful interaction can be had or is necessary with this window.
+
+
+BUTTONS AND SLIDERS
+
+Save:  Allows you to write the binary label volume you are creating to disk.  You can use save to remember the state of the volume and undo changes back to that saved state.  The output of this tool is a binary volume with 1's at pixel locations inside the structure and 0's at pixel locations outside the structure.
+
+Load: Loads a binary volume, replacing the current volume.
+
+Randomize Colors: Re-colorizes the regions in the segmentation window.
+
+3D Render: Generate a three dimensional rendering of the surface of the segmentation.  This spawns a new window which can be raised/lowered and resized.  The rendering can be manipulated in this window.
+
+Zoom: Change the scale at which you view the data.
+
+Toggle Zoom: Turns zooming on/off allowing you to view the data at full resolution.
+
+Add Selected Region: Adds the highlighed region(s) in the Segmentation Window to the binary volume.
+
+Subtract Selected Region: Subtracts the highlighed region(s) in the Segmentation Window from the binary volume.</li>
+
+Merge Selected (when selecting a single region in the Segmentation Window): This function merges regions until the next merge with the selected region occurs.  You can move up the merge hierarchy in a non-linear fashion with this button.
+
+Undo Last Merge:  Reverts the merge hierarchy to the state before the last merge operation.
+
+Scale:  This slider moves the threshold value at which you are viewing the segmentation up or down.
+
+Scale units:  Changes the resolution of the Scale slider to move in finer or coarser increments.
+
+Slice number:  Changes the 2D slice of the volume that you are currently viewing.
+
+Clear All:  Erases the entire binary volume.
+
+Show Help: Display a small help window.
+
+Hide Help:  Hide the help window.
+
+Toggle Overlay: Toggles the display of the binary volume overlay in the Source Window.
+
+Paint Radius:  Controls the size of the circle used to free-hand paint/erase pixels in the binary volume.
+
+
+Known Bugs 7/26/02
+
+Re-colorizing when deselecting multiple regions.  When multiple regions are deselected all at once, the distinct regions will sometimes remain the same color.  You can press the Randomize Colors button to recolor these regions.
+
+Too much zooming hides controls.  Resizing the windows on a large enough volume may position the controls off of the screen.
+

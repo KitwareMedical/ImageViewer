@@ -1,0 +1,91 @@
+DATA MODULE INSTRUCTIONS
+
+LOADING AND MANAGING THE DATA IS LIKELY THE TRICKIEST PART OF THE WHOLE ENDEAVOR SO READ CAREFULLY
+
+Data is organized logically into "sessions". A single session takes raw source data through the preprocessing and segmentation stages to produce an output that can be manipulated in the editor.
+
+At each stage of processing, data is written to the "Session directory."  The header information for each data set is recorded in the list below.  You should save this information to a file so that it is easily recalled.
+
+Begin a session by specifying the directory (you'll need to create it yourself if it does not already exist) and a file prefix (optional) to use when naming files.  Fill out the "Session directory" and "Session prefix" fields above.
+
+Now fill out the header information for your source data in the boxes to the right.  This program uses VTK image readers to read raw data, so the fields roughly correspond to settings in the VTK image reader class.  Valid settings for the fields are given below:
+
+
+Tag: a handle which you make up that
+represents a data set
+
+
+File prefix/name: the full path and
+file name (or file name prefix for slice
+data) of the data set
+
+
+Data type: must be one of the following
+
+UnsignedChar 
+UnsignedLong 
+UnsignedShort
+Short 
+Char 
+Float 
+SegmentationTree
+
+Make sure that you copy the
+string exactly.
+
+
+Size X, Y, Z: the size of the data in each of these dimensions.  This number represents the upper extent of the data (0-X, 0-Y, 0-Z), so if your data set is 256x256x100, you want to use 255, 255, 99.
+
+
+Byte order: must be either "Big" or "Little"
+
+
+Stored in multiple files?:  "Yes" if you are using a stack of 2D slices. "No" if the volume is all in a single file.
+
+
+Number of components (per voxel): For scalar data, this value is 1.  Currently only scalar data is supported.
+
+
+VTK file extension pattern: This is an expression which tells the VTK reader how to generate numbered file extensions.  For slices appended as .1 .2 ... .10, use "%s.%d".  For slices appended as .001 .002 ... .010, use "%s.%03d". See the VTK documentation for more information.
+
+
+Number of first slice:  This is the slice number you want the data set to begin with.
+
+
+Ok, now that you have filled out all the header information for your source, press the "Add/Update" button. You will see the information in the list below. Save the information using the "Save session" button.  You can test your header by going to the Preprocessor module and loading up the data.  If something is amiss, return to this screen and edit the information.
+
+
+
+FURTHER NOTES AND WARNINGS
+
+Due to the primitive parsing capabilities of this application, you must fill out all the fields.  If the field is not relevant to your particular data set, just give it some bogus value like "Null".
+
+This program currently supports only 3D volumetric data.  This is not to say you can't get results with 2D data, but 2D data is not specifically supported (and not recommended here).
+
+Make sure you have enough disk space!  Because each step of processing is written to disk, a segmentation can quickly eat up huge amounts of space. The final segmentation and its tree are stored in single files and so are easily portable.  I suggest moving those to a new directory and deleting all the preprocessing intermediates when you are satisfied with the results.  (Also, they should compress very well.)
+
+As an example, one of the SPL and NSG Brain Tumor Segmentation Database MRI datasets is 15M in size.  The intermediate and final results of a segmentation done with this application was 94M.  The final segmentation represented 33M of that data, the remain 61M could be deleted.  The 33M segmentation data was compressable to 2M using gzip.
+
+So the moral is that a 15M data set generated a segmentation requiring only 2M of storage space, but 94M of scratch disk space.
+
+
+
+EXAMPLE
+
+Here is an example:
+
+Session prefix:    Sample-
+Session directory: /tmp
+
+Tag:               sample_data
+File prefix/name: /data/cates/tumorbase/case1/spgr/i
+Data type:        UnsignedShort
+Size X:           255
+Size Y:           255
+Size Z:           123
+ByteOrder:        Big
+Stored in multiple files?:  Yes
+Number of components:       1
+VTK file extension pattern: %s.%03d
+Number of first slice:      1
+

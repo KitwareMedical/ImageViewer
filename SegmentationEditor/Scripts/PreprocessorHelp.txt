@@ -1,0 +1,20 @@
+PREPROCESSOR MODULE INSTRUCTIONS
+
+This module performs smoothing on the source data and calculates the height image used as input to the watershed algorithm.  Smoothing is done by an edge-preserving anisotropic diffusion and the height function is calculated as the gradient magnitude of the data.
+
+The first step is to specify the source data you want to use.  The "Source data" box lists all possible data sets that this module can accept as input.  Choose the data set by highlighting it in the box then click the "Load" button.  A window will appear displaying your data.   You can adjust the range of values used to calculate a colormap in the display window.  (For example, if your image is of unsigned shorts, the number of grayscales may exceed 256, so adjust the range accordingly for a better display.)
+
+Once you have successfully loaded the source, the "Noise reduction" filter becomes available.  At this stage, the goal is to minimize the presence of uninteresting image features.  What "uninteresting" means in this context depends entirely on your data and the result you want to achieve.  Some recommended parameter settings to start with are 10 iterations and a conductance of 1.0.  The gradient-based filter preserves areas of high gradient magnitude in the image.  The curvature-based filter preserves areas of high curvature.  Experiment with different parameter settings until you get the results you want.
+
+When the diffusion filter has finished running, you will see a new tag for its data set appear in the list on the "Data" module screen.  You will also see this data appear in the "Source data" box on this screen.  The diffused data is now available for further diffusion, simply load it up and run the noise reduction step again.
+
+Once you have generated a diffused volume, the "Gradient image" stage becomes available.  This step does a simple gradient magnitude calculation on the image. A Gaussian blurring filter is connected to the output to allow for blurring of the final edge image, which may be helpful in some situations, but is not recommended by default.  Start with a variance of 0.0.
+
+After the gradient image has been generated, you will see its tag appear in the "Source data" and Data module boxes.  This input is now available for the Segmentation module.  You may want to save your session in the "Data" module so that this header information is recorded for future use.
+
+
+NOTES
+
+Anisotropic diffusion can be the most time consuming part of the segmentation process.  You can speed up this step by running on machine with multiple processors.
+
+

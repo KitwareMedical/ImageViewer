@@ -1,0 +1,43 @@
+HELP SECTION
+
+YOU MIGHT WANT TO FAMILIARIZE YOURSELF WITH THIS INFORMATION BEFORE CONTINUING
+
+TO BEGIN
+Once you have familiarized yourself with the basic theory of watershed segmentation (see below and references), read the the little green instruction boxes for each module.  They describe step by step how to load and process a volume.  Start with the "Data" module.  You can edit the Help.txt file to add your own notes here.
+
+WATERSHED SEGMENTATION
+
+Watershed segmentation gets its name from the manner in which the algorithm segments regions of an image or volume into "catchment basins".  These basins are low points in the intensity of the image being segmented.  The basins are referred to as "segments" or "regions".  These regions share boundaries with one another.
+
+Imagine water raining into these basins.  As the water level rises, the basins fill and water spills across the boundaries, joining those basins into larger basins.  In this way, we can view the segmentation of the image into basins at different levels of scale, a continuous measure specified by the level of the water.
+
+The output of the watershed segmentation technique is then a hierarchy of basins which can be viewed at different levels of scale.  What remains is for a human to determine which basins at which scale levels are relevant to the structure or structures of interest.  This application is designed to facilitate the process and allow the user to piece together a binary mask of the structure from the hierarchy of segmented basins.
+
+The input to the watershed algorithm is critical to the quality of the result.  The watershed algorithm expects a height image as input.  A "height image" is defined in this context as an image where higher image intensities correspond to logical boundaries between regions of interest.  The algorithm does not presume to construct this input image for you because it cannot know what image features are interesting for your application.  It is your job, therefore, to construct an input based on image features of interest.
+
+This tool will take you from raw data to final, segmented volumes.  Since a necessary part of the process is preparing the input data, the application leads you through the common process of constructing a height image based on gradient magnitude.  Gradient magnitude calculations on an image are commonly used in image processing applications to find object edges.  Areas of high gradient magnitude are areas of rapid intensity change in the image, where objects are often set off from their background in relatively high relief.  The smoothing filters used in the preprocessing stages of this application are tuned to preserve areas of high gradient magnitude which may be of interest.
+
+
+SEMI-AUTOMATED SEGMENTATION
+
+The watershed segmentation does not target any particular region of an image, but processes the image as a whole.  In order to label a particular structure in an image, the output of the watershed segmentation must be manipulated by hand to target voxels of interest.  Because of the necessary human interaction, we refer to this process as semi-automated.  The hypothesis is that through image analysis and targeted visualization of the data, the task of hand labeling the voxels contained in anatomical structures can be made easier and more efficient than hand segmentation alone.
+
+This application contains filters to preprocess and segment the input data and it contains an editor which allows you to manipulate the output and construct labeled, binary volumes.  The whole segmentation process from raw data to labeled volumes is covered.
+
+
+THIS APPLICATION
+
+The interface given here contains several distinct modules, available through the menus above.  The Data module manages file information for the source and final data, as well as all of the intermediate data generated during the segmentation process.  The Preprocessor module takes the source data through several stages to generate the input height image for the watershed segmentation phase.  The Segmentation module performs the actual watershed segmentation and generates the information necessary to visualize the output at different scales.  The Editor module allows manipulation of the segmentation to produce labeled images.
+
+
+REFERENCES
+
+For more information, see the Examples web pages at www.itk.org.  More detailed information on the filters and algorithms used herein is also available at www.itk.org under the online manual pages (Documentation section).
+
+
+NOTES
+
+Be sure to read all of the information in the Data module instruction box.  Be especially careful of how you manage disk space.  Be sure that you have at least four to five times the storage used by your source data available as scratch space.
+
+
+jc 7/26/02
