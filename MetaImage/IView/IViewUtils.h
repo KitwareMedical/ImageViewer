@@ -29,11 +29,11 @@ PhysicalImage<T, 3>::Pointer loadImage(char *fname)
  spacing[1] = imIO->ElemSpacing(1);
  spacing[2] = imIO->ElemSpacing(2);
 
- if (spacing[0] == NULL )
+ if (spacing[0] == 0)
     spacing[0] = 1;
- if (spacing[1] == NULL )
+ if (spacing[1] == 0)
     spacing[1] = 1;
- if (spacing[2] == NULL )
+ if (spacing[2] == 0)
     spacing[2] = 1;
 
  Image<T,3>::RegionType region;
