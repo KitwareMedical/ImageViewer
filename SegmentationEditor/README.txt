@@ -1,10 +1,14 @@
 1. To build this application:
 
-* You will need VTK 4.0 installed on your machine.  In your VTK build, make
-sure you include the Patented classes and Tcl wrapping.  You will need 
-the Wrapping/Tcl directories from the VTK source tree.
+* You will need a recent version of VTK installed on your machine.  I suggest 
+using the anonymous CVS checkout.  Earlier versions are not guaranteed to 
+be supported because the API for event binding on the VTK Tk widget classes
+has recently undergone a major change.
 
-* When you configure Itk with CMake, turn on the following options, which
+In your VTK build, make sure you include the Patented classes and Tcl wrapping.
+You will need the Wrapping/Tcl directories from the VTK source tree.
+
+* When you configure ITK with CMake, turn on the following options, which
 will cause this application to build:
 
    BUILD_EXAMPLES
@@ -49,16 +53,6 @@ VTK_WRAP_HINTS:FILEPATH=/path/to/your/vtk/source/Wrapping
 
 where "/path/to/your/vtk/source/" depends on where you have installed
 VTK on your machine.
-
-
-
-7-29-02
-
-You will need to disable wrapping for Python (and possibly Java) in your
-VTK build so that the ITK CMake configuration does not pick up these
-settings and attempt to wrap the SegmentationEditor code for Python and Java.
-This is a bug in the SegmentationEditor CMake setup and will be corrected
-in the future.
 
 
 

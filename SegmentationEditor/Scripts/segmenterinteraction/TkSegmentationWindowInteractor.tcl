@@ -21,24 +21,19 @@ package require vtkinteraction
 
 proc BindTkSegmentationViewer {widget resampler dataReader WSmanager} {
    # to avoid queing up multple expose events.
-   SetWidgetVariableValue $widget Rendering 0
+   vtk::set_widget_variable_value $widget Rendering 0
 
    set imager [[$widget GetImageViewer] GetRenderer]
-
+   
+   ::vtk::bind_tk_imageviewer_widget $widget
+   
    #
    # Get the underlying segmentation label value.
    #
-   bind $widget <ButtonPress-1> [subst {  SelectRegion %W %x %y $resampler $dataReader $WSmanager}]
-
+   bind $widget <ButtonPress-1> \
+       [subst {  SelectRegion %W %x %y $resampler $dataReader $WSmanager}]
    bind $widget <Shift-ButtonPress-1> [subst {  AppendRegion %W %x %y $resampler $dataReader $WSmanager}]
 
-   #
-   #
-   bind $widget <Expose> {ExposeTkImageViewer %W %x %y %w %h}
-   bind $widget <Enter> {EnterTkViewer %W}
-   bind $widget <Leave> {LeaveTkViewer %W}
-   bind $widget <KeyPress-u> {wm deiconify .vtkInteract}
-   bind $widget <KeyPress-r> {ResetTkImageViewer %W}
 }
 
 proc SelectRegion {widget x y resampler dataReader WSmanager} {
@@ -71,13 +66,10 @@ proc SelectRegion {widget x y resampler dataReader WSmanager} {
 
     $WSmanager CompileEquivalenciesFor $x $y $z [$dataReader GetOutput]
 
-#    $WSmanager CompileEquivalenciesFor $val
     $WSmanager ClearHighlightedValuesToSameColor
     $WSmanager HighlightComputedEquivalencyList
 
     $viewer Render
-
-#    puts "$x $y $z => $val"
 
 }
 
@@ -112,22 +104,20 @@ proc AppendRegion {widget x y resampler dataReader WSmanager} {
 
     $WSmanager AppendEquivalenciesFor $x $y $z [$dataReader GetOutput]
 
-#    $WSmanager CompileEquivalenciesFor $val
     $WSmanager ClearHighlightedValuesToSameColor
     $WSmanager HighlightComputedEquivalencyList
 
     $viewer Render
-
-#    puts "$x $y $z => $val"
-
 }
 
 
 proc BindTkSourceImageViewer {widget resampler dataReader WSmanager labeledViewer binaryVolume binaryViewer} {
    # to avoid queing up multple expose events.
-   SetWidgetVariableValue $widget Rendering 0
+   ::vtk::set_widget_variable_value $widget Rendering 0
 
    set imager [[$widget GetImageViewer] GetRenderer]
+
+   ::vtk::bind_tk_imageviewer_widget $widget
 
    #
    # Get the underlying segmentation label value.
@@ -136,28 +126,12 @@ proc BindTkSourceImageViewer {widget resampler dataReader WSmanager labeledViewe
 
    bind $widget <Shift-ButtonPress-2> [subst {  AppendRegion %W %x %y $resampler $dataReader $WSmanager; $labeledViewer Render;} ]
 
-#   bind $widget <ButtonPress-1> [subst {  AddPixel %W %x %y $resampler $binaryVolume $binaryViewer } ]
-#   bind $widget <B1-Motion> [subst {  AddPixel %W %x %y $resampler $binaryVolume $binaryViewer } ]
-
-#   bind $widget <ButtonPress-3> [subst {  SubtractPixel %W %x %y $resampler $binaryVolume $binaryViewer } ]
-#   bind $widget <B3-Motion> [subst {  SubtractPixel %W %x %y $resampler $binaryVolume $binaryViewer } ]
-
    bind $widget <ButtonPress-3> [subst {  UnpaintPixels %W %x %y $resampler $binaryVolume $binaryViewer } ]
    bind $widget <B3-Motion> [subst {  UnpaintPixels %W %x %y $resampler $binaryVolume $binaryViewer } ]
    
    bind $widget <ButtonPress-1> [subst {  PaintPixels %W %x %y $resampler $binaryVolume $binaryViewer } ]
    bind $widget <B1-Motion> [subst {  PaintPixels %W %x %y $resampler $binaryVolume $binaryViewer } ]
-   
 
-
-
-   #
-   #
-   bind $widget <Expose> {ExposeTkImageViewer %W %x %y %w %h}
-   bind $widget <Enter> {EnterTkViewer %W}
-   bind $widget <Leave> {LeaveTkViewer %W}
-   bind $widget <KeyPress-u> {wm deiconify .vtkInteract}
-   bind $widget <KeyPress-r> {ResetTkImageViewer %W}
 }
 
 proc AddPixel { widget x y resampler binaryvol binaryviewer } {
@@ -196,8 +170,6 @@ proc AddPixel { widget x y resampler binaryvol binaryviewer } {
 
     $binaryvol SetUpdateExtentToWholeExtent
 
-#    puts "$x $y $z => $val"
-
 }
 
 proc SubtractPixel { widget x y resampler binaryvol binaryviewer } {
@@ -235,9 +207,6 @@ proc SubtractPixel { widget x y resampler binaryvol binaryviewer } {
     $viewer Render
 
     $binaryvol SetUpdateExtentToWholeExtent
-
-#    puts "$x $y $z => $val"
-
 }
 
 
@@ -281,9 +250,6 @@ proc PaintPixels { widget x y resampler binaryvol binaryviewer } {
     $viewer Render
 
     $binaryvol SetUpdateExtentToWholeExtent
-
-#    puts "$x $y $z => $val"
-
 }
 
 proc UnpaintPixels { widget x y resampler binaryvol binaryviewer } {
@@ -324,7 +290,4 @@ proc UnpaintPixels { widget x y resampler binaryvol binaryviewer } {
     $viewer Render
 
     $binaryvol SetUpdateExtentToWholeExtent
-
-#    puts "$x $y $z => $val"
-
 }

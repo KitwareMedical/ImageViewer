@@ -166,7 +166,9 @@ proc SegmenterCreateOutputDisplayWindow {f} {
     toplevel $f.viewer
     wm title $f.viewer $SegmenterGlobals(output_window_label)
     vtkTkImageViewerWidget $f.viewer.widget -iv $SegmenterGlobals(segmentation_viewer)
-    BindTkImageViewer $f.viewer.widget
+    
+    ::vtk::bind_tk_imageviewer_widget $f.viewer.widget
+
     wm protocol $f.viewer WM_DELETE_WINDOW { }
     set SegmenterGlobals(segmentation_widget) $f.viewer.widget
 
@@ -298,6 +300,8 @@ proc SegmenterInitialize {} {
     SegmentationViewer SetColorWindow 255.0
     SegmentationViewer SetColorLevel 127.5
     SegmentationViewer SetZSlice 0
+    ExitRegisterViewer SegmentationViewer
+
     set SegmenterGlobals(segmentation_viewer) SegmentationViewer
 }
 

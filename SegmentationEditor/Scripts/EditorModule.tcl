@@ -454,10 +454,14 @@ proc EditorCreateEditorConsole {f} {
     BindTkSourceImageViewer  $f.console.windowsFrame.r2 $EditorGlobals(resamplerSeg) \
         $EditorGlobals(labeledImgReader) $EditorGlobals(manager) \
        $EditorGlobals(viewerSeg) $EditorGlobals(binaryVolume) $EditorGlobals(viewerBin)
-    BindTkImageViewer     $f.console.windowsFrame.r3
+
+    #    BindTkImageViewer     $f.console.windowsFrame.r3
+    ::vtk::bind_tk_imageviewer_widget $f.console.windowsFrame.r3
+
     bind $f.console.windowsFrame.r2 <KeyPress-e> { }  ;# overridden 
     bind $f.console.windowsFrame.r3 <KeyPress-e> { }  ;# overridden 
-    BindTkRenderWidget $f.renderWindow.windowsFrame.r1 
+
+    ::vtk::bind_tk_render_widget $f.renderWindow.windowsFrame.r1
 }
 
 proc EditorSanityCheckFiles {} {
@@ -618,6 +622,21 @@ proc EditorStartEditor {} {
         WSTErrorMacro $ret
         return 
     }
+    
+    #
+    # Connect the pipeline
+    $EditorGlobals(mapToRGBA) SetInput [$EditorGlobals(resamplerSeg) GetOutput]
+    $EditorGlobals(mapToRGBA) SetLookupTable [$EditorGlobals(manager) GetLookupTable]
+    $EditorGlobals(colorMapImg) SetLookupTable $EditorGlobals(lut)
+    $EditorGlobals(colorMapImg) SetInput [$EditorGlobals(resamplerCol) GetOutput]
+    $EditorGlobals(colorMapBin) SetInput [$EditorGlobals(resamplerBin) GetOutput]
+    $EditorGlobals(colorMapBin) SetLookupTable $EditorGlobals(lutBin)
+    $EditorGlobals(viewerCol) SetInput [$EditorGlobals(colorMapImg) GetOutput]
+    $EditorGlobals(viewerSeg) SetInput [$EditorGlobals(mapToRGBA) GetOutput]
+    $EditorGlobals(viewerBin) SetInput [$EditorGlobals(colorMapBin) GetOutput]
+    $EditorGlobals(overlayMapper) SetInput [$EditorGlobals(colorMapBin) GetOutput]
+    $EditorGlobals(map) SetInput [$EditorGlobals(marcher) GetOutput]
+    $EditorGlobals(renWin) AddRenderer $EditorGlobals(ren1)
     
     #
     # Read the data
@@ -791,17 +810,17 @@ proc EditorInitialize {} {
     # Color mapper for segmentation data
     #
     vtkImageMapToColors mapToRGBA
-    mapToRGBA SetInput [resamplerSeg GetOutput]
+#    mapToRGBA SetInput [resamplerSeg GetOutput]
     mapToRGBA SetOutputFormatToRGBA
-    mapToRGBA SetLookupTable [manager GetLookupTable]
+#    mapToRGBA SetLookupTable [manager GetLookupTable]
     set EditorGlobals(mapToRGBA) mapToRGBA
-    
+
     #
     # Color maper for the original data
     #
     vtkImageMapToColors colorMapImg
-    colorMapImg SetInput [resamplerCol GetOutput]
-    colorMapImg SetLookupTable lut
+#    colorMapImg SetInput [resamplerCol GetOutput]
+#    colorMapImg SetLookupTable lut
     colorMapImg SetOutputFormatToRGBA
     set EditorGlobals(colorMapImg) colorMapImg
 
@@ -809,8 +828,8 @@ proc EditorInitialize {} {
     # Color mapper for the binary volume
     #
     vtkImageMapToColors colorMapBin
-    colorMapBin SetInput [resamplerBin GetOutput]
-    colorMapBin SetLookupTable lutBin
+#    colorMapBin SetInput [resamplerBin GetOutput]
+#    colorMapBin SetLookupTable lutBin
     set EditorGlobals(colorMapBin) colorMapBin
 
 
@@ -823,7 +842,7 @@ proc EditorInitialize {} {
     $EditorGlobals(viewerCol) SetZSlice 0
     $EditorGlobals(viewerCol) SetColorWindow 255.0
     $EditorGlobals(viewerCol) SetColorLevel 127.5
-    $EditorGlobals(viewerCol) SetInput [colorMapImg GetOutput]
+ #   $EditorGlobals(viewerCol) SetInput [colorMapImg GetOutput]
 
     ExitRegisterViewer $EditorGlobals(viewerCol)
 
@@ -834,7 +853,7 @@ proc EditorInitialize {} {
     $EditorGlobals(viewerSeg) SetColorWindow 255.0
     $EditorGlobals(viewerSeg) SetColorLevel 127.5
     $EditorGlobals(viewerSeg) SetZSlice 0
-    $EditorGlobals(viewerSeg) SetInput [mapToRGBA GetOutput]
+#    $EditorGlobals(viewerSeg) SetInput [mapToRGBA GetOutput]
 
     ExitRegisterViewer $EditorGlobals(viewerSeg)
 
@@ -845,7 +864,7 @@ proc EditorInitialize {} {
     $EditorGlobals(viewerBin) SetColorWindow 1.0
     $EditorGlobals(viewerBin) SetColorLevel 1.0
     $EditorGlobals(viewerBin) SetZSlice 0
-    $EditorGlobals(viewerBin) SetInput [colorMapBin GetOutput]
+ #   $EditorGlobals(viewerBin) SetInput [colorMapBin GetOutput]
 
     ExitRegisterViewer $EditorGlobals(viewerBin)
 
@@ -855,7 +874,7 @@ proc EditorInitialize {} {
     # Image mapper for the overlay
     #
     vtkImageMapper overlayMapper
-    overlayMapper SetInput [colorMapBin GetOutput]
+  #  overlayMapper SetInput [colorMapBin GetOutput]
     overlayMapper SetColorWindow 255
     overlayMapper SetColorLevel 129
     overlayMapper SetZSlice 0
@@ -903,7 +922,7 @@ proc EditorInitialize {} {
     vtkOpenGLPolyDataMapper map
     map ScalarVisibilityOff
     map ImmediateModeRenderingOn
-    map SetInput [marcher GetOutput]
+#    map SetInput [marcher GetOutput]
     set EditorGlobals(map) map
 
     #
@@ -917,9 +936,10 @@ proc EditorInitialize {} {
     # Create a render window
     #
     set EditorGlobals(renWin) [$EditorGlobals(render_widget) GetRenderWindow]
-    $EditorGlobals(renWin) AddRenderer ren1
+#    $EditorGlobals(renWin) AddRenderer ren1
     $EditorGlobals(renWin) SetSize 256 256
-                      
+    ExitRegisterViewer $EditorGlobals(renWin)
+
     #
     # Create an actor for the surface
     #

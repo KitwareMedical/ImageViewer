@@ -251,7 +251,7 @@ proc PreprocessorStartGradientRecovery {} {
 
 proc CreatePreprocessorRenderWindow {f fr} {
     global PreprocessorGlobals Options
-    
+
     toplevel $f.$fr
 
     set keyWord $fr
@@ -269,7 +269,9 @@ proc CreatePreprocessorRenderWindow {f fr} {
     set keyWord $fr
     append keyWord "_viewer"
     vtkTkImageViewerWidget $f.$fr.viewer -iv $PreprocessorGlobals($keyWord)
-    BindTkImageViewer        $f.$fr.viewer
+#    BindTkImageViewer        $f.$fr.viewer
+    ::vtk::bind_tk_imageviewer_widget $f.$fr.viewer
+
     wm protocol $f.$fr  WM_DELETE_WINDOW { }
 
     set keyWord $fr
