@@ -46,6 +46,7 @@ void CellsViewerBase
 {
   this->Stop();
   this->HideSlicerControls();
+  this->HideClippingPlaneControls();
   this->HideCellularAggregateControls();
   this->HideDisplay();
 
@@ -58,6 +59,17 @@ void CellsViewerBase
     slicer->second->Hide();
     ++slicer;
     }
+
+  // Hide the clipping plane controls
+  ClippingPlaneDrawersType::const_iterator plane = 
+                            m_ClippingPlaneDrawer.begin();
+
+  while ( plane != m_ClippingPlaneDrawer.end() )
+    {
+    plane->second->Hide();
+    ++plane;
+    }
+
 
 }
 
@@ -116,7 +128,15 @@ void CellsViewerBase
 void CellsViewerBase
 ::HideSlicerControls(void)
 {
-  //m_SliceDrawer->Hide();
+}
+
+
+/**
+ *    Hide the clipping plane controls
+ */ 
+void CellsViewerBase
+::HideClippingPlaneControls(void)
+{
 }
 
 
@@ -278,6 +298,51 @@ void CellsViewerBase
 }
 
 
+
+/**
+ *    Add a clipping plane
+ */ 
+void
+CellsViewerBase
+::AddClippingPlane( void )
+{
+  std::string planeName;
+  const char * name = fl_input("Name for the Clipping Plane");
+  if( !name )
+    {
+    return;
+    }
+  planeName = name;
+  ClippingPlaneDrawerPointer plane = ClippingPlaneDrawerType::New();
+  m_ClippingPlaneDrawer[ planeName ] = plane.GetPointer();
+  
+  m_Display.GetNotifier()->AddObserver( 
+             fltk::GlDrawEvent(),
+             plane->GetDrawCommand().GetPointer() );
+
+  plane->AddObserver( 
+            fltk::ClippingPlaneEvent(), 
+            m_Display.GetRedrawCommand() );
+ 
+  plane->SetLabel( planeName.c_str() );
+  plane->Show();
+
+}
+
+
+
+/**
+ *    Remove a clipping plane
+ */ 
+void
+CellsViewerBase
+::RemoveClippingPlane( void )
+{
+  
+}
+
+
+
 /**
  *    Return the time from the start of the simulation
  */ 
@@ -290,6 +355,27 @@ CellsViewerBase
 
 
 /**
+ *    Show the clipping planes controls
+ */ 
+void
+CellsViewerBase
+::ShowClippingPlane( const char * name )
+{
+  std::string clippingPlaneName = name;
+
+  ClippingPlaneDrawersType::const_iterator clippingPlane = 
+                      m_ClippingPlaneDrawer.find( clippingPlaneName );
+
+  if( clippingPlane != m_ClippingPlaneDrawer.end() )
+    {
+    clippingPlane->second->Show();
+    }
+
+}
+
+
+
+/**
  *    Show the substrate controls
  */ 
 void
@@ -297,10 +383,13 @@ CellsViewerBase
 ::ShowSubstrate( const char * name )
 {
   std::string substrateName = name;
-  SliceDrawerPointer slice = m_SubstrateSliceDrawer[ substrateName ];
-  if( slice )
+  
+  SubstratesDrawersType::const_iterator slice = 
+                  m_SubstrateSliceDrawer.find( substrateName );
+    
+  if( slice != m_SubstrateSliceDrawer.end() )
     {
-    slice->Show();
+    slice->second->Show();
     }
 
 }

@@ -11,7 +11,7 @@ namespace bio {
 
 
 // Class static variables
-double    GradientEatingBacteria::ChemoAttractantLowThreshold  =  10.0f;
+double    GradientEatingBacteria::ChemoAttractantLowThreshold  =  5.0f;
 double    GradientEatingBacteria::ChemoAttractantHighThreshold = 100.0f;
 
 Cell::ColorType GradientEatingBacteria::WellNourishedColor;

@@ -7,6 +7,7 @@
 #include "fltkSlice3DDrawer.h"
 #include "fltkDisplayGlWindowGUI.h"
 #include "CellularAggregate.h"
+#include "fltkClippingPlane3DDrawer.h"
 #include <map>
 #include <time.h>
 
@@ -78,9 +79,14 @@ public:
   typedef SliceDrawer< ImageType >::Type              SliceDrawerType;
   typedef SliceDrawerType::Pointer                    SliceDrawerPointer;
 
+  typedef fltk::ClippingPlane3DDrawer                 ClippingPlaneDrawerType;
+  typedef ClippingPlaneDrawerType::Pointer            ClippingPlaneDrawerPointer;
+
   typedef std::map< std::string, ImagePointer >       SubstratesType;
 
   typedef std::map< std::string, SliceDrawerPointer > SubstratesDrawersType;
+
+  typedef std::map< std::string, ClippingPlaneDrawerPointer > ClippingPlaneDrawersType;
 
   typedef Cell * (EggProducerFunction)(void);
 
@@ -102,15 +108,19 @@ public:
   virtual void ShowCellularAggregateControls(void);
   virtual void HideDisplay(void);
   virtual void HideSlicerControls(void);
+  virtual void HideClippingPlaneControls(void);
   virtual void HideCellularAggregateControls(void);
   virtual void SetCellsAggregate( CellularAggregate * );
   virtual clock_t GetStartTime(void) const;
   virtual void LoadSubstrate(void);
   virtual void ShowSubstrate( const char * name );
+  virtual void ShowClippingPlane( const char * name );
   virtual void ClearAggregate(void);
   virtual void AddSpeciesEggProducer( EggProducerFunction * ); 
   virtual void ShowSpecies( void );
   virtual void SelectSpecies( unsigned int );
+  virtual void AddClippingPlane();
+  virtual void RemoveClippingPlane();
   
   SpeciesContainerType & GetSpecies(void);
 
@@ -124,6 +134,8 @@ protected:
 
   SubstratesDrawersType               m_SubstrateSliceDrawer;
 
+  ClippingPlaneDrawersType            m_ClippingPlaneDrawer;
+
 
 private:
   
@@ -135,7 +147,7 @@ private:
 
   SpeciesContainerType                m_SpeciesProducer;
 
-  clock_t   m_StartTime;
+  clock_t                             m_StartTime;
     
 };
 

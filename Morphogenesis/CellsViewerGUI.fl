@@ -7,9 +7,10 @@ gridy 5
 snap 3
 class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
-  Function {CellsViewerGUI()} {} {
+  Function {CellsViewerGUI()} {open
+  } {
     Fl_Window controlWindow {
-      label {Control Panel} open selected
+      label {Control Panel}
       xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
@@ -17,7 +18,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
         label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
         xywh {10 75 110 75} box FLAT_BOX labeltype image
       }
-      Fl_Menu_Bar {} {open
+      Fl_Menu_Bar {} {
         xywh {0 0 250 25}
       } {
         submenu {} {
@@ -59,6 +60,11 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
             callback {ShowSpecies()}
             xywh {0 0 100 20}
           }
+          menuitem {} {
+            label {Clipping Planes}
+            callback {clippingPlanesWindow->show();}
+            xywh {0 0 100 20}
+          }
         }
       }
       Fl_Button {} {
@@ -91,16 +97,21 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
     }
     Fl_Window substratesWindow {
       label Substrates
-      xywh {235 23 249 146} hide resizable
+      xywh {772 52 249 180} resizable visible
     } {
       Fl_Browser substratesBrowser {
-        callback {ShowSubstrate( o->text( o->value() ) );}
+        callback {if( o->size() ) ShowSubstrate( o->text( o->value() ) );}
         xywh {10 10 230 125} type Select
+      }
+      Fl_Button {} {
+        label Close
+        callback {substratesWindow->hide();}
+        xywh {75 145 95 25}
       }
     }
     Fl_Window speciesWindow {
       label Species
-      xywh {418 247 278 193} hide resizable
+      xywh {418 247 278 193} resizable visible
     } {
       Fl_Browser speciesBrowser {
         callback {createEggButton->activate();}
@@ -109,13 +120,37 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
       Fl_Button createEggButton {
         label {Create Egg}
         callback {SelectSpecies( speciesBrowser->value()-1 );
-speciesWindow->hide();}
+speciesWindow->hide();} selected
         xywh {25 160 100 25} deactivate
       }
       Fl_Button {} {
         label Close
         callback {speciesWindow->hide();}
         xywh {150 160 100 25}
+      }
+    }
+    Fl_Window clippingPlanesWindow {
+      label {Clipping Planes}
+      xywh {859 282 249 180} resizable visible
+    } {
+      Fl_Browser clippingPlanesBrowser {
+        callback {if( o->size() ) ShowClippingPlane( o->text( o->value() ) );}
+        xywh {10 10 230 125} type Hold
+      }
+      Fl_Button {} {
+        label Close
+        callback {clippingPlanesWindow->hide();}
+        xywh {170 145 70 25}
+      }
+      Fl_Button {} {
+        label Remove
+        callback {RemoveClippingPlane();}
+        xywh {90 145 70 25}
+      }
+      Fl_Button {} {
+        label Add
+        callback {AddClippingPlane();}
+        xywh {10 145 70 25}
       }
     }
   }

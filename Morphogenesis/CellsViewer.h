@@ -36,8 +36,11 @@ public:
   virtual void ShowControls(void);
   virtual void ShowSpecies(void);
   virtual void HideControls(void);
+  virtual void HideSlicerControls(void);
+  virtual void HideClippingPlaneControls(void);
   virtual void LoadSubstrate(void);
   virtual void AddSpeciesEggProducer( EggProducerFunction *, const char *); 
+  virtual void AddClippingPlane( void );
 
 private:
   

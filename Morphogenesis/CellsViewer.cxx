@@ -61,6 +61,28 @@ void CellsViewer
 }
 
 
+/**
+ *    Hide the Slicer controls
+ */ 
+void CellsViewer
+::HideSlicerControls(void)
+{
+  this->CellsViewerBase::HideSlicerControls();
+  substratesWindow->hide();
+}
+
+
+/**
+ *    Hide the clipping plane controls
+ */ 
+void CellsViewer
+::HideClippingPlaneControls(void)
+{
+  this->CellsViewerBase::HideClippingPlaneControls();
+  clippingPlanesWindow->hide();
+}
+
+
 
 /**
  *    Add the egg of a Species to the Browser
@@ -98,6 +120,24 @@ void CellsViewer
   speciesWindow->hide();
 }
 
+
+
+/**
+ *    Add a clipping plane
+ */ 
+void
+CellsViewer
+::AddClippingPlane( void )
+{
+  CellsViewerBase::AddClippingPlane();
+  clippingPlanesBrowser->clear();
+  ClippingPlaneDrawersType::const_iterator plane = m_ClippingPlaneDrawer.begin();
+  while ( plane != m_ClippingPlaneDrawer.end() )
+    {
+    clippingPlanesBrowser->add( plane->first.c_str() );
+    ++plane;
+    }
+}
 
 
 /**
