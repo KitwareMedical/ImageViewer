@@ -46,6 +46,14 @@ class FEMElementTriangle :
 
 public:
 
+  typedef FEMElementTriangle< 
+                TFEMMesh, 
+                NDisplacementComponentsPerPoint >  Self;
+
+  typedef         Self * Pointer;
+  typedef const   Self * ConstPointer;
+  static  Pointer New(void) { return new Self; }
+
   /**
    * Number of Components of the Displacement Field
    * (also known as number of degrees of freedom)
@@ -60,7 +68,7 @@ public:
 
   // note that we cannot use "CellType" here because there 
   // is already an enum called "CellType" defined in CellInterface<>
-  typedef LineCell< PixelType, CellTraits >       BaseCellType;
+  typedef TriangleCell< PixelType, CellTraits >       BaseCellType;
   typedef typename BaseCellType::PointIdIterator      PointIdIterator;
   typedef typename BaseCellType::PointIdConstIterator PointIdConstIterator;
 
@@ -77,39 +85,7 @@ public:
   typedef typename Superclass::DisplacementType           DisplacementType;
 
 
-  
-  /**
-   * Element stiffness matrix
-   */
-  MatrixType GetStiffnessMatrix( const FEMMeshType * mesh ) const
-  {
-
-    if( !mesh ) 
-      {
-      itkGenericExceptionMacro(<<"Null mesh pointer passed to GetStiffnessMatrix()");
-      }
-
-    mesh->CellEquation(0,0);
-
-    MatrixType stiffnessMatrix( NumberOfDisplacementComponents, NumberOfDisplacementComponents);
-    
-    PointIdConstIterator Id = this->GetPointIds(); 
-    typename PointsContainer::ConstPointer points = mesh->GetPoints();
-
-    PointType point1;
-    PointType point2;
-
-    points->GetElementIfIndexExists( *Id++, &point1 );
-    points->GetElementIfIndexExists( *Id++, &point2 );
-
-    const CoordinateRepresentationType x1 = point1[0];
-    const CoordinateRepresentationType y1 = point1[1];
-    const CoordinateRepresentationType x2 = point2[0];
-    const CoordinateRepresentationType y2 = point2[1];
-
-    return stiffnessMatrix;
-  }
-
+ 
   /**
    * Function that handles all external loads applied to the element
    */

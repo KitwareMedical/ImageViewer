@@ -30,8 +30,7 @@ template<class TMesh>
 FEMMesh<TMesh>
 ::FEMMesh()
 {
-
-            
+  m_Elements = ElementsContainer::New();
 }
 
 

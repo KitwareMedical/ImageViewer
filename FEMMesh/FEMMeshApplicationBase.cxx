@@ -37,7 +37,7 @@
 #include "itkFEMElementBar2D.h"
 
 
-#include "itkFEMElementTriangle.h"
+#include "itkFEMElementTriangleHeat.h"
 
 
 
@@ -421,7 +421,7 @@ FEMMeshApplicationBase
   // so its pointer is a valid derived class from CellInterface<>
 
   CellIdentifierType cellId = itk::NumericTraits< CellIdentifierType >::Zero;
-  m_FEMMesh->SetCell( cellId++, bar1.GetPointer() ); // GetPointer() returns a normal pointer
+  m_FEMMesh->SetCell( cellId++, bar1 ); 
 
 
 
@@ -477,10 +477,7 @@ FEMMeshApplicationBase
   HeatMeshType::Pointer  heatMesh = HeatMeshType::New();
   m_HeatSolver->SetMesh( heatMesh );
 
-  const unsigned int degreesOfFreedomPerPoint = 1;
-  typedef itk::fem::FEMElementTriangle< 
-                        HeatMeshType, 
-                        degreesOfFreedomPerPoint >  HeatCellType;
+  typedef itk::fem::FEMElementTriangleHeat< HeatMeshType >  HeatElementType;
   
   const unsigned int nx = 10;
   const unsigned int ny = 10;
@@ -516,12 +513,14 @@ FEMMeshApplicationBase
   heatMesh->SetPoints( points.GetPointer() );
 
   // Create the points
-  typedef HeatMeshType::CellsContainer  HeatCellsContainer;
-  HeatCellsContainer::Pointer cells = HeatCellsContainer::New();
-  cells->Reserve( 2 * nx * ny );
+  typedef HeatMeshType::ElementsContainer    HeatElementsContainer;
+  HeatElementsContainer::Pointer elements  = HeatElementsContainer::New();
 
-  typedef HeatMeshType::CellIdentifier  HeatCellIdentifier;
-  HeatCellIdentifier cellId = itk::NumericTraits< HeatCellIdentifier >::Zero;
+  elements->Reserve( 2 * nx * ny );
+
+  typedef HeatMeshType::ElementIdentifier  HeatElementIdentifier;
+  HeatElementIdentifier elementId = 
+                          itk::NumericTraits< HeatElementIdentifier >::Zero;
 
   for(unsigned int y=0; y<ny; y++) 
     {
@@ -533,23 +532,23 @@ FEMMeshApplicationBase
       const HeatPointIdentifier point2 =   x   + ( (y+1) * pointsPerRow );
       const HeatPointIdentifier point3 = (x+1) + ( (y+1) * pointsPerRow );
 
-      HeatCellType::Pointer cellA = HeatCellType::New();
+      HeatElementType::Pointer cellA = HeatElementType::New();
       cellA->SetPointId( 0, point0 );
       cellA->SetPointId( 1, point1 );
       cellA->SetPointId( 2, point3 );
-      cells->SetElement( cellId++, cellA.GetPointer() );
+      elements->SetElement( elementId++, cellA );
 
-      HeatCellType::Pointer cellB = HeatCellType::New();
+      HeatElementType::Pointer cellB = HeatElementType::New();
       cellB->SetPointId( 0, point0 );
       cellB->SetPointId( 1, point3 );
       cellB->SetPointId( 2, point2 );
-      cells->SetElement( cellId++, cellB.GetPointer() );
+      elements->SetElement( elementId++, cellB );
 
       }
     }
 
 
-  heatMesh->SetCells( cells.GetPointer() );
+  heatMesh->SetElements( elements.GetPointer() );
 
 
   this->DisplayFEMMesh();
@@ -570,7 +569,7 @@ FEMMeshApplicationBase
   const unsigned int degreesOfFreedomPerPoint = 1;
   typedef itk::fem::FEMElementTriangle< 
                         HeatMeshType, 
-                        degreesOfFreedomPerPoint >  HeatCellType;
+                        degreesOfFreedomPerPoint >  HeatElementType;
  
   typedef vtkItkCellMultiVisitor< 
                               HeatSolverType::DisplacementType, 
@@ -583,8 +582,8 @@ FEMMeshApplicationBase
   // Define the Cell Visitor Types
   typedef itk::CellInterfaceVisitorImplementation<
                                               HeatSolverType::DisplacementType,
-                                              HeatCellType::CellTraits,
-                                              HeatCellType,
+                                              HeatElementType::CellTraits,
+                                              HeatElementType,
                                               HeatVisitorType  
                                                       >  HeatTriangleVisitorType;
 

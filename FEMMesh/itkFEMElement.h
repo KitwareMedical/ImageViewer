@@ -19,9 +19,7 @@
 #ifndef __itkFEMElement_h
 #define __itkFEMElement_h
 
-
-#include "itkFEMNodeBase.h"
-#include "itkFEMCellBase.h"
+#include "itkFEMElementBase.h"
 #include "vnl/vnl_matrix.h"
 
 
@@ -36,17 +34,21 @@ namespace fem {
 template <    typename TCell, 
               typename TFEMMesh, 
               unsigned int NDisplacementComponentsPerPoint  >
-class FEMElement : public TCell
+class FEMElement : public TCell, 
+                   public FEMElementBase< TFEMMesh >
 {
 
 public:
 
   // this type is used to represent components of the load
   // and the Stiffness matrix
-  typedef float       RealType;
+  typedef FEMElementBase<TFEMMesh>                  ElementBaseType;
+  typedef ElementBaseType::RealType                 RealType;
+  typedef ElementBaseType::MatrixType               MatrixType;
+  typedef ElementBaseType::LoadsVectorType          LoadsVectorType;
+  typedef ElementBaseType::DisplacementType         DisplacementType;
 
   typedef TFEMMesh                                  FEMMeshType;
-  typedef typename FEMMeshType::PixelType           DisplacementType;
   typedef typename FEMMeshType::CellTraits          CellTraits;
 
   
@@ -61,13 +63,6 @@ public:
   typedef typename FEMMeshType::PointIdentifier     PointIdentifier;
   
 
-
-  /** Type for representing the Stiffnes and Mass matrices  */
-  typedef  vnl_matrix< RealType >       MatrixType;
-
-  /** Type for representing sets of external loads */
-  typedef  vnl_vector< RealType >       LoadsVectorType;
-
   /**  Number of components of the displacemente field at one point */
   enum { NumberOfDisplacementComponentsPerPoint = NDisplacementComponentsPerPoint };
 
@@ -75,7 +70,7 @@ public:
    * Return the number of components of the Displacement field
    * also known as degrees of freedom (DOF) for a derived element class
    */
-  unsigned int GetNumberOfDisplacementComponents( void ) 
+  unsigned int GetNumberOfDisplacementComponents( void ) const
     { return this->GetNumberOfPoints() * NumberOfDisplacementComponentsPerPoint; }
 
 
@@ -84,24 +79,9 @@ public:
    *  of its list of points
    */
   const DisplacementType & 
-     GetDisplacement(unsigned int i,const FEMMeshType *mesh ) 
+     GetDisplacement(unsigned int i,const FEMMeshType *mesh ) const
       { const PointIdentifier Id = *( this->GetPointIds() + i );
         return mesh->GetPointData()->ElementAt( Id ); }
-
-
-  /**
-   * Compute and return element stiffnes matrix in global coordinate system
-   */
-  virtual MatrixType GetStiffnessMatrix( const FEMMeshType * ) const = 0;
-
-  /**
-   * Compute and return element mass matrix in global coordinate system.
-   * This is needed if dynamic problems (parabolic or hyperbolix d.e.)
-   * need to be solved.
-   */
-  virtual MatrixType GetMassMatrix( void ) const 
-    { return MatrixType(); }
-
 
 
 };

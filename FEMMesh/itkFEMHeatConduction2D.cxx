@@ -19,6 +19,8 @@
 =========================================================================*/
 
 #include "itkFEMHeatConduction2D.h"
+#include "itkFEMElementBase.h"
+
 
 namespace itk {
 namespace fem {
@@ -68,23 +70,26 @@ FEMHeatConduction2D
 ::AssembleMasterEquation(void)
 {
 
-  typedef MeshType::CellsContainer   CellsContainer;
+  typedef FEMMeshType::ElementBaseType    ElementBaseType;
+  typedef FEMMeshType::ElementsContainer  ElementsContainer;
 
   // This has to be replaced by a Visitor when
-  // the mesh is composed of different cell types
+  // the mesh is composed of different elements types
   // e.g. triangles and quads.
 
-  CellsContainer::Pointer   cells = m_Mesh->GetCells();
-  if( !cells ) 
+  ElementsContainer::Pointer   elements = m_Mesh->GetElements();
+  if( !elements ) 
     {
-    itkGenericExceptionMacro(<<"The Mesh is empty of Cells");
+    itkGenericExceptionMacro(<<"The Mesh is empty of Elements");
     }
 
-  CellsContainer::Iterator  cell = cells->Begin();
-  CellsContainer::Iterator  end  = cells->End();
-  while( cell != end )
+  ElementsContainer::Iterator  elementItr = elements->Begin();
+  ElementsContainer::Iterator  end        = elements->End();
+  while( elementItr != end )
     {
-    cell++;
+    ElementBaseType * element = elementItr.Value();
+    element->GetStiffnessMatrix( m_Mesh );
+    elementItr++;
     }
 
 }

@@ -45,6 +45,12 @@ class FEMElementBar2D :
 
 public:
 
+  typedef  FEMElementBar2D< TFEMMesh, NDisplacementComponentsPerPoint > Self;
+  typedef         Self * Pointer;
+  typedef  const  Self * ConstPointer;
+  
+  static  Pointer New(void) { return new Self; }
+
   /**
    * Number of Components of the Displacement Field
    * (also known as number of degrees of freedom)
@@ -94,10 +100,12 @@ public:
     points->GetElementIfIndexExists( *Id++, &point1 );
     points->GetElementIfIndexExists( *Id++, &point2 );
 
+    /*
     const CoordinateRepresentationType x1 = point1[0];
     const CoordinateRepresentationType y1 = point1[1];
     const CoordinateRepresentationType x2 = point2[0];
     const CoordinateRepresentationType y2 = point2[1];
+    */
 
     return stiffnessMatrix;
   }

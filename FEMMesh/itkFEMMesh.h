@@ -20,6 +20,7 @@
 
 
 #include "itkMesh.h"
+#include "itkFEMElementBase.h"
 
 
 namespace itk {
@@ -60,12 +61,22 @@ public:
   typedef typename Superclass::CellTraits                    CellTraits;
   typedef typename Superclass::CellMultiVisitorType          CellMultiVisitorType;
   typedef typename Superclass::CellsContainer                CellsContainer;
+  typedef typename Superclass::CellIdentifier                CellIdentifier;
+  typedef typename Superclass::CellIdentifier                ElementIdentifier;
 
   /** Convenient enums obtained from TMeshTraits template parameter. */
   enum {PointDimension = MeshTraits::PointDimension};
   enum {MaxTopologicalDimension = MeshTraits::MaxTopologicalDimension};
   
-
+    
+  /** The container type for use in storing Elements.  It must conform to
+   * the IndexedContainer interface. */
+  typedef FEMElementBase< Self >                                  ElementBaseType;
+  typedef ElementBaseType::Pointer                                ElementBasePointer;
+  typedef VectorContainer< CellIdentifier , ElementBasePointer  > ElementsContainer;
+ 
+  itkGetObjectMacro( Elements, ElementsContainer );
+  itkSetObjectMacro( Elements, ElementsContainer );
 
 protected:
 
@@ -78,6 +89,8 @@ private:
   FEMMesh(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
           
+  ElementsContainer::Pointer      m_Elements;
+
 };
 
 
