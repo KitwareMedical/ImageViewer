@@ -48,14 +48,15 @@ typedef itk::FEMBrainStripValidationApp<ImageType,LabelImageType,RealImageType> 
 
 int main(int argc, char *argv[])
 {
-
+  char* paramname;
   if ( argc < 2 )
     {
     std::cout << "Parameter file name missing" << std::endl;
     std::cout << std::endl;
     std::cout << "Usage:  FEMBrainStripValidationApp param.file" << std::endl;
+    paramname="U:\\itk\\Insight\\Examples\\IBSRValidation\\FEMAtlasSegmentation\\Inputs\\input_resample.txt";
 //    return 1;
-    }
+    } else paramname=argv[1];
 
   // registering the load for both hexahedron and tetrahedron elements
   DispatcherType::RegisterVisitor((ImageLoadType*)0, 
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
 
 
   // Parse the input file and set up the app
-  std::ifstream inputStream( "U:\\itk\\Insight\\Examples\\IBSRValidation\\FEMAtlasSegmentation\\Inputs\\input_resample.txt" /*argv[1]*/, std::ios::in );
+  std::ifstream inputStream( paramname, std::ios::in );
 
   if ( !inputStream.is_open() )
     {
