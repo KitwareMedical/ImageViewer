@@ -75,8 +75,6 @@ public:
   typedef typename Superclass::PointsContainer            PointsContainer;
   typedef typename Superclass::PointDataContainer         PointDataContainer;
   typedef typename Superclass::CellsContainer             CellsContainer;
-  typedef typename Superclass::DisplacementType           DisplacementType;
-
 
  
   /**
