@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <FL/fl_draw.H>
 #include <FL/Fl.H>
 #include <FL/fl_ask.H>
-#include <vcl_cmath.h>
+#include <math.h>
 
 
 namespace fltk {

@@ -125,6 +125,6 @@ Image2DViewerUpdateCommand
 
 
 
-} // end namespace li
+} // end namespace fltk
 
 

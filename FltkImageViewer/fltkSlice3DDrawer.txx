@@ -39,7 +39,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
 
-#include <fltkSlice3DDrawer.h>
+#ifndef _itkSlice3DDrawer_txx
+#define _itkSlice3DDrawer_txx
+
+#include "fltkSlice3DDrawer.h"
 #include <GL/glu.h>
 
 
@@ -655,4 +658,4 @@ Slice3DDrawer<ImagePixelType>
 } // end namespace fltk
 
 
-
+#endif

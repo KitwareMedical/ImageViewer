@@ -156,6 +156,6 @@ LightButtonRedrawCommand
 
 
 
-} // end namespace li
+} // end namespace fltk
 
 

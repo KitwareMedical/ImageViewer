@@ -123,6 +123,6 @@ ProgressBarRedrawCommand
 
 
 
-} // end namespace li
+} // end namespace fltk
 
 

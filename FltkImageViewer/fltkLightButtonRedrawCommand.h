@@ -115,7 +115,7 @@ protected:
 };
 
 
-} // end namespace li
+} // end namespace fltk
 
 
 #endif

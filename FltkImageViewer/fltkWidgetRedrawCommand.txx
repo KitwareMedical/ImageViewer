@@ -40,7 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 
-#include <fltkWidgetRedrawCommand.h>
+#include "fltkWidgetRedrawCommand.h"
 
 
 
@@ -141,6 +141,6 @@ WidgetRedrawCommand<TWidget>
 
 
 
-} // end namespace li
+} // end namespace fltk
 
 

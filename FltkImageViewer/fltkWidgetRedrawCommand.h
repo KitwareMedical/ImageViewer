@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __fltkWidgetRedrawCommand_h
 #define __fltkWidgetRedrawCommand_h
 
-#include <itkCommand.h>
+#include "itkCommand.h"
 #include <FL/Fl.H>
 
 
@@ -150,7 +150,7 @@ private:
 };
 
 
-} // end namespace li
+} // end namespace  fltk
   
 #ifndef ITK_MANUAL_INSTANTIATION
 #include "fltkWidgetRedrawCommand.txx"
