@@ -440,7 +440,7 @@ SliceView<imType>::SliceView(int x, int y, int w, int h, const char * )
   cClickBoxCallBack = NULL;
   cClickBoxArg = NULL;
   cClickBoxArgCallBack = NULL;
-  cViewClickedPoints = true;
+  cViewClickedPoints = false;
   
   cIWMin = 0;
   cIWMax = 0;
