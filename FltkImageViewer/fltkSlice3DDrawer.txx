@@ -43,6 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _itkSlice3DDrawer_txx
 
 #include "fltkSlice3DDrawer.h"
+#include "itkImageRegionIteratorWithIndex.h"
 #include <GL/glu.h>
 
 
@@ -66,6 +67,10 @@ Slice3DDrawer<TImage>
   m_SliceZ = 0;
 
   texturesGenerated = false;
+
+  m_DrawCommand = DrawCommandType::New();
+  m_DrawCommand->SetCallbackFunction( this, &(Self::glDraw) );
+
 }
 
 
@@ -138,6 +143,18 @@ Slice3DDrawer<TImage>
 
 
 
+/**
+ * Get Draw Command
+ */
+template <class TImage>
+Slice3DDrawer<TImage>::DrawCommandPointer
+Slice3DDrawer<TImage>
+::GetDrawCommand(void) 
+{
+  return m_DrawCommand.GetPointer();
+}
+
+
 
 
 /**
@@ -155,8 +172,13 @@ Slice3DDrawer<TImage>
     return;
   }
 
-  SizeType size =
-    m_Image->GetRequestedRegion().GetSize();
+  RegionType region = m_Image->GetRequestedRegion();
+  if( region.GetNumberOfPixels() == 0 )
+  {
+    return;
+  }
+
+  SizeType size = region.GetSize();
 
   xScrollBar->value( size[0]/2, 1, 0, size[0] );
   yScrollBar->value( size[1]/2, 1, 0, size[1] );
@@ -168,7 +190,7 @@ Slice3DDrawer<TImage>
 
   typedef  itk::ImageRegionIteratorWithIndex< ImageType > IteratorType;
 
-  IteratorType it( m_Image, m_Image->GetRequestedRegion() );
+  IteratorType it( m_Image, region );
 
   PixelType  max = it.Get();
   while( ! it.IsAtEnd() )
@@ -183,11 +205,9 @@ Slice3DDrawer<TImage>
   m_Max_Value = max;
 
 
-  RegionType region = m_Image->GetRequestedRegion();
-
-  m_Nx = region.GetSize()[0];
-  m_Ny = region.GetSize()[1];
-  m_Nz = region.GetSize()[2];
+  m_Nx = size[0];
+  m_Ny = size[1];
+  m_Nz = size[2];
 
   m_Nxr = (int)pow(2, floor( log(static_cast<float>(m_Nx))/log(2.0f)+1 ) );
   m_Nyr = (int)pow(2, floor( log(static_cast<float>(m_Ny))/log(2.0f)+1 ) );
@@ -301,7 +321,7 @@ Slice3DDrawer<ImagePixelType>
 {
     xValueOutput->value( xScrollBar->value() );
     BindTextureX();
-    InvokeEvent( li::VolumeReslicedEvent );
+    InvokeEvent( fltk::VolumeReslicedEvent );
 }
 
 
@@ -319,7 +339,7 @@ Slice3DDrawer<ImagePixelType>
 {
     yValueOutput->value( yScrollBar->value() );
     BindTextureY();
-    InvokeEvent( li::VolumeReslicedEvent );
+    InvokeEvent( fltk::VolumeReslicedEvent );
 }
 
 
@@ -336,7 +356,7 @@ Slice3DDrawer<ImagePixelType>
 {
     zValueOutput->value( zScrollBar->value() );
     BindTextureZ();
-    InvokeEvent( li::VolumeReslicedEvent );
+    InvokeEvent( fltk::VolumeReslicedEvent );
 }
 
 

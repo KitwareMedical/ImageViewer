@@ -43,8 +43,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __fltkSlice3DDrawer_h
 
 #include <fltkSlice3DDrawerGUI.h>
-#include <fltkGlDrawer.h>
 #include <itkImage.h>
+#include "fltkCommandEvents.h"
+#include "itkCommand.h"
 
 
 
@@ -52,8 +53,7 @@ namespace fltk {
 
 
 template <class TImage>
-class Slice3DDrawer : public fltkSlice3DDrawerGUI, 
-                      public GlDrawer
+class Slice3DDrawer : public fltkSlice3DDrawerGUI
 {
 public:
 
@@ -119,6 +119,13 @@ public:
  
 
   /**
+   * Command that will draw the object
+   */
+  typedef itk::SimpleConstMemberCommand< Self >   DrawCommandType;
+  typedef DrawCommandType::Pointer                DrawCommandPointer;
+
+
+  /**
    * Set Input Image
    */
   void SetInput( ImageType * );
@@ -181,6 +188,11 @@ public:
    */
    void BindTextureZ(void);
 
+  /**
+   * Get the Observer/Command that will redraw the object
+   */
+  DrawCommandPointer GetDrawCommand(void);
+
 
 protected:
 
@@ -233,6 +245,8 @@ private:
    PixelType              m_Max_Value;
 
    mutable bool           texturesGenerated;
+
+  DrawCommandPointer      m_DrawCommand;
 
 };
 
