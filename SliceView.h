@@ -238,6 +238,12 @@ template <class imType>
                           void (* newViewImDataArgCallBack)(void *),
                           void * viewImDataArg);
     
+    /*! Return the minimum value for the image */
+    double dataMin(void) const;
+
+    /*! Return the maximum value for the image */
+    double dataMax(void) const;
+
     /*! Flip the image about the x-axis */
     virtual void    flipX(bool newFlipX);
     /*! Is the image flipped? */
@@ -605,8 +611,19 @@ viewImDataCallBack(void (* newViewImDataArgCallBack)(void *), void * newViewImDa
   cViewImDataArgCallBack = newViewImDataArgCallBack;
   }
 
+template <class imType>
+double SliceView<imType>::
+dataMin(void) const
+  {
+  return this->cDataMin;
+  }
 
-
+template <class imType>
+double SliceView<imType>::
+dataMax(void) const
+  {
+  return this->cDataMax;
+  }
 
 //
 //
