@@ -17,8 +17,9 @@ Cell::ColorType    Cell::DefaultColor;
 double             Cell::DefaultRadius         =       1.0; // microns
 
 
-double             Cell::GrowthRadiusIncrement =       0.1; // 0.001 microns
+double             Cell::GrowthRadiusIncrement =       0.01; // microns
 double             Cell::GrowthRadiusLimit     =       2.0; // microns
+unsigned long      Cell::MaximumGenerationLimit =      30L; // 30th generation 
 
 double             Cell::NutrientSelfRepairLevel  =      0; 
 double             Cell::EnergySelfRepairLevel    =      0; 
@@ -26,6 +27,7 @@ double             Cell::EnergySelfRepairLevel    =      0;
 double             Cell::DefaultEnergyIntake      =      1; 
 double             Cell::DefaultNutrientsIntake   =      1; 
 
+fltk::Sphere3D::Pointer    Cell::SphereShape;
 
 unsigned long      Cell::Counter = 0; // number of cells created
 
@@ -60,11 +62,6 @@ Cell
 
   // too young to die...
   m_MarkedForRemoval = false;
-
-  // Create the representation for 3D
-  m_SphereShape = fltk::Sphere3D::New();
-  m_SphereShape->SetNumberOfSlices( 24 );
-  m_SphereShape->SetNumberOfStacks( 12 );
 
 }
 
@@ -135,7 +132,9 @@ bool
 Cell
 ::CheckPointDivision(void) 
 {
-  return true;
+  const bool fatality = (m_Generation < MaximumGenerationLimit );
+  const bool radius   = (m_Radius >= GrowthRadiusLimit);
+  return ( radius && fatality );
 }
 
 
@@ -171,6 +170,30 @@ Cell
 {
   Cell * cell = new Cell;
   cell->m_ParentIdentifier = m_SelfIdentifier;
+  return cell;
+}
+
+
+/**
+ *    Create a New Egg Cell
+ *    this method behave like a factory, it is 
+ *    intended to be overloaded in any class 
+ *    deriving from Cell.
+ */ 
+Cell *
+Cell 
+::CreateEgg(void) 
+{
+
+  // Create the representation for 3D
+  SphereShape = fltk::Sphere3D::New();
+  SphereShape->SetNumberOfSlices( 12 );
+  SphereShape->SetNumberOfStacks( 6 );
+
+  Cell * cell = new Cell;
+  cell->m_ParentIdentifier = 0;
+  cell->m_SelfIdentifier = 1;
+  cell->m_Generation = 0;
   return cell;
 }
 
@@ -257,8 +280,8 @@ Cell
         }
       case 3: 
         {
-        DrawSphere();
-        //DrawIcosaedron();
+        //DrawSphere();
+        DrawIcosaedron();
         break;
         }
       }
@@ -434,6 +457,35 @@ Cell
 
 
 /**
+ *    Set the value of the limit of cell generation.
+ *    After this generation cells will stop dividing
+ *    A mechanism similar to the inhibition of Telomerase
+ *    that impose a limit to the maximum number of times
+ *    that the genome can be replicated.
+ */ 
+void
+Cell
+::SetMaximumGenerationLimit( unsigned long generationLimit )
+{
+  MaximumGenerationLimit = generationLimit;
+}
+
+
+
+/**
+ *    Get the value of the limiting cell radius
+ *    this is a static value used for the whole
+ *    cellular aggregate
+ */ 
+double
+Cell
+::GetGrowthRadiusLimit( void ) 
+{
+  return GrowthRadiusLimit;
+}
+
+
+/**
  *    Set the value of the increment in cellular
  *    radius at each time step
  *    this is a static value used for the whole
@@ -463,7 +515,10 @@ void
 Cell
 ::AdvanceTimeStep(void) 
 {
-     
+
+  // get input from the environment
+  this->ReceptorsReading(); 
+
   // If this happens, it is an
   // emergency situation: Do it first.
   if( this->CheckPointApoptosis() )
@@ -561,6 +616,18 @@ Cell
 }
 
 
+
+/**
+ *    Reading substrate using receptors
+ */
+void
+Cell
+::ReceptorsReading(void) 
+{
+}
+
+
+
 /**
  *    Set default Color
  */
@@ -571,6 +638,17 @@ Cell
   DefaultColor = color;
 }
 
+
+
+/**
+ *    Reset the counter 
+ */
+void
+Cell
+::ResetCounter( void )
+{
+  Counter = 0;
+}
 
 
 /**
@@ -605,7 +683,7 @@ void
 Cell
 ::DrawSphere(void) const
 {
-  m_SphereShape->glDraw();
+  SphereShape->DrawGeometry();
 }
 
 

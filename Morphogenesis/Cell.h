@@ -28,7 +28,7 @@ class Cell
 
 public:
 
-  enum { Dimension = 3 };
+  enum { Dimension = 2 };
   enum { PointDimension = Dimension };
 
   typedef   itk::Vector<double,PointDimension>  VectorType;
@@ -50,6 +50,9 @@ public:
 
   virtual       CellularAggregate * GetCellularAggregate( void );
   virtual const CellularAggregate * GetCellularAggregate( void ) const;
+  static  const char * GetSpeciesName(void) 
+                              { return "Primitive Cell"; }
+  static  Cell * CreateEgg(void);
 
   bool MarkedForRemoval(void) const;
 
@@ -61,6 +64,7 @@ protected:
   
   virtual void EnergyIntake(void);
   virtual void NutrientsIntake(void);
+  virtual void ReceptorsReading(void);
   
   virtual bool CheckPointGrowth(void);
   virtual bool CheckPointDivision(void);
@@ -96,6 +100,10 @@ public:
   static void SetNutrientSelfRepairLevel( double );
   static void SetDefaultColor( const ColorType & color );
 
+  static double GetGrowthRadiusLimit( void );
+  static void SetMaximumGenerationLimit( unsigned long );
+  
+  static void ResetCounter(void);
 
 
 protected:
@@ -114,6 +122,8 @@ protected:
 
    CellCycleState       m_CycleState;
 
+   CellularAggregate  * m_Aggregate;
+
 
    // Static Members
    static     double      DefaultRadius;
@@ -121,6 +131,7 @@ protected:
 
    static     double      GrowthRadiusLimit;
    static     double      GrowthRadiusIncrement;
+   static unsigned long   MaximumGenerationLimit;
 
    static     double      EnergySelfRepairLevel;
    static     double      NutrientSelfRepairLevel;
@@ -132,6 +143,9 @@ protected:
 
    static     int         DisplayList;
      
+   static fltk::Sphere3D::Pointer    SphereShape;
+
+
 private:
 
    void DrawCircle(void) const;
@@ -140,12 +154,9 @@ private:
 
 private:
 
-   CellularAggregate  *       m_Aggregate;
-
 
    bool                       m_MarkedForRemoval;
 
-   fltk::Sphere3D::Pointer    m_SphereShape;
 
 };
 
