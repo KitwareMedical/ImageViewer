@@ -41,21 +41,21 @@ int main()
   double sourceImageOrigin[] = { 0,0 };
 
   // Image typedef
-  typedef itk::Image< bool, dim > TImageType;
+  typedef itk::Image< bool, dim > ImageType;
 
   // Creates the sourceImage (but doesn't set the size or allocate memory)
-  TImageType::Pointer sourceImage = TImageType::New();
+  ImageType::Pointer sourceImage = ImageType::New();
   sourceImage->SetOrigin(sourceImageOrigin);
   sourceImage->SetSpacing(sourceImageSpacing);
 
   // Create a size object native to the sourceImage type
-  TImageType::SizeType sourceImageSizeObject;
+  ImageType::SizeType sourceImageSizeObject;
 
   // Set the size object to the array defined earlier
   sourceImageSizeObject.SetSize( sourceImageSize );
 
   // Create a region object native to the sourceImage type
-  TImageType::RegionType largestPossibleRegion;
+  ImageType::RegionType largestPossibleRegion;
 
   // Resize the region
   largestPossibleRegion.SetSize( sourceImageSizeObject );
@@ -76,8 +76,8 @@ int main()
   for(int strat = 0; strat < 4; strat++)
   {
     // Initialize the image to hold all 0's
-    itk::ImageRegionIterator<TImageType> it = 
-      itk::ImageRegionIterator<TImageType>(sourceImage, largestPossibleRegion);
+    itk::ImageRegionIterator<ImageType> it = 
+      itk::ImageRegionIterator<ImageType>(sourceImage, largestPossibleRegion);
 
     for(it.GoToBegin(); !it.IsAtEnd(); ++it)
       {
@@ -85,26 +85,26 @@ int main()
       }
 
     // Create and initialize a spatial function
-    typedef itk::SphereSpatialFunction<dim> TFunctionType;
-    typedef TFunctionType::InputType TFunctionPositionType;
+    typedef itk::SphereSpatialFunction<dim> FunctionType;
+    typedef FunctionType::InputType FunctionPositionType;
 
-    TFunctionType::Pointer spatialFunc = TFunctionType::New();
+    FunctionType::Pointer spatialFunc = FunctionType::New();
     spatialFunc->SetRadius( 1.0 );
 
-    TFunctionPositionType center;
+    FunctionPositionType center;
     center[0] = 2.5;
     center[1] = 2.5;
     spatialFunc->SetCenter(center);
 
     // Create and initialize a spatial function iterator
-    TImageType::IndexType seedPos;
-    const TImageType::IndexValueType pos[] = {2,2};
+    ImageType::IndexType seedPos;
+    const ImageType::IndexValueType pos[] = {2,2};
     seedPos.SetIndex(pos);
 
     typedef itk::FloodFilledSpatialFunctionConditionalIterator
-      <TImageType, TFunctionType> TItType;
+      <ImageType, FunctionType> ItType;
 
-    TItType sfi = TItType(sourceImage, spatialFunc, seedPos);
+    ItType sfi = ItType(sourceImage, spatialFunc, seedPos);
 
     switch(strat){
     case 0:
@@ -139,13 +139,13 @@ int main()
       }
   
     // Dump the image to the console
-    TImageType::IndexType pix;
+    ImageType::IndexType pix;
 
     for( int r = 0; r < 5; r++)
       {
       for( int c = 0; c < 5; c++)
         {
-        TImageType::IndexValueType pos[] = {r,c};
+        ImageType::IndexValueType pos[] = {r,c};
         pix.SetIndex(pos);
         printf("%i ", sourceImage->GetPixel(pix) );
         }

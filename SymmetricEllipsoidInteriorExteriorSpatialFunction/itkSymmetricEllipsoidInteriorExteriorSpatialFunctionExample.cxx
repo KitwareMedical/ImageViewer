@@ -43,10 +43,10 @@ int main()
   unsigned long imageVolume = xExtent * yExtent * zExtent; 
 
         // Image typedef
-  typedef itk::Image< unsigned char, dimension> TImageType;
+  typedef itk::Image< unsigned char, dimension> ImageType;
 
   // Creates the sourceImage (but doesn't set the size or allocate memory)
-  TImageType::Pointer sourceImage = TImageType::New();
+  ImageType::Pointer sourceImage = ImageType::New();
   sourceImage->SetOrigin(sourceImageOrigin);
   sourceImage->SetSpacing(sourceImageSpacing);
 
@@ -55,11 +55,11 @@ int main()
   //-----The following block allocates the sourceImage-----
 
   // Create a size object native to the sourceImage type
-  TImageType::SizeType sourceImageSizeObject;
+  ImageType::SizeType sourceImageSizeObject;
   // Set the size object to the array defined earlier
   sourceImageSizeObject.SetSize( sourceImageSize );
   // Create a region object native to the sourceImage type
-  TImageType::RegionType largestPossibleRegion;
+  ImageType::RegionType largestPossibleRegion;
   // Resize the region
   largestPossibleRegion.SetSize( sourceImageSizeObject );
   // Set the largest legal region size (i.e. the size of the whole sourceImage) to what we just defined
@@ -74,8 +74,8 @@ int main()
   std::cout << "New physical sourceImage allocated\n";
   
   // Initialize the image to hold all 128
-  itk::ImageRegionIterator<TImageType> it =
-     itk::ImageRegionIterator<TImageType>(sourceImage, largestPossibleRegion);
+  itk::ImageRegionIterator<ImageType> it =
+     itk::ImageRegionIterator<ImageType>(sourceImage, largestPossibleRegion);
 
   unsigned long numImagePixels = 0;
   unsigned char exteriorPixelValue = 128;
@@ -88,16 +88,16 @@ int main()
   //-----Create ellipsoid in sourceImage-----------------
 
   // Symmetric Ellipsoid spatial function typedef
-  typedef itk::SymmetricEllipsoidInteriorExteriorSpatialFunction<dimension> TSymEllipsoidFunctionType;
+  typedef itk::SymmetricEllipsoidInteriorExteriorSpatialFunction<dimension> SymEllipsoidFunctionType;
   
   // Point position typedef
-  typedef TSymEllipsoidFunctionType::InputType TSymEllipsoidFunctionVectorType;
+  typedef SymEllipsoidFunctionType::InputType SymEllipsoidFunctionVectorType;
 
   // Create a symmetric ellipsoid spatial function for the source image
-  TSymEllipsoidFunctionType::Pointer spatialFunc = TSymEllipsoidFunctionType::New();
+  SymEllipsoidFunctionType::Pointer spatialFunc = SymEllipsoidFunctionType::New();
 
   // Define and set the center of the ellipsoid in physical space
-  TSymEllipsoidFunctionVectorType center;
+  SymEllipsoidFunctionVectorType center;
   center[0] = xExtent/2;
   center[1] = yExtent/2;
   center[2] = zExtent/2;
@@ -115,16 +115,16 @@ int main()
  
   spatialFunc->SetOrientation(orientation, uniqueAxisLength, symmetricAxesLength);
 
-  typedef TImageType::IndexType       IndexType;
+  typedef ImageType::IndexType       IndexType;
   typedef IndexType::IndexValueType   IndexValueType;
   IndexType seedPos;
   seedPos[0] = static_cast< IndexValueType >( center[0] ); 
   seedPos[1] = static_cast< IndexValueType >( center[1] ); 
   seedPos[2] = static_cast< IndexValueType >( center[2] ); 
 
-  itk::FloodFilledSpatialFunctionConditionalIterator<TImageType, TSymEllipsoidFunctionType> 
-    sfi = itk::FloodFilledSpatialFunctionConditionalIterator<TImageType,
-     TSymEllipsoidFunctionType>(sourceImage, spatialFunc, seedPos);
+  itk::FloodFilledSpatialFunctionConditionalIterator<ImageType, SymEllipsoidFunctionType> 
+    sfi = itk::FloodFilledSpatialFunctionConditionalIterator<ImageType,
+     SymEllipsoidFunctionType>(sourceImage, spatialFunc, seedPos);
    
   // Iterate through the entire image and set interior pixels to 255  
   unsigned char interiorPixelValue = 255;
@@ -133,7 +133,7 @@ int main()
     sfi.Set(interiorPixelValue);
     }
 
-  typedef TImageType::PixelType     PixelType;
+  typedef ImageType::PixelType     PixelType;
   unsigned int numExteriorPixels = 0; // Number of pixels not filled by spatial function
   unsigned int numInteriorPixels = 0; // Number of pixels filled by spatial function
   unsigned int numErrorPixels = 0; // Number of pixels not set by spatial function
@@ -216,8 +216,8 @@ int main()
     // Write the ellipsoid image to a vtk image file
     itk::VTKImageIO::Pointer vtkIO;
     vtkIO = itk::VTKImageIO::New();
-    itk::ImageFileWriter<TImageType>::Pointer writer;
-    writer = itk::ImageFileWriter<TImageType>::New();
+    itk::ImageFileWriter<ImageType>::Pointer writer;
+    writer = itk::ImageFileWriter<ImageType>::New();
     writer->SetInput(sourceImage);
     writer->SetFileName("ellipsoid.vtk");
     writer->SetImageIO(vtkIO);
