@@ -125,7 +125,6 @@ main(int argc, char *argv[])
     ImageIndexType index;        // Index to current pixel
     unsigned long point[3];      // Location of current pixel
     PixelType *buff = new PixelType[ImageWidth];  // Input/output buffer
-    PixelType value;             // Value of pixel
     PixelType maxval = 0;        // Maximum pixel value in image
     size_t count;
     for (long slice = 0; slice < NumberOfSlices; slice++) {
@@ -180,25 +179,25 @@ main(int argc, char *argv[])
 
     /* Compute the transform from principal axes to original axes */
     double pi = 3.14159265359;
-    AffineTransformType trans;
+    AffineTransformType::Pointer trans = AffineTransformType::New();
     itk::Vector<double,3> center;
     center[0] = -ImageWidth / 2.0;
     center[1] = -ImageHeight / 2.0;
     center[2] = -NumberOfSlices / 2.0;
-    trans.Translate(center);
-    trans.Rotate(1, 0, pi/2.0);   // Rotate into radiological orientation
-    trans.Rotate(2, 0, -pi/2.0);
-    AffineTransformType pa2phys =
+    trans->Translate(center);
+    trans->Rotate(1, 0, pi/2.0);   // Rotate into radiological orientation
+    trans->Rotate(2, 0, -pi/2.0);
+    AffineTransformType::Pointer pa2phys =
         moments.GetPrincipalAxesToPhysicalAxesTransform();
     if (verbose) {
         std::cout << "Principal axes to physical axes transform"
                   << std::endl << pa2phys << std::endl;
     }
-    trans.Compose(pa2phys);
-    trans.Compose(image->GetPhysicalToIndexTransform());
+    trans->Compose(pa2phys);
+    trans->Compose(image->GetPhysicalToIndexTransform());
     if (verbose) {
         std::cout << "Backprojection transform:" << std::endl;
-        std::cout << trans << std::endl;
+        std::cout << *trans << std::endl;
     }
 
     /* Create and initialize the interpolator */
@@ -211,7 +210,7 @@ main(int argc, char *argv[])
     resample = itk::ResampleImageFilter< ImageType, ImageType >::New();
     resample->SetInput(image);
     resample->SetSize(size);
-    resample->SetTransform(&trans);
+    resample->SetTransform(trans);
     resample->SetInterpolator(interp);
 
     // Run the resampling filter
