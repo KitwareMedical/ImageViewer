@@ -41,6 +41,25 @@ BacterialColony
 
 
 
+void
+BacterialColony
+::Show(void)
+{
+  m_GUI.Show();
+}
+
+
+
+void
+BacterialColony
+::Hide(void)
+{
+  m_GUI.Hide();
+}
+
+
+
+
 
 }; // end namespace bio
 

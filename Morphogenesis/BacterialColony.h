@@ -6,6 +6,7 @@
 #include <iostream>
 #include "CellularAggregate.h"
 #include "Bacteria.h"
+#include "BacterialColonyGUI.h"
 
 
 
@@ -53,6 +54,17 @@ public:
   typedef Cell::PointType         PointType;
 
 
+  /**
+   * Show the GUI
+   */
+  void Show(void);
+
+  /**
+   * Hide the GUI
+   */
+  void Hide(void);
+
+
 protected:
 
 	BacterialColony();
@@ -62,6 +74,10 @@ protected:
   void PrintSelf(std::ostream& os, itk::Indent indent) const;
 
   
+private:
+
+  BacterialColonyGUI               m_GUI;
+
 
 };
 
