@@ -72,27 +72,6 @@ class ImageIOError : public itk::ExceptionObject
   std::string Operation ;
 } ;
 
-int readMetaImageHeader(std::string fileName, 
-                        int& dimension, 
-                        itk::Size<3>& size)
-  throw (ImageIOError)
-{
-  MetaImage metaImage ;
-  bool ret = metaImage.OpenMetaFile(fileName.c_str(), false);
-  if (metaImage.Error()) 
-    {
-      throw ImageIOError(__FILE__, __LINE__, fileName, "Reading header: can't open the file") ;
-    }
-  
-  dimension = metaImage.NDims() ;
-  
-  for (int i = 0 ; i < dimension ; i++)
-    size[i] = metaImage.DimSize(i) ;
-  
-  return metaImage.NDims() ;
-}
-
-
 void loadImage(std::string fileName, ImagePointer image)
   throw (ImageIOError)
 {

@@ -135,9 +135,6 @@ int main(int argc, char* argv[])
   double grow ;
   double shrink ;
 
-  int inputDimension ;
-  itk::Size<3> inputSize ;
-
   try
     {
       // get image file options
@@ -179,7 +176,6 @@ int main(int argc, char* argv[])
   try
     {
       std::cout << "Loading images..." << std::endl ;
-      readMetaImageHeader(inputFileName, inputDimension, inputSize) ;
       loadImage(inputFileName, input) ;
       filter->SetInput(input) ;
       if (inputMaskFileName != "")

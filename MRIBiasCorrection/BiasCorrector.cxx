@@ -151,9 +151,6 @@ int main(int argc, char* argv[])
   double grow ;
   double shrink ;
 
-  int inputDimension ;
-  itk::Size<3> inputSize ;
-
   bool usingSlabIdentification ;
 
   try
@@ -200,7 +197,6 @@ int main(int argc, char* argv[])
   try
     {
       std::cout << "Loading images..." << std::endl ;
-      readMetaImageHeader(inputFileName, inputDimension, inputSize) ;
       loadImage(inputFileName, input) ;
       filter->SetInput(input) ;
       std::cout << "Input image loaded." << std::endl ;
