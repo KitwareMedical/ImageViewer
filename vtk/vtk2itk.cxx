@@ -22,6 +22,7 @@
 #include "itkMesh.h"
 #include "itkTriangleCell.h"
 #include "itkQuadrilateralCell.h"
+#include "vtkCellArray.h"
 #include "vtkDataSetWriter.h"
 #include "vtkDataSetMapper.h"
 #include "vtkRenderer.h"
