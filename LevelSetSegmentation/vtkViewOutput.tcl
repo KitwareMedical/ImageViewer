@@ -1,12 +1,13 @@
 package require vtk
 package require vtkinteraction
 
-set X 255
-set Y 255
+set X 216
+set Y 179
+set MAG 2
 
 # A reader for the original image
 vtkPNGReader sReader
-sReader SetFileName "/home/cates/images/256N356.png"
+sReader SetFileName "brainslice.png"
 
 # A reader for the level set image
 vtkImageReader lsReader
@@ -25,6 +26,22 @@ fReader SetFileDimensionality 2
 fReader SetDataScalarTypeToFloat
 fReader SetDataByteOrderToBigEndian
 fReader FileLowerLeftOn
+
+# Resamplers for all images
+vtkImageMagnify fResampler
+fResampler SetMagnificationFactors $MAG $MAG $MAG
+fResampler InterpolateOn
+fResampler SetInput [fReader GetOutput]
+
+vtkImageMagnify lsResampler
+lsResampler SetMagnificationFactors $MAG $MAG $MAG
+lsResampler InterpolateOn
+lsResampler SetInput [lsReader GetOutput]
+
+vtkImageMagnify sResampler
+sResampler SetMagnificationFactors $MAG $MAG $MAG
+sResampler InterpolateOn
+sResampler SetInput [sReader GetOutput]
 
 # A color lookup table for the level sets
 vtkLookupTable lsLookup
@@ -46,7 +63,7 @@ lsThreshold ReplaceOutOn
 lsThreshold SetInValue 1
 lsThreshold SetOutValue 0
 lsThreshold SetOutputScalarTypeToUnsignedChar
-lsThreshold SetInput [lsReader GetOutput]
+lsThreshold SetInput [lsResampler GetOutput]
 
 # A color mapper for the level sets
 vtkImageMapToColors lsMapper
@@ -56,13 +73,13 @@ lsMapper SetInput [lsThreshold GetOutput]
 # A color mapper for the features
 vtkImageMapToColors fMapper
 fMapper SetLookupTable fLookup
-fMapper SetInput [fReader GetOutput]
+fMapper SetInput [fResampler GetOutput]
 
 # A viewer
 vtkImageViewer viewer
-viewer SetColorWindow 255
-viewer SetColorLevel  127.5
-viewer SetInput [sReader GetOutput]
+viewer SetColorWindow 100
+viewer SetColorLevel  200
+viewer SetInput [sResampler GetOutput]
 #viewer SetInput [fMapper GetOutput]
 #viewer SetInput [lsMapper GetOutput]
 
@@ -78,7 +95,8 @@ overlay SetMapper lsImageMapper
 [viewer GetRenderer] AddActor2D overlay
 
 # A widget for the viewer
-vtkTkImageViewerWidget .viewer_widget -iv viewer -height $Y -width $X
+vtkTkImageViewerWidget .viewer_widget -iv viewer -height [expr $Y * $MAG] \
+    -width [expr $X * $MAG]
 ::vtk::bind_tk_imageviewer_widget .viewer_widget
 pack .viewer_widget
 
@@ -93,7 +111,7 @@ proc ToggleFeatureView {} {
     if { $view_features == 1 } {
         viewer SetInput [fMapper GetOutput]
     } else {
-        viewer SetInput [sReader GetOutput]
+        viewer SetInput [sResampler GetOutput]
     }
     viewer Render
 }
