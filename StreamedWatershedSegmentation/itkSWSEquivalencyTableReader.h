@@ -31,8 +31,7 @@ namespace sws
 class EquivalencyTableReader : public ProcessObject
 {
 public:
-  /** Standard Itk pipeline typedefs.  Defines smart pointer for this object.
-   */
+  /** Standard class typedefs.  Defines smart pointer for this object. */
   typedef EquivalencyTableReader Self;
   typedef ProcessObject Superclass;
   typedef SmartPointer<Self> Pointer;
@@ -43,17 +42,17 @@ public:
   typedef watershed::EquivalencyTable EquivalencyTableType;
 
   void SetInput(EquivalencyTableType *input)
-    {   this->ProcessObject::SetNthInput(0, input); }
+    { this->ProcessObject::SetNthInput(0, input); }
 
   void SetOutput(EquivalencyTableType *input)
-    {   this->ProcessObject::SetNthOutput(0, input); }
+    { this->ProcessObject::SetNthOutput(0, input); }
 
   EquivalencyTableType::Pointer GetInput()
-    {      return static_cast<EquivalencyTableType *>
-             (this->ProcessObject::GetInput(0).GetPointer());    }
+    { return static_cast<EquivalencyTableType *>
+              (this->ProcessObject::GetInput(0).GetPointer());    }
   
   EquivalencyTableType::Pointer GetOutput()
-    {      return static_cast<EquivalencyTableType *>
+    { return static_cast<EquivalencyTableType *>
              (this->ProcessObject::GetOutput(0).GetPointer());    }
 
   /** Set the name of the file to read.  */

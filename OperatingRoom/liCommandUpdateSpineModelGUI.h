@@ -26,90 +26,46 @@
 //     Chapel Hill, NC 27599
 //
 //--------------------------------------------
-
-
 #ifndef liCOMMANDUPDATESPINEMODELGUICLASS
 #define liCOMMANDUPDATESPINEMODELGUICLASS
 
 #include "liSpineModelGUI.h"
 #include "liCommandEvents.h"
 
-
-
 namespace li {
 
-/**
- *  Implementation of the Command Patter for invoking OpenGL redraw
- */
+/** Implementation of the Command Patter for invoking OpenGL redraw. */
 class ITK_EXPORT CommandUpdateSpineModelGUI : public itk::Command 
 {
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef CommandUpdateSpineModelGUI   Self;
-
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef itk::Command  Superclass;
-
-
-  /**
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>  Pointer;
-
-  /** 
-   * ConstSmart pointer typedef support.
-   */
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  /**
-   * Execute method will call redraw in the GL Window
-   */
+  /** Execute method will call redraw in the GL Window. */
   void Execute(itk::Object *caller, const itk::EventObject & event);
   void Execute(const itk::Object *caller, const itk::EventObject & event);
 
-
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /*** Run-time type information (and related methods). */
   itkTypeMacro( CommandUpdateSpineModelGUI, ::itk::Command );
 
-
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
-  
-
-  /**
-   * Set Fluoroscopy Unit to update
-   */
+  /** Set Fluoroscopy Unit to update. */
   void SetSpineModelGUI( SpineModelGUI * unit );
 
-
-
 protected:
-  /**
-   * Constructor
-   */
+  /** Constructor. */
   CommandUpdateSpineModelGUI();
 
 private:
-
-  /**
-   * SpineModelGUI
-   */
+  /** SpineModelGUI. */
   SpineModelGUI          *  m_SpineModelGUI;
- 
-
   
 };
-
 
 } // end namespace li
 

@@ -38,134 +38,65 @@
 namespace li {
 
 
-/**
- *  This class implements a Registration method 
- */
+/**  This class implements a Registration method */
 class ITK_EXPORT VesselsRegistrator : public itk::Object 
 {
-
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef VesselsRegistrator   Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef itk::Object  Superclass;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>  Pointer;
-
-  /** 
-   * ConstSmart pointer typedef support.
-   */
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-
-  /** 
-   * PointSet type
-   */
+  /** PointSet type */
   typedef PointSet3D::PointSetType  PointSetType;
-
   
-  /** 
-   * Fluoroscopic image type 
-   */
-  // Azucar
+  /*** Fluoroscopic image type  */
   typedef itk::Image<unsigned char, 2> FluoroscopicImageType;
   //typedef itk::Image<unsigned short, 2> FluoroscopicImageType;
 
+  /*** PointSet / Fluoroscopic Image Registration Method */
+  typedef itk::PointSetToImageRigid3DPerspectivePatternIntensityRegularStepGradientDescentRegistration<FluoroscopicImageType,PointSetType>  RegistrationMethod;
 
-
-  /** 
-   * PointSet / Fluoroscopic Image Registration Method
-   */
-  typedef
-    itk::PointSetToImageRigid3DPerspectivePatternIntensityRegularStepGradientDescentRegistration<
-                                                      FluoroscopicImageType,
-                                                      PointSetType
-                                                          >  RegistrationMethod;
-
-  /**
-   * Registration Optimizer
-   */
+  /** Registration Optimizer */
    typedef  RegistrationMethod::OptimizerType  RegistrationOptimizer;
 
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro( VesselsRegistrator, Object );
 
-
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro( Self );
-
         
-  /**
-   *  Get the Vessels
-   */
+  /**  Get the Vessels */
   VectorTubes3D::Pointer GetVessels( void );
-        
 
-  /**
-   *  Set the Vessels
-   */
+  /**  Set the Vessels */
   void SetVessels( VectorTubes3D  * vessels );
-        
   
-  /**
-   *  Set the Fluoroscopic image
-   */
+  /**  Set the Fluoroscopic image */
   void SetImage( FluoroscopicImageType  * image );
-         
 
-  /**
-   *  Get the  Registrator
-   */
+  /**  Get the  Registrator */
   RegistrationMethod::Pointer GetRegistrator(void);
         
-
 protected:
+  /**  Constructor */
+  VesselsRegistrator();
 
-  /**
-   *  Constructor
-   */
-        VesselsRegistrator();
-
-
-  /**
-   *  Destructor
-   */
-        ~VesselsRegistrator();
-
+  /**  Destructor */
+  ~VesselsRegistrator();
 
 private:
-
-  /**
-   *  Model of the Vertebral Segment
-   */
+  /**  Model of the Vertebral Segment */
   VectorTubes3D::Pointer        m_Vessels;
 
-
-  /**
-   *  Registration method for PointSet / Fluoroscopic Image
-   */
+  /**  Registration method for PointSet / Fluoroscopic Image */
   RegistrationMethod::Pointer   m_Registrator;
 
-
-  /**
-   *  Fluoroscopic Image 
-   */
+  /**  Fluoroscopic Image  */
   FluoroscopicImageType::Pointer  m_Image;
 
-        };
-
+};
 
 } // end namespace li
 

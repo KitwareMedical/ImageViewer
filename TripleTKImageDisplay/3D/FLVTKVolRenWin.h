@@ -33,109 +33,103 @@
 /** \class FLVTKVolRenWin */
 template <class T>
 class FLVTKVolRenWin : public FLVTKWin
-  {
-
+{
   typedef itk::Image<T,3>                 ImageType;
   typedef itk::Image<unsigned char,3>     OverlayType;
 
   typedef typename ImageType::Pointer     ImagePointer;
   typedef typename OverlayType::Pointer   OverlayPointer;
 
+protected:
+       
+  ImagePointer               mImData;
+  OverlayPointer             mMask;
+  bool                       mMaskAlloc;
 
-    protected:
-       
-          ImagePointer               mImData;
+  vtkRenderer               *mRenderer;
+  vtkRenderWindowInteractor *mInteractor;
 
-          OverlayPointer             mMask;
+  double              mOpacity;
 
+  VTKVolRen<T>        mVolRendProc;
+  bool                mVolRendView;
 
-          bool                       mMaskAlloc;
+  vtkActor           *mOutline;
+  bool                mOutlineView;
 
-          vtkRenderer               *mRenderer;
-          vtkRenderWindowInteractor *mInteractor;
+  int                 mSaggitalSlice;
+  vtkExtractVOI      *mSaggitalSect;
+  vtkPlaneSource     *mSaggitalPlane;
+  vtkTexture         *mSaggitalText;
+  vtkPolyDataMapper  *mSaggitalMap;
+  vtkActor           *mSaggital;
+  bool                mSaggitalView;
 
-          double              mOpacity;
+  int                 mAxialSlice;
+  vtkExtractVOI      *mAxialSect;
+  vtkPlaneSource     *mAxialPlane;
+  vtkTexture         *mAxialText;
+  vtkPolyDataMapper  *mAxialMap;
+  vtkActor           *mAxial;
+  bool                mAxialView;
 
-          VTKVolRen<T>        mVolRendProc;
-          bool                mVolRendView;
+  int                 mCoronalSlice;
+  vtkExtractVOI      *mCoronalSect;
+  vtkPlaneSource     *mCoronalPlane;
+  vtkTexture         *mCoronalText;
+  vtkPolyDataMapper  *mCoronalMap;
+  vtkActor           *mCoronal;
+  bool                mCoronalView;
 
-          vtkActor           *mOutline;
-          bool                mOutlineView;
-
-          int                 mSaggitalSlice;
-          vtkExtractVOI      *mSaggitalSect;
-          vtkPlaneSource     *mSaggitalPlane;
-          vtkTexture         *mSaggitalText;
-          vtkPolyDataMapper  *mSaggitalMap;
-          vtkActor           *mSaggital;
-          bool                mSaggitalView;
-
-          int                 mAxialSlice;
-          vtkExtractVOI      *mAxialSect;
-          vtkPlaneSource     *mAxialPlane;
-          vtkTexture         *mAxialText;
-          vtkPolyDataMapper  *mAxialMap;
-          vtkActor           *mAxial;
-          bool                mAxialView;
-
-          int                 mCoronalSlice;
-          vtkExtractVOI      *mCoronalSect;
-          vtkPlaneSource     *mCoronalPlane;
-          vtkTexture         *mCoronalText;
-          vtkPolyDataMapper  *mCoronalMap;
-          vtkActor           *mCoronal;
-          bool                mCoronalView;
-
-    public:
+public:
+  FLVTKVolRenWin(int x, int y, int w, int h, const char* l = 0);
        
-       FLVTKVolRenWin(int x, int y, int w, int h, const char* l = 0);
+  void free(void);
        
-       void free(void);
+  ~FLVTKVolRenWin();
        
-       ~FLVTKVolRenWin();
+  ImagePointer GetInputImage(void);
+  void SetInputImage(ImageType * newIm);
        
-       ImagePointer GetInputImage(void);
-       void SetInputImage(ImageType * newIm);
+  void OverlaymaskData(void);
+  void maskData(OverlayType * newMaskData);
+  OverlayType::Pointer maskData(void);
        
-       void OverlaymaskData(void);
-       void maskData(OverlayType * newMaskData);
-       OverlayType::Pointer maskData(void);
+  void useMask(bool newUseMask);
+  bool useMask(void);
        
-       void useMask(bool newUseMask);
-       bool useMask(void);
+  vtkRenderer * renderer(void);
        
-       vtkRenderer * renderer(void);
+  VTKVolRen<T> * volRendProc(void);
        
-       VTKVolRen<T> * volRendProc(void);
+  void viewVolRend(bool newViewVolRend);
+  bool viewVolRend(void);
        
-       void viewVolRend(bool newViewVolRend);
-       bool viewVolRend(void);
+  void viewOutline(bool newViewOutline);
+  bool viewOutline(void);
        
-       void viewOutline(bool newViewOutline);
-       bool viewOutline(void);
+  void viewSaggital(bool newViewSaggital);
+  bool viewSaggital(void);
+  void sliceSaggital(int newSliceSaggital);
+  int  sliceSaggital(void);
        
-       void viewSaggital(bool newViewSaggital);
-       bool viewSaggital(void);
-       void sliceSaggital(int newSliceSaggital);
-       int  sliceSaggital(void);
+  void viewAxial(bool newViewAxial);
+  bool viewAxial(void);
+  void sliceAxial(int newSliceAxial);
+  int  sliceAxial(void);
        
-       void viewAxial(bool newViewAxial);
-       bool viewAxial(void);
-       void sliceAxial(int newSliceAxial);
-       int  sliceAxial(void);
+  void viewCoronal(bool newViewCoronal);
+  bool viewCoronal(void);
+  void sliceCoronal(int newSliceCoronal);
+  int  sliceCoronal(void);
        
-       void viewCoronal(bool newViewCoronal);
-       bool viewCoronal(void);
-       void sliceCoronal(int newSliceCoronal);
-       int  sliceCoronal(void);
+  void    opacity(double newOpacity);
+  double  opacity(void);
        
-       void    opacity(double newOpacity);
-       double  opacity(void);
+  void update(void);
        
-       void update(void);
-       
-       void draw(void);
-  };
+  void draw(void);
+};
 
 ///
 //

@@ -14,23 +14,16 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
-
-
 #ifndef liFILTERCONSOLE
 #define liFILTERCONSOLE
 
 #include <fltkImageViewer.h>
 #include <liFilterConsoleGUI.h>
 
-
-
 class liFilterConsole : public liFilterConsoleGUI {
 
 public:
   typedef unsigned char  OverlayPixelType;
-  
   typedef fltk::ImageViewer< PixelType,
                        OverlayPixelType > ImageViewerType;
 
@@ -63,7 +56,6 @@ public:
   virtual void WriteGradientModulus(void);
 
 private:
-
   InputImageViewerType           * m_InputViewer;
 
   ImageViewerType           * m_Viewer_H1x;

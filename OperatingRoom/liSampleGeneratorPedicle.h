@@ -29,15 +29,13 @@
 //     Chapel Hill, NC 27514
 //
 //--------------------------------------------
-
 #ifndef liSAMPLEGENERATORPEDICLE
 #define liSAMPLEGENERATORPEDICLE
 
 #include "liSampleGeneratorPedicleGUI.h"
 
-
-class liSampleGeneratorPedicle : public liSampleGeneratorPedicleGUI {
-
+class liSampleGeneratorPedicle : public liSampleGeneratorPedicleGUI 
+{
 public:
   liSampleGeneratorPedicle();
   virtual ~liSampleGeneratorPedicle();
@@ -45,7 +43,5 @@ public:
   virtual void ShowParameters( void );
   virtual void GenerateSamples( SamplesType & samples );
 };
-
-
 
 #endif

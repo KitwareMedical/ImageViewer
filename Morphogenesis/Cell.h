@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef Cell_H
 #define Cell_H
 
@@ -25,27 +24,20 @@
 #include "fltkSphere3D.h"
 #include "Genome.h"
 
-
 namespace bio {
-
 
 class CellularAggregate;
 
-
-/**
- * \class Cell
+/** \class Cell
  * \brief This class implement the minimal behavior 
  * of a biological cell.
  * The basic behavior of a cell is related with the
  * cell cycle. Geometrical concepts like size and shape
  * are also managed by this abstract cell.
- * 
  */
 class Cell  
 {
-
 public:
-
   enum { Dimension = 3 };
   enum { PointDimension = Dimension };
 
@@ -55,9 +47,7 @@ public:
   typedef   unsigned long                       IdentifierType;
   typedef   Genome::GeneIdType                  GeneIdType;
 
-
 public:
-
   Cell();
   virtual ~Cell();
   virtual void Draw( const PointType & ) const;
@@ -79,7 +69,6 @@ public:
   bool MarkedForRemoval(void) const;
 
 protected:
-  
   virtual void Grow(void);
   virtual void Mitosis(void);
   virtual void DNAReplication(void);
@@ -132,9 +121,7 @@ public:
   
   static void ResetCounter(void);
 
-
 protected:
-
    Genome             * m_Genome;
    Genome             * m_GenomeCopy;
 
@@ -157,7 +144,6 @@ protected:
    CellCycleState       m_CycleState;
 
    CellularAggregate  * m_Aggregate;
-
 
    // Static Members
    static     double      DefaultRadius;
@@ -185,18 +171,13 @@ protected:
      
    static fltk::Sphere3D::Pointer    SphereShape;
 
-
 private:
-
    void DrawCircle(void) const;
    void DrawSphere(void) const;
    void DrawIcosaedron(void) const;
 
 private:
-
-
    bool                       m_MarkedForRemoval;
-
 
 };
 

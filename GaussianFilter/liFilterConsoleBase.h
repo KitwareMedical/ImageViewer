@@ -14,10 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
-
-
 #ifndef liFILTERCONSOLEBASE
 #define liFILTERCONSOLEBASE
 
@@ -29,12 +25,10 @@
 #include <itkTernaryAddImageFilter.h>
 #include <itkTernaryMagnitudeImageFilter.h>
 
-
 class liFilterConsoleBase 
 {
 
 public:
-
   typedef   unsigned short                    InputPixelType;
   typedef   float                             PixelType;
   typedef   float                             ComputationType;

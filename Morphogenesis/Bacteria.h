@@ -19,20 +19,14 @@
 
 #include "Prokariote.h"
 
-
 namespace bio {
 
-
-/**
- * \class Bacteria 
+/** \class Bacteria 
  * \brief This class implements the basic behavior of Prokariote cells.
  */
 class Bacteria  : public Prokariote
 {
-
-
 public:
-
   typedef  Prokariote  SuperClass;
 
   Bacteria();
@@ -44,7 +38,6 @@ public:
   static const char * GetSpeciesName(void) 
                           { return "Primitive Bacteria"; }
 private:
-  
   virtual Cell * CreateNew(void);
 
 };

@@ -21,77 +21,50 @@
 #include "itkFuzzyConnectednessImageFilter.h"
 #include <string>
 
-/**
- * \class FuzzyConnectApp
+/** \class FuzzyConnectApp
  * \brief A simple fuzzy connectedness based object delineation command 
  *        line application
- *
- **/
+ */
 class FuzzyConnectApp
 {
-
 public:
 
-  /**
-   * ImageDimension enumeration.
-   */
+  /** ImageDimension enumeration. */
   enum{ ImageDimension = 3 };
 
-  /**
-   * InputPixelType is the raw image pixel type.
-   */
+  /** InputPixelType is the raw image pixel type. */
   typedef signed short InputPixelType;
 
-  /**
-   * InputImageType is the raw image type
-   */
-  typedef itk::Image<InputPixelType,ImageDimension>
-    InputImageType;
+  /** InputImageType is the raw image type */
+  typedef itk::Image<InputPixelType,ImageDimension> InputImageType;
   typedef InputImageType::Pointer InputImagePointer;
 
-  /**
-   * BinaryImageType is the binary image type
-   */
-  typedef itk::Image<bool,ImageDimension>
-    BinaryImageType;
+  /** BinaryImageType is the binary image type */
+  typedef itk::Image<bool,ImageDimension> BinaryImageType;
   typedef BinaryImageType::Pointer BinaryImagePointer;
 
-  /**
-   * SizeType is the image size type
-   */
+  /** SizeType is the image size type. */
   typedef InputImageType::SizeType SizeType;
 
-  /**
-   * IndexType is the image index type
-   */
+  /** IndexType is the image index type. */
   typedef InputImageType::IndexType IndexType;
 
-  /**
-   * Fuzzy connectedness filter type
-   */
-  typedef itk::FuzzyConnectednessImageFilter<
-    InputImageType,InputImageType>  FilterType;
+  /** Fuzzy connectedness filter type. */
+  typedef itk::FuzzyConnectednessImageFilter<InputImageType,InputImageType>
+          FilterType;
   typedef FilterType::Pointer FilterPointer;
 
-  /**
-   * Constructors
-   */
+  /** Constructors */
   FuzzyConnectApp();
   FuzzyConnectApp( const char * );
 
-  /**
-   * Destructors
-   */
+  /** Destructors */
   ~FuzzyConnectApp(){};
 
-  /**
-   * Execute the application
-   */
+  /** Execute the application */
   void Execute();
 
-  /**
-   * Get the target image
-   */
+  /** Get the target image */
   InputImagePointer GetInputImage() const
    { return m_InputImage; }
 
@@ -99,95 +72,60 @@ public:
 
 private:
 
-   /**
-    * Input image file name 
-    */
+   /*** Input image file name   */
    std::string          m_InputFileName;
 
-   /**
-    * Input image size
-    */
+   /*** Input image size  */
    SizeType             m_InputSize;
 
-   /**
-    * Input image spacing
-    */
+   /*** Input image spacing  */
    double               m_InputSpacing[ImageDimension];
 
-   /**
-    * Input big endian flag
-    */
+   /*** Input big endian flag  */
    bool                 m_InputBigEndian;
 
-   /**
-    * Input image
-    */
+   /*** Input image  */
    InputImagePointer    m_InputImage;
 
-
-   /**
-    * Fuzzy connectedness filter
-    */
+   /** Fuzzy connectedness filter  */
    FilterPointer        m_Filter;
 
-   /**
-    * The seed
-    */
+   /*** The seed  */
    IndexType            m_Seed;
 
-   /**
-    * Threshold value
-    */
+   /*** Threshold value  */
    double               m_Threshold;
 
-   /**
-    * Parameters
-    */
+   /*** Parameters  */
    double               m_ObjectMean;
    double               m_ObjectVariance;
    double               m_DiffMean;
    double               m_DiffVariance;
    double               m_Weight;
 
-   /**
-    * Dump pgm files flag
-    */
+   /*** Dump pgm files flag  */
    bool                 m_DumpPGMFiles;
 
-   /**
-    * PGM directory
-    */
+   /*** PGM directory  */
    std::string          m_PGMDirectory;
 
-   /**
-    * Read in an image
-    */
+   /*** Read in an image  */
    bool ReadImage( const char *, const SizeType&, const double *, bool,
     InputImageType * );
 
-   /**
-    * Compute the fuzzy connectedness map
-    */
+   /*** Compute the fuzzy connectedness map  */
    void ComputeMap();
 
-   /**
-    * Compute segmentation image
-    */
+   /*** Compute segmentation image  */
    void ComputeSegmentationImage();
 
-   /**
-    * Write out segmentation image
-    */
+   /*** Write out segmentation image  */
    void WriteSegmentationImage();
 
-   /**
-    * Initialize
-    */
+   /*** Initialize  */
    void Initialize();
 
-   /**
-    * Write PGM files
-    */
+   /*** Write PGM files  */
    bool WritePGMFiles(InputImageType *, const char *, const char * );
 
   

@@ -14,10 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
-
-
 #ifndef ce_FilterConsoleBase_h
 #define ce_FilterConsoleBase_h
 
@@ -41,11 +37,8 @@
 #include "itkParametricSpaceToImageSpaceMeshFilter.h"
 
 
-
-
 class ceExtractorConsoleBase 
 {
-
 public:
 
   typedef   double                            InputPixelType;
@@ -96,7 +89,6 @@ public:
   typedef   itk::AddImageFilter< ImageType, 
                             ImageType, ImageType >  AddFilterType;
 
-
   typedef   itk::BinaryMagnitudeImageFilter< ImageType, 
                             ImageType, ImageType >  ModulusFilterType;
 
@@ -141,8 +133,6 @@ public:
 // typedef  SphereSpatialFunctionControlType   SpatialFunctionControlType;
    typedef  FrustumSpatialFunctionType         SpatialFunctionType;
    typedef  FrustumSpatialFunctionControlType  SpatialFunctionControlType;
-
-
                                 
   typedef itk::InteriorExteriorMeshFilter<
                                         MeshType,
@@ -150,15 +140,12 @@ public:
                                         SpatialFunctionType  >   
                                                    SpatialFunctionFilterType;
 
-
-
   typedef itk::ParametricSpaceToImageSpaceMeshFilter<
                                       MeshType,
                                       ImageSpaceMeshType 
                                       >         InverseParametricFilterType;
 
 public:
-
   ceExtractorConsoleBase();
   virtual ~ceExtractorConsoleBase();
   virtual void Load(const char * filename);
@@ -169,9 +156,7 @@ public:
   virtual void Execute(void);
   virtual void SetSigma( ComputationType );
 
-
 protected:
-
   VolumeReaderType::Pointer                  m_Reader;
 
   InputGaussianFilterType::Pointer               m_Hx;

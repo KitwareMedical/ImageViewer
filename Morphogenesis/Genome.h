@@ -14,8 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 #ifndef Genome_H
 #define Genome_H
 
@@ -27,31 +25,21 @@
 #include <string>
 #include <math.h>
 
-
 namespace bio {
 
-
-
-
-/**
- * \class Genome
+/** \class Genome
  * \brief This class implement the abstraction of a biological genome.
  * 
  * The genome is considered to be a sequence of genes each one having
  * a name and a level of expression.
- * 
  */
 class Genome  
 {
-
 public:
-
   typedef   std::string                       GeneIdType;
   typedef   std::map< GeneIdType, double >    MapType;
 
-
 public:
-
   Genome();
   virtual ~Genome();
 
@@ -63,16 +51,14 @@ public:
   double GetExpressionLevel( const GeneIdType & geneId );
   void   SetExpressionLevel( const GeneIdType & geneId, double level );
 
-  /** This methods computes a normalized Sigmoide function that can
-      be used for gene network computations.  */
+  /** This method computes a normalized Sigmoide function that can
+   *  be used for gene network computations.  */
   static double Sigmoide( double threshold, double slant, double value )
     {
     return atan(   ( value - threshold ) / slant   ) / 3.1416 + 0.5001;
     }
-    
 
 private:
-
   MapType         m_Map;
    
 };

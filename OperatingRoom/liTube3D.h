@@ -26,8 +26,6 @@
 //     Chapel Hill, NC 27514
 //
 //--------------------------------------------
-
-
 #ifndef liTUBE3DCLASS
 #define liTUBE3DCLASS
 
@@ -37,116 +35,72 @@
 
 namespace li {
 
-/**
- * 
- * Tube3D is the basic class to model a tube of variable
+/**Tube3D is the basic class to model a tube of variable
  * diameter. It is modeled as a set of points in the medial
  * axis of the tube, along with estimated radius at these
- * positions.
- *
- */ 
-
+ * positions.*/ 
 class ITK_EXPORT Tube3D : public fltk::Shape3D 
 {
-
 public:
-
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef Tube3D   Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef fltk::Shape3D  Superclass;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>  Pointer;
-
-  /** 
-   * ConstSmart pointer typedef support.
-   */
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro( Tube3D, fltk::Shape3D );
 
-
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro( Self );
 
-  unsigned int GetNumberOfSectors(void)  { return m_NumberOfSectors;  };
-  unsigned int GetNumberOfSections(void) { return m_NumberOfSections; };
-
+  unsigned int GetNumberOfSectors(void)  { return m_NumberOfSectors;  }
+  unsigned int GetNumberOfSections(void) { return m_NumberOfSections; }
   void SetNumberOfSectors(unsigned int val)  {   m_NumberOfSectors = val; }
   void SetNumberOfSections(unsigned int val) {  m_NumberOfSections = val; }
  
-  /**
-   * typedef of the Point type
-   */
+  /** Typedef of the Point type. */
   typedef   itk::Point<double,3>    PointType;
     
-  /**
-   * typedef of the Vector type
-   */
+  /** Typedef of the Vector type. */
   typedef   itk::Vector<double,3>    VectorType;
 
-  /**
-   * typedef of the PointSet type
-   */
+  /** Typedef of the PointSet type, */
   typedef   PointSet3D::PointSetType   PointSetType;
-  
 
-        bool Null(void) const;
-        void DrawGeometry(void) const;
-        int  Read(fltk::Shape3D::IfstreamType & is);
-        int  Write(const char *filename) const;
-        int  GenerateSkin(void);
-        void GeneratePointSet(void);
+  bool Null(void) const;
+  void DrawGeometry(void) const;
+  int  Read(fltk::Shape3D::IfstreamType & is);
+  int  Write(const char *filename) const;
+  int  GenerateSkin(void);
+  void GeneratePointSet(void);
   void GeneratePointSet( const VectorType & sight ); 
-
   void ScalePoints(double sx,double sy, double sz);
-
   
-        void SetRadius( float radius );
+  void SetRadius( float radius );
 
-        PointType & GetMedial( unsigned int i ) const { return m_Medial[i]; }
-        PointType & GetVertex( unsigned int i ) const { return m_Vertex[i]; }
-
-        float & GetRadius( unsigned int i ) { return m_Radius[i]; }
-
-        void Smooth(void);
+  PointType & GetMedial( unsigned int i ) const { return m_Medial[i]; }
+  PointType & GetVertex( unsigned int i ) const { return m_Vertex[i]; }
+  float & GetRadius( unsigned int i ) { return m_Radius[i]; }
+  void Smooth(void);
 
   void SubsampleUsingRadius(void);
-
-        void Copy(const Tube3D & sm );
-
-        bool Alloc(unsigned int nsect, unsigned int nsecc);
-
+  void Copy(const Tube3D & sm );
+  bool Alloc(unsigned int nsect, unsigned int nsecc);
   PointSetType::ConstPointer GetPointSet( void ) const
-            { return m_PointSet.GetPointer(); }
+    { return m_PointSet.GetPointer(); }
 
 protected:
-
-        Tube3D();
-        ~Tube3D();
-        void Clear(void);
+  Tube3D();
+  ~Tube3D();
+  void Clear(void);
   
 private:
-
-        unsigned int    m_NumberOfSectors;        // Number of radial sectors
-        unsigned int    m_NumberOfSections;     // Number of rectilinear sections
-        float        *m_Radius;             // Array of radius
-        PointType    *m_Vertex;             // Array of vertex coordinates
-        PointType    *m_Medial;             // Array of medial Point3Ds
-
+  unsigned int    m_NumberOfSectors;        // Number of radial sectors
+  unsigned int    m_NumberOfSections;     // Number of rectilinear sections
+  float        *m_Radius;             // Array of radius
+  PointType    *m_Vertex;             // Array of vertex coordinates
+  PointType    *m_Medial;             // Array of medial Point3Ds
   PointSetType::Pointer    m_PointSet; // Point Set
 
 };

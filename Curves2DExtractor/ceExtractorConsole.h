@@ -14,10 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
-
-
 #ifndef ce_ExtractorConsole_h
 #define ce_ExtractorConsole_h
 
@@ -29,12 +25,10 @@
 #include "itkPointSet.h"
 
 
-
 class ceExtractorConsole : public ceExtractorConsoleGUI 
 {
 
 public:
-
   typedef fltk::Image2DViewer< PixelType >      ImageViewerType;
   typedef fltk::Image2DViewer< InputPixelType > InputImageViewerType;
   typedef ImageViewerType::Pointer              ImageViewerPointer;
@@ -79,7 +73,6 @@ public:
   virtual void Execute(void);
 
 private:
-
   InputImageViewerPointer      m_InputViewer;
 
   ImageViewerPointer           m_Viewer_H1x;
@@ -113,7 +106,5 @@ private:
   ImageSpacePointSetShapePointer    m_ImageSpaceSamplesShape;
 
 };
-
-
 
 #endif

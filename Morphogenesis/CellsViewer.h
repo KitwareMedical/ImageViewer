@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __CellsViewer_H
 #define __CellsViewer_H
 
@@ -22,21 +21,12 @@
 
 namespace bio {
 
-
-/**
-
-  \class CellsViewer
-  \brief This class is responsible for holding the basic
-  elements of a simulation that are intended to be visualized
-  later. 
-
-*/
+/** \class CellsViewer
+ * \brief This class is responsible for holding the basic elements of a
+ * simulation that are intended to be visualized later.  */
 class CellsViewer : public CellsViewerGUI
 {
-
-
 public:
-
   typedef CellsViewerBase::SubstratesType        SubstratesType;
   typedef CellsViewerBase::SubstratesDrawersType SubstratesDrawersType;
 

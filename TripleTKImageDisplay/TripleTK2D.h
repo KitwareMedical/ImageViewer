@@ -19,7 +19,6 @@
 
 #include <GLSliceView.h>
 
-
 /** \class TripleTK2D
  * \brief 2D Window.
  *
@@ -31,41 +30,36 @@
  * having to manipulate GLSliceView.
  */
 class TripleTK2D : public GLSliceView<short, unsigned char>
-  {
-
-  public:
-
-    /**
-    * Constructor:  Calls GLSliceView's constructor with fluid produced
-    * parameters that specify the location, boundaries, and label of the 2D window.
-    */
-    TripleTK2D(int x, int y, int w, int h, const char *l);
+{
+public:
+  /** Constructor: Calls GLSliceView's constructor with fluid produced
+    * parameters that specify the location, boundaries, and label of the 2D
+    * window.  */
+  TripleTK2D(int x, int y, int w, int h, const char *l);
     
+  /**Destructor.*/
+  ~TripleTK2D();
     
-    /**Destructor.*/
-    ~TripleTK2D();
+  /**Return the original level value.*/
+  float getOriginalLevel(void);
     
-    /**Return the original level value.*/
-    float getOriginalLevel(void);
+  /**Return the original window value.*/
+  float getOriginalWindow(void);
     
-    /**Return the original window value.*/
-    float getOriginalWindow(void);
+  /**Set the original level value.*/
+  void setOriginalLevel(float level);
     
-    /**Set the original level value.*/
-    void setOriginalLevel(float level);
+  /**Set the original window value.*/
+  void setOriginalWindow(float window);
     
-    /**Set the original window value.*/
-    void setOriginalWindow(float window);
-    
-    /**Return the view overlay data boolean from GLSliceView.*/
-    bool getOverlayBoolean(void);
+  /**Return the view overlay data boolean from GLSliceView.*/
+  bool getOverlayBoolean(void);
    
-  protected:
-
-    float originalLevelValue;
-    float originalWindowValue;
+protected:
+  float originalLevelValue;
+  float originalWindowValue;
           
-  };
+};
 
 
 #endif

@@ -35,9 +35,8 @@
 
 #include "liSampleGeneratorBodyPlaneGUI.h"
 
-
-class liSampleGeneratorBodyPlane : public liSampleGeneratorBodyPlaneGUI {
-
+class liSampleGeneratorBodyPlane : public liSampleGeneratorBodyPlaneGUI 
+{
 public:
   liSampleGeneratorBodyPlane();
   virtual ~liSampleGeneratorBodyPlane();

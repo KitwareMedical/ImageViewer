@@ -30,7 +30,7 @@
 /** \class TripleTKMain
  * \brief Main for TTKID.
  *
- *   This class is used in conjuction with the TripleTKGUI structure.
+ * This class is used in conjuction with the TripleTKGUI structure.
  * It holds functions used in the main function for TripleTKGUI and
  * holds the actual main() in TripleTKMain.cxx.  The main function 
  * instantiates this class as an image viewer type and from this
@@ -38,47 +38,44 @@
  * function for creating the gui window is called.
  */
 class TripleTKMain
-  {
+{
+public:
+  typedef itk::Image<short, 3> ImageType;
 
-  public:
+  /**Constructor.*/
+  TripleTKMain();
+
+  /**Deconstructor.*/
+  ~TripleTKMain();
+
+  /**Fully coordinates the 2D system after loading an image.*/
+  void synchronize2D(void);
   
-    typedef itk::Image<short, 3> ImageType;
+  /**Fully coordinates the 3D system after loading an image.*/
+  void synchronize3D(void);
+    
+  /**Sets the image the be viewed in the 2D aspect of the program.*/
+  void SetImage(ImageType::Pointer img);
+    
+  /**Refreshes the display of the GUI.*/
+  void show(void);
+    
+  /**Refreshes the display and structure of the GUI.*/
+  void update(void);
+    
+  /**Redraw the windows -- used at the end of main().*/
+  void redraw(void);
+    
+  /**Initialize any necessary callbacks.*/
+  void setCallBacks(void);
+    
+  /**Return the protected variable window.*/
+  Fl_Window * getWindow();
 
-    /**Constructor.*/
-    TripleTKMain();
-
-    /**Deconstructor.*/
-    ~TripleTKMain();
-
-    /**Fully coordinates the 2D system after loading an image.*/
-    void synchronize2D(void);
+protected:
+  Fl_Window *window;
   
-    /**Fully coordinates the 3D system after loading an image.*/
-    void synchronize3D(void);
-    
-    /**Sets the image the be viewed in the 2D aspect of the program.*/
-    void SetImage(ImageType::Pointer img);
-    
-    /**Refreshes the display of the GUI.*/
-    void show(void);
-    
-    /**Refreshes the display and structure of the GUI.*/
-    void update(void);
-    
-    /**Redraw the windows -- used at the end of main().*/
-    void redraw(void);
-    
-    /**Initialize any necessary callbacks.*/
-    void setCallBacks(void);
-    
-    /**Return the protected variable window.*/
-    Fl_Window * getWindow();
-
-  protected:
-
-    Fl_Window *window;
-  
-  };
+};
 
 
 #endif

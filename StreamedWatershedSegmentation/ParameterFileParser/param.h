@@ -121,8 +121,7 @@ public:
   static void Delete( GenericValue *v );
 };
 
-/**
- * \class Parameter
+/** \class Parameter
  * \brief Holds a lists of generic values and a keyword associated with those
  * values.
  *

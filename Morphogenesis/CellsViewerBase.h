@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __CellsViewerBase_H
 #define __CellsViewerBase_H
 
@@ -27,10 +26,7 @@
 #include <map>
 #include <time.h>
 
-
-
 namespace bio {
-
 
 template <typename TInputImage>
 class SliceDrawer
@@ -70,22 +66,12 @@ public:
   typedef fltk::Slice3DDrawer< itk::Image<double, 3> > Type;
 };
 
-
-
-
-/**
-
-  \class CellsViewerBase
-  \brief This class is responsible for holding the basic
-  elements of a simulation that are intended to be visualized
-  later. 
-
-*/
+/** \class CellsViewerBase
+ * \brief This class is responsible for holding the basic elements of a
+ * simulation that are intended to be visualized later.  */
 class CellsViewerBase
 {
 public:
-    
-  
   typedef CellularAggregate::SubstrateType            ImageType;
   typedef ImageType::Pointer                          ImagePointer;
  
@@ -108,9 +94,7 @@ public:
 
   typedef std::vector< EggProducerFunction * >        SpeciesContainerType;
 
-
 public:
-
   CellsViewerBase();
 
   virtual ~CellsViewerBase();
@@ -145,31 +129,18 @@ public:
   itk::Command::Pointer GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
   
-
 protected:
-  
   SubstratesType                      m_Substrates;
-
   SubstratesDrawersType               m_SubstrateSliceDrawer;
-
   ClippingPlaneDrawersType            m_ClippingPlaneDrawer;
 
-
 private:
-  
   bool                                m_Stop;
-
   fltkDisplayGlWindowGUI              m_Display;
-
   CellularAggregate::Pointer          m_Cells;
-
   SpeciesContainerType                m_SpeciesProducer;
-
   clock_t                             m_StartTime;
-    
 };
-
-
 
 } // end namespace bio
 

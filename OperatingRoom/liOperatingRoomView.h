@@ -34,36 +34,23 @@
 #include "itkObject.h"
 #include "fltkGlWindowInteractive.h"
 
-
-
 namespace li 
 {
-
-/**
- * This class emulates a video camera observing
- * the operating room. It allows the user to 
- * interactively change positions, zoom and 
- * angles of view.
- */
-     
+/** This class emulates a video camera observing the operating room. It
+ * allows the user to interactively change positions, zoom and angles of
+ * view.  */
 class OperatingRoomView : public fltk::GlWindowInteractive
 {
-
 public:
-
-        OperatingRoomView(int x,int y,int w,int h, const char * label=0);
-        
+  OperatingRoomView(int x,int y,int w,int h, const char * label=0);
   void draw(void);
-
   typedef itk::Object lightObject;
-
   lightObject::Pointer  GetNotifier(void);
 
 private:
   lightObject::Pointer  m_Notifier;
 
 };
-
 
 } // end namespace li
 

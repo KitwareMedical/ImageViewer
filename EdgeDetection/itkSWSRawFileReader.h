@@ -33,73 +33,42 @@ namespace sws
  * \brief A very simple reader for raw binary image data without headers.
  * This class reads a binary file into an itk::Image.  The size of the image
  * is given by the SetRegion macro.
- * 
  */
 template <class TOutputImage>
 class ITK_EXPORT RawFileReader : public ImageSource<TOutputImage>
 {
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef RawFileReader         Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef ImageSource<TOutputImage>  Superclass;
-
-  /**
-   * Smart pointer typedef support.
-   */
   typedef SmartPointer<Self>  Pointer;
-
-  /**
-   * Method for creation through the object factory.
-   */
   itkNewMacro(Self);
 
-  /**
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro(RawFileReader, ImageSource);
 
-  /**
-   * typedef for Size.
-   */
+  /** Typedefs. */
   typedef Size<TOutputImage::ImageDimension>  SizeType;
-
-  /**
-   * typedef for Region.
-   */
   typedef ImageRegion<TOutputImage::ImageDimension>  RegionType;
-
   typedef typename TOutputImage::PixelType PixelType;
   
-  /**
-   * Specify the name of the file to load.
-   */
+  /** Specify the name of the file to load. */
   itkSetStringMacro(FileName);
   itkGetStringMacro(FileName);
 
-  /**
-   * Declare the size of each pixel.  This method is not used.  Pixel size is
-   * determined from the templated image type.
-   */
+  /** Declare the size of each pixel.  This method is not used.  Pixel size
+   *  is determined from the templated image type.  */
   itkSetMacro(PixelSize, unsigned int);
   itkGetMacro(PixelSize, unsigned int);
 
-  /**
-   * Declare the size of the image region contained in the file.
-   */
+  /** Declare the size of the image region contained in the file. */
   itkSetMacro(Region, RegionType);
   itkGetMacro(Region, RegionType);
 
-  /**
-   * Execute the reader.  This public method allows the filter to be updated
-   * without propagating updates through the pipeline.
-   */
+  /** Execute the reader.  This public method allows the filter to be updated
+   * without propagating updates through the pipeline. */
   void SafeRead();
+
 protected:
   RawFileReader()
     {

@@ -14,26 +14,18 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef Eukariote_H
 #define Eukariote_H
 
 #include "Cell.h"
 
-
 namespace bio {
 
-
-/**
- * \class Eukariote 
- * \brief This class implements the basic behavior of Prokariote cells.
- */
+/** \class Eukariote 
+ * \brief This class implements the basic behavior of Prokariote cells. */
 class Eukariote  : public Cell
 {
-
-
 public:
-
   typedef  Cell  SuperClass;
 
   Eukariote();
@@ -54,7 +46,6 @@ public:
   static const char * GetSpeciesName(void) 
                           { return "Primitive Eukariote"; }
 private:
-  
   virtual Cell * CreateNew(void);
   unsigned long m_DivisionLatencyTime;
 

@@ -32,6 +32,7 @@ namespace sws
 class EquivalencyTableWriter : public ProcessObject
 {
 public:
+  /** Standard class typedefs. */
   typedef EquivalencyTableWriter Self;
   typedef ProcessObject Superclass;
   typedef SmartPointer<Self> Pointer;
@@ -42,19 +43,18 @@ public:
   typedef watershed::EquivalencyTable EquivalencyTableType;
   
   void SetInput(EquivalencyTableType *input)
-    {   this->ProcessObject::SetNthInput(0, input); }
+    { this->ProcessObject::SetNthInput(0, input); }
 
   void SetOutput(EquivalencyTableType *input)
-    {   this->ProcessObject::SetNthOutput(0, input); }
+    { this->ProcessObject::SetNthOutput(0, input); }
 
   EquivalencyTableType::Pointer GetInput()
-    {      return static_cast<EquivalencyTableType *>
+    { return static_cast<EquivalencyTableType *>
              (this->ProcessObject::GetInput(0).GetPointer());    }
   
   EquivalencyTableType::Pointer GetOutput()
-    {      return static_cast<EquivalencyTableType *>
+    { return static_cast<EquivalencyTableType *>
              (this->ProcessObject::GetOutput(0).GetPointer());    }
-
 
   void SetFileName(const char *fn)
     {

@@ -14,10 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __BacterialColony_H
 #define __BacterialColony_H
-
 
 #include <iostream>
 #include "CellularAggregate.h"
@@ -25,12 +23,9 @@
 #include "BacterialColonyGUI.h"
 #include "itkCommand.h"
 
-
-
 namespace bio {
 
-/**
- * \class BacterialColony
+/** \class BacterialColony
  * \brief This class represent an aggregation of bio::Bacteria.
  * The interactions between the bacteria are managed at this 
  * level. Global coordination is also performed for growing and
@@ -38,60 +33,36 @@ namespace bio {
  */
 class BacterialColony : public CellularAggregate
 {
-
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef BacterialColony      Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef CellularAggregate Superclass;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>        Pointer;
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro(BacterialColony, CellularAggregate );
 
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro(Self);  
 
-
+  /** Some typedefs. */
   typedef Cell::VectorType        VectorType;
   typedef Cell::PointType         PointType;
 
-
-  /**
-   *  Command to receive redraw events 
-   */ 
+  /**  Command to receive redraw events  */ 
   typedef itk::SimpleConstMemberCommand< BacterialColony > RedrawCommandType;
   
   RedrawCommandType::Pointer GetRedrawCommand(void)
                                   { return m_RedrawCommand.GetPointer(); }
 
-  /**
-   * Show the GUI
-   */
+  /** Show the GUI */
   void Show(void);
 
-  /**
-   * Hide the GUI
-   */
+  /** Hide the GUI */
   void Hide(void);
 
-
 protected:
-
   BacterialColony();
   virtual ~BacterialColony();
   BacterialColony( const Self & ) {}
@@ -100,9 +71,7 @@ protected:
 
   
 private:
-
   BacterialColonyGUI               m_GUI;
-
   RedrawCommandType::Pointer       m_RedrawCommand;
 
 };

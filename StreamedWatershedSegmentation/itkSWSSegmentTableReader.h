@@ -42,15 +42,15 @@ public:
   itkTypeMacro(SegmentTableReader, ProcessObject);
   typedef SegmentTableWriter<TScalarType> SegmentTableWriter;
 
+  /** Convenient typedefs. */
   typedef TScalarType ScalarType;
-  
   typedef itk::watershed::SegmentTable<ScalarType> SegmentTableType;
   
   void SetOutput(SegmentTableType *input)
-    {   this->ProcessObject::SetNthOutput(0, input); }
+    { this->ProcessObject::SetNthOutput(0, input); }
 
   typename SegmentTableType::Pointer GetOutput()
-    {      return static_cast<SegmentTableType *>
+    { return static_cast<SegmentTableType *>
              (this->ProcessObject::GetOutput(0).GetPointer());    }
 
   typedef typename SegmentTableWriter::record_t record_t;

@@ -23,188 +23,114 @@
 #include "itkFastMarchingImageFilter.h"
 #include <string>
 
-
-/**
- * \class ShapeDetectApp
+/** \class ShapeDetectApp
  * \brief A simple level-set shape detection command line application
- *
- **/
+ */
 class ShapeDetectApp
 {
-
 public:
-
-  /**
-   * ImageDimension enumeration.
-   */
+  /** ImageDimension enumeration. */
   enum{ ImageDimension = 3 };
 
-  /**
-   * InputPixelType is the raw image pixel type.
-   */
+  /** InputPixelType is the raw image pixel type. */
   typedef signed short InputPixelType;
 
-  /**
-   * InputImageType is the raw image type
-   */
-  typedef itk::Image<InputPixelType,ImageDimension>
-    InputImageType;
+  /** InputImageType is the raw image type. */
+  typedef itk::Image<InputPixelType,ImageDimension> InputImageType;
   typedef InputImageType::Pointer InputImagePointer;
 
-  /**
-   * ImageType is the internal image type
-   */
-  typedef itk::Image<float,ImageDimension>
-    ImageType;
+  /** ImageType is the internal image type. */
+  typedef itk::Image<float,ImageDimension> ImageType;
   typedef ImageType::Pointer ImagePointer;
 
-  /**
-   * SizeType is the image size type
-   */
+  /** SizeType is the image size type, */
   typedef InputImageType::SizeType SizeType;
 
-  /**
-   * IndexType is the image index type
-   */
+  /** IndexType is the image index type. */
   typedef InputImageType::IndexType IndexType;
 
-  /**
-   * DerivativeImageType is the derivative image type
-   */
+  /** DerivativeImageType is the derivative image type. */
   typedef itk::CovariantVector<float,ImageDimension> VectorType;
-  typedef itk::Image<VectorType, ImageDimension>
-    DerivativeImageType;
+  typedef itk::Image<VectorType, ImageDimension> DerivativeImageType;
 
-  /**
-   * Derivative filter type
-   */
+  /** Derivative filter type, */
   typedef itk::GradientRecursiveGaussianImageFilter<
     InputImageType,DerivativeImageType,double>  DerivativeFilterType;
   typedef DerivativeFilterType::Pointer DerivativeFilterPointer;
 
-  /**
-   * Shape Detection filter type
-   */
+  /** Shape Detection filter type. */
   typedef itk::FastMarchingImageFilter<ImageType,ImageType> DetectionFilterType;
   typedef DetectionFilterType::Pointer DetectionFilterPointer;
     
 
-  /**
-   * Constructors
-   */
+  /** Constructors */
   ShapeDetectApp();
   ShapeDetectApp( const char * );
 
-  /**
-   * Destructors
-   */
+  /** Destructors */
   ~ShapeDetectApp(){};
 
-  /**
-   * Execute the application
-   */
+  /** Execute the application.  */
   void Execute();
 
-  /**
-   * Get the target image
-   */
+  /** Get the target image */
   InputImagePointer GetInputImage() const
-   { return m_InputImage; }
-
+    { return m_InputImage; }
 
 private:
-
-   /**
-    * Input image file name 
-    */
+   /** Input image file name.  */
    std::string          m_InputFileName;
 
-   /**
-    * Input image size
-    */
+   /** Input image size.  */
    SizeType             m_InputSize;
 
-   /**
-    * Input big endian flag
-    */
+   /** Input big endian flag.  */
    bool                 m_InputBigEndian;
 
-   /**
-    * Input image
-    */
+   /** Input image.  */
    InputImagePointer    m_InputImage;
 
-   /**
-    * Dump pgm files flag
-    */
+   /** Dump pgm files flag  */
    bool                 m_DumpPGMFiles;
 
-   /**
-    * PGM directory
-    */
+   /** PGM directory.  */
    std::string          m_PGMDirectory;
 
-   /**
-    * Seed point
-    */
+   /** Seed point.  */
    IndexType            m_Seed;
 
-   /**
-    * Time crossing threshold
-    */
+   /** Time crossing threshold.  */
    double               m_Threshold;
 
-   /**
-    * Sigma for computing derivative of gaussian
-    */
+   /** Sigma for computing derivative of gaussian.  */
    double               m_Sigma;
 
-   /**
-    * Edge potential map
-    */
+   /** Edge potential map.  */
    ImagePointer         m_EdgePotentialImage;
 
-   /**
-    * Shape detection filter
-    */
+   /** Shape detection filter.  */
    DetectionFilterPointer  m_DetectionFilter;
 
-   /**
-    * Segmentation mask
-    */
+   /** Segmentation mask.  */
    ImagePointer          m_SegmentationMask;
 
-   /**
-    * Read in an image
-    */
-   bool ReadImage( const char *, const SizeType&, bool,
-    InputImageType * );
+   /** Read in an image.  */
+   bool ReadImage( const char *, const SizeType&, bool, InputImageType * );
 
-   /**
-    * Initialize
-    */
+   /** Initialize  */
    void Initialize();
 
-   /**
-    * Compute edge potential map
-    */
+   /** Compute edge potential map  */
    void ComputeEdgePotentialMap();
 
-   /**
-    * Compute time crossing map using fast marching
-    */
+   /** Compute time crossing map using fast marching  */
    void ComputeTimeCrossingMap();
 
-   /**
-    * Threshold time crossing map
-    */
+   /** Threshold time crossing map  */
    void ThresholdTimeCrossingMap();
 
-   /**
-    * Write segmentation mask
-    */
+   /** Write segmentation mask  */
   void WriteSegmentationImage();
-
   
 };
 

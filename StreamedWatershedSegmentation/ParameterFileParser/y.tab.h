@@ -24,6 +24,7 @@ typedef union
   GenericValue * GenericValue_ptr;
   std::vector<GenericValue *> * ValueArray_ptr;
 } YYSTYPE;
+
 #define NUM 257
 #define DEC_NUM 258
 #define IDENT 259
@@ -32,6 +33,5 @@ typedef union
 #define LPAREN  262
 #define RPAREN  263
 #define NEWLINE 264
-
 
 extern YYSTYPE yylval;

@@ -29,7 +29,6 @@
 //     Chapel Hill, NC 27514
 //
 //--------------------------------------------
-
 #ifndef liSAMPLEGENERATORBASE
 #define liSAMPLEGENERATORBASE
 
@@ -37,9 +36,8 @@
 #include "itkPointSet.h"
 #include <vector>
 
-
-
-class liSampleGeneratorBase {
+class liSampleGeneratorBase 
+{
 public:
   typedef  std::vector<liSample>             SamplesType;
   typedef  liSample::PointType               PointType;
@@ -56,7 +54,6 @@ public:
   void Test(void) {
     m_PointSet->GetPoints();
   }
-
 
 protected:
   void TransferSamplesToPointSet( const SamplesType & samples );

@@ -14,8 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 #ifndef __MYUTILS_H
 #define __MYUTILS_H
 
@@ -31,7 +29,7 @@ void dump(vnl_vector<double> vect)
   std::cout << "vector dump" << std::endl ;
   for (int i = 0 ; i < vect.size() ; i++)
     {
-      std::cout << i << ": " << vect[i] << std::endl ;
+    std::cout << i << ": " << vect[i] << std::endl ;
     }
 }
 #endif

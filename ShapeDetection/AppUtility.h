@@ -27,13 +27,11 @@ typename TImage::Pointer input,
 const char * dirname,
 const char * basename )
 {
-
   // go through the image and compute the offset and scale
   // to make it normalized to between 0 and 255
   typedef TImage ImageType;
   typedef typename TImage::PixelType PixelType;
-  typedef itk::ImageRegionIterator<ImageType>
-   InputIterator;
+  typedef itk::ImageRegionIterator<ImageType> InputIterator;
 
   InputIterator inIter( input, input->GetBufferedRegion() );
 

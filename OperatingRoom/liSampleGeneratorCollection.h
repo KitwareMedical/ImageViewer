@@ -35,9 +35,8 @@
 
 #include "liSampleGeneratorCollectionGUI.h"
 
-
-class liSampleGeneratorCollection : public liSampleGeneratorCollectionGUI {
-
+class liSampleGeneratorCollection : public liSampleGeneratorCollectionGUI 
+{
 public:
   liSampleGeneratorCollection();
   virtual ~liSampleGeneratorCollection();
@@ -45,10 +44,7 @@ public:
   virtual void Hide( void );
   virtual void Add( liSampleGenerator * );
   virtual void ShowSampleGenerator( void );
-
 };
-
-
 
 #endif
 

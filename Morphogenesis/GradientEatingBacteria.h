@@ -19,22 +19,16 @@
 
 #include "PressureSensitiveBacteria.h"
 
-
 namespace bio {
 
-
-/**
- * \class Bacteria 
+/** \class Bacteria 
  * \brief This class implements the basic behavior of 
  * pressure sensitive cells. This cells will arrest in
  * G1 if the pressure exceeds a limit.
  */
 class GradientEatingBacteria  : public PressureSensitiveBacteria
 {
-
-
 public:
-
   typedef  PressureSensitiveBacteria  SuperClass;
 
   GradientEatingBacteria();
@@ -52,7 +46,6 @@ public:
   static const char * GetSpeciesName(void) 
                           { return "Gradient Eating Bacteria"; }
 private:
-  
   virtual Cell * CreateNew(void);
  
   bool                     m_ScheduleApoptosis;

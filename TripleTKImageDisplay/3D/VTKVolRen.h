@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef _VTKVolRen_h
 #define _VTKVolRen_h
 #include <vtkVolumeRayCastMapper.h>
@@ -22,67 +21,64 @@
 #include "itkImage.h"
 #include "itkSimpleImageRegionIterator.h"
 
-/**
- * \class VTKVolRen
+/** \class VTKVolRen
  * \brief Class of vtk convenience functions painful to work out.
  *
  * This class does nothing but save code in an easy place to find and use.
- * All functions return true on success and false on failure. Reasons for failure
- * can be retrieved by calling Error(). Error() returns null if no error is present,
- * so check before use. 
- *
- **/
+ * All functions return true on success and false on failure. Reasons for
+ * failure can be retrieved by calling Error(). Error() returns null if no
+ * error is present, so check before use.
+ */
 template <class T>
 class VTKVolRen
-  {
-  
+{
   typedef itk::Image<T,3>  ImageType;
   typedef itk::Image<unsigned char,3>  OverlayType;
 
   typedef typename ImageType::Pointer    ImagePointer;
   typedef typename OverlayType::Pointer  OverlayPointer;
 
-  protected:
+protected:
 
-    char    mError[200];
-    double  mStepSize;//for step volue rendering. Should be
-                      //set to the minimum of xstep, ystep, zstep. Default
-                      //is 0.08.
+  char    mError[200];
+  double  mStepSize;//for step volue rendering. Should be
+  //set to the minimum of xstep, ystep, zstep. Default
+  //is 0.08.
 
-    double  mOpacity;  //for setting global opacity of a volume. Default 1.0.
-                       //Will not affect sites excluded by opacmask.
+  double  mOpacity;  //for setting global opacity of a volume. Default 1.0.
+  //Will not affect sites excluded by opacmask.
 
-    double  mIntensityMin;//voxels of opacask intensity will be set
-                          //to an opacity of 0. This value can therefore
-                          //be used as a ask to exclude soe areas of a dataset
-                          //if unwanted regions are set to opacask intensity.
-                          //If you don't want this feature, set opacval to
-                          //256 or -1 or soething out of range of uchar.
-                          //Default value is 0, which isn't a very useful
-                          //value for MIP projections anyway.
-
-
+  double  mIntensityMin;//voxels of opacask intensity will be set
+  //to an opacity of 0. This value can therefore
+  //be used as a ask to exclude soe areas of a dataset
+  //if unwanted regions are set to opacask intensity.
+  //If you don't want this feature, set opacval to
+  //256 or -1 or soething out of range of uchar.
+  //Default value is 0, which isn't a very useful
+  //value for MIP projections anyway.
 
 
-    ImagePointer     mImData;
+
+
+  ImagePointer     mImData;
    
-    OverlayPointer   mMask;
+  OverlayPointer   mMask;
 
-    bool             mUseMask;
+  bool             mUseMask;
 
-    vtkStructuredPoints      *mVol;
-    vtkScalars               *mScalars;
-    vtkVolume                *mActor;
-    vtkPiecewiseFunction     *mColorFunc;
-    vtkPiecewiseFunction     *mOpacityTransferFunc;
-    vtkVolumeProperty        *mProperty;
-    vtkVolumeRayCastMapper   *mMapper;
+  vtkStructuredPoints      *mVol;
+  vtkScalars               *mScalars;
+  vtkVolume                *mActor;
+  vtkPiecewiseFunction     *mColorFunc;
+  vtkPiecewiseFunction     *mOpacityTransferFunc;
+  vtkVolumeProperty        *mProperty;
+  vtkVolumeRayCastMapper   *mMapper;
         
-  public:
+public:
 
-    VTKVolRen();
+  VTKVolRen();
 
-    char*    error(void);
+  char*    error(void);
 
     //Volume Rendering Stuff
     //Greyscale volume for MIP volue rendering. Vtk's volume is buggy
@@ -92,41 +88,40 @@ class VTKVolRen
     //vtkSetOrigin() with these volumes--that's buggy too. If you
     //need an offset, you must provide it by SetUserMatrix().
 
-    bool    SetInputImage( ImageType * newIm );
+  bool    SetInputImage( ImageType * newIm );
 
-    void    stepSize(double newStepSize);
-    double  stepSize(void);
+  void    stepSize(double newStepSize);
+  double  stepSize(void);
     
-    void    opacity(double newOpacity);  //val should be between 0 and 1
-    double  opacity(void);
+  void    opacity(double newOpacity);  //val should be between 0 and 1
+  double  opacity(void);
 
-    void    intensityMin(double newIntensityMin);
-    double  intensityMin(void);
+  void    intensityMin(double newIntensityMin);
+  double  intensityMin(void);
 
-    void    maskData(OverlayType::Pointer newMask);
-    OverlayType::Pointer maskData(void);
+  void    maskData(OverlayType::Pointer newMask);
+  OverlayType::Pointer maskData(void);
 
-    void  useMask(bool newUseMask);
-    bool  useMask(void);
+  void  useMask(bool newUseMask);
+  bool  useMask(void);
 
-    vtkVolume               * actor(void);
-    vtkPiecewiseFunction    * colorFunc(void);
-    vtkPiecewiseFunction    * opacityFunc(void);
-    vtkVolumeProperty       * property(void);
-    vtkVolumeRayCastMapper  * mapper(void);
-    vtkStructuredPoints     * volume(void);
-    vtkScalars              * scalars(void);
+  vtkVolume               * actor(void);
+  vtkPiecewiseFunction    * colorFunc(void);
+  vtkPiecewiseFunction    * opacityFunc(void);
+  vtkVolumeProperty       * property(void);
+  vtkVolumeRayCastMapper  * mapper(void);
+  vtkStructuredPoints     * volume(void);
+  vtkScalars              * scalars(void);
 
-    void update(void);
-
-  };
+  void update(void);
+};
 
 //
 //
 //
 template <class T>
 VTKVolRen<T>::VTKVolRen()
-  {
+{
   *mError = '\0';
 
   mStepSize = 0.8;        //volume rendering default stepsize
@@ -173,7 +168,7 @@ VTKVolRen<T>::VTKVolRen()
   rt->Delete();
 
   mActor = vtkVolume::New();
-  }
+}
 
 //
 //

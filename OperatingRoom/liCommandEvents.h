@@ -14,8 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -28,21 +26,15 @@
 //     Chapel Hill, NC 27599
 //
 //--------------------------------------------
-
-
 #ifndef liCOMMANDEVENTS
 #define liCOMMANDEVENTS
 
 #include "itkCommand.h"
 #include "itkEventObject.h"
 
-
 namespace li {
 
-/**
- *  List of the events expected in this domain
- */
-
+/** List of the events expected in this domain. */
 itkEventMacro( RedrawEvent,                 itk::UserEvent );
 itkEventMacro( FluoroscopyUnitMovedEvent,   itk::UserEvent );
 itkEventMacro( TableMovedEvent,             itk::UserEvent );
@@ -54,8 +46,6 @@ itkEventMacro( VesselsChangedEvent,         itk::UserEvent );
 itkEventMacro( FieldOfViewChangedEvent,     itk::UserEvent );
 itkEventMacro( RequestVesselPointSetGenerationEvent, itk::UserEvent );
 
-
-  
 } // end namespace li
 
 

@@ -74,7 +74,6 @@ public:
 
   void  SafeWrite();
 
-  
 protected:
   std::string m_FileName;
   SegmentTableWriter()

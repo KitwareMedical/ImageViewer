@@ -23,13 +23,11 @@
 #include "itkObjectFactory.h"
 
 /** \class MaximumLikelihoodRatioDecisionRule
- *  \brief A Decision rule that choose the class that has maximum value
- */
- 
+ *  \brief A Decision rule that choose the class that has maximum value. */
 class MaximumLikelihoodRatioDecisionRule : 
   public itk::Object
 {
- public:
+public:
   /** Standard class typedefs */ 
   typedef MaximumLikelihoodRatioDecisionRule Self ;
   typedef itk::Object Superclass;
@@ -44,15 +42,16 @@ class MaximumLikelihoodRatioDecisionRule :
   unsigned int Evaluate(std::vector< double > discriminantScores) ;
   void AddClassSampleSize(unsigned int size) ;
 
- protected:
+protected:
   MaximumLikelihoodRatioDecisionRule() ;
   virtual ~MaximumLikelihoodRatioDecisionRule() {}
   
- private:
+private:
   std::vector< unsigned int > m_ClassSizes ;
   std::vector< double > m_TempScores ;
   vnl_matrix< double > m_APrioriRatioMatrix ;
   unsigned long m_TotalSampleSize ;
+
 } ; // end of class
 
 #endif

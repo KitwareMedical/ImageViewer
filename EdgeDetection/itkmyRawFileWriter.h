@@ -25,79 +25,42 @@
 namespace itk
 {
 
-/**
- *
- *
- */
 template <class TOutputImage>
 class ITK_EXPORT myRawFileWriter : public ImageToImageFilter<TOutputImage, TOutputImage>
 {
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef myRawFileWriter         Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef ImageToImageFilter<TOutputImage, TOutputImage>  Superclass;
-
-  /**
-   * Smart pointer typedef support.
-   */
   typedef SmartPointer<Self>  Pointer;
 
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
-  /**
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro(myRawFileWriter, ImageSource);
 
-
+  /** The dimension of the image. */
   enum {ImageDimension = TOutputImage::ImageDimension };
-  /**
-   * typedef for Size.
-   */
+
+  /** Typedefs. */
   typedef Size<TOutputImage::ImageDimension>  SizeType;
-
-  /**
-   * typedef for Region.
-   */
   typedef ImageRegion<TOutputImage::ImageDimension>  RegionType;
-
   typedef typename TOutputImage::PixelType PixelType;
   
-  /**
-   * Specify the file to load. This is forwarded to the IO instance. 
-   * Either the FileName or FilePrefix plus pattern are used to read
-   * files.
-   */
+  /** Specify the file to load. This is forwarded to the IO instance.  Either
+   * the FileName or FilePrefix plus pattern are used to read files.  */
   itkSetStringMacro(FileName);
   itkGetStringMacro(FileName);
 
-  //  itkSetMacro(PixelSize, unsigned int);
-  //  itkGetMacro(PixelSize, unsigned int);
-
-  //  itkSetMacro(Region, RegionType);
-  //  itkGetMacro(Region, RegionType);
-
-  /** 
-   * Specify file prefix for the image file(s). You should specify either
-   * a FileName or FilePrefix. Use FilePrefix if the data is stored
-   * in multiple files. (Note: the FileName ivar is available from the
-   * superclass.)
-   */
+  /*** Specify file prefix for the image file(s). You should specify either *
+   * a FileName or FilePrefix. Use FilePrefix if the data is stored in
+   * multiple files. (Note: the FileName ivar is available from the
+   * superclass.)  */
   //  itkSetStringMacro(FilePrefix);
   //  itkGetStringMacro(FilePrefix);
 
-  /**
-   * The sprintf format used to build filename from FilePrefix and number.
-   */
+  /** The sprintf format used to build filename from FilePrefix and number. */
   //  itkSetStringMacro(FilePattern);
   //  itkGetStringMacro(FilePattern);
 

@@ -33,13 +33,9 @@ template <class TOutputImage>
 class ITK_EXPORT RawFileWriter : public ImageToImageFilter<TOutputImage, TOutputImage>
 {
 public:
-  /** Standard "Self" typedef.   */
+  /** Standard class typedefs.   */
   typedef RawFileWriter         Self;
-
-  /** Standard "Superclass" typedef.   */
   typedef ImageToImageFilter<TOutputImage, TOutputImage>  Superclass;
-
-  /** Smart pointer typedef support.   */
   typedef SmartPointer<Self>  Pointer;
 
   /** Method for creation through the object factory.   */
@@ -48,14 +44,12 @@ public:
   /** Run-time type information (and related methods).   */
   itkTypeMacro(RawFileWriter, ImageSource);
 
-
+  /** Image dimension. */
   enum {ImageDimension = TOutputImage::ImageDimension };
-  /** typedef for Size.   */
+
+  /** Convenient typedefs.   */
   typedef Size<TOutputImage::ImageDimension>  SizeType;
-
-  /** typedef for Region.   */
   typedef ImageRegion<TOutputImage::ImageDimension>  RegionType;
-
   typedef typename TOutputImage::PixelType PixelType;
   
   /** Specify the file to load. This is forwarded to the IO instance. 
@@ -63,6 +57,7 @@ public:
    * files.   */
   itkSetStringMacro(FileName);
   itkGetStringMacro(FileName);
+
 protected:
   RawFileWriter()
     {

@@ -14,8 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 #ifndef liIMAGEREGISTRATIONCONSOLEBASE
 #define liIMAGEREGISTRATIONCONSOLEBASE
 
@@ -29,16 +27,13 @@
 #include <itkImageToImageAffineMutualInformationGradientDescentRegistration.h>
 #include <itkPixelAccessor.h>
 
-
 /**
  * \brief ImageRegistrationConsoleBase class that instantiate
  * the elements required for a registration method without GUI
  *
  */
-
 class liImageRegistrationConsoleBase
 {
-
 public:
 
   enum { ImageDimension = 3 };
@@ -50,39 +45,29 @@ public:
     meanSquares
   } RegistrationMethodType;
   
-  // Type of the image as it is read from a file
+  /** Type of the image as it is read from a file */
   typedef   unsigned short     InputPixelType;
 
-
-  // Pixel type to be used internally during registration
+  /** Pixel type to be used internally during registration */
   typedef   float              PixelType;
-
   
-  // Type of the image to be read from the file
-  typedef   itk::Image< InputPixelType, 
-                                ImageDimension >          InputImageType;
+  /** Type of the image to be read from the file */
+  typedef   itk::Image<InputPixelType,ImageDimension> InputImageType;
 
-  // Data Accessor to convert image pixels from 
-  // the type in the file to the internal type
-  typedef   itk::PixelAccessor< InputPixelType, PixelType > PixelAccessorType;                                
+  /** Data Accessor to convert image pixels from 
+   * the type in the file to the internal type */
+  typedef   itk::PixelAccessor<InputPixelType,PixelType> PixelAccessorType;                                
+  /** ImageAdaptor that will simulate that the input image
+   * is an image with pixels of internal type */
+  typedef   itk::ImageAdaptor<InputImageType,PixelAccessorType>  TargetType;
 
+  /** Type of the Reference image */
+  typedef   itk::Image<PixelType,ImageDimension>  ReferenceType;
 
-  // ImageAdaptor that will simulate that the input image
-  // is an image with pixels of internal type
-  typedef   itk::ImageAdaptor< InputImageType,
-                                       PixelAccessorType >   TargetType;
-                                       
-  // Type of the Reference image                                     
-  typedef   itk::Image< PixelType, 
-                                ImageDimension >          ReferenceType;
-
-
-   // Type of the Mapped Reference image
-  typedef   itk::Image< PixelType, 
-                                ImageDimension >      MappedReferenceType;
-
+  /** Type of the Mapped Reference image */
+  typedef   itk::Image<PixelType,ImageDimension>  MappedReferenceType;
  
-  //  Registration methods to use
+  /**  Registration methods to use */
   typedef   itk::ImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration<
                                                 ReferenceType,
                                                 TargetType> 
@@ -133,7 +118,6 @@ public:
 
 
 public:
-
   liImageRegistrationConsoleBase();
   virtual ~liImageRegistrationConsoleBase();
   virtual void Load(void)=0;
@@ -148,20 +132,16 @@ public:
   virtual void SelectRegistrationMethod( RegistrationMethodType method );
 
 protected:
+  ImageReaderType::Pointer m_Reader;
 
-  ImageReaderType::Pointer               m_Reader;
-
-  MeanSquaresRegistrationMethodType::Pointer
-                                                  m_MeansSquaresMethod;
+  MeanSquaresRegistrationMethodType::Pointer m_MeansSquaresMethod;
   
-  MutualInformationRegistrationMethodType::Pointer
-                                                  m_MutualInformationMethod;
+  MutualInformationRegistrationMethodType::Pointer m_MutualInformationMethod;
 
-  PatternIntensityRegistrationMethodType::Pointer
-                                                  m_PatternIntensityMethod;
+  PatternIntensityRegistrationMethodType::Pointer  m_PatternIntensityMethod;
   
   NormalizedCorrelationRegistrationMethodType::Pointer
-                                                  m_NormalizedCorrelationMethod;
+                                               m_NormalizedCorrelationMethod;
   
   TargetType::Pointer                             m_TargetImage;
 

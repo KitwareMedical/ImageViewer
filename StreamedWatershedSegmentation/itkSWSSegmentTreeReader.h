@@ -40,8 +40,8 @@ public:
   itkNewMacro(Self);
   itkTypeMacro(SegmentTreeReader, ProcessObject);
 
+  /** Convenient typedefs. */
   typedef TScalarType ScalarType;
-  
   typedef itk::watershed::SegmentTree<ScalarType> SegmentTreeType;
   
   void SetInput(SegmentTreeType *input)

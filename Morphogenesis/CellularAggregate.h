@@ -14,10 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef __Cellular_Aggregate_H
 #define __Cellular_Aggregate_H
-
 
 #include <iostream>
 #include "itkDefaultDynamicMeshTraits.h"
@@ -27,61 +25,33 @@
 #include "itkPolygonCell.h"
 #include <vector>
 
-
-
 namespace bio {
 
-
-  
-/**
- * \class CellularAggregate
+/** \class CellularAggregate
  * \brief This class represent an aggregation of bio::Cell objects
  * This class is the base for different types of cellular groups
  * including bacterial colonies and pluricellular organisms 
  */
 class CellularAggregate : public itk::Object
 {
-
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef CellularAggregate      Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef itk::Object  Superclass;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>        Pointer;
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /*** Run-time type information (and related methods). */
   itkTypeMacro(CellularAggregate, itk::Object);
 
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro(Self);  
 
-
-  /** 
-   * Type to be used for data associated 
-   * with each point in the mesh 
-   */
+  /*** Type to be used for data associated with each point in the mesh. */
   typedef    Cell *    PointPixelType;
   typedef    double    CellPixelType;
 
-
-  /** 
-   *      Mesh Traits
-   */
+  /** Mesh Traits */
   typedef itk::DefaultDynamicMeshTraits<  
               PointPixelType,           // PixelType
               Cell::PointDimension,     // Points Dimension
@@ -91,58 +61,40 @@ public:
               CellPixelType             // Type for values in the cells  
               >  MeshTraits;
   
-  
-  /** 
-   *      Mesh Traits
-   */
+  /** Mesh Traits */
   typedef itk::Mesh<  MeshTraits::PixelType,
                       MeshTraits::PointDimension,
                       MeshTraits  >               MeshType;
 
-  
-  /** 
-   *      Mesh Associated types
-   */
+  /** Mesh Associated types */
   typedef MeshType::Pointer                       MeshPointer;
   typedef MeshType::ConstPointer                  MeshConstPointer;
-
   typedef MeshType::PointType                     PointType;
   typedef Cell::VectorType                        VectorType;
-
-
   typedef MeshType::PointsContainer               PointsContainer;
   typedef MeshType::PointDataContainer            PointDataContainer;
   typedef MeshType::CellsContainer                VoronoiRegionsContainer;
-
   typedef PointsContainer::Iterator               PointsIterator;
   typedef PointDataContainer::Iterator            CellsIterator;
   typedef VoronoiRegionsContainer::Iterator       VoronoiIterator;
-
   typedef PointsContainer::ConstIterator          PointsConstIterator;
   typedef PointDataContainer::ConstIterator       CellsConstIterator;
   typedef VoronoiRegionsContainer::ConstIterator  VoronoiConstIterator;
-
   typedef MeshType::PointIdentifier               IdentifierType;
-  
 
-
-  /** 
-   *   Voronoi region around a bio::Cell
-   */
+  /**   Voronoi region around a bio::Cell */
   typedef itk::PolygonCell<  MeshType::CellPixelType, 
                              MeshType::CellTraits > VoronoiRegionType;
-
   typedef VoronoiRegionType::Pointer VoronoiRegionPointer;
 
+  /** Convenient typedefs. */
   typedef double                                          ImagePixelType;
   typedef itk::Image<ImagePixelType, Cell::Dimension >    SubstrateType;
   typedef SubstrateType::Pointer                          SubstratePointer;
   typedef ImagePixelType                                  SubstrateValueType;
-
   typedef std::vector< SubstratePointer >                 SubstratesVector;
 
 public:
-
   unsigned int GetNumberOfCells(void) const;
  
   void Draw(void) const;
@@ -178,7 +130,6 @@ public:
   virtual void KillAll(void);
 
 protected:
-
   CellularAggregate();
   virtual ~CellularAggregate();
   CellularAggregate( const Self & ) {}
@@ -191,13 +142,9 @@ protected:
   virtual void ClearForces(void);
   
 private:
-
   MeshPointer           m_Mesh;
-
   SubstratesVector      m_Substrates;
-
   double                m_FrictionForce;
-
   unsigned long  m_Iteration;
   unsigned long  m_ClosestPointComputationInterval;
 

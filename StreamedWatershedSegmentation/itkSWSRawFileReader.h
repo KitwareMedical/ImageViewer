@@ -36,13 +36,9 @@ template <class TOutputImage>
 class ITK_EXPORT RawFileReader : public ImageSource<TOutputImage>
 {
 public:
-  /** Standard "Self" typedef.  */
+  /** Standard class typedefs.  */
   typedef RawFileReader         Self;
-
-  /** Standard "Superclass" typedef. */
   typedef ImageSource<TOutputImage>  Superclass;
-
-  /** Smart pointer typedef support.   */
   typedef SmartPointer<Self>  Pointer;
 
   /** Method for creation through the object factory.   */
@@ -51,12 +47,9 @@ public:
   /** Run-time type information (and related methods).   */
   itkTypeMacro(RawFileReader, ImageSource);
 
-  /** typedef for Size.   */
+  /** Convenient typedefs.   */
   typedef Size<TOutputImage::ImageDimension>  SizeType;
-
-  /** typedef for Region.   */
   typedef ImageRegion<TOutputImage::ImageDimension>  RegionType;
-
   typedef typename TOutputImage::PixelType PixelType;
   
   /** Specify the name of the file to load.  */
@@ -75,6 +68,7 @@ public:
   /** Execute the reader.  This public method allows the filter to be updated
    * without propagating updates through the pipeline.   */
   void SafeRead();
+
 protected:
   RawFileReader()
     {

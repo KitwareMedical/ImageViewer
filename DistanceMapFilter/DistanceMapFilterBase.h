@@ -14,8 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 #ifndef __DistanceMapFilterBase_H
 #define __DistanceMapFilterBase_H
 
@@ -29,100 +27,51 @@
 #include "itkCommand.h"
 #include "itkDanielssonDistanceMapImageFilter.h"
 
-
-
-
-class DistanceMapFilterBase : public itk::Object {
-
+class DistanceMapFilterBase : public itk::Object 
+{
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef DistanceMapFilterBase      Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef itk::Object  Superclass;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>        Pointer;
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro(DistanceMapFilterBase, itk::Object);
 
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro(Self);  
 
-  /**
-   * Image Dimension
-   */
-   enum { ImageDimension = 3 };
+  /** Image Dimension */
+  enum { ImageDimension = 3 };
 
-  /**
-   * Input Image Type
-   */
-   typedef itk::Image< unsigned short, ImageDimension >  ImageType;
-   typedef ImageType::Pointer                            ImagePointer;
-
-
-  /**
-   * Distance Image Type
-   */
+  /** Convenient typedefs. */
+  typedef itk::Image<unsigned short,ImageDimension>    ImageType;
+  typedef ImageType::Pointer                           ImagePointer;
   typedef itk::Image<unsigned short, ImageDimension>   DistanceImageType;
   typedef DistanceImageType::Pointer                   DistanceImagePointer;
-   
-
-  /**
-   *  Gradient filter type
-   */
-  typedef itk::DanielssonDistanceMapImageFilter< 
-                                    ImageType,
-                                    DistanceImageType >  DistanceFilterType;
-   
-  typedef DistanceFilterType::Pointer                    DistanceFilterPointer; 
-
-
-  typedef   itk::ImageFileReader< ImageType >            VolumeReaderType;
-  typedef   VolumeReaderType::Pointer                    VolumeReaderPointer;
-
+  typedef itk::DanielssonDistanceMapImageFilter<ImageType,DistanceImageType> 
+          DistanceFilterType;
+  typedef DistanceFilterType::Pointer                  DistanceFilterPointer; 
+  typedef itk::ImageFileReader< ImageType>             VolumeReaderType;
+  typedef VolumeReaderType::Pointer                    VolumeReaderPointer;
 
   /** Slice Drawer for Input Image : Orthogonal slices in OpenGL */
-  typedef fltk::Slice3DDrawer< ImageType >               ImageSliceDrawerType;
-  typedef ImageSliceDrawerType::Pointer                  ImageSliceDrawerPointer;
+  typedef fltk::Slice3DDrawer<ImageType>         ImageSliceDrawerType;
+  typedef ImageSliceDrawerType::Pointer          ImageSliceDrawerPointer;
 
   /** Slice Drawer for Distance Image  : Orthogonal slices in OpenGL */
-  typedef fltk::Slice3DDrawer< DistanceImageType >  DistanceImageSliceDrawerType;
-  typedef DistanceImageSliceDrawerType::Pointer     DistanceImageSliceDrawerPointer;
-
+  typedef fltk::Slice3DDrawer<DistanceImageType> DistanceImageSliceDrawerType;
+  typedef DistanceImageSliceDrawerType::Pointer DistanceImageSliceDrawerPointer;
   typedef unsigned char      OverlayPixelType;
 
   /** Image viewer using in-plane slice by slice */ 
-  typedef fltk::ImageViewer< ImageType::PixelType,
-                                OverlayPixelType >    ImageViewerType;
-
-  typedef fltk::ImageViewer< DistanceImageType::PixelType,
-                             OverlayPixelType  >      DistanceImageViewerType;
-
-
-
-protected:
-
-  DistanceMapFilterBase();
-  virtual ~DistanceMapFilterBase();
-
-  DistanceMapFilterBase( const DistanceMapFilterBase & ); // should not be defined 
-  DistanceMapFilterBase operator=( const DistanceMapFilterBase & ); // should not be defined 
+  typedef fltk::ImageViewer<ImageType::PixelType,OverlayPixelType>
+          ImageViewerType;
+  typedef fltk::ImageViewer<DistanceImageType::PixelType,OverlayPixelType>
+          DistanceImageViewerType;
 
 public:
-
   virtual void Load(void);
   virtual void Save(void) const;
   virtual void Load(const char * filename);
@@ -131,27 +80,25 @@ public:
   virtual void HideDisplay(void);
   virtual void ComputeDistance(void);
 
-
 protected:
+  DistanceMapFilterBase();
+  virtual ~DistanceMapFilterBase();
 
   VolumeReaderPointer                 m_Reader;
-
   DistanceImagePointer                m_DistanceImage;
   DistanceFilterPointer               m_DistanceFilter;
-
   ImageSliceDrawerPointer             m_ImageSliceDrawer;
   DistanceImageSliceDrawerPointer     m_DistanceImageSliceDrawer;
-
   ImageViewerType                   * m_ImageViewer;
   DistanceImageViewerType           * m_DistanceImageViewer;
-
   fltkDisplayGlWindowGUI              m_Display;
-
   bool    ImageHasBeenLoaded( void ) { return m_ImageLoaded; }
 
 private:
-  
-  bool                                m_ImageLoaded;
+  DistanceMapFilterBase( const DistanceMapFilterBase & ); // don't implement
+  DistanceMapFilterBase operator=( const DistanceMapFilterBase & );
+
+  bool  m_ImageLoaded;
 
 };
 

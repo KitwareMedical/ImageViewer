@@ -29,7 +29,6 @@
 //     Chapel Hill, NC 27514
 //
 //--------------------------------------------
-
 #ifndef liSAMPLEGENERATORCOLLECTIONBASE
 #define liSAMPLEGENERATORCOLLECTIONBASE
 
@@ -37,28 +36,21 @@
 #include "liSample.h"
 #include <vector>
 
-
-class liSampleGeneratorCollectionBase {
+class liSampleGeneratorCollectionBase 
+{
 public:  
-
   typedef  std::vector< liSampleGenerator * > CollectionType;
-
   typedef  std::vector<liSample>          SamplesType;
-
   typedef  std::vector<SamplesType>       SetsOfSamplesType;
 
-public:
   liSampleGeneratorCollectionBase();
   virtual ~liSampleGeneratorCollectionBase();
   virtual void GenerateSamples( SetsOfSamplesType & samples );
 
 protected:
-
   CollectionType  m_Collection; 
 
 };
-
-
 
 #endif
 

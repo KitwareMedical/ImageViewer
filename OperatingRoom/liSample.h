@@ -29,15 +29,12 @@
 //     Chapel Hill, NC 27514
 //
 //--------------------------------------------
-
 #ifndef liSAMPLE
 #define liSAMPLE
 
 #include "itkPoint.h"
 
-
 class ITK_EXPORT liSample {
-
 public:
   typedef     double                     CoordType;
   typedef     itk::Point<CoordType,3>    PointType;
@@ -45,7 +42,5 @@ public:
   PointType   point;
   float       value; 
 };
-
-
 
 #endif

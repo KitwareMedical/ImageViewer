@@ -26,8 +26,6 @@
 //     Chapel Hill, NC 27599
 //
 //--------------------------------------------
-
-
 #ifndef liPOINTSET3DCLASS
 #define liPOINTSET3DCLASS
 
@@ -36,106 +34,54 @@
 
 namespace li {
 
-
-/**
- *  \class PointSet3D derives from Shape3D and contains an itk::PointSet
- */
+/** \class PointSet3D derives from Shape3D and contains an itk::PointSet */
 class ITK_EXPORT PointSet3D : public fltk::Shape3D 
 {
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef PointSet3D   Self;
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef fltk::Shape3D  Superclass;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>  Pointer;
-
-  /** 
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro( PointSet3D, fltk::Shape3D );
   
-
-  /** 
-   * PointSet Type Defaults
-   */
+  /** PointSet Type Defaults */
   typedef ::itk::DefaultStaticMeshTraits<
                       double,
                       3,3,
                       double,
                       double> PointSetDefaultType;
 
+  /** PointSet Type */
+  typedef ::itk::PointSet<double,3,PointSetDefaultType>   PointSetType;
 
-  /** 
-   * PointSet Type
-   */
-   typedef ::itk::PointSet<double,3,PointSetDefaultType>   PointSetType;
-
-
-  /** 
-   * Points Container Type
-   */
+  /*** Points Container Type */
   typedef PointSetType::PointsContainer     PointsContainerType;
 
-  /** 
-   * Point Data Container Type
-   */
+  /** Point Data Container Type */
   typedef PointSetType::PointDataContainer     PointDataContainerType;
 
-
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro(Self);
-    
 
-  /**
-   * Draw the geometry of the shape
-   */
+  /** Draw the geometry of the shape */
   void DrawGeometry(void) const;
 
-
-
-  /**
-   * Accepts a mesh
-   */
+  /** Accepts a mesh. */
   void SetPointSet( PointSetType * );
 
-
-
-  /**
-   * Return a mesh
-   */
+  /** Return a mesh. */
   PointSetType::ConstPointer GetPointSet( void );
 
-
 protected:
-  /**
-   * Constructor
-   */
+  /** Constructor */
   PointSet3D();
-
   
 private:
-
-   /**
-   * PointSet that contains all the data
-   */
+  /** PointSet that contains all the data */
    PointSetType::Pointer                  m_PointSet;
-
 };
 
 

@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 //--------------------------------------------
 //
 //     Project: Operating Room
@@ -27,8 +26,6 @@
 //     Chapel Hill, NC 27599
 //
 //--------------------------------------------
-
-
 #ifndef liCOMMANDUPDATEREGISTRATORFIELDOFVIEW
 #define liCOMMANDUPDATEREGISTRATORFIELDOFVIEW
 
@@ -37,88 +34,45 @@
 #include "itkCommand.h"
 #include "liCommandEvents.h"
 
-
-
 namespace li {
 
-/**
- *  Implementation of the Command Pattern for updating 
+/** Implementation of the Command Pattern for updating 
  *  the perspective projection parameters of the 3D/2D
- *  registrator
- */
+ *  registrator. */
 class ITK_EXPORT CommandUpdateRegistratorFieldOfView : public itk::Command 
 {
 public:
-  /**
-   * Standard "Self" typedef.
-   */
+  /** Standard class typedefs. */
   typedef CommandUpdateRegistratorFieldOfView   Self;
-
-
-  /**
-   * Standard "Superclass" typedef.
-   */
   typedef itk::Command  Superclass;
-
-
-  /**
-   * Smart pointer typedef support.
-   */
   typedef itk::SmartPointer<Self>  Pointer;
-
-  /** 
-   * ConstSmart pointer typedef support.
-   */
   typedef itk::SmartPointer<const Self>  ConstPointer;
 
-  /**
-   * Execute method will call redraw in the GL Window
-   */
+  /** Execute method will call redraw in the GL Window. */
   void Execute(itk::Object *caller, const itk::EventObject & event);
   void Execute(const itk::Object *caller, const itk::EventObject & event);
 
-
-  /** 
-   * Run-time type information (and related methods).
-   */
+  /** Run-time type information (and related methods). */
   itkTypeMacro( CommandUpdateRegistratorFieldOfView, ::itk::Command );
 
-
-  /**
-   * Method for creation through the object factory.
-   */
+  /** Method for creation through the object factory. */
   itkNewMacro( Self );
-
   
-  /**
-   * Type defining the Registrator class
-   */
+  /** Type defining the Registrator class. */
   typedef li::VesselsRegistrator    RegistratorType;
 
-  /**
-   * Set Registrator object to update
-   */
+  /** Set Registrator object to update. */
   void SetRegistrator( RegistratorType * unit );
 
-
-
 protected:
-  /**
-   * Constructor
-   */
+  /** Constructor */
   CommandUpdateRegistratorFieldOfView();
 
 private:
-
-  /**
-   * Registrator class to be updated
-   */
+  /** Registrator class to be updated. */
   RegistratorType::Pointer     m_Registrator;
- 
 
-  
 };
-
 
 } // end namespace li
 

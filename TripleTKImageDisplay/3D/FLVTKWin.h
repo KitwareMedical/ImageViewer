@@ -14,7 +14,6 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #ifndef _FLVTKWin_h
 #define _FLVTKWin_h
 
@@ -31,29 +30,25 @@
  *     the vtk window and use as you would vtk.
  */
 class FLVTKWin:public Fl_Box
-  {      
+{      
+protected:
+  vtkRenderWindow* mRenWin;
+  bool mFirstdraw;
+  bool mInitializePosition();    //determine offsetx/y and rootwindow
 
-  protected:
+public:
+  FLVTKWin(int x, int y, int w, int h, const char* l = 0);
+  ~FLVTKWin();
 
-    vtkRenderWindow* mRenWin;
-    bool mFirstdraw;
-    bool mInitializePosition();    //determine offsetx/y and rootwindow
+  vtkRenderWindow * win();
 
-  public:
-
-    FLVTKWin(int x, int y, int w, int h, const char* l = 0);
-    ~FLVTKWin();
-
-    vtkRenderWindow * win();
-
-    //if the Fl_Box widget is resizable, make the vtk window
-    //resize along with it
-    void size(int w, int h);
-    void resize(int x, int y, int w, int h);
+  //if the Fl_Box widget is resizable, make the vtk window
+  //resize along with it
+  void size(int w, int h);
+  void resize(int x, int y, int w, int h);
 
     //draw the vtk window, not the box
-    virtual void draw();
-
-  };
+  virtual void draw();
+};
 
 #endif

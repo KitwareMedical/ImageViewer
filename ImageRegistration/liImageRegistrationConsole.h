@@ -14,15 +14,11 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
-
 #ifndef liIMAGEREGISTRATIONCONSOLE
 #define liIMAGEREGISTRATIONCONSOLE
 
 #include <fltkImageViewer.h>
 #include <liImageRegistrationConsoleGUI.h>
-
-
 
 class liImageRegistrationConsole : public liImageRegistrationConsoleGUI {
 

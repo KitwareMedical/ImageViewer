@@ -22,285 +22,172 @@
 
 #include <string>
 
-/**
- * \class MIRegistrationApp
- * \brief A mutual information registration command line based application
- *
- **/
+/** \class MIRegistrationApp
+ * \brief A mutual information registration command line based application. */
 class MIRegistrationApp
 {
-
 public:
-
-  /**
-   * ImageDimension enumeration.
-   */
+  /** ImageDimension enumeration. */
   enum{ ImageDimension = 3 };
 
-  /**
-   * InputPixelType is the raw image pixel type.
-   */
+  /** InputPixelType is the raw image pixel type. */
   typedef signed short InputPixelType;
 
-  /**
-   * PixelType is the internal image represenation pixel type.
-   */
+  /** PixelType is the internal image represenation pixel type. */
   typedef float PixelType;
 
-  /**
-   * InputImageType is the raw image type
-   */
-  typedef itk::Image<InputPixelType,ImageDimension>
-    InputImageType;
+  /** InputImageType is the raw image type */
+  typedef itk::Image<InputPixelType,ImageDimension> InputImageType;
   typedef InputImageType::Pointer InputImagePointer;
 
-  /**
-   * ImageType is the internal image type
-   */
-  typedef itk::Image<PixelType,ImageDimension>
-    ImageType;
+  /** ImageType is the internal image type */
+  typedef itk::Image<PixelType,ImageDimension> ImageType;
   typedef ImageType::Pointer ImagePointer;
 
-  /**
-   * SizeType is the image size type
-   */
+  /** SizeType is the image size type */
   typedef InputImageType::SizeType SizeType;
 
-  /**
-   * RegistratorType is the type of the registrator used
-   */
+  /** RegistratorType is the type of the registrator used */
   typedef itk::MultiResolutionMutualInformationRigidRegistration<
     ImageType, ImageType> RegistratorType;
   typedef RegistratorType::Pointer RegistratorPointer;
 
-  /**
-   * InternalRegistratorType is the type of the internal registrator used
-   */
+  /** InternalRegistratorType is the type of the internal registrator used. */
   typedef RegistratorType::RegistrationType InternalRegistratorType;
 
-  /**
-   * ParametersType is the type of the transform parameters
-   */
+  /** ParametersType is the type of the transform parameters. */
   typedef InternalRegistratorType::ParametersType ParametersType;
 
-  /**
-   * MaxNumberOfLevels enumeration
-   */
+  /** MaxNumberOfLevels enumeration. */
   enum { MaxNumberOfLevels = 8 };
 
-
-  /**
-   * Constructors
-   */
+  /** Constructors. */
   MIRegistrationApp();
   MIRegistrationApp( const char * );
 
-  /**
-   * Destructors
-   */
+  /** Destructors. */
   ~MIRegistrationApp(){};
 
-  /**
-   * Execute the application
-   */
+  /** Execute the application. */
   void Execute();
 
-  /**
-   * Get the target image
-   */
+  /** Get the target image */
   InputImagePointer GetTarget() const
    { return m_Target; }
 
-  /**
-   * Get the reference image
-   */
+  /** Get the reference image. */
   InputImagePointer GetReference() const
     { return m_Reference; }
 
-  /**
-   * Get the registered image
-   */
+  /** Get the registered image. */
   InputImagePointer GetRegisteredImage() const
     { return m_RegisteredImage; }
 
-  /**
-   * Get the output parameters
-   */
+  /** Get the output parameters. */
   const ParametersType& GetParameters() const
     { return m_Parameters; }
 
-
-
 private:
-
-   /**
-    * The registrator
-    */
+   /*** The registrator  */
    RegistratorPointer   m_Registrator;
 
-   /**
-    * The solution parameters
-    */
+   /*** The solution parameters  */
    ParametersType       m_Parameters;
 
-   /**
-    * Target image file name 
-    */
+   /*** Target image file name   */
    std::string          m_TargetFileName;
 
-   /**
-    * Target image size
-    */
+   /*** Target image size  */
    SizeType             m_TargetSize;
 
-   /**
-    * Target image spacing
-    */
+   /*** Target image spacing  */
    double               m_TargetSpacing[ImageDimension];
 
-   /**
-    * Target big endian flag
-    */
+   /*** Target big endian flag  */
    bool                 m_TargetBigEndian;
 
-   /**
-    * Target image
-    */
+   /*** Target image  */
    InputImagePointer    m_Target;
 
-   /**
-    * Normalized target image
-    */
+   /*** Normalized target image  */
    ImagePointer         m_NormalizedTarget;
 
-   /**
-    * Reference image file name 
-    */
+   /*** Reference image file name   */
    std::string          m_ReferenceFileName;
 
-   /**
-    * Reference image size
-    */
+   /*** Reference image size  */
    SizeType             m_ReferenceSize;
 
-   /**
-    * Reference image spacing
-    */
+   /*** Reference image spacing  */
    double               m_ReferenceSpacing[ImageDimension];
 
-   /**
-    * Reference big endian flag
-    */
+   /*** Reference big endian flag  */
    bool                 m_ReferenceBigEndian;
 
-   /**
-    * Reference image
-    */
+   /*** Reference image  */
    InputImagePointer    m_Reference;
 
-   /**
-    * Normalized reference image
-    */
+   /*** Normalized reference image  */
    ImagePointer         m_NormalizedReference;
 
-   /**
-    * Registered image filename
-    */
+   /*** Registered image filename  */
    std::string          m_RegisteredImageFileName;
 
-   /**
-    * Registered image big endian flag
-    */
+   /*** Registered image big endian flag  */
    bool                 m_RegisteredImageBigEndian;
 
-   /**
-    * Registerd image
-    */
+   /*** Registerd image  */
    InputImagePointer    m_RegisteredImage;
 
-   /**
-    * Number of computation levels
-    */
+   /*** Number of computation levels  */
    unsigned int         m_NumberOfLevels;
 
-   /**
-    * Number of iterations to perform at each level
-    */
+   /*** Number of iterations to perform at each level  */
    unsigned int         m_NumberOfIterations[MaxNumberOfLevels];
 
-   /**
-    * Learning rate at each level
-    */
+   /*** Learning rate at each level  */
    double               m_LearningRates[MaxNumberOfLevels];
 
-   /**
-    * Translation scaling at each level
-    */
+   /*** Translation scaling at each level  */
    double               m_TranslationScales[MaxNumberOfLevels];
 
-   /**
-    * Target starting shrink factors
-    */
+   /*** Target starting shrink factors  */
    unsigned int         m_TargetShrinkFactors[ImageDimension];
 
-   /**
-    * Reference starting shrink factors
-    */
+   /*** Reference starting shrink factors  */
    unsigned int         m_ReferenceShrinkFactors[ImageDimension];
 
-   /**
-    * Dump pgm files flag
-    */
+   /*** Dump pgm files flag  */
    bool                 m_DumpPGMFiles;
 
-   /**
-    * PGM directory
-    */
+   /*** PGM directory  */
    std::string          m_PGMDirectory;
 
-   /**
-    * Read in an image
-    */
+   /*** Read in an image  */
    bool ReadImage( const char *, const SizeType&, const double *, bool,
     InputImageType * );
 
-   /**
-    * Write an image out to file
-    */
+   /*** Write an image out to file  */
    void WriteImage( InputImageType *, const char *, bool );
 
-   /**
-    * Normalize image to have mean of zero and variance of one
-    */
+   /*** Normalize image to have mean of zero and variance of one.  */
    void NormalizeImage( InputImageType *, ImageType * );
 
-   /**
-    * Initialize
-    */
+   /*** Initialize  */
    void Initialize();
 
-   /**
-    * Parse input file
-    */
+   /*** Parse input file  */
    bool ParseInputFile( const char * );
 
-   /**
-    * Setup the registrator
-    */
+   /*** Setup the registrator  */
    void SetUpRegistrator();
 
-   /**
-    * Transform reference image to form registered image
-    */
+   /*** Transform reference image to form registered image  */
    void TransformReference();
 
-   /**
-    * Write PGM files
-    */
+   /*** Write PGM files  */
    bool WritePGMFiles( InputImageType *, const char *, const char * );
-
   
 };
-
 
 #endif
