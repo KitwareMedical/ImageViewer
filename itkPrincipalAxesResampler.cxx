@@ -93,7 +93,7 @@ main(int argc, char *argv[])
     std::cout << "Reading image file." << std::endl;
     ImageIndexType index;        // Index to current pixel
     unsigned long point[3];      // Location of current pixel
-    unsigned char bytes[2];      // First and second bytes of pixel
+    unsigned char buff[2*ImageWidth];  // Input/output buffer
     PixelType value;             // Value of pixel
     size_t count;
 #if 1       // Version using explicit loops
@@ -101,22 +101,24 @@ main(int argc, char *argv[])
         point[2] = slice;
         for (long row = 0; row < ImageHeight; row++) {
             point[1] = row;
+            count = fread(buff, 1, 2*ImageWidth, infile);
+            if (count != 2*ImageWidth) {
+                fprintf(stderr, "Error reading input file\n");
+                exit(EXIT_FAILURE); 
+            }                
             for (long col = 0; col < ImageWidth; col++) {
                 point[0] = col;
                 index.SetIndex(point);
-                count = fread(bytes, 1, 2, infile);
-                if (count != 2) {
-                    fprintf(stderr, "Error reading input file\n");
-                    exit(EXIT_FAILURE); }
                 if (bigend)
-                    value = (bytes[0] << 8) + bytes[1];
+                    value = (buff[2*col+0] << 8) + buff[2*col+1];
                 else
-                    value = (bytes[1] << 8) + bytes[0];
+                    value = (buff[2*col+1] << 8) + buff[2*col+0];
                 image->SetPixel(index, value);
             }
         }
     }
 #else    // Broken version using iterators
+    unsigned char bytes[2];      // First and second bytes of pixel
     region = image->GetRequestedRegion();
     ImageIteratorType iterator(image, region);
     for (iterator.Begin(); !iterator.IsAtEnd(); ++iterator)
@@ -231,18 +233,18 @@ main(int argc, char *argv[])
                 index.SetIndex(point);
                 value = resamp->GetPixel(index);
                 if (bigend) {
-                    bytes[0] = value >> 8;
-                    bytes[1] = value & 0xff;
+                    buff[2*col+0] = value >> 8;
+                    buff[2*col+1] = value & 0xff;
                 }
                 else {
-                    bytes[1] = value >> 8;
-                    bytes[0] = value & 0xff;
+                    buff[2*col+1] = value >> 8;
+                    buff[2*col+0] = value & 0xff;
                 }
-                count = fwrite(bytes, 1, 2, outfile);
-                if (count != 2) {
-                    fprintf(stderr, "Error reading input file\n");
-                    exit(EXIT_FAILURE); }
             }
+            count = fwrite(buff, 1, 2*ImageWidth, outfile);
+            if (count != 2*ImageWidth) {
+                fprintf(stderr, "Error writing output file\n");
+                exit(EXIT_FAILURE); }
         }
     }
     fclose(outfile);
