@@ -126,9 +126,7 @@ public:
                                          > PatternIntensityImageMetricType;
 
   typedef   itk::ResampleImageFilter< MovingImageType,
-                                      MovingImageType,
-                                      AffineTransformType 
-                                                  >  ResampleFilterType;
+                                      MovingImageType>  ResampleFilterType;
 
   typedef   itk::ImageFileWriter< MovingImageType >  MovingImageWriterType;
 

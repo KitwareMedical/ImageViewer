@@ -48,17 +48,15 @@ bool transformImage(typename itk::Image<dataT,3>::Pointer fixedIm,
   typedef itk::AffineTransform<double, 3> TransformType;
   typedef itk::LinearInterpolateImageFunction<ImageType,double>  
           InterpolatorType;
-  typedef itk::ResampleImageFilter<ImageType,ImageType,TransformType,
-                                   InterpolatorType> 
-          ResamplerType;
+  typedef itk::ResampleImageFilter<ImageType,ImageType> ResamplerType;
 
   InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
   ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( movingIm );
 
-  resampler->SetTransform( transform );
-  resampler->SetInterpolator( interpolator );
+  resampler->SetTransform( transform.GetPointer() );
+  resampler->SetInterpolator( interpolator.GetPointer() );
   resampler->SetSize( fixedIm->GetLargestPossibleRegion().GetSize() );
   resampler->SetOutputOrigin( fixedIm->GetOrigin() );
   resampler->SetOutputSpacing( fixedIm->GetSpacing() );

@@ -56,8 +56,7 @@ OutputGenerator<TImage>
   typedef AffineTransformType::ScalarType CoordRepType;
   typedef itk::LinearInterpolateImageFunction<ImageType,CoordRepType> 
     InterpolatorType;
-  typedef itk::ResampleImageFilter<ImageType,ImageType,
-    AffineTransformType,InterpolatorType> ResamplerType;
+  typedef itk::ResampleImageFilter<ImageType,ImageType> ResamplerType;
 
   InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
