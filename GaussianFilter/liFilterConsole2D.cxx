@@ -39,8 +39,8 @@ liFilterConsole2D
   m_Viewer_H2x  = ImageViewerType::New();
   m_Viewer_H2y  = ImageViewerType::New();
 
-  m_Viewer_Laplacian = ImageViewerType::New();
-
+  m_Viewer_Laplacian =        ImageViewerType::New();
+  m_Viewer_Smoothed  =        ImageViewerType::New();
   m_Viewer_Gradient_Modulus = ImageViewerType::New();
 
   m_InputViewer->SetLabel( "Input Image" );
@@ -52,7 +52,7 @@ liFilterConsole2D
   m_Viewer_H2y->SetLabel( "Second Derivative Y" );
 
   m_Viewer_Laplacian->SetLabel( "Laplacian" );
-  
+  m_Viewer_Smoothed->SetLabel( "Smoothed" );
   m_Viewer_Gradient_Modulus->SetLabel( "Gradient Modulus" );
 
 
@@ -62,7 +62,8 @@ liFilterConsole2D
   progressSlider->Observe( m_H1y.GetPointer() );
   progressSlider->Observe( m_H2x.GetPointer() );
   progressSlider->Observe( m_H2y.GetPointer() );
-  progressSlider->Observe( m_Add.GetPointer() );
+  progressSlider->Observe( m_Laplacian.GetPointer() );
+  progressSlider->Observe( m_Smoothed.GetPointer() );
   progressSlider->Observe( m_Modulus.GetPointer() );
                               
   loadButton->Observe( m_Reader.GetPointer() );
@@ -73,7 +74,8 @@ liFilterConsole2D
   H1yButton->Observe( m_H1y.GetPointer() );
   H2xButton->Observe( m_H2x.GetPointer() );
   H2yButton->Observe( m_H2y.GetPointer() );
-  laplacianButton->Observe( m_Add.GetPointer() );
+  laplacianButton->Observe( m_Laplacian.GetPointer() );
+  smoothedButton->Observe( m_Smoothed.GetPointer() );
   modulusButton->Observe( m_Modulus.GetPointer() );
 
   m_Reader->AddObserver( itk::ModifiedEvent(), HxButton->GetRedrawCommand().GetPointer() );
@@ -83,6 +85,7 @@ liFilterConsole2D
   m_Reader->AddObserver( itk::ModifiedEvent(), H2xButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), H2yButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::ModifiedEvent(), smoothedButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
 
   this->ShowStatus("Let's start by loading an image...");
@@ -177,6 +180,7 @@ liFilterConsole2D
   m_Viewer_H2y->Hide();
   m_InputViewer->Hide();
   m_Viewer_Laplacian->Hide();
+  m_Viewer_Smoothed->Hide();
   m_Viewer_Gradient_Modulus->Hide();
 }
 
@@ -320,6 +324,26 @@ liFilterConsole2D
  
 /************************************
  *
+ *  Show Smoothed
+ *
+ ***********************************/
+void
+liFilterConsole2D
+::ShowSmoothed( void )
+{
+
+  m_Smoothed->Update();
+  m_Viewer_Smoothed->SetImage( m_Smoothed->GetOutput() );  
+  m_Viewer_Smoothed->Show();
+
+}
+
+
+
+
+ 
+/************************************
+ *
  *  Show Laplacian
  *
  ***********************************/
@@ -328,8 +352,8 @@ liFilterConsole2D
 ::ShowLaplacian( void )
 {
 
-  m_Add->Update();
-  m_Viewer_Laplacian->SetImage( m_Add->GetOutput() );  
+  m_Laplacian->Update();
+  m_Viewer_Laplacian->SetImage( m_Laplacian->GetOutput() );  
   m_Viewer_Laplacian->Show();
 
 }

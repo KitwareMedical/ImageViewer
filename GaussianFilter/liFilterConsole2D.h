@@ -41,6 +41,7 @@ public:
   virtual void ShowSecondDerivativeX(void);
   virtual void ShowSecondDerivativeY(void);
   virtual void ShowLaplacian(void);
+  virtual void ShowSmoothed(void);
   virtual void ShowGradientModulus(void);
   virtual void Execute(void);
 
@@ -54,7 +55,7 @@ private:
   ImageViewerType::Pointer           m_Viewer_H2y;
 
   ImageViewerType::Pointer           m_Viewer_Laplacian;
-
+  ImageViewerType::Pointer           m_Viewer_Smoothed;
   ImageViewerType::Pointer           m_Viewer_Gradient_Modulus;
 
 };

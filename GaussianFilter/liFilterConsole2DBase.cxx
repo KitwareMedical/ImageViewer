@@ -69,11 +69,17 @@ liFilterConsole2DBase
   m_H2x->SetInputImage( m_Hy->GetOutput() );
   m_H2y->SetInputImage( m_Hx->GetOutput() );
 
-  m_Add = AddFilterType::New();
+  m_Laplacian = AddFilterType::New();
 
-  m_Add->SetInput1( m_H2x->GetOutput() );
-  m_Add->SetInput2( m_H2y->GetOutput() );
+  m_Laplacian->SetInput1( m_H2x->GetOutput() );
+  m_Laplacian->SetInput2( m_H2y->GetOutput() );
 
+  m_Smoothed = SmoothingFilterType::New();
+
+  m_Smoothed->SetInputImage( m_Hx->GetOutput() );
+  m_Smoothed->SetDirection( 1 );
+
+  m_Modulus = ModulusFilterType::New();
   m_Modulus = ModulusFilterType::New();
 
   m_Modulus->SetInput1( m_H1x->GetOutput() );
@@ -176,6 +182,8 @@ liFilterConsole2DBase
 
   m_H2x->SetSigma( value );
   m_H2y->SetSigma( value );
+ 
+  m_Smoothed->SetSigma( value );
 
 }
 
@@ -199,8 +207,8 @@ liFilterConsole2DBase
     return;
   }
   
-  m_Add->Update();
-
+  m_Laplacian->Update();
+  m_Smoothed->Update();
   m_Modulus->Update();
 
 }

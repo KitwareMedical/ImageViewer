@@ -44,6 +44,11 @@ public:
                             InputImageType,
                             ImageType,
                             ComputationType  > InputGaussianFilterType;
+
+  typedef   itk::RecursiveGaussianImageFilter<
+                            ImageType,
+                            ImageType,
+                            ComputationType  > SmoothingFilterType;
   
   typedef   itk::RecursiveGaussianImageFilter<
                             ImageType,
@@ -100,7 +105,8 @@ protected:
   GaussianSecondDerivativeFilterType::Pointer    m_H2x;
   GaussianSecondDerivativeFilterType::Pointer    m_H2y;
 
-  AddFilterType::Pointer                         m_Add;
+  AddFilterType::Pointer                   m_Laplacian;
+  SmoothingFilterType::Pointer              m_Smoothed;
   ModulusFilterType::Pointer                 m_Modulus;
 
   bool                                   m_ImageLoaded;

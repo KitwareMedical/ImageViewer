@@ -7,7 +7,8 @@ gridy 5
 snap 3
 class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
 } {
-  Function {liFilterConsole2DGUI()} {} {
+  Function {liFilterConsole2DGUI()} {open
+  } {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console} open
       xywh {63 118 598 322}
@@ -40,6 +41,9 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
         }
         Fl_Box {} {
           xywh {380 107 70 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 85 235 10} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {381 132 69 10} box UP_BOX color 4
@@ -78,7 +82,7 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
           xywh {438 39 10 35} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {selected
+      Fl_Group controlsGroup {
         xywh {0 1 595 319} deactivate
       } {
         Fl_Light_Button inputButton {
@@ -147,6 +151,12 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
           label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
           xywh {465 172 103 68} labeltype image
         }
+        Fl_Light_Button smoothedButton {
+          label Smooth
+          callback {ShowSmoothed();} selected
+          xywh {471 80 87 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
       }
       Fl_Slider progressSlider {
         xywh {5 260 580 15} type {Horz Fill} selection_color 2
@@ -188,5 +198,7 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
   Function {ShowLaplacian( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientModulus( void )} {return_type {virtual void}
+  } {}
+  Function {ShowSmoothed( void )} {return_type {virtual void}
   } {}
 } 
