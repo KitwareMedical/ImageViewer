@@ -23,7 +23,7 @@
 
 #include "itkImage.h"
 #include "itkImageFileReader.h"
-#include "itkDiscreteGaussianImageFilter.h"
+#include "itkAddImageFilter.h"
 
 #include "itkQtAdaptor.h"
 #include "itkQtProgressBar.h"
@@ -34,7 +34,8 @@ int main(int argc, char **argv)
 
   typedef itk::Image< float, 2 > ImageType;
 
-  typedef itk::DiscreteGaussianImageFilter< 
+  typedef itk::AddImageFilter< 
+                    ImageType,
                     ImageType,
                     ImageType >  FilterType;
 
@@ -44,7 +45,8 @@ int main(int argc, char **argv)
   
   FilterType::Pointer filter = FilterType::New();
 
-  filter->SetInput( reader->GetOutput() );
+  filter->SetInput1( reader->GetOutput() );
+  filter->SetInput2( reader->GetOutput() );
 
   // Create Qt Application to let Qt get its 
   // parameters from the command line
@@ -53,7 +55,7 @@ int main(int argc, char **argv)
   reader->SetFileName( argv[1] );
 
   QVBox qb;
-  qb.resize(120,200);
+  qb.resize(620,200);
 
   QPushButton  bb( "Start", &qb );
   bb.resize( 100, 30 );
