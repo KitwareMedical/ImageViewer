@@ -188,7 +188,7 @@ int main(int argc, char * argv[])
   std::string chunkfilename;
   char strbuf[256];
   char *scanline;
-  ofstream out;
+  std::ofstream out;
   unsigned scanlen;
 
 

@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
   if (!in)
     {
       std::cerr << "Could not open file" << chunkfile << std::endl;
-      std::exit(1);
+      ::exit(1);
     }
   in.read(&chunknumber, sizeof(int)); //read the number of chunks to follow
   chunk_list = new ctk::chunk_info_struct[chunknumber];

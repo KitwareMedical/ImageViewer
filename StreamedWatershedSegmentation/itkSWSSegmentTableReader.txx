@@ -62,7 +62,7 @@ void SegmentTableReader<TScalarType>
   typename SegmentTableType::DataType *segptr;
 
   typename SegmentTableType::Pointer output = this->GetOutput();
-  ifstream in(m_FileName.c_str());
+  std::ifstream in(m_FileName.c_str());
   if (!in)
     {
       itkDebugMacro ("Couldn't open " << m_FileName);

@@ -77,7 +77,7 @@ void BoundaryDataReader<TScalarType, TDimension>::GenerateData()
 
   unsigned long imgsz, hashsz, offsz;
   
-  ifstream in(m_FileName.c_str());
+  std::ifstream in(m_FileName.c_str());
   if (!in)
     {
       std::cerr << "BoundaryDataReader: couldn't open file"

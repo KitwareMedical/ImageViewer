@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
   if (argc < 2)
     {
       std::cerr << "Usage: catchunkfile <filename>" << std::endl;
-      std::exit(1);
+      ::exit(1);
     }
   
   std::ifstream in;
@@ -60,13 +60,13 @@ int main(int argc, char *argv[])
   if (!in)
     {
       std::cerr << "Could not open file" << std::endl;
-      std::exit(1);
+      ::exit(1);
     }
   
   in.read(&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
   in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
-  in.close;
+  in.close();
 
   // List the chunks
   std::cout << chunknumber << " records" << std::endl;

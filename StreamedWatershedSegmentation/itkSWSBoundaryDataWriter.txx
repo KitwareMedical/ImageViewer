@@ -72,14 +72,13 @@ void BoundaryDataWriter<TScalarType, TDimension>::SafeWrite()
   unsigned int i;
   unsigned long imgsz, hashsz;
   
-
-  ofstream out(m_FileName.c_str());
+  std::ofstream out(m_FileName.c_str());
   if (!out)
     {
       std::cerr << "BoundaryDataWriter: couldn't open file" << m_FileName <<
         std::endl; 
 
-      exit(-1);
+      ::exit(-1);
     }
 
   // First write all of the valid indicies

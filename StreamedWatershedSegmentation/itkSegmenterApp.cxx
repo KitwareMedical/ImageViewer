@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
   if (!in)
     {
       std::cerr << "Could not open file" << in_chunkfile << std::endl;
-      std::exit(1);
+      ::exit(1);
     }
   
   in.read(&chunknumber, sizeof(int)); //read the number of chunks to follow
@@ -260,8 +260,9 @@ int main(int argc, char *argv[])
   out.open(output_chunk_file.c_str());
   if (!out)
     {
-      std::cerr << "Could not open output chunk file " << output_chunk_file << std::endl;
-      std::exit(1);
+      std::cerr << "Could not open output chunk file " << output_chunk_file <<
+        std::endl;
+      ::exit(1);
     }
   
   out.write(&chunknumber, sizeof(int)); //write the number of chunks to follow

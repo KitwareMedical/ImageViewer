@@ -62,7 +62,7 @@ void SegmentTableWriter<TScalarType>
   typename SegmentTableType::edge_list_t::iterator edge_it;
   typename SegmentTableType::Pointer input = this->GetInput();
   
-  ofstream out(m_FileName.c_str());
+  std::ofstream out(m_FileName.c_str());
   if (!out)
     {
       throw ExceptionObject(__FILE__, __LINE__);

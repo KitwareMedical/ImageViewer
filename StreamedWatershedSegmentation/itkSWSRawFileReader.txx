@@ -100,7 +100,8 @@ void RawFileReader<TOutputImage>::SafeRead()
 
   unsigned rdsz = 16384;
   buf = new PixelType[rdsz];
-  std::cout << "Reading a region of size: " << output->GetRequestedRegion() << std::endl;
+  std::cout << "Reading a region of size: " << output->GetRequestedRegion() <<
+    std::endl; 
   while ( !in.eof() )
     {
       in.read((unsigned char *)buf, sizeof(PixelType) * 16384);

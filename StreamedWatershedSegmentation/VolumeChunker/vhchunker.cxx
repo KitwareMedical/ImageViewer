@@ -171,7 +171,7 @@ int main(int argc, char * argv[])
     {
       std::cerr << "Currently only the visible female dataset is supported" <<
         std::endl;
-      std::exit(1);
+      ::exit(1);
     }
   
   // Calculate the chunks we need
@@ -230,7 +230,7 @@ int main(int argc, char * argv[])
   std::string chunkfilename;
   char strbuf[256];
   char *scanline, *scanline2, *scanline3, *interlaced_scanline;
-  ofstream out;
+  std::ofstream out;
   unsigned scanlen;
   std::streampos pos;
   for (i = 0; i < chunknumber; ++i)
@@ -287,7 +287,7 @@ int main(int argc, char * argv[])
             {
               std::cerr << "Could not open " << input_path <<
                 vf_filename_map(zz) << std::endl;
-              std::exit(1);
+              ::exit(1);
             }
           in.seekg(start_offset, ios::beg);
           for (unsigned yy = 0; yy < y_max; yy++)

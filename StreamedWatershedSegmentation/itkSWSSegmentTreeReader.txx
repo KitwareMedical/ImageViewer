@@ -57,7 +57,7 @@ void SegmentTreeReader<TScalarType>
 
   typename SegmentTreeType::Pointer output = this->GetOutput();
 
-  ifstream in(m_FileName.c_str());
+  std::ifstream in(m_FileName.c_str());
   if (!in)
     {
       throw ExceptionObject(__FILE__, __LINE__);

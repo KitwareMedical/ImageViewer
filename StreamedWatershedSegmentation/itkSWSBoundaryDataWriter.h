@@ -73,11 +73,11 @@ public:
   void SetOutput(BoundaryDataType *input)
     {   this->ProcessObject::SetNthOutput(0, input); }
 
-  BoundaryDataType::Pointer GetInput()
+  typename BoundaryDataType::Pointer GetInput()
     {      return static_cast<BoundaryDataType *>
              (this->ProcessObject::GetInput(0).GetPointer());    }
 
-  BoundaryDataType::Pointer GetOutput()
+  typename BoundaryDataType::Pointer GetOutput()
     {      return static_cast<BoundaryDataType *>
              (this->ProcessObject::GetOutput(0).GetPointer());    }
 

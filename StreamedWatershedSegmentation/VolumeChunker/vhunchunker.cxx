@@ -119,7 +119,7 @@ protected:
   long m_y_stride;
   long m_z_stride;
 
-  ofstream m_ostream;
+  std::ofstream m_ostream;
 
   void calculate_strides();
   
@@ -155,7 +155,10 @@ void volume_ra_file::open(const char *fn)
   // Create and pad file to proper size
   m_ostream.open(fn, ios::trunc);
   if (!m_ostream)
-    {  std::cerr << "Cannot open file " << fn << std::endl; std::exit(1); }
+    {
+      std::cerr << "Cannot open file " << fn << std::endl;
+      ::exit(1);
+    }
   buf = new unsigned char[bufsz];
   ::memset((void *)buf, 0, bufsz);
   while (counter < (filelen - bufsz))
@@ -233,7 +236,7 @@ void slice_ra_file::open(const char *fn)
       if (!m_ostream)
         {
           std::cerr << "Could not create file " << name << std::endl;
-          std::exit(1);
+          ::exit(1);
         }
 
       filelen = m_sz[0] * m_sz[1] * m_pixel_size * m_components;
@@ -334,7 +337,7 @@ int main(int argc, char *argv[])
     {
       std::cerr << "Could not open chunk record file " << chunk_filename
                 << std::endl;
-      std::exit(1);
+      ::exit(1);
     }
   in.read(&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
