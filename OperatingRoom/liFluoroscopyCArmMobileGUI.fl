@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0010 
+version 1.0009 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -8,11 +8,10 @@ snap 3
 class FluoroscopyCArmMobileGUI {open
 } {
   decl {li::FluoroscopyCArmMobile::Pointer m_Unit;} {}
-  Function {FluoroscopyCArmMobileGUI()} {open
-  } {
+  Function {FluoroscopyCArmMobileGUI()} {} {
     Fl_Window controlWindow {
-      label {Flurosocopy Unit Control} open
-      xywh {623 637 315 325}
+      label {Flurosocopy Unit Control}
+      xywh {623 570 315 325}
       code0 {\#include <liFluoroscopyCArmMobile.h>} visible
     } {
       Fl_Roller cranCaudRoller {
@@ -110,7 +109,7 @@ m_Unit->SetAzimuthAngle( 180 );}
         xywh {215 272 70 30} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX value 1 selection_color 2
       }
       Fl_Choice {} {
-        label {Detector : } open
+        label {Detector : }
         xywh {120 274 70 28}
       } {
         menuitem {} {
@@ -130,7 +129,7 @@ m_Unit->SetAzimuthAngle( 180 );}
         xywh {215 189 60 25} maximum 3000 value 1170
       }
       Fl_Choice {} {
-        label {Configuration : } open
+        label {Configuration : }
         xywh {160 160 115 25}
       } {
         menuitem {} {
@@ -144,7 +143,7 @@ SetUnitGeometricParameters( stfd, vps );}
           label {TIPS LAT}
           callback {const double stfd = 1180.0f;
 const double vps  = 200.3f;
-SetUnitGeometricParameters( stfd, vps );} selected
+SetUnitGeometricParameters( stfd, vps );}
           xywh {10 10 100 20}
         }
       }
@@ -183,7 +182,7 @@ cranioCaudalPositionValueOutput->value( m_Unit->GetCranioCaudalPosition() );
 lateralPositionAdjuster->value( m_Unit->GetCranioCaudalPosition() );
 lateralPositionValueOutput->value( m_Unit->GetCranioCaudalPosition() );} {}
   }
-  Function {SetUnitGeometricParameters(double stfd,double vps)} {open return_type {virtual void}
+  Function {SetUnitGeometricParameters(double stfd,double vps)} {return_type {virtual void}
   } {
     code {sourceToFilmDistanceValueInput->value( stfd );
 detectorDiameterValueInput->value( vps );
@@ -191,6 +190,7 @@ m_Unit->SetSourceToFilmDistance( stfd );
 m_Unit->SetDetectorRadius( vps / 2.0 );
 m_Unit->InvokeEvent( li::FieldOfViewChangedEvent );
 const double angle = atan2( vps/2.0, stfd );
-fieldOfViewValueOutput->value( 2.0 * angle * 45.0 / atan(1) );} {}
+fieldOfViewValueOutput->value( 2.0 * angle * 45.0 / atan(1) );} {selected
+    }
   }
 } 

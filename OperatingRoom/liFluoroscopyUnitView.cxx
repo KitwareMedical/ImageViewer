@@ -492,6 +492,8 @@ void FluoroscopyUnitView::draw(void)
 
     glLightfv( GL_LIGHT0, GL_POSITION, lightPosition );
 
+    glColor3f( (GLfloat)1.0, (GLfloat)1.0, (GLfloat)1.0 );
+
     GLfloat focalDistance = lineOfSight.GetNorm();
     GLfloat pnx =   m_DetectorRadius;
     GLfloat pny =   m_DetectorRadius;

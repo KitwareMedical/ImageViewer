@@ -185,7 +185,7 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
                     commandUpdateRegistratorFieldOfView =
                            li::CommandUpdateRegistratorFieldOfView::New();
 
-  m_OperatingRoomModel->GetPatient()->GetVesselsModel()->AddObserver( 
+  m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver( 
                               li::FieldOfViewChangedEvent,
                               commandUpdateRegistratorFieldOfView );
  

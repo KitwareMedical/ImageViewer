@@ -61,13 +61,25 @@ CommandUpdateRegistratorFieldOfView::Execute( itk::LightObject * unit, unsigned 
       FluoroscopyCArmMobile::Pointer  fluoroscopyCArmMobile = 
                         static_cast< FluoroscopyCArmMobile *>( unit );
 
-      m_Registrator->GetRegistrator()->GetMetric()
-        ->GetMapper()->GetTransform()->GetTransform().SetFocalDistance(  
-                    fluoroscopyCArmMobile->GetSourceToFilmDistance() );
+      const double focalDistance = 
+                    fluoroscopyCArmMobile->GetSourceToFilmDistance();
 
-      m_Registrator->GetRegistrator()->GetMetric()
-        ->GetMapper()->GetTransform()->GetTransform().SetHeight(  
-                    fluoroscopyCArmMobile->GetDetectorRadius() * 2.0 );
+      const double height = 
+                    fluoroscopyCArmMobile->GetDetectorRadius() * 2.0;
+
+      const double width = 
+                    fluoroscopyCArmMobile->GetDetectorRadius() * 2.0;
+      
+      m_Registrator->GetRegistrator()->GetMetric()->GetMapper()
+              ->GetTransform()->SetFocalDistance( focalDistance ); 
+
+      m_Registrator->GetRegistrator()->GetMetric()->GetMapper()
+                      ->GetTransform()->SetHeight( height ); 
+
+      m_Registrator->GetRegistrator()->GetMetric()->GetMapper()
+                      ->GetTransform()->SetWidth( width ); 
+
+
 
     }
   }
@@ -93,13 +105,24 @@ CommandUpdateRegistratorFieldOfView::Execute(const itk::LightObject * unit, unsi
       FluoroscopyCArmMobile::ConstPointer  fluoroscopyCArmMobile = 
                         static_cast<const FluoroscopyCArmMobile *>( unit );
 
-      m_Registrator->GetRegistrator()->GetMetric()
-        ->GetMapper()->GetTransform()->GetTransform().SetFocalDistance(  
-                    fluoroscopyCArmMobile->GetSourceToFilmDistance() );
 
-      m_Registrator->GetRegistrator()->GetMetric()
-        ->GetMapper()->GetTransform()->GetTransform().SetHeight(  
-                    fluoroscopyCArmMobile->GetDetectorRadius() * 2.0 );
+      const double focalDistance = 
+                    fluoroscopyCArmMobile->GetSourceToFilmDistance();
+
+      const double height = 
+                    fluoroscopyCArmMobile->GetDetectorRadius() * 2.0;
+
+      const double width = 
+                    fluoroscopyCArmMobile->GetDetectorRadius() * 2.0;
+
+      m_Registrator->GetRegistrator()->GetMetric()->GetMapper()
+              ->GetTransform()->SetFocalDistance( focalDistance ); 
+
+      m_Registrator->GetRegistrator()->GetMetric()->GetMapper()
+                      ->GetTransform()->SetHeight( height ); 
+
+      m_Registrator->GetRegistrator()->GetMetric()->GetMapper()
+                      ->GetTransform()->SetWidth( width ); 
 
     }
   }
