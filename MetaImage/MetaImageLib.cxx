@@ -159,7 +159,7 @@ InitMetaImage(int _iNDims, const int * _iDimSize, MET_Type _eType, const float *
 
    if(_eSize == NULL)
       for(i=0; i<iNDims; i++)
-         eSize[i] = 0;
+         eSize[i] = 1;
      else
       for(i=0; i<iNDims; i++)
          eSize[i] = _eSize[i];
@@ -221,10 +221,10 @@ InitMetaMem()
       {
       iDimSize[i] = 0;
       iSubQuantity[i] = 0;
-      eSize[i] = 0;
+      eSize[i] = 1;
       iPosition[i] = 0;
       pPosition[i] = 0;
-      eSpacing[i] = 0;
+      eSpacing[i] = 1;
       }
    for(i=0; i<6; i++)
       iOrientation[i] = 0;
@@ -599,14 +599,14 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
          eSize[i] = f[c].val[i];
      else
       for(i=0; i<iNDims; i++)
-         eSize[i] = 0;
+         eSize[i] = 1;
 
    if(f[++c].defined)
       for(i=0; i<iNDims; i++)
          eSpacing[i] = f[c].val[i];
      else
       for(i=0; i<iNDims; i++)
-         eSpacing[i] = 0;
+         eSpacing[i] = 1;
 
    if(f[++c].defined)
       eType = MET_StringToType((char *)f[c].val);
