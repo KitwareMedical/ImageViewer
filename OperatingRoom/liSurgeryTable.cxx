@@ -113,7 +113,7 @@ SurgeryTable::DrawGeometry(void) const
   
   // at this level the patient will be drawn.
   glTranslated( 0.0, 0.0 , m_Bed->GetHeight() );
-      
+ 
 
 }
 

@@ -16,6 +16,7 @@
 
 #include "fltkBox3D.h"
 
+
 namespace li {
 
 
@@ -158,6 +159,7 @@ private:
    * Axial displacements move the Bed along the BedSupport.
    */
   fltk::Box3D::Pointer    m_Bed;
+
 
 };
 

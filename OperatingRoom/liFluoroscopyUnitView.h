@@ -68,8 +68,8 @@ public:
   /**
    *  Image type for real fluoroscopy
    */
-  //typedef itk::Image< unsigned char, 2 > ImageType; 
-  typedef itk::Image< unsigned short, 2 > ImageType; 
+  typedef itk::Image< unsigned char, 2 > ImageType; 
+  //typedef itk::Image< unsigned short, 2 > ImageType; 
 
 
   /**

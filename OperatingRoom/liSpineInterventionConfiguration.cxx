@@ -14,7 +14,8 @@
 
 #include "liSpineInterventionConfiguration.h"
 
-#include "itkFileIOMetaImage.h"
+//#include "itkFileIOMetaImage.h"
+#include "itkMetaImageIOFactory.h"
 #include "itkWriteMetaImage.h"
 
 #include "liCommandUpdateSpineModelGUI.h"
@@ -42,9 +43,12 @@ namespace li {
 SpineInterventionConfiguration::SpineInterventionConfiguration()
 {
 
-  itk::FileIOMetaImageFactory * factory = new itk::FileIOMetaImageFactory;
-  itk::ObjectFactoryBase * factoryBase = static_cast<itk::ObjectFactoryBase *>(factory);
-  itk::ObjectFactoryBase::RegisterFactory( factoryBase );
+//  itk::FileIOMetaImageFactory * factory = new itk::FileIOMetaImageFactory;
+//  itk::ObjectFactoryBase * factoryBase = static_cast<itk::ObjectFactoryBase *>(factory);
+//  itk::ObjectFactoryBase::RegisterFactory( factoryBase );
+
+  itk::MetaImageIOFactory::RegisterOneFactory();
+ 
 
   m_FluoroscopyImageReader = ImageReaderType::New();
 

@@ -60,8 +60,8 @@ public:
    * Fluoroscopic image type 
    */
   // Azucar
-  // typedef itk::Image<unsigned char, 2> FluoroscopicImageType;
-  typedef itk::Image<unsigned short, 2> FluoroscopicImageType;
+  typedef itk::Image<unsigned char, 2> FluoroscopicImageType;
+  //typedef itk::Image<unsigned short, 2> FluoroscopicImageType;
 
 
 

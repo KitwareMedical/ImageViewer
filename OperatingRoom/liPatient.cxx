@@ -154,8 +154,10 @@ Patient::DrawGeometry(void)  const
 
     glPopMatrix();
 
-    glRotated(  90.0, 0.0, 1.0, 0.0 );
+//  glRotated(  90.0, 0.0, 1.0, 0.0 );
+    glRotated( -90.0, 0.0, 1.0, 0.0 );
     glRotated(  90.0, 0.0, 0.0, 1.0 );
+  
     m_Vessels->glDraw();
 
   glPopMatrix();

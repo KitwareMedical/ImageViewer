@@ -28,7 +28,7 @@
  */
 #include <liSurgeryTableGUI.h>
 #include <liOperatingRoomViewGUI.h>
-#include <itkFileIOToImageFilter.h>
+#include <itkImageFileReader.h>
 #include <liSpineModelGUI.h>
 #include <fltkDisplayGlWindowGUI.h>
 #include <fltkSlice3DDrawer.h>
@@ -87,13 +87,13 @@ public:
   /** 
    * Fluorocopy Image Reader Type
    */
-  typedef itk::FileIOToImageFilter< ImageType >   ImageReaderType;
+  typedef itk::ImageFileReader< ImageType >   ImageReaderType;
 
 
   /** 
    * Volume Image Reader Type
    */
-  typedef itk::FileIOToImageFilter< VolumeType >   VolumeReaderType;
+  typedef itk::ImageFileReader< VolumeType >   VolumeReaderType;
 
 
   /** 
