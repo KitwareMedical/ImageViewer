@@ -1,0 +1,123 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0102 
+header_name {.h} 
+code_name {.cxx}
+class liFilterConsole3DGUI {open : {public liFilterConsole3DBase}
+} {
+  Function {liFilterConsole3DGUI()} {open
+  } {
+    Fl_Window consoleWindow {
+      label {Anisotropic Diffusion 3D} open
+      xywh {379 269 586 320} color 215
+      code0 {\#include <liFilterConsole3DBase.h>}
+      code1 {\#include <fltkLightButton.h>} visible
+    } {
+      Fl_Group controlsGroup {selected
+        xywh {0 1 582 304} deactivate
+      } {
+        Fl_Light_Button inputButton {
+          label {Show Input Image}
+          callback {ShowInputImage();}
+          xywh {25 70 150 30} type Normal value 1 selection_color 121
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button GradientButton {
+          label {Show Gradient Anisotripic Diffusion Image}
+          callback {ShowGradientImage();}
+          xywh {219 28 306 24} type Normal value 1 selection_color 121
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button CurvatureButton {
+          label {Show Curvature Anisotropic Diffusion Image}
+          callback {ShowCurvatureImage();}
+          xywh {219 118 304 24} selection_color 121
+          class {fltk::LightButton}
+        }
+        Fl_Button {} {
+          label {Save@>}
+          callback {SaveGradientImage()}
+          xywh {525 28 55 24}
+        }
+        Fl_Button {} {
+          label {Save@>}
+          callback {SaveCurvatureImage()}
+          xywh {523 118 55 24}
+        }
+        Fl_Box {} {
+          label label
+          xywh {175 79 15 10} box THIN_UP_BOX color 12 labeltype NO_LABEL
+        }
+        Fl_Box {} {
+          label label
+          xywh {190 35 10 100} box THIN_UP_BOX color 12 labeltype NO_LABEL
+        }
+        Fl_Box {} {
+          label label
+          xywh {199 35 20 10} box THIN_UP_BOX color 12 labeltype NO_LABEL
+        }
+        Fl_Box {} {
+          label label
+          xywh {199 125 20 10} box THIN_UP_BOX color 12 labeltype NO_LABEL
+        }
+      }
+      Fl_Slider progressSlider {
+        xywh {5 260 570 15} type {Horz Fill} selection_color 5
+        code0 {\#include <fltkProgressBar.h>}
+        class {fltk::ProgressBar}
+      }
+      Fl_Output statusTextOutput {
+        xywh {5 280 570 25}
+      }
+      Fl_Output instructTextOutput {
+        xywh {5 154 285 95} type Multiline color 158 labelcolor 0
+      }
+      Fl_Light_Button loadButton {
+        label {Load Source File}
+        callback {Load();}
+        xywh {25 20 150 30} type Normal value 1 selection_color 121
+        class {fltk::LightButton}
+      }
+      Fl_Button {} {
+        label Quit
+        callback {Quit();}
+        xywh {481 203 80 30}
+      }
+      Fl_Value_Input IterationsGradient {
+        label Iterations
+        callback {SetIterationsForGradient( o->value() );}
+        xywh {304 73 50 25} align 1 maximum 100 value 10
+      }
+      Fl_Value_Input ConductanceGradient {
+        label Conductance
+        callback {SetConductanceForGradient( o->value() );}
+        xywh {415 73 50 25} align 1 maximum 100 value 1
+      }
+      Fl_Value_Input IterationsCurvature {
+        label Iterations
+        callback {SetIterationsForCurvature( o->value() );}
+        xywh {308 164 50 25} align 1 maximum 100 value 10
+      }
+      Fl_Value_Input ConductanceCurvature {
+        label Conductance
+        callback {SetConductanceForCurvature( o->value() );}
+        xywh {415 165 50 25} align 1 maximum 100 value 1
+      }
+      Fl_Box {} {
+        label label
+        xywh {87 50 10 20} box THIN_UP_BOX color 12 labeltype NO_LABEL
+      }
+    }
+  }
+  Function {~liFilterConsole3DGUI()} {return_type virtual
+  } {}
+  Function {Quit( void )} {return_type {virtual void}
+  } {}
+  Function {Load( void )} {return_type {virtual void}
+  } {}
+  Function {ShowInputImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowGradientImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowCurvatureImage( void )} {return_type {virtual void}
+  } {}
+} 
