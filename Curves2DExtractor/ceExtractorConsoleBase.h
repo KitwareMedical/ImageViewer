@@ -51,7 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkRecursiveGaussianImageFilter.h>
 #include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
 #include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
-#include <itkAddImageFilter.h>
+#include <itkAdd2ImageFilter.h>
 #include <itkBinaryMagnitudeImageFilter.h>
 #include <itkEigenAnalysis2DImageFilter.h>
 #include <itkGradientRecursiveGaussianImageFilter.h>
@@ -101,7 +101,7 @@ public:
                             ComputationType  > 
                                GaussianSecondDerivativeFilterType;
 
-  typedef   itk::AddImageFilter< ImageType, 
+  typedef   itk::Add2ImageFilter< ImageType, 
                             ImageType, ImageType >  AddFilterType;
 
 
