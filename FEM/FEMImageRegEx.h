@@ -18,6 +18,7 @@
 =========================================================================*/
 #pragma warning(disable: 4786)
 
+#include "itkFEM.h"
 #include <itkImage.h>
 #include <itkFileIOMetaImage.h>
 #include <itkWriteMetaImage.h>
@@ -37,13 +38,12 @@
 #include "itkImageFileReader.h"
 #include "itkNearestNeighborInterpolateImageFunction.h"
 #include "itkBSplineInterpolateImageFunction.h"
-#include "FEM/itkFEM.h"
-#include "FEM/itkFEMSolverCrankNicolson.h"
-#include "FEM/itkFEMImageMetricLoad.h"
-#include "FEM/itkFEMImageMetricLoadImplementation.h"
-#include "FEM/itkFEMLinearSystemWrapperItpack.h"
-#include "FEM/itkFEMLinearSystemWrapperDenseVNL.h"
-#include "FEM/itkFEMMaterialLinearElasticity.h"
+
+
+
+#include "itkFEMLinearSystemWrapperItpack.h"
+#include "itkFEMLinearSystemWrapperDenseVNL.h"
+
 
 #include "itkTranslationTransform.h"
 #include "itkLinearInterpolateImageFunction.h"

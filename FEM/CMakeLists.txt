@@ -42,8 +42,24 @@ IF(FEM_VISUALIZATION)
 ADD_DEFINITIONS( -DFEM_BUILD_VISUALIZATION /D "_AFXDLL" )
 ENDIF(FEM_VISUALIZATION)
 
+SOURCE_FILES(FEMImageRegEx_SRCS
+  FEMImageRegEx.cxx
+)
+
+# Header and template source files for FEM project
+# we can only include them if compiling on windows
+IF(NOT UNIX)
+IF(WIN32)
+SOURCE_FILES(FEMImageRegEx_SRCS 
+  FEMImageRegEx.h
+)
+ENDIF(WIN32)
+ENDIF(NOT UNIX)
+
+
+
+
 # Create project files for all examples
 ADD_EXECUTABLE(FEMRead FEMRead)
 ADD_EXECUTABLE(FEMTruss FEMTruss)
-ADD_EXECUTABLE(FEMImageRegEx FEMImageRegEx)
-
+ADD_EXECUTABLE(FEMImageRegEx FEMImageRegEx_SRCS)

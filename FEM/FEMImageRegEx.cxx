@@ -470,9 +470,10 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
   FILE *fbin; 
   string exte=".raw";
   string fnum;
-  m_FileCount++;  char dd;
-  itoa(m_FileCount+10,&dd,10);
-  fnum=string(&dd);
+  m_FileCount++;
+  std::ostringstream os;
+  os<<(m_FileCount+10);
+  fnum=os.str();
 
   string fullfname=(fname+fnum+exte);
 
