@@ -20,7 +20,7 @@ Function {make_window()} {open
     Fl_Box tk3D {
       label 3D selected
       xywh {475 100 310 310} box UP_BOX
-      code0 {\#include "TripileTK3D.h"}
+      code0 {\#include "TripleTK3D.h"}
       class TripleTK3D
     }
     Fl_Button {} {

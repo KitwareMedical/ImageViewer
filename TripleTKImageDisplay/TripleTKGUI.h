@@ -7,7 +7,7 @@
 extern Fl_Window *window;
 #include "TripleTK2D.h"
 extern TripleTK2D *tk2D;
-#include "TripileTK3D.h"
+#include "TripleTK3D.h"
 extern TripleTK3D *tk3D;
 #include <FL/Fl_Button.H>
 extern void upButton_CB(Fl_Button*, void*);
