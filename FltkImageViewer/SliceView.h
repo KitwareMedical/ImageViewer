@@ -708,6 +708,8 @@ void SliceView<imType>::sliceNum(unsigned int newSliceNum)
   if(newSliceNum>=cDimSize[cWinOrder[2]])
     newSliceNum = cDimSize[cWinOrder[2]]-1;
   cWinCenter[cWinOrder[2]] = newSliceNum;
+  if(newSliceNum < 0)
+    newSliceNum = 0;
   
   if(cSliceNumCallBack != NULL)
     cSliceNumCallBack();
@@ -1392,7 +1394,7 @@ int SliceView<imType>::handle(int event)
   int x = Fl::event_x();
   int y = Fl::event_y();
   int button;
-  static int key;
+  int key;
   static int fastMov = 0;
   int pace;
 
@@ -1526,9 +1528,13 @@ int SliceView<imType>::handle(int event)
           }
           if((int)cWinCenter[cWinOrder[2]]-pace<0)
           {
-            return 1;
+      if( (int)cWinCenter[cWinOrder[2]] == 0)
+          return 1;
+      else
+        sliceNum(0);
           }
-          sliceNum((int)cWinCenter[cWinOrder[2]]-pace);
+      else
+      sliceNum((int)cWinCenter[cWinOrder[2]]-pace);
           this->update();
           return 1;
           break;
@@ -1546,9 +1552,13 @@ int SliceView<imType>::handle(int event)
           }
           if((int)cWinCenter[cWinOrder[2]]+pace>(int)cDimSize[cWinOrder[2]]-1)
           {
-            return 1;
-          }
-          sliceNum(cWinCenter[cWinOrder[2]]+pace);
+      if((int)cWinCenter[cWinOrder[2]] == (int)cDimSize[cWinOrder[2]]-1)
+        return 1;
+      else
+        sliceNum((int)cDimSize[cWinOrder[2]]-1);
+        }
+      else
+      sliceNum(cWinCenter[cWinOrder[2]]+pace);
           this->update();
           return 1;
           break;
