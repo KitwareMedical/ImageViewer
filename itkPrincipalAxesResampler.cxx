@@ -45,7 +45,7 @@ typedef ImageType::AffineTransformType      AffineTransformType;
 
 typedef itk::Index<NDimensions>                    ImageIndexType;
 typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
-typedef itk::ImageMomentsCalculator<PixelType, NDimensions>  ImageMomentsCalculatorType;
+typedef itk::ImageMomentsCalculator<ImageType>  ImageMomentsCalculatorType;
 typedef itk::LinearInterpolateImageFunction<ImageType>  InterpolatorType;
 typedef itk::Point<double, NDimensions>            PointType;
 
