@@ -17,7 +17,6 @@
 
 #include <liImageRegistrationConsoleBase.h>
 #include <FL/fl_ask.H>
-#include <itkMetaImageIOFactory.h>
 #include <itkRawImageIO.h>
 
 
@@ -56,8 +55,6 @@ liImageRegistrationConsoleBase
 
   m_MovingImageWriter->SetInput( m_ResampleInputMovingImageFilter->GetOutput() );
 
-
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
   itk::RawImageIOFactory< MovingImageType::PixelType, 
                           MovingImageType::ImageDimension >::RegisterOneFactory();
