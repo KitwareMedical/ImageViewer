@@ -412,5 +412,7 @@ void main(int argc, char** argv)
       std::cout << e << std::endl;
     }
   
+
+  return 0;
 }
 
