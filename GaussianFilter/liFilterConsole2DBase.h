@@ -23,8 +23,7 @@
 #include <itkRecursiveGaussianImageFilter.h>
 #include <itkAddImageFilter.h>
 #include <itkBinaryMagnitudeImageFilter.h>
-#include <itkShiftScaleImageFilter.h>
-#include <itkMinimumMaximumImageFilter.h>
+#include <itkRescaleIntensityImageFilter.h>
 
 class liFilterConsole2DBase 
 {
@@ -66,13 +65,11 @@ public:
                                  ImageType,
                                  ImageType >  ModulusFilterType;
 
-  typedef   itk::ShiftScaleImageFilter<
-                     ImageType,
-                     OutputImageType >  IntensityScaleImageFilterType; 
                                  
-  typedef   itk::MinimumMaximumImageFilter<
-                               ImageType
-                               >  MinimumMaximumImageFilterType; 
+  typedef   itk::RescaleIntensityImageFilter<
+                               ImageType,
+                               OutputImageType
+                               >  RescaleIntensityImageFilterType; 
                                  
 
 
@@ -114,13 +111,9 @@ protected:
 
   bool                                        m_ImageFileNameAvailable;
 
-  MinimumMaximumImageFilterType::Pointer      m_MinimumMaximumSmoothed;  
-  MinimumMaximumImageFilterType::Pointer      m_MinimumMaximumLaplacian;  
-  MinimumMaximumImageFilterType::Pointer      m_MinimumMaximumModulus;  
-
-  IntensityScaleImageFilterType::Pointer      m_IntensityScaleSmoothed;  
-  IntensityScaleImageFilterType::Pointer      m_IntensityScaleLaplacian;  
-  IntensityScaleImageFilterType::Pointer      m_IntensityScaleModulus;  
+  RescaleIntensityImageFilterType::Pointer    m_RescaleIntensitySmoothed;  
+  RescaleIntensityImageFilterType::Pointer    m_RescaleIntensityLaplacian;  
+  RescaleIntensityImageFilterType::Pointer    m_RescaleIntensityModulus;  
 
   VolumeWriterType::Pointer                   m_WriterSmoothed;
   VolumeWriterType::Pointer                   m_WriterLaplacian;

@@ -65,9 +65,9 @@ liFilterConsole2D
   progressSlider->Observe( m_Laplacian.GetPointer() );
   progressSlider->Observe( m_Smoothed.GetPointer() );
   progressSlider->Observe( m_Modulus.GetPointer() );
-  progressSlider->Observe( m_IntensityScaleSmoothed.GetPointer() );
-  progressSlider->Observe( m_IntensityScaleLaplacian.GetPointer() );
-  progressSlider->Observe( m_IntensityScaleModulus.GetPointer() );
+  progressSlider->Observe( m_RescaleIntensitySmoothed.GetPointer() );
+  progressSlider->Observe( m_RescaleIntensityLaplacian.GetPointer() );
+  progressSlider->Observe( m_RescaleIntensityModulus.GetPointer() );
   progressSlider->Observe( m_WriterSmoothed.GetPointer() );
   progressSlider->Observe( m_WriterLaplacian.GetPointer() );
   progressSlider->Observe( m_WriterModulus.GetPointer() );
@@ -93,14 +93,6 @@ liFilterConsole2D
   m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), smoothedButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
-
-  m_IntensityScaleModulus->SetScale(    1.0  );
-  m_IntensityScaleSmoothed->SetScale(   1.0  );
-  m_IntensityScaleLaplacian->SetScale(  1.0  );
-
-  m_IntensityScaleModulus->SetShift(   1000  );
-  m_IntensityScaleSmoothed->SetScale(  1000  );
-  m_IntensityScaleLaplacian->SetScale( 1000  );
 
   this->ShowStatus("Let's start by loading an image...");
 
