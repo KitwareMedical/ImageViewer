@@ -18,11 +18,13 @@
 #include "ShapeDetectApp.h"
 #include "AppUtility.h"
 
-#include "RawVolumeReader.h"
 #include "itkImageRegionIterator.h"
 #include "itkExceptionObject.h"
 
 #include "itkFastMarchingImageFilter.h"
+
+#include "itkImageFileReader.h"
+#include "itkRawImageIO.h"
 
 #include "vnl/vnl_math.h"
 
@@ -382,15 +384,23 @@ InputImageType::Pointer & imgPtr
 {
 
   // Read in a raw volume
-  typedef itk::RawVolumeReader<InputPixelType,InputImageType> ReaderType;
+  typedef itk::RawImageIO< InputPixelType, ImageDimension > RawReaderType;
+  RawReaderType::Pointer rawIO = RawReaderType::New();
+  
+  rawIO->SetFileDimensionality( ImageDimension );
+  rawIO->SetDimensions( 0, size[0] );
+  rawIO->SetDimensions( 1, size[1] );
+  rawIO->SetDimensions( 2, size[2] );
+
+  typedef itk::ImageFileReader<InputImageType> ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
  
+  reader->SetImageIO( rawIO );
   reader->SetFileName( filename );
-  reader->SetBigEndian( bigEndian );
-  reader->SetSize( size );
-  reader->Execute();
 
-  imgPtr = reader->GetImage();
+  reader->Update();
+
+  imgPtr = reader->GetOutput();
 
   return true;
 }
