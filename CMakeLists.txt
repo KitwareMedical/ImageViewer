@@ -8,7 +8,7 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
-SUBDIRS(MultiResMIRegistration)
+SUBDIRS(MultiResMIRegistration PrincipalAxes)
 
 
 LINK_LIBRARIES (
@@ -22,7 +22,4 @@ IF(UNIX)
   -lm
   )
 ENDIF(UNIX)
-
-
-ADD_EXECUTABLE(itkPrincipalAxesResampler itkPrincipalAxesResampler)
 
