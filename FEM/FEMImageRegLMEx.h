@@ -205,6 +205,7 @@ public:
   unsigned int m_NumberOfIntegrationPoints;
   unsigned int m_MetricWidth;
   unsigned int m_Maxiters; // max iterations
+  unsigned int m_TotalIterations;
   float m_MaxSmoothing; // max smoothing
   float m_MinSmoothing; // min smoothing
   float m_SmoothingStep;// smoothing step size
