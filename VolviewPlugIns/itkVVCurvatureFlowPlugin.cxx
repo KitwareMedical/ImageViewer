@@ -79,11 +79,11 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 
   const unsigned int totalNumberOfPixels = region.GetNumberOfPixels();
 
-  const bool         importFilterWillNotDeleteTheBuffer = true;
+  const bool         importFilterWillDeleteTheInputBuffer = false;
 
   importFilter->SetImportPointer( static_cast< InputPixelType * >( pds->inData ), 
                                   totalNumberOfPixels,
-                                  importFilterWillNotDeleteTheBuffer );
+                                  importFilterWillDeleteTheInputBuffer );
 
   // Instantiate the CastImageFilter
   // This filter is used for converting the pixel type from the input
