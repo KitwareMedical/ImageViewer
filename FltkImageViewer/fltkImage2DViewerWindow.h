@@ -52,9 +52,9 @@ namespace fltk {
 class Image2DViewerWindow : public GlWindow 
 {
 
-  typedef     unsigned char    DataType;
-
 public:
+
+  typedef     unsigned char    ValueType;
 
   typedef itk::RGBPixel<float>  ColorType;
 
@@ -72,7 +72,7 @@ public:
   
   const ColorType & GetBackground(void) const;
 
-  DataType * GetBuffer(void) 
+  ValueType * GetBuffer(void) 
   { return m_Buffer; }
 
   unsigned int GetWidth(void) const;
@@ -90,7 +90,7 @@ public:
 private:
 
   ColorType          m_Background;
-  DataType        *  m_Buffer;
+  ValueType        *  m_Buffer;
   unsigned int       m_Width;
   unsigned int       m_Height;
   double             m_Zoom;
