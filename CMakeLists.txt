@@ -63,9 +63,7 @@ ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the MRIBiasCorrection example
 IF(HAS_METAIMAGE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    SUBDIRS(MRIBiasCorrection)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
+  SUBDIRS(MRIBiasCorrection)
 ENDIF(HAS_METAIMAGE)
 
 
