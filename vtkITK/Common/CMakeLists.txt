@@ -77,6 +77,9 @@ vtkCommon
 vtkFiltering
 vtkImaging
 vtkVTKITKCommon 
+vtkexpat
+vtkftgl
+vtkfreetype
 VXLNumerics
 ITKCommon
 ITKBasicFilters
