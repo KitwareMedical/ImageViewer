@@ -18,5 +18,5 @@ UNIX_LIBRARIES (
 -lm
 )
 
-EXECUTABLES(itkPrincipalAxesResampler)
+ADD_EXECUTABLE(itkPrincipalAxesResampler itkPrincipalAxesResampler)
 
