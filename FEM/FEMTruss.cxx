@@ -36,7 +36,7 @@ using namespace std;
  */
 int main( int argc, char *argv[] ) {
 
-  /**
+  /*
    * First we create the FEM solver object. This object stores pointers
    * to all objects that define the FEM problem. One solver object
    * effectively defines one FEM problem.
@@ -53,7 +53,7 @@ int main( int argc, char *argv[] ) {
 
 
 
-  /**
+  /*
    * Below we'll define a FEM problem described in the chapter 25.3-4,
    * from the book, which can also be downloaded from 
    * http://titan.colorado.edu/courses.d/IFEM.d/IFEM.Ch25.d/IFEM.Ch25.pdf
@@ -63,32 +63,33 @@ int main( int argc, char *argv[] ) {
 
 
 
-  /**
+  /*
    * We start by creating four Node objects. One of them is of
    * class NodeXY. It has two displacements in two degrees of freedom.
    * 3 of them are of class NodeXYrotZ, which also includes the rotation
    * around Z axis.
    */
   
-  /** We'll need these pointers to create and initialize the objects. */
-  NodeXYrotZ::Pointer n1;
-  NodeXY::Pointer n2;
+  /* We'll need these pointers to create and initialize the objects. */
+  Node::Pointer n1;
 
-  /**
+  /*
    * We create the objects in a standard itk way by calling the New()
    * static function in the class.
    */
-  n1=NodeXYrotZ::New();
+  n1=Node::New();
+  Element::VectorType pt(2);
 
-  /**
+  /*
    * Initialize the data members inside the node objects. Basically here
-   * we only have to specify the X and Y coordinate of the node in global
-   * coordinate system.
+   * we only have to specify the vector of X and Y coordinate of the
+   * node in global coordinate system.
    */
-  n1->X=-4.0;
-  n1->Y=3.0;
+  pt[0]=-4.0;
+  pt[1]=3.0;
+  n1->SetCoordinates(pt);
 
-  /**
+  /*
    * Convert the node pointer into a special pointer (FEMP) and add it to
    * the nodes array inside the solver class. The special pointer now
    * owns the object and we don't have to keep track of it anymore.
@@ -99,39 +100,28 @@ int main( int argc, char *argv[] ) {
    */
   S.node.push_back( FEMP<Node>(&*n1) );
      
-  /**
-   * Special pointers (class FEMP) create a copy of the objects,
-   * when a pointer object is copied. We can use that feature to quickly
-   * create many similar objects without using the FEMObjectFactory,
-   * New() function, or new operator.
-   *
-   * Operator[] on FEMPArray returns the special pointer (FEMP), while
-   * the function operator () returns the actual pointer.
+  /*
+   * Create three more nodes in the same way.
    */
-  S.node.push_back( S.node[0] );
-  S.node.push_back( S.node[0] );
-  
-  /**
-   * Now we have to update coordinates inside the newly created nodes.
-   * Since we're getting back the pointers to base class, we need to
-   * cast it to the proper class. dynamic_cast is used in this case.
-   * Note that the Y coordinate of a node remains 3.0, so we don't have
-   * to change it.
-   */
-  dynamic_cast<NodeXYrotZ*>( &*S.node(1) )->X=0.0;
-  dynamic_cast<NodeXYrotZ*>( &*S.node(2) )->X=4.0;
+  n1=Node::New();
+  pt[0]=0.0;
+  pt[1]=3.0;
+  n1->SetCoordinates(pt);
+  S.node.push_back( FEMP<Node>(&*n1) );
 
-  /**
-   * Note that we could also create new objects in a standard way
-   * by using the New() function and not copying the objects inside arrays.
-   * This is what we'll do for the final node.
-   */
-  n2=NodeXY::New();
-  n2->X=0.0;
-  n2->Y=0.0;
-  S.node.push_back( FEMP<Node>(&*n2) );
+  n1=Node::New();
+  pt[0]=4.0;
+  pt[1]=3.0;
+  n1->SetCoordinates(pt);
+  S.node.push_back( FEMP<Node>(&*n1) );
 
-  /**
+  n1=Node::New();
+  pt[0]=0.0;
+  pt[1]=0.0;
+  n1->SetCoordinates(pt);
+  S.node.push_back( FEMP<Node>(&*n1) );
+
+  /*
    * Automatically assign the global numbers (IDs) to
    * all the objects in the array. (first object gets number 0,
    * second 1, and so on). We could have also specified the GN
@@ -143,35 +133,35 @@ int main( int argc, char *argv[] ) {
 
 
 
-  
-  /**
+
+  /*
    * Then we have to create the materials that will define
    * the elements.
    */
-  MaterialStandard::Pointer m;
-  m=MaterialStandard::New();
-  m->GN=0;       /** Global number of the material */
-  m->E=30000.0;  /** Young modulus */
-  m->A=0.02;     /** Crossection area */
-  m->I=0.004;    /** Momemt of inertia */
+  MaterialLinearElasticity::Pointer m;
+  m=MaterialLinearElasticity::New();
+  m->GN=0;       /* Global number of the material */
+  m->E=30000.0;  /* Young modulus */
+  m->A=0.02;     /* Crossection area */
+  m->I=0.004;    /* Momemt of inertia */
   S.mat.push_back( FEMP<Material>(&*m) );
 
-  m=MaterialStandard::New();
-  m->GN=1;       /** Global number of the material */
-  m->E=200000.0;  /** Young modulus */
-  m->A=0.001;     /** Crossection area */
-  /**
+  m=MaterialLinearElasticity::New();
+  m->GN=1;       /* Global number of the material */
+  m->E=200000.0;  /* Young modulus */
+  m->A=0.001;     /* Crossection area */
+  /*
    * Momemt of inertia. This material will be used in
    * the Bar element, which doesn't need this constant.
    */
   m->I=0.0;
   S.mat.push_back( FEMP<Material>(&*m) );
 
-  m=MaterialStandard::New();
-  m->GN=2;       /** Global number of the material */
-  m->E=200000.0;  /** Young modulus */
-  m->A=0.003;     /** Crossection area */
-  /**
+  m=MaterialLinearElasticity::New();
+  m->GN=2;       /* Global number of the material */
+  m->E=200000.0;  /* Young modulus */
+  m->A=0.003;     /* Crossection area */
+  /*
    * Momemt of inertia. This material will be used in
    * the Bar element, which doesn't need this constant.
    */
@@ -182,67 +172,62 @@ int main( int argc, char *argv[] ) {
 
 
 
-  /**
+  /*
    * Next we create the finite elements that use the above
    * created nodes. We'll have 3 Bar elements ( a simple
    * spring in 2D space ) and 2 Beam elements that also
    * accounts for bending.
    */
-  Beam2D::Pointer e1;
-  Bar2D::Pointer e2;
+  Element2DC1Beam::Pointer e1;
+  Element2DC0LinearLineStress::Pointer e2;
 
-  e1=Beam2D::New();
+  e1=Element2DC1Beam::New();
 
-  /**
+  /*
    * Initialize the pointers to correct node objects. We use the
    * Find function of the FEMPArray to search for object (in this
-   * case node) with given GN. Since the Beam2D element requires
-   * nodes of class NodeXYrotZ, we have to make sure that we
-   * have the right node object by using dynamic_cast.
+   * case node) with given GN.
    */
   e1->GN=0;
-  e1->m_node[0]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(0) );
-  e1->m_node[1]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
+  e1->SetNode(0, &*S.node.Find(0) );
+  e1->SetNode(1, &*S.node.Find(1) );
 
-  /** same for material */
-  e1->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(0) );
+  /* same for material */
+  e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*S.mat.Find(0) );
   S.el.push_back( FEMP<Element>(&*e1) );
 
-  /** Create the other elements */
-  e1=Beam2D::New();
+  /* Create the other elements */
+  e1=Element2DC1Beam::New();
   e1->GN=1;
-  e1->m_node[0]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(1) );
-  e1->m_node[1]=dynamic_cast<NodeXYrotZ*>( &*S.node.Find(2) );
-  e1->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(0) );
+  e1->SetNode(0, &*S.node.Find(1) );
+  e1->SetNode(1, &*S.node.Find(2) );
+  e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*S.mat.Find(0) );
   S.el.push_back( FEMP<Element>(&*e1) );
 
-  /**
-   * Note that Bar2D requires nodes of class NodeXY. But since the
-   * class NodeXYrotZ is derived from NodeXY, we can cast it
-   * to NodeXY without loosing any information and seemlessly
-   * connect these two elements together. Error checking is
-   * guarantied by compiler either at compile time or by
-   * dynamic_cast operator.
+  /*
+   * Note that Bar2D element defines only two degrees of freedom
+   * per node, while Beam2D defines three. In this case Bar only shares
+   * the first two with Beam.
    */
-  e2=Bar2D::New();
+  e2=Element2DC0LinearLineStress::New();
   e2->GN=2;
-  e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(0) );
-  e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
-  e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(1) );
+  e2->SetNode(0, &*S.node.Find(0) );
+  e2->SetNode(1, &*S.node.Find(3) );
+  e2->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*S.mat.Find(1) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
-  e2=Bar2D::New();
+  e2=Element2DC0LinearLineStress::New();
   e2->GN=3;
-  e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(1) );
-  e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
-  e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(2) );
+  e2->SetNode(0, &*S.node.Find(1) );
+  e2->SetNode(1, &*S.node.Find(3) );
+  e2->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*S.mat.Find(2) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
-  e2=Bar2D::New();
+  e2=Element2DC0LinearLineStress::New();
   e2->GN=4;
-  e2->m_node[0]=dynamic_cast<NodeXY*>( &*S.node.Find(2) );
-  e2->m_node[1]=dynamic_cast<NodeXY*>( &*S.node.Find(3) );
-  e2->m_mat=dynamic_cast<MaterialStandard*>( &*S.mat.Find(1) );
+  e2->SetNode(0, &*S.node.Find(2) );
+  e2->SetNode(1, &*S.node.Find(3) );
+  e2->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*S.mat.Find(1) );
   S.el.push_back( FEMP<Element>(&*e2) );
 
 
@@ -250,11 +235,11 @@ int main( int argc, char *argv[] ) {
 
 
 
-  /**
+  /*
    * Apply the boundary conditions and external forces (loads).
    */
 
-  /**
+  /*
    * The first node is completely fixed i.e. both displacements
    * are fixed to 0.
    * 
@@ -264,7 +249,7 @@ int main( int argc, char *argv[] ) {
 
   l1=LoadBC::New();
 
-  /**
+  /*
    * Here we're saying that the first degree of freedom at first node
    * is fixed to value m_value=0.0. See comments in class LoadBC declaration
    * for more information. Note that the m_value is a vector. This is useful
@@ -276,7 +261,7 @@ int main( int argc, char *argv[] ) {
   l1->m_value = vnl_vector<double>(1,0.0);
   S.load.push_back( FEMP<Load>(&*l1) );
 
-  /**
+  /*
    * In a same way we also fix the second DOF in a first node and the
    * second DOF in a third node (it's only fixed in Y direction).
    */
@@ -293,10 +278,10 @@ int main( int argc, char *argv[] ) {
   S.load.push_back( FEMP<Load>(&*l1) );
 
 
-  /**
+  /*
    * Now we apply the external force on the fourth node. The force is specified
-   * by a vector [20,-20] in global coordinate system. This is the second point
-   * of the third element in a system.
+   * by a vector [20,-20] in global coordinate system. The force acts on tthe
+   * second node of the third element in a system.
    */
   LoadNode::Pointer l2;
 
@@ -312,7 +297,7 @@ int main( int argc, char *argv[] ) {
 
 
 
-  /**
+  /*
    * The whole problem is now stored inside the Solver class.
    * Note that in the code above we don't use any of the
    * constructors that make creation of objects easier and with
@@ -323,51 +308,45 @@ int main( int argc, char *argv[] ) {
 
 
 
-  /**
+  /*
    * We can now solve for displacements.
    */
 
-  /**
+  /*
    * Assign a unique id (global freedom number - GFN)
    * to every degree of freedom (DOF) in a system.
    */
   S.GenerateGFN();
 
-  /**
+  /*
    * Assemble the master stiffness matrix. In order to do this
    * the GFN's should already be assigned to every DOF.
    */
   S.AssembleK();
 
-  /**
-   * Invert the master stiffness matrix.
+  /*
+   * Perform any preprocessing on the master stiffness matrix.
    */
   S.DecomposeK();
 
-  /**
-   * Assemble the master force vector (from the applied loads)
+  /*
+   * Assemble the master force vector (from the applied loads).
    */
   S.AssembleF();
 
-  /**
+  /*
    * Solve the system of equations for displacements (u=K^-1*F)
    */
   S.Solve();
 
-  /**
-   * Copy the displacemenets which are now stored inside
-   * the solver class back to nodes, where they belong.
-   */
-  S.UpdateDisplacements();
-
-  /**
+  /*
    * Output displacements of all nodes in a system;
    */
   std::cout<<"\nNodal displacements:\n";
   for( ::itk::fem::Solver::NodeArray::iterator n = S.node.begin(); n!=S.node.end(); n++)
   {
     std::cout<<"Node#: "<<(*n)->GN<<": ";
-    /** For each DOF in the node... */
+    /* For each DOF in the node... */
     for( unsigned int d=0, dof; (dof=(*n)->GetDegreeOfFreedom(d))!=::itk::fem::Element::InvalidDegreeOfFreedomID; d++ )
     {
       std::cout<<S.GetSolution(dof);

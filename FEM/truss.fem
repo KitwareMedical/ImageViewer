@@ -1,113 +1,104 @@
 % Simple truss example from the chapter 25.3
 % this chapter can be downloaded from http://titan.colorado.edu/courses.d/IFEM.d/IFEM.Ch25.d/IFEM.Ch25.pdf
 
-<NodeXYrotZ>
+<Node>
 	0	% Global object number
-	-4	% X
-	3	% Y
-<NodeXYrotZ>
+	2 -4 3	% Node coordinates
+<Node>
 	1	% Global object number
-	0	% X
-	3	% Y
-<NodeXYrotZ>
+	2 0 3	% Node coordinates
+<Node>
 	2	% Global object number
-	4	% X
-	3	% Y
-<NodeXY>
+	2 4 3	% Node coordinates
+<Node>
 	3	% Global object number
-	0	% X
-	0	% Y
+	2 0 0	% Node coordinates
 
-<END>	% End of nodes
+<END>  % End of nodes
 
-<MaterialStandard>
+<MaterialLinearElasticity>
 	0	% Global object number
 	E  : 30000	% Young modulus
-	A  : 0.02	% Crossection area
+	A  : 0.02	% Beam crossection area
 	I  : 0.004	% Moment of inertia
 	nu : 0	% Poisson's ratio
+	h : 1	% Plate thickness
+	RhoC : 1	% Density times capacity
 	END:	% End of material definition
-<MaterialStandard>
+<MaterialLinearElasticity>
 	1	% Global object number
 	E  : 200000	% Young modulus
-	A  : 0.001	% Crossection area
+	A  : 0.001	% Beam crossection area
 	I  : 0	% Moment of inertia
 	nu : 0	% Poisson's ratio
+	h : 1	% Plate thickness
+	RhoC : 1	% Density times capacity
 	END:	% End of material definition
-<MaterialStandard>
+<MaterialLinearElasticity>
 	2	% Global object number
 	E  : 200000	% Young modulus
-	A  : 0.003	% Crossection area
+	A  : 0.003	% Beam crossection area
 	I  : 0	% Moment of inertia
 	nu : 0	% Poisson's ratio
+	h : 1	% Plate thickness
+	RhoC : 1	% Density times capacity
 	END:	% End of material definition
 
-<END>	% End of materials
+<END>  % End of materials
 
-<Beam2D>
+<Element2DC1Beam>
 	0	% Global object number
-	0	% MaterialStandard ID
-	0	% NodeXYrotZ 1 ID
-	1	% NodeXYrotZ 2 ID
-<Beam2D>
+	0	% Node #1 ID
+	1	% Node #2 ID
+	0	% MaterialLinearElasticity ID
+<Element2DC1Beam>
 	1	% Global object number
-	0	% MaterialStandard ID
-	1	% NodeXYrotZ 1 ID
-	2	% NodeXYrotZ 2 ID
-<Bar2D>
+	1	% Node #1 ID
+	2	% Node #2 ID
+	0	% MaterialLinearElasticity ID
+<Element2DC0LinearLineStress>
 	2	% Global object number
-	1	% MaterialStandard ID
-	0	% NodeXY 1 ID
-	3	% NodeXY 2 ID
-<Bar2D>
+	0	% Node #1 ID
+	3	% Node #2 ID
+	1	% MaterialLinearElasticity ID
+<Element2DC0LinearLineStress>
 	3	% Global object number
-	2	% MaterialStandard ID
-	1	% NodeXY 1 ID
-	3	% NodeXY 2 ID
-<Bar2D>
+	1	% Node #1 ID
+	3	% Node #2 ID
+	2	% MaterialLinearElasticity ID
+<Element2DC0LinearLineStress>
 	4	% Global object number
-	1	% MaterialStandard ID
-	2	% NodeXY 1 ID
-	3	% NodeXY 2 ID
+	2	% Node #1 ID
+	3	% Node #2 ID
+	1	% MaterialLinearElasticity ID
 
-<END>	% End of elements
+<END>  % End of elements
 
 % We apply only one nodal force. This is not the in book.
 <LoadNode>
 	0	% Global object number
 	2	% GN of element on which the load acts
-	1   % Point number within the element
+	1 	% Point number within the element
 	2 20 -20	% Force vector (first number is the size of a vector)
-
-% Essential boundary conditions in form of MFCs are applyed, so that the system is
-% fixed and we can solve for displacements. In book the MFCs are different than these here.
-<LoadBCMFC>
+	
+% Essential boundary conditions are applyed, so that the system is
+% fixed and we can solve for displacements. In book the BCs are applied
+% in form of MFCs, and are different than these here.
+<LoadBC>
 	1	% Global object number
-	1	% Number of DOFs in this MFC
-	  %==>
-	  0	% GN of element
-	  0	% DOF# in element
-	  1	% weight
-	  %==>
-	1 0	% rhs of MFC
-<LoadBCMFC>
+	0	% GN of element
+	0	% DOF# in element
+	1 0	% value of the fixed DOF
+<LoadBC>
 	2	% Global object number
-	1	% Number of DOFs in this MFC
-	  %==>
-	  0	% GN of element
-	  1	% DOF# in element
-	  1	% weight
-	  %==>
-	1 0	% rhs of MFC
-<LoadBCMFC>
+	0	% GN of element
+	1	% DOF# in element
+	1 0	% value of the fixed DOF
+<LoadBC>
 	3	% Global object number
-	1	% Number of DOFs in this MFC
-	  %==>
-	  1	% GN of element
-	  4	% DOF# in element
-	  1	% weight
-	  %==>
-	1 0	% rhs of MFC
+	1	% GN of element
+	4	% DOF# in element
+	1 0	% value of the fixed DOF
 
-<END>	% End of loads
+<END>  % End of loads
 
