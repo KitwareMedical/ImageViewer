@@ -18,8 +18,9 @@
 #define __fltkVTKImageViewer_h
 
 #include "fltkVTKImageViewerGUI.h"
-#include "itkVTKImageExport.h"
-#include "vtkImageImport.h"
+
+#include "itkImageToVTKImageFilter.h"
+
 #include "vtkRenderWindow.h"
 #include "vtkActor.h"
 #include "vtkRenderer.h"
@@ -61,7 +62,8 @@ public:
 
   /** Filter for connecting and end of the ITK pipeline 
       to the beggining of a VTK pipeline */
-  typedef itk::VTKImageExport< ImageType >    VTKImageExportType;
+  typedef ::itk::ImageToVTKImageFilter< ImageType >   AdaptorFilterType;
+  typedef typename AdaptorFilterType::Pointer          AdaptorFilterPointer;
 
 
   virtual void SetImage(ImageType * img);
@@ -75,17 +77,11 @@ protected:
 
 private:
 
-  typename VTKImageExportType::Pointer  m_VTKImageExport;
-
   vtkRenderWindow           *  m_RenderWindow;
 
-  vtkImageImport            *  m_VTKImageImport;
-
-  vtkImageMapper            *  m_ImageMapper;
-
-  vtkActor                  *  m_Actor;
-
   vtkRenderer               *  m_Renderer;
+
+  AdaptorFilterPointer         m_AdaptorFilter;
 
 };
 
