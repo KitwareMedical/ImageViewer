@@ -18,6 +18,7 @@
 #define _VTKVolRen_h
 #include <vtkVolumeRayCastMapper.h>
 #include <vtkVolumeRayCastMIPFunction.h>
+#include <vtkUnsignedCharArray.h>
 #include "itkImage.h"
 #include "itkSimpleImageRegionIterator.h"
 
@@ -67,7 +68,7 @@ protected:
   bool             mUseMask;
 
   vtkStructuredPoints      *mVol;
-  vtkScalars               *mScalars;
+  vtkUnsignedCharArray     *mScalars;
   vtkVolume                *mActor;
   vtkPiecewiseFunction     *mColorFunc;
   vtkPiecewiseFunction     *mOpacityTransferFunc;
@@ -304,7 +305,7 @@ bool VTKVolRen<T>::SetInputImage(ImageType * image)
   //if(!mImData->dataRangeDefined())
     //    mImData->calcDataRange();
 
-  mScalars = vtkScalars::New(VTK_UNSIGNED_CHAR);
+  mScalars = vtkUnsignedCharArray::New();
 
   mActor->SetScale(1, mImData->GetSpacing()[1]/mImData->GetSpacing()[0], mImData->GetSpacing()[2]/mImData->GetSpacing()[0]);
 
@@ -335,7 +336,7 @@ bool VTKVolRen<T>::SetInputImage(ImageType * image)
   //for (i = 0; i < (long)mImData->quantity(); i++)
   while (!it.IsAtEnd())
     {
-    mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
+    mScalars->InsertTuple1(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
     i++;
     ++it;
     }  
@@ -450,11 +451,11 @@ void VTKVolRen<T>::update(void)
       {
       if(itMask.Get()>0)
         {
-        mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
+        mScalars->InsertTuple1(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
         j++;
         } 
       else
-        mScalars->InsertScalar(i, 0);
+        mScalars->InsertTuple1(i, 0);
       i++; 
       ++it;
       ++itMask;
@@ -464,7 +465,7 @@ void VTKVolRen<T>::update(void)
     while (!it.IsAtEnd())
       {
       //for (i = 0; i < (long)mImData->quantity(); i++)
-      mScalars->InsertScalar(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
+      mScalars->InsertTuple1(i, (unsigned char)(((it.Get()-imMin)/imRange)*255));
       ++it;
       i++;
       }
