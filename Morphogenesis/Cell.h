@@ -22,7 +22,7 @@ class CellularAggregate;
  * and size are also managed by this abstract cell.
  * 
  */
-class Cell 
+class Cell  
 {
 
 public:

@@ -23,6 +23,12 @@ public:
   virtual Cell * CreateNew(void);
 
 private:
+  
+  unsigned long m_GrowthLatencyTime;
+  unsigned long m_DivisionLatencyTime;
+
+  static unsigned long GrowthMaxLatency;
+  static unsigned long DivisionMaxLatency;
 
 };
 

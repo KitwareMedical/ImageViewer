@@ -23,6 +23,10 @@ CellularAggregate
 
   m_Mesh->SetPoints( PointsContainer::New() );
   m_Mesh->SetPointData( PointDataContainer::New() );
+  m_Mesh->SetCells( VoronoiRegionsContainer::New() );
+
+  m_Iteration = 0;
+  m_ClosestPointComputationInterval = 200;
 
 }
 
@@ -60,7 +64,7 @@ CellularAggregate
 	while( cellIt != end )
     {
     Cell * cell = cellIt.Value();
-    const Cell::IdentifierType id = cell->GetSelfIdentifier();
+    const IdentifierType id = cell->GetSelfIdentifier();
     m_Mesh->GetPoint( id, &position );
 		cell->Draw( position );
     cellIt++;
@@ -117,11 +121,30 @@ CellularAggregate
     throw exception;
   }
   
-  Cell::IdentifierType id = cell->GetSelfIdentifier();
+  IdentifierType id = cell->GetSelfIdentifier();
 
+  MeshType::CellPointer   region;
+  bool regionExist = m_Mesh->GetCell( id, &region );
+  if( regionExist )
+    {
+    VoronoiRegionType::Pointer realRegion( 
+              dynamic_cast < VoronoiRegionType * >( region.GetPointer() ) );
+
+    VoronoiRegionType::PointIdIterator neighbor = realRegion->PointIdsBegin();
+    VoronoiRegionType::PointIdIterator end      = realRegion->PointIdsEnd();
+    while( neighbor != end )
+      {
+      neighbor++;
+      }
+    
+    // update voronoi connections
+    }
+ 
+  m_Mesh->GetCells()->DeleteIndex( id );
   m_Mesh->GetPoints()->DeleteIndex( id );
   m_Mesh->GetPointData()->DeleteIndex( id );
 
+ 
   delete cell;
 
 }
@@ -147,37 +170,73 @@ CellularAggregate
 ::Add( Cell * cell, const VectorType & perturbation )
 {
 
-  CellIdentifierType  newcellId       = cell->GetSelfIdentifier();
-  CellIdentifierType  newcellparentId = cell->GetParentIdentifier();
+  IdentifierType  newcellId       = cell->GetSelfIdentifier();
+  IdentifierType  newcellparentId = cell->GetParentIdentifier();
     
   PointType position;
+  VoronoiRegionType::Pointer selfVoronoi;
 
   // If the cell does not have a parent 
   // from which receive a position
   if( !newcellparentId )
     {
     position.Fill( 0.0 );
+    selfVoronoi = VoronoiRegionType::New();
     }
   else
     {
-    bool exist = m_Mesh->GetPoint( newcellparentId, &position );
-    if( !exist ) 
+
+    bool parentPositionExist = m_Mesh->GetPoint( newcellparentId, &position );
+    if( !parentPositionExist ) 
       {
         itk::ExceptionObject exception;
         exception.SetDescription( "Parent cell does not exist in the container" );
         exception.SetLocation( "CellularAggregate::Add( cell * )" );
         throw exception;
       }
+
+    // If possible, inherit neighborhood from the parent
+    MeshType::CellPointer cellPointer;
+    bool parentVoronoiExist = m_Mesh->GetCell( newcellparentId, &cellPointer );
+    if( !parentVoronoiExist ) 
+      {
+      itk::ExceptionObject exception;
+      exception.SetDescription( "Parent voronoi region does not exist in the container" );
+      exception.SetLocation( "CellularAggregate::Add( cell * )" );
+      throw exception;
+      }
+
+    selfVoronoi = 
+       dynamic_cast < VoronoiRegionType * >( cellPointer->MakeCopy().GetPointer() );
+
     }
 
   position += perturbation;
 
-  m_Mesh->SetPoint(       newcellId, position );
-  m_Mesh->SetPointData(   newcellId, cell     );
+  m_Mesh->SetCell(      newcellId, selfVoronoi.GetPointer() );
+  m_Mesh->SetPoint(     newcellId, position   );
+  m_Mesh->SetPointData( newcellId, cell       );
  
-  m_Mesh->GetPoint( newcellId, &position );
-    
   cell->SetCellularAggregate( this );
+
+  // Add this new cell as neighbor to cells in its neighborhood
+
+  VoronoiRegionType::PointIdIterator neighbor = selfVoronoi->PointIdsBegin();
+  VoronoiRegionType::PointIdIterator end      = selfVoronoi->PointIdsEnd();
+
+  while( neighbor != end )
+    {
+    const IdentifierType neighborId = (*neighbor);
+    MeshType::CellPointer cellPointer;
+    bool neighborVoronoiExist = m_Mesh->GetCell( neighborId, &cellPointer );
+    if( neighborVoronoiExist ) 
+      {
+      VoronoiRegionType::Pointer neighborVoronoi( 
+         dynamic_cast < VoronoiRegionType * >( cellPointer.GetPointer() ) );
+      neighborVoronoi->AddPointId( newcellId );
+      }
+    neighbor++;
+    }
 
 }
 
@@ -187,6 +246,11 @@ void
 CellularAggregate
 ::AdvanceTimeStep(void)
 {
+  
+  if( m_Iteration % m_ClosestPointComputationInterval == 0 ) 
+  {
+    this->ComputeClosestPoints();
+  }
 
   this->ComputeForces();
   this->UpdatePositions();
@@ -203,6 +267,7 @@ CellularAggregate
 
   this->InvokeEvent( TimeStepEvent );
 
+  m_Iteration++;
 
 }
 
@@ -229,6 +294,7 @@ CellularAggregate
     delete (cell.Value());
     ++cell;
     }
+
 }
 
 
@@ -268,7 +334,7 @@ CellularAggregate
 	while( cellIt != end )
     {
     Cell * cell = cellIt.Value();
-    Cell::IdentifierType cellId = cell->GetSelfIdentifier();
+    IdentifierType cellId = cell->GetSelfIdentifier();
     m_Mesh->GetPoint( cellId, &position );
     position += cell->GetForce() / 2.0;
 		m_Mesh->SetPoint( cellId, position );
@@ -287,6 +353,7 @@ CellularAggregate
   
   // Clear all the force accumulators
   this->ClearForces();
+ 
 
   CellsConstIterator   cell1It     = m_Mesh->GetPointData()->Begin();
   CellsConstIterator   end         = m_Mesh->GetPointData()->End();
@@ -295,21 +362,48 @@ CellularAggregate
 	while( cell1It != end )
     {
 
+    const IdentifierType cell1Id = cell1It.Index();
+
     Cell     * cell1      =  cell1It.Value();
+
     PointType  position1;
-    m_Mesh->GetPoint( cell1->GetSelfIdentifier(), &position1 );
+    m_Mesh->GetPoint( cell1Id, &position1 );
+
     const double rA          = cell1->GetRadius();
 
-    CellsConstIterator   cell2It   = cell1It;
-    cell2It++;
-    
-    while( cell2It != end )
+    MeshType::CellPointer   region;
+    bool regionExist = m_Mesh->GetCell( cell1Id, &region );
+    if( !regionExist )
+      {
+      itk::ExceptionObject exception;
+      exception.SetDescription("Voronoi region not found in container");
+      exception.SetLocation("CellularAggregate::ComputeForces()");
+      throw exception;
+      }
+ 
+    VoronoiRegionType::Pointer voronoiRegion( 
+              dynamic_cast < VoronoiRegionType * >( region.GetPointer() ) );
+
+ 
+    VoronoiRegionType::PointIdIterator neighbor = voronoiRegion->PointIdsBegin();
+    VoronoiRegionType::PointIdIterator end      = voronoiRegion->PointIdsEnd();
+
+    while( neighbor != end )
       {
 
-      Cell     * cell2      =  cell2It.Value();
+      const IdentifierType cell2Id = (*neighbor);  
+
+      Cell     * cell2;
       PointType  position2;
-      m_Mesh->GetPoint( cell2->GetSelfIdentifier(), &position2 );
-      const double rB          = cell2->GetRadius();
+      
+      if( !m_Mesh->GetPoint(      cell2Id, &position2 ) )
+        {
+        neighbor++;  // if the neigbor has been removed, skip it
+        continue;
+        }
+      m_Mesh->GetPointData(  cell2Id, &cell2     );
+      
+      const double rB      = cell2->GetRadius();
 
       Cell::VectorType relativePosition = position1 - position2;
 
@@ -322,25 +416,99 @@ CellularAggregate
         cell1->AddForce(  force );
         cell2->AddForce( -force );
         }
-      cell2It++;
+      
+      neighbor++;
       }
+    
     cell1It++;
     }
 
  }
 
 
+
+
 void
 CellularAggregate
-::DumpContent(void) const
+::ComputeClosestPoints(void)
+{
+
+  PointsConstIterator   beginPoints   = m_Mesh->GetPoints()->Begin();
+  PointsConstIterator   endPoints     = m_Mesh->GetPoints()->End();
+
+  PointsConstIterator   point1It = beginPoints;
+
+	while( point1It != endPoints )
+    {
+
+    PointType  position1 = point1It.Value();
+
+    PointsConstIterator   point2It   = beginPoints;
+
+    Cell  * cell1;
+
+    IdentifierType cell1Id = point1It.Index();
+    m_Mesh->GetPointData( cell1Id, &cell1 );
+    const double radius  = cell1->GetRadius();
+    const double limitDistance = radius * 4.0;
+   
+    MeshType::CellPointer   region;
+    bool regionExist = m_Mesh->GetCell( cell1Id, &region );
+    if( !regionExist )
+      {
+      itk::ExceptionObject exception;
+      exception.SetDescription("Voronoi region not found in container");
+      exception.SetLocation("CellularAggregate::ComputeClosestPoints()");
+      throw exception;
+      }
+ 
+    VoronoiRegionType::Pointer voronoiRegion( 
+              dynamic_cast < VoronoiRegionType * >( region.GetPointer() ) );
+
+    voronoiRegion->ClearPoints();
+
+    while( point2It != endPoints )
+      {
+
+      if( point2It == point1It )
+        {
+        point2It++;
+        continue;
+        }
+
+      PointType  position2 = point2It.Value();
+
+      Cell::VectorType relativePosition = position1 - position2;
+
+      const double distance = relativePosition.GetNorm();
+      if( distance < limitDistance )
+        {
+        voronoiRegion->AddPointId( point2It.Index() );
+        }
+      
+      point2It++;
+      }
+
+    point1It++;
+    }
+
+ }
+
+
+
+
+
+void
+CellularAggregate
+::DumpContent( std::ostream & os ) const
 {
   CellsConstIterator   cell1It     = m_Mesh->GetPointData()->Begin();
   CellsConstIterator   endCell     = m_Mesh->GetPointData()->End();
   
   while( cell1It != endCell )
     {
-    std::cout << cell1It.Index() << " == ";
-    std::cout << cell1It.Value()->GetSelfIdentifier() << std::endl;
+    os << cell1It.Index() << " == ";
+    os << cell1It.Value()->GetSelfIdentifier() << std::endl;
     cell1It++;
     }
 
@@ -349,8 +517,8 @@ CellularAggregate
 
   while( pointIt != endPoint )
     {
-    std::cout << pointIt.Index() << "  ";
-    std::cout << pointIt.Value() << std::endl; 
+    os << pointIt.Index() << "  ";
+    os << pointIt.Value() << std::endl; 
     pointIt++;
     }
 

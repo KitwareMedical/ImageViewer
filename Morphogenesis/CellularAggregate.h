@@ -7,6 +7,7 @@
 #include "itkDefaultDynamicMeshTraits.h"
 #include "itkMesh.h"
 #include "Cell.h"
+#include "itkPolygonCell.h"
 
 
 
@@ -52,24 +53,38 @@ public:
   itkNewMacro(Self);  
 
 
+  /** 
+   * Type to be used for data associated 
+   * with each point in the mesh 
+   */
+  typedef    Cell *    PointPixelType;
+  typedef    double    CellPixelType;
+
 
   /** 
-   *      Mesh type 
+   *      Mesh Traits
    */
   typedef itk::DefaultDynamicMeshTraits<  
-              Cell *,                   // PixelType
+              PointPixelType,           // PixelType
               Cell::PointDimension,     // Points Dimension
               Cell::PointDimension,     // Max.Topologycal Dimension
               double,                   // Type for coordinates
-              double                    // Type for interpolation 
+              double,                   // Type for interpolation 
+              CellPixelType             // Type for values in the cells  
               >  MeshTraits;
   
   
+  /** 
+   *      Mesh Traits
+   */
   typedef itk::Mesh<  MeshTraits::PixelType,
                       MeshTraits::PointDimension,
                       MeshTraits  >               MeshType;
 
   
+  /** 
+   *      Mesh Associated types
+   */
   typedef MeshType::Pointer                       MeshPointer;
   typedef MeshType::ConstPointer                  MeshConstPointer;
 
@@ -79,15 +94,26 @@ public:
 
   typedef MeshType::PointsContainer               PointsContainer;
   typedef MeshType::PointDataContainer            PointDataContainer;
+  typedef MeshType::CellsContainer                VoronoiRegionsContainer;
 
   typedef PointsContainer::Iterator               PointsIterator;
   typedef PointDataContainer::Iterator            CellsIterator;
+  typedef VoronoiRegionsContainer::Iterator       VoronoiIterator;
 
   typedef PointsContainer::ConstIterator          PointsConstIterator;
   typedef PointDataContainer::ConstIterator       CellsConstIterator;
+  typedef VoronoiRegionsContainer::ConstIterator  VoronoiConstIterator;
 
-  typedef MeshType::PointIdentifier               CellIdentifierType;
+  typedef MeshType::PointIdentifier               IdentifierType;
   
+
+
+  /** 
+   *   Voronoi region around a bio::Cell
+   */
+  typedef itk::PolygonCell<  MeshType::CellPixelType, 
+                             MeshType::CellTraits > VoronoiRegionType;
+
 
 public:
 
@@ -106,7 +132,7 @@ public:
   virtual void Add( Cell * cell );
   virtual void Remove( Cell * cell );
 
-  void DumpContent(void) const;
+  void DumpContent( std::ostream & os ) const;
 
 
 protected:
@@ -119,12 +145,16 @@ protected:
 
   virtual void ComputeForces(void);
   virtual void UpdatePositions(void);
+  virtual void ComputeClosestPoints(void);
   virtual void ClearForces(void);
   virtual void KillAll(void);
   
 private:
 
   MeshPointer    m_Mesh;
+
+  unsigned long  m_Iteration;
+  unsigned long  m_ClosestPointComputationInterval;
 
 };
 

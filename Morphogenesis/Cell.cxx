@@ -17,8 +17,8 @@ double             Cell::DefaultRadius         =       10; // microns
 double             Cell::GrowthRadiusIncrement =    0.001; // microns
 double             Cell::GrowthRadiusLimit     =       20; // microns
 
-double             Cell::NutrientSelfRepairLevel  =    50; 
-double             Cell::EnergySelfRepairLevel    =    50; 
+double             Cell::NutrientSelfRepairLevel  =     0; 
+double             Cell::EnergySelfRepairLevel    =     0; 
 
 double             Cell::DefaultEnergyIntake      =     1; 
 double             Cell::DefaultNutrientsIntake   =     1; 
@@ -42,6 +42,10 @@ Cell
   // The first Cell is numbered as 1
   Counter++;
   m_SelfIdentifier = Counter;  
+
+  // Start with minimum reserves
+  m_NutrientsReserveLevel = NutrientSelfRepairLevel + DefaultNutrientsIntake;
+  m_EnergyReserveLevel    = EnergySelfRepairLevel   + DefaultEnergyIntake;
 
 }
 

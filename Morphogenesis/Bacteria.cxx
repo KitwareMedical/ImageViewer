@@ -10,7 +10,8 @@
 namespace bio {
 
 
-  
+unsigned long Bacteria::GrowthMaxLatency    = 1000;
+unsigned long Bacteria::DivisionMaxLatency  = 2000;
 
 
 /**
@@ -19,6 +20,9 @@ namespace bio {
 Bacteria
 ::Bacteria()
 {
+  // add a random time before starting to grow
+  m_GrowthLatencyTime   = rand() % GrowthMaxLatency;
+  m_DivisionLatencyTime = rand() % DivisionMaxLatency;
 }
 
 
@@ -45,9 +49,20 @@ void
 Bacteria
 ::Grow(void) 
 {
-  m_Radius += GrowthRadiusIncrement;
-  if( m_Radius > GrowthRadiusLimit )
+  if( m_GrowthLatencyTime )
   {
+    m_GrowthLatencyTime--;
+    return;
+  }
+  Cell::Grow();
+  if( m_Radius >= GrowthRadiusLimit )
+  {
+    if( m_DivisionLatencyTime )
+    {
+      m_DivisionLatencyTime--;
+      return;
+    }
+
     // Divide is a terminal operation
     // this cell is destroyed in the 
     // process

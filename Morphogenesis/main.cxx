@@ -44,10 +44,21 @@ int main()
 
   viewer->Show();
   
-  Fl::run();
-
-  delete viewer;
+  try 
+    {
+    Fl::run();
+    delete viewer;
+    }
+  catch( itk::ExceptionObject & exception )
+    {
+    std::cout << "Exception caught !" << std::endl;
+    std::cout << "Description : " << exception.GetDescription() << std::endl;
+    std::cout << "Location    : " << exception.GetLocation()    << std::endl;
+    }
 
   return 0;
 
 }
+
+
+
