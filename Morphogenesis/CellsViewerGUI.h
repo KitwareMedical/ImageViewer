@@ -15,6 +15,8 @@ public:
   Fl_Window *controlWindow;
   static Fl_Menu_Item menu_[];
 private:
+  inline void cb_Load_i(Fl_Menu_*, void*);
+  static void cb_Load(Fl_Menu_*, void*);
   inline void cb_Quit_i(Fl_Menu_*, void*);
   static void cb_Quit(Fl_Menu_*, void*);
   inline void cb_3_i(Fl_Button*, void*);

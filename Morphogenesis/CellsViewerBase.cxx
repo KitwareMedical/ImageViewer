@@ -1,5 +1,9 @@
-#include "CellsViewerBase.h"
 
+
+
+#include "CellsViewerBase.h"
+#include <Fl/fl_file_chooser.H>
+#include "itkMetaImageIOFactory.h"
 
 namespace bio {
 
@@ -14,9 +18,11 @@ CellsViewerBase
   m_Stop = true;
   m_StartTime = 0;
 
-  m_Image = ImageType::New();
-
   m_SliceDrawer = SliceDrawerType::New();
+
+  m_ImageReader = ImageReaderType::New();
+    
+  m_Image = m_ImageReader->GetOutput();
 
   m_SliceDrawer->SetInput( m_Image.GetPointer() );
 
@@ -24,7 +30,13 @@ CellsViewerBase
                              m_SliceDrawer->GetDrawCommand().GetPointer() );
 
   m_SliceDrawer->AddObserver( fltk::VolumeReslicedEvent,
-                             m_Display.GetRedrawCommand() );
+                               m_Display.GetRedrawCommand() );
+  
+  m_ImageReader->AddObserver( itk::Command::EndEvent,
+                              m_Display.GetRedrawCommand() );
+                               
+  itk::MetaImageIOFactory::RegisterOneFactory();
+
 }
 
 
@@ -167,6 +179,27 @@ CellsViewerBase
 {
 	return m_StartTime;
 }
+
+
+/**
+ *    Load an Image representing the substrate
+ */ 
+void
+CellsViewerBase
+::LoadImage()
+{
+  const char * filename = fl_file_chooser("","","");
+  if( !filename )
+  {
+    return;
+  }
+  m_ImageReader->SetFileName( filename );
+  m_ImageReader->Update();
+}
+
+  
+ 
+
 
 }; // end namespace bio
 

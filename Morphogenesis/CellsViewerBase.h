@@ -2,12 +2,14 @@
 #ifndef __CellsViewerBase_H
 #define __CellsViewerBase_H
 
-#include "itkObject.h"
-#include "fltkDisplayGlWindowGUI.h"
 #include "itkImage.h"
+#include "itkImageFileReader.h"
 #include "fltkSlice3DDrawer.h"
+#include "fltkDisplayGlWindowGUI.h"
 #include "CellularAggregate.h"
 #include <time.h>
+
+
 
 namespace bio {
 
@@ -23,13 +25,16 @@ namespace bio {
 class CellsViewerBase
 {
 
-  typedef unsigned char                             PixelType;
+  typedef unsigned char                               PixelType;
   
-  typedef itk::Image<PixelType, Cell::Dimension >   ImageType;
-  typedef ImageType::Pointer                        ImagePointer;
-
-  typedef fltk::Slice3DDrawer<ImageType>            SliceDrawerType;
-  typedef SliceDrawerType::Pointer                  SliceDrawerPointer;
+  typedef itk::Image<PixelType, Cell::Dimension >     ImageType;
+  typedef ImageType::Pointer                          ImagePointer;
+ 
+  typedef itk::ImageFileReader< ImageType >           ImageReaderType;
+  typedef ImageReaderType::Pointer                    ImageReaderPointer;
+    
+  typedef fltk::Slice3DDrawer<ImageType>              SliceDrawerType;
+  typedef SliceDrawerType::Pointer                    SliceDrawerPointer;
 
 public:
 
@@ -45,6 +50,7 @@ public:
   virtual void HideDisplay(void);
   virtual void SetCellsAggregate( CellularAggregate * );
   virtual clock_t GetStartTime(void) const;
+  virtual void LoadImage(void);
 
   itk::Command::Pointer GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
@@ -57,6 +63,8 @@ private:
   fltkDisplayGlWindowGUI              m_Display;
 
   ImagePointer                        m_Image;
+
+  ImageReaderPointer                  m_ImageReader;
 
   SliceDrawerPointer                  m_SliceDrawer;
 

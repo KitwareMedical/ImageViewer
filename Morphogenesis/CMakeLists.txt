@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
+${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
@@ -19,6 +20,7 @@ LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
+${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
 ${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
@@ -43,6 +45,7 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 MetaImageIO
+ITKIO
 IView
 FltkImageViewer
 ${FLTK_LIBRARY}

@@ -2,6 +2,13 @@
 
 #include "CellsViewerGUI.h"
 
+inline void CellsViewerGUI::cb_Load_i(Fl_Menu_*, void*) {
+  LoadImage();
+}
+void CellsViewerGUI::cb_Load(Fl_Menu_* o, void* v) {
+  ((CellsViewerGUI*)(o->parent()->user_data()))->cb_Load_i(o,v);
+}
+
 inline void CellsViewerGUI::cb_Quit_i(Fl_Menu_*, void*) {
   Quit();
 }
@@ -11,6 +18,7 @@ void CellsViewerGUI::cb_Quit(Fl_Menu_* o, void* v) {
 
 Fl_Menu_Item CellsViewerGUI::menu_[] = {
  {"File", 0,  0, 0, 64, 0, 0, 14, 0},
+ {"Load Image", 0,  (Fl_Callback*)CellsViewerGUI::cb_Load, 0, 0, 0, 0, 14, 0},
  {"Quit", 0x80071,  (Fl_Callback*)CellsViewerGUI::cb_Quit, 0, 0, 0, 0, 14, 0},
  {0},
  {0}

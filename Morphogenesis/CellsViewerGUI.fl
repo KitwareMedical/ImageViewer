@@ -7,19 +7,25 @@ gridy 5
 snap 3
 class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
-  Function {CellsViewerGUI()} {} {
+  Function {CellsViewerGUI()} {open
+  } {
     Fl_Window controlWindow {
-      label {Control Panel}
+      label {Control Panel} open
       xywh {494 37 172 192}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
-      Fl_Menu_Bar {} {open
+      Fl_Menu_Bar {} {open selected
         xywh {0 0 170 25}
       } {
         submenu {} {
           label File open
           xywh {0 0 100 20}
         } {
+          menuitem {} {
+            label {Load Image}
+            callback {LoadImage();}
+            xywh {0 0 100 20}
+          }
           menuitem {} {
             label Quit
             callback {Quit();}
@@ -51,7 +57,7 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
         xywh {105 40 45 20} labeltype SYMBOL_LABEL
       }
       Fl_Value_Output timeValueOutput {
-        label {Time : } selected
+        label {Time : }
         xywh {85 130 60 25}
       }
     }
