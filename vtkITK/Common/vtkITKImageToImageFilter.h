@@ -13,6 +13,7 @@
 #include "vtkImageExport.h"
 #include "vtkImageToImageFilter.h"
 #include "vtkImageCast.h"
+#include "vtkImageData.h"
 
 #undef itkExceptionMacro  
 #define itkExceptionMacro(x) \
