@@ -220,8 +220,12 @@ int main(int argc, char *argv[])
   ImageType::Pointer im_target = ImageType::New();
   
   ImageType::RegionType r;
-  ImageType::SizeType   sz = {{HEIGHT, WIDTH}};
-  ImageType::IndexType  idx = {{0,0}};
+  ImageType::SizeType   sz;
+  sz[0] = HEIGHT;
+  sz[1] = WIDTH;
+  ImageType::IndexType  idx;
+  idx[0] = 0;
+  idx[1] = 0;
   r.SetSize(sz);
   r.SetIndex(idx);
 
