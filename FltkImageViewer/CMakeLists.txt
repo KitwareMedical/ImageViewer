@@ -10,19 +10,22 @@ IF(FLTK_LIBRARY)
      fltkCylinder3D
      fltkDisplayGlWindowGUI
      fltkDisplayGlWindowFlatGUI
+     fltkFrustum3D
+     fltkFrustumFunctionControlGUI
      fltkGlWindow
      fltkGlWindowInteractive
      fltkGlWindowInteractiveFlat
      fltkImageViewerGUI
      fltkImage2DViewerGUI
      fltkImage2DViewerWindow
-     fltkImage2DViewerUpdateCommand
      fltkLightButtonRedrawCommand
      fltkProgressBarRedrawCommand
      fltkRegularStepGradientDescent
      fltkRegularStepGradientDescentGUI
      fltkSlice3DDrawerGUI
      fltkShape3D
+     fltkSphere3D
+     fltkSphereFunctionControlGUI
      fltkWindowInteractive
      )
 
