@@ -96,8 +96,7 @@ static int UpdateGUI(void *inf)
   info->RequiredZOverlap = numberOfIterations;
   
   info->OutputVolumeScalarType = info->InputVolumeScalarType;
-  info->OutputVolumeNumberOfComponents = 
-    info->InputVolumeNumberOfComponents;
+  info->OutputVolumeNumberOfComponents = info->InputVolumeNumberOfComponents;
 
   info->OutputVolumeDimensions[0] = info->InputVolumeDimensions[0]; // + 2 * numberOfIterations;
   info->OutputVolumeDimensions[1] = info->InputVolumeDimensions[1]; // + 2 * numberOfIterations;
@@ -126,6 +125,9 @@ void VV_PLUGIN_EXPORT vvGradientAnisotropicDiffusionInit(vtkVVPluginInfo *info)
   info->SupportsProcessingPieces = 1;
   info->RequiredZOverlap = 0;
   
+  // Number of bytes required in intermediate memory per voxel
+  info->PerVoxelMemoryRequired = 8;
+
   /* setup the GUI components */
   info->NumberOfGUIItems = 3;
   info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));
