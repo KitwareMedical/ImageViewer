@@ -235,9 +235,9 @@ int main(int argc, char* argv[])
       std::cout << "  covariance = " << std::endl ;
       (densityFunctions[i])->GetCovariance().print(std::cout) ;
       
-      // add the class sample size to the decision rule for the Apriori probability
-      // calculation
-      std::cout << "Sample size of the class [" << i << "] = " ;
+      // add the class sample size to the decision rule 
+      // for the a priori probability calculation
+      std::cout << "  Sample size = " ;
       sampleSize = (membershipSample->GetClassSample(i))->GetSize(0) ;
       std::cout << sampleSize << std::endl ;
       rule->AddClassSampleSize(sampleSize) ;
@@ -271,10 +271,11 @@ int main(int argc, char* argv[])
   output->Allocate() ;
   typedef itk::ImageRegionIteratorWithIndex< ImageType > ImageIteratorType ;
   ImageIteratorType i_iter(output, output->GetLargestPossibleRegion()) ;
+  i_iter.GoToBegin() ;
   ClassifierType::OutputType::Iterator m_iter = result->Begin() ;
   while (!i_iter.IsAtEnd())
     {
-      i_iter.Set(m_iter.GetClassLabel()) ;
+      i_iter.Set((ImageType::PixelType)m_iter.GetClassLabel()) ;
       ++i_iter ;
       ++m_iter ;
     }
