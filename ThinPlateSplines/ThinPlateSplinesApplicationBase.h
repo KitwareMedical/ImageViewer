@@ -24,6 +24,8 @@
 #include "vtkRenderWindow.h"
 #include "itkPoint.h"
 #include "vtkPoints.h"
+#include "vtkCellArray.h"
+#include "vtkActor.h"
 #include "fltkTimeProbesCollector.h"
 #include "itkThinPlateSplineKernelTransform.h"
 #include "itkThinPlateR2LogRSplineKernelTransform.h"
