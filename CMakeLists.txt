@@ -119,6 +119,14 @@ IF(HAS_METAIMAGE)
 ENDIF(HAS_METAIMAGE)
 
 
+# Add an option to build or not build the Distance Map Filter example
+IF(HAS_METAIMAGE)
+  IF(HAS_FLTKIMAGEVIEWER)
+    SUBDIRS(DistanceMapFilter)
+  ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_METAIMAGE)
+
+
 
 # Add an option to build the Tcl Wrap for the stl string class
 IF( ITK_WRAP_TCL )
