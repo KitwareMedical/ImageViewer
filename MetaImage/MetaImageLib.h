@@ -3,7 +3,7 @@
 
 #include "MetaUtils.h"
 #include "MetaFileLib.h"
-#include <fstream>
+#include "itkFstream.h"
 
 /*!
  *   Just a reminder of the dimension ordering in memory
@@ -82,9 +82,9 @@ class MetaImage
       bool           iFreeEData;
 
       bool           iReadFileOpen;
-      std::ifstream  iReadFilePointer;
+      itk::Ifstream  iReadFilePointer;
       bool           iWriteFileOpen;
-      std::ofstream  iWriteFilePointer;
+      itk::Ofstream  iWriteFilePointer;
 
       //
       int           iNDims;

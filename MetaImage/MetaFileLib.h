@@ -26,6 +26,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include "itkFstream.h"
 
 #include "MetaUtils.h"     // Generic Memory/IO/Debug/Misc Routines
 
@@ -37,7 +38,7 @@
 //       to topOfFile before parsing begins
 
 //extern bool MF_Read(FILE *fp,
-extern bool MF_Read(istream &fp,
+extern bool MF_Read(itk::Ifstream &fp,
                     int nFields,
                     MF_FieldRec *field,
                     int fTerm=-1,
@@ -46,7 +47,7 @@ extern bool MF_Read(istream &fp,
 
 // Given an array of fieldRecs, creates a metaFile.
 //extern bool MF_Write(FILE *fp,
-extern bool MF_Write(ostream &fp,
+extern bool MF_Write(itk::Ofstream &fp,
                      int nFields,
                      MF_FieldRec *field,
                      char _sepChar='=');

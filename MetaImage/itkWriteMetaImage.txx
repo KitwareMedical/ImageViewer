@@ -158,7 +158,7 @@ WriteMetaImage<TInputImage>
 template <class TInputImage>
 void 
 WriteMetaImage<TInputImage>
-::PrintSelf(std::ostream& os, Indent indent)
+::PrintSelf(itk::Ofstream& os, Indent indent)
 {
   Superclass::PrintSelf(os,indent);
   os << indent << "Meta Image file format writer";

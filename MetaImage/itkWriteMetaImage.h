@@ -44,6 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkImageWriter.h"
 #include "MetaUtils.h"
 #include <vector>
+#include "itkFstream.h"
 
 namespace itk
 {
@@ -120,7 +121,7 @@ protected:
   ~WriteMetaImage() {}
   WriteMetaImage(const Self&) {}
   void operator=(const Self&) {}
-  void PrintSelf(std::ostream& os, Indent indent);
+  void PrintSelf(itk::Ofstream& os, Indent indent);
 
 private:
   std::string m_FileName;

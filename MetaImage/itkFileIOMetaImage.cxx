@@ -251,7 +251,7 @@ FileIOMetaImage::GetSupportedFileExtensions() const
   return fileExtensionsList;
 }
 
-void FileIOMetaImage::Print(std::ostream& os)
+void FileIOMetaImage::Print(itk::Ofstream& os)
 {
   ImageIO::Print(os);
 }

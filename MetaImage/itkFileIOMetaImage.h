@@ -173,7 +173,7 @@ public:
   /**
    * Print information about myself
    */
-  void Print(std::ostream& os);
+  void Print(itk::Ofstream& os);
 
 protected:
   std::string m_Comment;

@@ -11,8 +11,6 @@
 #include <itkWriteMetaImage.h>
 #include <itkFileIOToImageFilter.h>
 
-using namespace itk;
-using namespace std;
 
 int main ()
 {
@@ -21,11 +19,11 @@ int main ()
    * (because MetaImage defines a mapping between image-space to physical-space),
    * you can just as easily substitute an Image in its place.
    */
-  typedef PhysicalImage<unsigned short, 3> myImageType;
+  typedef itk::PhysicalImage<unsigned short, 3> myImageType;
   /*
    * This defines our MetaImage writer
    */
-  typedef WriteMetaImage<myImageType> myWriterType;
+  typedef itk::WriteMetaImage<myImageType> myWriterType;
   /*
    * This defines our MetaImage "reader-cum-pixel-translator" (filter).
    * It not only reads the file from disk, but also typecasts the pixels from
@@ -34,7 +32,7 @@ int main ()
    * Note that by subclassing from FileIOToImageFilter, one can perform more sophisticated
    * pixel conversions, e.g. rgb to grayscale conversion.
    */
-  typedef FileIOToImageFilter<myImageType> myFilterType;
+  typedef itk::FileIOToImageFilter<myImageType> myFilterType;
 
   /*
    * This call manually registers the MetaImage reader with the master object factory.
@@ -44,7 +42,7 @@ int main ()
    * Note that once we compile the MetaImageIO library as a DLL, this call is no longer
    * necessary. It is only needed when using static libraries, as we are currently doing.
    */
-  ObjectFactoryBase::RegisterFactory(new FileIOMetaImageFactory);
+  itk::ObjectFactoryBase::RegisterFactory(new itk::FileIOMetaImageFactory);
   myWriterType::Pointer writer = myWriterType::New();
   myFilterType::Pointer filter = myFilterType::New();
 

@@ -406,7 +406,7 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
    
    InitMetaMem();
    
-   iReadFilePointer.open(_fname,ios::binary);
+   iReadFilePointer.open(_fname,std::ios::binary);
    if( iReadFilePointer.fail() )
       {
       std::cout << "Error: Cannot open file: " << _fname << std::endl;
@@ -707,7 +707,7 @@ bool MetaImage::
 ReadImageData()
    {
    bool localData = false;
-   ifstream *fp;
+   itk::Ifstream *fp;
 
    char fName[800];
    if(!strcmp("LOCAL", iDataFileName))
@@ -726,9 +726,9 @@ ReadImageData()
         {
           sprintf(fName, "%s", iDataFileName);
         }
-        fp = new ifstream;
-        fp->open(fName, ios::binary );
-      }
+        fp = new itk::Ifstream;
+        fp->open(fName, std::ios::binary );
+     }
    if( fp->fail() )
       {
       strcpy(errorMessage, "Error: cannot open element data file: ");
@@ -742,8 +742,9 @@ ReadImageData()
       {
       iHeader = (unsigned char *)MET_Alloc(MET_UCHAR, iHeaderSize);
       iFreeHeader = true;
-      fp->read( iHeader, iHeaderSize );
-      if( fp->gcount() != iHeaderSize)
+      fp->read( (char *)iHeader, iHeaderSize );
+      n = fp->gcount();
+      if( n != iHeaderSize)
          {
          sprintf(errorMessage, "Error: read header %d but expected %d", n, iHeaderSize);
          std::cout << "Error: read header " << n << " but expecting " << iHeaderSize << std::endl;
@@ -759,8 +760,9 @@ ReadImageData()
       return false;
       }
    iFreeEData = true;
-   fp->read( eData, eNBytes * iQuantity );
-   if( fp->gcount() != eNBytes * iQuantity )
+   fp->read( (char *)eData, eNBytes * iQuantity );
+   n = fp->gcount();
+   if( n != eNBytes * iQuantity )
       {
       sprintf(errorMessage, "Error: read %i but expected %i", n, iQuantity);
       std::cout << "Error: read " << n << " but expecting " << iQuantity << std::endl;
@@ -1394,7 +1396,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
    {
    char pName[255];
 
-   iWriteFilePointer.open(_headname, ios::binary );
+   iWriteFilePointer.open(_headname, std::ios::binary );
    if(iWriteFilePointer == NULL)
       {
       strcpy(errorMessage, "Error: cannot write to file: ");
@@ -1506,7 +1508,7 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
       {
       sprintf(s, "LOCAL");
       SetFieldValue("ElementDataFile", MF_CHAR_ARRAY, strlen(s), (void *)s);
-      iWriteFilePointer.write( eData, eNBytes * iQuantity );
+      iWriteFilePointer.write( (char *)eData, eNBytes * iQuantity );
       WriteFileClose();
       return true;
       }
