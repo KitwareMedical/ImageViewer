@@ -1,0 +1,236 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0011 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class RegisterGUI {open : {public RegisterApplication}
+} {
+  Function {RegisterGUI()} {open
+  } {
+    Fl_Window winMain {
+      label {Mutual Information 2D Registration} open
+      xywh {302 69 430 289} labeltype NORMAL_LABEL
+      code0 {\#include <RegisterApplication.h>} visible
+    } {
+      Fl_Group grpControls {open
+        xywh {15 15 400 210}
+      } {
+        Fl_Button {} {
+          label {Load Fixed Image...}
+          callback {this->LoadFixedImage()}
+          xywh {15 15 180 30}
+        }
+        Fl_Button {} {
+          label {Load MovingImage...}
+          callback {this->LoadMovingImage()}
+          xywh {15 50 180 30}
+        }
+        Fl_Box {} {
+          label {Selected Region}
+          xywh {220 30 195 75} box THIN_DOWN_FRAME labeltype EMBOSSED_LABEL labelsize 12 align 5
+        }
+        Fl_Value_Output outSelectedRegionBeginX {
+          label {X:}
+          xywh {310 40 35 25} labelsize 12 textsize 12
+        }
+        Fl_Value_Output outSelectedRegionBeginY {
+          label {Y:}
+          xywh {365 40 35 25} labelsize 12 textsize 12
+        }
+        Fl_Value_Output outSelectedRegionEndX {
+          label {X:}
+          xywh {310 75 35 25} labelsize 12 textsize 12
+        }
+        Fl_Value_Output outSelectedRegionEndY {
+          label {Y:}
+          xywh {365 75 35 25} labelsize 12 textsize 12
+        }
+        Fl_Box {} {
+          label End
+          xywh {225 75 75 20} labelsize 12 align 128
+        }
+        Fl_Box {} {
+          label Begin
+          xywh {220 40 85 25} labelsize 12 align 128
+        }
+        Fl_Return_Button {} {
+          label Quit
+          callback {this->Quit()}
+          xywh {15 190 180 30}
+        }
+        Fl_Button buSaveRegisteredImage {
+          label {Save Registered Image...}
+          callback {this->SaveRegisteredImage()}
+          xywh {15 120 180 30}
+        }
+        Fl_Button buStartRegistration {
+          label {Start Registration}
+          callback {this->Execute()}
+          xywh {15 85 180 30}
+        }
+        Fl_Button buAdvancedOptions {
+          label {Advanced Options...}
+          callback {this->ShowAdvancedOptionsWindow()}
+          xywh {15 155 180 30}
+        }
+        Fl_Box {} {
+          label Display
+          xywh {220 125 195 100} box THIN_DOWN_FRAME labeltype EMBOSSED_LABEL labelsize 12 align 5
+        }
+        Fl_Choice lsDisplay {open
+          xywh {230 140 175 30} labeltype EMBOSSED_LABEL labelsize 12 textsize 12
+        } {
+          menuitem menuFixedImageDisplay {
+            label {Fixed Image}
+            callback {this->SelectDisplay(fixedImage)}
+            xywh {0 0 100 20} labelsize 12
+          }
+          menuitem menuMovingImageDisplay {
+            label {Moving Image}
+            callback {this->SelectDisplay(movingImage)}
+            xywh {0 0 100 20} labelsize 12
+          }
+          menuitem menuRegisteredImageDisplay {
+            label {Registered Image}
+            callback {this->SelectDisplay(registeredImage)}
+            xywh {0 0 100 20} labelsize 12
+          }
+          menuitem menuMixedChannel {
+            label MixedChannelView
+            callback {this->SelectDisplay(mixedChannel)}
+            xywh {0 0 100 20} labelsize 12
+          }
+        }
+        Fl_Button buShowDisplay {
+          label Show
+          callback {this->ShowDisplay()}
+          xywh {230 185 175 30} labelsize 12
+        }
+      }
+      Fl_Output outStatus {selected
+        xywh {15 230 400 45} type Multiline labelsize 12 textsize 12
+      }
+    }
+    Fl_Window winAdvancedOptions {
+      label {Advaned options} open
+      xywh {506 168 364 356} labelsize 12 visible
+    } {
+      Fl_Return_Button buUpdateAdvancedOptions {
+        label OK
+        callback {this->UpdateAdvancedOptions()}
+        xywh {70 315 90 30} labeltype EMBOSSED_LABEL labelsize 12
+      }
+      Fl_Return_Button buCancelAdvancedOptionsUpdate {
+        label Cancel
+        callback {this->CloseAdvancedOptionsWindow()}
+        xywh {215 315 85 30} labeltype EMBOSSED_LABEL labelsize 12
+      }
+      Fl_Box {} {
+        label {Optimizor Parameters}
+        xywh {10 30 345 130} box THIN_DOWN_FRAME labeltype EMBOSSED_LABEL labelsize 12 align 5
+      }
+      Fl_Value_Input inNumberOfIterations {
+        label {No. of Iterations}
+        xywh {170 35 85 25} labelsize 12 textsize 12
+      }
+      Fl_Value_Input inRotationScale {
+        label {Rotation Scale}
+        xywh {170 95 85 25} labelsize 12 textsize 12
+      }
+      Fl_Value_Input inLearningRate {
+        label {Learning Rate}
+        xywh {170 65 85 25} labelsize 12 textsize 12
+      }
+      Fl_Box {} {
+        label {Mixed channel view image sources}
+        xywh {10 195 345 105} box THIN_DOWN_BOX labeltype EMBOSSED_LABEL labelsize 12 align 5
+      }
+      Fl_Group {} {open
+        xywh {75 210 240 25}
+      } {
+        Fl_Check_Button buRedFixedImage {
+          label {Fixed Image}
+          xywh {75 210 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+        Fl_Check_Button buRedRegisteredImage {
+          label {Registered Image}
+          xywh {171 210 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+        Fl_Check_Button buRedNone {
+          label None
+          xywh {290 210 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+      }
+      Fl_Box {} {
+        label {Red:}
+        xywh {20 210 55 25} labelsize 12
+      }
+      Fl_Group {} {open
+        xywh {75 235 240 25}
+      } {
+        Fl_Check_Button buGreenFixedImage {
+          label {Fixed Image}
+          xywh {75 235 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+        Fl_Check_Button buGreenRegisteredImage {
+          label {Registered Image}
+          xywh {171 235 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+        Fl_Check_Button buGreenNone {
+          label None
+          xywh {290 235 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+      }
+      Fl_Box {} {
+        label {Green:}
+        xywh {20 235 55 25} labelsize 12
+      }
+      Fl_Group {} {open
+        xywh {75 260 240 25}
+      } {
+        Fl_Check_Button buBlueFixedImage {
+          label {Fixed Image}
+          xywh {75 260 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+        Fl_Check_Button buBlueRegisteredImage {
+          label {Registered Image}
+          xywh {172 260 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+        Fl_Check_Button buBlueNone {
+          label None
+          xywh {290 260 25 25} type Radio down_box DIAMOND_DOWN_BOX labelsize 12
+        }
+      }
+      Fl_Box {} {
+        label {Blue:}
+        xywh {20 260 55 25} labelsize 12
+      }
+      Fl_Value_Input inTranslationScale {
+        label {Translation Scale}
+        xywh {170 125 85 25} labelsize 12 textsize 12
+      }
+    }
+  }
+  Function {Quit()} {open return_type {virtual void}
+  } {}
+  Function {Load()} {open return_type {virtual void}
+  } {}
+  Function {ShowFixedImage()} {open return_type {virtual void}
+  } {}
+  Function {ShowMovingImage()} {open return_type {virtual void}
+  } {}
+  Function {ShowRegisteredImage()} {open return_type {virtual void}
+  } {}
+  Function {ShowAdvancedOptionsWindow()} {open return_type {virtual void}
+  } {}
+  Function {UpdateAdvancedOptions(void)} {open return_type {virtual void}
+  } {}
+  Function {CloseAdvancedOptionsWindow(void)} {open return_type {virtual void}
+  } {}
+  Function {SaveRegisteredImage(void)} {open return_type {virtual void}
+  } {}
+  Function {ShowMixedChannel(void)} {open return_type {virtual void}
+  } {}
+} 
