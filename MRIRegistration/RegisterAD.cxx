@@ -16,6 +16,7 @@
 =========================================================================*/
 #include <iostream>
 #include <fstream>
+
 #include "itkImage.h"
 #include "itkImageRegionIterator.h"
 #include "itkImportImageFilter.h"
@@ -43,6 +44,7 @@ int main(int argc, char **argv)
     exit(1);
     }
 
+  // Process Options
   OptionList options(argc, argv) ;
   std::string study1Prefix;
   std::vector<int> study1Resolution(3);
@@ -80,7 +82,7 @@ int main(int argc, char **argv)
     }
   
 
-  // Read two studies
+  // Study 1 ----------------
   vtkImageReader *aReader1 = vtkImageReader::New();
     aReader1->SetDataScalarTypeToUnsignedShort();
     aReader1->SetFilePrefix(study1Prefix.c_str());
@@ -96,7 +98,6 @@ int main(int argc, char **argv)
   vtkImageCast *floatImage1 = vtkImageCast::New();
     floatImage1->SetInput(aReader1->GetOutput());
     floatImage1->SetOutputScalarTypeToFloat();
-
   vtkImageStatistics *stat1 = vtkImageStatistics::New();
     stat1->SetInput(floatImage1->GetOutput());
     stat1->Update();
@@ -105,10 +106,11 @@ int main(int argc, char **argv)
     scaleImage1->SetScale(1.0 / stat1->GetStandardDeviationValue());
     scaleImage1->SetShift(-stat1->GetMeanValue());
     scaleImage1->Update();
-      
+  // Center the study
   vtkImageChangeInformation *centerImage1 = vtkImageChangeInformation::New();
     centerImage1->SetInput(scaleImage1->GetOutput());
     centerImage1->CenterImageOn();
+  // Generate requested resolution
   vtkImageShrink3D *shrinkImage1 = vtkImageShrink3D::New();
     shrinkImage1->SetInput(centerImage1->GetOutput());
     shrinkImage1->SetShrinkFactors(shrinkFactors[0],
@@ -128,6 +130,7 @@ int main(int argc, char **argv)
     anExporter1->SetInput(shrinkImage1->GetOutput());
     anExporter1->Export(rawReference);
 
+  // Study 2 -----------------
   vtkImageReader *aReader2 = vtkImageReader::New();
     aReader2->SetFilePrefix(study2Prefix.c_str());
     aReader2->SetDataScalarTypeToUnsignedShort();
@@ -152,8 +155,6 @@ int main(int argc, char **argv)
   vtkImageChangeInformation *centerImage2 = vtkImageChangeInformation::New();
     centerImage2->SetInput(scaleImage2->GetOutput());
     centerImage2->CenterImageOn();
-
-
   vtkImageShrink3D *shrinkImage2 = vtkImageShrink3D::New();
     shrinkImage2->SetInput(centerImage2->GetOutput());
     shrinkImage2->SetShrinkFactors(shrinkFactors[0],
@@ -195,7 +196,7 @@ int main(int argc, char **argv)
   importReference->SetRegion( referenceRegion );
   importReference->SetImportPointer( rawReference, originalSizeX1*originalSizeY1*originalSizeZ1, true);
 
-  // set the parameters for the physical image
+  // set the parameters for the image
   float originalSpacing1[3];
   shrinkImage1->GetOutput()->GetSpacing(originalSpacing1);
   importReference->SetSpacing(originalSpacing1);
@@ -215,7 +216,7 @@ int main(int argc, char **argv)
   importTarget->SetRegion( targetRegion );
   importTarget->SetImportPointer( rawTarget, originalSizeX2*originalSizeY2*originalSizeZ2, true);
 
-  // set the parameters for the image
+  // Set the parameters for the image
   float originalSpacing2[3];
   shrinkImage2->GetOutput()->GetSpacing(originalSpacing2);
   importTarget->SetSpacing(originalSpacing2);
@@ -233,19 +234,20 @@ int main(int argc, char **argv)
   RegistrationType::Pointer registrationMethod = RegistrationType::New();
   RegistrationType::ParametersType guess; guess.Fill(0); guess[1] = 1.0;
 
+  // The guess is: a quaternion followed by a translation
   std::cerr << "Enter a 7 tuple guess: ";
   std::cin >> guess;
   std::cerr << guess << std::endl;
   registrationMethod->SetParameters (guess);
   
-  // connect the images
+  // Connect the images
   importReference->Update();
   registrationMethod->SetReference(importReference->GetOutput());
 
   importTarget->Update();
   registrationMethod->SetTarget(importTarget->GetOutput());
 
-  // set translation scale
+  // Set translation scale
   typedef RegistrationType::OptimizerType OptimizerType;
   typedef OptimizerType::TransformType::ParametersType ScaleType;
 
@@ -261,21 +263,22 @@ int main(int argc, char **argv)
   registrationMethod->SetNumberOfIterations( numberOfIterations );
   registrationMethod->SetLearningRate( learningRate );
 
-  // set metric related parameters
+  // Set metric related parameters
   registrationMethod->GetMetric()->SetTargetStandardDeviation( standardDeviation );
   registrationMethod->GetMetric()->SetReferenceStandardDeviation( standardDeviation );
   registrationMethod->GetMetric()->SetNumberOfSpatialSamples( numberOfSamples );
 
-  // start registration
+  // Start registration
   registrationMethod->StartRegistration();
 
-  // get the results
+  // Get the results
   RegistrationType::ParametersType solution = 
     registrationMethod->GetParameters();
 
   vnl_quaternion<double> quat(solution[0],solution[1],solution[2],solution[3]);
   vnl_matrix_fixed<double,3,3> mat = quat.rotation_matrix();
   
+  // Convert the vnl matrix to a vtk mtrix
   double result[16];
   result[0] = mat(0,0);
   result[1] = mat(0,1);
@@ -352,7 +355,7 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.9 $  $Date: 2002-01-15 20:12:18 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.10 $  $Date: 2002-01-16 15:30:49 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
