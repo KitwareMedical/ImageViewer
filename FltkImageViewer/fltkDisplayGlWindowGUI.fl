@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0010 
+version 1.0009 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -62,11 +62,11 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->visible_r();} {}
   }
-  Function {GetRedrawCommand(void)} {return_type {const fltk::GlWindow::RedrawCommandType::Pointer &}
+  Function {GetRedrawCommand(void)} {return_type {fltk::GlWindow::RedrawCommandType::Pointer}
   } {
-    code {return drawWindow->GetRedrawCommand();} {}
+    code {return drawWindow->GetRedrawCommand().GetPointer();} {}
   }
-  Function {GetNotifier(void)} {return_type {itk::Object::Pointer &}
+  Function {GetNotifier(void)} {return_type {itk::Object::Pointer}
   } {
     code {return drawWindow->GetNotifier();} {}
   }

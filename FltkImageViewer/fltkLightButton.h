@@ -77,9 +77,9 @@ public:
   /**
    * Get Command
    */
-  const RedrawCommandType::Pointer & GetRedrawCommand( void ) const
+  RedrawCommandType::Pointer GetRedrawCommand( void ) const
   {
-    return m_Command;
+    return m_Command.GetPointer();
   }
 
 private:

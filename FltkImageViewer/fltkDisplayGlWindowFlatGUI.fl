@@ -66,9 +66,9 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->GetRedrawCommand().GetPointer();} {}
   }
-  Function {GetNotifier(void)} {return_type {itk::Object::Pointer &}
+  Function {GetNotifier(void)} {return_type {itk::Object::Pointer}
   } {
-    code {return drawWindow->GetNotifier();} {}
+    code {return drawWindow->GetNotifier().GetPointer();} {}
   }
   Function {SetBackground(GLfloat r, GLfloat g, GLfloat b)} {return_type {virtual void}
   } {
