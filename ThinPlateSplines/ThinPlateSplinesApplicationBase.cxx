@@ -17,6 +17,7 @@
 
 #include "ThinPlateSplinesApplicationBase.h"
 
+#include "vtkPolyData.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkDataSetMapper.h"
 #include "vtkActor.h"
