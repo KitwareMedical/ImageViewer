@@ -45,12 +45,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mydefs.h"
 #include "imageutils.h"
 #include "OptionList.h"
-#include "EnergyFunction.h"
-#include "BiasField.h"
-#include "itkFastRandomUnitNormalVariateGenerator.h"
-
-#include <itkOnePlusOneEvolutionaryOptimizer.h>
-
+#include "itkMRIBiasFieldCorrectionFilter.h"
 
 void print_usage()
 {
@@ -63,7 +58,7 @@ void print_usage()
   print_line("       --use-log [yes|no]") ;
   print_line("       [--input-mask file]  [--output-mask file]" ) ;
   print_line("       [--grow double] [--shrink double] [--max-iteration int]");
-  print_line("       [--init-step-size double] ");
+  print_line("       [--init-step-size double] [--slice-direction [0 - 2]]");
 
   print_line("");
 
@@ -86,7 +81,7 @@ void print_usage()
   print_line("         and init-step-size)" );
   print_line("--grow double") ;
   print_line("        stepsize growth factor. must be greater than 1.0") ;
-  print_line("        [default 2.0]" ) ;
+  print_line("        [default 1.05]" ) ;
   print_line("--shrink double") ;
   print_line("        stepsize shrink factor ") ;
   print_line("        [default grow^(-0.25)]" ) ; 
@@ -94,7 +89,10 @@ void print_usage()
   print_line("        maximal number of iterations") ;
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
-  print_line("        inital step size [default 2.0]" );
+  print_line("        inital step size [default 1.02]" );
+  print_line("--slice-direction [0 - 2]") ;
+  print_line("        along which axes the slices are formed (0 - x, 1 - y,") ;
+  print_line("        2 - z) [default 2 (z axis)]" );
 
   print_line("");
 
@@ -105,85 +103,11 @@ void print_usage()
   print_line("         --input-mask sample.mask.mhd ") ;
   print_line("         --output-mask sample.mask2.mhd") ;
   print_line("         --grow 1.05 --shrink 0.9");
-  print_line("         --max-iteration 2000 --init-step-size 1.1") ;
+  print_line("         --max-iteration 2000 --init-step-size 1.02") ;
 
 }
 
     
-void updateSlice(ImagePointer image, MaskPointer mask, 
-                 int sliceNo, BiasField& biasField)
-{
-  ImageType::RegionType region = image->GetLargestPossibleRegion() ;
-  ImageType::IndexType index = region.GetIndex() ;
-  ImageType::SizeType size = region.GetSize() ;
-
-  index[2] = sliceNo ;
-  size[2] = 1 ;
-
-  region.SetSize(size) ;
-  region.SetIndex(index) ;
-
-  bool maskAvailable = true ;
-
-  if (image->GetLargestPossibleRegion().GetSize() !=
-      mask->GetLargestPossibleRegion().GetSize())
-    maskAvailable = false ;
-
-  itk::ImageRegionIteratorWithIndex<ImageType> iIter(image, region) ;
-  
-  BiasField::SimpleForwardIterator bIter(&biasField) ;
-  bIter.Begin() ;
-
-  if (maskAvailable)
-    {
-      itk::ImageRegionIteratorWithIndex<MaskType> 
-        mIter(mask, region) ;
-      mIter.GoToBegin() ;
-      // mask diff image
-      while (!iIter.IsAtEnd())
-        {
-          double pixel = iIter.Get() ;
-          double bias = bIter.Get() ;
-          double diff = pixel - bias ;
-
-          if (mIter.Get() != 0.0)
-            {
-              if (biasField.IsMultiplicative())
-                iIter.Set(exp(diff) - 1) ;
-              else
-                iIter.Set(diff) ;
-            }
-          else
-            {
-              if (biasField.IsMultiplicative())
-                iIter.Set(exp(pixel) - 1) ;
-              else
-                iIter.Set(pixel) ;
-            }
-
-          ++mIter ;
-          ++bIter ;
-          ++iIter ;
-        }
-    }
-  else
-    {
-      while (!iIter.IsAtEnd())
-        {
-          double bias = bIter.Get() ;
-          double diff = iIter.Get() - bias ;
-
-          if (biasField.IsMultiplicative())
-            iIter.Set(exp(diff) - 1) ;
-          else
-            iIter.Set(diff) ;
-
-          ++bIter ;
-          ++iIter ;
-        }
-    }
-}
-
 int main(int argc, char* argv[])
 {
   int ret ;
@@ -197,10 +121,14 @@ int main(int argc, char* argv[])
 
   OptionList options(argc, argv) ;
 
+  typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType> Corrector ;
+  Corrector::Pointer filter = Corrector::New() ;
+
   std::string inputFileName ;
   std::string inputMaskFileName = "" ;
   std::string outputMaskFileName = "" ;
   std::string outputFileName ;
+  int sliceDirection ;
   bool useLog ;
   int degree ;
   std::vector<double> classMeans ;
@@ -221,19 +149,21 @@ int main(int argc, char* argv[])
       options.GetStringOption("input-mask", &inputMaskFileName, false) ;
       options.GetStringOption("output-mask", &outputMaskFileName, false) ;
 
+      sliceDirection = options.GetIntOption("slice-direction", 2, false) ;
       // get bias field options
-      useLog = options.GetBooleanOption("use-log", true) ;
-      degree = options.GetIntOption("degree", false) ;
+      useLog = options.GetBooleanOption("use-log", true, true) ;
+      degree = options.GetIntOption("degree", 3, false) ;
   
       // get energyfunction options
       options.GetMultiDoubleOption("class-mean", &classMeans, true) ;
       options.GetMultiDoubleOption("class-sigma", &classSigmas, true) ;
 
       // get optimizer options
-      maximumIteration = options.GetIntOption("max-iteration", false) ;
-      initialRadius = options.GetDoubleOption("step-size", false) ;
-      grow = options.GetDoubleOption("grow", false) ;
-      shrink = options.GetDoubleOption("shrink", false) ;
+      maximumIteration = options.GetIntOption("max-iteration", 20, false) ;
+      grow = options.GetDoubleOption("grow", 1.05, false) ;
+      shrink = pow(grow, -0.25) ;
+      shrink = options.GetDoubleOption("shrink", shrink, false) ;
+      initialRadius = options.GetDoubleOption("step-size", 1.02, false) ;
     }
   catch(OptionList::RequiredOptionMissing e)
     {
@@ -254,10 +184,19 @@ int main(int argc, char* argv[])
       std::cout << "Loading images..." << std::endl ;
       readMetaImageHeader(inputFileName, inputDimension, inputSize) ;
       loadImage(inputFileName, input) ;
+      filter->SetInput(input) ;
       if (inputMaskFileName != "")
-        loadMask(inputMaskFileName, inputMask) ;
+        {
+          loadMask(inputMaskFileName, inputMask) ;
+          filter->SetInputMask(inputMask) ;
+        }
+
       if (outputMaskFileName != "")
-        loadMask(outputMaskFileName, outputMask) ;
+        {
+          loadMask(outputMaskFileName, outputMask) ;
+          filter->SetOutputMask(outputMask) ;
+        }
+
       std::cout << "Images loaded." << std::endl ;
     }
   catch (ImageIOError e)
@@ -267,78 +206,36 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
 
-  if (initialRadius <= 0)
-    initialRadius = 10.0 ;
+  ImagePointer output = ImageType::New() ;
 
-  if (useLog)
-    {
-      for (int i = 0 ; i < classMeans.size() ; i++) 
-        {
-          classSigmas[i] = log(1.0 + classSigmas[i] / (classMeans[i] + 1.0)) ;
-          classMeans[i] = log(classMeans[i] + 1.0) ;
-        }
+  filter->SetOutput(output) ;
+  filter->SetSlicingDirection(sliceDirection) ;
+  filter->IsBiasFieldMultiplicative(useLog) ;
+  // sets tissue classes' statistics for creating the energy function
+  filter->SetTissueClassStatistics(classMeans, classSigmas) ;
+  // setting standard optimizer parameters 
+  filter->SetOptimizerGrowFactor(grow) ;
+  filter->SetOptimizerShrinkFactor(shrink) ;
+  filter->SetOptimizerMaximumIteration(maximumIteration) ;
+  filter->SetOptimizerInitialRadius(initialRadius) ;
+  // this member function call is not necessary since the filter's internal
+  // InterSliceIntensityCorrection() member sets the bias field degree to
+  // zero.
+  filter->SetBiasFieldDegree(0) ;
+  // turn on inter-slice intensity correction 
+  filter->SetUsingInterSliceIntensityCorrection(true) ;
+  // disable slab identifcation
+  // the filter will think the largest possible region as the only one
+  // slab.
+  filter->SetUsingSlabIdentification(false) ;
+  // disable 3D bias correction
+  filter->SetUsingBiasFieldCorrection(false) ;
 
-      if (initialRadius > 0)
-        initialRadius = log(initialRadius) ;
+  std::cout << "Correcting the input image..." << std::endl ;
+  filter->Update() ;
 
-      logImage(input, input) ;
-    }
-
-  // initialize energy function
-  typedef EnergyFunction<ImageType, MaskType> MyEnergy ;
-  std::cout << "Initializing energy table..." << std::endl ;
-  MyEnergy energy(classMeans, classSigmas) ;
-  std::cout << "Energy table initialized." << std::endl ;
-
-  energy.SetImage(input) ;
-
-  energy.SetMask(inputMask) ;
-
-  // initialize optimizer
-  typedef itk::OnePlusOneEvolutionaryOptimizer<MyEnergy, 
-    itk::FastRandomUnitNormalVariateGenerator> MyOptimizer ;
-  MyOptimizer::Pointer optimizer = MyOptimizer::New() ;
-  optimizer->SetCostFunction(&energy) ;
+  std::cout << "Writing the output image..." << std::endl ;
+  writeImage(outputFileName, output) ;
   
-  if (grow > 0)
-    {
-      if (shrink > 0)
-        optimizer->Initialize(initialRadius, grow, shrink) ;
-      else
-        optimizer->Initialize(initialRadius, grow) ;
-    }
-  else
-    {
-      if (shrink > 0)
-        optimizer->Initialize(initialRadius, shrink) ;
-      else
-        optimizer->Initialize(initialRadius) ;
-    }
-
-  optimizer->SetMaximumIteration(maximumIteration) ;
-
-
-  BiasField biasField(2, 0, inputSize) ;
-  biasField.IsMultiplicative(useLog) ;
-  energy.SetBiasField(&biasField) ;
-  optimizer->SetSpaceDimension(biasField.GetNoOfCoefficients()) ;
-  int totalSlices = input->GetLargestPossibleRegion().GetSize()[2] ;
-  std::cout << "There are " << totalSlices << " slices." << std::endl ;
-  for (int slice = 0 ; slice < totalSlices ; slice++)
-    {
-      std::cout << "Updating Slice (" << slice << ")" << std::endl ; 
-      biasField.Initialize() ;
-      optimizer->SetInitialPosition(biasField.GetCoefficients()) ;
-      energy.SetSliceNo(slice) ;
-      optimizer->Run() ;
-      biasField.SetCoefficients(optimizer->GetCurrentPosition()) ;
-      updateSlice(input, outputMask, slice, biasField) ;
-      print_line("Slice updated.") ;
-    }
-
-  std::cout << "Writing corrected image..." << std::endl ;
-  writeImage(outputFileName, input) ;
-  std::cout << "Corrected image created." << std::endl ;
-
   return 0 ;
 }
