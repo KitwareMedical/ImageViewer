@@ -163,7 +163,9 @@ pgm_reader::getln(std::ifstream &in, char *buf) const
 
 int main(int argc, char *argv[])
 {
-  float conductance_term, lower_threshold, flood_level;
+  float conductance_term; 
+  float lower_threshold; 
+//  float flood_level;
   unsigned int diffusion_iterations;
   typedef pgm_reader::ImageType ImageType;
   typedef itk::Image<unsigned long, 2> UnsignedImageType;
