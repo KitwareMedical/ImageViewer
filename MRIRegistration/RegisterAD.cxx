@@ -243,8 +243,19 @@ int main(int argc, char **argv)
   importTarget->Update();
   registrationMethod->SetTarget(importTarget->GetOutput());
 
-  // set optimization related parameters
-  registrationMethod->SetTranslationScale( translateScale );
+  // set translation scale
+  typedef RegistrationType::OptimizerType OptimizerType;
+  typedef OptimizerType::TransformType::ParametersType ScaleType;
+
+  ScaleType scales;
+  scales.Fill( 1.0 );
+  for( unsigned j = 4; j < 7; j++ )
+    {
+    scales[j] = translateScale;
+    }
+
+  registrationMethod->GetOptimizer()->GetTransform()->SetScale( scales );
+
   registrationMethod->SetNumberOfIterations( numberOfIterations );
   registrationMethod->SetLearningRate( learningRate );
 
@@ -260,15 +271,7 @@ int main(int argc, char **argv)
   RegistrationType::ParametersType solution = 
     registrationMethod->GetParameters();
 
-  typedef RegistrationType::TransformationType SolutionTransformType;
-  SolutionTransformType::Pointer solutionTransform =
-    SolutionTransformType::New();
-  solutionTransform->SetParameters(solution);
-
-  typedef SolutionTransformType::RigidTransformType Rigid3DType;
-
-  Rigid3DType::VnlQuaternionType quat(solution[0],solution[1],solution[2],solution[3]);
-
+  vnl_quaternion<double> quat(solution[0],solution[1],solution[2],solution[3]);
   vnl_matrix_fixed<double,3,3> mat = quat.rotation_matrix();
   
   double result[16];
@@ -348,7 +351,7 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.2 $  $Date: 2001-07-18 19:27:21 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.3 $  $Date: 2001-09-19 20:48:23 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
