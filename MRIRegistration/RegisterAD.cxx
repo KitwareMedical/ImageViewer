@@ -13,7 +13,8 @@ All rights reserved.
 See COPYRIGHT.txt for copyright details.
 
 =========================================================================*/
-#include <fstream>
+#include <ostream>
+#include <iostream>
 #include "itkImage.h"
 #include "itkImageRegionIterator.h"
 #include "itkImportImageFilter.h"
@@ -213,7 +214,7 @@ void main(int argc, char **argv)
   importTarget->SetRegion( targetRegion );
   importTarget->SetImportPointer( rawTarget, originalSizeX2*originalSizeY2*originalSizeZ2, true);
 
-  // set the parameters for the physical image
+  // set the parameters for the image
   float originalSpacing2[3];
   shrinkImage2->GetOutput()->GetSpacing(originalSpacing2);
   importTarget->SetSpacing(originalSpacing2);
@@ -251,11 +252,11 @@ void main(int argc, char **argv)
   scales.Fill( 1.0 );
   for( unsigned j = 4; j < 7; j++ )
     {
-    scales[j] = translateScale;
+    scales[j] = 1.0 / vnl_math_sqr(translateScale);
     }
 
   registrationMethod->GetOptimizer()->GetTransform()->SetScale( scales );
-
+  
   registrationMethod->SetNumberOfIterations( numberOfIterations );
   registrationMethod->SetLearningRate( learningRate );
 
@@ -278,15 +279,15 @@ void main(int argc, char **argv)
   result[0] = mat(0,0);
   result[1] = mat(0,1);
   result[2] = mat(0,2);
-  result[3] = solution[4] * translateScale;
+  result[3] = solution[4];
   result[4] = mat(1,0);
   result[5] = mat(1,1);
   result[6] = mat(1,2);
-  result[7] = solution[5] * translateScale;
+  result[7] = solution[5];
   result[8] = mat(2,0);
   result[9] = mat(2,1);
   result[10] = mat(2,2);
-  result[11] = solution[6] * translateScale;
+  result[11] = solution[6];
   result[12] = 0;
   result[13] = 0;
   result[14] = 0;
@@ -310,39 +311,39 @@ void main(int argc, char **argv)
   std::cout << solution << std::endl;
 
   // Write a vtk tcl script to load the data sets and register them
-  std::fstream *fptr = new std::fstream("reg.tcl", ios::out);
+  ostream *fptr = new ofstream("reg.tcl", ios::out);
   *fptr << "set study1Prefix \""
-	<< study1Prefix.c_str() << "\"" << std::endl;
+	<< study1Prefix.c_str() << "\"" << endl;
   *fptr << "set study1Extent \""
 	<< 0 << " " << study1Resolution[0] - 1 << " "
     	<< 0 << " " << study1Resolution[1] - 1 << " "
-    	<< 1 << " " << study1Resolution[2] << "\"" << std::endl;
+    	<< 1 << " " << study1Resolution[2] << "\"" << endl;
   *fptr << "set study1Spacing \""
 	<< study1Spacing[0] << " "
     	<< study1Spacing[1] << " "
-    	<< study1Spacing[2] << "\"" << std::endl;
+    	<< study1Spacing[2] << "\"" << endl;
 
   *fptr << "set study2Prefix \""
-	<< study2Prefix.c_str() << "\"" << std::endl;
+	<< study2Prefix.c_str() << "\"" << endl;
   *fptr << "set study2Extent \""
 	<< 0 << " " << study2Resolution[0] - 1 << " "
     	<< 0 << " " << study2Resolution[1] - 1 << " "
-    	<< 1 << " " << study2Resolution[2] << "\"" << std::endl;
+    	<< 1 << " " << study2Resolution[2] << "\"" << endl;
   *fptr << "set study2Spacing \""
 	<< study2Spacing[0] << " "
     	<< study2Spacing[1] << " "
-    	<< study2Spacing[2] << "\"" << std::endl;
+    	<< study2Spacing[2] << "\"" << endl;
 
   *fptr << "set rotateX "
-       << aTrans->GetOrientation()[0] << std::endl;
+       << aTrans->GetOrientation()[0] << endl;
   *fptr << "set rotateY "
-       << aTrans->GetOrientation()[1] << std::endl;
+       << aTrans->GetOrientation()[1] << endl;
   *fptr << "set rotateZ "
-       << aTrans->GetOrientation()[2] << std::endl;
+       << aTrans->GetOrientation()[2] << endl;
   *fptr << "set translate \""
 	<< aTrans->GetPosition()[0] << " "
 	<< aTrans->GetPosition()[1] << " "
-	<< aTrans->GetPosition()[2] << "\"" << std::endl;
+	<< aTrans->GetPosition()[2] << "\"" << endl;
     
   delete fptr;
   
@@ -351,7 +352,7 @@ void main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.4 $  $Date: 2001-09-20 11:10:34 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.5 $  $Date: 2001-09-21 00:07:19 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
