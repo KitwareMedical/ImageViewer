@@ -25,6 +25,9 @@ ${ITK_BINARY_DIR}/Examples/Morphogenesis
 
 SOURCE_FILES(Morphogenesis_SRCS
 Cell
+CellsViewerBase
+CellsViewerGUI
+CellsViewer
 Bacteria
 Tissue
 TissueViewer

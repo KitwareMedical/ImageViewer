@@ -70,6 +70,7 @@ Bacteria
     m_Position    	+= PerturbationVector;
     sibling->m_Position -= PerturbationVector; 
 
+    m_CellCycleState  = G1;
 
 }
 

@@ -14,6 +14,14 @@ double             Cell::DefaultRadius         =       10; // microns
 double             Cell::GrowthRadiusIncrement =    0.001; // microns
 double             Cell::GrowthRadiusLimit     =       20; // microns
 
+double             Cell::NutrientSelfRepairLevel  =    50; 
+double             Cell::EnergySelfRepairLevel    =    50; 
+
+double             Cell::DefaultEnergyIntake      =     1; 
+double             Cell::DefaultNutrientsIntake   =     1; 
+
+Cell::CellCycleStateType Cell::TransitionTable[100][100];
+  
 std::list<Cell *>  Cell::m_Aggregate;       
 
 
@@ -21,9 +29,10 @@ Cell
 ::Cell()
 {
 
-	m_Radius   = DefaultRadius;
-	m_Position = DefaultPosition;
-  m_Color    = DefaultColor;
+	m_Radius      = DefaultRadius;
+	m_Position    = DefaultPosition;
+  m_Color       = DefaultColor;
+  m_CellCycleState  = G1;
   
   m_Aggregate.push_back( this );
 
@@ -52,11 +61,15 @@ void
 Cell
 ::Grow(void) 
 {
-  m_Radius += GrowthRadiusIncrement;
-  if( m_Radius > GrowthRadiusLimit )
-  {
-	m_Radius = GrowthRadiusLimit;
-  }
+  if ( m_NutrientsReserve > NutrientSelfRepairLevel &&
+       m_EnergyReserve    > EnergySelfRepairLevel       )
+    {
+    m_Radius += GrowthRadiusIncrement;
+    if( m_Radius > GrowthRadiusLimit )
+      {
+      m_Radius = GrowthRadiusLimit;
+      }
+    }
 }
 
 
@@ -118,6 +131,38 @@ Cell
   GrowthRadiusIncrement = value;
 }
 
+
+void
+Cell
+::AdvanceTimeStep(void) 
+{
+  
+  unsigned int input = 0;
+
+  this->NutrientsIntake();
+  if( m_CellCycleState == G1 )
+    {
+    this->Grow();
+    }
+  m_CellCycleState = TransitionTable[ m_CellCycleState ][ input ];
+
+}
+
+
+void
+Cell
+::NutrientsIntake(void) 
+{
+  m_NutrientsReserve += DefaultNutrientsIntake;
+}
+
+
+void
+Cell
+::EnergyIntake(void) 
+{
+  m_EnergyReserve += DefaultEnergyIntake;
+}
 
 
 };  // end namespace bio

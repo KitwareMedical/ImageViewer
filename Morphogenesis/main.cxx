@@ -1,17 +1,15 @@
-#include "TissueViewer.h"
+#include "CellsViewer.h"
 
 
 int main()
 {
 
-  bio::TissueViewer * viewer = new bio::TissueViewer();
+  bio::CellsViewer viewer;
 
-  
-  viewer->Show();
+  viewer.Show();
   
   Fl::run();
 
-  delete viewer;
 
   return 0;
 }
