@@ -22,7 +22,7 @@ SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 SUBDIRS(AntiAliasBinaryImageFilter)
 
 # Build the WatershedSegmentation example
-#SUBDIRS(WatershedSegmentation)
+SUBDIRS(WatershedSegmentation)
 
 # Build the SimpleLevelSetsExample
 #SUBDIRS(SimpleLevelSetsExample)
