@@ -19,7 +19,7 @@ SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 #SUBDIRS(StreamedWatershedSegmentation)
 
 # Build the AntiAliasBinaryImageFilter example
-#SUBDIRS(AntiAliasBinaryImageFilter)
+SUBDIRS(AntiAliasBinaryImageFilter)
 
 # Build the WatershedSegmentation example
 #SUBDIRS(WatershedSegmentation)
