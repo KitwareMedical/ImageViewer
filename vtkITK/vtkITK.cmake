@@ -28,8 +28,6 @@ IF (VTK_WRAP_TCL)
 
     ELSE (NOT VTK_WRAP_TCL_EXE)
 
-      FIND_FILE (VTK_WRAP_HINTS hints Wrapping)
-      MARK_AS_ADVANCED(VTK_WRAP_HINTS)
       INCLUDE (${CMAKE_ROOT}/Modules/FindTCL.cmake)
 
       IF (TCL_INCLUDE_PATH)
