@@ -216,7 +216,7 @@ private:
 
   virtual ScalarValueType PropagationSpeed(
                     const NeighborhoodType& neighborhood,
-                         const FloatOffsetType
+                         const FloatOffsetType &
                                 ) const
   {
     return m_DistanceTransform->GetPixel( neighborhood.GetIndex() );
