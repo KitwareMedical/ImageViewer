@@ -39,6 +39,9 @@ FastMarchingLevelSet
 
   m_ThresholdedImageViewer.SetLabel("Thresholded Image");
 
+  m_SegmentationImageViewer.SetLabel("Segmented Image");
+  m_SegmentationImageViewer.SetOverlayOpacity( 0.5 );
+
   m_GradientMagnitudeImageViewer.SetLabel("Gradient Magnitude Image");
 
   m_EdgePotentialImageViewer.SetLabel("Edge Potential Image");
@@ -62,6 +65,7 @@ FastMarchingLevelSet
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   thresholdedImageButton->Observe( m_ThresholdFilter.GetPointer() );
+  segmentedImageButton->Observe( m_ThresholdFilter.GetPointer() );
   thresholdedImageVTKButton->Observe( m_ThresholdFilter.GetPointer() );
   timeCrossingButton->Observe( m_FastMarchingFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
@@ -138,6 +142,7 @@ FastMarchingLevelSet
 {
   m_InputImageViewer.Hide();
   m_ThresholdedImageViewer.Hide();
+  m_SegmentationImageViewer.Hide();
   m_EdgePotentialImageViewer.Hide();
   m_GradientMagnitudeImageViewer.Hide();
   m_TimeCrossingMapViewer.Hide();
@@ -341,6 +346,26 @@ FastMarchingLevelSet
 
 }
 
+
+
+
+
+ 
+/************************************
+ *
+ *  Show Segmented Image
+ *
+ ***********************************/
+void
+FastMarchingLevelSet
+::ShowSegmentedImage( void )
+{
+  m_ThresholdFilter->Update();
+  m_SegmentationImageViewer.SetImage( m_CastImageFilter->GetOutput() );  
+  m_SegmentationImageViewer.SetOverlay( m_ThresholdFilter->GetOutput() );
+  m_SegmentationImageViewer.Show();
+
+}
 
 
 

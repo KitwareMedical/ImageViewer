@@ -44,7 +44,7 @@ FastMarchingLevelSetBase
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_FastMarchingFilter->GetOutput() );
-  m_ThresholdFilter->SetInsideValue( 200 );
+  m_ThresholdFilter->SetInsideValue(   1 );
   m_ThresholdFilter->SetOutsideValue(  0 );
 
   m_TrialPoints = NodeContainer::New();
