@@ -1,6 +1,4 @@
-EXECUTABLES(
-itkFileIOMetaImageExample
-)
+SUBDIRS(IView)
 
 LINK_LIBRARIES(
 MetaImageIO
@@ -14,11 +12,7 @@ ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Code/BasicFilters
 )
 
-LIBRARY(
-MetaImageIO
-)
-
-SOURCE_FILES(
+SOURCE_FILES(MetaImageIO_SRCS
 MetaFileLib 
 MetaImageLib
 itkWriteMetaImage 
@@ -31,3 +25,13 @@ INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage
 )
+
+ADD_LIBRARY(
+MetaImageIO MetaImageIO_SRCS
+)
+
+ADD_EXECUTABLE(
+itkFileIOMetaImageExample itkFileIOMetaImageExample
+)
+
+
