@@ -85,6 +85,10 @@ public:
    *  information.  (Note, this follows the Visitor Design Pattern.) */
   virtual void Accept(ElementMultiVisitorType* mv);
 
+  /** Return the number of Elements in the ElementsContainer */
+  virtual unsigned long GetNumberOfElements(void) const;
+    
+
 
 protected:
 

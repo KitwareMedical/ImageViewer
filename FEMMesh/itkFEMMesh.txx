@@ -44,6 +44,19 @@ FEMMesh<TMesh>
 
 
 
+template <typename TMesh>
+unsigned long
+FEMMesh<TMesh>
+::GetNumberOfElements( void ) const
+{
+  if( ! m_ElementsContainer )
+    {
+    return 0;
+    }
+  return m_ElementsContainer->Size();
+}
+
+
 
 /**
  * Dynamically build the links from points back to their using cells.  This
