@@ -6,11 +6,12 @@
 #define __vtkITKImageToImageFilter_h
 
 
+#include "itkCommand.h"
+#include "vtkCommand.h"
+#include "itkProcessObject.h"
 #include "vtkImageImport.h"
 #include "vtkImageExport.h"
 #include "vtkImageToImageFilter.h"
-#include "itkCommand.h"
-#include "itkProcessObject.h"
 
 #undef itkExceptionMacro  
 #define itkExceptionMacro(x) \
@@ -142,8 +143,12 @@ protected:
     this->vtkExporter = vtkImageExport::New();
     this->vtkImporter = vtkImageImport::New();
     this->m_Process = NULL;
-    this->m_ProgressCommand = ProgressMemberCommand::New();
+    this->m_ProgressCommand = MemberCommand::New();
     this->m_ProgressCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::GetProgressFromITKFilter );
+    this->m_StartEventCommand = MemberCommand::New();
+    this->m_StartEventCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleStartEvent );
+    this->m_EndEventCommand = MemberCommand::New();
+    this->m_EndEventCommand->SetCallbackFunction ( this, &vtkITKImageToImageFilter::HandleEndEvent );
   };
   ~vtkITKImageToImageFilter()
   {
@@ -159,18 +164,31 @@ protected:
       this->UpdateProgress ( m_Process->GetProgress() );
       }
   };
+  void HandleStartEvent ()
+  {
+    this->InvokeEvent(vtkCommand::StartEvent,NULL);
+  };
+  void HandleEndEvent ()
+  {
+    this->InvokeEvent(vtkCommand::EndEvent,NULL);
+  };
+    
   
   void LinkITKProgressToVTKProgress ( itk::ProcessObject* process )
   {
     this->m_Process = process;
     this->m_Process->AddObserver ( itk::ProgressEvent(), this->m_ProgressCommand );
+    this->m_Process->AddObserver ( itk::StartEvent(), this->m_StartEventCommand );
+    this->m_Process->AddObserver ( itk::EndEvent(), this->m_EndEventCommand );
   };
 
-  typedef itk::SimpleMemberCommand<vtkITKImageToImageFilter> ProgressMemberCommand;
-  typedef ProgressMemberCommand::Pointer ProgressMemberCommandPointer;
+  typedef itk::SimpleMemberCommand<vtkITKImageToImageFilter> MemberCommand;
+  typedef MemberCommand::Pointer MemberCommandPointer;
   
   itk::ProcessObject::Pointer m_Process;
-  ProgressMemberCommandPointer m_ProgressCommand;
+  MemberCommandPointer m_ProgressCommand;
+  MemberCommandPointer m_StartEventCommand;
+  MemberCommandPointer m_EndEventCommand;
   
   // ITK Progress object
   // To/from VTK
@@ -189,7 +207,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.10 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.11 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
