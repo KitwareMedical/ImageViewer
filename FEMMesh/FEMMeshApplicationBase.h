@@ -24,6 +24,9 @@
 #include "vtkRenderWindow.h"
 #include "itkFEMMesh.h"
 
+#include "itkFEM2DDeformationNode.h"
+#include "itkFEMLineCell.h"
+
 // This is the base classe for the Application
 
 class FEMMeshApplicationBase 
@@ -42,9 +45,8 @@ public:
   // positions and the cells define the topology of the mesh.
   // Cells are also responsible for providing methods for 
   // mapping from geometrical space to parametric coordinates.
-  typedef  FEMMeshType::PointType             PointType;
-  typedef  FEMMeshType::CellType              CellType;
-
+  typedef  FEMMeshType::PointType             BasePointType;
+  typedef  FEMMeshType::CellType              BaseCellType;
 
   // Node type containing the Degrees of Freedom 
   // of the physical problem. 
@@ -52,9 +54,21 @@ public:
   // points because the geometry can be represented by 
   // interpolating with a certain order while the physical
   // layer can use a different order.
-  typedef  FEMMeshType::NodeType              NodeType;
-  typedef  FEMMeshType::ElementType           ElementType;
+  typedef  FEMMeshType::NodeType                   BaseNodeType;
+  typedef  FEMMeshType::ElementType                BaseElementType;
 
+
+  // Actual implementation types for Nodes, Cells and Elements
+  // In this simple case we are creating Nodes of the same type,
+  // Cells of the same type, Points of the same type and Elements
+  // of the same type. However the use of polymorphism allows to
+  // set any type of Node, Point, Cell or Element as long as it
+  // derives from the corresponding Node, Point, Cell or Element
+  // base class.
+  typedef itk::fem::FEM2DDeformationNode           ActualNodeType;
+  typedef itk::fem::FEMLineCell<PointsDimension>   ActualCellType;
+  typedef BasePointType                            ActualPointType;
+  typedef BaseElementType                          ActualElementType;
 
 public:
 
@@ -73,6 +87,14 @@ protected:
 
 
   FEMMeshType::Pointer  m_FEMMesh;
+
+private:
+
+  // Internal data used to feed the MESH
+  ActualPointType       *  m_Points;
+  ActualNodeType        *  m_Nodes;
+  ActualCellType        *  m_Cells;
+  ActualElementType     *  m_Elements;
 
 };
 

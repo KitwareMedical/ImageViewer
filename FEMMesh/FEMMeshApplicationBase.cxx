@@ -30,10 +30,6 @@
 #include "itkNumericTraits.h"
 
 
-#include "itkFEM2DDeformationNode.h"
-#include "itkFEMLineCell.h"
-
-
 
 FEMMeshApplicationBase
 ::FEMMeshApplicationBase()
@@ -46,6 +42,11 @@ FEMMeshApplicationBase
 
   m_FEMMesh = FEMMeshType::New();
 
+  m_Points    = 0;
+  m_Nodes     = 0;
+  m_Cells     = 0;
+  m_Elements  = 0;
+
 }
 
 
@@ -56,6 +57,27 @@ FEMMeshApplicationBase
 {
   m_RenderWindow->Delete();
   m_Renderer->Delete();
+
+  if( m_Points )
+    {
+    delete [] m_Points;
+    } 
+
+  if( m_Nodes )
+    {
+    delete [] m_Nodes;
+    } 
+
+  if( m_Cells )
+    {
+    delete [] m_Cells;
+    } 
+  if( m_Elements )
+    {
+    delete [] m_Elements;
+    } 
+
+
 }
 
 
@@ -187,8 +209,8 @@ FEMMeshApplicationBase
  
 
   // Get the number of points in the mesh
-  const unsigned int numPoints = m_FEMMesh->GetNumberOfPoints();
-  if( numPoints == 0 )
+  const unsigned int numberOfPoints = m_FEMMesh->GetNumberOfPoints();
+  if( numberOfPoints == 0 )
     {
     itkGenericExceptionMacro(<<"Attempt to display a Mesh with no points !");
     }
@@ -198,11 +220,13 @@ FEMMeshApplicationBase
 
   // Create the vtkPoints object and set the number of points
   vtkPoints * vpoints = vtkPoints::New();
-  vpoints->SetNumberOfPoints(numPoints);
+  vpoints->SetNumberOfPoints(numberOfPoints);
 
   
-  // HERE CONVERT THE MESH to a VTK Mesh
-
+  // HERE CONVERT THE FEMMESH to a VTK Mesh
+  const unsigned int numberOfCells    = m_FEMMesh->GetNumberOfCells();  
+  const unsigned int numberOfNodes    = m_FEMMesh->GetNumberOfNodes();  
+  const unsigned int numberOfElements = m_FEMMesh->GetNumberOfElements();  
 
   // connect the vtkUnstructuredGrid to a visualization Pipeline
 
@@ -239,25 +263,42 @@ FEMMeshApplicationBase
   // and the Physical representation of the problem 
   m_FEMMesh = FEMMeshType::New();
 
-  PointType * point1 = new PointType;
-  (*point1)[0] = 10;
-  (*point1)[1] = 15;
-  (*point1)[2] = 13;
-  m_FEMMesh->AddPoint( point1 );
+  // The user (we here :-) ) is responsible for allocating
+  // and releasing the memory for Points, Nodes, Cells and
+  // Elements. The FEMMesh can not do that because that will
+  // difficult the use of polymorphism.
+
+  const unsigned int numberOfPoints = 10;
+
+  m_Points = new ActualPointType[ numberOfPoints ];
+
+  m_Points[0][0] = 10;
+  m_Points[0][1] = 15;
+  m_Points[0][2] = 18;
+
+  m_Points[0][0] = 20;
+  m_Points[0][1] = 15;
+  m_Points[0][2] = 18;
+
+  m_FEMMesh->AddPoint( &(m_Points[0]) );
+  m_FEMMesh->AddPoint( &(m_Points[1]) );
 
 
-  typedef itk::fem::FEM2DDeformationNode   NodeType;
+  // Note that the numberOfNodes is not necessarily equal to
+  // the numberOfPoints because the geometry and the degrees
+  // of freedom do not have to be represented with shape 
+  // functions of the same order.
+  const unsigned int numberOfNodes = 10;
+  m_Nodes = new ActualNodeType[ numberOfNodes ];
+  m_FEMMesh->AddNode( &(m_Nodes[0]) );
+  m_FEMMesh->AddNode( &(m_Nodes[1]) );
 
-  NodeType  * node1  = new NodeType;
-  m_FEMMesh->AddNode( node1 );
 
-
-  typedef itk::fem::FEMLineCell<PointsDimension>   LineCellType;
-
-  LineCellType  * cell1 = new LineCellType;
-  cell1->SetPoint( 0, point1 );
-  m_FEMMesh->AddCell( cell1 );
-
+  const unsigned int numberOfCells = 2;
+  m_Cells = new ActualCellType[ numberOfCells ];
+  m_Cells[0].SetPoint( 0, &(m_Points[0]) );
+  m_Cells[0].SetPoint( 1, &(m_Points[1]) );
+  m_FEMMesh->AddCell( &(m_Cells[0]) );
 
   
   std::cout << "Number of points    = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
