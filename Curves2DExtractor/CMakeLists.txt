@@ -21,7 +21,7 @@ ADD_LIBRARY(Curves2DExtractorLib
 FLTK_WRAP_UI(Curves2DExtractorLib ceExtractorConsoleGUI.fl)
 
 TARGET_LINK_LIBRARIES (Curves2DExtractorLib
-                       ITKBasicFilters ITKIO FltkImageViewer
+                       ITKBasicFilters ITKIO ITKFltkImageViewer
                        ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
 IF(WIN32)

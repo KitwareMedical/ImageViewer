@@ -22,7 +22,7 @@ ENDIF(WIN32)
 ADD_EXECUTABLE( MetaImageColorViewer ${MetaImageColorViewer_SRCS} )
 TARGET_LINK_LIBRARIES (MetaImageColorViewer
   ITKBasicFilters
-  FltkImageViewer
+  ITKFltkImageViewer
   ITKIO
   ${FLTK_LIBRARY}
   ${OPENGL_LIBRARY}

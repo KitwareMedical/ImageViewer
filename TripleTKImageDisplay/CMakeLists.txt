@@ -32,7 +32,7 @@ ADD_EXECUTABLE(TripleTKID
 FLTK_WRAP_UI(TripleTKID TripleTKGUI.fld)
 
 TARGET_LINK_LIBRARIES (TripleTKID
-                       ITKIO ITKBasicFilters FltkImageViewer
+                       ITKIO ITKBasicFilters ITKFltkImageViewer
                        ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
 TARGET_LINK_LIBRARIES(TripleTKID

@@ -37,6 +37,7 @@ ITKCommon
 ITKNumerics
 ITKBasicFilters 
 ITKIO
+ITKFltkImageViewer
 vtkRendering
 vtkGraphics	  
 vtkHybrid	  
@@ -44,7 +45,6 @@ vtkImaging
 vtkIO
 vtkFiltering
 vtkCommon
-FltkImageViewer
 vtkFltk
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}

@@ -21,7 +21,7 @@ ADD_EXECUTABLE(MutualInformationEuler2DRegistration
 FLTK_WRAP_UI(MutualInformationEuler2DRegistration registerGUI.fl)
 
 TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration
-                      ITKNumerics ITKBasicFilters ITKIO FltkImageViewer
+                      ITKNumerics ITKBasicFilters ITKIO ITKFltkImageViewer
                       ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
 IF(WIN32)

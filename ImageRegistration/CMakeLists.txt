@@ -25,7 +25,7 @@ LINK_LIBRARIES (
 ITKNumerics
 ITKBasicFilters 
 ITKIO
-FltkImageViewer
+ITKFltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}

@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES (
 LINK_LIBRARIES (
   ITKBasicFilters
   ITKIO
-  FltkImageViewer
+  ITKFltkImageViewer
   ${FLTK_LIBRARY}
   ${OPENGL_LIBRARY}
   ${GLU_LIBRARY}
