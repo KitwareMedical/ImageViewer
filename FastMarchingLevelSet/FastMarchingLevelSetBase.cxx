@@ -38,6 +38,12 @@ FastMarchingLevelSetBase
 
   m_SigmoidFilter  = SigmoidFilterType::New();
   m_SigmoidFilter->SetInput( m_DerivativeFilter->GetOutput() );
+  m_SigmoidFilter->SetOutputMinimum( 0.0 );
+  m_SigmoidFilter->SetOutputMaximum( 1.0 );
+
+  m_FastMarchingFilter = FastMarchingFilterType::New();
+  m_FastMarchingFilter->SetInput( m_SigmoidFilter->GetOutput() );
+
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
   m_FastMarchingFilter->SetInput( m_SigmoidFilter->GetOutput() );
