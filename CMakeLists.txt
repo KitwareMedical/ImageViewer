@@ -8,6 +8,9 @@ SUBDIRS (AnisotropicDiffusionImageFilter)
 #on a PNG image
 SUBDIRS (GradientMagnitudeImageFilter)
 
+#Build the example of various methods of segmentation using level sets.
+SUBDIRS (LevelSetSegmentation)
+
 #Build the example of how to create a static library for 
 # select filters in itk.
 SUBDIRS (ITKFilterLib)
