@@ -192,6 +192,8 @@ template <class imType>
     std::list< ClickPoint * > cClickedPoints;
     unsigned int maxClickPoints;
     int cX, cY, cW, cH;
+    int fastMovVal; //fast moving pace
+    int fastMovThresh; //how many single step moves before fast moving
     
   public:
     /*! SliceView Constructor */
@@ -372,6 +374,12 @@ template <class imType>
   void viewCrosshairs(bool crosshairs){cViewCrosshairs = crosshairs;}
   bool viewCrosshairs(){return cViewCrosshairs;}
 
+  void SetFastMoveValue(int moval) { fastMovVal = moval;} //fast moving pace
+  int GetFastMoveValue() {return fastMovVal;}
+  //how many single step moves before fast moving
+  void SetFastMoveThresh(int thresh) { fastMovThresh = thresh;} 
+  int GetFastMoveThresh() {return fastMovThresh;}
+
 };
 
 
@@ -471,8 +479,10 @@ SliceView<imType>::SliceView(int x, int y, int w, int h, const char *
   cWinZBuffer = NULL;
   
   maxClickPoints = 0;
-  
-  }
+  fastMovVal = 1; //fast moving pace: 1 by defaut
+  fastMovThresh = 10; //how many single step moves before fast moving
+    
+}
 
 //
 //
@@ -1382,8 +1392,10 @@ int SliceView<imType>::handle(int event)
   int x = Fl::event_x();
   int y = Fl::event_y();
   int button;
-  int key;
-  
+  static int key;
+  static int fastMov = 0;
+  int pace;
+
   int imgShiftSize = (int)(cWinSizeX/10/cWinZoom);
   if(imgShiftSize<1)
     {
@@ -1471,9 +1483,15 @@ int SliceView<imType>::handle(int event)
         }
       return 0;
       break;
+    case FL_KEYUP:
+    //when pressing down ">" or "<" key, scrolling will go faster
+    //when the key is released, scrolling speed go back to 1
+    fastMov = 0;
+    return 1;
+    break;
     case FL_KEYBOARD:
     case FL_SHORTCUT:
-      key = Fl::event_text()[0];
+    key = Fl::event_text()[0];
       switch(key)
         {
         case '0':
@@ -1496,17 +1514,41 @@ int SliceView<imType>::handle(int event)
           break;
         case '<':
         case ',':
-          if((int)cWinCenter[cWinOrder[2]]-1<0)
+          //when pressing down ">" or "<" key, scrolling will go faster
+          if( fastMov < fastMovThresh)
+          {
+            fastMov ++;
+            pace = 1;
+          }
+          else
+          {    
+            pace = fastMovVal;
+          }
+          if((int)cWinCenter[cWinOrder[2]]-pace<0)
+          {
             return 1;
-          sliceNum((int)cWinCenter[cWinOrder[2]]-1);
+          }
+          sliceNum((int)cWinCenter[cWinOrder[2]]-pace);
           this->update();
           return 1;
           break;
         case '>':
         case '.':
-          if((int)cWinCenter[cWinOrder[2]]+1>(int)cDimSize[cWinOrder[2]]-1)
+          //when pressing down ">" or "<" key, scrolling will go faster
+          if( fastMov < fastMovThresh)
+          {
+            fastMov ++;
+            pace = 1;
+          }
+          else
+          {
+            pace = fastMovVal;
+          }
+          if((int)cWinCenter[cWinOrder[2]]+pace>(int)cDimSize[cWinOrder[2]]-1)
+          {
             return 1;
-          sliceNum(cWinCenter[cWinOrder[2]]+1);
+          }
+          sliceNum(cWinCenter[cWinOrder[2]]+pace);
           this->update();
           return 1;
           break;
