@@ -69,6 +69,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __vtkPatchedImageReader_h
 #define __vtkPatchedImageReader_h
 
+#include "vtkImageData.h"
 #include "vtkImageSource.h"
 #include "vtkTransform.h"
 
