@@ -23,6 +23,9 @@ class VTKVolRen
   typedef itk::Image<T,3>  ImageType;
   typedef itk::Image<unsigned char,3>  OverlayType;
 
+  typedef typename ImageType::Pointer    ImagePointer;
+  typedef typename OverlayType::Pointer  OverlayPointer;
+
   protected:
 
     char    mError[200];
@@ -45,9 +48,9 @@ class VTKVolRen
 
 
 
-    ImageType::Pointer     mImData;
+    ImagePointer     mImData;
        
-    OverlayType::Pointer   mMask;
+    OverlayPointer   mMask;
 
     bool                     mUseMask;
 
@@ -73,7 +76,7 @@ class VTKVolRen
 		//vtkSetOrigin() with these volumes--that's buggy too. If you
 		//need an offset, you must provide it by SetUserMatrix().
 
-	  bool    SetInputImage(ImageType::Pointer newIm);
+	  bool    SetInputImage( ImageType * newIm );
 
     void    stepSize(double newStepSize);
     double  stepSize(void);
@@ -266,8 +269,11 @@ bool VTKVolRen<T>::useMask(void)
 //
 //
 template <class T>
-bool VTKVolRen<T>::SetInputImage(ImageType::Pointer newIm)
+bool VTKVolRen<T>::SetInputImage(ImageType * image)
   {
+
+  ImagePointer newIm( image );
+      
   if (newIm->GetLargestPossibleRegion().GetSize()[0] <=0 
       || newIm->GetLargestPossibleRegion().GetSize()[1]  <=0 
       || newIm->GetLargestPossibleRegion().GetSize()[2]  <=0) 
