@@ -5,6 +5,7 @@ ITKIO
 )
 
 ADD_EXECUTABLE(itk2DThresholdSegmentationLevelSetImageFilter itk2DThresholdSegmentationLevelSetImageFilter.cxx)
+ADD_EXECUTABLE(itk2DCannySegmentationLevelSetImageFilter itk2DCannySegmentationLevelSetImageFilter.cxx)
 
 
 

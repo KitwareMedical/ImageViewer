@@ -46,6 +46,50 @@ negative_features 1=Use 0=Do not use.  Turning negative features on will swap th
                   positive/negative convention. (Front will shrink instead of grow and vice-versa)
 
 
+itk2DCannySegmentationLevelSetImageFilter
+---------------------------------------------
+There are 13 command line parameters as follows
+
+Usage: itk2DCannySegmentationLevelSetImageFilter input_image input_model output_model output_features iterations max_rms_change threshold variance propagation_scaling advection_scaling curvature_scaling isovalue negative_features
+
+
+input_image     The name of the "feature" image, typically the image to segment.  Must be 
+                in PNG format (grayscale).
+
+input_model     The name of the "seed" image which contains the initial model.  Must be
+                in PNG format (grayscale).
+
+output_model    The name of the output file which will contain the solution. The final
+                position of the front is denoted by zero crossings in this image.  The
+                image is a raw (no header) floating point image of same size as the input.
+
+output_features The name of the output file which contains the "feature" image 
+                calculated by the filter.  This was the image used as a speed function
+                for the solution.
+
+iterations      The maximum number of iterations that the solver will perform.
+
+max_rms         The minimum RMS change value of the level-set front allowed for the
+                solver to continue iterating (maximum RMS of the solution).
+
+threshold Lower threshold value used by the Canny edge detection algorithm
+
+variance        variance of the Gaussian blurring kernel used by the Canny edge detection
+                algorithm
+
+propagation_scaling Scaling value for the propagation speed term of the equation.
+
+advection_scaling Scaling value for the advection field term of the equation.
+
+curvature_scaling Scaling value for the curvature term of the equation.
+
+isovalue          The isovalue to use as an initial front in the input model image.
+
+negative_features 1=Use 0=Do not use.  Turning negative features on will swap the inside/outside
+                  positive/negative convention. (Front will shrink instead of grow and vice-versa)
+
+
+
 
 Note that this example does NOT handle COLOR PNG images.
 
