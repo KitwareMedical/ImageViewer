@@ -46,7 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkImage.h>
 #include "fltkCommandEvents.h"
 #include "itkCommand.h"
-#include <Fl/gl.h>
+#include <FL/gl.h>
 
 
 
