@@ -147,14 +147,15 @@ void PrintU(SolverHyperbolic& S, char comment, ostream& of, int iter)
 
 int main(int ac, char** av)
 {
-  // NOTE TO THE USER: if you would like to run the menu-based test,
-  // you will need to change the two paths below to point to the
-  // appropriate directory in your ITK tree from your executable
-  // folder.
-
   // File I/O streams
   ifstream f;
   ofstream of;
+
+  // NOTE TO THE USER: You should change the output path to something
+  // appropriate for your system.  Also, if you would like to run the 
+  // menu-based test, you will need to change the two paths below to 
+  // point to the appropriate directory in your ITK tree from your 
+  // executable folder.
 
   // Filename containing list of possible input files
   char listloc[] = "../../Insight/Testing/Data/Input/FEM/input-list";
@@ -163,7 +164,7 @@ int main(int ac, char** av)
   char filepath[] = "../../Insight/Testing/Data/Input/FEM/";
 
   // Path to output (either Matlab or IDL)
-  char outpath[] = "";
+  char outpath[] = "/data/tessa/temp/";
 
   // Storage for list of or user-specified input file(s)
   char** filelist; 
