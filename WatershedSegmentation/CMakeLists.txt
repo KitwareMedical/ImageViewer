@@ -18,3 +18,4 @@ VXLNumerics
 )
 
 ADD_EXECUTABLE(itkWatershedSegmentationExample itkWatershedSegmentationExample)
+

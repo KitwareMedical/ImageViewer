@@ -10,6 +10,11 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+# Add an option to build or not build the Image Registration example
+OPTION(BUILD_IMAGE_REGISTRATION "Build the watershed segmentation")
+IF(BUILD_WATERSHED_SEGMENTATION)
+SUBDIRS(WatershedSegmentation)
+ENDIF(BUILD_WATERSHED_SEGMENTATION)
 
 # Add an option to build or not build the Image Registration example
 IF(HAS_METAIMAGE)
