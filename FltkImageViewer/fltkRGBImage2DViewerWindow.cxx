@@ -420,7 +420,7 @@ RGBImage2DViewerWindow
     FIT_IMAGE_TO_WINDOW,
     FIT_WINDOW_TO_IMAGE,
     INTENSITY_WINDOWING
-    };
+    } PopupMenuOptions;
 
   popupMenu->popup();
 
