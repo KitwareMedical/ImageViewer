@@ -1,0 +1,194 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    fltkClippingPlane3DDrawer.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+Copyright (c) 2001 Insight Consortium
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+ * The name of the Insight Consortium, nor the names of any consortium members,
+   nor of any contributors, may be used to endorse or promote products derived
+   from this software without specific prior written permission.
+
+  * Modified source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS ``AS IS''
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+=========================================================================*/
+
+#ifndef _itkClippingPlane3DDrawer_txx
+#define _itkClippingPlane3DDrawer_txx
+
+#include "fltkClippingPlane3DDrawer.h"
+#include "itkImageRegionIteratorWithIndex.h"
+#include <GL/glu.h>
+#include "fltkCommandEvents.h"
+
+
+namespace fltk {
+
+
+unsigned int ClippingPlane3DDrawer::counter = 0;
+
+
+/**
+ * Default constructor
+ */
+ClippingPlane3DDrawer
+::ClippingPlane3DDrawer()
+{
+
+  m_X = 1.0f;
+  m_Y = 0.0f;
+  m_Z = 0.0f;
+  m_R = 0.0f;
+
+  m_DrawCommand = DrawCommandType::New();
+  m_DrawCommand->SetCallbackFunction( this, &Self::glDraw );
+
+  m_Id = counter;
+  
+  m_Enabled = false;
+
+  counter++;
+
+  this->UpdateTheGUI();
+
+  rAdjuster->range( -100.0f, 100.0f );
+  rAdjuster->step( 0.01f );
+
+}
+
+
+/**
+ * Destructor
+ */
+ClippingPlane3DDrawer
+::~ClippingPlane3DDrawer()
+{
+
+}
+
+
+
+/**
+ * Get Draw Command
+ */
+ClippingPlane3DDrawer::DrawCommandPointer
+ClippingPlane3DDrawer
+::GetDrawCommand(void) 
+{
+  return m_DrawCommand.GetPointer();
+}
+
+
+
+/**
+ * Update The  GUI
+ */
+void
+ClippingPlane3DDrawer
+::UpdateTheGUI( void )
+{
+  
+  xValueInput->value( m_X );
+  yValueInput->value( m_Y );
+  zValueInput->value( m_Z );
+
+  rAdjuster->value( m_R );
+  rValueOutput->value( m_R );
+
+  if( m_Enabled )
+    {
+    enableCheckButton->value( 1 );
+    }
+  else 
+    {
+    enableCheckButton->value( 0 );
+    }
+}
+
+
+/**
+ * Update from  GUI
+ */
+void
+ClippingPlane3DDrawer
+::UpdateFromGUI( void )
+{
+  m_X = xValueInput->value();
+  m_Y = yValueInput->value();
+  m_Z = zValueInput->value();
+
+  const double norm = sqrt( m_X * m_X + m_Y * m_Y + m_Z * m_Z );
+
+  m_X /= norm;
+  m_Y /= norm;
+  m_Z /= norm;
+
+  m_R = rAdjuster->value();
+
+  m_Enabled =  ( enableCheckButton->value() == 1 )? true : false;
+
+  this->InvokeEvent( ClippingPlaneEvent() );
+}
+
+
+
+
+
+/**
+ *  Send the clipping plane data to OpenGL
+ */
+void 
+ClippingPlane3DDrawer
+::glDraw(void) const
+{
+
+  if( m_Enabled )
+    {
+    double equation[4];
+    equation[0] = m_X;
+    equation[1] = m_Y;
+    equation[2] = m_Z;
+    equation[3] = m_R;
+    glClipPlane( GL_CLIP_PLANE0 + m_Id, equation );
+    glEnable(    GL_CLIP_PLANE0 + m_Id );
+    }
+  else
+    {
+    glDisable(GL_CLIP_PLANE0 + m_Id );
+    }
+
+}
+
+
+
+
+} // end namespace fltk
+
+
+#endif
