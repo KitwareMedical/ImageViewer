@@ -14,7 +14,7 @@
 #include <FL/fl_file_chooser.H>
 
 // Image manipulation functions
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 
 // Multifunction slice-based display class
 #include <IViewGUIBase.h>
@@ -26,8 +26,8 @@
 #include <IViewUtils.h>
 
 
-typedef PhysicalImage<float,3> ImageType;
-typedef PhysicalImage<unsigned char,3> OverlayType;
+typedef Image<float,3> ImageType;
+typedef Image<unsigned char,3> OverlayType;
 
 typedef std::deque<ImageType::Pointer> DequeOfImages;
 

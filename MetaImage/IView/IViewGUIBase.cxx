@@ -396,7 +396,7 @@ void IViewGUIBase::hide(void) {
   iviewWindow->hide();
 }
 
-void IViewGUIBase::setImage(const PhysicalImage<float,3>::Pointer img) {
+void IViewGUIBase::setImage(const Image<float,3>::Pointer img) {
   sliceView->SetInputImage(img);
  float min,max;
  imageMinandMax(img, min, max);
@@ -411,8 +411,8 @@ intensityWindowingMaxSlider->step((max-min)/100);
 intensityWindowingMaxSlider->value(max);
 
 unsigned long *size = new unsigned long[3];
-PhysicalImage<float,3>::RegionType img_region = img->GetLargestPossibleRegion();
-PhysicalImage<float,3>::SizeType   img_size   = img_region.GetSize();
+Image<float,3>::RegionType img_region = img->GetLargestPossibleRegion();
+Image<float,3>::SizeType   img_size   = img_region.GetSize();
 size[0] = img_size[0];
 size[1] = img_size[1];
 size[2] = img_size[2];
@@ -441,7 +441,7 @@ void IViewGUIBase::setSaveCB(SaveCBType CB) {
   saveCB = CB;
 }
 
-void IViewGUIBase::setOverlay(const PhysicalImage<unsigned char,3>::Pointer img) {
+void IViewGUIBase::setOverlay(const Image<unsigned char,3>::Pointer img) {
   sliceView->SetInputOverlay(img);
 sliceView->update();
 }
@@ -467,8 +467,8 @@ sprintf(s, "%0.1f %0.1f %0.1f = %f", x, y, z, v);
 
 void orientationCallBack(void *t) {
   unsigned long *size= new unsigned  long[3];
-PhysicalImage<float,3>::RegionType InputImage_region = (((IViewGUIBase*)t)->sliceView->GetInputImage())->GetLargestPossibleRegion();
-PhysicalImage<float,3>::SizeType   InputImage_size   = InputImage_region.GetSize();
+Image<float,3>::RegionType InputImage_region = (((IViewGUIBase*)t)->sliceView->GetInputImage())->GetLargestPossibleRegion();
+Image<float,3>::SizeType   InputImage_size   = InputImage_region.GetSize();
 size[0] = InputImage_size[0];
 size[1] = InputImage_size[1];
 size[2] = InputImage_size[2];
@@ -477,10 +477,10 @@ size[2] = InputImage_size[2];
 ((IViewGUIBase*)t)->sliceNumberSlider->value(((IViewGUIBase*)t)->sliceView->sliceNum());
 }
 
-void imageMinandMax(PhysicalImage<float,3>::Pointer img, float &min, float &max) {
+void imageMinandMax(Image<float,3>::Pointer img, float &min, float &max) {
   float v;
 Image<float,3>::RegionType img_region = img->GetLargestPossibleRegion();
-itk::ImageRegionIterator<itk::PhysicalImage<float,3> > it(img,img_region);
+itk::ImageRegionIterator<itk::Image<float,3> > it(img,img_region);
   it.Begin();
 
   if(!it.IsAtEnd())

@@ -109,17 +109,17 @@ public:
   virtual void update(void);
   virtual void show(void);
   virtual void hide(void);
-  virtual void setImage(const PhysicalImage<float,3>::Pointer img);
+  virtual void setImage(const Image<float,3>::Pointer img);
   void setImageNumSliderCB(ImageNumSliderCBType CB);
   void setOpenImageCB(OpenCBType CB);
   void setRemoveCB(RemoveCBType CB);
   void setSaveCB(SaveCBType CB);
-  void setOverlay(const PhysicalImage<unsigned char,3>::Pointer img);
+  void setOverlay(const Image<unsigned char,3>::Pointer img);
   void setOpenOverlayCB(OpenCBType CB);
 };
 void sliceNumCallBack(void *t);
 void intensityWindowingCallBack(void *t);
 void clickSelectCallBack(float x, float y, float z, float v, void *t);
 void orientationCallBack(void *t);
-void imageMinandMax(PhysicalImage<float,3>::Pointer img, float &min, float &max);
+void imageMinandMax(Image<float,3>::Pointer img, float &min, float &max);
 #endif

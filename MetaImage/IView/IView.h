@@ -48,8 +48,8 @@ class IView : public IViewGUI
 {
 public:
   
-  typedef itk::PhysicalImage< ImagePixelType, 3 >   ImageType;
-  typedef itk::PhysicalImage< OverlayPixelType, 3 > OverlayType;
+  typedef itk::Image< ImagePixelType, 3 >   ImageType;
+  typedef itk::Image< OverlayPixelType, 3 > OverlayType;
   typedef GLSliceView< ImagePixelType, OverlayPixelType > GLSliceViewType;
     
   IView();

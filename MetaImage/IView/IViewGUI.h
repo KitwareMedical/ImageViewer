@@ -113,7 +113,7 @@ public:
   virtual void update(void);
   virtual void show(void);
   virtual void hide(void);
-  virtual void setImage(const PhysicalImage<float,3>::Pointer img);
+  virtual void setImage(const Image<float,3>::Pointer img);
   virtual void imageMode(ImageModeType mode);
   virtual void synchronize(void);
   virtual void shiftUp(void);
@@ -130,6 +130,6 @@ public:
   virtual void CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w );
   virtual void FlipY(void);
   virtual void Orientation(unsigned int);
-  virtual void setOverlay(const PhysicalImage<unsigned char,3>::Pointer img);
+  virtual void setOverlay(const Image<unsigned char,3>::Pointer img);
 };
 #endif

@@ -221,7 +221,7 @@ saveCB = NULL;} {}
   } {}
   Function {hide(void)} {return_type {virtual void}
   } {}
-  Function {setImage(const PhysicalImage<float,3>::Pointer img)} {return_type {virtual void}
+  Function {setImage(const Image<float,3>::Pointer img)} {return_type {virtual void}
   } {}
   Function {imageMode(ImageModeType mode)} {return_type {virtual void}
   } {}
@@ -257,6 +257,6 @@ saveCB = NULL;} {}
   } {}
   Function {Orientation(unsigned int)} {return_type {virtual void}
   } {}
-  Function {setOverlay(const PhysicalImage<unsigned char,3>::Pointer img)} {selected return_type {virtual void}
+  Function {setOverlay(const Image<unsigned char,3>::Pointer img)} {selected return_type {virtual void}
   } {}
 } 

@@ -357,7 +357,7 @@ void IViewGUI::show(void) {
 void IViewGUI::hide(void) {
 }
 
-void IViewGUI::setImage(const PhysicalImage<float,3>::Pointer img) {
+void IViewGUI::setImage(const Image<float,3>::Pointer img) {
 }
 
 void IViewGUI::imageMode(ImageModeType mode) {
@@ -409,5 +409,5 @@ void IViewGUI::FlipY(void) {
 void IViewGUI::Orientation(unsigned int) {
 }
 
-void IViewGUI::setOverlay(const PhysicalImage<unsigned char,3>::Pointer img) {
+void IViewGUI::setOverlay(const Image<unsigned char,3>::Pointer img) {
 }
