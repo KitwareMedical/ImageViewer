@@ -1,0 +1,34 @@
+GAUSSIAN MINIMUM ERROR CLASSIFIER EXAMPLE
+
+OVERVIEW
+
+This example assumes the training and target data sets (images) has pixel data that follow
+the Gaussian (normal) distribution. The traing data set is composed of two images. One
+is for pixel data. The other is for class label. The class label data should be 
+greater than or eaqual to 0 and there should be no missing value between 0 and the largest
+value. For example, there are four classes. the class lables should 0, 1, 2, and 3.
+
+The target data set (image) is an image that the classifier will assign class labels 
+for each pixel in the image.
+
+For more information, please refer to the Statistical Pattern Classification chapter of the
+Users Guide. You can get the document by checking out InsightDocumentation repository from
+itk.org using cvs. You can find download instruction for the InsightDocumentation at
+http://www.itk.org/HTML/Download.htm.
+
+NOTE: The example supports only metaimage file format (.mha or .mhd).
+
+HOW TO COMPILE
+
+Before compile the utilities in this example, you have to turn on the
+BUILD_AUXILIARY option and BUILD_EXAMPLE option which you can find
+in the CMakeList.txt file in the root of the Insight source
+directory. After all necessary libraries are compiled, cd to this directory
+and run make or open the dsp file for Visual C++.
+
+
+HOW TO USE THE APPLICATION
+
+Just type the name of the application you want to use in command line
+without any option. The application will show its usage.
+
