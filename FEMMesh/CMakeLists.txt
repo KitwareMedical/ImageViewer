@@ -8,6 +8,7 @@ ${ITK_SOURCE_DIR}/Code/Numerics/FEM
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
 ${ITK_SOURCE_DIR}/Examples/FEMMesh
+${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
@@ -29,13 +30,13 @@ LINK_LIBRARIES(
   vtkIO
   vtkFiltering
   vtkCommon
+  vtkFltk
 )
 
 SOURCE_FILES(FEMMeshApplication_SRCS
 itkFEMHeatConduction2D
 FEMMeshApplicationBase
 FEMMeshApplication
-vtkFlRenderWindowInteractor
 main
 )
 
