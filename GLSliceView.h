@@ -40,8 +40,8 @@ namespace itk {
     {
 public:
   
-  typedef itk::Image<ImagePixelType,3>     ImageType;
-  typedef itk::Image<OverlayPixelType,3>   OverlayType;
+  typedef Image<ImagePixelType,3>     ImageType;
+  typedef Image<OverlayPixelType,3>   OverlayType;
   typedef typename ImageType::Pointer      ImagePointer;
   typedef typename OverlayType::Pointer    OverlayPointer;
   typedef typename ImageType::RegionType   RegionType;
@@ -687,18 +687,18 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
             {
             m = (int)*((unsigned short *)&(cOverlayData->GetPixel(ind)));
             }
-          if( m >= cColorTable->size() ) 
+          if( m >= (int)cColorTable->GetNumberOfColors() ) 
             { 
-            m = cColorTable->size() - 1;
+            m = cColorTable->GetNumberOfColors() - 1;
             }
           if( m > 0 ) {
             m = m - 1;
             cWinOverlayData[l+0] = 
-              (unsigned char)(cColorTable->color(m)->GetRed()*255);
+              (unsigned char)(cColorTable->GetColorComponent(m, 'r')*255);
             cWinOverlayData[l+1] = 
-              (unsigned char)(cColorTable->color(m)->GetGreen()*255);
+              (unsigned char)(cColorTable->GetColorComponent(m, 'g')*255);
             cWinOverlayData[l+2] = 
-              (unsigned char)(cColorTable->color(m)->GetBlue()*255);
+              (unsigned char)(cColorTable->GetColorComponent(m, 'b')*255);
             cWinOverlayData[l+3] = 
               (unsigned char)(cOverlayOpacity*255);
             }

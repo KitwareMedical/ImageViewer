@@ -564,11 +564,11 @@ update()
           if( m > 0 ) {
             m = m - 1;
             cWinOverlayData[l+0] = 
-              (unsigned char)(cColorTable->color(m)->GetRed()*255);
+              (unsigned char)(cColorTable->GetColorComponent(m, 'r')*255);
             cWinOverlayData[l+1] = 
-              (unsigned char)(cColorTable->color(m)->GetGreen()*255);
+              (unsigned char)(cColorTable->GetColorComponent(m, 'g')*255);
             cWinOverlayData[l+2] = 
-              (unsigned char)(cColorTable->color(m)->GetBlue()*255);
+              (unsigned char)(cColorTable->GetColorComponent(m, 'b')*255);
             cWinOverlayData[l+3] = 
               (unsigned char)(cOverlayOpacity*255);
             }
