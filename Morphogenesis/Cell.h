@@ -2,6 +2,7 @@
 #define Cell_H
 
 #include "itkPoint.h"
+#include "itkRGBPixel.h"
 #include <FL/fl_draw.H>
 #include <list>
 
@@ -26,16 +27,8 @@ public:
   typedef   itk::Point<double,2>   PointType;
   typedef   itk::Vector<double,2>  VectorType;
   typedef   std::list< Cell * >    CellsListType;
+  typedef   itk::RGBPixel<float>   ColorType;
 
-  typedef enum 
-    {
-    M,          // Mitosis
-    G1,         // Growth Gap 1
-    S,          // DNA Synthesis = DNA Replication
-    G2,         // Growth
-    Arrest,     // Cell Cycle arrest
-    Apoptosis   // Programmed cell death
-    }             CellCycleStateType;
 
 public:
 
@@ -53,26 +46,25 @@ public:
   const PointType & GetPosition(void) const;
   CellsListType   * GetAggregate(void);
   
-  // This is the additive
   static void SetGrowthRadiusLimit( double );
   static void SetGrowthRadiusIncrement( double );
   static void SetEnergySelfRepairLevel( double );
   static void SetNutrientSelfRepairLevel( double );
+  static void SetDefaultColor( const ColorType & color );
 
 protected:
 
    PointType          m_Position;
    VectorType         m_Force;
-   Fl_Color           m_Color;
+   ColorType          m_Color;
+   
    double             m_Radius;
-   double             m_EnergyReserve;
-   double             m_NutrientsReserve;
-
-   CellCycleStateType     m_CellCycleState;
+   double             m_EnergyReserveLevel;
+   double             m_NutrientsReserveLevel;
 
 
    static     double      DefaultRadius;
-   static     Fl_Color    DefaultColor;
+   static     ColorType   DefaultColor;
    static     PointType   DefaultPosition;
 
    static     double      GrowthRadiusLimit;
@@ -85,8 +77,6 @@ protected:
    static     double      DefaultNutrientsIntake;
 
    static     CellsListType   m_Aggregate;
-
-   static     CellCycleStateType TransitionTable[100][100];
 
 };
 

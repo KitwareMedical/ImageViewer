@@ -2,13 +2,16 @@
 
 
 #include "Cell.h"
+#include "GL/gl.h"
+
 
 namespace bio {
 
 
   
 Cell::PointType    Cell::DefaultPosition;
-Fl_Color           Cell::DefaultColor          =  FL_BLUE;
+Cell::ColorType    Cell::DefaultColor;
+
 double             Cell::DefaultRadius         =       10; // microns
 
 double             Cell::GrowthRadiusIncrement =    0.001; // microns
@@ -20,11 +23,14 @@ double             Cell::EnergySelfRepairLevel    =    50;
 double             Cell::DefaultEnergyIntake      =     1; 
 double             Cell::DefaultNutrientsIntake   =     1; 
 
-Cell::CellCycleStateType Cell::TransitionTable[100][100];
-  
 std::list<Cell *>  Cell::m_Aggregate;       
 
 
+
+
+/**
+ *    Constructor
+ */ 
 Cell
 ::Cell()
 {
@@ -32,7 +38,6 @@ Cell
 	m_Radius      = DefaultRadius;
 	m_Position    = DefaultPosition;
   m_Color       = DefaultColor;
-  m_CellCycleState  = G1;
   
   m_Aggregate.push_back( this );
 
@@ -42,27 +47,47 @@ Cell
 
 
 
+/**
+ *    Destructor   
+ */ 
 Cell
 ::~Cell()
 {
 }
 
 
+
+
+/**
+ *    OpenGL Drawing
+ */ 
 void
 Cell
 ::Draw(void) const
 {
-	fl_color( m_Color );
-	fl_circle( m_Position[0], m_Position[1], m_Radius );
+  glBegin( GL_TRIANGLE_FAN );
+    glColor3f( m_Color.GetRed(), m_Color.GetGreen(), m_Color.GetBlue() );
+    glVertex3d(m_Position[0],m_Position[1],m_Position[2]);
+  glEnd(); 
 }
 
 
+
+/**
+ *   Cell Growth
+ *   Growth is conditioned to the availability of 
+ *   nutrients and energy beyond the critical limit 
+ *   of self-repair
+ *   
+ *   Growth is limited by a constraint in the size
+ *   of cell's radius
+ */ 
 void
 Cell
 ::Grow(void) 
 {
-  if ( m_NutrientsReserve > NutrientSelfRepairLevel &&
-       m_EnergyReserve    > EnergySelfRepairLevel       )
+  if ( m_NutrientsReserveLevel > NutrientSelfRepairLevel &&
+       m_EnergyReserveLevel    > EnergySelfRepairLevel       )
     {
     m_Radius += GrowthRadiusIncrement;
     if( m_Radius > GrowthRadiusLimit )
@@ -74,6 +99,9 @@ Cell
 
 
 
+/**
+ *    Clear the cumulator for applied forces
+ */ 
 void
 Cell
 ::ClearForce(void) 
@@ -83,6 +111,9 @@ Cell
 
 
 
+/**
+ *    Add a force to the cumulator
+ */ 
 void
 Cell
 ::AddForce( const VectorType & force )
@@ -92,6 +123,10 @@ Cell
 
 
 
+/**
+ *    Return a pointer to the static list that
+ *    hold reference to all the cells
+ */ 
 Cell::CellsListType *
 Cell
 ::GetAggregate(void) 
@@ -100,6 +135,10 @@ Cell
 }
 
 
+
+/**
+ *    Get the position of the cell in space
+ */ 
 const Cell::PointType &
 Cell
 ::GetPosition(void) const
@@ -108,6 +147,13 @@ Cell
 }
 
 
+
+/**
+ *    Update the position by applying the force
+ *    a viscous medium is assumed, in which 
+ *    kinetic energy is disipated, so speeds are
+ *    not managed
+ */ 
 void
 Cell
 ::UpdatePosition(void) 
@@ -116,6 +162,11 @@ Cell
 }
 
 
+/**
+ *    Set the value of the limiting cell radius
+ *    this is a static value used for the whole
+ *    cellular aggregate
+ */ 
 void
 Cell
 ::SetGrowthRadiusLimit( double value ) 
@@ -124,6 +175,12 @@ Cell
 }
 
 
+/**
+ *    Set the value of the increment in cellular
+ *    radius at each time step
+ *    this is a static value used for the whole
+ *    cellular aggregate
+ */ 
 void
 Cell
 ::SetGrowthRadiusIncrement( double value ) 
@@ -132,36 +189,60 @@ Cell
 }
 
 
+
+
+/**
+ *    Execute a time step in the life of the cell
+ *    Nutrients are acquired
+ *    Energy is acquired
+ *    If conditions allow it, the cell will grow
+ *    The position will be updated according to
+ *    applied forces
+ */ 
 void
 Cell
 ::AdvanceTimeStep(void) 
 {
   
-  unsigned int input = 0;
-
   this->NutrientsIntake();
-  if( m_CellCycleState == G1 )
-    {
-    this->Grow();
-    }
-  m_CellCycleState = TransitionTable[ m_CellCycleState ][ input ];
+  this->EnergyIntake();
+  this->Grow();
 
 }
 
 
+
+/**
+ *    Ingestion of nutrients
+ */
 void
 Cell
 ::NutrientsIntake(void) 
 {
-  m_NutrientsReserve += DefaultNutrientsIntake;
+  m_NutrientsReserveLevel += DefaultNutrientsIntake;
 }
 
 
+
+/**
+ *    Acquisition of energy
+ */
 void
 Cell
 ::EnergyIntake(void) 
 {
-  m_EnergyReserve += DefaultEnergyIntake;
+  m_EnergyReserveLevel += DefaultEnergyIntake;
+}
+
+
+/**
+ *    Set default Color
+ */
+void
+Cell
+::SetDefaultColor( const ColorType & color )
+{
+  DefaultColor = color;
 }
 
 
