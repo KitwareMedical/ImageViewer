@@ -76,6 +76,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __vtkPatchedLookupTable_h
 
 #include "vtkScalarsToColors.h"
+#include "vtkUnsignedCharArray.h"
 
 #define VTK_RAMP_LINEAR 0
 #define VTK_RAMP_SCURVE 1
