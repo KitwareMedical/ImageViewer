@@ -21,7 +21,7 @@
 #endif
 #include <fstream>
 
-#include "FEMImageRegLMEx.h"
+#include "FEMImageRegLMEX.h"
 
 // Below, we have typedefs that instantiate all necessary classes.
 // Here, we instantiate the image type, load type and 
@@ -55,7 +55,7 @@ typedef itk::fem::VisitorDispatcher<ElementType2,ElementLoadType2, LoadImpFP2>
 
 typedef itk::fem::FEMRegistrationFilter<ImageType,ImageType> RegistrationType;
 
-void ReadRawImageFiles( RegistrationType&  X )
+void ReadRawImageFiles( RegistrationType* X)
 {
 
   typedef  itk::ImageFileReader< fileImageType >      FileSourceType;
@@ -64,14 +64,14 @@ void ReadRawImageFiles( RegistrationType&  X )
   typedef  itk::RawImageIO< PixType,ImageDimension>   RawReaderType;
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
-  reffilter->SetFileName( X.GetReferenceFile() );
+  reffilter->SetFileName( X->GetReferenceFile() );
   FileSourceType::Pointer tarfilter = FileSourceType::New();
-  tarfilter->SetFileName( X.GetTargetFile() );
+  tarfilter->SetFileName( X->GetTargetFile() );
 
   RawReaderType::Pointer  rawReader  = RawReaderType::New();
   rawReader->SetFileDimensionality( ImageDimension );
 
-  ImageType::SizeType ImageSize=X.GetImageSize();
+  ImageType::SizeType ImageSize=X->GetImageSize();
   for (unsigned int ii=0; ii<ImageDimension; ii++)     
   {
     unsigned int temp=(unsigned int) ImageSize[ii];
@@ -129,10 +129,10 @@ void ReadRawImageFiles( RegistrationType&  X )
   IntensityEqualizeFilter->ThresholdAtMeanIntensityOn();
   IntensityEqualizeFilter->Update();
 
-  X.SetReferenceImage(refrescalefilter->GetOutput());
-  X.SetTargetImage(IntensityEqualizeFilter->GetOutput()/*tarrescalefilter->GetOutput()*/);
-//  X.SetReferenceImage(reffilter->GetOutput());
-//  X.SetTargetImage(tarfilter->GetOutput());
+  X->SetReferenceImage(refrescalefilter->GetOutput());
+  X->SetTargetImage(IntensityEqualizeFilter->GetOutput()/*tarrescalefilter->GetOutput()*/);
+//  X->SetReferenceImage(reffilter->GetOutput());
+//  X->SetTargetImage(tarfilter->GetOutput());
 }
 
 int main() 
@@ -144,11 +144,11 @@ int main()
   DispatcherType2::RegisterVisitor((ImageLoadType*)0, 
           &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
 
-  RegistrationType X; // Declare the registration class
+  RegistrationType::Pointer X= RegistrationType::New(); // Declare the registration class
 
-  X.SetConfigFileName("U://itk//Insight//Examples//FEM//FEMregLMparams.txt");
-  //X.SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
-  if (!X.ReadConfigFile(X.GetConfigFileName())) { return -1; }
+  X->SetConfigFileName("U://itk//Insight//Examples//FEM//FEMregLMparams.txt");
+  //X->SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
+  if (!X->ReadConfigFile(X->GetConfigFileName())) { return -1; }
  
   // Read Raw Files 
   ReadRawImageFiles(X);
@@ -157,7 +157,7 @@ int main()
   itk::fem::MaterialLinearElasticity::Pointer m;
   m=itk::fem::MaterialLinearElasticity::New();
   m->GN=0;       // Global number of the material ///
-  m->E=X.GetElasticity();  // Young modulus -- used in the membrane ///
+  m->E=X->GetElasticity();  // Young modulus -- used in the membrane ///
   m->A=1.0;     // Crossection area ///
   m->h=1.0;     // Crossection area ///
   m->I=1.0;    // Moment of inertia ///
@@ -167,19 +167,19 @@ int main()
   // Create the element type 
   ElementType::Pointer e1=ElementType::New();
   e1->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
-  X.SetElement(e1);
-  X.SetMaterial(m);
+  X->SetElement(e1);
+  X->SetMaterial(m);
 
   // Register the images
-  X.RunRegistration();
+  X->RunRegistration();
 
   // Get outputs -- in image or vector field form
-  X.WriteWarpedImage(X.GetResultsFileName());
+  X->WriteWarpedImage(X->GetResultsFileName());
 
-  X.SetWriteDisplacements(false);
-  if (X.GetWriteDisplacements()) {
-    X.WriteDisplacementField(0);
-    X.WriteDisplacementField(1);
+  X->SetWriteDisplacements(false);
+  if (X->GetWriteDisplacements()) {
+    X->WriteDisplacementField(0);
+    X->WriteDisplacementField(1);
   }
   delete e1;
   delete m;
