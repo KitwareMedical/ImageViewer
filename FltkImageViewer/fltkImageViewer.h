@@ -41,7 +41,7 @@ public:
   typedef itk::Image< ImagePixelType, 3 >   ImageType;
   typedef itk::Image< OverlayPixelType, 3 > OverlayType;
   typedef GLSliceView< ImagePixelType, OverlayPixelType > GLSliceViewType;
-  typedef GLSliceViewType::ColorTablePointer ColorTablePointer;
+  typedef typename GLSliceViewType::ColorTablePointer ColorTablePointer;
 
 
     
