@@ -119,6 +119,7 @@ template <class imType>
     
     bool                     cValidImData;
     bool                     cViewImData;
+    bool                     cViewClickedPoints;
     ImagePointer             cImData;
     unsigned long            cDimSize[3];
     float                    cOrigin[3];
@@ -437,6 +438,7 @@ SliceView<imType>::SliceView(int x, int y, int w, int h, const char * )
   cClickBoxCallBack = NULL;
   cClickBoxArg = NULL;
   cClickBoxArgCallBack = NULL;
+  cViewClickedPoints = true;
   
   cIWMin = 0;
   cIWMax = 0;
@@ -1823,6 +1825,11 @@ int SliceView<imType>::handle(int event)
               this->saveClickedPointsStored();
               return 1;
               break;
+          case 'T':
+              cViewClickedPoints = !cViewClickedPoints;
+              this->update();
+              return 1;
+              break;
           case 'h':
             ifuShowText(" \
 SliceViewer\n \
@@ -1864,6 +1871,7 @@ Options: (press a key in the window)\n \
   A - View axis labels: P=posterior, L=left, S=superior\n \
   C - View crosshairs that illustrate last user-click in the window\n \
   I - View image values as the user clicks in the window\n \
+  T - Toggle display of clicked points\n \
   P - Toggle coordinates display between index and physical units\n \
   D - View image details as an overlay on the image\n \
   O - View a color overlay (application dependent)\n \

@@ -98,7 +98,12 @@ public:
   void SetColorTable(ColorTablePointer newColorTable);
 
 
-  
+  /*! Turn on/off the display of clicked points */
+  void ViewClickedPoints( bool newViewClickedPoints );
+
+  /*! Status of clicked points display - on/off */
+  bool ViewClickedPoints();
+
   virtual void clickSelect(float x, float y, float z);
   
   virtual void size(int w, int h);
@@ -394,6 +399,23 @@ ViewOverlayCallBack( void (* newViewOverlayCallBack)(void) )
   }
 
 
+template <class ImagePixelType, class OverlayPixelType>
+void 
+GLSliceView<ImagePixelType, OverlayPixelType>::
+ViewClickedPoints( bool newViewClickedPoints )
+{
+    cViewClickedPoints = newViewClickedPoints;
+
+    this->redraw();
+}
+
+template <class ImagePixelType, class OverlayPixelType>
+bool
+GLSliceView<ImagePixelType, OverlayPixelType>::
+ViewClickedPoints()
+{
+    return cViewClickedPoints;
+}
 
 
 //
@@ -892,7 +914,52 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
         GL_UNSIGNED_BYTE, cWinOverlayData);
       glDisable(GL_BLEND);
       }
-    
+
+    if( cViewClickedPoints )
+    {
+        glColor3f( 0.8, 0.4, 0.4 );
+        glPointSize( 3.0 );
+        glBegin(GL_POINTS);
+        {
+            for ( int i = 0; i < numClickedPointsStored(); i++ )
+            {
+                ClickPoint p;
+                getClickedPoint( i, p );
+                float pts[3] = { p.x, p.y, p.z };
+
+                if ( static_cast<int>( pts[cWinOrder[2]] ) ==
+                     (int)sliceNum() )
+                {
+                    float x = 0;
+                    if(cFlipX[cWinOrientation])
+                    {
+                        x = cW - (pts[cWinOrder[0]] - cWinMinX) * scale0
+                            - originX;
+                    }
+                    else
+                    {
+                        x = (pts[cWinOrder[0]] - cWinMinX) * scale0
+                            + originX;
+                    }
+
+                    float y = 0;
+                    if(cFlipY[cWinOrientation])
+                    {
+                        y = cH - (pts[cWinOrder[1]] - cWinMinY) * scale1
+                            - originY;
+                    }
+                    else
+                    {
+                        y = (pts[cWinOrder[1]] - cWinMinY) * scale1
+                             + originY;
+                    }
+                    glVertex2f( x, y );
+                }
+            }
+        }
+        glEnd();
+    }
+
     if( cViewAxisLabel ) 
       {
       glEnable(GL_BLEND);
