@@ -133,13 +133,15 @@ public:
   
   
   //
+  // Set the input image to be displayed
+  // Warning: the current overlay is destroyed if the size of the image
+  // is different from the size of the overlay.
   //
   template <class ImagePixelType, class OverlayPixelType>
     void 
     GLSliceView<ImagePixelType, OverlayPixelType>::
     SetInputImage(ImageType * newImData)
     {
-    
     RegionType region = newImData->GetLargestPossibleRegion();
     if( region.GetNumberOfPixels() == 0 ) 
       {
@@ -148,19 +150,25 @@ public:
 
     SizeType   size   = region.GetSize();
 
-    if( cValidOverlayData )
-      {
-      RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
-      SizeType   overlay_size   = overlay_region.GetSize();
+    // If the overlay has been set and the size is different from the new image,
+    // it is removed.
+    if( cValidOverlayData)
+    {  
+      SizeType  overlay_size   = cOverlayData->GetLargestPossibleRegion().GetSize();
       
-      for( int i=0; i<3; i++ )
+      if((overlay_size[0] != size[0])
+        ||  (overlay_size[1] != size[1])
+        ||  (overlay_size[2] != size[2])
+        )
         {
-        if( size[i] != overlay_size[i] )
-          {
-          return;
-          }
-        }
-      } 
+         if(cWinOverlayData != NULL)
+           {
+           delete [] cWinOverlayData;
+           }
+         cWinOverlayData       = NULL;
+         cValidOverlayData     = false;
+        }       
+    }
 
     cImData = newImData;
 
@@ -292,7 +300,12 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 
   SizeType   newoverlay_size   = newoverlay_region.GetSize();
 
-  if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
+
+  if( cValidImData 
+      &&  (newoverlay_size[0] == cDimSize[0])
+      &&  (newoverlay_size[1] == cDimSize[1])
+      &&  (newoverlay_size[2] == cDimSize[2])
+    )
     {
     cOverlayData = newOverlayData;
     
@@ -311,6 +324,23 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 
     this->update();
 
+    }
+  else // return a warning
+    {
+      if(!cValidImData)
+        {
+        std::cout << "GLSliceView: Please set the input image before the overlay" << std::endl;
+        std::cout << "GLSliceView: Overlay not set." << std::endl;
+        }
+      else if((newoverlay_size[0] != cDimSize[0])
+      ||  (newoverlay_size[1] != cDimSize[1])
+      ||  (newoverlay_size[2] != cDimSize[2])
+      )
+        {
+        std::cout << "GLSliceView: Error: the overlay should have the same size as the input image." << std::endl;
+        std::cout << "GLSliceView: Overlay not set." << std::endl;
+        }
+      
     }
   }
 
