@@ -181,6 +181,9 @@ public:
   /** Get computed affine transform. */
   AffineTransformPointer GetAffineTransform();
 
+  /** Get Optimizer */
+  itkGetObjectMacro(Optimizer, OptimizerType);
+
 protected:
   MIAffine2DRegistrator();
   ~MIAffine2DRegistrator();
