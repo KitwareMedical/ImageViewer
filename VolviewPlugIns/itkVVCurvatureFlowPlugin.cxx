@@ -172,7 +172,15 @@ public:
     ot.GoToBegin(); 
     while( !ot.IsAtEnd() )
       {
-      *outData = static_cast< InputPixelType >( ot.Get() );
+      // NOTE: some combination of ClampMacro and 
+      // NumericTraits should be used here. 
+      // The code below is ok only for unsigned types in the InputPixelType...
+      InternalPixelType value = ot.Get();
+      if( value < 0.0 ) 
+        {
+        value = 0.0;
+        }
+      *outData = static_cast< InputPixelType >( value );
       ++ot;
       ++outData;
       }
