@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    vtk2itk.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 // Disable warning for long symbol names in this file only
 #ifdef _MSC_VER
 #pragma warning ( disable : 4786 )
@@ -107,18 +123,18 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
         {
         itk::TriangleCell<float, floatMesh::CellTraits>::Pointer t 
         = itk::TriangleCell<float, floatMesh::CellTraits>::New();
-	t->SetPointIds((unsigned long*)pts);
-	c = t;
-	break;
-	}  
+        t->SetPointIds((unsigned long*)pts);
+        c = t;
+        break;
+        }  
       case VTK_QUAD:
         {
         itk::QuadrilateralCell<float, floatMesh::CellTraits>::Pointer t 
         = itk::QuadrilateralCell<float, floatMesh::CellTraits>::New();
-	t->SetPointIds((unsigned long*)pts);
-	c = t;
-	break;
-	}  
+        t->SetPointIds((unsigned long*)pts);
+        c = t;
+        break;
+        }  
       case VTK_EMPTY_CELL:
       case VTK_VERTEX:
       case VTK_POLY_VERTEX:
@@ -137,7 +153,7 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
       default:
         std::cerr << "Warning unhandled cell type " 
                   << vtkCellTypes[cellId] << std::endl;
-	;
+        ;
       }
     mesh->SetCell(cellId, c);
     }

@@ -1,3 +1,20 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    MetaFileLib.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
+
 //
 // File:
 //    MetaFileLib (.h and .cpp)
@@ -55,9 +72,9 @@ extern bool MF_Write(std::ofstream &fp,
 extern bool MF_ParseStringToCHAR_ARRAY(char *s, int *n, char ***val);
 
 extern bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
-              	 						 MF_ValType _pType, int _n, const void *_v);
+                                                                 MF_ValType _pType, int _n, const void *_v);
 
 extern bool WriteFieldToFile(FILE* _fp, const char *_fieldName,
-														 MF_ValType _pType, float _v);
+                                                                                                                 MF_ValType _pType, float _v);
 
 #endif

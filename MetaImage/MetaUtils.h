@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    MetaUtils.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 /*!
  * File:
  *   MetaUtils (.h and .cpp)
@@ -103,10 +119,10 @@ extern unsigned long  MET_freadl(FILE *fp,
 
 extern bool     MET_Error;
 
-extern MET_Type	MET_StringToType(const char *_s);
-extern char *	MET_TypeToString(MET_Type _pType);
+extern MET_Type MET_StringToType(const char *_s);
+extern char *   MET_TypeToString(MET_Type _pType);
 
-extern float	MET_ValueToFloat(MET_Type _pType,
+extern float    MET_ValueToFloat(MET_Type _pType,
                                  const void *_v,
                                  bool _byteOrderMSB=MET_SYSTEM_BYTE_ORDER_MSB);
 
@@ -116,11 +132,11 @@ extern int      MET_SizeOfType(MET_Type _pType);
 //
 // MET_ALLOC
 //
-extern void *	MET_Alloc(MET_Type _pType, int _x);
-extern void *	MET_Alloc(MET_Type _pType, int _y, int _x);
-extern void *	MET_Alloc(MET_Type _pType, int _z, int _y, int _x);
-extern void *	MET_Alloc(MET_Type _pType, int _s, int _z, int _y, int _x);
-extern void *	MET_Alloc(MET_Type _pType, int _nDims, const int *_dimSize);
+extern void *   MET_Alloc(MET_Type _pType, int _x);
+extern void *   MET_Alloc(MET_Type _pType, int _y, int _x);
+extern void *   MET_Alloc(MET_Type _pType, int _z, int _y, int _x);
+extern void *   MET_Alloc(MET_Type _pType, int _s, int _z, int _y, int _x);
+extern void *   MET_Alloc(MET_Type _pType, int _nDims, const int *_dimSize);
 
 //
 //

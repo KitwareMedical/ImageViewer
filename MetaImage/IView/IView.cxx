@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    IView.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 /** ImageViewer
  *  Provides a basic 2D and 3D image viewing application
  *  Demonstrates the use and capabilities of GLSliceViewer and how to
@@ -94,7 +110,7 @@ void loadIm(char *fName)
 
   imageList.push_back(currentImage);
   overlayList.push_back((OverlayType::Pointer)NULL);//placeholder in overlay
-						    //image list
+                                                    //image list
   
   ivGUI->setImage(currentImage);
   ivGUI->iviewWindow->label(fName);
@@ -146,8 +162,8 @@ void tkRemoveCB(void)
 
   if(imageList.size() > 1)
     {
-    //delete imageList[currentImageNum];	no need to delete
-    //delete overlayList[currentImageNum];	I think - smart pointers
+    //delete imageList[currentImageNum];        no need to delete
+    //delete overlayList[currentImageNum];      I think - smart pointers
 
     imageList.erase(i+currentImageNum);
     overlayList.erase(j+currentImageNum);

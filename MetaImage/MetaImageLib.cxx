@@ -1,3 +1,19 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    MetaImageLib.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
@@ -16,26 +32,26 @@
 MET_ModType MET_StringToMod(const char *_s)
    {
    if(!strcmp(_s, "MET_MOD_UNKNOWN"))
-		return MET_MOD_UNKNOWN;
+                return MET_MOD_UNKNOWN;
 
-  	if(!strcmp(_s, "MET_MOD_MRI"))
-		return MET_MOD_MRI;
+        if(!strcmp(_s, "MET_MOD_MRI"))
+                return MET_MOD_MRI;
 
-  	if(!strcmp(_s, "MET_MOD_MRA"))
-		return MET_MOD_MRA;
+        if(!strcmp(_s, "MET_MOD_MRA"))
+                return MET_MOD_MRA;
 
    if(!strcmp(_s, "MET_MOD_CT"))
-		return MET_MOD_CT;
-	
+                return MET_MOD_CT;
+        
    if(!strcmp(_s, "MET_MOD_DSA"))
-		return MET_MOD_DSA;
-	
+                return MET_MOD_DSA;
+        
    if(!strcmp(_s, "MET_MOD_CXR"))
-		return MET_MOD_CXR;
-	
+                return MET_MOD_CXR;
+        
    if(!strcmp(_s, "MET_MOD_DRR"))
-		return MET_MOD_DRR;
-	
+                return MET_MOD_DRR;
+        
    MET_Error = true;
    return MET_MOD_UNKNOWN;
    }
@@ -87,10 +103,10 @@ MetaImage()
 //
 MetaImage::
 MetaImage(const char *_name, bool _read_and_close)
-	{
+        {
    InitMetaMem();
    OpenMetaFile(_name, _read_and_close);
-	}
+        }
 
 //
 MetaImage::
@@ -130,9 +146,9 @@ MetaImage(int _x, int _y, int _z, MET_Type _eType, const float *_eSize, int _eNB
 //
 MetaImage::
 ~MetaImage()
-	{
-	FreeMetaMem();
-	}
+        {
+        FreeMetaMem();
+        }
 
 //
 // Common Constructor Code
@@ -235,9 +251,9 @@ InitMetaMem()
 //
 void MetaImage::
 FreeMetaMem()
-	{
-	if(iReadFileOpen)
-		ReadFileClose();
+        {
+        if(iReadFileOpen)
+                ReadFileClose();
 
    if(iWriteFileOpen)
       WriteFileClose();
@@ -644,11 +660,11 @@ OpenMetaFile(const char *_fname, bool _read_and_close)
 
    //
    if(_read_and_close)
-		{
-		if(!ReadImageData())
+                {
+                if(!ReadImageData())
          return false;
       ReadFileClose();
-		}
+                }
 
    return true;
    }
@@ -1525,10 +1541,10 @@ Save(const char *_headname, const char *_dataname, bool _write_and_close)
       if(!MET_GetFilePath(_dataname, s))
           strcpy(s, _dataname);
       else
-	  if(!strcmp(s, pName))
+          if(!strcmp(s, pName))
               strcpy(s, &(_dataname[strlen(s)]));
-	  else
-	      strcpy(s, _dataname);
+          else
+              strcpy(s, _dataname);
       SetFieldValue("ElementDataFile", MF_CHAR_ARRAY, strlen(s), (void *)s);
       strcpy(pName, s);
       }
