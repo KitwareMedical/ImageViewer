@@ -1,6 +1,6 @@
 /* perform smoothing using an anisotropic diffusion filter */
 
-#include "itkVVFilterModule.h"
+#include "itkVVFilterModuleWithCasting.h"
 
 #include "itkCurvatureAnisotropicDiffusionImageFilter.h"
 
@@ -24,7 +24,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
     {
     case VTK_UNSIGNED_CHAR:
       {
-      FilterModule< unsigned char, FilterType > module;
+      FilterModuleWithCasting< unsigned char, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Anisotropic Diffusion...");
       // Set the parameters on it
@@ -37,7 +37,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       }
     case VTK_UNSIGNED_SHORT:
       {
-      FilterModule< unsigned short, FilterType > module;
+      FilterModuleWithCasting< unsigned short, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Anisotropic Diffusion...");
       // Set the parameters on it

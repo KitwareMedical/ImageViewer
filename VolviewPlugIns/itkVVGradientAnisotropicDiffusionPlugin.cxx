@@ -1,6 +1,6 @@
 /* perform smoothing using an anisotropic diffusion filter */
 
-#include "itkVVFilterModule.h"
+#include "itkVVFilterModuleWithCasting.h"
 
 #include "itkGradientAnisotropicDiffusionImageFilter.h"
 
@@ -8,16 +8,6 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
 
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
-
-
-std::cout << "ProcessData() called " << std::endl;
-std::cout << "Dimensions : " << std::endl;
-std::cout << info->InputVolumeDimensions[0] << std::endl; 
-std::cout << info->InputVolumeDimensions[1] << std::endl; 
-std::cout << info->InputVolumeDimensions[2] << std::endl; 
-
-
-info->DisplayError( info, "Processing One Slab" );
 
   const unsigned int Dimension = 3;
 
@@ -34,7 +24,7 @@ info->DisplayError( info, "Processing One Slab" );
     {
     case VTK_UNSIGNED_CHAR:
       {
-      FilterModule< unsigned char, FilterType > module;
+      FilterModuleWithCasting< unsigned char, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Gradient Anisotropic Diffusion...");
       // Set the parameters on it
@@ -47,7 +37,7 @@ info->DisplayError( info, "Processing One Slab" );
       }
     case VTK_UNSIGNED_SHORT:
       {
-      FilterModule< unsigned short, FilterType > module;
+      FilterModuleWithCasting< unsigned short, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Gradient Anisotropic Diffusion...");
       // Set the parameters on it

@@ -1,6 +1,6 @@
 /* perform segmentation using the confidence connected image filter */
 
-#include "itkVVFilterModule.h"
+#include "itkVVFilterModuleWithCasting.h"
 
 #include "itkConfidenceConnectedImageFilter.h"
 
@@ -28,7 +28,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
     {
     case VTK_UNSIGNED_CHAR:
       {
-      FilterModule< unsigned char, FilterType > module;
+      FilterModuleWithCasting< unsigned char, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
@@ -47,7 +47,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       }
     case VTK_UNSIGNED_SHORT:
       {
-      FilterModule< unsigned short, FilterType > module;
+      FilterModuleWithCasting< unsigned short, FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Smoothing with Curvature Flow...");
       // Set the parameters on it
