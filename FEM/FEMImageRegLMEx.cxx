@@ -276,8 +276,7 @@ void ImageRegLMEx<TReference,TTarget>::ReadImages()
   // Read a Raw File
   typedef  itk::ImageFileReader< ImageType >      FileSourceType;
   typedef typename ImageType::PixelType PixType;
-  typedef  itk::RawImageIO< PixType,
-                            ImageType::ImageDimension>   RawReaderType;
+  typedef  itk::RawImageIO< PixType,ImageDimension>   RawReaderType;
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
   reffilter->SetFileName( m_ReferenceFileName );
@@ -286,8 +285,12 @@ void ImageRegLMEx<TReference,TTarget>::ReadImages()
 
   RawReaderType::Pointer  rawReader  = RawReaderType::New();
   
-  for (int ii=0; ii<ImageDimension; ii++) rawReader->SetDimensions( ii, m_ImageSize[ii] );
-
+  rawReader->SetFileDimensionality( ImageDimension );
+  for (int ii=0; ii<ImageDimension; ii++)     
+  {
+    unsigned int temp=(unsigned int) m_ImageSize[ii];
+    rawReader->SetDimensions( ii, temp );
+  }
   reffilter->SetImageIO( rawReader );
   tarfilter->SetImageIO( rawReader );
 
@@ -313,8 +316,7 @@ void ImageRegLMEx<TReference,TTarget>::ReadImages()
     }
   
   std::cout << "File succesfully read ! " << std::endl;
-
-  // now set variables
+ // now set variables
   m_RefImg=reffilter->GetOutput();
   m_TarImg=tarfilter->GetOutput();
   m_Rregion = m_RefImg->GetLargestPossibleRegion();
@@ -632,12 +634,18 @@ void ImageRegLMEx<TReference,TTarget>::CreateMesh(ImageSizeType MeshOrigin, Imag
   }
 
 // FIXME when mesh input is available
-  if (dynamic_cast<Element2DC0LinearQuadrilateral*> (e1)&& ImageDimension == 2) 
-  Generate2DRectilinearMesh(e1,mySolver,MeshOriginV,MeshSizeV,ElementsPerDimension); 
-  else if (dynamic_cast<Element3DC0LinearHexahedron*> (e1) && ImageDimension == 3) 
-    Generate3DRectilinearMesh(e1,mySolver,MeshOriginV,MeshSizeV,ElementsPerDimension); 
-  else {  throw FEMException(__FILE__, __LINE__, "CreateMesh - wrong image or element type ");}
-  delete e1;
+  if (ImageDimension == 2 && dynamic_cast<Element2DC0LinearQuadrilateral*>(m_Element) != NULL)
+  {
+    Generate2DRectilinearMesh(m_Element,mySolver,MeshOriginV,MeshSizeV,ElementsPerDimension); 
+  }
+  else if ( ImageDimension == 3 && dynamic_cast<Element3DC0LinearHexahedron*>(m_Element) != NULL) 
+  {
+    Generate3DRectilinearMesh(m_Element,mySolver,MeshOriginV,MeshSizeV,ElementsPerDimension); 
+  }
+  else 
+  {  
+    throw FEMException(__FILE__, __LINE__, "CreateMesh - wrong image or element type ");
+  }
 
 }
 
@@ -781,9 +789,13 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
      {
         mint=iters;   
         mySolver.AddToDisplacements();  
-        if (LastE > m_MinE) minct++; 
+        if (LastE >= m_MinE) minct++; 
         m_MinE=LastE;
      } //else iters=m_Maxiters;
+   if (LastE == 0.0) {
+       iters=m_Maxiters;
+     minct=NumMins;
+     }
    }
    
    std::cout << " min E " << m_MinE << " Cur E " << LastE << "  t " << mint << " iter " << iters << std::endl;
@@ -995,18 +1007,19 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
   //for (unsigned int ii=0; ii<numLevels; ii++) for (unsigned int jj=0; jj<ImageDimension; jj++) 
   //{ SizeReductionR[ii][jj]=1;SizeReductionT[ii][jj]=1;}
   pyramidR->SetSchedule(SizeReductionR); pyramidT->SetSchedule(SizeReductionT);
-  std::cout << SizeReductionR << std::endl;
+  std::cout << " size change at this level " << SizeReductionR << std::endl;
   pyramidR->Update();
   pyramidT->Update();
 
-/*
-  itk::RawImageIO<typename ImageDataType,typename ImageDimension>::Pointer io;
+
+/*  itk::RawImageIO<ImageDataType,ImageDimension>::Pointer io;
   itk::ImageFileWriter<ImageType>::Pointer writer;
-  io = itk::RawImageIO<typename ImageDataType,typename ImageDimension>::New();
+  io = itk::RawImageIO<ImageDataType,ImageDimension>::New();
   writer = itk::ImageFileWriter<ImageType>::New();
   writer->SetImageIO(io);
   writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");
-*/
+  writer->SetInput(m_TarImg); writer->Write();*/
+ 
   for (unsigned int i=0; i<m_MaxLevel; i++)
   {
     pyramidR->GetOutput( i )->Update();
@@ -1027,7 +1040,24 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
 
       Rcaster2 = CasterType2::New();// Weird - don't know why but this worked
       Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
- 
+      
+/*    // Choose the material properties
+      itk::fem::MaterialLinearElasticity::Pointer m;
+      m=itk::fem::MaterialLinearElasticity::New();
+      m->GN=0;       // Global number of the material ///
+      m->E=this->GetElasticity();  // Young modulus -- used in the membrane ///
+      m->A=1.0;     // Crossection area ///
+      m->h=1.0;     // Crossection area ///
+      m->I=1.0;    // Moment of inertia ///
+      m->nu=0.; //.0;    // poissons -- DONT CHOOSE 1.0!!///
+      m->RhoC=1.0;
+  
+      typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
+      // Create the element type 
+      ElementType::Pointer ee=ElementType::New();
+      ee->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
+      this->SetElement(ee);*/
+
       CreateMesh(m_ImageOrigin,Isz,MeshResolution,m_Solver); 
       m_Solver.GenerateGFN();
       ApplyLoads(m_Solver,(unsigned int)MeshResolution);
@@ -1129,17 +1159,79 @@ void ImageRegLMEx<TReference,TTarget>::CreateLinearSystemSolver()
 // Below, we have typedefs that instantiate all necessary classes.
 // Here, we instantiate the image type, load type and 
 // explicitly template the load implementation type.
-typedef itk::Image< unsigned char, 2 >                     ImageType;
+typedef itk::Image< unsigned char, 3 >                     ImageType;
 typedef itk::fem::ImageMetricLoad<ImageType,ImageType>     ImageLoadType;
 template class itk::fem::ImageMetricLoadImplementation<ImageLoadType>;
 
 // We now declare an element type and load implementation pointer for the visitor class.
-typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
+//typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
+typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
 typedef ElementType::LoadImplementationFunctionPointer     LoadImpFP;
 typedef ElementType::LoadType                              ElementLoadType;
 typedef itk::fem::VisitorDispatcher<ElementType,ElementLoadType, LoadImpFP>   
                                                            DispatcherType;
+
+typedef itk::fem::ImageRegLMEx<ImageType,ImageType> RegistrationType;
+
+void ReadRawImageFiles( RegistrationType&  X )
+{
+
+  typedef  itk::ImageFileReader< ImageType >      FileSourceType;
+  typedef ImageType::PixelType PixType;
+  const unsigned int ImageDimension=ImageType::ImageDimension;
+  typedef  itk::RawImageIO< PixType,ImageDimension>   RawReaderType;
+
+  FileSourceType::Pointer reffilter = FileSourceType::New();
+  reffilter->SetFileName( X.GetReferenceFile() );
+  FileSourceType::Pointer tarfilter = FileSourceType::New();
+  tarfilter->SetFileName( X.GetTargetFile() );
+
+  RawReaderType::Pointer  rawReader  = RawReaderType::New();
+  rawReader->SetFileDimensionality( ImageDimension );
+
+  ImageType::SizeType ImageSize=X.GetImageSize();
+  for (int ii=0; ii<ImageDimension; ii++)     
+  {
+    unsigned int temp=(unsigned int) ImageSize[ii];
+    rawReader->SetDimensions( ii, temp );
+  }
+  reffilter->SetImageIO( rawReader );
+  tarfilter->SetImageIO( rawReader );
+
+  try
+    {
+    reffilter->Update();
+    }
+  catch( itk::ExceptionObject & e )
+    {
+    std::cerr << "Exception caught during reference file reading " << std::endl;
+    std::cerr << e << std::endl;
+    return ;
+    }
+  try
+    {
+    tarfilter->Update();
+    }
+  catch( itk::ExceptionObject & e )
+    {
+    std::cerr << "Exception caught during target file reading " << std::endl;
+    std::cerr << e << std::endl;
+    return ;
+    }
+  
+  std::cout << "File succesfully read ! " << std::endl;
+  ImageType::IndexType rindex;
+  rindex[0]=15;
+  rindex[1]=10;
+  rindex[2]=11;
+  std::cout << " pix val " << (unsigned int) reffilter->GetOutput()->GetPixel(rindex) << std::endl;
+  rindex[0]=11;
+  rindex[1]=10;
+  rindex[2]=15;
+  std::cout << " pix val " << (unsigned int) reffilter->GetOutput()->GetPixel(rindex) << std::endl;
  
+}
+
 int main() 
 { 
   
@@ -1147,7 +1239,7 @@ int main()
   DispatcherType::RegisterVisitor((ImageLoadType*)0, 
           &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
 
-  itk::fem::ImageRegLMEx<ImageType,ImageType> X; // Declare the registration class
+  RegistrationType X; // Declare the registration class
 
   X.SetConfigFileName("U://itk//Insight//Examples//FEM//FEMregLMparams.txt");
   //X.SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
@@ -1172,7 +1264,7 @@ int main()
   m->E=X.GetElasticity();  // Young modulus -- used in the membrane ///
   m->A=1.0;     // Crossection area ///
   m->h=1.0;     // Crossection area ///
-  m->I=1.0;    // Momemt of inertia ///
+  m->I=1.0;    // Moment of inertia ///
   m->nu=0.; //.0;    // poissons -- DONT CHOOSE 1.0!!///
   m->RhoC=1.0;
   
@@ -1181,6 +1273,7 @@ int main()
   e1->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
   X.SetElement(e1);
 
+  // Read Raw Files ReadRawImageFiles();
   // Register the images
   X.RunRegistration();
 
