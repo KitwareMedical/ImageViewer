@@ -2,9 +2,10 @@
 
 
 #include "Cell.h"
+#include "CellularAggregate.h"
 #include <new>
 #include "FL/gl.h"
-#include "CellularAggregate.h"
+
 
 
 namespace bio {
@@ -35,7 +36,7 @@ Cell
 ::Cell()
 {
 
-	m_Radius      = DefaultRadius;
+  m_Radius      = DefaultRadius;
   m_Color       = DefaultColor;
   
   m_ParentIdentifier = 0;    // Parent cell has to write here
