@@ -20,29 +20,7 @@
 #pragma warning(disable: 4786)
 #endif
 
-#include "itkFEM.h"
-#include "itkFEMSolverHyperbolic.h"
-
-#include "itkFEMLinearSystemWrappers.h"
-
-#include "itkExceptionObject.h"
-
-#include <iostream>
-#include <fstream>
-#include <exception>
-
-#define DEFAULT_COMMENT     '.'
-#define MATLAB_COMMENT      '%'
-#define IDL_COMMENT         ';'
-
-// Only one of these _OUTPUT variables should be nonzero, otherwise
-// things will become confusing!  If both are zero, no output will be
-// generated.
-#define MATLAB_OUTPUT       1
-#define IDL_OUTPUT          0
-#define DEBUG               0
-#define DEBUG_FEM_TESTS     ( ( MATLAB_OUTPUT || IDL_OUTPUT ) && DEBUG )
-#define OUTPUT              1
+#include "FEMSolverHyperbolicExample.h"
 
 using namespace std;
 using namespace itk;
@@ -50,7 +28,7 @@ using namespace fem;
 
 #if DEBUG_FEM_TESTS
 
-void PrintK(SolverHyperbolic& S, char comment, ofstream& of)
+void PrintK(SolverHyperbolic& S, char comment, ostream& of)
 // Print K - the global stiffness matrix
 {
   LinearSystemWrapper::Pointer lsw = S.GetLinearSystemWrapper();
@@ -71,7 +49,7 @@ void PrintK(SolverHyperbolic& S, char comment, ofstream& of)
   std::cout << "];" << std::endl;
 }  
 
-void PrintF(SolverHyperbolic& S, char comment, ofstream& of)
+void PrintF(SolverHyperbolic& S, char comment, ostream& of)
 // Print F - the global load vector
 {
   LinearSystemWrapper::Pointer lsw = S.GetLinearSystemWrapper();
@@ -86,9 +64,9 @@ void PrintF(SolverHyperbolic& S, char comment, ofstream& of)
 
 #endif
 
-#if OUTPUT
+#if FORMAT_OUTPUT_ASCII
 
-void PrintNodalCoordinates(SolverHyperbolic& S, char comment, ofstream& of)
+void PrintNodalCoordinates(SolverHyperbolic& S, char comment, ostream& of)
 // Print the nodal coordinates
 {
   of << std::endl << comment << "Nodal coordinates: " << std::endl;
@@ -107,7 +85,7 @@ void PrintNodalCoordinates(SolverHyperbolic& S, char comment, ofstream& of)
    of << "];" << std::endl;
 }
 
-void PrintElementCoordinates(SolverHyperbolic& S, char comment, ofstream& of, int iter)
+void PrintElementCoordinates(SolverHyperbolic& S, char comment, ostream& of, int iter)
 // Useful for display purposes - lets you draw each element
 // individually, instead of just a stream of nodes
 {
@@ -139,7 +117,11 @@ void PrintElementCoordinates(SolverHyperbolic& S, char comment, ofstream& of, in
   }
 }
 
-void PrintU(SolverHyperbolic& S, char comment, ofstream& of, int iter)
+#endif
+
+#if OUTPUT 
+
+void PrintU(SolverHyperbolic& S, char comment, ostream& of, int iter)
 // Print the displacements
 {
   of << std::endl << comment << "Displacements: " << std::endl;
@@ -181,7 +163,7 @@ int main(int ac, char** av)
   char filepath[] = "../../Insight/Testing/Data/Input/FEM/";
 
   // Path to output (either Matlab or IDL)
-  char outpath[] = "/data/tessa/temp/";
+  char outpath[] = "";
 
   // Storage for list of or user-specified input file(s)
   char** filelist; 
@@ -213,7 +195,6 @@ int main(int ac, char** av)
     f.open(listloc);
     if (!f) {
       std::cout << "ERROR: null file handle - couldn't read input file list" << std::endl;
-      std::cout << "Test FAILED" << std::endl;
       return EXIT_FAILURE;
     }
     
@@ -258,7 +239,6 @@ int main(int ac, char** av)
   if (!f)
   {
     std::cout << "ERROR: null file handle...terminating." << std::endl;
-    std::cout << "Test FAILED" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -315,12 +295,12 @@ int main(int ac, char** av)
     of.open(outfile);
     if (!f) {
       std::cout << "ERROR: null file handle - couldn't open output file" << std::endl;
-      std::cout << "Test FAILED" << std::endl;
+      std::cout << outfile << std::endl;
       return EXIT_FAILURE;
     }
-    
-    
-    // Create the 4D storage for the element coordinates
+
+    // Find out the dimensions of the array that will be sent to Matlab/IDL 
+    // In Matlab, the dimensions of the array will be [ndof, nndel, nelems, niter]
     Solver::ElementArray::iterator elit = SH.el.begin();
     unsigned char nelems = SH.el.size();
     unsigned char nndel = (*elit)->GetNumberOfNodes();
@@ -333,6 +313,9 @@ int main(int ac, char** av)
       SH.Solve();                // Iteratively solve the system Mu'' + Cu' + Ku=F for u
 
       int ctr = 0;
+
+      // Output the new positions of the elements in the mesh ** in binary format **
+#if FORMAT_OUTPUT_BINARY
       for (Solver::ElementArray::iterator ee = SH.el.begin(); ee != SH.el.end(); ee++) {
   for (unsigned int n=0; n < (*ee)->GetNumberOfNodes(); n++) {
     Element::VectorType nc = (*ee)->GetNode(n)->GetCoordinates();
@@ -345,7 +328,8 @@ int main(int ac, char** av)
   }
   ctr++;
       }
-
+#endif
+      
       std::cout << comment << " Iteration " << nit << std::endl;
 #if DEBUG_FEM_TESTS
       PrintK(SH, comment, of);
@@ -357,25 +341,11 @@ int main(int ac, char** av)
 #endif
     }
 
-#if OUTPUT
-//     for (unsigned int n=0; n < (nelems*niter*nndel*ndof*sizeof(e[0][0][0][0])); n++) {
-//       of << reinterpret_cast<unsigned char*>(&e[0][0][0][0])[n];
-//     }
-#endif
-    
-// #if OUTPUT
-//    PrintNodalCoordinates(SH, comment, of);
-//    PrintElementCoordinates(SH, comment, of);
-// #endif
-
     std::cout << comment << "Done" << std::endl;
-    
-    std::cout << comment << "Test PASSED" << std::endl;
   }
 
   catch (::itk::ExceptionObject &err) {
     std::cerr << "ITK exception detected: "  << err;
-    std::cout << "Test FAILED" << std::endl;
     of.close();
     delete(outfile);
 
