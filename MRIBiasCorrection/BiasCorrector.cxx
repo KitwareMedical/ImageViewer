@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
   itk::Array<double> classSigmas ;
   int volumeMaximumIteration = 20; 
   int interSliceMaximumIteration = 20; 
-  double initialRadius ;
+  double initialRadius = 1.02;
   double growth = 1.05;
   double shrink = 0.0;
 
