@@ -289,8 +289,15 @@ CellularAggregate
     throw exception;
     }
 
-  voronoiPointer.TakeOwnership(
-        dynamic_cast < VoronoiRegionType * >( cellPointer.GetPointer() ) );
+  VoronoiRegionType * region =
+          dynamic_cast < VoronoiRegionType * >( cellPointer.GetPointer() );
+
+  voronoiPointer.TakeNoOwnership( region );
+  if( cellPointer.IsOwner() )
+    {
+    voronoiPointer.TakeOwnership();   
+    cellPointer.ReleaseOwnership();  
+    }
 
 }
 
