@@ -15,7 +15,9 @@
 
 =========================================================================*/
 
-
+#if defined(_MSC_VER)
+#pragma warning ( disable : 4786 )
+#endif
 
 #include "CellsViewerBase.h"
 #include <FL/fl_file_chooser.H>

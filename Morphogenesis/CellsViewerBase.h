@@ -17,6 +17,9 @@
 #ifndef __CellsViewerBase_H
 #define __CellsViewerBase_H
 
+#if defined(_MSC_VER)
+#pragma warning ( disable : 4786 )
+#endif
 #include "itkImageFileReader.h"
 #include "fltkSlice2DDrawer.h"
 #include "fltkSlice3DDrawer.h"

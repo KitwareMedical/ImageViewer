@@ -17,6 +17,9 @@
 #ifndef __BacterialColony_H
 #define __BacterialColony_H
 
+#if defined(_MSC_VER)
+#pragma warning ( disable : 4786 )
+#endif
 #include <iostream>
 #include "CellularAggregate.h"
 #include "Bacteria.h"

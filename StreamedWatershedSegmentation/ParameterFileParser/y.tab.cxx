@@ -18,6 +18,10 @@
 /*  A Bison parser, made from param.y
     by GNU Bison version 1.28  */
 
+#if defined(_MSC_VER)
+#pragma warning ( disable : 4786 )
+#endif
+
 #define YYBISON 1  /* Identify Bison output.  */
 
 #define NUM 257
