@@ -19,6 +19,7 @@
 #include <itkWindows.h>
 #endif
 
+#include <itkFstream.h>
 #include <itkRGBPixel.h>
 #include <itkLightObject.h>
 #include <itkObjectFactory.h>
@@ -27,7 +28,6 @@
 #include <liCommandEvents.h>
 #include <list>
 #include <FL/gl.h>
-#include <fstream>
 
 
 
@@ -106,13 +106,13 @@ public:
   /**
    *   Output stream type
    */ 
-  typedef std::ofstream OfstreamType;
+  typedef itk::Ofstream OfstreamType;
 
 
   /**
    *   Intput stream type
    */ 
-  typedef std::ifstream IfstreamType;
+  typedef itk::Ifstream IfstreamType;
 
 
 
