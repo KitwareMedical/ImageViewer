@@ -14,17 +14,17 @@
 # 
 
 IF (VTK_WRAP_TCL)
-  OPTION(WST_WRAP_TCL 
+  OPTION(SEGMENTER_WRAP_TCL 
          "Wrap classes into the TCL interpreted language." 
          OFF)
 
-  IF (WST_WRAP_TCL)
+  IF (SEGMENTER_WRAP_TCL)
 
     IF (NOT VTK_WRAP_TCL_EXE)
 
       MESSAGE("Error. Unable to find VTK_WRAP_TCL_EXE, please edit this value to specify the correct location of the VTK Tcl wrapper.")
       MARK_AS_ADVANCED(CLEAR VTK_WRAP_TCL_EXE)
-      SET (WST_CAN_BUILD 0 CACHE INTERNAL)
+      SET (SEGMENTER_CAN_BUILD 0 CACHE INTERNAL)
 
     ELSE (NOT VTK_WRAP_TCL_EXE)
 
@@ -39,5 +39,5 @@ IF (VTK_WRAP_TCL)
     ENDIF (NOT VTK_WRAP_TCL_EXE)
 
   SUBDIR_DEPENDS(Wrapping/Tcl Common)
-  ENDIF (WST_WRAP_TCL)
+  ENDIF (SEGMENTER_WRAP_TCL)
 ENDIF (VTK_WRAP_TCL)
