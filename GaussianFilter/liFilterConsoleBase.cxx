@@ -18,7 +18,7 @@
 
 #include <liFilterConsoleBase.h>
 #include <itkMetaImageIOFactory.h>
-
+#include <itkMetaImageIO.h>
 
 
 /************************************
@@ -111,12 +111,17 @@ liFilterConsoleBase
   m_Modulus->SetInput3( m_H1z->GetOutput() );
 
 
-  /*
   m_Writer_Gradient_Modulus = VolumeWriterType::New();
-  m_Writer_Gradient_X      = VolumeWriterType::New();
-  m_Writer_Gradient_Y      = VolumeWriterType::New();
-  m_Writer_Gradient_Z      = VolumeWriterType::New();
-  m_Writer_Laplacian       = VolumeWriterType::New();
+  m_Writer_Gradient_X       = VolumeWriterType::New();
+  m_Writer_Gradient_Y       = VolumeWriterType::New();
+  m_Writer_Gradient_Z       = VolumeWriterType::New();
+  m_Writer_Laplacian        = VolumeWriterType::New();
+
+  m_Writer_Gradient_Modulus->SetImageIO( itk::MetaImageIO::New() );
+  m_Writer_Gradient_X->SetImageIO( itk::MetaImageIO::New() );
+  m_Writer_Gradient_Y->SetImageIO( itk::MetaImageIO::New() );
+  m_Writer_Gradient_Z->SetImageIO( itk::MetaImageIO::New() );
+  m_Writer_Laplacian->SetImageIO(  itk::MetaImageIO::New() );
 
   m_Writer_Gradient_X->SetInput( m_H1x->GetOutput() );
   m_Writer_Gradient_Y->SetInput( m_H1y->GetOutput() );
@@ -125,7 +130,7 @@ liFilterConsoleBase
   m_Writer_Gradient_Modulus->SetInput( m_Modulus->GetOutput() );
 
   m_Writer_Laplacian->SetInput( m_Add->GetOutput() );
-  */
+  
   
   // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
@@ -278,9 +283,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientX( const char * filename )
 {
-//  m_Writer_Gradient_X->SetInput( m_H1x->GetOutput() );
-//  m_Writer_Gradient_X->SetFileName( filename );
-//  m_Writer_Gradient_X->Write();
+  m_Writer_Gradient_X->SetFileName( filename );
+  m_Writer_Gradient_X->Write();
 }
 
 
@@ -294,8 +298,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientY( const char * filename )
 {
-//  m_Writer_Gradient_Y->SetFileName( filename );
-//  m_Writer_Gradient_Y->Write();
+  m_Writer_Gradient_Y->SetFileName( filename );
+  m_Writer_Gradient_Y->Write();
 }
 
 
@@ -309,8 +313,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientZ( const char * filename )
 {
-//  m_Writer_Gradient_Z->SetFileName( filename );
-//  m_Writer_Gradient_Z->Write();
+  m_Writer_Gradient_Z->SetFileName( filename );
+  m_Writer_Gradient_Z->Write();
 }
 
 
@@ -324,8 +328,8 @@ void
 liFilterConsoleBase 
 ::WriteGradientModulus( const char * filename )
 {
-//  m_Writer_Gradient_Modulus->SetFileName( filename );
-//  m_Writer_Gradient_Modulus->Write();
+  m_Writer_Gradient_Modulus->SetFileName( filename );
+  m_Writer_Gradient_Modulus->Write();
 }
 
 
@@ -339,8 +343,8 @@ void
 liFilterConsoleBase 
 ::WriteLaplacian( const char * filename )
 {
-//  m_Writer_Laplacian->SetFileName( filename );
-//  m_Writer_Laplacian->Write();
+  m_Writer_Laplacian->SetFileName( filename );
+  m_Writer_Laplacian->Write();
 }
 
 

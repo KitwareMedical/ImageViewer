@@ -19,6 +19,7 @@
 
 #include <itkImage.h>
 #include <itkImageFileReader.h>
+#include <itkImageFileWriter.h>
 #include <itkRecursiveGaussianImageFilter.h>
 #include <itkTernaryAddImageFilter.h>
 #include <itkTernaryMagnitudeImageFilter.h>
@@ -36,8 +37,8 @@ public:
   typedef   itk::ImageFileReader< 
                             InputImageType >       VolumeReaderType;
 
-//  typedef   itk::WriteMetaImage< 
-//                            ImageType >            VolumeWriterType;
+  typedef   itk::ImageFileWriter< 
+                            ImageType >            VolumeWriterType;
 
   typedef   itk::RecursiveGaussianImageFilter<
                                     InputImageType,
@@ -105,13 +106,13 @@ protected:
 
   bool                        m_ImageFileNameAvailable;
 
-  /*
+  
   VolumeWriterType::Pointer         m_Writer_Laplacian;
   VolumeWriterType::Pointer        m_Writer_Gradient_X;
   VolumeWriterType::Pointer        m_Writer_Gradient_Y;
   VolumeWriterType::Pointer        m_Writer_Gradient_Z;
   VolumeWriterType::Pointer   m_Writer_Gradient_Modulus;
-  */
+  
 
 };
 
