@@ -29,12 +29,18 @@
 RegionGrowingSegmentation
 ::RegionGrowingSegmentation()
 {
+
   m_InputImageViewer.SetLabel("Input Image");
+
+  m_InputImageViewer.ClickSelectCallBack( ClickSelectCallback, (void *)this);
+
   m_ConnectedThresholdImageViewer.SetLabel("Connected Threshold Image");
 
   m_ConnectedThresholdImageFilter = ConnectedThresholdImageFilterType::New();
 
   m_ConnectedThresholdImageViewer.SetImage( m_ConnectedThresholdImageFilter->GetOutput() );  
+
+  m_ConnectedThresholdImageFilter->SetInput( m_ImageReader->GetOutput() );
 
   // Initialize ITK filter with GUI values
   m_ConnectedThresholdImageFilter->SetLower( 
@@ -42,6 +48,13 @@ RegionGrowingSegmentation
 
   m_ConnectedThresholdImageFilter->SetUpper( 
       static_cast<InputPixelType>( upperThresholdCounter->value() ) );
+
+  inputImageButton->Observe( m_ImageReader.GetPointer() );
+  loadInputImageButton->Observe(  m_ImageReader.GetPointer() );
+
+  progressSlider->Observe( m_ImageReader.GetPointer() );
+  progressSlider->Observe( m_ConnectedThresholdImageFilter.GetPointer() );
+
 }
 
 
@@ -85,6 +98,7 @@ RegionGrowingSegmentation
 ::Quit(void)
 {
   m_InputImageViewer.Hide();
+  m_ConnectedThresholdImageViewer.Hide();
   consoleWindow->hide();
 }
 
@@ -192,7 +206,50 @@ RegionGrowingSegmentation
 
 
 
+ 
+/*****************************************
+ *
+ *  Callback for Selecting a seed point
+ *
+ *****************************************/
+void
+RegionGrowingSegmentation
+::ClickSelectCallback(float x, float y, float z, float value, void * args )
+{
 
+  RegionGrowingSegmentation * self = 
+     static_cast<RegionGrowingSegmentation *>( args );
+
+  self->SelectSeedPoint( x, y, z );
+
+}
+
+
+
+ 
+/*****************************************
+ *
+ *  Callback for Selecting a seed point
+ *
+ *****************************************/
+void
+RegionGrowingSegmentation
+::SelectSeedPoint(float x, float y, float z)
+{
+  xSeedPointValueOutput->value( x );
+  ySeedPointValueOutput->value( y );
+  zSeedPointValueOutput->value( z );
+
+  typedef ConnectedThresholdImageFilterType::IndexType IndexType;
+  IndexType seed;
+  seed[0] = static_cast<IndexType::IndexValueType>( x );
+  seed[1] = static_cast<IndexType::IndexValueType>( y );
+  seed[2] = static_cast<IndexType::IndexValueType>( z );
+  m_ConnectedThresholdImageFilter->SetSeed( seed );
+}
+
+
+  
 
 
 

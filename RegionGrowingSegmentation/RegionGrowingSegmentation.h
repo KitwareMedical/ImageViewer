@@ -73,6 +73,9 @@ public:
 
   virtual void Quit(void);
 
+  virtual void SelectSeedPoint( float x, float y, float z );
+  
+  static void ClickSelectCallback(float x, float y, float z, float value, void * args );
 
 private:
 

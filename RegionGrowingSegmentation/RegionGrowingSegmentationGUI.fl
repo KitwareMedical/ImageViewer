@@ -11,7 +11,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
   } {
     Fl_Window consoleWindow {
       label {Region Growing Segmentation} open
-      xywh {329 273 830 428}
+      xywh {126 327 830 428}
       code0 {\#include <RegionGrowingSegmentationBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -26,6 +26,9 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         }
         Fl_Box {} {
           xywh {465 72 108 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {170 77 9 53} box UP_BOX color 4
         }
       }
       Fl_Group controlsGroup {
@@ -55,6 +58,7 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         }
         Fl_Button {} {
           label {Connected Threshold}
+          callback {m_ConnectedThresholdImageFilter->Update();} selected
           xywh {330 54 170 37} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Button {} {
@@ -69,9 +73,26 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
         }
         Fl_Counter upperThresholdCounter {
           label Upper
-          callback {m_ConnectedThresholdImageFilter->SetUpper( static_cast<InputPixelType>( o->value() ) );} selected
+          callback {m_ConnectedThresholdImageFilter->SetUpper( static_cast<InputPixelType>( o->value() ) );}
           xywh {348 116 134 25} align 4 minimum 0 maximum 255 step 1 value 200
           code0 {o->lstep( 10.0 );}
+        }
+        Fl_Group seedGroup {
+          label {Seed Point} open
+          xywh {128 113 95 115} box ENGRAVED_BOX align 17
+        } {
+          Fl_Value_Output xSeedPointValueOutput {
+            label {X }
+            xywh {156 138 55 25}
+          }
+          Fl_Value_Output ySeedPointValueOutput {
+            label {Y }
+            xywh {156 165 55 25}
+          }
+          Fl_Value_Output zSeedPointValueOutput {
+            label {Z }
+            xywh {156 192 55 25}
+          }
         }
       }
       Fl_Slider progressSlider {
