@@ -12,6 +12,8 @@ IF(HAS_FLTK)
      fltkGlWindowInteractive
      fltkGlWindowInteractiveFlat
      fltkImage2DViewerWindow
+     fltkLightButton
+     fltkProgressBar
      fltkRegularStepGradientDescent
      fltkShape3D
      fltkSphere3D

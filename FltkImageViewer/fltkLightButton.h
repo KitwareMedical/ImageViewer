@@ -35,66 +35,20 @@ class LightButton : public Fl_Light_Button
 {
 public:
 
-  /**
-   * Command Class invoked for button redraw
-   */
-  typedef itk::ReceptorMemberCommand< LightButton >  RedrawCommandType;
+   typedef itk::ReceptorMemberCommand< LightButton >  RedrawCommandType;
 
 
-  /**
-   * Constructor
-   */
-  LightButton(int x, int y, int w, int h, char * label=0):
-    Fl_Light_Button( x, y, w, h, label ) {
-      m_RedrawCommand = RedrawCommandType::New();
-      m_RedrawCommand->SetCallbackFunction( this, &LightButton::ProcessEvent );
-    }
+  /** Constructor */
+  LightButton(int x, int y, int w, int h, char * label=0);
+ 
+  /** Get Command */
+  RedrawCommandType::Pointer GetRedrawCommand( void ) const;
 
-
+  /** Manage a Progress event */
+  void ProcessEvent( const itk::EventObject & event );
   
-  /**
-   * Get Command
-   */
-  RedrawCommandType::Pointer GetRedrawCommand( void ) const
-  {
-    return m_RedrawCommand.GetPointer();
-  }
-
-  /**
-   * Manage a Progress event
-   */
-  void ProcessEvent( const itk::EventObject & event )
-  {
-  if( typeid( itk::StartEvent )  ==  typeid( event ) ) 
-    {
-    this->selection_color( FL_YELLOW );
-    this->value( 1 );
-    }
-  else if ( typeid( itk::EndEvent )   ==   typeid( event ) ) 
-    {
-    this->selection_color( FL_GREEN );
-    this->value( 1 );
-    }
-  else if  ( typeid( itk::ModifiedEvent )  ==   typeid( event ) ) 
-    {
-    this->selection_color( FL_RED );
-    this->value( 1 );
-    }
-
-  this->redraw();
-  }
-  
-
-  /**
-   *  Register as observer for a set of standard events
-   */
-  void Observe( itk::Object *caller )
-  {
-    itk::Object::Pointer observed( caller );
-    observed->AddObserver(  itk::StartEvent(),    m_RedrawCommand.GetPointer() );
-    observed->AddObserver(  itk::ModifiedEvent(), m_RedrawCommand.GetPointer() );
-    observed->AddObserver(  itk::EndEvent(),      m_RedrawCommand.GetPointer() );
-  }
+  /** Register as observer for a set of standard events */
+  void Observe( itk::Object *caller );
 
 
 private:

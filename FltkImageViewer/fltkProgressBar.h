@@ -37,66 +37,25 @@ class ProgressBar : public Fl_Slider
 {
 public:
 
-  /**
-   * Command Class invoked for button redraw
-   */
+  /** Command Class invoked for button redraw */
   typedef itk::MemberCommand< ProgressBar >  RedrawCommandType;
 
 
-  /**
-   * Constructor
-   */
-  ProgressBar(int x, int y, int w, int h, char * label=0):
-    Fl_Slider( x, y, w, h, label ) {
-      m_RedrawCommand = RedrawCommandType::New();
-      m_RedrawCommand->SetCallbackFunction( this, &ProgressBar::ProcessEvent );
-      m_RedrawCommand->SetCallbackFunction( this, &ProgressBar::ConstProcessEvent );
-    }
-
+  /** Constructor */
+  ProgressBar(int x, int y, int w, int h, char * label=0);
 
   
-  /**
-   * Get Command
-   */
-  RedrawCommandType::Pointer GetRedrawCommand( void ) const
-  {
-    return m_RedrawCommand.GetPointer();
-  }
+  /** Get Command */
+  RedrawCommandType::Pointer GetRedrawCommand( void ) const;
 
   
-  /**
-   * Manage a Progress event
-   */
-  void ProcessEvent(itk::Object * caller, const itk::EventObject & event )
-  {
-    if( typeid( itk::ProgressEvent )   ==  typeid( event ) )
-      {
-      itk::ProcessObject::Pointer  process = 
-                 dynamic_cast< itk::ProcessObject *>( caller );
-      this->value( process->GetProgress() );
-      this->redraw();
-      }
-  }
-
-  void ConstProcessEvent(const itk::Object * caller, const itk::EventObject & event )
-  {
-    if( typeid( itk::ProgressEvent )   ==  typeid( event ) ) 
-      {
-      itk::ProcessObject::ConstPointer  process = 
-                 dynamic_cast< const itk::ProcessObject *>( caller );
-      this->value( process->GetProgress() );
-      this->redraw();
-      }
-  }
+  /** Manage a Progress event */
+  void ProcessEvent(itk::Object * caller, const itk::EventObject & event );
+  void ConstProcessEvent(const itk::Object * caller, const itk::EventObject & event );
  
 
-  /**
-   * Manage a Progress event
-   */
-  void Observe( itk::Object *caller )
-  {
-    caller->AddObserver(  itk::ProgressEvent(), m_RedrawCommand.GetPointer() );
-  }
+  /** Manage a Progress event */
+  void Observe( itk::Object *caller );
 
 private:
 
