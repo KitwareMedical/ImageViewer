@@ -71,10 +71,26 @@ void GlWindow::SaveImage(void)
 
 //------------------------------------------
 //
-//    Plug Drawer Object
+//    Return Redraw Command
 //
 //------------------------------------------
-void GlWindow::PlugDrawer(  GlDrawerPtr dr) 
+const GlWindow::RedrawCommandType::Pointer & 
+GlWindow
+::GetRedrawCommand(  void )
+{
+  
+  return m_RedrawCommand;
+
+}
+
+ 
+
+//------------------------------------------
+//
+//    Add Drawer Object
+//
+//------------------------------------------
+void GlWindow::AddDrawer(  GlDrawerPtr dr) 
 {
   
   if( !dr ) return;

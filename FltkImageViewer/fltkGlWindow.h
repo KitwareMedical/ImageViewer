@@ -51,7 +51,7 @@ public:
   virtual ~GlWindow();
   void SaveImage( void );
   void SaveImage( const char * filename );
-  void PlugDrawer( GlDrawerPtr dr );
+  void AddDrawer( GlDrawerPtr dr );
   const RedrawCommandType::Pointer & GetRedrawCommand(void);
 
 private:
