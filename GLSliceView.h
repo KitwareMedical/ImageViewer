@@ -175,6 +175,9 @@ SetInputImage(ImageType * newImData)
   cSpacing[0]=cImData->GetSpacing()[0];
   cSpacing[1]=cImData->GetSpacing()[1];
   cSpacing[2]=cImData->GetSpacing()[2];
+  cOrigin[0]=cImData->GetOrigin()[0];
+  cOrigin[1]=cImData->GetOrigin()[1];
+  cOrigin[2]=cImData->GetOrigin()[2];
     
   //calculating cDataMax and cDataMin    
   IndexType ind;
@@ -936,21 +939,36 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
       gl_font(FL_TIMES_BOLD, 12);
       char s[80];
+      float px, py, pz, val = cClickSelectV;
+      char * suffix = "";
+      if( cViewValuePhysicalUnits )
+        {
+        px = cOrigin[0]+cSpacing[0]*cClickSelect[0];
+        py = cOrigin[1]+cSpacing[1]*cClickSelect[1];
+        pz = cOrigin[2]+cSpacing[2]*cClickSelect[2];
+        suffix = cPhysicalUnitsName;
+        }
+       else
+        {
+        px = cClickSelect[0];
+        py = cClickSelect[1];
+        pz = cClickSelect[2];
+        }
       if((ImagePixelType)1.5==1.5)
         {
-        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f", 
-          cClickSelect[0],
-          cClickSelect[1], 
-          cClickSelect[2], 
-          (float)cClickSelectV);
+        sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %0.3f", 
+                px, suffix,
+                py, suffix,
+                pz, suffix,
+                val);
         }
       else
         {
-        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %d", 
-          cClickSelect[0],
-          cClickSelect[1], 
-          cClickSelect[2], 
-          (int)cClickSelectV);
+        sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %d", 
+                px, suffix,
+                py, suffix,
+                pz, suffix,
+                (int)val);
         }
       gl_draw( s,
         (int)(cW-(gl_width(s)+2)), 2);

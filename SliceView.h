@@ -121,6 +121,7 @@ template <class imType>
     bool                     cViewImData;
     ImagePointer             cImData;
     unsigned long            cDimSize[3];
+    float                    cOrigin[3];
     float                    cSpacing[3];
     void                    (* cViewImDataCallBack)(void);
     void                     * cViewImDataArg;
@@ -179,6 +180,8 @@ template <class imType>
     bool        cViewOverlayData;
     bool        cViewCrosshairs;
     bool        cViewValue;
+    bool        cViewValuePhysicalUnits;
+    char *      cPhysicalUnitsName;
     bool        cViewDetails;
     
     int   cWinMinX;
@@ -490,7 +493,9 @@ SliceView<imType>::SliceView(int x, int y, int w, int h, const char * )
   cViewCrosshairs = true;
   cViewValue = true;
   
-  
+  cViewValuePhysicalUnits = false;
+  cPhysicalUnitsName = "mm";
+
   cWinMinX = 0;
   cWinMaxX = 0;
   cWinSizeX = 0;
@@ -1799,6 +1804,11 @@ int SliceView<imType>::handle(int event)
               this->update();
               return 1;
               break;
+          case 'P':
+              cViewValuePhysicalUnits = !cViewValuePhysicalUnits;
+              this->update();
+              return 1;
+              break;
           case 'D':
               cViewDetails = !cViewDetails;
               this->update();
@@ -1854,6 +1864,7 @@ Options: (press a key in the window)\n \
   A - View axis labels: P=posterior, L=left, S=superior\n \
   C - View crosshairs that illustrate last user-click in the window\n \
   I - View image values as the user clicks in the window\n \
+  P - Toggle coordinates display between index and physical units\n \
   D - View image details as an overlay on the image\n \
   O - View a color overlay (application dependent)\n \
   \n \
