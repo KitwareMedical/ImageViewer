@@ -21,6 +21,7 @@
 
 
 #include "itkFEMNode.h"
+#include "itkFEMCellBase.h"
 #include "vnl/vnl_matrix.h"
 
 
@@ -48,12 +49,26 @@ namespace fem {
 class FEMElement 
 {
 
-  typedef FEMNode   NodeType;
+public:
+
+  /** Use a standard symplified type for the Node base class */
+  typedef FEMNode                 NodeType;
+
+  /** Use a standard symplified type for the Cell base class */
+  typedef FEMCellBase             CellType;
 
   /**
-   * Float type used in Node and derived classes
+   * Real type used in Node and derived classes
+   * This type is used for representing the 
+   * components of the Stiffnes Matrix.
    */
-  typedef NodeType::FloatType     FloatType;
+  typedef  float      RealType;
+
+  /** Type for representing the Stiffnes and Mass matrices  */
+  typedef  vnl_matrix< RealType >       MatrixType;
+
+  /** Type for representing sets of external loads */
+  typedef  vnl_vector< RealType >       LoadsVectorType;
 
   /**
    * Class type used in Node and derived classes to specify
@@ -62,43 +77,62 @@ class FEMElement
    typedef NodeType::DisplacementType  DisplacementType;
 
   /**
-   * Return the number of degrees of freedom (DOF) for a derived element class
+   * Return the number of components of the Displacement field
+   * also known as degrees of freedom (DOF) for a derived element class
    */
-  virtual int NumberOfDegreesOfFreedom( void ) const = 0;
+  virtual unsigned int GetNumberOfDisplacementComponents( void ) const = 0;
 
   /**
    * Return the number of Nodes used by this Element
    */
-  virtual int NumberOfNodes( void ) const = 0;
+  virtual unsigned int GetNumberOfNodes( void ) const = 0;
 
 
   /**
-   * Pure virtual function that returns a pointer to an allocated memory that stores displacement
-   * of i-th degree of freedom (DOF) of this element.
    *
-   * Number of different pointers in a whole system determines global number of DOF. If two
-   * pointers in two different elements point to the same location, this means that those two
-   * elements share that DOF and are connected together.
+   * The memory address of the Displacement component is used as an Identifier in the global
+   * FEM mesh. This Identifier allows to align the contribution of equations comming from every
+   * Element in the system.
+   *
+   * Number of different pointers in a whole system determines global number of displacement
+   * components. If two pointers in two different elements point to the same location, this 
+   *  means that those two elements share that displacement component and are connected together.
    *
    * Normally this function is overriden by defining a simple switch statement that returns
-   * pointers to members in nodes object that define the element. If an error occurs
-   * (when i is out of range for example), derived function should call
-   * implementation in base class (this one).
+   * const references to members in nodes object that define the element. If an error occurs
+   * (when i is out of range for example), an ExceptionObject is thrown.
    */
-  virtual DisplacementType * uDOF(int i) const = 0;
+  virtual const DisplacementType & GetDisplacementComponent(unsigned int i) const = 0;
 
   /**
    * Compute and return element stiffnes matrix in global coordinate system
    */
-  virtual vnl_matrix<FloatType> Ke() const = 0;
+  virtual MatrixType GetStiffnessMatrix( void ) const = 0;
 
   /**
    * Compute and return element mass matrix in global coordinate system.
    * This is needed if dynamic problems (parabolic or hyperbolix d.e.)
    * need to be solved.
    */
-  virtual vnl_matrix<FloatType> Me() const;
+  virtual MatrixType GetMassMatrix( void ) const 
+    { return MatrixType(); }
 
+  /** Set the pointer to the Cell associated with this Element.
+   *  Cells represent the geometry of the object while Element represent
+   *  the distribition of the Displacement Field over the object      */
+  void SetCell( const CellType * cell )
+           { m_Cell = cell; }
+
+  /** Get the pointer to the Cell associated with this Element.
+   *  Cells represent the geometry of the object while Element represent
+   *  the distribition of the Displacement Field over the object          */
+  const CellType * GetCell( void ) const
+           { return m_Cell; }
+
+
+private:
+
+   const CellType  *   m_Cell;
 
 
 };
