@@ -73,14 +73,12 @@ static int UpdateGUI(void *inf)
 
   info->SetGUIProperty(info, 1, VVP_GUI_LABEL, "Beta");
   info->SetGUIProperty(info, 1, VVP_GUI_TYPE, VVP_GUI_SCALE);
-  const float meanValue = (info->InputVolumeScalarRange[1] - 
-                           info->InputVolumeScalarRange[0]) / 2.0;
+  const float meanValue = (info->InputVolumeScalarTypeRange[1] - 
+                           info->InputVolumeScalarTypeRange[0]) / 2.0;
   sprintf(tmp,"%f",meanValue);
   info->SetGUIProperty(info, 1, VVP_GUI_DEFAULT, tmp );
   info->SetGUIProperty(info, 1, VVP_GUI_HELP, "Origin of the Sigmoid function in the range scale. It cooresponds to the intensity of the imput image that will be mapped almost linearly to the output image. Intensities far from this value will be transformed non-linearly.");
-  sprintf(tmp,"%f %f %f",info->InputVolumeScalarTypeRange[0], 1.0,
-                         info->InputVolumeScalarTypeRange[1] );
-  info->SetGUIProperty(info, 1, VVP_GUI_HINTS , tmp );
+  info->SetGUIProperty(info, 1, VVP_GUI_HINTS , VolView::PlugIn::FilterModuleBase::GetInputVolumeScalarTypeRange( info ) );
 
   // The output image type is equal to the input image type. 
   // We can use then the ranges returned by the GetInput... methods.
