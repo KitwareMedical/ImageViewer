@@ -80,6 +80,8 @@ ceExtractorConsole
   m_Viewer_Min_EigenValue = ImageViewerType::New();
   m_Viewer_Max_EigenValue = ImageViewerType::New();
 
+  m_Viewer_Gradient_On_EigenVector = ImageViewerType::New();
+
   m_InputViewer->SetLabel( "Input Image" );
 
   m_Viewer_H1x->SetLabel( "Gradient X" );
@@ -99,6 +101,8 @@ ceExtractorConsole
   m_Viewer_Max_EigenValue->SetLabel( "Max Eigen Value" );
   m_Viewer_Min_EigenValue->SetLabel( "Min Eigen Value" );
 
+  m_Viewer_Gradient_On_EigenVector->SetLabel( "Gradient Projected on EigenVector" );
+
 
   fltk::ProgressBarRedrawCommand * progressUpdateCommand = 
                             progressSlider->GetRedrawCommand().GetPointer();
@@ -115,6 +119,7 @@ ceExtractorConsole
   m_Modulus->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Eigen->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
   m_Gradient->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
+  m_ScalarProduct->AddObserver(  itk::Command::ProgressEvent, progressUpdateCommand );
                               
   m_Reader->AddObserver( itk::Command::StartEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::StartEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -129,6 +134,9 @@ ceExtractorConsole
   m_Modulus->AddObserver( itk::Command::StartEvent, modulusButton->GetRedrawCommand().GetPointer() );
   m_Eigen->AddObserver( itk::Command::StartEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
   m_Eigen->AddObserver( itk::Command::StartEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Eigen->AddObserver( itk::Command::StartEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_ScalarProduct->AddObserver( itk::Command::StartEvent, 
+                                gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::EndEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::EndEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -143,6 +151,9 @@ ceExtractorConsole
   m_Modulus->AddObserver( itk::Command::EndEvent, modulusButton->GetRedrawCommand().GetPointer() );
   m_Eigen->AddObserver( itk::Command::EndEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
   m_Eigen->AddObserver( itk::Command::EndEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Eigen->AddObserver( itk::Command::EndEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_ScalarProduct->AddObserver( itk::Command::EndEvent, 
+                                gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Hx->AddObserver(  itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -157,6 +168,11 @@ ceExtractorConsole
   m_H2x->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
   m_H2y->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
   m_H1xy->AddObserver( itk::Command::ModifiedEvent, H1xyButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::ModifiedEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::ModifiedEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_H1xy->AddObserver( itk::Command::ModifiedEvent, 
+                                gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
 
   m_Reader->AddObserver( itk::Command::ModifiedEvent, inputButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, HxButton->GetRedrawCommand().GetPointer() );
@@ -171,6 +187,8 @@ ceExtractorConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, modulusButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenValueButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, minEigenValueButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, maxEigenVectorButton->GetRedrawCommand().GetPointer() );
+  m_Reader->AddObserver( itk::Command::ModifiedEvent, gradientOnEigenVectorButton->GetRedrawCommand().GetPointer() );
 
   this->ShowStatus("Let's start by loading an image...");
 
@@ -270,6 +288,7 @@ ceExtractorConsole
   m_Viewer_Gradient_Modulus->Hide();
   m_Viewer_Max_EigenValue->Hide();
   m_Viewer_Min_EigenValue->Hide();
+  m_Viewer_Gradient_On_EigenVector->Hide();
 }
 
 
@@ -522,6 +541,25 @@ ceExtractorConsole
 
 }
 
+
+
+
+ 
+/************************************************
+ *
+ *  Show Gradient projected on max EigenVector
+ *
+ ***********************************************/
+void
+ceExtractorConsole
+::ShowGradientOnEigenVector( void )
+{
+
+  m_ScalarProduct->Update(); 
+  m_Viewer_Gradient_On_EigenVector->SetImage( m_ScalarProduct->GetOutput() );  
+  m_Viewer_Gradient_On_EigenVector->Show();
+
+}
 
 
 

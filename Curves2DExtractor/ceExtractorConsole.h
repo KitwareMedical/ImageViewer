@@ -82,6 +82,7 @@ public:
   virtual void ShowGradientModulus(void);
   virtual void ShowMaxEigenValue(void);
   virtual void ShowMinEigenValue(void);
+  virtual void ShowGradientOnEigenVector(void);
   virtual void Execute(void);
 
 private:
@@ -105,6 +106,8 @@ private:
 
   ImageViewerPointer           m_Viewer_Max_EigenValue;
   ImageViewerPointer           m_Viewer_Min_EigenValue;
+
+  ImageViewerPointer           m_Viewer_Gradient_On_EigenVector;
 
 };
 

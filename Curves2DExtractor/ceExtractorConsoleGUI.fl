@@ -7,10 +7,11 @@ gridy 5
 snap 3
 class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
 } {
-  Function {ceExtractorConsoleGUI()} {} {
+  Function {ceExtractorConsoleGUI()} {open
+  } {
     Fl_Window consoleWindow {
-      label {Gaussian Filter Console}
-      xywh {365 120 837 391}
+      label {Gaussian Filter Console} open
+      xywh {88 193 837 391}
       code0 {\#include <ceExtractorConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -42,7 +43,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
           xywh {112 100 10 55} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {415 90 10 35} box UP_BOX color 4
+          xywh {415 90 10 50} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {380 90 45 10} box UP_BOX color 4
@@ -113,8 +114,14 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Box {} {
           xywh {550 215 45 10} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {660 125 10 50} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {415 130 170 10} box UP_BOX color 4
+        }
       }
-      Fl_Group controlsGroup {
+      Fl_Group controlsGroup {selected
         xywh {5 5 825 255} box DOWN_FRAME deactivate
       } {
         Fl_Light_Button inputButton {
@@ -131,7 +138,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         }
         Fl_Counter {} {
           label Sigma
-          callback {SetSigma( o->value() );} selected
+          callback {SetSigma( o->value() );}
           xywh {30 190 160 25} align 1 when 4 minimum -100 maximum 100 value 1
         }
         Fl_Light_Button H1yButton {
@@ -189,13 +196,13 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button maxEigenValueButton {
           label {Max Eigen Value}
           callback {ShowMaxEigenValue();}
-          xywh {610 165 142 25} type Normal value 1 selection_color 1
+          xywh {610 195 142 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button minEigenValueButton {
           label {Min Eigen Value}
           callback {ShowMinEigenValue();}
-          xywh {610 195 142 25} type Normal value 1 selection_color 1
+          xywh {610 225 142 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Button {} {
@@ -205,7 +212,13 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         Fl_Light_Button maxEigenVectorButton {
           label {Max Eigen Vector}
           callback {ShowMaxEigenVector();}
-          xywh {610 225 142 25} type Normal value 1 selection_color 1
+          xywh {610 165 142 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button gradientOnEigenVectorButton {
+          label {Gradient || EigenVector}
+          callback {ShowGradientOnEigenVector();}
+          xywh {575 120 180 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
       }
@@ -264,5 +277,7 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
   Function {ShowMinEigenValue( void )} {return_type {virtual void}
   } {}
   Function {ShowMaxEigenVector( void )} {return_type {virtual void}
+  } {}
+  Function {ShowGradientOnEigenVector( void )} {return_type {virtual void}
   } {}
 } 

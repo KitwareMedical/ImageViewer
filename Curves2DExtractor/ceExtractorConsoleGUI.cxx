@@ -93,6 +93,13 @@ void ceExtractorConsoleGUI::cb_maxEigenVectorButton(fltk::LightButton* o, void* 
   ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_maxEigenVectorButton_i(o,v);
 }
 
+inline void ceExtractorConsoleGUI::cb_gradientOnEigenVectorButton_i(fltk::LightButton*, void*) {
+  ShowGradientOnEigenVector();
+}
+void ceExtractorConsoleGUI::cb_gradientOnEigenVectorButton(fltk::LightButton* o, void* v) {
+  ((ceExtractorConsoleGUI*)(o->parent()->parent()->user_data()))->cb_gradientOnEigenVectorButton_i(o,v);
+}
+
 inline void ceExtractorConsoleGUI::cb_loadButton_i(fltk::LightButton*, void*) {
   Load();
 }
@@ -152,7 +159,7 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
-      { Fl_Box* o = new Fl_Box(415, 90, 10, 35);
+      { Fl_Box* o = new Fl_Box(415, 90, 10, 50);
         o->box(FL_UP_BOX);
         o->color(4);
       }
@@ -248,6 +255,14 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_UP_BOX);
         o->color(4);
       }
+      { Fl_Box* o = new Fl_Box(660, 125, 10, 50);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
+      { Fl_Box* o = new Fl_Box(415, 130, 170, 10);
+        o->box(FL_UP_BOX);
+        o->color(4);
+      }
       o->end();
     }
     { Fl_Group* o = controlsGroup = new Fl_Group(5, 5, 825, 255);
@@ -325,13 +340,13 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H1xyButton);
       }
-      { fltk::LightButton* o = maxEigenValueButton = new fltk::LightButton(610, 165, 142, 25, "Max Eigen Value");
+      { fltk::LightButton* o = maxEigenValueButton = new fltk::LightButton(610, 195, 142, 25, "Max Eigen Value");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_maxEigenValueButton);
       }
-      { fltk::LightButton* o = minEigenValueButton = new fltk::LightButton(610, 195, 142, 25, "Min Eigen Value");
+      { fltk::LightButton* o = minEigenValueButton = new fltk::LightButton(610, 225, 142, 25, "Min Eigen Value");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -341,11 +356,17 @@ ceExtractorConsoleGUI::ceExtractorConsoleGUI() {
         o->box(FL_ROUND_UP_BOX);
         o->align(FL_ALIGN_WRAP);
       }
-      { fltk::LightButton* o = maxEigenVectorButton = new fltk::LightButton(610, 225, 142, 25, "Max Eigen Vector");
+      { fltk::LightButton* o = maxEigenVectorButton = new fltk::LightButton(610, 165, 142, 25, "Max Eigen Vector");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_maxEigenVectorButton);
+      }
+      { fltk::LightButton* o = gradientOnEigenVectorButton = new fltk::LightButton(575, 120, 180, 25, "Gradient || EigenVector");
+        o->type(0);
+        o->value(1);
+        o->selection_color(1);
+        o->callback((Fl_Callback*)cb_gradientOnEigenVectorButton);
       }
       o->end();
     }
@@ -415,4 +436,7 @@ void ceExtractorConsoleGUI::ShowMinEigenValue( void ) {
 }
 
 void ceExtractorConsoleGUI::ShowMaxEigenVector( void ) {
+}
+
+void ceExtractorConsoleGUI::ShowGradientOnEigenVector( void ) {
 }

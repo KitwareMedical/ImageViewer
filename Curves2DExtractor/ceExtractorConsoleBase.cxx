@@ -119,7 +119,10 @@ ceExtractorConsoleBase
   m_Eigen->SetInput2( m_H1xy->GetOutput() );
   m_Eigen->SetInput3( m_H2y->GetOutput() );
       
+  m_ScalarProduct = ScalarProductFilterType::New();
 
+  m_ScalarProduct->SetInput1( m_Gradient->GetOutput() );
+  m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
   
 }
 
@@ -258,6 +261,8 @@ ceExtractorConsoleBase
   m_Eigen->Update();
 
   m_Gradient->Update();
+
+  m_ScalarProduct->Update();
 
 }
 

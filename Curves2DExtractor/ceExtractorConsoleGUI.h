@@ -83,6 +83,11 @@ private:
   inline void cb_maxEigenVectorButton_i(fltk::LightButton*, void*);
   static void cb_maxEigenVectorButton(fltk::LightButton*, void*);
 public:
+  fltk::LightButton *gradientOnEigenVectorButton;
+private:
+  inline void cb_gradientOnEigenVectorButton_i(fltk::LightButton*, void*);
+  static void cb_gradientOnEigenVectorButton(fltk::LightButton*, void*);
+public:
   fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;
   fltk::LightButton *loadButton;
@@ -109,5 +114,6 @@ public:
   virtual void ShowMaxEigenValue( void );
   virtual void ShowMinEigenValue( void );
   virtual void ShowMaxEigenVector( void );
+  virtual void ShowGradientOnEigenVector( void );
 };
 #endif

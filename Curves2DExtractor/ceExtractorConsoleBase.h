@@ -55,6 +55,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkBinaryMagnitudeImageFilter.h>
 #include <itkEigenAnalysis2DImageFilter.h>
 #include <itkGradientRecursiveGaussianImageFilter.h>
+#include <itkMultiplyImageFilter.h>
 
 
 class ceExtractorConsoleBase 
@@ -111,8 +112,14 @@ public:
   typedef   itk::EigenAnalysis2DImageFilter< ImageType, 
                             ImageType, VectorImageType >  EigenFilterType;
 
-  typedef   itk::GradientRecursiveGaussianImageFilter< InputImageType,
-                            CovariantVectorImageType, ComputationType > GradientFilterType;
+  typedef   itk::GradientRecursiveGaussianImageFilter< 
+                            InputImageType,
+                            CovariantVectorImageType, 
+                            ComputationType >           GradientFilterType;
+
+  typedef   itk::MultiplyImageFilter< CovariantVectorImageType, 
+                                      VectorImageType, 
+                                      ImageType >  ScalarProductFilterType;
 
 
 public:
@@ -148,6 +155,8 @@ protected:
   EigenFilterType::Pointer                     m_Eigen;
 
   GradientFilterType::Pointer               m_Gradient;
+
+  ScalarProductFilterType::Pointer     m_ScalarProduct;
 
   bool                                   m_ImageLoaded;
 
