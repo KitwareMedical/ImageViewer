@@ -10,12 +10,11 @@ class RegisterWindow : public RegisterGUI
 {
 public:
   typedef enum {fixed, registered, none} ChannelSourceIdentifierType ;
-  typedef unsigned char PixelType ;
-  typedef unsigned char OverlayPixelType ;
+  typedef unsigned short PixelType ;
+  typedef unsigned short OverlayPixelType ;
   typedef itk::RGBPixel< PixelType > MixedChannelPixelType ;
   typedef fltk::Image2DViewer< PixelType > ImageViewerType ;
-  typedef fltk::RGBImage2DViewer< MixedChannelPixelType > 
-  MixedChannelViewerType ;
+  typedef fltk::RGBImage2DViewer< PixelType > MixedChannelViewerType ;
 
   RegisterWindow() ;
   virtual ~RegisterWindow() ;

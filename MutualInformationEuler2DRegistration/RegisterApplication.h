@@ -16,7 +16,7 @@ public:
 
   enum { ImageDimension = 2 } ;
 
-  typedef unsigned char PixelType ;
+  typedef unsigned short PixelType ;
   typedef itk::Image< PixelType, ImageDimension > InputImageType ;
   typedef itk::Image< float, ImageDimension > OutputImageType ;
   typedef itk::PNGImageIO ImageIOType ;
