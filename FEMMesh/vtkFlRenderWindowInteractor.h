@@ -27,8 +27,8 @@
 #ifndef _vtkFlRenderWindowInteractor_h
 #define _vtkFlRenderWindowInteractor_h
 
-#include <FL/Fl.H>
-#include <FL/Fl_Gl_Window.h>
+#include <Fl/Fl.H>
+#include <Fl/Fl_Gl_Window.h>
 #include <vtkRenderWindowInteractor.h>
 
 class vtkFlRenderWindowInteractor : public Fl_Gl_Window, public vtkRenderWindowInteractor {

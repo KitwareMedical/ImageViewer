@@ -31,7 +31,7 @@
 
 #include "vtkFlRenderWindowInteractor.h"
 // FLTK
-#include <FL/x.H>
+#include <Fl/x.H>
 // vtk
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
