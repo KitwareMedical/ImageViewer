@@ -8,7 +8,7 @@
 
 #include "vtkImageImport.h"
 #include "vtkImageExport.h"
-#include "vtkImageToImageFIlter.h"
+#include "vtkImageToImageFilter.h"
 #include "itkCommand.h"
 #include "itkProcessObject.h"
 
@@ -189,7 +189,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.9 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.10 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
