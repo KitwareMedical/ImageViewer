@@ -14,24 +14,24 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-
 #include "OptionList.h"
 #include "itkImage.h"
 #include "itkReadMetaImage.h"
 #include "itkWriteMetaImage.h"
-#include "itkImageRegionIteratorWithIndex.h"
+#include "itkImageRegionIterator.h"
 
 #include "vnl/vnl_matrix.h"
 
-#include "itkImageListSampleAdaptor.h"
+#include "itkImageToListAdaptor.h"
 #include "itkSubsample.h"
 #include "itkMembershipSample.h"
 #include "itkMembershipSampleGenerator.h"
 #include "itkGaussianDensityFunction.h"
 #include "itkMeanCalculator.h"
 #include "itkCovarianceCalculator.h"
-#include "itkTableLookupClassifier.h"
+#include "itkTableLookupSampleClassifier.h"
 #include "MaximumLikelihoodRatioDecisionRule.h"
+#include "itkStatisticsAlgorithm.h"
 
 void print_usage()
 {
@@ -46,16 +46,16 @@ void print_usage()
 
   std::cout << "--training file" << std::endl ;
   std::cout << "        image file name with intesnity values [meta image format]"  
-            << std::endl ;
+    << std::endl ;
   std::cout << "--class-mask file" << std::endl ;
   std::cout << "        image file name with class labels [meta image format]"  
-            << std::endl ;
+    << std::endl ;
   std::cout << "--target file" << std::endl ;
   std::cout << "        target image file name with intensity values [meta image format]" 
-            << std::endl ;
+    << std::endl ;
   std::cout << "--output file" << std::endl ;
   std::cout << "        output image file name that will have the class labels for pixels" 
-            << std::endl ;
+    << std::endl ;
   std::cout << "        in the target image file [meta image format]"  << std::endl ;
 
   std::cout << "" << std::endl ;
@@ -69,6 +69,7 @@ void print_usage()
 
 int main(int argc, char* argv[])
 {
+
   namespace stat = itk::Statistics ;
  
   if (argc <= 1)
@@ -135,7 +136,7 @@ int main(int argc, char* argv[])
   /* ================================================== */
   std::cout << "Importing the images to samples..."
             << std::endl ;
-  typedef stat::ImageListSampleAdaptor< ImageType, stat::ScalarAccessor< ImageType > > 
+  typedef stat::ImageToListAdaptor< ImageType, stat::ScalarImageAccessor< ImageType > > 
     ImageListSampleType;
 
   ImageListSampleType::Pointer sample =
@@ -164,9 +165,6 @@ int main(int argc, char* argv[])
   MembershipSampleGeneratorType::OutputPointer membershipSample = 
     generator->GetOutput() ;
   unsigned int numberOfClasses = membershipSample->GetNumberOfClasses() ;
-  std::cout << "Generating class samples..." 
-            << std::endl ;
-  membershipSample->GenerateClassSamples() ;
   
   /* =================================================== */
   std::cout << "Inducing the gaussian density function parameters and apriori probabilities..." 
@@ -212,12 +210,12 @@ int main(int argc, char* argv[])
       meanCalculator->SetSample(subSample) ;
       meanCalculator->GenerateData() ;
       mean = meanCalculator->GetOutput() ;
-
+      
       covarianceCalculator->SetSample(subSample) ;
       covarianceCalculator->SetMean(mean) ;
       covarianceCalculator->GenerateData() ;
       covariance = covarianceCalculator->GetOutput() ;
-      
+
       densityFunctions[i] = DensityFunctionType::New() ;
       (densityFunctions[i])->SetMean(mean) ;
       (densityFunctions[i])->SetCovariance(covariance) ;
@@ -227,23 +225,11 @@ int main(int argc, char* argv[])
       (densityFunctions[i])->GetCovariance().print(std::cout) ;
       
     }
-
-  typedef itk::ImageRegionIteratorWithIndex< ImageType > ImageIteratorType ;
-  ImageIteratorType t_iter(target, target->GetLargestPossibleRegion()) ;
-  short temp ;
-  while (!t_iter.IsAtEnd())
-    {
-      if (temp < t_iter.Get())
-        {
-          temp = t_iter.Get() ;
-        }
-      ++t_iter ;
-    }
-  std::cout << "Max value = " << temp << std::endl ;
+  
   /* =================================================== */
   std::cout << "Classifying..." << std::endl ;
   
-  typedef stat::TableLookupClassifier< ImageListSampleType, DensityFunctionType, DecisionRuleType > ClassifierType ;
+  typedef stat::TableLookupSampleClassifier< ImageListSampleType, DensityFunctionType, DecisionRuleType > ClassifierType ;
 
   ClassifierType::Pointer classifier = ClassifierType::New() ;
   classifier->SetSample(targetSample) ;
@@ -253,10 +239,14 @@ int main(int argc, char* argv[])
     }
 
   classifier->SetDecisionRule(rule) ;
-  ClassifierType::CachedMeasurementVectorType upper ;
-  ClassifierType::CachedMeasurementVectorType lower ;
-  upper[0] = temp ;
-  lower[0] = 0 ;
+  ImageListSampleType::MeasurementVectorType upper ;
+  ImageListSampleType::MeasurementVectorType lower ;
+  
+  
+  stat::FindSampleBound< ImageListSampleType >(targetSample, targetSample->Begin(),
+                                               targetSample->End(), lower, upper) ;
+  std::cout << "min = " << lower[0] << " max = " << upper[0] << std::endl ;
+
   classifier->SetLookupTableLowerBound(lower) ;
   classifier->SetLookupTableUpperBound(upper) ;
   classifier->GenerateData() ;
@@ -265,6 +255,7 @@ int main(int argc, char* argv[])
 
   /* ===================================================== */
   std::cout << "Creating a image with result class labels..." << std::endl ;
+  typedef itk::ImageRegionIterator< ImageType > ImageIteratorType ;
   typedef itk::WriteMetaImage< ImageType > Writer ;
   Writer::Pointer writer = Writer::New() ;
 
@@ -288,6 +279,7 @@ int main(int argc, char* argv[])
 
   return 0 ;
 }
+
 
 
 
