@@ -165,7 +165,7 @@ public:
                               double ElementsPerSide, Solver& S);
 
   /** The loads are entered into the solver. */
-  void      ApplyLoads(SolverType& S,unsigned int MeshResolution); 
+  void      ApplyLoads(SolverType& S,ImageSizeType Isz); 
 
   /**  Builds the itpack linear system wrapper with appropriate parameters. 
        Currently undefined */
