@@ -161,7 +161,7 @@ unsigned int level )
 template <class TReference, class TTarget>
 void
 MultiResolutionMutualInformationRegistration<TReference,TTarget>
-::PrintSelf(std::ostream& os, Indent indent)
+::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);
 

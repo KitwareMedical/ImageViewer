@@ -194,7 +194,7 @@ protected:
   ~MultiResolutionMutualInformationRegistration(){};
   MultiResolutionMutualInformationRegistration(const Self&);
   const Self & operator=(const Self&);
-  void PrintSelf(std::ostream&os, Indent indent);
+  void PrintSelf(std::ostream&os, Indent indent) const;
 
   /**
    * Initialize the internal registration algorithm at the
