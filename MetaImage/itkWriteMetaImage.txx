@@ -17,7 +17,7 @@
 #include "itkObjectFactory.h"
 #include <fstream>
 #include <MetaImageLib.h>
-#include <itkImageRegionSimpleIterator.h>
+#include <itkSimpleImageRegionIterator.h>
 
 namespace itk
 {
@@ -86,7 +86,7 @@ WriteMetaImage<TInputImage>
   PixelType *yetAnotherBuffer = new PixelType[ 
             m_InputImage->GetOffsetTable()[dimension] ];
 
-  typedef itk::ImageRegionSimpleIterator< TInputImage > IteratorType;
+  typedef itk::SimpleImageRegionIterator< TInputImage > IteratorType;
   
   IteratorType it(	m_InputImage, 
                     m_InputImage->GetBufferedRegion() );

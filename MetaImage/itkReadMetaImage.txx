@@ -15,7 +15,7 @@
 =========================================================================*/
 #include "itkReadMetaImage.h"
 #include "itkObjectFactory.h"
-#include "itkImageRegionSimpleIterator.h"
+#include "itkSimpleImageRegionIterator.h"
 #include <MetaImageLib.h>
 
 namespace itk
@@ -81,7 +81,7 @@ ReadMetaImage<TOutputImage>
 
   typedef typename TOutputImage::PixelType  PixelType;
 
-  typedef itk::ImageRegionSimpleIterator< TOutputImage> IteratorType;
+  typedef itk::SimpleImageRegionIterator< TOutputImage> IteratorType;
   
   IteratorType it(m_OutputImage,
                   m_OutputImage->GetLargestPossibleRegion() );
