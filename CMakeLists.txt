@@ -1,20 +1,12 @@
 # Add an option to build or not build the FltkImageViewer Library
 IF(HAS_FLTK)
-  OPTION(BUILD_FLTKIMAGEVIEWER "Build the FltkImageViewer Library" ON)
-  IF(BUILD_FLTKIMAGEVIEWER)
-    SET(HAS_FLTKIMAGEVIEWER 1 CACHE INTERNAL "FLTK image support")
-    SUBDIRS(FltkImageViewer)
-  ELSE(BUILD_FLTKIMAGEVIEWER)
-    SET(HAS_FLTKIMAGEVIEWER 0 CACHE INTERNAL "no FLTK image support")
-  ENDIF(BUILD_FLTKIMAGEVIEWER)
+  SET(HAS_FLTKIMAGEVIEWER 1 CACHE INTERNAL "FLTK image support")
+  SUBDIRS(FltkImageViewer)
 ENDIF(HAS_FLTK)
 
 # Add an option to build or not build the vtk interface Library
 IF(HAS_VTK)
-  OPTION(BUILD_VTKINTERFACE "Build the VTK interface Library")
-  IF(BUILD_VTKINTERFACE)
-    SUBDIRS(vtk)
-  ENDIF(BUILD_VTKINTERFACE)
+  SUBDIRS(vtk)
 ENDIF(HAS_VTK)
 
 
