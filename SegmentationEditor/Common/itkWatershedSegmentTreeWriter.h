@@ -69,7 +69,7 @@ protected:
   std::string m_FileName;
   WatershedSegmentTreeWriter()
     { 
-      SegmentTreeType::Pointer output = SegmentTreeType::New();
+      typename SegmentTreeType::Pointer output = SegmentTreeType::New();
       this->ProcessObject::SetNumberOfRequiredOutputs(1);
       this->ProcessObject::SetNthOutput(0, output.GetPointer());
     }
