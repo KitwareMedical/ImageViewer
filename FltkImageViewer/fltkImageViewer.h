@@ -45,6 +45,7 @@ public:
   ImageViewer();
   virtual ~ImageViewer();
   virtual void SetImage(ImageBase<3> * img);
+  virtual void SetOverlay(ImageBase<3> * img);
   virtual void Show(void);
   virtual void Hide(void);
   virtual void Update(void);

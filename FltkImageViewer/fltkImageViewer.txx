@@ -51,6 +51,15 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 }
 
 
+template <class ImagePixelType, class OverlayPixelType>
+void
+ImageViewer<ImagePixelType,OverlayPixelType>
+::SetOverlay(ImageBase<3> * img)
+{
+  OverlayType * overlay = dynamic_cast<ImageType *>( img );
+  glSliceView->SetInputOverlay( overlay );
+  Synchronize();
+}
 
 
 
