@@ -277,14 +277,14 @@ void vtkWSLookupTableManager::LoadTreeFile(const char* fn)
   
   // read header
   unsigned long listsz;
-  in.read((unsigned char *)&listsz, sizeof(unsigned long));
+  in.read((char *)&listsz, sizeof(unsigned long));
 
   // allocate merge list
   if (this->MergeList != 0) delete[] this->MergeList;
   this->MergeList = new merge_t[listsz + 2];
   
   // now read the data
-  in.read((unsigned char *)(this->MergeList + 1), listsz * sizeof(merge_t));
+  in.read((char *)(this->MergeList + 1), listsz * sizeof(merge_t));
 
   if (in.gcount() != listsz *sizeof(merge_t))
     {

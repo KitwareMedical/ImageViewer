@@ -74,13 +74,13 @@ int vtkBinaryVolume::WriteToDisk(const char *fn)
   out.write((char *)this->GetScalarPointer(), volume_size_in_bytes);
   out.close();
 
-  std::cout << "vtkBinaryVolume::WriteToDisk: header size is "
-              << sizeof(int) * 6 << std::endl;
-  std::cout << "vtkBinaryVolume::WriteToDisk: volume size in bytes is "
-            << volume_size_in_bytes << std::endl;
-  std::cout << "vtkBinaryVolume::WriteToDisk: volume dimensions are: "
-            << (e[1] + 1 - e[0]) << "x" << (e[3] +1 - e[2]) << "x" << (e[5] +1 - e[4])
-            << std::endl;
+  //  std::cout << "vtkBinaryVolume::WriteToDisk: header size is "
+  //              << sizeof(int) * 6 << std::endl;
+  //  std::cout << "vtkBinaryVolume::WriteToDisk: volume size in bytes is "
+  //            << volume_size_in_bytes << std::endl;
+  //  std::cout << "vtkBinaryVolume::WriteToDisk: volume dimensions are: "
+  //            << (e[1] + 1 - e[0]) << "x" << (e[3] +1 - e[2]) << "x" << (e[5] +1 - e[4])
+  //            << std::endl;
   return 0; // all OK  
 }
 
@@ -144,7 +144,7 @@ void vtkBinaryVolume::SetWithRadius(int x, int y, int z)
   for (yy = -paint_radius + 1; yy < paint_radius; yy++)
     {
       ypos = y + yy;
-      xx = (int) (::rint( ::sqrt(r2 - (yy * yy)) ) );
+      xx = (int) (::floor( ::sqrt(r2 - (yy * yy)) ) );
       for (x_tem = xx; x_tem >= -xx ; x_tem --)
         {
           xpos = x + x_tem;
@@ -157,7 +157,7 @@ void vtkBinaryVolume::SetWithRadius(int x, int y, int z)
   for ( xx = -paint_radius + 1; xx < paint_radius; xx++)
     {
       xpos = x + xx;
-      yy = (int) ( ::rint(::sqrt( r2 - (xx * xx))) );
+      yy = (int) ( ::floor(::sqrt( r2 - (xx * xx))) );
       for (y_tem = yy; y_tem >= -yy ; y_tem -= yy)
         {
           ypos = y + y_tem;
@@ -189,7 +189,7 @@ void vtkBinaryVolume::UnsetWithRadius(int x, int y, int z)
   for (yy = -paint_radius + 1; yy < paint_radius; yy++)
     {
       ypos = y + yy;
-      xx = (int) (::rint( ::sqrt(r2 - (yy * yy)) ) );
+      xx = (int) (::floor( ::sqrt(r2 - (yy * yy)) ) );
       for (x_tem = xx; x_tem >= -xx ; x_tem --)
         {
           xpos = x + x_tem;
@@ -202,7 +202,7 @@ void vtkBinaryVolume::UnsetWithRadius(int x, int y, int z)
   for ( xx = -paint_radius + 1; xx < paint_radius; xx++)
     {
       xpos = x + xx;
-      yy = (int) ( ::rint(::sqrt( r2 - (xx * xx))) );
+      yy = (int) ( ::floor(::sqrt( r2 - (xx * xx))) );
       for (y_tem = yy; y_tem >= -yy ; y_tem -= yy)
         {
           ypos = y + y_tem;

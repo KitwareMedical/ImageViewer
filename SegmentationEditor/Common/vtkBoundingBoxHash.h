@@ -18,7 +18,7 @@
 #ifndef __vtkBoundingBoxHash_h_
 #define __vtkBoundingBoxHash_h_
 
-#include <hash_map>
+#include "itk_hash_map.h"
 
 struct bounding_box_t
 {
@@ -30,7 +30,7 @@ struct bounding_box_t
   int z1;
 };
 
-typedef hash_map<unsigned long, bounding_box_t, hash<unsigned long> >
+typedef itk::hash_map<unsigned long, bounding_box_t, itk::hash<unsigned long> >
   vtkBoundingBoxHash;
 
 
