@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
 
-#include <itkSlice3DDrawer.h>
+#include <fltkSlice3DDrawer.h>
 #include <GL/glu.h>
 
 
@@ -49,18 +49,18 @@ namespace fltk {
 /**
  * Default constructor
  */
-template <class ImagePixelType>
-Slice3DDrawer<ImagePixelType>
+template <class TImage>
+Slice3DDrawer<TImage>
 ::Slice3DDrawer()
 {
 
-  this->m_TextureX = 0;
-  this->m_TextureY = 0;
-  this->m_TextureZ = 0;
+  m_TextureX = 0;
+  m_TextureY = 0;
+  m_TextureZ = 0;
 
-  this->m_SliceX = 0;
-  this->m_SliceY = 0;
-  this->m_SliceZ = 0;
+  m_SliceX = 0;
+  m_SliceY = 0;
+  m_SliceZ = 0;
 
   texturesGenerated = false;
 }
@@ -69,46 +69,46 @@ Slice3DDrawer<ImagePixelType>
 /**
  * Destructor
  */
-template <class ImagePixelType>
-Slice3DDrawer<ImagePixelType>
+template <class TImage>
+Slice3DDrawer<TImage>
 ::~Slice3DDrawer()
 {
 
 
-  if( this->m_TextureX ) 
+  if( m_TextureX ) 
   {
-    delete this->m_TextureX;
-    this->m_TextureX = 0;
+    delete m_TextureX;
+    m_TextureX = 0;
   }
 
-  if( this->m_TextureY ) 
+  if( m_TextureY ) 
   {
-    delete this->m_TextureY;
-    this->m_TextureY = 0;
+    delete m_TextureY;
+    m_TextureY = 0;
   }
 
-  if( this->m_TextureZ ) 
+  if( m_TextureZ ) 
   {
-    delete this->m_TextureZ;
-    this->m_TextureZ = 0;
+    delete m_TextureZ;
+    m_TextureZ = 0;
   }
 
-  if( this->m_SliceX ) 
+  if( m_SliceX ) 
   {
-    delete this->m_SliceX;
-    this->m_SliceX = 0;
+    delete m_SliceX;
+    m_SliceX = 0;
   }
 
-  if( this->m_SliceY ) 
+  if( m_SliceY ) 
   {
-    delete this->m_SliceY;
-    this->m_SliceY = 0;
+    delete m_SliceY;
+    m_SliceY = 0;
   }
 
-  if( this->m_SliceZ ) 
+  if( m_SliceZ ) 
   {
-    delete this->m_SliceZ;
-    this->m_SliceZ = 0;
+    delete m_SliceZ;
+    m_SliceZ = 0;
   }
 
 
@@ -121,13 +121,13 @@ Slice3DDrawer<ImagePixelType>
 /**
  * SetInput
  */
-template <class ImagePixelType>
+template <class TImage>
 void
-Slice3DDrawer<ImagePixelType>
-::SetInput( ImageType * volume )
+Slice3DDrawer<TImage>
+::SetInput( ImageType * image )
 {
 
-  this->m_Volume = volume;
+  m_Image = image;
 
   RefreshGUI();
 
@@ -140,20 +140,20 @@ Slice3DDrawer<ImagePixelType>
 /**
  * Refresh GUI
  */
-template <class ImagePixelType>
+template <class TImage>
 void
-Slice3DDrawer<ImagePixelType>
+Slice3DDrawer<TImage>
 ::RefreshGUI( void )
 {
 
-  if( ! this->m_Volume ) 
+  if( ! m_Image ) 
   {
     VolumeWindow->deactivate();
     return;
   }
 
-  itk::Size<3> size =
-    this->m_Volume->GetRequestedRegion().GetSize();
+  SizeType size =
+    m_Image->GetRequestedRegion().GetSize();
 
   xScrollBar->value( size[0]/2, 1, 0, size[0] );
   yScrollBar->value( size[1]/2, 1, 0, size[1] );
@@ -165,81 +165,84 @@ Slice3DDrawer<ImagePixelType>
 
   typedef  itk::SimpleImageRegionIterator< ImageType > IteratorType;
 
-  IteratorType it( this->m_Volume,
-   this->m_Volume->GetRequestedRegion() );
+  IteratorType it( m_Image, m_Image->GetRequestedRegion() );
 
   it.Begin();
-  ImagePixelType  max = it.Get();
+  PixelType  max = it.Get();
   while( ! it.IsAtEnd() )
   {
-	 const ImagePixelType val = it.Get();
+	 const PixelType val = it.Get();
      if( max < val )
      {
        max = val;
      }
      ++it;
   }
-  this->m_Max_Value = max;
+  m_Max_Value = max;
 
 
-  itk::ImageRegion<3> region = this->m_Volume->GetRequestedRegion();
+  RegionType region = m_Image->GetRequestedRegion();
 
-  this->m_Nx = region.GetSize()[0];
-  this->m_Ny = region.GetSize()[1];
-  this->m_Nz = region.GetSize()[2];
+  m_Nx = region.GetSize()[0];
+  m_Ny = region.GetSize()[1];
+  m_Nz = region.GetSize()[2];
 
-  this->m_Nxr = (int)pow(2, floor( log(this->m_Nx)/log(2.0)+1 ) );
-  this->m_Nyr = (int)pow(2, floor( log(this->m_Ny)/log(2.0)+1 ) );
-  this->m_Nzr = (int)pow(2, floor( log(this->m_Nz)/log(2.0)+1 ) );
+  m_Nxr = (int)pow(2, floor( log(m_Nx)/log(2.0)+1 ) );
+  m_Nyr = (int)pow(2, floor( log(m_Ny)/log(2.0)+1 ) );
+  m_Nzr = (int)pow(2, floor( log(m_Nz)/log(2.0)+1 ) );
 
-  this->m_Dx = this->m_Volume->GetSpacing()[0];
-  this->m_Dy = this->m_Volume->GetSpacing()[1];
-  this->m_Dz = this->m_Volume->GetSpacing()[2];
+  m_Dx = m_Image->GetSpacing()[0];
+  m_Dy = m_Image->GetSpacing()[1];
+  m_Dz = m_Image->GetSpacing()[2];
 
-  itk::ImageRegion<3> totalRegion = this->m_Volume->GetLargestPossibleRegion();
+  RegionType totalRegion = m_Image->GetLargestPossibleRegion();
 
-  this->m_Cx = totalRegion.GetSize()[0] * this->m_Dx / 2.0;
-  this->m_Cy = totalRegion.GetSize()[1] * this->m_Dx / 2.0;
-  this->m_Cz = totalRegion.GetSize()[2] * this->m_Dz / 2.0;
+  m_Cx = totalRegion.GetSize()[0] * m_Dx / 2.0;
+  m_Cy = totalRegion.GetSize()[1] * m_Dy / 2.0;
+  m_Cz = totalRegion.GetSize()[2] * m_Dz / 2.0;
+
+  m_Ox = m_Image->GetOrigin()[0];
+  m_Oy = m_Image->GetOrigin()[1];
+  m_Oz = m_Image->GetOrigin()[2];
 
 
-  if( this->m_SliceX ) 
+  if( m_SliceX ) 
   {
-    delete this->m_SliceX;
+    delete m_SliceX;
   }
 
-  if( this->m_SliceY ) 
+  if( m_SliceY ) 
   {
-    delete this->m_SliceY;
+    delete m_SliceY;
   }
 
-  if( this->m_SliceZ ) 
+  if( m_SliceZ ) 
   {
-    delete this->m_SliceZ;
+    delete m_SliceZ;
   }
 
-  this->m_SliceX = new unsigned char [ 4 * this->m_Ny * this->m_Nz ];
-  this->m_SliceY = new unsigned char [ 4 * this->m_Nz * this->m_Nx ];
-  this->m_SliceZ = new unsigned char [ 4 * this->m_Nx * this->m_Ny ];
+  m_SliceX = new unsigned char [ 4 * m_Ny * m_Nz ];
+  m_SliceY = new unsigned char [ 4 * m_Nz * m_Nx ];
+  m_SliceZ = new unsigned char [ 4 * m_Nx * m_Ny ];
 
-  if( this->m_TextureX ) 
+  if( m_TextureX ) 
   {
-    delete this->m_TextureX;
+    delete m_TextureX;
   }
 
-  if( this->m_TextureY ) 
+  if( m_TextureY ) 
   {
-    delete this->m_TextureY;
+    delete m_TextureY;
   }
 
-  if( this->m_TextureZ ) 
+  if( m_TextureZ ) 
   {
-    delete this->m_TextureZ;
+    delete m_TextureZ;
   }
 
-  this->m_TextureX = new unsigned char [ 4 * this->m_Nyr * this->m_Nzr ];
-  this->m_TextureY = new unsigned char [ 4 * this->m_Nzr * this->m_Nxr ];
-  this->m_TextureZ = new unsigned char [ 4 * this->m_Nxr * this->m_Nyr ];
+  m_TextureX = new unsigned char [ 4 * m_Nyr * m_Nzr ];
+  m_TextureY = new unsigned char [ 4 * m_Nzr * m_Nxr ];
+  m_TextureZ = new unsigned char [ 4 * m_Nxr * m_Nyr ];
 
   VolumeWindow->activate();
 }
@@ -296,7 +299,7 @@ Slice3DDrawer<ImagePixelType>
 {
     xValueOutput->value( xScrollBar->value() );
     BindTextureX();
-    UpdateLinks();
+    InvokeEvent( li::VolumeReslicedEvent );
 }
 
 
@@ -314,7 +317,7 @@ Slice3DDrawer<ImagePixelType>
 {
     yValueOutput->value( yScrollBar->value() );
     BindTextureY();
-    UpdateLinks();
+    InvokeEvent( li::VolumeReslicedEvent );
 }
 
 
@@ -331,7 +334,7 @@ Slice3DDrawer<ImagePixelType>
 {
     zValueOutput->value( zScrollBar->value() );
     BindTextureZ();
-    UpdateLinks();
+    InvokeEvent( li::VolumeReslicedEvent );
 }
 
 
@@ -345,7 +348,7 @@ Slice3DDrawer<ImagePixelType>
 template <class ImagePixelType>
 void 
 Slice3DDrawer<ImagePixelType>
-::glDraw(void)
+::glDraw(void) const
 {
 
 
@@ -355,7 +358,7 @@ Slice3DDrawer<ImagePixelType>
     texturesGenerated = true;
   }
   
-  if( !(this->m_Volume) )
+  if( !(m_Image) )
   {
     return;
   }
@@ -364,10 +367,14 @@ Slice3DDrawer<ImagePixelType>
 
   glPushMatrix();
 
+  glRotatef( 90.0, 0, 0, 1 );
+  glRotatef( 90.0, 1, 0, 0 );
 
-  const GLfloat qx = -this->m_Cx; 
-  const GLfloat qy = -this->m_Cy; 
-  const GLfloat qz = -this->m_Cz; 
+  glTranslatef( -m_Ox, -m_Oy, -m_Oy );
+
+  const GLfloat qx = -m_Cx; 
+  const GLfloat qy = -m_Cy; 
+  const GLfloat qz = -m_Cz; 
     
 
   glColor3f(0.7,0.5,0.5);
@@ -405,9 +412,9 @@ Slice3DDrawer<ImagePixelType>
   if( xCheckButton->value() ) 
   {
     int px = xScrollBar->value();
-    GLfloat pnx =   px               * this->m_Dx;
-    GLfloat pny =   this->m_Ny       * this->m_Dy;
-    GLfloat pnz =   this->m_Nz       * this->m_Dz;
+    GLfloat pnx =   px    * m_Dx;
+    GLfloat pny =   m_Ny  * m_Dy;
+    GLfloat pnz =   m_Nz  * m_Dz;
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_TextureName[0]);
     glBegin(GL_QUADS);
@@ -424,9 +431,9 @@ Slice3DDrawer<ImagePixelType>
   if( yCheckButton->value() ) 
   {
     int py = yScrollBar->value();
-    GLfloat pnx =   this->m_Nx       * this->m_Dx;
-    GLfloat pny =   py               * this->m_Dy;
-    GLfloat pnz =   this->m_Nz       * this->m_Dz;
+    GLfloat pnx =   m_Nx   * m_Dx;
+    GLfloat pny =   py     * m_Dy;
+    GLfloat pnz =   m_Nz   * m_Dz;
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_TextureName[1]);
     glBegin(GL_QUADS);
@@ -443,9 +450,9 @@ Slice3DDrawer<ImagePixelType>
   if( zCheckButton->value() ) 
   {
     int pz = zScrollBar->value();
-    GLfloat pnx =   this->m_Nx       * this->m_Dx;
-    GLfloat pny =   this->m_Ny       * this->m_Dy;
-    GLfloat pnz =   pz               * this->m_Dz;
+    GLfloat pnx =   m_Nx   * m_Dx;
+    GLfloat pny =   m_Ny   * m_Dy;
+    GLfloat pnz =   pz     * m_Dz;
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_TextureName[2]);
     glBegin(GL_QUADS);
@@ -490,35 +497,35 @@ Slice3DDrawer<ImagePixelType>
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 
-    float factor = 255.0 / this->m_Max_Value;
+    float factor = 255.0 / m_Max_Value;
 
-    itk::Index<3> index;
+    IndexType index;
     const int px = xScrollBar->value();
     int pix = 0;
     index[0] = px;
-    for(int z=0; z<this->m_Nz; z++) {
+    for(int z=0; z<m_Nz; z++) {
       index[2] = z;
-      for(int y=0; y<this->m_Ny; y++) {
+      for(int y=0; y<m_Ny; y++) {
         index[1] = y;
         GLubyte val = (GLubyte)(
-          this->m_Volume->GetPixel(index) * factor );
-        this->m_SliceX[pix++] = val;
-        this->m_SliceX[pix++] = val;
-        this->m_SliceX[pix++] = val;
-        this->m_SliceX[pix++] = 255;
+          m_Image->GetPixel(index) * factor );
+        m_SliceX[pix++] = val;
+        m_SliceX[pix++] = val;
+        m_SliceX[pix++] = val;
+        m_SliceX[pix++] = 255;
         }
       }
 
-    glBindTexture(GL_TEXTURE_2D, this->m_TextureName[0]);
+    glBindTexture(GL_TEXTURE_2D, m_TextureName[0]);
 
-    gluScaleImage( GL_RGBA, this->m_Ny, this->m_Nz,
-                   GL_UNSIGNED_BYTE, this->m_SliceX,
-                   this->m_Nyr, this->m_Nzr,
-                   GL_UNSIGNED_BYTE, this->m_TextureX);
+    gluScaleImage( GL_RGBA, m_Ny, m_Nz,
+                   GL_UNSIGNED_BYTE, m_SliceX,
+                   m_Nyr, m_Nzr,
+                   GL_UNSIGNED_BYTE, m_TextureX);
 
     glTexImage2D(GL_TEXTURE_2D,level,GL_RGBA,
-                 this->m_Nyr,this->m_Nzr,
-                 border,GL_RGBA,GL_UNSIGNED_BYTE,this->m_TextureX);
+                 m_Nyr,m_Nzr,
+                 border,GL_RGBA,GL_UNSIGNED_BYTE,m_TextureX);
 
     }
 
@@ -549,35 +556,35 @@ Slice3DDrawer<ImagePixelType>
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 
-    float factor = 255.0 / this->m_Max_Value;
+    float factor = 255.0 / m_Max_Value;
 
-    itk::Index<3> index;
+    IndexType index;
     const int py = yScrollBar->value();
     int piy = 0;
     index[1] = py;
-    for(int z=0; z<this->m_Nz; z++) {
+    for(int z=0; z<m_Nz; z++) {
       index[2] = z;
-      for(int x=0; x<this->m_Nx; x++) {
+      for(int x=0; x<m_Nx; x++) {
         index[0] = x;
         GLubyte val = (GLubyte)(
-          this->m_Volume->GetPixel(index) * factor );
-        this->m_SliceY[piy++] = val;
-        this->m_SliceY[piy++] = val;
-        this->m_SliceY[piy++] = val;
-        this->m_SliceY[piy++] = 255;
+          m_Image->GetPixel(index) * factor );
+        m_SliceY[piy++] = val;
+        m_SliceY[piy++] = val;
+        m_SliceY[piy++] = val;
+        m_SliceY[piy++] = 255;
         }
       }
 
-    glBindTexture(GL_TEXTURE_2D, this->m_TextureName[1]);
+    glBindTexture(GL_TEXTURE_2D, m_TextureName[1]);
 
-    gluScaleImage( GL_RGBA, this->m_Nx, this->m_Nz,
-                   GL_UNSIGNED_BYTE, this->m_SliceY,
-                   this->m_Nxr, this->m_Nzr,
-                   GL_UNSIGNED_BYTE, this->m_TextureY);
+    gluScaleImage( GL_RGBA, m_Nx, m_Nz,
+                   GL_UNSIGNED_BYTE, m_SliceY,
+                   m_Nxr, m_Nzr,
+                   GL_UNSIGNED_BYTE, m_TextureY);
 
     glTexImage2D(GL_TEXTURE_2D,level,GL_RGBA,
-                 this->m_Nxr,this->m_Nzr,
-                 border,GL_RGBA,GL_UNSIGNED_BYTE,this->m_TextureY);
+                 m_Nxr,m_Nzr,
+                 border,GL_RGBA,GL_UNSIGNED_BYTE,m_TextureY);
 
     }
 
@@ -609,35 +616,35 @@ Slice3DDrawer<ImagePixelType>
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 
-    float factor = 255.0 / this->m_Max_Value;
+    float factor = 255.0 / m_Max_Value;
 
-    itk::Index<3> index;
+    IndexType index;
     const int pz = zScrollBar->value();
     int piz = 0;
     index[2] = pz;
-    for(int y=0; y<this->m_Ny; y++) {
+    for(int y=0; y<m_Ny; y++) {
       index[1] = y;
-      for(int x=0; x<this->m_Nx; x++) {
+      for(int x=0; x<m_Nx; x++) {
         index[0] = x;
         GLubyte val = (GLubyte)(
-          this->m_Volume->GetPixel(index) * factor );
-        this->m_SliceZ[piz++] = val;
-        this->m_SliceZ[piz++] = val;
-        this->m_SliceZ[piz++] = val;
-        this->m_SliceZ[piz++] = 255;
+          m_Image->GetPixel(index) * factor );
+        m_SliceZ[piz++] = val;
+        m_SliceZ[piz++] = val;
+        m_SliceZ[piz++] = val;
+        m_SliceZ[piz++] = 255;
         }
       }
 
-    glBindTexture(GL_TEXTURE_2D, this->m_TextureName[2]);
+    glBindTexture(GL_TEXTURE_2D, m_TextureName[2]);
 
-    gluScaleImage( GL_RGBA, this->m_Nx, this->m_Ny,
-                   GL_UNSIGNED_BYTE, this->m_SliceZ,
-                   this->m_Nxr, this->m_Nyr,
-                   GL_UNSIGNED_BYTE, this->m_TextureZ);
+    gluScaleImage( GL_RGBA, m_Nx, m_Ny,
+                   GL_UNSIGNED_BYTE, m_SliceZ,
+                   m_Nxr, m_Nyr,
+                   GL_UNSIGNED_BYTE, m_TextureZ);
 
     glTexImage2D(GL_TEXTURE_2D,level,GL_RGBA,
-                 this->m_Nxr,this->m_Nyr,
-                 border,GL_RGBA,GL_UNSIGNED_BYTE,this->m_TextureZ);
+                 m_Nxr,m_Nyr,
+                 border,GL_RGBA,GL_UNSIGNED_BYTE,m_TextureZ);
 
     }
 
