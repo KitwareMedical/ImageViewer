@@ -104,10 +104,10 @@ int main()
   int numImagePixels = 0;
   unsigned char exteriorPixelValue = 128;
   for(it.GoToBegin(); !it.IsAtEnd(); ++it)
-  {
+    {
     it.Set(exteriorPixelValue);
     ++numImagePixels;
-  }
+    }
 
   //-----Create ellipsoid in sourceImage-----------------
 
@@ -134,7 +134,7 @@ int main()
   center[2] = zExtent/2;
   spatialFunc->SetCenter(center);
 
-  // Define the orientations of the ellipsoid axes    
+  // Define the orientations of the ellipsoid axes, vectors must be normalized  
   // (0,1,0) corresponds to the axes of length axes[0]
   // (1,0,0) corresponds to the axes of length axes[1]
   // (0,0,1) corresponds to the axes of lenght axes[2]
@@ -156,10 +156,10 @@ int main()
   int numInteriorPixels1 = 0;
   unsigned char interiorPixelValue = 255;
   for(; !sfi.IsAtEnd(); ++sfi)
-  {
+    {
      sfi.Set(interiorPixelValue);
     ++numInteriorPixels1;
-  }
+    }
 
   TImageType::PixelType apixel;
   int numExteriorPixels = 0; // Number of pixels not filled by spatial function
@@ -230,6 +230,7 @@ int main()
               << "volume error = " << volumeError << "%" << std::endl
               << "function value = " << functionValue << std::endl
               << "itkEllipsoidInteriorExteriorSpatialFunction failed :(" << std::endl;
+
     return EXIT_FAILURE;
     }
   
