@@ -54,6 +54,7 @@ ImageRegLMEx::ImageRegLMEx( )
   m_MinSmoothing=1;
   m_SmoothingStep=2;
   m_DoMultiRes=false;
+  m_UseLandmarks=false;
 
   m_ReferenceFileName = NULL;
   m_TargetFileName = NULL;
@@ -77,7 +78,8 @@ void ImageRegLMEx::RunRegistration()
 
     m_Load->SetReferenceImage(m_RefImg);
     m_Load->SetTargetImage(m_TarImg);
-//  m_Load->SetMetric(MeanSquaresImageToImageMetric<ImageType,ImageType>::New());
+    MetricType::Pointer msqp=MetricType::New();
+    m_Load->SetMetric(msqp.GetPointer());
     m_Load->InitializeMetric();
     ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
     m_Load->SetMetricRadius(r);
@@ -202,6 +204,48 @@ void ImageRegLMEx::WarpImage()
  // -------------------------------------------------------
   std::cout << "Warping image" << std::endl;
 
+   // -------------------------------------------------------
+  std::cout << "Warping image" << std::endl;
+  bool InverseWarp=false;
+
+
+  if (InverseWarp)
+  {
+    bool InImage=true;
+    m_WarpedImage->Allocate();
+    FieldIterator m_FieldIter( m_Field, m_FieldRegion );
+    m_FieldIter.GoToBegin();
+    ImageType::IndexType rindex = m_FieldIter.GetIndex();
+    ImageType::IndexType tindex = m_FieldIter.GetIndex();
+
+    m_FieldIter.GoToBegin();  
+    for( ; !m_FieldIter.IsAtEnd(); ++m_FieldIter )
+    {
+      rindex=m_FieldIter.GetIndex();
+      tindex=m_FieldIter.GetIndex();
+      VectorType disp=m_FieldIter.Get();
+
+      for (unsigned int ii=0; ii < ImageDimension; ii++)
+      { 
+        tindex[ii]+=(long int)(disp[ii]+0.5);
+        if (tindex[ii] >=0 && tindex[ii] < m_FieldSize[ii]) InImage=true;
+          else 
+          {
+            InImage=false;
+            ii=ImageDimension;
+          }
+      }
+
+      if (InImage)
+      {
+        ImageDataType t =  m_RefImg->GetPixel(tindex);
+        m_WarpedImage->SetPixel(rindex, t );
+      }
+      else m_WarpedImage->SetPixel(rindex,1);
+    }
+  }
+  else 
+  {
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType;
   WarperType::Pointer warper = WarperType::New();
 
@@ -214,18 +258,18 @@ void ImageRegLMEx::WarpImage()
     InterpolatorType2;
   InterpolatorType1::Pointer interpolator = InterpolatorType1::New();
   
-
   warper = WarperType::New();
   warper->SetInput( m_RefImg );
   warper->SetDeformationField( m_Field );
   warper->SetInterpolator( interpolator );
-  warper->SetOutputSpacing( m_TarImg->GetSpacing() );
-  warper->SetOutputOrigin( m_TarImg->GetOrigin() );
+  warper->SetOutputSpacing( m_RefImg->GetSpacing() );
+  warper->SetOutputOrigin( m_RefImg->GetOrigin() );
   ImageType::PixelType padValue = 1;
   warper->SetEdgePaddingValue( padValue );
   warper->Update();
 
   m_WarpedImage=warper->GetOutput();  
+  }
 
 }
 
@@ -358,6 +402,8 @@ int ImageRegLMEx::GenRegMesh()
   l1->m_value=vnl_vector<double>(1,0.0);
   m_Solver.load.push_back( FEMP<Load>(&*l1) ); 
 
+  if (m_UseLandmarks)
+  {
   // Landmark loads
   std::ifstream f;
   std::cout << m_LandmarkFileName << std::endl;
@@ -378,6 +424,7 @@ int ImageRegLMEx::GenRegMesh()
     std::cout << "done" << std::endl;
   }
   else { std::cout << "no landmark file specified." << std::endl; }
+  }
 
 /*
   unsigned int ind4=128;
@@ -443,9 +490,9 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
    //m_Solver.ZeroVector(2);
    //m_Solver.ZeroVector(3);
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere
-   GetVectorField();
-   WarpImage();
-   WriteWarpedImage(m_ResultsFileName);
+   //GetVectorField();
+   //WarpImage();
+   //WriteWarpedImage(m_ResultsFileName);
   } 
   
 }
@@ -520,7 +567,7 @@ void ImageRegLMEx::WriteWarpedImage(const char* fname)
 
   std::string fullfname=(fname+fnum+exte);
 
-  ImgIterator wimIter( m_WarpedImage,m_Wregion );
+  ImageIterator wimIter( m_WarpedImage,m_Wregion );
 
   fbin=fopen(fullfname.c_str(),"wb");
   ImageDataType t=0;
@@ -546,10 +593,26 @@ void ImageRegLMEx::WriteWarpedImage(const char* fname)
 
 void ImageRegLMEx::MultiResSolve()
 {
-     
-  typedef DiscreteGaussianImageFilter<ImageType, ImageType>  SmootherType;
+
+  
+ /**
+  * Setup a multi-resolution pyramid
+  typedef itk::MultiResolutionPyramidImageFilter<InputImageType,OutputImageType>
+    PyramidType;
+  typedef PyramidType::ScheduleType ScheduleType;
+  PyramidType::Pointer pyramid = PyramidType::New();
+
+  pyramid->SetInput( imgTarget );
+  */
+
+  typedef itk::CastImageFilter<ImageType,FloatImageType> CasterType1;
+  CasterType1::Pointer caster1 = CasterType1::New();
+  typedef itk::CastImageFilter<FloatImageType,ImageType> CasterType2;
+  CasterType2::Pointer caster2 = CasterType2::New();
+
+  typedef DiscreteGaussianImageFilter<FloatImageType,FloatImageType>  SmootherType;
 //  typedef MeanImageFilter<ImageType, ImageType>  SmootherType;
-  SmootherType::Pointer filter = SmootherType::New();
+  SmootherType::Pointer smoothfilter = SmootherType::New();
   //itk::CannyEdgeDetectionImageFilter<ImageType, ImageType>::Pointer  edgefilter = itk::CannyEdgeDetectionImageFilter<ImageType, ImageType>::New();
   //itk::SobelEdgeDetectionImageFilter<ImageType, ImageType>::Pointer edgefilter
   //  = itk::SobelEdgeDetectionImageFilter<ImageType, ImageType>::New();
@@ -565,8 +628,8 @@ void ImageRegLMEx::MultiResSolve()
   //filter->SetRadius(neighRadius);
 
   // run the algorithm
-  filter->SetVariance(1.0f);
-  filter->SetMaximumError(.01f);
+  smoothfilter->SetVariance(1.0f);
+  smoothfilter->SetMaximumError(.01f);
       
   float smoothing;
   // run the algorithm
@@ -577,21 +640,26 @@ void ImageRegLMEx::MultiResSolve()
 //    neighRadius[1] =(unsigned long) smoothing;
 //    filter->SetRadius(neighRadius);
 
-    filter->SetVariance(smoothing);
+    smoothfilter->SetVariance(smoothing);
     edgefilter->SetVariance(smoothing);
 
-    filter->SetInput(m_TarImg);
-    filter->Update();
-
+    // take care of target image filtering 
+    caster1->SetInput(m_TarImg);
+    smoothfilter->SetInput(caster1->GetOutput());
+    smoothfilter->Update();
     edgefilter->SetInput(m_TarImg);
     edgefilter->Update();    
+    caster2->SetInput(smoothfilter->GetOutput());
+    m_Load->SetMetricTargetImage(caster2->GetOutput());  
 
-    m_Load->SetMetricTargetImage(filter->GetOutput());    
-    filter->SetInput(m_RefImg);
-    filter->Update();
+    // take care of ref image filtering  
+    caster1->SetInput(m_RefImg);
+    smoothfilter->SetInput(caster1->GetOutput());
+    smoothfilter->Update();
     edgefilter->SetInput(m_RefImg);
     edgefilter->Update();    
-    m_Load->SetMetricReferenceImage(filter->GetOutput());
+    caster2->SetInput(smoothfilter->GetOutput());
+    m_Load->SetMetricReferenceImage(caster2->GetOutput());
     IterativeSolve();
   }
 // now full res
@@ -609,10 +677,10 @@ void ImageRegLMEx::MultiResSolve()
 
 int main() 
 {
-  const char* ReferenceFileName;
-  const char* TargetFileName;
-  const char* LandmarkFileName;
-  const char* ResultsFileName;
+  const char* ReferenceFileName="";
+  const char* TargetFileName="";
+  const char* LandmarkFileName="";
+  const char* ResultsFileName="";
 
   itk::fem::ImageRegLMEx X; // Declare the registration clasm_Solver.
  
@@ -635,22 +703,22 @@ int main()
 //    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt_shift.im";  
 //    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt.im"; 
 //    m_TargetFileName="E:\\Avants\\MetaImages\\callosa2_dt.im"; 
-  X.m_Nx=128;   // set image size
-  X.m_Ny=128;
+  X.m_Nx=64;   // set image size
+  X.m_Ny=64;
  
 //  m_ReferenceFileName="E:\\Avants\\MetaImages\\gauss_im1.im"; 
 //  m_TargetFileName="E:\\Avants\\MetaImages\\gauss_im2.im";
-  // m_ReferenceFileName="E:\\Avants\\MetaImages\\brain_slice1smth.im"; // good params E=1 its=10 dt=1. rho= 1.e7
-  // m_TargetFileName="E:\\Avants\\MetaImages\\brain_slice2smth.im";
+  ReferenceFileName="E:\\Avants\\MetaImages\\brain_slice1smth.im"; // good params E=1 its=10 dt=1. rho= 1.e7
+  TargetFileName="E:\\Avants\\MetaImages\\brain_slice2smth.im";
     
   // NOTE TO USER: change the files below to refer to your own images
   // & landmark files.  You will also need to uncomment the first 4
   // lines of Solver::Read() in itkFEMSolver.cxx
 
-  ReferenceFileName = "/mnt/data/tessa/temp/img1.raw";
-  TargetFileName = "/mnt/data/tessa/temp/img2.raw";
-  LandmarkFileName = "/mnt/data/tessa/temp/e15326s16i1_2.regLM"; 
-  ResultsFileName = "/mnt/data/tessa/temp/result";
+  //ReferenceFileName = "/mnt/data/tessa/temp/img1.raw";
+  //TargetFileName = "/mnt/data/tessa/temp/img2.raw";
+  //LandmarkFileName = "/mnt/data/tessa/temp/e15326s16i1_2.regLM"; 
+  ResultsFileName = "E:\\Avants\\MetaImages\\result";
 
   X.SetReferenceFile(ReferenceFileName);
   X.SetTargetFile(TargetFileName);
@@ -659,9 +727,9 @@ int main()
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
-  X.SetNumberOfIntegrationPoints(2);// Resolution of energy integration
+  X.SetNumberOfIntegrationPoints(6);// Resolution of energy integration
   X.SetWidthOfMetricRegion(2);
-  X.DoMultiRes(false);// Use multi-resolution strategy
+  X.DoMultiRes(true);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
   X.m_MaxSmoothing=12.0; // set multi-res parameters
   X.m_MinSmoothing=12.;

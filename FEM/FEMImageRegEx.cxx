@@ -73,7 +73,8 @@ void ImageRegEx::RunRegistration()
 
     m_Load->SetReferenceImage(m_RefImg);
     m_Load->SetTargetImage(m_TarImg);
-//  m_Load->SetMetric(MeanSquaresImageToImageMetric<ImageType,ImageType>::New());
+    MetricType::Pointer msqp=MetricType::New();
+    m_Load->SetMetric(msqp.GetPointer());
     m_Load->InitializeMetric();
     ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
     m_Load->SetMetricRadius(r);
@@ -192,7 +193,48 @@ void ImageRegEx::WarpImage()
 {
  // -------------------------------------------------------
   std::cout << "Warping image" << std::endl;
+  bool InverseWarp=true;
 
+
+  if (InverseWarp)
+  {
+
+    // Here, the vector field is defined over the
+    bool InImage=false;
+    m_WarpedImage->Allocate();
+    FieldIterator m_FieldIter( m_Field, m_FieldRegion );
+    m_FieldIter.GoToBegin();
+    ImageType::IndexType rindex = m_FieldIter.GetIndex();
+    ImageType::IndexType tindex = m_FieldIter.GetIndex();
+
+    m_FieldIter.GoToBegin();  
+    for( ; !m_FieldIter.IsAtEnd(); ++m_FieldIter )
+    {
+      rindex=m_FieldIter.GetIndex();
+      tindex=m_FieldIter.GetIndex();
+      VectorType disp=m_FieldIter.Get();
+
+      for (unsigned int ii=0; ii < ImageDimension; ii++)
+      { 
+        tindex[ii]+=(long int)(disp[ii]+0.5);
+        if (tindex[ii] >=0 && tindex[ii] < m_FieldSize[ii]) InImage=true;
+          else 
+          {
+            InImage=false;
+            ii=ImageDimension;
+          }
+      }
+
+      if (InImage)
+      {
+        ImageDataType t =  m_RefImg->GetPixel(tindex);
+        m_WarpedImage->SetPixel(rindex, t );
+      }
+      else m_WarpedImage->SetPixel(rindex,1);
+    }
+  }
+  else 
+  {
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType;
   WarperType::Pointer warper = WarperType::New();
 
@@ -205,18 +247,18 @@ void ImageRegEx::WarpImage()
     InterpolatorType2;
   InterpolatorType1::Pointer interpolator = InterpolatorType1::New();
   
-
   warper = WarperType::New();
   warper->SetInput( m_RefImg );
   warper->SetDeformationField( m_Field );
   warper->SetInterpolator( interpolator );
-  warper->SetOutputSpacing( m_TarImg->GetSpacing() );
-  warper->SetOutputOrigin( m_TarImg->GetOrigin() );
+  warper->SetOutputSpacing( m_RefImg->GetSpacing() );
+  warper->SetOutputOrigin( m_RefImg->GetOrigin() );
   ImageType::PixelType padValue = 1;
   warper->SetEdgePaddingValue( padValue );
   warper->Update();
 
   m_WarpedImage=warper->GetOutput();  
+  }
 
 }
 
@@ -413,9 +455,9 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
    //m_Solver.ZeroVector(2);
    //m_Solver.ZeroVector(3);
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere
-   GetVectorField();
-   WarpImage();
-   WriteWarpedImage("E:\\Avants\\MetaImages\\result");
+//   GetVectorField();
+//   WarpImage();
+//   WriteWarpedImage("E:\\Avants\\MetaImages\\result");
   } 
   
 }
@@ -465,7 +507,7 @@ void ImageRegEx::GetVectorField()
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
         rindex[ii]=(long int) Gpt[ii];
-        disp[ii] =(Float) 1.*Sol[ii];
+        disp[ii] =(Float)  1.*Sol[ii];
         tindex[ii]=(long int) rindex[ii]+(long int)(disp[ii]+0.5);
       }
       
@@ -491,7 +533,7 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 
 /*  
   FILE *fbin; 
-  ImgIterator wimIter( m_WarpedImage,m_Wregion );
+   wimIter( m_WarpedImage,m_Wregion );
 
   fbin=fopen(fullfname.c_str(),"wb");
   ImageDataType t=0;
@@ -534,6 +576,7 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 void ImageRegEx::MultiResSolve()
 {
      
+//  typedef CastImageFilter<ImageType,FloatImageType> CastFilter;
   typedef DiscreteGaussianImageFilter<ImageType, ImageType>  SmootherType;
 //  typedef MeanImageFilter<ImageType, ImageType>  SmootherType;
   SmootherType::Pointer filter = SmootherType::New();
@@ -602,6 +645,7 @@ int main()
   itk::fem::ImageRegEx X; // Declare the registration clasm_Solver.
  
   X.m_Solver.SetAlpha(0.5);
+  X.m_Solver.SetAlpha(1.0); // for static solution 
   X.SetDescentDirectionMinimize();// for Mean Squares
   X.DoLineSearch(true);// Perform line search at each iteration
 
@@ -623,8 +667,8 @@ int main()
   X.m_Nx=64;   // set image size
   X.m_Ny=64;
  
-//  m_ReferenceFileName="E:\\Avants\\MetaImages\\gauss_im1.im"; 
-//  m_TargetFileName="E:\\Avants\\MetaImages\\gauss_im2.im";
+  m_ReferenceFileName="E:\\Avants\\MetaImages\\gauss_im1.im"; 
+  m_TargetFileName="E:\\Avants\\MetaImages\\gauss_im2.im";
   m_ReferenceFileName="E:\\Avants\\MetaImages\\brain_slice1smth.im"; // good params E=1 its=10 dt=1. rho= 1.e7
   m_TargetFileName="E:\\Avants\\MetaImages\\brain_slice2smth.im";
     
@@ -633,7 +677,7 @@ int main()
   
   X.SetMeshResolution(8);//  Number of voxels per element
 
-  X.SetNumberOfIntegrationPoints(2);// Resolution of energy integration
+  X.SetNumberOfIntegrationPoints(6);// Resolution of energy integration
   X.SetWidthOfMetricRegion(2);
   X.DoMultiRes(false);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution

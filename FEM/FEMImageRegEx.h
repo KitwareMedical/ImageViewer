@@ -109,12 +109,14 @@ public:
   typedef double Float;
   typedef unsigned char ImageDataType;
   typedef Image< unsigned char, 2 > ImageType;
+  typedef Image< float, 2 > FloatImageType;
   enum { ImageDimension = 2 };
-  typedef itk::fem::Element2DC0LinearQuadrilateralStress ElementType;
+  typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
+  typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType;
   typedef itk::Vector<Float,ImageDimension> VectorType;
   typedef itk::Image<VectorType,ImageDimension> FieldType;
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType; 
-  typedef itk::ImageRegionIteratorWithIndex<ImageType> ImgIterator; 
+  typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator; 
   typedef itk::ImageRegionIteratorWithIndex<FieldType> FieldIterator; 
 
   /**

@@ -23,6 +23,7 @@
 #include "itkImage.h"
 #include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h" 
+#include "itkCastImageFilter.h"
 
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
@@ -110,12 +111,14 @@ public:
   typedef double Float;
   typedef unsigned char ImageDataType;
   typedef Image< unsigned char, 2 > ImageType;
+  typedef Image< float, 2 > FloatImageType;
   enum { ImageDimension = 2 };
-  typedef itk::fem::Element2DC0LinearQuadrilateralStress ElementType;
+  typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
+  typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType;
   typedef itk::Vector<Float,ImageDimension> VectorType;
   typedef itk::Image<VectorType,ImageDimension> FieldType;
   typedef itk::WarpImageFilter<ImageType,ImageType,FieldType> WarperType; 
-  typedef itk::ImageRegionIteratorWithIndex<ImageType> ImgIterator; 
+  typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator; 
   typedef itk::ImageRegionIteratorWithIndex<FieldType> FieldIterator; 
 
   /**
@@ -170,6 +173,7 @@ public:
   void DoLineSearch(bool b) { m_DoLineSearch=b; } /** Finds the minimum energy between the current and next solution by linear search.*/
   void DoMultiRes(bool b) { m_DoMultiRes=b; } 
   void DoSearchForMinAtEachResolution(bool b) { m_SearchForMinAtEachLevel=b; } 
+  void UseLandmarks(bool b) {m_UseLandmarks=b;}
 
   const char* m_ReferenceFileName;  
   const char* m_TargetFileName;
@@ -193,6 +197,7 @@ public:
   bool  m_DoLineSearch;  
   bool  m_DoMultiRes;
   bool  m_SearchForMinAtEachLevel;
+  bool  m_UseLandmarks;
   Float m_LineSearchStep;
   Sign  m_DescentDirection;
   int m_FileCount; // keeps track of number of files written
