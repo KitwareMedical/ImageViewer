@@ -5,11 +5,11 @@ INCLUDE_DIRECTORIES(
   ${VTK_INCLUDE_PATH}
 )
 
-ADD_LIBRARY(vtkFltk
+ADD_LIBRARY(ITKVtkFltk
   vtkFlRenderWindowInteractor.cxx
   fltkVTKImageViewerBase.cxx
 )
 
-FLTK_WRAP_UI(vtkFltk fltkVTKImageViewerGUI.fl)
+FLTK_WRAP_UI(ITKVtkFltk fltkVTKImageViewerGUI.fl)
 
-TARGET_LINK_LIBRARIES(vtkFltk ${FLTK_LIBRARIES} ${GLU_LIBRARY})
+TARGET_LINK_LIBRARIES(ITKVtkFltk ${FLTK_LIBRARIES} ${GLU_LIBRARY})
