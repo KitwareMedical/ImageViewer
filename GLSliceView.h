@@ -220,12 +220,7 @@ SetInputImage(ImageType * newImData)
   cImageMode = IMG_VAL;
   
   cWinZoom = 1;
-  if(cDimSize[0]*cSpacing[0]<
-     cDimSize[1]*cSpacing[1])
-    {
-    cWinZoom = (cDimSize[0]*cSpacing[0]) / (cDimSize[1]*cSpacing[1]);
-    }
-
+  
   cWinOrientation = 2;
   cWinOrder[0] = 0;
   cWinOrder[1] = 1;
@@ -468,11 +463,19 @@ update()
     {
     return;
     }
-  
 
-  if(cWinZoom>=1)
+  double zoomBase = cW/(cDimSize[cWinOrder[0]]*(fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0])));
+  if(zoomBase >
+      cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]))))
     {
-    cWinSizeX = (int)( cDimSize[ cWinOrder[0] ] / cWinZoom );
+    zoomBase = cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0])));
+    }
+  double scale0 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
+  double scale1 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
+
+  if(cWinZoom>1)
+    {
+    cWinSizeX = (int)( cW / scale0 );
     cWinMinX = (int)( (int)cWinCenter[ cWinOrder[0] ] - cWinSizeX/2);
     cWinMaxX = (int)( (int)cWinCenter[ cWinOrder[0] ] + cWinSizeX/2);
     }
@@ -496,9 +499,9 @@ update()
     cWinMaxX = (int)cDimSize[ cWinOrder[0] ] - 1;
     }
   
-  if(cWinZoom>=1)
+  if(cWinZoom>1)
     {
-    cWinSizeY = (int)( cDimSize[ cWinOrder[1] ] / cWinZoom );
+    cWinSizeY = (int)( cH / scale1 );
     cWinMinY = (int)( (int)(cWinCenter[ cWinOrder[1] ]) - cWinSizeY/2 );
     cWinMaxY = (int)( (int)(cWinCenter[ cWinOrder[1] ]) + cWinSizeY/2 );
     }
@@ -843,18 +846,28 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       return;
       }
     
+    double zoomBase = cW/(cDimSize[cWinOrder[0]]*(fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0])));
+    if(zoomBase >
+       cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]))))
+      {
+      zoomBase = cH/(cDimSize[cWinOrder[1]]*(fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0])));
+      }
 
-    double scale0 = cW/(double)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
-    double scale1 = cW/(double)cDimSize[0] * cWinZoom
-      * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
+    double scale0 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
+    double scale1 = cWinZoom * zoomBase * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
     
     int originX = 0;
     int originY = 0;
-    if(cWinZoom<1)
+    if(cWinZoom<=1)
       {
-      originX = (int)((cW-scale0*cDimSize[cWinOrder[0]])/2.0);
-      originY = (int)((cH-scale1*cDimSize[cWinOrder[1]])/2.0);
+      if(cW-scale0*cDimSize[cWinOrder[0]]>0)
+        {
+        originX = (int)((cW-scale0*cDimSize[cWinOrder[0]])/2.0);
+        }
+      if(cH-scale1*cDimSize[cWinOrder[1]]>0)
+        {
+        originY = (int)((cH-scale1*cDimSize[cWinOrder[1]])/2.0);
+        }
       }
     glRasterPos2i((cFlipX[cWinOrientation])?cW-originX:originX,
       (cFlipY[cWinOrientation])?cH-originY:originY);  
