@@ -321,7 +321,8 @@ void upButton_CB(Fl_Button*, void*)
   {
   if(sliceViewButton->value() == 1)
     {
-    int slices = sliceNumberSlider->value();
+    const int slices = 
+          static_cast<int>( sliceNumberSlider->value() );
     if (slices > 0) selectSlice(slices-1);
     } 
   else if (move2DButton->value() == 1) shiftDown();
@@ -341,8 +342,11 @@ void downButton_CB(Fl_Button*, void*)
   {
   if(sliceViewButton->value() == 1)
     {
-    int slices = sliceNumberSlider->value();
-    if (slices < tk2D->numSlices()) selectSlice(slices+1);
+    const unsigned int slices = static_cast<unsigned int>( sliceNumberSlider->value() );
+    if (slices < tk2D->numSlices()) 
+      {
+      selectSlice(slices+1);
+      }
     } 
   else if (move2DButton->value() == 1) shiftUp();
   else if (zoom2DButton->value() == 1) zoomIn();
@@ -356,8 +360,17 @@ void downButton_CB(Fl_Button*, void*)
 */
 void leftButton_CB(Fl_Button*, void*)
   {
-  if (move2DButton->value() == 1) tk2D->winShift(0,1);
-  else if (levelWindowButton->value() == 1) setWindowIntensity((float)windowOutput->value()+10);
+  if (move2DButton->value() == 1) 
+    {
+    tk2D->winShift(0,1);
+    }
+  else 
+    {
+    if (levelWindowButton->value() == 1)
+      {
+       setWindowIntensity(static_cast<float>(windowOutput->value()+10));
+      }
+    }
   tk2D->update();   
   } 
 
