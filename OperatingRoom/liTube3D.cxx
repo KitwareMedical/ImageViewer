@@ -15,7 +15,6 @@
 
 #include <liTube3D.h>
 #include <FL/fl_ask.H>
-#include <fstream>
 #include <cstring>
 
 namespace li {

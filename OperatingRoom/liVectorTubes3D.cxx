@@ -15,7 +15,6 @@
 
 #include <liVectorTubes3D.h>
 #include <itkExceptionObject.h>
-#include <fstream>
 
 namespace li {
 

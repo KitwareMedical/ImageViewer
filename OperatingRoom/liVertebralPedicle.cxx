@@ -15,7 +15,6 @@
 #include <FL/gl.h>
 #include <FL/fl_ask.H>
 #include <liVertebralPedicle.h>
-#include <fstream>
 
 namespace li {
 

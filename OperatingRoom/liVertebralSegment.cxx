@@ -15,7 +15,6 @@
 #include <liVertebralSegment.h>
 #include <liSampleGeneratorPedicle.h>
 #include <liSampleGeneratorBodyPlane.h>
-#include <fstream>
 
 
 namespace li {

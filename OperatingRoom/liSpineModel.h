@@ -14,8 +14,8 @@
 #ifndef liSPINEMODELCLASS
 #define liSPINEMODELCLASS
 
+#include <fstream>
 #include <liVertebralSegment.h>
-
 
 
 namespace li {
