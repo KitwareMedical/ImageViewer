@@ -62,7 +62,7 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->visible_r();} {}
   }
-  Function {GetRedrawCommand(void)} {return_type { itk::Command::Pointer }
+  Function {GetRedrawCommand(void)} {return_type {itk::Command::Pointer}
   } {
     code {return drawWindow->GetRedrawCommand().GetPointer();} {}
   }
@@ -70,9 +70,9 @@ drawWindow->size(nx,ny);} {}
   } {
     code {return drawWindow->GetNotifier().GetPointer();} {}
   }
-  Function {SetBackground(GLfloat r, GLfloat g, GLfloat b)} {return_type {virtual void}
+  Function {GetGlWindow(void)} {return_type {virtual fltk::GlWindowInteractiveFlat *}
   } {
-    code {drawWindow->SetBackground(r,g,b);} {selected
+    code {return drawWindow;} {selected
     }
   }
 } 

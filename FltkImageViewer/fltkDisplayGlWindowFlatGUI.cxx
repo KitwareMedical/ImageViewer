@@ -65,6 +65,6 @@ itk::Object::Pointer fltkDisplayGlWindowFlatGUI::GetNotifier(void) {
   return drawWindow->GetNotifier().GetPointer();
 }
 
-void fltkDisplayGlWindowFlatGUI::SetBackground(GLfloat r, GLfloat g, GLfloat b) {
-  drawWindow->SetBackground(r,g,b);
+fltk::GlWindowInteractiveFlat * fltkDisplayGlWindowFlatGUI::GetGlWindow(void) {
+  return drawWindow;
 }

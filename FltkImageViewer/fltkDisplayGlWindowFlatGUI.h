@@ -26,6 +26,6 @@ public:
   int IsVisible(void);
   itk::Command::Pointer GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
-  virtual void SetBackground(GLfloat r, GLfloat g, GLfloat b);
+  virtual fltk::GlWindowInteractiveFlat * GetGlWindow(void);
 };
 #endif
