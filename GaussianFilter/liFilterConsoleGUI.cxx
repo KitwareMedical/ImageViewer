@@ -38,17 +38,17 @@ Fl_Menu_Item liFilterConsoleGUI::menu_[] = {
  {0}
 };
 
-inline void liFilterConsoleGUI::cb_inputButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_inputButton_i(fltk::LightButton*, void*) {
   ShowInput();
 }
-void liFilterConsoleGUI::cb_inputButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_inputButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_inputButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_H1xButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_H1xButton_i(fltk::LightButton*, void*) {
   ShowFilteredX();
 }
-void liFilterConsoleGUI::cb_H1xButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_H1xButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H1xButton_i(o,v);
 }
 
@@ -66,52 +66,52 @@ void liFilterConsoleGUI::cb_Sigma(Fl_Counter* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Sigma_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_H1zButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_H1zButton_i(fltk::LightButton*, void*) {
   ShowFilteredZ();
 }
-void liFilterConsoleGUI::cb_H1zButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_H1zButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H1zButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_H1yButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_H1yButton_i(fltk::LightButton*, void*) {
   ShowFilteredY();
 }
-void liFilterConsoleGUI::cb_H1yButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_H1yButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H1yButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_H2xButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_H2xButton_i(fltk::LightButton*, void*) {
   ShowSecondDerivativeX();
 }
-void liFilterConsoleGUI::cb_H2xButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_H2xButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H2xButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_H2yButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_H2yButton_i(fltk::LightButton*, void*) {
   ShowSecondDerivativeY();
 }
-void liFilterConsoleGUI::cb_H2yButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_H2yButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H2yButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_H2zButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_H2zButton_i(fltk::LightButton*, void*) {
   ShowSecondDerivativeZ();
 }
-void liFilterConsoleGUI::cb_H2zButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_H2zButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_H2zButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_laplacianButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_laplacianButton_i(fltk::LightButton*, void*) {
   ShowLaplacian();
 }
-void liFilterConsoleGUI::cb_laplacianButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_laplacianButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_laplacianButton_i(o,v);
 }
 
-inline void liFilterConsoleGUI::cb_modulusButton_i(li::LightButton*, void*) {
+inline void liFilterConsoleGUI::cb_modulusButton_i(fltk::LightButton*, void*) {
   ShowGradientModulus();
 }
-void liFilterConsoleGUI::cb_modulusButton(li::LightButton* o, void* v) {
+void liFilterConsoleGUI::cb_modulusButton(fltk::LightButton* o, void* v) {
   ((liFilterConsoleGUI*)(o->parent()->parent()->user_data()))->cb_modulusButton_i(o,v);
 }
 
@@ -1889,13 +1889,13 @@ liFilterConsoleGUI::liFilterConsoleGUI() {
     }
     { Fl_Group* o = controlsGroup = new Fl_Group(0, 25, 755, 365);
       o->deactivate();
-      { li::LightButton* o = inputButton = new li::LightButton(27, 116, 69, 30, "Input");
+      { fltk::LightButton* o = inputButton = new fltk::LightButton(27, 116, 69, 30, "Input");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_inputButton);
       }
-      { li::LightButton* o = H1xButton = new li::LightButton(405, 44, 100, 24, "Gradient X");
+      { fltk::LightButton* o = H1xButton = new fltk::LightButton(405, 44, 100, 24, "Gradient X");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -1912,43 +1912,43 @@ liFilterConsoleGUI::liFilterConsoleGUI() {
         o->callback((Fl_Callback*)cb_Sigma);
         o->align(FL_ALIGN_TOP);
       }
-      { li::LightButton* o = H1zButton = new li::LightButton(405, 92, 100, 25, "Gradient Z");
+      { fltk::LightButton* o = H1zButton = new fltk::LightButton(405, 92, 100, 25, "Gradient Z");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H1zButton);
       }
-      { li::LightButton* o = H1yButton = new li::LightButton(405, 68, 100, 24, "Gradient Y");
+      { fltk::LightButton* o = H1yButton = new fltk::LightButton(405, 68, 100, 24, "Gradient Y");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H1yButton);
       }
-      { li::LightButton* o = H2xButton = new li::LightButton(405, 139, 101, 24, "Second X");
+      { fltk::LightButton* o = H2xButton = new fltk::LightButton(405, 139, 101, 24, "Second X");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H2xButton);
       }
-      { li::LightButton* o = H2yButton = new li::LightButton(405, 163, 101, 25, "Second Y");
+      { fltk::LightButton* o = H2yButton = new fltk::LightButton(405, 163, 101, 25, "Second Y");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H2yButton);
       }
-      { li::LightButton* o = H2zButton = new li::LightButton(405, 188, 101, 25, "Second Z");
+      { fltk::LightButton* o = H2zButton = new fltk::LightButton(405, 188, 101, 25, "Second Z");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_H2zButton);
       }
-      { li::LightButton* o = laplacianButton = new li::LightButton(575, 163, 89, 25, "Laplacian");
+      { fltk::LightButton* o = laplacianButton = new fltk::LightButton(575, 163, 89, 25, "Laplacian");
         o->type(0);
         o->value(1);
         o->selection_color(1);
         o->callback((Fl_Callback*)cb_laplacianButton);
       }
-      { li::LightButton* o = modulusButton = new li::LightButton(578, 68, 85, 25, "Modulus");
+      { fltk::LightButton* o = modulusButton = new fltk::LightButton(578, 68, 85, 25, "Modulus");
         o->type(0);
         o->value(1);
         o->selection_color(1);
@@ -1974,39 +1974,39 @@ liFilterConsoleGUI::liFilterConsoleGUI() {
         o->labeltype(FL_SYMBOL_LABEL);
         o->callback((Fl_Callback*)cb_24);
       }
-      { li::LightButton* o = HxButton = new li::LightButton(139, 93, 90, 24, "Smooth X");
+      { fltk::LightButton* o = HxButton = new fltk::LightButton(139, 93, 90, 24, "Smooth X");
         o->type(0);
         o->value(1);
         o->selection_color(1);
       }
-      { li::LightButton* o = HyButton = new li::LightButton(139, 117, 90, 24, "Smooth Y");
+      { fltk::LightButton* o = HyButton = new fltk::LightButton(139, 117, 90, 24, "Smooth Y");
         o->type(0);
         o->value(1);
         o->selection_color(1);
       }
-      { li::LightButton* o = HzButton = new li::LightButton(139, 141, 90, 25, "Smooth Z");
+      { fltk::LightButton* o = HzButton = new fltk::LightButton(139, 141, 90, 25, "Smooth Z");
         o->type(0);
         o->value(1);
         o->selection_color(1);
       }
-      { li::LightButton* o = HxyButton = new li::LightButton(254, 92, 98, 24, "Smooth XY");
+      { fltk::LightButton* o = HxyButton = new fltk::LightButton(254, 92, 98, 24, "Smooth XY");
         o->type(0);
         o->value(1);
         o->selection_color(1);
       }
-      { li::LightButton* o = HyzButton = new li::LightButton(254, 116, 98, 24, "Smooth YZ");
+      { fltk::LightButton* o = HyzButton = new fltk::LightButton(254, 116, 98, 24, "Smooth YZ");
         o->type(0);
         o->value(1);
         o->selection_color(1);
       }
-      { li::LightButton* o = HzxButton = new li::LightButton(254, 140, 98, 25, "Smooth ZX");
+      { fltk::LightButton* o = HzxButton = new fltk::LightButton(254, 140, 98, 25, "Smooth ZX");
         o->type(0);
         o->value(1);
         o->selection_color(1);
       }
       o->end();
     }
-    { Fl_Slider* o = progressSlider = new Fl_Slider(5, 324, 735, 15);
+    { fltk::ProgressBar* o = progressSlider = new fltk::ProgressBar(5, 324, 735, 15);
       o->type(3);
       o->selection_color(2);
     }

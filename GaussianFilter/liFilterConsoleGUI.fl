@@ -7,12 +7,13 @@ gridy 5
 snap 3
 class liFilterConsoleGUI {open : {public liFilterConsoleBase}
 } {
-  Function {liFilterConsoleGUI()} {} {
+  Function {liFilterConsoleGUI()} {open
+  } {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console}
-      xywh {329 176 757 391} hide
+      xywh {329 176 757 391}
       code0 {\#include <liFilterConsoleBase.h>}
-      code1 {\#include <liLightButton.h>}
+      code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Menu_Bar {} {
         xywh {0 0 760 25}
@@ -138,13 +139,13 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
           label Input
           callback {ShowInput();}
           xywh {27 116 69 30} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button H1xButton {
           label {Gradient X}
           callback {ShowFilteredX();}
           xywh {405 44 100 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Button {} {
           label Execute
@@ -160,43 +161,43 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
           label {Gradient Z}
           callback {ShowFilteredZ();}
           xywh {405 92 100 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button H1yButton {
           label {Gradient Y}
           callback {ShowFilteredY();}
           xywh {405 68 100 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button H2xButton {
           label {Second X}
           callback {ShowSecondDerivativeX();}
           xywh {405 139 101 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button H2yButton {
           label {Second Y}
           callback {ShowSecondDerivativeY();}
           xywh {405 163 101 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button H2zButton {
           label {Second Z}
           callback {ShowSecondDerivativeZ();}
           xywh {405 188 101 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button laplacianButton {
           label Laplacian
           callback {ShowLaplacian();}
           xywh {575 163 89 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button modulusButton {
           label Modulus
           callback {ShowGradientModulus();}
           xywh {578 68 85 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Button {} {
           label {@2>}
@@ -226,43 +227,45 @@ class liFilterConsoleGUI {open : {public liFilterConsoleBase}
         Fl_Light_Button HxButton {
           label {Smooth X}
           xywh {139 93 90 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button HyButton {
           label {Smooth Y}
           xywh {139 117 90 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button HzButton {
           label {Smooth Z}
           xywh {139 141 90 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button HxyButton {
           label {Smooth XY}
           xywh {254 92 98 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button HyzButton {
           label {Smooth YZ}
           xywh {254 116 98 24} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
         Fl_Light_Button HzxButton {
           label {Smooth ZX}
           xywh {254 140 98 25} type Normal value 1 selection_color 1
-          class {li::LightButton}
+          class {fltk::LightButton}
         }
       }
-      Fl_Slider progressSlider {
+      Fl_Slider progressSlider {selected
         xywh {5 324 735 15} type {Horz Fill} selection_color 2
+        code0 {\#include <fltkProgressBar.h>}
+        class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
         xywh {5 349 735 25}
       }
     }
     Fl_Window aboutWindow {
-      label {About ...} open selected
+      label {About ...} open
       xywh {271 470 440 323} box UP_BOX visible
     } {
       Fl_Box {} {
