@@ -50,7 +50,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *  \brief A Decision rule that choose the class that has maximum value
  */
  
-class ITK_EXPORT MaximumLikelihoodRatioDecisionRule : 
+class MaximumLikelihoodRatioDecisionRule : 
   public itk::Object
 {
  public:
