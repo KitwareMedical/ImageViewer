@@ -244,7 +244,7 @@ bool MF_Write(std::ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
             fp << field[i].name << " " << sepChar << " " << (float)field[i].val[0] << std::endl;
             break;
          case MF_CHAR_ARRAY:
-            fp << field[i].name << " " << sepChar;
+            fp << field[i].name << " " << sepChar << " ";
             if(field[i].dependsOn >= 0) 
             {
                if(field[i].length != field[field[i].dependsOn].val[0])
@@ -259,7 +259,7 @@ bool MF_Write(std::ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
             fp << std::endl;
             break;
          case MF_INT_ARRAY:
-            fp << field[i].name << " " << sepChar;
+            fp << field[i].name << " " << sepChar << " ";
             if(field[i].dependsOn >= 0)
             {
                if(field[i].length != field[field[i].dependsOn].val[0])
@@ -274,7 +274,7 @@ bool MF_Write(std::ofstream &fp, int nFields, MF_FieldRec *field, char _sepChar)
             fp << std::endl;
             break;
       case MF_FLOAT_ARRAY:
-            fp << field[i].name << " " << sepChar;
+            fp << field[i].name << " " << sepChar << " ";
             if(field[i].dependsOn >= 0)
             {
                if(field[i].length != field[field[i].dependsOn].val[0])
