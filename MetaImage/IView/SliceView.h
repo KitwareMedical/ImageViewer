@@ -376,7 +376,7 @@ SliceView<imType>::~SliceView()
 //
 //
 template <class imType>
-const PhysicalImage<imType,3>::Pointer & 
+const PhysicalImage<imType,3>::ConstPointer & 
 SliceView<imType>
 ::GetInputImage(void) const
 {
