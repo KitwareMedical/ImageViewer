@@ -10,6 +10,7 @@
 #include "MIEuler2DRegistrator.h"
 #include "MISimilarity2DRegistrator.h"
 #include "MIAffine2DRegistrator.h"
+#include "MIScaleRegistrator.h"
 #include "OutputGenerator.h"
 
 class RegisterApplication
@@ -28,9 +29,10 @@ public:
 
   typedef Preprocessor< InputImageType, OutputImageType > PreprocessorType ;
 
-//  typedef MIEuler2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+  typedef MIEuler2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 //  typedef MIAffine2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
-  typedef MISimilarity2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+//  typedef MISimilarity2DRegistrator< OutputImageType, OutputImageType > RegistratorType ;
+//  typedef MIScaleRegistrator< OutputImageType, OutputImageType > RegistratorType ;
 
   typedef PreprocessorType::AffineTransformType TransformType ;
   typedef OutputGenerator< InputImageType > GeneratorType ;
