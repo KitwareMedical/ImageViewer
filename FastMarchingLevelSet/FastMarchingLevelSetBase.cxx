@@ -193,7 +193,6 @@ FastMarchingLevelSetBase
     {
     fl_alert( exp.GetDescription() );
     }
-  m_FastMarchingFilter->SetTrialPoints( m_TrialPoints );
 
 
 }
