@@ -22,11 +22,30 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       typedef  unsigned char                        PixelType;
       typedef  itk::Image< PixelType, Dimension >   ImageType; 
       typedef  itk::FastMarchingImageFilter< ImageType,  ImageType >   FilterType;
+      typedef  FilterType::NodeContainer            NodeContainer;
+      typedef  FilterType::NodeType                 NodeType;
+      NodeContainer::Pointer seeds = NodeContainer::New();
+      seeds->Initialize();
+      const double seedValue = 0.0;
+      ImageType::IndexType seedPosition;
       VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Computing Fast Marching...");
       // Set the parameters on it
       module.GetFilter()->SetStoppingValue(  atof( info->GUIItems[ 0 ].CurrentValue) );
+      seedPosition[0] =                      atoi( info->GUIItems[ 1 ].CurrentValue);      
+      seedPosition[1] =                      atoi( info->GUIItems[ 2 ].CurrentValue);      
+      seedPosition[2] =                      atoi( info->GUIItems[ 3 ].CurrentValue);      
+      NodeType node;
+      node.SetValue( seedValue );
+      node.SetIndex( seedPosition );
+      seeds->InsertElement( 0, node );
+      module.GetFilter()->SetTrialPoints( seeds );
+      ImageType::SizeType size;
+      size[0] = info->OutputVolumeDimensions[0];
+      size[1] = info->OutputVolumeDimensions[1];
+      size[2] = info->OutputVolumeDimensions[2];
+      module.GetFilter()->SetOutputSize( size );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -36,11 +55,30 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       typedef  unsigned short                       PixelType;
       typedef  itk::Image< PixelType, Dimension >   ImageType; 
       typedef  itk::FastMarchingImageFilter< ImageType,  ImageType >   FilterType;
+      typedef  FilterType::NodeContainer            NodeContainer;
+      typedef  FilterType::NodeType                 NodeType;
+      NodeContainer::Pointer seeds = NodeContainer::New();
+      seeds->Initialize();
+      const double seedValue = 0.0;
+      ImageType::IndexType seedPosition;
       VolView::PlugIn::FilterModule< FilterType > module;
       module.SetPlugInfo( info );
       module.SetUpdateMessage("Computing Fast Marching...");
       // Set the parameters on it
       module.GetFilter()->SetStoppingValue(  atof( info->GUIItems[ 0 ].CurrentValue) );
+      seedPosition[0] =                      atoi( info->GUIItems[ 1 ].CurrentValue);      
+      seedPosition[1] =                      atoi( info->GUIItems[ 2 ].CurrentValue);      
+      seedPosition[2] =                      atoi( info->GUIItems[ 3 ].CurrentValue);      
+      NodeType node;
+      node.SetValue( seedValue );
+      node.SetIndex( seedPosition );
+      seeds->InsertElement( 0, node );
+      module.GetFilter()->SetTrialPoints( seeds );
+      ImageType::SizeType size;
+      size[0] = info->OutputVolumeDimensions[0];
+      size[1] = info->OutputVolumeDimensions[1];
+      size[2] = info->OutputVolumeDimensions[2];
+      module.GetFilter()->SetOutputSize( size );
       // Execute the filter
       module.ProcessData( pds );
       break; 
@@ -63,8 +101,27 @@ static int UpdateGUI(void *inf)
   info->GUIItems[0].Label = "Stopping Value";
   info->GUIItems[0].GUIType = VV_GUI_SCALE;
   info->GUIItems[0].Default = "1.0";
-  info->GUIItems[0].Help = "Defines a stopping value for the time up to which the front propagation will be computed. deviation of the Gaussian kernel used to smooth the image before computing the gradient";
-  info->GUIItems[0].Hints = "0 20 0.1";
+  info->GUIItems[0].Help = "Defines a stopping value for the time up to which the front propagation will be computed."; 
+  info->GUIItems[0].Hints = "1 100 1";
+
+  info->GUIItems[1].Label = "X coordinate of the seed";
+  info->GUIItems[1].GUIType = VV_GUI_SCALE;
+  info->GUIItems[1].Default = "0";
+  info->GUIItems[1].Help = "X coordinate of the seed point. The seed should be placed in the middle of the region to be segmented.";
+  info->GUIItems[1].Hints = "1 1000.0 1.0";
+
+  info->GUIItems[2].Label = "Y coordinate of the seed";
+  info->GUIItems[2].GUIType = VV_GUI_SCALE;
+  info->GUIItems[2].Default = "0";
+  info->GUIItems[2].Help = "Y coordinate of the seed point. The seed should be placed in the middle of the region to be segmented.";
+  info->GUIItems[2].Hints = "1 1000.0 1.0";
+
+  info->GUIItems[3].Label = "Z coordinate of the seed";
+  info->GUIItems[3].GUIType = VV_GUI_SCALE;
+  info->GUIItems[3].Default = "0";
+  info->GUIItems[3].Help = "Z coordinate of the seed point. The seed should be placed in the middle of the region to be segmented.";
+  info->GUIItems[3].Hints = "1 1000.0 1.0";
+
 
   info->RequiredZOverlap = 0;
   
@@ -101,7 +158,7 @@ void VV_PLUGIN_EXPORT vvITKFastMarchingInit(vtkVVPluginInfo *info)
   info->PerVoxelMemoryRequired = 16; 
   
   /* setup the GUI components */
-  info->NumberOfGUIItems = 1;
+  info->NumberOfGUIItems = 4;
   info->GUIItems = (vtkVVGUIItem *)malloc(info->NumberOfGUIItems*sizeof(vtkVVGUIItem));
 }
 
