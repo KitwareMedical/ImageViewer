@@ -1,20 +1,24 @@
-//--------------------------------------------
-//
-//     Project Implicit Modeler
-//
-//     Author:  Luis Ibanez
-//
-//     Division of Neurosugery
-//     Department of Surgery
-//     University of North Carolina
-//     Chapel Hill, NC 27514
-//
-//--------------------------------------------
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    fltkSlice3DDrawer.txx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
 
 
-// #include <itkSlice3DDrawer.h>
+  Copyright (c) 2000 National Library of Medicine
+  All rights reserved.
+
+  See COPYRIGHT.txt for copyright details.
+
+=========================================================================*/
+
+#include <itkSlice3DDrawer.h>
 #include <GL/glu.h>
 
+
+namespace fltk {
 
 
 /**
@@ -614,4 +618,10 @@ Slice3DDrawer<ImagePixelType>
 
 
 }
+
+
+
+} // end namespace fltk
+
+
 
