@@ -3,16 +3,12 @@ Volume file chunker/splitter & unchunker/joiner documentation
 12/05/01 cates@cs.utah.edu
 -----------------------------------------------------------
 
-NOTE: DOCUMENTATION WILL BE COMPLETED POST 12/15/01 jc
-
-
 I. Introduction
 
 The code in this directory provides a way to split up large files of raw,
 binary data into smaller files, or ``chunks'' of data.  It was written
 specifically for use with the streaming watershed code contained in the
-Examples/StreamedWatershedSegmentation, but can obviously be used in other
-contexts.
+Examples/StreamedWatershedSegmentation.
 
 Vocabulary:  
 
@@ -52,3 +48,126 @@ in ../ParameterFileParser).
 
 II. Using the utilities
 
+Input file formats:
+        Inputs to the file chunking utilities should be in binary format and
+        should not contain headers.  Parameter files as described below define
+        the size, extent, and data type of the input.
+
+Generated header files:
+        The various chunking applications will generate a single header file
+        which descibes all of the volume chunks created.  For various
+        implementational reasons, this file is stored in a binary format.  To
+        view the contents of a header file, use "catchunkfile header_file_name".
+
+Descriptions of the utilities:
+
+chunker
+        This application breaks a single binary file into smaller files.  A sample
+        parameter file is given below.  All parameters are required except as
+        noted.  Output is raw binary files.
+
+// SAMPLE PARAMETER FILE FOR chunker
+
+ (input_filename   "cd_edge.full.float") // name of the input file
+
+ (output_prefix    "cd_edge") // prefix for naming the output files
+
+ (volume_dimensions 1600 800 100 )// dimensions of the total input volume
+
+ (cube_dimensions   8 4 1)        // The number of cubes to create along each
+                                 // dimension.  This controls the number of
+                                 // chunks created (i.e. 8x4x1=32 chunks).
+
+ (pixel_size 4)                 // Size in bytes of each pixel.
+
+ (pad 1 1 1)                    // Desired padding in pixels for each block.
+                                // Padding is added to low & high edges of block.
+
+ (chunk_filename   "chunkset.record")    // OPTIONAL name of the header file
+
+// END SAMPLE PARAMETER FILE FOR chunker
+
+
+vhchunker
+        This application constructs interlaced 24-bit RGB volumes from a full
+        color, non-interlaced 24-bit Visible Human slice dataset. A sample
+        parameter file is given below.  NOTE THAT THIS APPLICATION REQUIRES
+        THE FILENAMES OF THE VISIBLE HUMAN DATA TO BE EXACTLY AS THEY APPEAR 
+        IN THE VHP REPOSITORY. This is because z-indexes are hashed into
+        filenames. Output is raw binary files.
+
+// SAMPLE PARAMETER FILE FOR vhchunker
+
+ (input_path "Female/Fullcolor/abdomen/") // Path to the directory containing
+                                          // the slice data
+
+ (output_prefix "Female/Fullcolor/abdomen/chunked/vhf_abdomen") // Path and
+                                               // prefix for output data files.
+
+ (volume_extent  270 1870 110 910 1700 1900) // Extent of the volume to chunk.
+
+ (volume_dimensions 2048 1216 2727) // Size of the complete data set.
+
+ (cube_dimensions 8 4 1) // The number of cubes to create along each dimension.
+                        // This parameter controls the number of chunks 
+                        // created (i.e. 8x4x1=32 chunks).
+
+ (pixel_size 1) // In this context, this size of a single component of the 
+                // pixel data (this is inconsistent with its use in chunker).
+                // For Visible Human 24-bit color data this value is always 1
+                // byte. 
+
+ (pad 15 15 15) // Number of pixels to pad each side of each chunk.
+
+ (chunk_filename "Female/Fullcolor/abdomen/chunked/chunkset.record") //OPTIONAL 
+                                                        // name of header file.
+
+ (vh_dataset "female") // Value is either "female" or "male". CURRENTLY ONLY
+                       // FEMALE IS SUPPORTED.  You can write a hash for the
+                       // male filenames.  They did not use a standard naming
+                       // convention across datasets.
+
+// END SAMPLE PARAMETER FILE FOR vhchunker
+
+vhunchunker
+        This application ``unchunks'' files created by either of the two
+        previous applications.  In other words, it reconstitutes the various
+        chunk files into a complete volume or, optionally, a set of slices.  It
+        will not reproduce the Visible Human non-interlaced format (once
+        non-interlaced data is interlaced, it remains that way).  A sample 
+        parameter file is given below.
+
+// SAMPLE PARAMETER FILE FOR vhunchunker
+
+(chunk_file  "chunkset.record") // Name of the header file for the chunk
+                // volumes.  This file was automatically generated on chunking.
+
+(chunk_prefix "vhf_abdomen.chunk") // Prefix of the chunked data files.
+
+(volume_extent  270 1870 110 910 1700 1900) // Complete extent of the chunked data.
+
+(reassemble_extent 270 1870 110 910 1700 1900)  // Area of the volume_extent to
+                                                // reassemble.
+
+(pixel_components 3)   // Number of component values contained in each pixel.
+                       // Note that if unchunking chunked Visible Human data, 
+                       // this value is 3, one for each component of the now 
+                       // interlaced data.
+
+(pixel_size 1)         // Size in bytes of each pixel component
+
+(pad 15 15 15)         // Size of the padding included in each chunk (the padding
+                       // will be cropped out of the reassembled volume)
+
+(no_z_offset 1) // Set this value to 0 if you are reconstructing into slices
+                // and want the slices numbered according to their position on 
+                // the z-axis.  A value of 1 starts the numbering from 0.
+
+// If reassembling into a single volume file, supply the following:
+//(volume_name "Female/Fullcolor/abdomen/full.raw")
+
+// If reassembling into a set of slices, comment out the previous line and
+// supply the following parameter instead:
+(slice_prefix "Female/Fullcolor/abodmen/abdomen_reassembled/reassembled_slice")
+
+// END SAMPLE PARAMETER FILE FOR vhunchunker
