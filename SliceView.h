@@ -343,6 +343,8 @@ template <class imType>
     
     void  clearClickedPointsStored(){cClickedPoints.clear();}
     
+    void  deleteLastClickedPointsStored(){cClickedPoints.pop_front();}  
+    
     void  saveClickedPointsStored() {
       const char * filename = fl_file_chooser("Please select a file name","*.*","");
       std::ofstream fpoints( filename );
