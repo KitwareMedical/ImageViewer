@@ -11,6 +11,8 @@ INCLUDE_DIRECTORIES (
   ${ITK_SOURCE_DIR}/Code/BasicFilters
   ${ITK_SOURCE_DIR}/Code/Algorithms
   ${ITK_SOURCE_DIR}/Code/IO
+  ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl/doc
+  ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vnl  
   ${ITK_SOURCE_DIR}/Examples/TclWrappedImage
   )
 
