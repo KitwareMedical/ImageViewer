@@ -19,7 +19,11 @@
 
 #include "fltkImage2DViewerWindow.h"
 #include "fltkCommandEvents.h"
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 #include <math.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_Button.H>

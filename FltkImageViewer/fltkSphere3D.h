@@ -20,7 +20,12 @@
 #define __fltkSphere3D_h
 
 #include "fltkShape3D.h"
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
+
 
 
 
