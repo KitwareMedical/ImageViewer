@@ -15,6 +15,7 @@ See COPYRIGHT.txt for copyright details.
 =========================================================================*/
 #include <ostream>
 #include <iostream>
+#include <fstream>
 #include "itkImage.h"
 #include "itkImageRegionIterator.h"
 #include "itkImportImageFilter.h"
@@ -311,48 +312,47 @@ void main(int argc, char **argv)
   std::cout << solution << std::endl;
 
   // Write a vtk tcl script to load the data sets and register them
-  ostream *fptr = new ofstream("reg.tcl", ios::out);
-  *fptr << "set study1Prefix \""
-	<< study1Prefix.c_str() << "\"" << endl;
-  *fptr << "set study1Extent \""
+  std::ofstream fptr("reg.tcl", ios::out);
+  fptr << "set study1Prefix \""
+	<< study1Prefix.c_str() << "\"" << std::endl;
+  fptr << "set study1Extent \""
 	<< 0 << " " << study1Resolution[0] - 1 << " "
     	<< 0 << " " << study1Resolution[1] - 1 << " "
-    	<< 1 << " " << study1Resolution[2] << "\"" << endl;
-  *fptr << "set study1Spacing \""
+    	<< 1 << " " << study1Resolution[2] << "\"" << std::endl;
+  fptr << "set study1Spacing \""
 	<< study1Spacing[0] << " "
     	<< study1Spacing[1] << " "
-    	<< study1Spacing[2] << "\"" << endl;
+    	<< study1Spacing[2] << "\"" << std::endl;
 
-  *fptr << "set study2Prefix \""
-	<< study2Prefix.c_str() << "\"" << endl;
-  *fptr << "set study2Extent \""
+  fptr << "set study2Prefix \""
+	<< study2Prefix.c_str() << "\"" << std::endl;
+  fptr << "set study2Extent \""
 	<< 0 << " " << study2Resolution[0] - 1 << " "
     	<< 0 << " " << study2Resolution[1] - 1 << " "
-    	<< 1 << " " << study2Resolution[2] << "\"" << endl;
-  *fptr << "set study2Spacing \""
+    	<< 1 << " " << study2Resolution[2] << "\"" << std::endl;
+  fptr << "set study2Spacing \""
 	<< study2Spacing[0] << " "
     	<< study2Spacing[1] << " "
-    	<< study2Spacing[2] << "\"" << endl;
+    	<< study2Spacing[2] << "\"" << std::endl;
 
-  *fptr << "set rotateX "
-       << aTrans->GetOrientation()[0] << endl;
-  *fptr << "set rotateY "
-       << aTrans->GetOrientation()[1] << endl;
-  *fptr << "set rotateZ "
-       << aTrans->GetOrientation()[2] << endl;
-  *fptr << "set translate \""
+  fptr << "set rotateX "
+       << aTrans->GetOrientation()[0] << std::endl;
+  fptr << "set rotateY "
+       << aTrans->GetOrientation()[1] << std::endl;
+  fptr << "set rotateZ "
+       << aTrans->GetOrientation()[2] << std::endl;
+  fptr << "set translate \""
 	<< aTrans->GetPosition()[0] << " "
 	<< aTrans->GetPosition()[1] << " "
-	<< aTrans->GetPosition()[2] << "\"" << endl;
+	<< aTrans->GetPosition()[2] << "\"" << std::endl;
     
-  delete fptr;
   
   exit(0);
 }
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.5 $  $Date: 2001-09-21 00:07:19 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.6 $  $Date: 2001-09-26 12:23:30 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
