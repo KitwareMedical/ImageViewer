@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <fltkImage2DViewerWindow.h>
 #include <GL/glu.h>
-#include <cmath>
+#include <vcl_cmath.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_Button.H>
 
