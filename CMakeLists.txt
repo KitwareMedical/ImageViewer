@@ -41,6 +41,9 @@ SUBDIRS(RawImageReadWrite)
 # Build the PNGImageReadWrite example
 SUBDIRS(PNGImageReadWrite)
 
+# Build the ExtractImageRegion example
+SUBDIRS(ExtractImageRegion)
+
 # Examples requiring MetaImages and Fltk GUI 
 IF(HAS_FLTK)
   IF(HAS_FLTKIMAGEVIEWER)
