@@ -22,5 +22,5 @@ ITKBasicFilters
 )
 
 ADD_EXECUTABLE(vtk2itk vtk2itk)
-
 ADD_EXECUTABLE(itkCurvatureFlowToVTK itkCurvatureFlowToVTK)
+ADD_EXECUTABLE(itkVTKtoITKtoVTK itkVTKtoITKtoVTK)
