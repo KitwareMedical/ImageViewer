@@ -16,7 +16,7 @@
 =========================================================================*/
 #include <iostream>
 #include <fstream>
-
+#include <stdio.h>
 #include "GaussianClassifierValidationApp.h"
 #include "itkImage.h"
 #include "itkArray.h"

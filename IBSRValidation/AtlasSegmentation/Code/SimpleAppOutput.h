@@ -65,7 +65,7 @@ public:
   typedef TDeformationField DeformationFieldType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** Set the fixed image. */
   itkSetObjectMacro( FixedImage, ImageType );

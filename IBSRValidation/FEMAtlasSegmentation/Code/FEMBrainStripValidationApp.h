@@ -90,7 +90,7 @@ public:
   itkNewMacro(Self);
 
   /** Image dimension. */
-  enum{  ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** Image types. */
   typedef TImage               ImageType;

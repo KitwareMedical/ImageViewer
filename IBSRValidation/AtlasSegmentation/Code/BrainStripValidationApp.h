@@ -85,13 +85,13 @@ public:
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
 
-  /** Image dimension. */
-  enum{  ImageDimension = TImage::ImageDimension };
-
   /** Image types. */
   typedef TImage               ImageType;
   typedef TLabelImage          LabelImageType;
   typedef TRealImage           RealImageType;
+
+  /** Image dimension. */
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** Set the IBSR "20Normals_T1" directory path. */
   itkSetStringMacro( ImageDirectoryName );

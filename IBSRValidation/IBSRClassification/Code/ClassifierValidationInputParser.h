@@ -85,7 +85,7 @@ public:
   typedef TMaskImage TruthImageType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TVectorInputImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TVectorInputImage::ImageDimension);
 
   /** Storage type for individual image type */
   typedef typename TVectorInputImage::PixelType VectorInputImageVectorType;
@@ -177,7 +177,7 @@ protected:
   ClassifierValidationInputParser();
   ~ClassifierValidationInputParser(){};
 
-  typedef Image<VectorInputImagePixelType, ImageDimension> TempImageType;
+  typedef Image<VectorInputImagePixelType, itkGetStaticConstMacro(ImageDimension)> TempImageType;
 
   typedef typename TempImageType::PixelType TempImagePixelType;
 

@@ -57,7 +57,7 @@ public:
 
   /** Image Type. */
   typedef TImage ImageType;
-  enum { ImageDimension = TImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TImage::ImageDimension);
 
   /** File format pixel type. */
   typedef typename ImageType::PixelType PixelType;

@@ -85,11 +85,14 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(RawImageSequenceReader, ImageSource);
 
+  /** Image dimension enumeration. */
+  itkStaticConstMacro (ImageDimension, unsigned int, TOutputImage::ImageDimension);
+
   /** The size of the output image. */
-  typedef Size<TOutputImage::ImageDimension>  Size;
+  typedef Size<itkGetStaticConstMacro(ImageDimension)>  Size;
 
   /** The region of the output image. */
-  typedef ImageRegion<TOutputImage::ImageDimension>  Region;
+  typedef ImageRegion<itkGetStaticConstMacro(ImageDimension)>  Region;
 
   /** The pixel type of the output image. */
   typedef typename TOutputImage::PixelType OutputImagePixelType;

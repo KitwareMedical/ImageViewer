@@ -81,7 +81,7 @@ public:
   typedef TDeformationField DeformationFieldType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TLabelImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TLabelImage::ImageDimension);
 
   /** Set the atlas label image. */
   itkSetObjectMacro( AtlasLabelImage, LabelImageType );

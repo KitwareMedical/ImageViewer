@@ -85,16 +85,16 @@ public:
   typedef TMovingImage MovingImageType;
 
   /** Image dimension enumeration. */
-  enum { ImageDimension = TFixedImage::ImageDimension };
+  itkStaticConstMacro(ImageDimension, unsigned int, TFixedImage::ImageDimension);
 
   /** Deformation field value type. */
   typedef TFieldValue FieldValueType;
 
   /** Deformation field pixel type. */
-  typedef Vector<FieldValueType,ImageDimension> FieldPixelType;
+  typedef Vector<FieldValueType,itkGetStaticConstMacro(ImageDimension)> FieldPixelType;
 
   /** Deformation field type. */
-  typedef Image<FieldPixelType,ImageDimension> DeformationFieldType;
+  typedef Image<FieldPixelType,itkGetStaticConstMacro(ImageDimension)> DeformationFieldType;
 
   /** Fixed Image Pyramid Type. */
   typedef RecursiveMultiResolutionPyramidImageFilter<
@@ -116,7 +116,7 @@ public:
   typedef Array<unsigned int> UnsignedIntArray;
 
   /** ShrinkFactorsArray type. */
-  typedef FixedArray<unsigned int,ImageDimension> ShrinkFactorsArray;
+  typedef FixedArray<unsigned int,itkGetStaticConstMacro(ImageDimension)> ShrinkFactorsArray;
 
   /** Set the fixed image. */
   itkSetObjectMacro( FixedImage, FixedImageType );

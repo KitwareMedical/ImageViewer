@@ -21,7 +21,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <stdio.h>
 #include "FEMBrainStripValidationApp.h"
 #include "itkImage.h"
 #include "itkExceptionObject.h"
@@ -59,10 +59,10 @@ int main(int argc, char *argv[])
     } else paramname=argv[1];
 
   // registering the load for both hexahedron and tetrahedron elements
-  DispatcherType::RegisterVisitor((ImageLoadType*)0, 
-          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
-  DispatcherType2::RegisterVisitor((ImageLoadType*)0, 
-          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
+  
+  LoadImpFP fp = &itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad;
+  DispatcherType::RegisterVisitor((ImageLoadType*)0, fp);
+  DispatcherType2::RegisterVisitor((ImageLoadType*)0, fp);
 
 
   AppType::Pointer app = AppType::New();

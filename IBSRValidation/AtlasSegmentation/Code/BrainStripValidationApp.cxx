@@ -16,7 +16,7 @@
 =========================================================================*/
 #include <iostream>
 #include <fstream>
-
+#include <stdio.h>
 #include "BrainStripValidationApp.h"
 #include "itkImage.h"
 #include "itkExceptionObject.h"
