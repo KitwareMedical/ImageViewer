@@ -50,12 +50,28 @@ public:
   virtual const CellularAggregate * GetCellularAggregate( void ) const;
 
 protected:
+  
   virtual void Grow(void);
   virtual void Divide(void);
+  virtual void Apoptosis(void);
+  
   virtual void EnergyIntake(void);
   virtual void NutrientsIntake(void);
+  
+  virtual bool CheckPointGrowth(void);
+  virtual bool CheckPointDivision(void);
+  virtual bool CheckPointApoptosis(void);
 
   virtual Cell * CreateNew(void);
+
+  typedef enum {
+                  M = 1,
+                  Gap1,
+                  S,
+                  Gap2,
+                  Gap0,
+                  Apop,
+                        } CellCycleState;
 
 public:
 
@@ -86,6 +102,9 @@ protected:
    IdentifierType       m_ParentIdentifier;
    IdentifierType       m_SelfIdentifier;
 
+   unsigned long        m_Generation;
+
+   CellCycleState       m_CycleState;
 
 
    // Static Members

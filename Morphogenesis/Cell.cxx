@@ -2,8 +2,9 @@
 
 
 #include "Cell.h"
-#include "FL/gl.h"
 #include <new>
+#include "FL/gl.h"
+#include "CellularAggregate.h"
 
 
 namespace bio {
@@ -14,7 +15,7 @@ Cell::ColorType    Cell::DefaultColor;
 
 double             Cell::DefaultRadius         =       10; // microns
 
-double             Cell::GrowthRadiusIncrement =    0.001; // microns
+double             Cell::GrowthRadiusIncrement =    0.01; // 0.001 microns
 double             Cell::GrowthRadiusLimit     =       20; // microns
 
 double             Cell::NutrientSelfRepairLevel  =     0; 
@@ -43,6 +44,9 @@ Cell
   Counter++;
   m_SelfIdentifier = Counter;  
 
+  m_Generation     = 0;
+  m_CycleState     = M;  // cells are created in Mitosis state
+
   // Start with minimum reserves
   m_NutrientsReserveLevel = NutrientSelfRepairLevel + DefaultNutrientsIntake;
   m_EnergyReserveLevel    = EnergySelfRepairLevel   + DefaultEnergyIntake;
@@ -70,6 +74,72 @@ Cell
 ::Divide(void) 
 {
 }
+
+
+
+/**
+ *    Programmed Cell Death 
+ *    This is the cellular equivalent of suicide.
+ */ 
+void
+Cell
+::Apoptosis(void) 
+{
+
+  CellularAggregate * aggregate = GetCellularAggregate();
+  // "this" will be destroyed here
+  aggregate->Remove( this ); 
+
+}
+
+
+
+/**
+ *    Check point after division
+ *    This check point will control
+ *    the entrance in the growth stage.
+ *    It returns true when conditions
+ *    required for growth are satisfied.
+ */ 
+bool
+Cell
+::CheckPointGrowth(void) 
+{
+  return true;
+}
+
+
+/**
+ *    Check point before division
+ *    This check point will control
+ *    the entrance in the division stage.
+ *    It returns true when conditions
+ *    required for division are satisfied.
+ */ 
+bool
+Cell
+::CheckPointDivision(void) 
+{
+  return true;
+}
+
+
+
+/**
+ *    Check point before apoptosis
+ *    This check point will control
+ *    the entrance in the apoptosis stage.
+ *    It returns true when conditions
+ *    required for apoptosis are satisfied.
+ *    The cell will die in apoptosis.
+ */ 
+bool
+Cell
+::CheckPointApoptosis(void) 
+{
+  return false;
+}
+
 
 
 
@@ -298,7 +368,9 @@ Cell
 
 
 /**
- *    Execute a time step in the life of the cell
+ *    Execute a time step in the life of the cell.
+ *    This is one step in the cell cycle.
+ *
  *    Nutrients are acquired
  *    Energy is acquired
  *    If conditions allow it, the cell will grow
@@ -309,11 +381,77 @@ void
 Cell
 ::AdvanceTimeStep(void) 
 {
-  
-  this->NutrientsIntake();
-  this->EnergyIntake();
-  this->Grow();
+     
+  // If this happens, it is an
+  // emergency situation: Do it first.
+  if( this->CheckPointApoptosis() )
+    {
+    m_CycleState = Apop;
+    }
 
+
+  switch( m_CycleState )
+  {
+  case M: // Mitosis
+    {
+    if( this->CheckPointGrowth() )
+      {
+      m_CycleState = Gap1;
+      }
+    break;
+    }
+  case Gap1: // Gap 1 : growing
+    {
+    if( this->CheckPointDivision() )
+      {
+      m_CycleState = S;
+      }
+
+    break;
+    }
+  case S:
+    m_CycleState = Gap2;
+    break;
+  case Gap2:
+    m_CycleState = M;
+    break;
+  case Gap0:
+    m_CycleState = Gap0;
+    break;
+  case Apop:
+    m_CycleState = Apop;
+    break;
+  }
+
+
+
+  // Atomaton : Execute action
+  switch( m_CycleState )
+  {
+  case M:  // Mitosis
+    break;
+  case Gap1:
+    // Eat and grow
+    this->NutrientsIntake();
+    this->EnergyIntake();
+    this->Grow();
+    break;
+  case Gap0:
+    this->NutrientsIntake();
+    this->EnergyIntake();
+   break;
+  case S:
+    this->Divide();
+    // this is a terminal action
+    // the cell is destroyed after
+    // division.
+   break; 
+  case Gap2:
+   break;
+  case Apop:
+   this->Apoptosis();
+   break;
+  }
 }
 
 

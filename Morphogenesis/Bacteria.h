@@ -16,10 +16,20 @@ class Bacteria  : public Cell
 
 
 public:
+
+  typedef  Cell  SuperClass;
+
   Bacteria();
   ~Bacteria();
+
   virtual void Grow(void);
   virtual void Divide(void);
+  virtual void Apoptosis(void);
+
+  virtual bool CheckPointGrowth(void);
+  virtual bool CheckPointDivision(void);
+  virtual bool CheckPointApoptosis(void);
+
   virtual Cell * CreateNew(void);
 
 private:

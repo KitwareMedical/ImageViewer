@@ -114,6 +114,8 @@ public:
   typedef itk::PolygonCell<  MeshType::CellPixelType, 
                              MeshType::CellTraits > VoronoiRegionType;
 
+  typedef VoronoiRegionType::Pointer VoronoiRegionPointer;
+
 
 public:
 
@@ -129,8 +131,10 @@ public:
   virtual void AdvanceTimeStep(void);
 
   virtual void Add( Cell * cell, const VectorType & perturbation );
+  virtual void Add( Cell * cell, Cell *cell, const VectorType & perturbation );
   virtual void Add( Cell * cell );
   virtual void Remove( Cell * cell );
+  virtual VoronoiRegionType::Pointer GetVoronoi( IdentifierType cellId ) const;
 
   void DumpContent( std::ostream & os ) const;
 
