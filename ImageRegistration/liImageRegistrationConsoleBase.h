@@ -123,7 +123,6 @@ public:
   virtual void LoadMovingImage(void)=0;
   virtual void LoadMovingImage(const char * filename);
 
-  virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
 
   virtual void Execute(void);

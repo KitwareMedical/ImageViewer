@@ -42,7 +42,6 @@ public:
   virtual void LoadMovingImage(void);
 
   virtual void Quit(void);
-  virtual void ShowProgress(float);
   virtual void ShowStatus(const char * text);
 
   virtual void ShowFixedImage(void);

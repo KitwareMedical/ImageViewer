@@ -20,10 +20,6 @@
 #include <FL/fl_file_chooser.H>
  
 
-// This macro helps to connect observers for events
-#define AddObserverMacro( filter, event, widget ) \
-  filter->AddObserver( itk::event(), widget->GetRedrawCommand().GetPointer() );
-
 
 
 /************************************
@@ -40,22 +36,13 @@ liImageRegistrationConsole
   m_InputMovingImageViewer.SetLabel( "Input Moving Image" );
   m_MappedMovingImageViewer.SetLabel( "Mapped Moving Image" );
 
-  AddObserverMacro( m_FixedImageReader, StartEvent,     fixedImageButton );
-  AddObserverMacro( m_FixedImageReader, EndEvent,       fixedImageButton );
-  AddObserverMacro( m_FixedImageReader, ModifiedEvent,  fixedImageButton );
-  
-  AddObserverMacro( m_MovingImageReader, StartEvent,    inputMovingImageButton );
-  AddObserverMacro( m_MovingImageReader, EndEvent,      inputMovingImageButton );
-  AddObserverMacro( m_MovingImageReader, ModifiedEvent, inputMovingImageButton );
-  
-  AddObserverMacro( m_FixedImageReader, StartEvent,     loadFixedImageButton );
-  AddObserverMacro( m_FixedImageReader, EndEvent,       loadFixedImageButton );
-  AddObserverMacro( m_FixedImageReader, ModifiedEvent,  loadFixedImageButton );
-  
-  AddObserverMacro( m_MovingImageReader, StartEvent,     loadMovingImageButton );
-  AddObserverMacro( m_MovingImageReader, EndEvent,       loadMovingImageButton );
-  AddObserverMacro( m_MovingImageReader, ModifiedEvent,  loadMovingImageButton );
-  
+  progressSlider->Observe( m_ResampleMovingImageFilter.GetPointer() );
+
+  fixedImageButton->Observe(        m_FixedImageReader.GetPointer()  );
+  loadFixedImageButton->Observe(    m_FixedImageReader.GetPointer()  );
+  inputMovingImageButton->Observe(  m_MovingImageReader.GetPointer() );
+  loadMovingImageButton->Observe(   m_MovingImageReader.GetPointer() );
+
   this->ShowStatus("Let's start by loading an image...");
 
 }
@@ -201,23 +188,6 @@ liImageRegistrationConsole
 }
 
 
-
-
-
- 
-/************************************
- *
- *  Show Progress
- *
- ***********************************/
-void
-liImageRegistrationConsole
-::ShowProgress( float fraction )
-{
-  liImageRegistrationConsoleBase::ShowProgress( fraction );
-  progressSlider->value( fraction );
-  Fl::check();
-}
 
 
 

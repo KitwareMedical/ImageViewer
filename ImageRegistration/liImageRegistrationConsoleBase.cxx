@@ -129,20 +129,6 @@ liImageRegistrationConsoleBase
  
 /************************************
  *
- *  Show Progress
- *
- ***********************************/
-void
-liImageRegistrationConsoleBase 
-::ShowProgress( float )
-{
-
-}
-
-
- 
-/************************************
- *
  *  Show Status
  *
  ***********************************/
@@ -182,7 +168,6 @@ liImageRegistrationConsoleBase
 
   m_ResampleInputMovingImageFilter->Update();
 
-  this->ShowProgress( 1.0 );
   this->ShowStatus("FixedImage Image Transformation done");
 
 }
@@ -243,7 +228,6 @@ liImageRegistrationConsoleBase
 
   m_ResampleMovingImageFilter->Update();
 
-  this->ShowProgress( 1.0 );
   this->ShowStatus("MovingImage Image Transformation done");
 
 }
