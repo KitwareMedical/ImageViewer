@@ -81,6 +81,6 @@ private:
 
 };
 
-}; // end namespace bio
+} // end namespace bio
 
 #endif
