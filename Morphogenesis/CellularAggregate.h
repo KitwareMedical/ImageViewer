@@ -61,7 +61,7 @@ public:
   typedef itk::DefaultDynamicMeshTraits<  
               PointPixelType,           // PixelType
               Cell::PointDimension,     // Points Dimension
-              Cell::PointDimension,     // Max.Topologycal Dimension
+              Cell::PointDimension,     // Max.Topological Dimension
               double,                   // Type for coordinates
               double,                   // Type for interpolation 
               CellPixelType             // Type for values in the cells  
