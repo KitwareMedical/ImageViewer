@@ -90,7 +90,7 @@ void ImageRegLMEx::RunRegistration()
     m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
     m_Load=dynamic_cast<LMClass2*> (&*m_Solver.load.Find(m_Solver.load.size()));  
   
-   
+  
     //FIXME - experiment with these values and choices for solver
     LinearSystemWrapperItpack itpackWrapper; 
     LinearSystemWrapperDenseVNL vnld;  
@@ -116,23 +116,19 @@ void ImageRegLMEx::RunRegistration()
      m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
     //m_Solver.SetLinearSystemWrapper(&vnld); 
 
-  /*
-  * Assemble the global mass and stiffness matrix. In order to do this
-  * the GFN's should already be assigned to every DOF.
-  */  
+  
+  //Assemble the global mass and stiffness matrix. In order to do this
+  // the GFN's should already be assigned to every DOF.
+     
   m_Solver.AssembleKandM();
  
-    
-  /* Solve the system in time */
+   
+  // Solve the system in time 
 
   if (!m_DoMultiRes) IterativeSolve(); else MultiResSolve();
-
-  std::cout << " interpolating vector field " << std::endl;
-
+ 
   GetVectorField();
 
-  
-//  ReadImages(); //FIXME
   WarpImage();
 
   std::cout<<"\n E " << m_E << " dt " << m_dT << " rho " << m_Rho << "\n";
@@ -296,57 +292,19 @@ int ImageRegLMEx::GenRegMesh()
   e1=ElementType::New();
   e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*m_Solver.mat.Find(0) );
 
-  /* We'll need these pointers to create and initialize the objectm_Solver. */
-  Node::Pointer n1;
-  
-  // We create a uniform mesh over the image
-  
-  unsigned int i,j, ct=0;  Float X, Y;
-  for (j=0; j<=m_Ny;j=j+m_MeshResolution){
-  for (i=0; i<=m_Nx;i=i+m_MeshResolution){
-    if ( i < m_Nx-1) X=Float(i); else X=Float(m_Nx-1);
-    if ( j < m_Ny-1) Y=Float(j); else Y=Float(m_Ny-1); 
-    n1=new Node(X,Y);
-    n1->GN=ct;
-    ct++;
-    m_Solver.node.push_back( FEMP<Node>(&*n1) );
-    //cout << " ct " << ct << " pos " << i << " " << j << endl;
-  }
-  }
- 
-  
-  unsigned int ctGN=0,jct=0,ict=0;
-    for (unsigned int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
-      ict=0;
-      for (unsigned int i=0; i<=m_Nx-m_MeshResolution;i=i+m_MeshResolution){ 
-        e1=ElementType::New();
-        e1->GN=ctGN;  ctGN++;
-        e1->SetNode(0,dynamic_cast<Node*>( &*m_Solver.node.Find(ctGN+jct-1) ));
-        e1->SetNode(1,dynamic_cast<Node*>( &*m_Solver.node.Find(ctGN+jct) ));
-        e1->SetNode(2,dynamic_cast<Node*>( &*m_Solver.node.Find((ctGN+m_Nx/m_MeshResolution)+jct+1) ));
-        e1->SetNode(3,dynamic_cast<Node*>( &*m_Solver.node.Find((ctGN+m_Nx/m_MeshResolution)+jct) ));
-        e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*m_Solver.mat.Find(0) );
-        m_Solver.el.push_back( FEMP<Element>(&*e1) );
-        ict++;
-       // std::cout << ctGN << "  elt nodes : a  " << ctGN+jct -1 << " b " <<
-       //   ctGN+jct << " c " << (ctGN+nx/step)+jct+1 << " d " << (ctGN+nx/step)+jct<< endl;
-      }
-      jct++;
-      
-    }
-
-
   vnl_vector<double> MeshOrigin; MeshOrigin.resize(ImageDimension); 
   vnl_vector<double> MeshSize;   MeshSize.resize(ImageDimension); 
   vnl_vector<double> ElementsPerDimension;  ElementsPerDimension.resize(ImageDimension); 
   for (unsigned int i=0; i<ImageDimension; i++)
   { 
-    MeshSize[i]=(double)m_Nx; // FIX ME
-    MeshOrigin[i]=(double)0.0;// FIX ME
+    MeshSize[i]=(double)m_Nx-1; // FIX ME make more general
+    MeshOrigin[i]=(double)0.0;// FIX ME make more general
     ElementsPerDimension[i]=(double)m_MeshResolution;
   }
 
-  //GenerateMesh<Element2DC0LinearQuadrilateral>::Rectangular(e1,m_Solver,MeshOrigin,MeshSize,ElementsPerDimension);   
+  GenerateMesh<Element2DC0LinearQuadrilateral>::
+    Rectangular(e1,m_Solver,MeshOrigin,MeshSize,ElementsPerDimension);   
+  delete e1;
 
  /*
   * Apply the boundary conditions.  We pin the image corners.
@@ -434,20 +392,6 @@ int ImageRegLMEx::GenRegMesh()
   else { std::cout << "no landmark file specified." << std::endl; }
   }
 
-/*
-  unsigned int ind4=128;
-  l1=LoadBC::New();
-  l1->m_element=( &*m_Solver.el.Find(ind4));
-  l1->m_dof=4;
-  l1->m_value=vnl_vector<double>(1,10.0);
-  m_Solver.load.push_back( FEMP<Load>(&*l1) ); 
-  
-  l1=LoadBC::New();
-  l1->m_element=( &*m_Solver.el.Find(ind4));
-  l1->m_dof=5;
-  l1->m_value=vnl_vector<double>(1,10.0);
-  m_Solver.load.push_back( FEMP<Load>(&*l1) ); */
-
   return 0;
 }
 
@@ -530,7 +474,6 @@ void ImageRegLMEx::GetVectorField()
   FieldIterator m_FieldIter( m_Field, m_FieldRegion );
   m_FieldIter.GoToBegin();
   ImageType::IndexType rindex = m_FieldIter.GetIndex();
-  ImageType::IndexType tindex = m_FieldIter.GetIndex();
 
   for(  Element::ArrayType::iterator elt=el->begin(); elt!=el->end(); elt++) 
   {
@@ -541,7 +484,7 @@ void ImageRegLMEx::GetVectorField()
     for (double r=-1.; r <= 1.; r=r+ 1./(float)m_MeshResolution)
     for (double s=-1.; s <= 1.; s=s+ 1./(float)m_MeshResolution)
     {
-      Pos[0]=r; 
+     Pos[0]=r; 
       Pos[1]=s;;
       VectorType disp; 
       vnl_vector<double> ncoord(2); 
@@ -549,11 +492,12 @@ void ImageRegLMEx::GetVectorField()
       Sol=(*elt)->InterpolateSolution(Pos,*(m_Solver.GetLS()),1); // for total solution index
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        rindex[ii]=(long int) Gpt[ii];
+        long int temp=0;
+        rindex[ii]=(long int) (Gpt[ii]+0.5);
         disp[ii] =(Float) 1.*Sol[ii];
-        tindex[ii]=(long int) rindex[ii]+(long int)(disp[ii]+0.5);
       }
-      
+    
+      std::cout << rindex << std::endl;
       m_Field->SetPixel(rindex, disp );
     }    
   }
@@ -753,7 +697,7 @@ int main()
 
   X.SetNumberOfIntegrationPoints(8);// Resolution of energy integration
   X.SetWidthOfMetricRegion(1);
-  X.DoMultiRes(true);// Use multi-resolution strategy
+  X.DoMultiRes(false);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
   X.m_MaxSmoothing=2.0; // set multi-res parameters
   X.m_MinSmoothing=0.5;
