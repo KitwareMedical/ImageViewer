@@ -45,20 +45,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 int main(int argc, char *argv[])
 {
 
-/*
-  if ( argc < 2 )
-    {
-    std::cout << "Parameter file name missing" << std::endl;
-    std::cout << std::endl;
-    std::cout << "Usage:  FuzzyConnectedness param.file" << std::endl;
-    return 1;
-    }
-*/
-
-  // run the registration
+  // run the application
   try
     {
-//    FuzzyConnectApp theApp( argv[1] );
     FuzzyConnectApp theApp;
     theApp.Execute();
     }
