@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0009 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -11,7 +11,7 @@ class fltkImage2DViewerGUI {open
     Fl_Window externalWindow {open
       xywh {512 175 454 367} resizable visible
     } {
-      Fl_Box imageViewer {
+      Fl_Box imageViewer {selected
         xywh {0 0 450 365}
         code0 {\#include <fltkImage2DViewerWindow.h>}
         class {fltk::Image2DViewerWindow}
@@ -57,6 +57,6 @@ Fl::check();} {}
   } {}
   Function {SetMax(double val)} {return_type {virtual void}
   } {}
-  Function {Update(void)} {selected return_type {virtual void}
+  Function {Update(void)} {return_type {virtual void}
   } {}
 } 
