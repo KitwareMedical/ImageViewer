@@ -1,0 +1,205 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
+} {
+  Function {ceExtractorConsoleGUI()} {} {
+    Fl_Window consoleWindow {
+      label {Gaussian Filter Console} selected
+      xywh {329 176 757 391}
+      code0 {\#include <ceExtractorConsoleBase.h>}
+      code1 {\#include <fltkLightButton.h>} visible
+    } {
+      Fl_Group Connectors {
+        xywh {5 5 745 255}
+      } {
+        Fl_Box {} {
+          xywh {460 175 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {466 80 51 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {117 100 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {117 145 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {72 125 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {221 100 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {221 145 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {112 100 10 55} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {465 55 10 35} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {430 55 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {425 80 45 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {405 150 70 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {400 175 75 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {465 150 10 35} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 46 55 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 71 55 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 180 53 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 205 53 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 113 55 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {265 156 50 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {260 45 10 170} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {60 60 10 65} box UP_BOX color 4
+        }
+      }
+      Fl_Group controlsGroup {
+        xywh {5 5 745 255} box DOWN_FRAME deactivate
+      } {
+        Fl_Light_Button inputButton {
+          label Input
+          callback {ShowInput();}
+          xywh {27 116 69 30} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button H1xButton {
+          label {Gradient X}
+          callback {ShowFilteredX();}
+          xywh {295 40 100 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Counter {} {
+          label Sigma
+          callback {SetSigma( o->value() );}
+          xywh {30 190 160 25} align 1 minimum -100 maximum 100 value 1
+        }
+        Fl_Light_Button H1yButton {
+          label {Gradient Y}
+          callback {ShowFilteredY();}
+          xywh {295 64 100 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button H2xButton {
+          label {Second X}
+          callback {ShowSecondDerivativeX();}
+          xywh {295 149 101 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button H2yButton {
+          label {Second Y}
+          callback {ShowSecondDerivativeY();}
+          xywh {295 173 101 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button laplacianButton {
+          label Laplacian
+          callback {ShowLaplacian();}
+          xywh {490 170 89 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button modulusButton {
+          label Modulus
+          callback {ShowGradientModulus();}
+          xywh {493 75 85 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button HxButton {
+          label {Smooth X}
+          xywh {139 93 90 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button HyButton {
+          label {Smooth Y}
+          xywh {139 136 90 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button HxyButton {
+          label {Smooth XY}
+          xywh {295 106 98 24} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+        Fl_Light_Button H2xyButton {
+          label {Second XY}
+          callback {ShowSecondDerivativeY();}
+          xywh {295 198 101 25} type Normal value 1 selection_color 1
+          class {fltk::LightButton}
+        }
+      }
+      Fl_Slider progressSlider {
+        xywh {5 324 735 15} type {Horz Fill} selection_color 2
+        code0 {\#include <fltkProgressBar.h>}
+        class {fltk::ProgressBar}
+      }
+      Fl_Output statusTextOutput {
+        xywh {5 349 735 25}
+      }
+      Fl_Light_Button loadButton {
+        label Load
+        callback {Load();}
+        xywh {30 45 69 30} type Normal value 1 selection_color 1
+        class {fltk::LightButton}
+      }
+      Fl_Button {} {
+        label Quit
+        callback {Quit();}
+        xywh {125 280 80 30} box ROUND_UP_BOX
+      }
+      Fl_Button {} {
+        label Execute
+        callback {Execute();}
+        xywh {25 280 80 30} box ROUND_UP_BOX
+      }
+    }
+  }
+  Function {~ceExtractorConsoleGUI()} {return_type virtual
+  } {}
+  Function {Quit( void )} {return_type {virtual void}
+  } {}
+  Function {Load( void )} {return_type {virtual void}
+  } {}
+  Function {ShowInput( void )} {return_type {virtual void}
+  } {}
+  Function {ShowFilteredX( void )} {return_type {virtual void}
+  } {}
+  Function {ShowFilteredY( void )} {return_type {virtual void}
+  } {}
+  Function {ShowSecondDerivativeX( void )} {return_type {virtual void}
+  } {}
+  Function {ShowSecondDerivativeY( void )} {return_type {virtual void}
+  } {}
+  Function {ShowLaplacian( void )} {return_type {virtual void}
+  } {}
+  Function {ShowGradientModulus( void )} {return_type {virtual void}
+  } {}
+} 
