@@ -48,71 +48,22 @@ these steps
 
 1) Download and install FLTK
 
-2) Activate the compilation of Auxiliary
-   classes.
+2) Activate the compilation of Auxiliary classes.
+   When you run CMake set the option:
 
-2.1)  Go to  your Insight directory and edit
-      the file CMakeList.txt. Look for the line
-      containing the command "SUBDIRS"
+   BUILD_AUXILIARY = "ON"
 
-      Add at the end of the list between the 
-      parenthesis, the directories "Auxiliary"
-      and "Examples".
-      
-      the line will look similar to:
+3) Activate the compilation of Example programs.
+   When you run CMake set the option:
 
-      "SUBDIRS(Utilities Code Testing Examples Auxiliary)"
+   BUILD_EXAMPLES = "ON"
 
-      (without the quotes...)
-
-      That will indicate to the make program CMake that 
-      this directories should be included in the building 
-      process.
-
-      If you want to know more about CMakeList
-      files and the portable maker CMake, please
-      consult:  Insight/Documents/CMake.pdf
-
-2.2)  cd to Insight/Auxiliary.
-      edit the CMakeList.txt file.
-      Look for the line containing the command
-      "SUBDIRS". Add the directories "MetaImage"
-      and "FltkImageViewer".
-    
-      The line will look similar to:
-      
-      "SUBDIRS(MetaImage FltkImageViewer)"
-
-      (without the quotes...)
-
-      MetaImage contains a set of classes for
-      reading and writing images on files.
-      
-      FltkImageViewer contains classes for the 
-      GUI of image display.
+4) From CMake configure and generate the 
+   configuration files: Project files for
+   windows and Makefiles for Unix.
 
 
-2.3)  cd to Insight/Auxiliary/MetaImage.
-      edit the CMakeList.txt file.
-      Look for the line containing the command
-      "SUBDIRS". Add the directory "IView".
-    
-      The line will look similar to:
-
-      "SUBDIRS(IView)"
-
-      (without the quotes...)
-
-      IView is a set of classes for Image display.
-
-
-3) Rerun "configure" (on Unix) or CMakeSetup (on windows)
-   as you did the first time you installed the Insight
-   toolkit.  That will regenerate the Makefiles (on Unix)
-   or .dsw .dsp project files (on Windows for Visual C++).
-  
-
-4) on Unix:
+5) on Unix:
 
    run make
 
@@ -122,7 +73,7 @@ these steps
    the ImageRegistration project. Rebuild it.
 
 
-5) on Unix:
+6) on Unix:
   
    The executable should be availabe at your Insight binary
    directory, under : /Examples/ImageRegistration/ImageRegistration
@@ -133,7 +84,7 @@ these steps
    run the program from the Visual C++ environment.
    
 
-6) Enjoy  !
+7) Enjoy  !
 
 
 
