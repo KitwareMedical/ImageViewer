@@ -59,6 +59,8 @@ ShapeDetectionLevelSetBase
   m_SeedImage = SeedImageType::New();
   m_SeedValue = 1;
 
+  m_NumberOfSeeds = 0;
+
   m_InputImageIsLoaded  = false;
 
 }
