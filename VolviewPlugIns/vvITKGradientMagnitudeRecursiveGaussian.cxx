@@ -26,6 +26,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetUpdateMessage("Computing the gradient magnitude...");
       // Set the parameters on it
       module.GetFilter()->SetSigma(  atof( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetNormalizeAcrossScale( true );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -40,6 +41,7 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.SetUpdateMessage("Computing the gradient magnitude...");
       // Set the parameters on it
       module.GetFilter()->SetSigma(  atof( info->GUIItems[ 0 ].CurrentValue) );
+      module.GetFilter()->SetNormalizeAcrossScale( true );
       // Execute the filter
       module.ProcessData( pds );
       break; 
