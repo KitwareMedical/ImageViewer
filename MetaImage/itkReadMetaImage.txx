@@ -125,7 +125,7 @@ ReadMetaImage<TOutputImage>
     }
   else
     {
-    itkErrorMacro(<<"Couldn't convert pixel type");
+    itkExceptionMacro(<<"Couldn't convert pixel type");
     return;
     }
 
