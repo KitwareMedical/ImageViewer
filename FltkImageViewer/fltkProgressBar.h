@@ -93,8 +93,7 @@ public:
    */
   void ProcessEvent(itk::Object * caller, const itk::EventObject & event )
   {
-    if( typeid( itk::ProgressEvent )   ==  ( typeid( event ) ) ||  
-        typeid( itk::ProgressEvent ).before( typeid( event ) ) )  
+    if( typeid( itk::ProgressEvent )   ==  typeid( event ) )
       {
       itk::ProcessObject::Pointer  process = 
                  dynamic_cast< itk::ProcessObject *>( caller );
@@ -105,8 +104,7 @@ public:
 
   void ConstProcessEvent(const itk::Object * caller, const itk::EventObject & event )
   {
-    if( typeid( itk::ProgressEvent )   ==  ( typeid( event ) ) ||  
-        typeid( itk::ProgressEvent ).before( typeid( event ) ) )  
+    if( typeid( itk::ProgressEvent )   ==  typeid( event ) ) 
       {
       itk::ProcessObject::ConstPointer  process = 
                  dynamic_cast< const itk::ProcessObject *>( caller );

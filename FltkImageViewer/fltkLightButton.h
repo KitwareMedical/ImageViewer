@@ -89,20 +89,17 @@ public:
    */
   void ProcessEvent( const itk::EventObject & event )
   {
-  if( typeid( itk::StartEvent )  ==   ( typeid( event ) ) ||
-      typeid( itk::StartEvent ).before( typeid( event ) ) )
+  if( typeid( itk::StartEvent )  ==  typeid( event ) ) 
     {
     this->selection_color( FL_YELLOW );
     this->value( 1 );
     }
-  else if ( typeid( itk::EndEvent )   ==   ( typeid( event ) ) ||
-            typeid( itk::EndEvent ) .before( typeid( event ) ) )
+  else if ( typeid( itk::EndEvent )   ==   typeid( event ) ) 
     {
     this->selection_color( FL_GREEN );
     this->value( 1 );
     }
-  else if  ( typeid( itk::ModifiedEvent )  ==   ( typeid( event ) ) || 
-             typeid( itk::ModifiedEvent ).before( typeid( event ) ) ) 
+  else if  ( typeid( itk::ModifiedEvent )  ==   typeid( event ) ) 
     {
     this->selection_color( FL_RED );
     this->value( 1 );
