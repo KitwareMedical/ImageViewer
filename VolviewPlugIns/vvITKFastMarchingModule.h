@@ -14,6 +14,7 @@
 #include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
 #include "itkSigmoidImageFilter.h"
 #include "itkFastMarchingImageFilter.h"
+#include "itkIntensityWindowingImageFilter.h"
 #include "itkImageRegionConstIterator.h"
 #include "itkCommand.h"
 
@@ -32,12 +33,14 @@ public:
   typedef TInputPixelType                InputPixelType;
   typedef float                          RealPixelType;
   typedef unsigned char                  SpeedPixelType;
+  typedef unsigned char                  OutputPixelType;
 
   itkStaticConstMacro( Dimension, unsigned int, 3 );
 
-  typedef itk::Image< InputPixelType, Dimension >  InputImageType;
-  typedef itk::Image< RealPixelType,  Dimension >  RealImageType;
-  typedef itk::Image< SpeedPixelType, Dimension >  SpeedImageType;
+  typedef itk::Image< InputPixelType,  Dimension >  InputImageType;
+  typedef itk::Image< RealPixelType,   Dimension >  RealImageType;
+  typedef itk::Image< SpeedPixelType,  Dimension >  SpeedImageType;
+  typedef itk::Image< OutputPixelType, Dimension >  OutputImageType;
 
   // Instantiate the ImportImageFilter
   // This filter is used for building an ITK image using 
@@ -75,6 +78,16 @@ public:
   typedef itk::FastMarchingImageFilter< RealImageType,
                                         SpeedImageType >  FastMarchingFilterType;
 
+   // Instantiation of the Intensity windowing filter.
+   // This filter is used to remove infinite times from the non-visited
+   // pixels of the time-crossing map. This pixels are set to the stopping value.
+   typedef itk::IntensityWindowingImageFilter< 
+                                        RealImageType,
+                                        OutputImageType >
+                                                    IntensityWindowingFilterType;
+                                               
+
+
 
    typedef typename FastMarchingFilterType::NodeType         NodeType;
    typedef typename FastMarchingFilterType::NodeContainer    NodeContainerType;
@@ -105,6 +118,7 @@ private:
     typename GradientMagnitudeFilterType::Pointer   m_GradientMagnitudeFilter;
     typename SigmoidFilterType::Pointer             m_SigmoidFilter;
     typename FastMarchingFilterType::Pointer        m_FastMarchingFilter;
+    typename IntensityWindowingFilterType::Pointer  m_IntensityWindowingFilter;
 
     typename NodeContainerType::Pointer             m_NodeContainer;
     

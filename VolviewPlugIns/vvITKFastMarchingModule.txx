@@ -19,10 +19,11 @@ template <class TInputPixelType >
 FastMarchingModule<TInputPixelType>
 ::FastMarchingModule()
 {
-    m_ImportFilter            = ImportFilterType::New();
-    m_GradientMagnitudeFilter = GradientMagnitudeFilterType::New();
-    m_SigmoidFilter           = SigmoidFilterType::New();
-    m_FastMarchingFilter      = FastMarchingFilterType::New();
+    m_ImportFilter               = ImportFilterType::New();
+    m_GradientMagnitudeFilter    = GradientMagnitudeFilterType::New();
+    m_SigmoidFilter              = SigmoidFilterType::New();
+    m_FastMarchingFilter         = FastMarchingFilterType::New();
+    m_IntensityWindowingFilter   = IntensityWindowingFilterType::New();
 
     m_NodeContainer           = NodeContainerType::New();
 
@@ -40,10 +41,17 @@ FastMarchingModule<TInputPixelType>
 
     m_CurrentNumberOfSeeds    = 0;
 
+    // This transfer function will invert the map
+    m_IntensityWindowingFilter->SetWindowMinimum( m_InitialSeedValue );
+    m_IntensityWindowingFilter->SetWindowMaximum( m_FastMarchingFilter->GetStoppingValue() );
+    m_IntensityWindowingFilter->SetOutputMinimum( m_FastMarchingFilter->GetStoppingValue() );
+    m_IntensityWindowingFilter->SetOutputMaximum( m_InitialSeedValue );
+
     // Set up the pipeline
     m_GradientMagnitudeFilter->SetInput(  m_ImportFilter->GetOutput()             );
     m_SigmoidFilter->SetInput(            m_GradientMagnitudeFilter->GetOutput()  );
     m_FastMarchingFilter->SetInput(       m_SigmoidFilter->GetOutput()            );
+    m_IntensityWindowingFilter->SetInput( m_FastMarchingFilter->GetOutput()       );
 
 }
 
@@ -130,6 +138,8 @@ FastMarchingModule<TInputPixelType>
 ::SetStoppingValue( float value )
 {
   m_FastMarchingFilter->SetStoppingValue( value );
+  m_IntensityWindowingFilter->SetOutputMinimum( value );
+  m_IntensityWindowingFilter->SetWindowMaximum( value );
 }
 
 
@@ -242,12 +252,13 @@ FastMarchingModule<TInputPixelType>
   m_GradientMagnitudeFilter->Update();
   m_SigmoidFilter->Update();
   m_FastMarchingFilter->Update();
+  m_IntensityWindowingFilter->Update();
 
   // Copy the data (with casting) to the output buffer provided by the Plug In API
-  typename RealImageType::ConstPointer outputImage =
-                               m_FastMarchingFilter->GetOutput();
+  typename OutputImageType::ConstPointer outputImage =
+                               m_IntensityWindowingFilter->GetOutput();
 
-  typedef itk::ImageRegionConstIterator< RealImageType >  OutputIteratorType;
+  typedef itk::ImageRegionConstIterator< OutputImageType >  OutputIteratorType;
 
   OutputIteratorType ot( outputImage, outputImage->GetBufferedRegion() );
 
