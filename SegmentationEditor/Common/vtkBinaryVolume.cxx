@@ -18,7 +18,6 @@
 #include "vtkBinaryVolume.h"
 #include "vtkObjectFactory.h"
 #include <fstream>
-#include <cmath>
 
 vtkBinaryVolume::vtkBinaryVolume()
 {
@@ -144,7 +143,7 @@ void vtkBinaryVolume::SetWithRadius(int x, int y, int z)
   for (yy = -paint_radius + 1; yy < paint_radius; yy++)
     {
       ypos = y + yy;
-      xx = (int) (::floor( ::sqrt(r2 - (yy * yy)) ) );
+      xx = (int) (::floor( ::sqrt(static_cast<double>(r2 - (yy * yy))) ) );
       for (x_tem = xx; x_tem >= -xx ; x_tem --)
         {
           xpos = x + x_tem;
@@ -157,7 +156,7 @@ void vtkBinaryVolume::SetWithRadius(int x, int y, int z)
   for ( xx = -paint_radius + 1; xx < paint_radius; xx++)
     {
       xpos = x + xx;
-      yy = (int) ( ::floor(::sqrt( r2 - (xx * xx))) );
+      yy = (int) ( ::floor(::sqrt( static_cast<double>(r2 - (xx * xx)))) );
       for (y_tem = yy; y_tem >= -yy ; y_tem -= yy)
         {
           ypos = y + y_tem;
@@ -189,7 +188,7 @@ void vtkBinaryVolume::UnsetWithRadius(int x, int y, int z)
   for (yy = -paint_radius + 1; yy < paint_radius; yy++)
     {
       ypos = y + yy;
-      xx = (int) (::floor( ::sqrt(r2 - (yy * yy)) ) );
+      xx = (int) (::floor( ::sqrt(static_cast<double>(r2 - (yy * yy))) ) );
       for (x_tem = xx; x_tem >= -xx ; x_tem --)
         {
           xpos = x + x_tem;
@@ -202,7 +201,7 @@ void vtkBinaryVolume::UnsetWithRadius(int x, int y, int z)
   for ( xx = -paint_radius + 1; xx < paint_radius; xx++)
     {
       xpos = x + xx;
-      yy = (int) ( ::floor(::sqrt( r2 - (xx * xx))) );
+      yy = (int) ( ::floor(::sqrt( static_cast<double>(r2 - (xx * xx)))) );
       for (y_tem = yy; y_tem >= -yy ; y_tem -= yy)
         {
           ypos = y + y_tem;
