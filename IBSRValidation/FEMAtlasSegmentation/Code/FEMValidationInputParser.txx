@@ -152,7 +152,7 @@ LabelImagePointer& image )
   
   // Defaults for IBSR data
 //  RawReaderType::SpacingType spacing;
-  bool                    bigEndian = true;
+//  bool                    bigEndian = true;
 // HERE ASSUMING THE IMAGES HAVE BEEN RESAMPLED TO BE ISOTROPIC
 //  spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 1.0; 
 //  rawReader->SetSpacing( spacing );
