@@ -1,0 +1,54 @@
+-----------------------------------------------------------
+Volume file chunker/splitter & unchunker/joiner documentation
+12/05/01 cates@cs.utah.edu
+-----------------------------------------------------------
+
+NOTE: DOCUMENTATION WILL BE COMPLETED POST 12/15/01 jc
+
+
+I. Introduction
+
+The code in this directory provides a way to split up large files of raw,
+binary data into smaller files, or ``chunks'' of data.  It was written
+specifically for use with the streaming watershed code contained in the
+Examples/StreamedWatershedSegmentation, but can obviously be used in other
+contexts.
+
+Vocabulary:  
+
+        volume      - The full data set.  This is either a single file, or, in
+                      the case of Visible Human data, a set of slices.
+
+        slice       - A 2d file that is actually one plane out of a 3d volume.
+
+        chunk       - A subset of the full data set.
+
+        to chunk    - The act of splitting the volume into chunks.
+
+        to unchunk  - The act of joining the chunks into a volume.
+
+        header file - A file that contains information about chunks
+                      and the volume from which they were created.
+
+
+Building the code in this directory will produce several executable
+utilities.  These executables are driven by parameter files (see documentation
+in ../ParameterFileParser).
+
+  catchunkfile header_file_name
+        Prints the contents of a header file used by the other various
+        utilities.
+
+  chunker parameter_file_name 
+        Chunks a standard raw binary volume.
+
+  vhchunker parameter_file_name
+        Chunks a Visible Human color data format raw binary volume.
+
+  vhunchunker parameter_file_name
+        Unchunks any set of chunks into either a single volume, or a set of
+        slices. 
+        
+
+II. Using the utilities
+
