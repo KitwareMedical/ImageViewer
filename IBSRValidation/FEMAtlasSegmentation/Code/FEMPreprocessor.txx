@@ -48,6 +48,8 @@ FEMPreprocessor<TInputImage,TOutputImage>
 ::Execute()
 {
 
+  PRINTOUT( NumberOfHistogramLevels );
+  PRINTOUT( NumberOfMatchPoints );
   this->NormalizeImage( m_InputFixedImage, m_OutputFixedImage, m_FixedImageMinimum );
   this->NormalizeImage( m_InputMovingImage, m_OutputMovingImage, m_MovingImageMinimum );
 
