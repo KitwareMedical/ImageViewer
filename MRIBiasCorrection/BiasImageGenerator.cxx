@@ -18,7 +18,6 @@ PURPOSE.  See the above copyright notices for more information.
 #include <vector>
 #include <vnl/vnl_math.h>
 
-//#include "mydefs.h"
 #include "imageutils.h"
 #include "itkWriteMetaImage.h"
 #include "OptionList.h"
@@ -130,8 +129,6 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
   
-  itk::MetaImageIOFactory::RegisterOneFactory();
-
   // generates the bias field image
   ImagePointer output = ImageType::New() ;
   typedef ImageType::PixelType Pixel ;

@@ -34,28 +34,6 @@ typedef itk::ImageFileReader< ImageType > ImageReaderType ;
 typedef itk::ImageFileReader< MaskType > MaskReaderType ;
 typedef itk::ImageFileWriter< ImageType > ImageWriterType ;
 
-class ImageIOError : public itk::ExceptionObject
-{
-public:
-  ImageIOError() : itk::ExceptionObject() {}
-  virtual ~ImageIOError() throw () {}
-  
-  ImageIOError(const char *file, unsigned int line, std::string fileName, std::string operation) : itk::ExceptionObject(file, line)
-  {
-    FileName = fileName ;
-    Operation = operation ;
-  }
-
-  ImageIOError(const std::string &nfile, unsigned int line, std::string fileName, std::string operation) : itk::ExceptionObject(nfile, line)
-  {
-    FileName = fileName ;
-    Operation = operation ;
-  }
-  
-  std::string FileName ;
-  std::string Operation ;
-} ;
-
 void copyImage(ImagePointer source , ImagePointer target)
 {
   typedef itk::ImageRegionIteratorWithIndex<ImageType> ImageIterator ;

@@ -218,13 +218,11 @@ int main(int argc, char* argv[])
         }
       std::cout << "Images loaded." << std::endl ;
     }
-  catch (ImageIOError e)
+  catch (itk::ExceptionObject e)
     {
-      std::cout << "Error: " << e.Operation << " file name:" 
-                << e.FileName << std::endl ;
+      e.Print(std::cout);
       exit(0) ;
     }
-
       
   if (useLog)
     {

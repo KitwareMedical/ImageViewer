@@ -77,8 +77,18 @@ int main(int argc, char* argv[])
   
   std::cout << "Loading image..." << std::endl ;
   ImageReaderType::Pointer imageReader = ImageReaderType::New() ;
-  imageReader->SetFileName(inputFileName.c_str()) ;
-  imageReader->Update() ;
+  try
+    {
+      std::cout << "Loading images..." << std::endl ;
+      imageReader->SetFileName(inputFileName.c_str()) ;
+      imageReader->Update() ;
+    }
+  catch (itk::ExceptionObject e)
+    {
+      e.Print(std::cout);
+      exit(0) ;
+    }
+
   ImagePointer image = imageReader->GetOutput() ;
   std::cout << "Image loaded..." << std::endl ;
   SlabIdentifier::Pointer identifier = SlabIdentifier::New() ;
