@@ -61,8 +61,13 @@ OperatingRoomModel::OperatingRoomModel()
   li::Light::PointType p0;
   li::Light::PointType p1;
 
-  p0 = -200.0, -500.0, 500.0;
-  p1 =  200.0,  500.0, 500.0;
+  p0[0] = -200.0f;
+  p0[1] = -500.0f;
+  p0[2] =  500.0f;
+
+  p1[0] =  200.0f;
+  p1[1] =  500.0f;
+  p1[2] =  500.0f;
 
   m_Light0->SetPosition( p0 );
   m_Light1->SetPosition( p1 );

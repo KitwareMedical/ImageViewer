@@ -459,7 +459,10 @@ void VertebralBody::GeneratePoints(void)
       double y = currentYRadius * cos(th) - currentYConcavityDepth * exp( -thg*thg/(2.0*width2) );
       double z = y*tan( currentInclination * atan(1.0)/45.0) + alpha * m_Height;
       PointType p;
-      p = x, y, z;
+      p[0] = x;
+      p[1] = y;
+      p[2] = z;
+
       m_Points.push_back( p );
     }
   }

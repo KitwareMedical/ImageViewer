@@ -81,7 +81,9 @@ bool Tube3D::Alloc( unsigned int numberOfSectors,
   }
 
   PointType pp;
-  pp = 0.0, 0.0,-interleave*((double)m_NumberOfSections)/2.0;
+  pp[0] = 0.0f;
+  pp[1] = 0.0f;
+  pp[2] = -interleave*((double)m_NumberOfSections)/2.0f;
 
   for(unsigned int j=0; j<m_NumberOfSections; j++) 
   {

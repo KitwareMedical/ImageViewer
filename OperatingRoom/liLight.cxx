@@ -36,7 +36,9 @@ Light::Light(void)
   m_Specular.SetGreen( 0.0f );
   m_Specular.SetBlue(  0.0f );
 
-  m_Position =  0.0, 0.0, -1.0;
+  m_Position[0] =  0.0;
+  m_Position[1] =  0.0;
+  m_Position[2] = -1.0;
   
   m_LightNumber = (GLenum)(GL_LIGHT0 + m_Counter);
   m_Counter++;

@@ -176,7 +176,9 @@ liSampleGeneratorPedicle::GenerateSamples( SamplesType & samples )
         z *= scale[2];
 
         PointType point;
-        point = x, y, z;
+        point[0] = x;
+        point[1] = y;
+        point[2] = z;
 
         liSample sample;
         sample.value = value;
