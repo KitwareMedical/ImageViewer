@@ -173,7 +173,27 @@ main(int argc, char *argv[])
         pa2phys->Print( std::cout );
     }
     trans->Compose(pa2phys);
-    trans->Compose(image->GetPhysicalToIndexTransform());
+
+    // WARNING: This casting is valid only in this particular example
+    // because we assume that the image has by default an AffineTransform.
+    // However, the transform returned by GetPhysicalToIndexTransform() can
+    // be of any type. In case the actual Transform is not  derived from an
+    // AffineTransform the dynamic_cast<> line will throw an exception.
+    AffineTransformType::Pointer affineTransform;
+    try 
+      {
+       affineTransform = dynamic_cast< AffineTransformType * > (
+                              image->GetPhysicalToIndexTransform().GetPointer() );
+      }
+    catch( ... ) 
+      {
+      itk::ExceptionObject ex;
+      ex.SetLocation(__FILE__);
+      ex.SetDescription(" Attempt to convert a Transform into an AffineTransform");  
+      throw ex;
+      }
+
+    trans->Compose( affineTransform );
     if (verbose) {
         std::cout << "Backprojection transform:" << std::endl;
         trans->Print( std::cout );
