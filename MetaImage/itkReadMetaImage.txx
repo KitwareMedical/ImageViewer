@@ -59,7 +59,6 @@ ReadMetaImage<TOutputImage>
   m_FileName = "";
 }
 
-
 /**
  *
  */
@@ -68,7 +67,7 @@ void
 ReadMetaImage<TOutputImage>
 ::GenerateData()
 {
-
+  
   MetaImage   metaImage;
   
   metaImage.OpenMetaFile(m_FileName.c_str(), true);
@@ -108,7 +107,6 @@ ReadMetaImage<TOutputImage>
   m_OutputImage->SetRequestedRegion( region );
   m_OutputImage->SetBufferedRegion( region );
   m_OutputImage->Allocate();
-    
 
   typedef typename TOutputImage::PixelType  PixelType;
 
@@ -117,33 +115,50 @@ ReadMetaImage<TOutputImage>
   IteratorType it(m_OutputImage,
                   m_OutputImage->GetLargestPossibleRegion() );
 
-  if(!strcmp(typeid(TOutputImage::PixelType).name(), "Uc"))
-    metaImage.ConvertTo(MET_UCHAR);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "c"))
-    metaImage.ConvertTo(MET_CHAR);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "Us"))
-    metaImage.ConvertTo(MET_USHORT);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "s"))
-    metaImage.ConvertTo(MET_SHORT);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "Ui"))
-    metaImage.ConvertTo(MET_UINT);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "i"))
-    metaImage.ConvertTo(MET_INT);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "f"))
-    metaImage.ConvertTo(MET_FLOAT);
-  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "d"))
-    metaImage.ConvertTo(MET_DOUBLE);
-
-  PixelType * source = (PixelType *)metaImage.Get();
-
-  
-  it.Begin();
-  while( !it.IsAtEnd() ) 
+  if( typeid(TOutputImage::PixelType) == typeid(unsigned char) )
     {
-    it.Set( *source++ );
-    ++it;
+    metaImage.ConvertTo(MET_UCHAR);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(char) )
+    {
+    metaImage.ConvertTo(MET_CHAR);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(unsigned short))
+    {
+    metaImage.ConvertTo(MET_USHORT);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(short) )
+    {
+    metaImage.ConvertTo(MET_SHORT);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(unsigned int) )
+    {
+    metaImage.ConvertTo(MET_UINT);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(int) )
+    {
+    metaImage.ConvertTo(MET_INT);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(float) )
+    {
+    metaImage.ConvertTo(MET_FLOAT);
+    }
+  else if( typeid(TOutputImage::PixelType), typeid(double) )
+    {
+    metaImage.ConvertTo(MET_DOUBLE);
+    }
+  else
+    {
+    vtkErrorMacro(<<"Couldn't convert pixel type");
+    return;
     }
 
+  PixelType * source = (PixelType *)metaImage.Get();
+  
+  for ( it.Begin(); !it.IsAtEnd(); ++it ) 
+    {
+    it.Set( *source++ );
+    }
 }
 
 
