@@ -23,7 +23,7 @@
 #endif
 
 #include "FEMImageRegEx.h"
-#include <sstream>
+#include <strstream>
 
 namespace itk {
 namespace fem {
@@ -465,9 +465,13 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
   std::string exte=".raw";
   std::string fnum;
   m_FileCount++;
-  std::ostringstream os;
-  os<<(m_FileCount+10);
-  fnum=os.str();
+
+  std::ostrstream buf;
+  buf.clear();
+  buf<<(m_FileCount+10)<<'\0';
+  fnum=std::string(buf.str());
+  buf.freeze(false);
+
   std::string fullfname=(fname+fnum+exte);
 
   ImgIterator wimIter( m_WarpedImage,m_Wregion );
