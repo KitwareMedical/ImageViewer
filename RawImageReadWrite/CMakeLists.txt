@@ -8,6 +8,9 @@ ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/IO
 )
 
+LINK_DIRECTORIES(${ITK_BINARY_DIR}/Utilities/png)
+LINK_DIRECTORIES(${ITK_BINARY_DIR}/Utilities/zlib)
+
 SOURCE_FILES(RawImageReadWrite_SRCS
 itkRawImageReadWrite
 )
@@ -20,6 +23,8 @@ itkRawImageReadWritePNG
 LINK_LIBRARIES (
 ITKCommon
 ITKIO
+itkpng
+itkzlib
 )
 
 IF(UNIX)
