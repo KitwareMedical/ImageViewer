@@ -56,7 +56,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.4 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.5 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------
@@ -157,21 +157,21 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   RegistrationType::ParametersType guess(transform->GetNumberOfParameters() );
 
   // the guess is derived from the current matrix.
-  vnl_vector<double> matrixAsVector(12);
-  matrixAsVector[0]  = matrix->Element[0][0];
-  matrixAsVector[1]  = matrix->Element[0][1];
-  matrixAsVector[2]  = matrix->Element[0][2];
-  matrixAsVector[3]  = matrix->Element[0][3];
-  matrixAsVector[4]  = matrix->Element[1][0];
-  matrixAsVector[5]  = matrix->Element[1][1];
-  matrixAsVector[6]  = matrix->Element[1][2];
-  matrixAsVector[7]  = matrix->Element[1][3];
-  matrixAsVector[8]  = matrix->Element[2][0];
-  matrixAsVector[9]  = matrix->Element[2][1];
-  matrixAsVector[10] = matrix->Element[2][2];
-  matrixAsVector[11] = matrix->Element[2][3];
+  vnl_matrix<double> matrix3x4(3,4);
+  matrix3x4[0][0] = matrix->Element[0][0];
+  matrix3x4[0][1] = matrix->Element[0][1];
+  matrix3x4[0][2] = matrix->Element[0][2];
+  matrix3x4[0][3] = matrix->Element[0][3];
+  matrix3x4[1][0] = matrix->Element[1][0];
+  matrix3x4[1][1] = matrix->Element[1][1];
+  matrix3x4[1][2] = matrix->Element[1][2];
+  matrix3x4[1][3] = matrix->Element[1][3];
+  matrix3x4[2][0] = matrix->Element[2][0];
+  matrix3x4[2][1] = matrix->Element[2][1];
+  matrix3x4[2][2] = matrix->Element[2][2];
+  matrix3x4[2][3] = matrix->Element[2][3];
 
-  vnl_quaternion<double> matrixAsQuaternion(matrixAsVector);
+  vnl_quaternion<double> matrixAsQuaternion(matrix3x4);
   
   guess[0]= matrixAsQuaternion.x();
   guess[1]= matrixAsQuaternion.y();
@@ -181,8 +181,6 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   guess[5] = matrix->Element[1][3];
   guess[6] = matrix->Element[2][3];
   
-  guess.Fill(0); guess[3] = 1.0;
-
   // The guess is: a quaternion followed by a translation
   registration->SetInitialTransformParameters (guess);
   
