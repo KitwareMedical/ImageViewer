@@ -9,6 +9,7 @@ ${CMAKE_BINARY_DIR}/Code/Algorithms
 )
 
 LINK_LIBRARIES (
+ITKCommon
 ITKBasicFilters 
 )
 
