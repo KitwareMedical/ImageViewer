@@ -74,14 +74,19 @@ void
 Image2DViewer<ImagePixelType>
 ::SetImage(ImageType * image)
 {
-  
+ 
   if( m_Image && m_Tag )
     {
     m_Image->GetSource()->RemoveObserver( m_Tag );
     }
   m_Image = image;
-  m_Tag = m_Image->GetSource()->AddObserver( 
+   
+  if(m_Image->GetSource())
+  {
+    m_Tag = m_Image->GetSource()->AddObserver( 
       itk::Command::EndEvent, m_Command );
+  }
+
   Update();
 
 }
@@ -96,6 +101,8 @@ Image2DViewer<ImagePixelType>
 ::Update(void) 
 {
 
+
+    
   if( !m_Image )
     {
     return;
