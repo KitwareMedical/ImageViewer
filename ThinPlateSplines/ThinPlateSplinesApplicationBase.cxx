@@ -143,6 +143,7 @@ ThinPlateSplinesApplicationBase
 ::CreateSpline(void)
 {
   this->CreateLandMarks();
+  this->CreateSourcePoints();
 }
 
 
@@ -306,12 +307,19 @@ ThinPlateSplinesApplicationBase
 }
 
    
+ 
+void
+ThinPlateSplinesApplicationBase
+::MapPoints(void)
+{
+
+}
 
 
  
 void
 ThinPlateSplinesApplicationBase
-::MapPoints(void)
+::CreateSourcePoints(void)
 {
 
   m_PointsToTransform.clear();
@@ -350,6 +358,7 @@ ThinPlateSplinesApplicationBase
         rx /= fac;
         rx -= nx/fac + deltax;
         p[0] = rx;
+        std::cout << pointCounter << " : " << p << std::endl;
         m_PointsToTransform.push_back( p );
         m_VTKPointsToTransform->InsertNextPoint( p[0], p[1], p[2] );
         pointCounter++;
@@ -357,7 +366,7 @@ ThinPlateSplinesApplicationBase
           {
           endpoints[0] = pointCounter-1;
           endpoints[1] = pointCounter;
-std::cout << endpoints[0] << " -> " << endpoints[1] << std::endl;
+//std::cout << endpoints[0] << " -> " << endpoints[1] << std::endl;
           m_VTKLinesToTransform->InsertNextCell( VTK_LINE, endpoints );
           }
         }
@@ -391,7 +400,7 @@ ThinPlateSplinesApplicationBase
   // actor coordinates geometry, properties, transformation
   vtkActor * sourceActor = vtkActor::New();
   sourceActor->SetMapper( sourceMapper );
-  sourceActor->GetProperty()->SetRepresentationToWireframe();
+  sourceActor->GetProperty()->SetRepresentationToPoints();
   sourceActor->GetProperty()->SetColor(0,0,1); 
 
   // actor coordinates geometry, properties, transformation

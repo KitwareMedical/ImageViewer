@@ -54,6 +54,7 @@ public:
   virtual void DisplayAxes(void);
   virtual void CreateSpline(void);
   virtual void CreateLandMarks(void);
+
   virtual void DisplayLandMarks(void);
   virtual void DisplayPoints(void);
   virtual void ShowTimeProbes(void);
@@ -85,6 +86,7 @@ protected:
   fltk::TimeProbesCollector  m_TimeCollector;
 
   virtual void    MapPoints(void);
+  virtual void    CreateSourcePoints(void);
 
 private:
 

@@ -44,6 +44,8 @@ ThinPlateSplinesApplication
   this->ThinPlateSplinesApplicationBase::CreateLandMarks();
   targetLandMarkIdCounter->range( 0, m_TargetLandMarks.size()-1 );
   sourceLandMarkIdCounter->range( 0, m_TargetLandMarks.size()-1 );
+  this->SelectSourceLandMark();
+  this->SelectTargetLandMark();
 }
 
 
@@ -53,6 +55,18 @@ ThinPlateSplinesApplication
 ::MapPoints()
 {
   this->ThinPlateSplinesApplicationBase::MapPoints();
+  this->DisplayPoints();
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
+
+
+
+void 
+ThinPlateSplinesApplication
+::CreateSourcePoints()
+{
+  this->ThinPlateSplinesApplicationBase::CreateSourcePoints();
   this->DisplayPoints();
   m_FlRenderWindowInteractor->redraw();
   Fl::check();
@@ -140,3 +154,11 @@ ThinPlateSplinesApplication
 
 
 
+
+void 
+ThinPlateSplinesApplication
+::Show(void)
+{
+  this->ThinPlateSplinesApplicationGUI::Show();
+  this->CreateSpline();
+}

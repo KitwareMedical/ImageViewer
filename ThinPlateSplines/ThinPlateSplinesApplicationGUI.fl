@@ -11,7 +11,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
   } {
     Fl_Window controlWindow {
       label {Finite Elements Rendering} open
-      xywh {67 137 1010 538} resizable
+      xywh {345 208 1010 538} resizable
       code0 {\#include "ThinPlateSplinesApplicationBase.h"} visible
     } {
       Fl_Menu_Bar {} {open
@@ -28,22 +28,12 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
           }
         }
         submenu {} {
-          label View
+          label View selected
           xywh {0 0 100 20}
         } {
           menuitem {} {
             label {Coordinate Axes}
             callback {this->DisplayAxes();}
-            xywh {10 10 100 20}
-          }
-        }
-        submenu {} {
-          label Create
-          xywh {10 10 100 20}
-        } {
-          menuitem {} {
-            label ThinPlateSplines
-            callback {this->CreateSpline();}
             xywh {10 10 100 20}
           }
         }
@@ -61,7 +51,7 @@ class ThinPlateSplinesApplicationGUI {open : {public ThinPlateSplinesApplication
       Fl_Group {} {
         xywh {15 40 800 485} box DOWN_FRAME
       } {
-        Fl_Box m_FlRenderWindowInteractor {selected
+        Fl_Box m_FlRenderWindowInteractor {
           xywh {25 50 780 465} box DOWN_FRAME
           code0 {\#include "vtkFlRenderWindowInteractor.h"}
           code1 {m_FlRenderWindowInteractor->SetRenderWindow( m_RenderWindow );}

@@ -40,6 +40,7 @@ public:
   virtual void SelectTargetLandMark(void);
   virtual void UpdateSelectedSourceLandMark(void);
   virtual void UpdateSelectedTargetLandMark(void);
+  virtual void Show(void);
       
 public:
 
@@ -49,6 +50,7 @@ public:
 
 protected:
   virtual void MapPoints(void);
+  virtual void CreateSourcePoints(void);
 
 private:
 
