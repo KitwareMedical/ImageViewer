@@ -222,7 +222,7 @@ void ImageRegLMEx<TReference,TTarget>::RunRegistration()
     
     CreateMesh(m_ImageOrigin,m_ImageSize,(double)m_MeshResolution,m_Solver); 
     m_Solver.GenerateGFN(); 
-    ApplyLoads(m_Solver,m_MeshResolution);
+    ApplyLoads(m_Solver,m_ImageSize);
 
 
     LinearSystemWrapperItpack itpackWrapper; 
@@ -608,7 +608,7 @@ void ImageRegLMEx<TReference,TTarget>::CreateMesh(ImageSizeType MeshOrigin, Imag
 
 
 template<class TReference,class TTarget>
-void ImageRegLMEx<TReference,TTarget>::ApplyLoads(SolverType& mySolver,unsigned int Resolution)
+void ImageRegLMEx<TReference,TTarget>::ApplyLoads(SolverType& mySolver,ImageSizeType ImgSz)
 {
  //
   // Apply the boundary conditions.  We pin the image corners.
@@ -627,13 +627,14 @@ void ImageRegLMEx<TReference,TTarget>::ApplyLoads(SolverType& mySolver,unsigned 
     CornerCounter=0;
     for (unsigned int ii=0; ii < ImageDimension; ii++)
   { 
-    if (coord[ii] == m_ImageOrigin[ii] || coord[ii] == m_ImageSize[ii]-1 ) CornerCounter++;
+    if (coord[ii] == m_ImageOrigin[ii] || coord[ii] == ImgSz[ii]-1 ) CornerCounter++;
   }
   if (CornerCounter == ImageDimension) // the node is located at a true corner
   {
     unsigned int ndofpernode=(*((*node)->m_elements.begin()))->GetNumberOfDegreesOfFreedomPerNode();
     unsigned int numnodesperelt=(*((*node)->m_elements.begin()))->GetNumberOfNodes();
     unsigned int whichnode=0;
+    std::cout << " corner coord " << coord << std::endl;
     for (unsigned int nn=0; nn<numnodesperelt; nn++)
     {
       if ((*node) == (*((*node)->m_elements.begin()))->GetNode(nn)) whichnode=nn;
@@ -1007,7 +1008,7 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
 
       CreateMesh(m_ImageOrigin,Isz,MeshResolution,SSS); 
       SSS.GenerateGFN();
-      ApplyLoads(SSS,(unsigned int)MeshResolution);
+      ApplyLoads(SSS,Isz);
  
 
       LinearSystemWrapperItpack itpackWrapper; 
@@ -1109,16 +1110,17 @@ void ImageRegLMEx<TReference,TTarget>::CreateLinearSystemSolver()
 // explicitly template the load implementation type.
 
 
-#define TWOD
+//#define TWOD
+#define THREED
 #ifdef TWOD
 typedef itk::Image< unsigned char, 2 >                     fileImageType;
-typedef itk::Image< unsigned char, 2 >                     ImageType;
+typedef itk::Image< float, 2 >                     ImageType;
 // We now declare an element type and load implementation pointer for the visitor class.
 typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
 #endif 
 #ifdef THREED
 typedef itk::Image< unsigned char, 3 >                     fileImageType;
-typedef itk::Image< unsigned char, 3 >                     ImageType;
+typedef itk::Image< float, 3 >                     ImageType;
 typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
 #endif
 typedef itk::fem::ImageMetricLoad<ImageType,ImageType>     ImageLoadType;
@@ -1204,10 +1206,10 @@ void ReadRawImageFiles( RegistrationType&  X )
   IntensityEqualizeFilter->ThresholdAtMeanIntensityOn();
   IntensityEqualizeFilter->Update();
 
-//  X.SetReferenceImage(refrescalefilter->GetOutput());
-//  X.SetTargetImage(IntensityEqualizeFilter->GetOutput());
-  X.SetReferenceImage(reffilter->GetOutput());
-  X.SetTargetImage(tarfilter->GetOutput());
+  X.SetReferenceImage(refrescalefilter->GetOutput());
+  X.SetTargetImage(IntensityEqualizeFilter->GetOutput());
+//  X.SetReferenceImage(reffilter->GetOutput());
+//  X.SetTargetImage(tarfilter->GetOutput());
 }
 
 int main() 
