@@ -52,7 +52,14 @@ FEMPreprocessor<TInputImage,TOutputImage>
   PRINTOUT( NumberOfMatchPoints );
   this->NormalizeImage( m_InputFixedImage, m_OutputFixedImage, m_FixedImageMinimum );
   this->NormalizeImage( m_InputMovingImage, m_OutputMovingImage, m_MovingImageMinimum );
-
+  
+  int m_EdgeFilter=-1;
+  if ( m_EdgeFilter >= 0)
+  {
+    float variance=7.0;
+    this->EdgeFilterImage( m_OutputFixedImage, m_OutputFixedImage, m_EdgeFilter, variance );
+    this->EdgeFilterImage( m_OutputMovingImage, m_OutputMovingImage,m_EdgeFilter, variance );
+  }
   typedef HistogramMatchingImageFilter<OutputImageType,OutputImageType> FilterType;
   typename FilterType::Pointer filter = FilterType::New();
 
@@ -101,6 +108,53 @@ InputPixelType & min )
 
 }
 
+
+template <typename TInputImage, typename  TOutputImage>
+void
+FEMPreprocessor<TInputImage,TOutputImage>
+::EdgeFilterImage( 
+OutputImageType * input,
+OutputImagePointer & output, int whichfilter, float variance)
+{ 
+  typedef ImageToImageFilter<OutputImageType, OutputImageType> filtertype;
+  typedef CannyEdgeDetectionImageFilter<OutputImageType, OutputImageType> filtertype0;
+  typedef SobelEdgeDetectionImageFilter<OutputImageType, OutputImageType> filtertype1;
+  typedef ZeroCrossingBasedEdgeDetectionImageFilter<OutputImageType, OutputImageType> filtertype2;
+  filtertype::Pointer  edgefilter;
+  filtertype0::Pointer  edgefilter0;
+  filtertype1::Pointer  edgefilter1;
+  filtertype2::Pointer  edgefilter2;
+
+  switch (whichfilter){
+  case 0:
+    edgefilter0 = filtertype0::New();
+    edgefilter0->SetVariance(variance);
+    edgefilter0->SetMaximumError(.01f);
+    edgefilter=edgefilter0;
+    break;
+  case 1:
+    edgefilter1 = filtertype1::New();
+    edgefilter=edgefilter1;
+    break;
+  case 2:
+    edgefilter2 = filtertype2::New();
+    edgefilter2->SetVariance(variance);
+    edgefilter2->SetMaximumError(.01f);
+    edgefilter=edgefilter2;
+    break;
+  default:
+    edgefilter0 = filtertype0::New();
+    edgefilter0->SetVariance(variance);
+    edgefilter0->SetMaximumError(.01f);
+    edgefilter=edgefilter0;
+  }
+
+  edgefilter->SetInput(input);
+  edgefilter->Update();
+
+  output=edgefilter->GetOutput();
+
+}
 
 
 } // namespace itk

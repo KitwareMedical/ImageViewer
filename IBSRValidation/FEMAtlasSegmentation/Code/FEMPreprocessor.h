@@ -18,6 +18,10 @@
 #define _FEMPreprocessor_h
 
 #include "itkObject.h"
+#include "itkCannyEdgeDetectionImageFilter.h"
+#include "itkSobelEdgeDetectionImageFilter.h"
+#include "itkZeroCrossingBasedEdgeDetectionImageFilter.h"
+
 
 namespace itk
 {
@@ -127,6 +131,8 @@ private:
   typedef typename OutputImageType::Pointer OutputImagePointer;
   void NormalizeImage( InputImageType * input,
    OutputImagePointer & output, InputPixelType & min ); 
+  void EdgeFilterImage( OutputImageType * input,
+   OutputImagePointer & output,  int whichfilter, float variance);
 
 };
 

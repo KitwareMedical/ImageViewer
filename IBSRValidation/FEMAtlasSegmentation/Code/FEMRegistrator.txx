@@ -65,14 +65,7 @@ FEMRegistrator<TFixedImage,TMovingImage,TFieldValue>
 
   // Choose the similarity metric
 
-  typedef itk::MeanSquaresImageToImageMetric<MovingImageType,FixedImageType> MetricType0;
-  typedef itk::NormalizedCorrelationImageToImageMetric<MovingImageType,FixedImageType> MetricType1;
-  typedef itk::PatternIntensityImageToImageMetric<MovingImageType,FixedImageType> MetricType2;
-  typedef itk::MutualInformationImageToImageMetric<MovingImageType,FixedImageType> MetricType3;
-  typedef MetricType0 MetricType;
-  MetricType::Pointer msqp=MetricType::New();
-  msqp->SetScaleGradient(1.0); // this is the default(?)
-  m_Registration.SetMetric(msqp.GetPointer());
+  m_Registration.ChooseMetric(0/*mean squares*/);
 
 
   // Choose the material properties
