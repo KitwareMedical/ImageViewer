@@ -32,6 +32,7 @@ qtITK.cxx
 
 SET(QtITK_MOC_SRCS 
 itkQtAdaptor.h
+itkQtLightIndicator.h
 )
 
 IF(QT_WRAP_CPP)

@@ -30,6 +30,7 @@ class QtTranslator : public QObject
 {
 
   Q_OBJECT
+
 public:
   QtTranslator() {}
   virtual ~QtTranslator() {}

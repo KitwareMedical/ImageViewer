@@ -19,13 +19,13 @@
 
 #include <qapplication.h>
 #include <qpushbutton.h>
-#include <qvbox.h>
 
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include "itkAddImageFilter.h"
 
 #include "itkQtAdaptor.h"
+#include "itkQtLightIndicator.h"
 #include "itkQtProgressBar.h"
 
 
@@ -54,23 +54,34 @@ int main(int argc, char **argv)
 
   reader->SetFileName( argv[1] );
 
-  QVBox qb;
-  qb.resize(620,200);
+  QWidget qb;
+  qb.resize(620,100);
+
+  const int buttonWidth  = 70;
+  const int buttonHeight = 30;
+  const int buttonSpace  = 80;
+
+  int horizontalPosition = 30;
 
   QPushButton  bb( "Start", &qb );
-  bb.resize( 100, 30 );
+  bb.setGeometry( horizontalPosition, 20, buttonWidth, buttonHeight );
 
-  QPushButton  cc( "State", &qb );
-  cc.resize( 100, 30 );
+  horizontalPosition += buttonWidth + buttonSpace;
+
+  itk::QtLightIndicator  cc( &qb, "State" );
+  cc.setGeometry( horizontalPosition, 20, buttonWidth, buttonHeight );
+  cc.Modified();
+
+  horizontalPosition += buttonWidth + buttonSpace;
 
   QPushButton  qt( "Quit", &qb );
-  qt.resize( 100, 30 );
+  qt.setGeometry( horizontalPosition, 20, buttonWidth, buttonHeight );
 
-  itk::QtProgressBar qs( Qt::Horizontal, &qb, "Progress");
-  qs.resize( 100, 30 );
-  qs.setRange(0,100);
-  qs.setValue(0);
+  itk::QtProgressBar qs( &qb, "Progress");
+  qs.setGeometry( 10, 60, 600, 30 );
   
+
+
   // Connect the progress bar to the ITK processObject
   qs.Observe( filter.GetPointer() );
   qs.Observe( reader.GetPointer() );
@@ -85,14 +96,50 @@ int main(int argc, char **argv)
   QObject::connect( &bb, SIGNAL(clicked()), &slotAdaptor, SLOT(Slot()) );
 
 
+
+
+
+
+  // One signal adaptor for observing the StartEvent()
   typedef itk::QtSignalAdaptor SignalAdaptorType;
-  SignalAdaptorType signalAdaptor;
+  SignalAdaptorType signalAdaptor1;
 
   // Connect the adaptor as an observer of a Filter's event
-  filter->AddObserver( itk::StartEvent(),  signalAdaptor.GetCommand() );
+  filter->AddObserver( itk::StartEvent(),  signalAdaptor1.GetCommand() );
 
   // Connect the adaptor's Signal to the Qt Widget Slot
-  QObject::connect( &signalAdaptor, SIGNAL(Signal()), &cc, SLOT(toggle()) );
+  QObject::connect( &signalAdaptor1, SIGNAL(Signal()), &cc, SLOT(Start()) );
+
+
+
+
+
+
+  // One signal adaptor for observing the ModifiedEvent()
+  typedef itk::QtSignalAdaptor SignalAdaptorType;
+  SignalAdaptorType signalAdaptor2;
+
+  // Connect the adaptor as an observer of a Filter's event
+  filter->AddObserver( itk::ModifiedEvent(),  signalAdaptor2.GetCommand() );
+
+  // Connect the adaptor's Signal to the Qt Widget Slot
+  QObject::connect( &signalAdaptor2, SIGNAL(Signal()), &cc, SLOT(Modified()) );
+
+
+
+
+
+  // One signal adaptor for observing the EndEvent()
+  typedef itk::QtSignalAdaptor SignalAdaptorType;
+  SignalAdaptorType signalAdaptor3;
+
+  // Connect the adaptor as an observer of a Filter's event
+  filter->AddObserver( itk::EndEvent(),  signalAdaptor3.GetCommand() );
+
+  // Connect the adaptor's Signal to the Qt Widget Slot
+  QObject::connect( &signalAdaptor3, SIGNAL(Signal()), &cc, SLOT(End()) );
+
+
 
 
 
