@@ -26,18 +26,31 @@ liImageRegistrationConsoleBase
 ::liImageRegistrationConsoleBase()
 {
 
-  this->m_ImageLoaded           = false;
-  this->m_Reader                = ImageReaderType::New();
+  m_ImageLoaded           = false;
+  m_Reader                = ImageReaderType::New();
   
   // The Target is indeed an adaptor 
   // from InputPixelType to PixelType
-  this->m_TargetImage           = TargetType::New();
-  this->m_TargetImage->SetImage( m_Reader->GetOutput() );
+  m_TargetImage           = TargetType::New();
+  m_TargetImage->SetImage( m_Reader->GetOutput() );
   
-  this->m_ReferenceImage        = ReferenceType::New();
-  this->m_MappedReferenceImage  = MappedReferenceType::New();
-  this->m_ImageMapper           = MapperType::New();
-  this->m_RegistrationMethod    = RegistrationMethodType::New();
+  m_ReferenceImage        = ReferenceType::New();
+  m_MappedReferenceImage  = MappedReferenceType::New();
+  m_ImageMapper           = MapperType::New();
+
+  m_MutualInformationMethod = 
+                        MutualInformationRegistrationMethodType::New();
+  
+  m_MeansSquaresMethod      = 
+                        MeanSquaresRegistrationMethodType::New();
+  
+  m_PatternIntensityMethod  = 
+                        PatternIntensityRegistrationMethodType::New();
+  
+  m_NormalizedCorrelationMethod =
+                        NormalizedCorrelationRegistrationMethodType::New();
+
+  m_SelectedMethod = meanSquares;
 
 }
 
@@ -72,10 +85,10 @@ liImageRegistrationConsoleBase
     return;
   }
 
-  this->m_Reader->SetFileToLoad( filename );
-  this->m_Reader->Update();
+  m_Reader->SetFileToLoad( filename );
+  m_Reader->Update();
 
-  this->m_ImageLoaded = true;
+  m_ImageLoaded = true;
 
 }
 
@@ -118,31 +131,31 @@ liImageRegistrationConsoleBase
 ::GenerateReference( void )
 {
 
-  ShowStatus("Transforming the orignal image...");
+  this->ShowStatus("Transforming the original image...");
 
   // Select to Process the whole image 
-  this->m_TargetImage->SetRequestedRegion(
-      this->m_TargetImage->GetBufferedRegion() );
+  m_TargetImage->SetRequestedRegion(
+      m_TargetImage->GetBufferedRegion() );
   
 
   //  Allocate the reference accordingly
-  this->m_ReferenceImage = ReferenceType::New();
+  m_ReferenceImage = ReferenceType::New();
 
-  this->m_ReferenceImage->SetLargestPossibleRegion(
-      this->m_TargetImage->GetLargestPossibleRegion() );
+  m_ReferenceImage->SetLargestPossibleRegion(
+      m_TargetImage->GetLargestPossibleRegion() );
 
-  this->m_ReferenceImage->SetBufferedRegion(
-      this->m_TargetImage->GetBufferedRegion() );
+  m_ReferenceImage->SetBufferedRegion(
+      m_TargetImage->GetBufferedRegion() );
 
-  this->m_ReferenceImage->SetRequestedRegion(
-      this->m_TargetImage->GetRequestedRegion() );
+  m_ReferenceImage->SetRequestedRegion(
+      m_TargetImage->GetRequestedRegion() );
 
-  this->m_ReferenceImage->Allocate();
+  m_ReferenceImage->Allocate();
 
-  this->m_ImageMapper->SetDomain( this->m_TargetImage );
+  m_ImageMapper->SetDomain( m_TargetImage );
 
 
-  UpdateTransformationParameters();
+  this->UpdateTransformationParameters();
 
   typedef ReferenceType::IndexType  IndexType;
 
@@ -166,7 +179,7 @@ liImageRegistrationConsoleBase
     {
       counter = 0;
       percent += 0.01;
-      ShowProgress( percent );
+      this->ShowProgress( percent );
     }
     
     IndexType index = it.GetIndex();
@@ -178,7 +191,7 @@ liImageRegistrationConsoleBase
     PixelType value;
     try 
     {
-      value = this->m_ImageMapper->Evaluate( point );
+      value = m_ImageMapper->Evaluate( point );
     }
     catch( itk::MapperException )
     {      
@@ -189,8 +202,8 @@ liImageRegistrationConsoleBase
     ++counter;
   }
 
-  ShowProgress( 1.0 );
-  ShowStatus("Image Transformation done");
+  this->ShowProgress( 1.0 );
+  this->ShowStatus("Image Transformation done");
 
 }
 
@@ -208,16 +221,37 @@ liImageRegistrationConsoleBase
 ::Execute( void )
 {
 
-  if( ! (this->m_ImageLoaded) ) 
+  if( ! (m_ImageLoaded) ) 
   {
-    ShowStatus("Please load an image first");
+    this->ShowStatus("Please load an image first");
     return;
   }
   
-  this->m_RegistrationMethod->SetReference( m_ReferenceImage );
-  this->m_RegistrationMethod->SetTarget(    m_TargetImage    );
+  switch( m_SelectedMethod )
+  {
+  case mutualInformation:
+    m_MutualInformationMethod->SetReference( m_ReferenceImage );
+    m_MutualInformationMethod->SetTarget(    m_TargetImage    );
+    m_MutualInformationMethod->StartRegistration();
+    break;
+  case normalizedCorrelation:
+    m_NormalizedCorrelationMethod->SetReference( m_ReferenceImage );
+    m_NormalizedCorrelationMethod->SetTarget(    m_TargetImage    );
+    m_NormalizedCorrelationMethod->StartRegistration();
+    break;
+  case patternIntensity:
+    m_PatternIntensityMethod->SetReference( m_ReferenceImage );
+    m_PatternIntensityMethod->SetTarget(    m_TargetImage    );
+    m_PatternIntensityMethod->StartRegistration();
+    break;
+  case meanSquares:
+    m_MeansSquaresMethod->SetReference( m_ReferenceImage );
+    m_MeansSquaresMethod->SetTarget(    m_TargetImage    );
+    m_MeansSquaresMethod->StartRegistration();
+    break;
+  }
 
-  this->m_RegistrationMethod->StartRegistration();
+
 
 }
 
@@ -250,6 +284,20 @@ liImageRegistrationConsoleBase
 ::UpdateTransformationParameters( void )
 {
 
+}
+
+
+ 
+/************************************
+ *
+ *  Select the registration method
+ *
+ ***********************************/
+void
+liImageRegistrationConsoleBase 
+::SelectRegistrationMethod( RegistrationMethodType method )
+{
+  m_SelectedMethod = method;
 }
 
 

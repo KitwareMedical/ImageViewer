@@ -59,6 +59,16 @@ public:
   Fl_Value_Input *yTranslation;
   Fl_Value_Input *zTranslation;
   static Fl_Menu_Item menu_1[];
+private:
+  inline void cb_Mean_i(Fl_Menu_*, void*);
+  static void cb_Mean(Fl_Menu_*, void*);
+  inline void cb_Normalized_i(Fl_Menu_*, void*);
+  static void cb_Normalized(Fl_Menu_*, void*);
+  inline void cb_Pattern_i(Fl_Menu_*, void*);
+  static void cb_Pattern(Fl_Menu_*, void*);
+  inline void cb_Mutual_i(Fl_Menu_*, void*);
+  static void cb_Mutual(Fl_Menu_*, void*);
+public:
   fltk::ProgressBar *progressSlider;
   Fl_Output *statusTextOutput;
   Fl_Window *aboutWindow;

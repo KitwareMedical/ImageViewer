@@ -94,7 +94,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
       } {
         Fl_Light_Button targetButton {
           label Target
-          callback {ShowTarget();} selected
+          callback {ShowTarget();}
           xywh {20 75 105 30} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
@@ -151,18 +151,22 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         } {
           menuitem {} {
             label {Mean Squares}
+            callback {SelectRegistrationMethod( meanSquares );}
             xywh {0 0 100 20}
           }
           menuitem {} {
             label {Normalized Correlation}
+            callback {SelectRegistrationMethod( normalizedCorrelation );}
             xywh {10 10 100 20}
           }
           menuitem {} {
             label {Pattern Intensity}
+            callback {SelectRegistrationMethod( patternIntensity );}
             xywh {20 20 100 20}
           }
           menuitem {} {
             label {Mutual Information}
+            callback {SelectRegistrationMethod( mutualInformation );} selected
             xywh {30 30 100 20}
           }
         }

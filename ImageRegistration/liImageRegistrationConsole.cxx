@@ -34,13 +34,13 @@ liImageRegistrationConsole
   ObjectFactoryBase * factoryBase = static_cast<ObjectFactoryBase *>( factory );
   ObjectFactoryBase::RegisterFactory( factoryBase );  
 
-  this->m_InputViewer           = new InputImageViewerType;
-  this->m_ReferenceViewer       = new ImageViewerType;
-  this->m_MappedReferenceViewer = new ImageViewerType;
+  m_InputViewer           = new InputImageViewerType;
+  m_ReferenceViewer       = new ImageViewerType;
+  m_MappedReferenceViewer = new ImageViewerType;
 
-  this->m_InputViewer->SetLabel( "Target Image" );
-  this->m_ReferenceViewer->SetLabel( "Reference Image" );
-  this->m_MappedReferenceViewer->SetLabel( "Mapped Reference Image" );
+  m_InputViewer->SetLabel( "Target Image" );
+  m_ReferenceViewer->SetLabel( "Reference Image" );
+  m_MappedReferenceViewer->SetLabel( "Mapped Reference Image" );
 
   m_Reader->AddObserver( itk::Command::StartEvent, targetButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::EndEvent, targetButton->GetRedrawCommand().GetPointer() );
@@ -48,7 +48,7 @@ liImageRegistrationConsole
   m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::Command::ModifiedEvent, targetButton->GetRedrawCommand().GetPointer() );
   
-  ShowStatus("Let's start by loading an image...");
+  this->ShowStatus("Let's start by loading an image...");
 
 }
 
@@ -64,22 +64,22 @@ liImageRegistrationConsole
 ::~liImageRegistrationConsole()
 {
 
-  if( this->m_InputViewer ) 
+  if( m_InputViewer ) 
   {
-    delete this->m_InputViewer;
-    this->m_InputViewer = 0;
+    delete m_InputViewer;
+    m_InputViewer = 0;
   }
 
-  if( this->m_ReferenceViewer ) 
+  if( m_ReferenceViewer ) 
   {
-    delete this->m_ReferenceViewer;
-    this->m_ReferenceViewer = 0;
+    delete m_ReferenceViewer;
+    m_ReferenceViewer = 0;
   }
 
-  if( this->m_MappedReferenceViewer ) 
+  if( m_MappedReferenceViewer ) 
   {
-    delete this->m_MappedReferenceViewer;
-    this->m_MappedReferenceViewer = 0;
+    delete m_MappedReferenceViewer;
+    m_MappedReferenceViewer = 0;
   }
 
 
@@ -104,7 +104,7 @@ liImageRegistrationConsole
     return;
   }
 
-  ShowStatus("Loading image file...");
+  this->ShowStatus("Loading image file...");
   
   try 
   {
@@ -112,13 +112,13 @@ liImageRegistrationConsole
   }
   catch( ... ) 
   {
-    ShowStatus("Problems reading file format");
+    this->ShowStatus("Problems reading file format");
     controlsGroup->deactivate();
     return;
   }
 
 
-  ShowStatus("File Loaded");
+  this->ShowStatus("File Loaded");
 
   controlsGroup->activate();
 
@@ -152,9 +152,9 @@ liImageRegistrationConsole
 {
 
   consoleWindow->hide();
-  this->m_InputViewer->Hide();
-  this->m_ReferenceViewer->Hide();
-  this->m_MappedReferenceViewer->Hide();
+  m_InputViewer->Hide();
+  m_ReferenceViewer->Hide();
+  m_MappedReferenceViewer->Hide();
   aboutWindow->hide();
 }
 
@@ -171,7 +171,7 @@ void
 liImageRegistrationConsole
 ::Quit( void )
 {
-  Hide();
+  this->Hide();
 }
 
 
@@ -225,14 +225,14 @@ liImageRegistrationConsole
 ::ShowTarget( void )
 {
 
-  if( !(this->m_ImageLoaded ) )
+  if( !(m_ImageLoaded ) )
   {
     ShowStatus("Please load an image first");
     return;
   }
 
-  this->m_InputViewer->SetImage( this->m_Reader->GetOutput() );  
-  this->m_InputViewer->Show();
+  m_InputViewer->SetImage( m_Reader->GetOutput() );  
+  m_InputViewer->Show();
 
 }
 
@@ -248,14 +248,14 @@ liImageRegistrationConsole
 ::ShowReference( void )
 {
 
-  if( !(this->m_ImageLoaded ) )
+  if( !(m_ImageLoaded ) )
   {
     ShowStatus("Please load an image first");
     return;
   }
 
-  this->m_ReferenceViewer->SetImage( this->m_ReferenceImage );  
-  this->m_ReferenceViewer->Show();
+  m_ReferenceViewer->SetImage( m_ReferenceImage );  
+  m_ReferenceViewer->Show();
 
 }
 
@@ -272,14 +272,14 @@ liImageRegistrationConsole
 ::ShowMappedReference( void )
 {
 
-  if( !(this->m_ImageLoaded ) )
+  if( !(m_ImageLoaded ) )
   {
     ShowStatus("Please load an image first");
     return;
   }
 
-  this->m_MappedReferenceViewer->SetImage( this->m_MappedReferenceImage );
-  this->m_MappedReferenceViewer->Show();
+  m_MappedReferenceViewer->SetImage( m_MappedReferenceImage );
+  m_MappedReferenceViewer->Show();
 
 }
 
@@ -317,19 +317,19 @@ liImageRegistrationConsole
 ::Execute( void )
 {
 
-  if( ! (this->m_ImageLoaded) ) 
+  if( ! (m_ImageLoaded) ) 
   {
-    ShowStatus("Please load an image first");
+    this->ShowStatus("Please load an image first");
     return;
   }
 
 
-  ShowStatus("Registering Reference against Target ...");
+  this->ShowStatus("Registering Reference against Target ...");
 
   liImageRegistrationConsoleBase::Execute();
 
 
-  ShowStatus("Registration done ");
+  this->ShowStatus("Registration done ");
   
 }
 
@@ -354,7 +354,7 @@ liImageRegistrationConsole
   transformationParameters[1] = yTranslation->value();
   transformationParameters[2] = zTranslation->value();
 
-  this->m_ImageMapper->GetTransformation()->SetParameters(
+  m_ImageMapper->GetTransformation()->SetParameters(
                                               transformationParameters);
 
 

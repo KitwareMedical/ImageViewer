@@ -80,11 +80,39 @@ void liImageRegistrationConsoleGUI::cb_mappedReferenceButton(fltk::LightButton* 
   ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_mappedReferenceButton_i(o,v);
 }
 
+inline void liImageRegistrationConsoleGUI::cb_Mean_i(Fl_Menu_*, void*) {
+  SelectRegistrationMethod( meanSquares );
+}
+void liImageRegistrationConsoleGUI::cb_Mean(Fl_Menu_* o, void* v) {
+  ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Mean_i(o,v);
+}
+
+inline void liImageRegistrationConsoleGUI::cb_Normalized_i(Fl_Menu_*, void*) {
+  SelectRegistrationMethod( normalizedCorrelation );
+}
+void liImageRegistrationConsoleGUI::cb_Normalized(Fl_Menu_* o, void* v) {
+  ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Normalized_i(o,v);
+}
+
+inline void liImageRegistrationConsoleGUI::cb_Pattern_i(Fl_Menu_*, void*) {
+  SelectRegistrationMethod( patternIntensity );
+}
+void liImageRegistrationConsoleGUI::cb_Pattern(Fl_Menu_* o, void* v) {
+  ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Pattern_i(o,v);
+}
+
+inline void liImageRegistrationConsoleGUI::cb_Mutual_i(Fl_Menu_*, void*) {
+  SelectRegistrationMethod( mutualInformation );
+}
+void liImageRegistrationConsoleGUI::cb_Mutual(Fl_Menu_* o, void* v) {
+  ((liImageRegistrationConsoleGUI*)(o->parent()->parent()->user_data()))->cb_Mutual_i(o,v);
+}
+
 Fl_Menu_Item liImageRegistrationConsoleGUI::menu_1[] = {
- {"Mean Squares", 0,  0, 0, 0, 0, 0, 14, 0},
- {"Normalized Correlation", 0,  0, 0, 0, 0, 0, 14, 0},
- {"Pattern Intensity", 0,  0, 0, 0, 0, 0, 14, 0},
- {"Mutual Information", 0,  0, 0, 0, 0, 0, 14, 0},
+ {"Mean Squares", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Mean, 0, 0, 0, 0, 14, 0},
+ {"Normalized Correlation", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Normalized, 0, 0, 0, 0, 14, 0},
+ {"Pattern Intensity", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Pattern, 0, 0, 0, 0, 14, 0},
+ {"Mutual Information", 0,  (Fl_Callback*)liImageRegistrationConsoleGUI::cb_Mutual, 0, 0, 0, 0, 14, 0},
  {0},
  {0},
  {0},

@@ -22,7 +22,10 @@
 #include <itkPhysicalImageAdaptor.h>
 #include <itkFileIOToImageFilter.h>
 #include <itkWriteMetaImage.h>
-#include <itkImageToImageTranslationMeanSquaresRegistration.h>
+#include <itkImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration.h>
+#include <itkImageToImageAffinePatternIntensityRegularStepGradientDescentRegistration.h>
+#include <itkImageToImageAffineNormalizedCorrelationRegularStepGradientDescentRegistration.h>
+#include <itkImageToImageAffineMutualInformationRegistration.h>
 #include <itkDataAccessor.h>
 
 
@@ -39,6 +42,12 @@ public:
 
   enum { ImageDimension = 3 };
 
+  typedef enum {
+    mutualInformation,
+    normalizedCorrelation,
+    patternIntensity,
+    meanSquares
+  } RegistrationMethodType;
   
   // Type of the image as it is read from a file
   typedef   unsigned short     InputPixelType;
@@ -72,18 +81,33 @@ public:
                                 ImageDimension >      MappedReferenceType;
 
  
-  //  Registration method to use
-  typedef   itk::ImageToImageTranslationMeanSquaresRegistration<
+  //  Registration methods to use
+  typedef   itk::ImageToImageAffineMeanSquaresRegularStepGradientDescentRegistration<
                                                 ReferenceType,
                                                 TargetType> 
-                                                  RegistrationMethodType;
+                                                  MeanSquaresRegistrationMethodType;
+
+  typedef   itk::ImageToImageAffineNormalizedCorrelationRegularStepGradientDescentRegistration<
+                                                ReferenceType,
+                                                TargetType> 
+                                                  NormalizedCorrelationRegistrationMethodType;
+
+  typedef   itk::ImageToImageAffinePatternIntensityRegularStepGradientDescentRegistration<
+                                                ReferenceType,
+                                                TargetType> 
+                                                  PatternIntensityRegistrationMethodType;
+
+  typedef   itk::ImageToImageAffineMutualInformationRegistration<
+                                                ReferenceType,
+                                                TargetType> 
+                                                  MutualInformationRegistrationMethodType;
 
   typedef   itk::FileIOToImageFilter< 
                             InputImageType >             ImageReaderType;
 
-  typedef   itk::Vector< double, ImageDimension >   TransformationParametersType;
+  typedef   itk::Vector< double, ImageDimension * (ImageDimension + 1) >   TransformationParametersType;
 
-  typedef   itk::TranslationRegistrationTransform< 
+  typedef   itk::AffineRegistrationTransform< 
                                       double,
                                       ImageDimension,
                                       TransformationParametersType 
@@ -114,23 +138,35 @@ public:
   virtual void GenerateReference(void);
   virtual void GenerateMappedReference(void);
   virtual void UpdateTransformationParameters(void);
+  virtual void SelectRegistrationMethod( RegistrationMethodType method );
 
 protected:
 
   ImageReaderType::Pointer               m_Reader;
 
-  RegistrationMethodType::Pointer        m_RegistrationMethod;
+  MeanSquaresRegistrationMethodType::Pointer
+                                                  m_MeansSquaresMethod;
+  
+  MutualInformationRegistrationMethodType::Pointer
+                                                  m_MutualInformationMethod;
 
-  TargetType::Pointer                    m_TargetImage;
+  PatternIntensityRegistrationMethodType::Pointer
+                                                  m_PatternIntensityMethod;
+  
+  NormalizedCorrelationRegistrationMethodType::Pointer
+                                                  m_NormalizedCorrelationMethod;
+  
+  TargetType::Pointer                             m_TargetImage;
 
-  ReferenceType::Pointer                 m_ReferenceImage;
+  ReferenceType::Pointer                          m_ReferenceImage;
 
-  MappedReferenceType::Pointer           m_MappedReferenceImage;
+  MappedReferenceType::Pointer                    m_MappedReferenceImage;
 
-  MapperType::Pointer                    m_ImageMapper;
+  MapperType::Pointer                             m_ImageMapper;
 
-  bool                                   m_ImageLoaded;
+  bool                                            m_ImageLoaded;
 
+  RegistrationMethodType                          m_SelectedMethod;
 
 };
 
