@@ -1,0 +1,25 @@
+PROJECT(ImageViewer)
+
+INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
+${ITK_SOURCE_DIR}/Code/BasicFilters
+${ITK_SOURCE_DIR}/Code/Algorithms
+${ITK_SOURCE_DIR}/Code/IO
+${ITK_SOURCE_DIR}/Utilities/GlutMaster
+${OPENGL_INCLUDE_PATH}
+)
+
+
+LINK_LIBRARIES (
+  VXLNumerics
+  ITKCommon
+  ITKIO
+  ITKGlut
+  ${GLUT_LIBRARIES}
+  ${OPENGL_LIBRARIES}
+  )
+
+ADD_EXECUTABLE(ImageViewer itkImageViewer.cxx )
+
+TARGET_LINK_LIBRARIES(ImageViewer ITKGlut )
+
