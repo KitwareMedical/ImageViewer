@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   if( argc < 4 ) 
     {
     std::cerr << std::endl;
-    std::cerr << "Usage:  PNGImageReadWrite  inputImageFilePrefix   numberOfSlices   outputImageFilePrefix" << std::endl;
+    std::cerr << "Usage:  PNGImageReadWrite  inputImageFileName   numberOfSlices   outputImageFilePrefix" << std::endl;
     std::cerr << std::endl;
     return -1;
     }
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
   PNGWriterType::Pointer  pngWriter  = PNGWriterType::New();
 
   fileSink->SetImageIO( pngWriter );
-  fileSink->SetFilePrefix( outputFileName );
+  fileSink->SetFileName( outputFileName );
   fileSink->SetInput( fileSource->GetOutput() );
 
   
