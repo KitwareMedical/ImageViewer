@@ -17,24 +17,24 @@ IF(BUILD_WATERSHED_SEGMENTATION)
 SUBDIRS(WatershedSegmentation)
 ENDIF(BUILD_WATERSHED_SEGMENTATION)
 
-# Add an option to build or not build the Image Registration example
-# IF(HAS_METAIMAGE)
-#  IF(HAS_FLTKIMAGEVIEWER)
-#    SUBDIRS(ImageRegistration)
-#  ENDIF(HAS_FLTKIMAGEVIEWER)
-# ENDIF(HAS_METAIMAGE)
+# Test the condition to build or not build the Image Registration example
+IF(HAS_METAIMAGE)
+ IF(HAS_FLTKIMAGEVIEWER)
+   SUBDIRS(ImageRegistration)
+ ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_METAIMAGE)
 
-# Add an option to build or not build the Multiresolution Registration example
+# Build the Multiresolution Registration example
 SUBDIRS(MultiResMIRegistration)
 
-# Add an option to build or not build the Gaussian Filter GUI example
+# Test the conditions for building the Gaussian Filter GUI example
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
     SUBDIRS(GaussianFilter)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
-# Add an option to build or not build the Extractor of 2D curves
+# Test the conditions for building the Extractor of 2D curves
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
     SUBDIRS(Curves2DExtractor)
@@ -52,14 +52,14 @@ ENDIF(HAS_METAIMAGE)
 # Add an option to build or not build the PrincipalAxes example
 SUBDIRS(PrincipalAxes)
 
-# Add an option to build or not build the Morphogenesis example
+# Test the conditions for building the Morphogenesis example
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
     SUBDIRS(Morphogenesis)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
-# Add an option to build or not build the MRIBiasCorrection example
+# Test the conditions for building the MRIBiasCorrection example
 IF(HAS_METAIMAGE)
   SUBDIRS(MRIBiasCorrection)
 ENDIF(HAS_METAIMAGE)
@@ -134,15 +134,10 @@ ENDIF(BUILD_FEM_MESH_EXAMPLE)
 MARK_AS_ADVANCED( BUILD_FEM_MESH_EXAMPLE )
   
 
-# Add an option to build or not build the ThinPlateSplines example
-OPTION(BUILD_THINPLATESPLINES_EXAMPLE "Build the ThinPlateSplines example" OFF)
-IF(BUILD_THINPLATESPLINES_EXAMPLE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    IF(HAS_VTK)
-      SUBDIRS(ThinPlateSplines)
-    ENDIF(HAS_VTK)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
-ENDIF(BUILD_THINPLATESPLINES_EXAMPLE)
+# Test the conditions for building the ThinPlateSplines example
+IF(HAS_VTK)
+  SUBDIRS(ThinPlateSplines)
+ENDIF(HAS_VTK)
 
 
 # Add an option to build the Tcl Wrap for the stl string class
