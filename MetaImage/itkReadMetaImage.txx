@@ -71,7 +71,8 @@ ReadMetaImage<TOutputImage>
 
   MetaImage   metaImage;
   
-  metaImage.OpenMetaFile(m_FileName.c_str(),true);
+  metaImage.OpenMetaFile(m_FileName.c_str(), true);
+
   if( metaImage.Error() ) 
     {
     throw ExceptionObject();
@@ -115,6 +116,23 @@ ReadMetaImage<TOutputImage>
   
   IteratorType it(m_OutputImage,
                   m_OutputImage->GetLargestPossibleRegion() );
+
+  if(!strcmp(typeid(TOutputImage::PixelType).name(), "Uc"))
+    metaImage.ConvertTo(MET_UCHAR);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "c"))
+    metaImage.ConvertTo(MET_CHAR);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "Us"))
+    metaImage.ConvertTo(MET_USHORT);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "s"))
+    metaImage.ConvertTo(MET_SHORT);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "Ui"))
+    metaImage.ConvertTo(MET_UINT);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "i"))
+    metaImage.ConvertTo(MET_INT);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "f"))
+    metaImage.ConvertTo(MET_FLOAT);
+  else if(!strcmp(typeid(TOutputImage::PixelType).name(), "d"))
+    metaImage.ConvertTo(MET_DOUBLE);
 
   PixelType * source = (PixelType *)metaImage.Get();
 

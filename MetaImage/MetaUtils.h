@@ -20,10 +20,16 @@
 
 #include <stdio.h>
 
-#ifndef _WIN32
-#define  MET_SYSTEM_BYTE_ORDER_MSB   true
-#else
+//  #ifndef _WIN32
+//  #define  MET_SYSTEM_BYTE_ORDER_MSB   true
+//  #else
+//  #define  MET_SYSTEM_BYTE_ORDER_MSB   false
+//  #endif
+
+#if defined(_WIN32) || defined(__CYGWIN__) 
 #define  MET_SYSTEM_BYTE_ORDER_MSB   false
+#else
+#define  MET_SYSTEM_BYTE_ORDER_MSB   true
 #endif
 
 // Value types for the variables in a metaFile
