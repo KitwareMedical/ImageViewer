@@ -38,13 +38,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
-#pragma warning( once : 4786 )        // Issue warning 4385
-//  only once.
-
-
 #include <string>
-#include <cmath>
 #include <vector>
+#include <vnl/vnl_math.h>
 
 #include "mydefs.h"
 #include "imageutils.h"
@@ -94,6 +90,8 @@ void print_usage()
 void correctBias(ImagePointer input, MaskPointer mask,
                  BiasField& biasField, ImagePointer output) 
 {
+  std::cout << "Correcting bias..." << std::endl ;
+
   typedef ImageType::PixelType Pixel ;
 
   ImageType::RegionType region = input->GetLargestPossibleRegion() ;
@@ -101,6 +99,8 @@ void correctBias(ImagePointer input, MaskPointer mask,
   output->SetLargestPossibleRegion(region) ;
   output->SetBufferedRegion(region) ;
   output->Allocate() ;
+
+  output->SetSpacing(input->GetSpacing()) ;
 
   bool maskAvailable = true ;
   if (region.GetSize() != mask->GetLargestPossibleRegion().GetSize())
@@ -161,6 +161,8 @@ void correctBias(ImagePointer input, MaskPointer mask,
           ++iIter ;
         }
     }
+
+  std::cout << "bias correction done." << std::endl ;
 }
 
 int main(int argc, char* argv[])

@@ -38,9 +38,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
-#include <vector>
 #include <string>
-#include <cmath>
+#include <vector>
+#include <vnl/vnl_math.h>
 
 #include "myutils.h"
 #include "OptionList.h"

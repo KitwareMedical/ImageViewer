@@ -38,13 +38,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
-#pragma warning( once : 4786 )        // Issue warning 4385
-//  only once.
-
-
 #include <string>
-#include <cmath>
 #include <vector>
+#include <vnl/vnl_math.h>
+
 
 #include "mydefs.h"
 #include "imageutils.h"
