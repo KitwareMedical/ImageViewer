@@ -26,7 +26,6 @@ ${ITK_BINARY_DIR}/Examples/OperatingRoom
 
 SOURCE_FILES(OperatingRoom_SRCS
 liC_Arm3D
-liCommandGLRedrawModel
 liCommandGLRedrawModelFixed
 liCommandGLRedrawModelSensitive
 liCommandUpdateImageIntensifier

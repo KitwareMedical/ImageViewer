@@ -18,7 +18,6 @@
 #include "itkWriteMetaImage.h"
 
 #include "liCommandUpdateSpineModelGUI.h"
-#include "liCommandGLRedrawModel.h"
 #include "liCommandGLRedrawModelFixed.h"
 #include "liCommandGLRedrawModelSensitive.h"
 #include "liCommandUpdateImageIntensifier.h"
