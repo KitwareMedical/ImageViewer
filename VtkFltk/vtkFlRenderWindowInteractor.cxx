@@ -33,9 +33,13 @@
 // FLTK
 #include <FL/x.H>
 // vtk
+#include <vtkVersion.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkInteractorStyle.h>
+#if (VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 0)
+#include <vtkCommand.h>
+#endif
 #include <vtkVersion.h>
 
 //---------------------------------------------------------------------------
