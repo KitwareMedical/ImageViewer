@@ -26,10 +26,12 @@ INCLUDE(${USE_VTK_FILE})
 LINK_LIBRARIES( 
   vtkRendering
   vtkGraphics	  
+  vtkHybrid	  
   vtkImaging
   vtkIO
   vtkFiltering
   vtkCommon
+  vtkFltk
 )
 
 SOURCE_FILES(TripleTKID_SRCS
