@@ -46,8 +46,18 @@ $start SetElement 0 0
 $start SetElement 1 0
 $start SetElement 1 0
 
+
 $imageRegion SetSize  $size
 $imageRegion SetIndex $start
+
+
+# The same can be achieved with the magic conversion operator
+$size  SetSize    { 100 100 100 }
+$start SetIndex   {   0   0   0 }
+
+$imageRegion SetSize  $size
+$imageRegion SetIndex $start
+
 
 
 
