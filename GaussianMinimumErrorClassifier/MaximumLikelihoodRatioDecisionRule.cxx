@@ -21,30 +21,6 @@ MaximumLikelihoodRatioDecisionRule::MaximumLikelihoodRatioDecisionRule()
   m_TotalSampleSize = 0 ;
 }
 
-unsigned int 
-MaximumLikelihoodRatioDecisionRule::Evaluate(std::vector< double > discriminantScores)
-{
-  unsigned int maxIndex = 0 ;
-  double maxScore = 0.0 ;
-  unsigned int i ;
-  
-  for (i = 0 ; i < m_ClassSizes.size() ; i++)
-    {
-      m_TempScores[i] = discriminantScores[i] * m_ClassSizes[i] ;
-    }
-
-  for (i = 0 ; i < m_ClassSizes.size() ; i++)
-    {
-      if (m_TempScores[i] > maxScore)
-        {
-          maxIndex = i ;
-          maxScore = m_TempScores[i] ;
-        }
-    }
-
-  return maxIndex ;
-}
-
 void MaximumLikelihoodRatioDecisionRule::AddClassSampleSize(unsigned int size)
 {
   m_ClassSizes.push_back(size) ;
