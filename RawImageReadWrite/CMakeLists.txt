@@ -20,7 +20,7 @@ ITKIO
 
 IF(UNIX)
   LINK_LIBRARIES (
-  ${CMAKE_X_LIBS} -lm
+  -lm
   )
 ENDIF(UNIX)
 
