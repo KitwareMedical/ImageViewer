@@ -66,7 +66,7 @@ public:
   /*! Called when overlay is toggled or opacity is changed */
   void  ViewOverlayCallBack(void (* newOverlayCallBack)(void));
 
-	itk::ColorTable * GetColorTable(void);
+  ColorTableType * GetColorTable(void);
 
   void size(int w, int h);
   void resize(int x, int y, int w, int h);
@@ -291,7 +291,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::SetInputOverlay(
 
 
 template <class ImagePixelType, class OverlayPixelType>
-const Image<OverlayPixelType,3>::Pointer &
+const typename GLSliceView<ImagePixelType, OverlayPixelType>::OverlayType::Pointer &
 GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) const
 {
   return cOverlayData;
@@ -372,7 +372,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>::OverlayOpacity(void)
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-itk::ColorTable * 
+typename GLSliceView<ImagePixelType, OverlayPixelType>::ColorTableType * 
 GLSliceView<ImagePixelType, OverlayPixelType>::GetColorTable(void)
 {
   return &cColorTable;
