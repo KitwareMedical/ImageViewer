@@ -22,16 +22,12 @@ ${ITK_BINARY_DIR}/Examples/ImageRegistration
 ${FLTK_LIBRARY_DIR}
 )
 
-SOURCE_FILES(
+SOURCE_FILES(ImageRegistration_SRCS
 liImageRegistrationConsole
 liImageRegistrationConsoleGUI
 liImageRegistrationConsoleBase
+ImageRegistration
 )
-
-LIBRARY(
-ImageRegistrationLib
-)
-
 
 LINK_LIBRARIES (
 VXLNumerics
@@ -54,5 +50,5 @@ UNIX_LIBRARIES (
 )
 
 
-EXECUTABLES(ImageRegistration)
+ADD_EXECUTABLE(ImageRegistration ImageRegistration_SRCS)
 

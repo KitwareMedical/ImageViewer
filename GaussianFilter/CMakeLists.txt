@@ -23,16 +23,12 @@ ${ITK_BINARY_DIR}/Examples/GaussianFilter
 ${FLTK_LIBRARY_DIR}
 )
 
-SOURCE_FILES(
+SOURCE_FILES(GaussianFilter_SRCS
 liFilterConsole
 liFilterConsoleGUI
 liFilterConsoleBase
+GaussianFilter
 )
-
-LIBRARY(
-GaussianFilterLib
-)
-
 
 LINK_LIBRARIES (
 ITKCommon
@@ -54,5 +50,5 @@ UNIX_LIBRARIES (
 )
 
 
-EXECUTABLES(GaussianFilter)
+ADD_EXECUTABLE(GaussianFilter GaussianFilter_SRCS)
 
