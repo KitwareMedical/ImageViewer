@@ -11,7 +11,7 @@ LINK_LIBRARIES(
   vtkCommon
 )
 
-LINK_LIBRARIES(VXLNumerics ITKCommon)
+LINK_LIBRARIES(VXLNumerics ITKCommon ITKIO ITKNumerics)
 
 SOURCE_FILES(MRIRegistration_SRCS
 OptionList
@@ -19,4 +19,10 @@ RegisterAD
 vtkImageStatistics
 )
 
-ADD_EXECUTABLE(MRIRegistration MRIRegistration_SRCS)
+SOURCE_FILES(MIRegistration_SRCS
+OptionList
+MIRegistration
+)
+
+# ADD_EXECUTABLE(MRIRegistration MRIRegistration_SRCS)
+ADD_EXECUTABLE(MIRegistration MIRegistration_SRCS)
