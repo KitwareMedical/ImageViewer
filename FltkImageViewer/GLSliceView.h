@@ -496,14 +496,14 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
     {
     ind[cWinOrder[1]] = k;
     
-    if(k-cWinMinY >= cWinDataSizeY)
+    if(k-cWinMinY >= (int)cWinDataSizeY)
       continue;
 
     for(int j=startJ; j <= cWinMaxX; j++) 
       {
       ind[cWinOrder[0]] = j;
       
-      if(j-cWinMinX >= cWinDataSizeX)
+      if(j-cWinMinX >= (int)cWinDataSizeX)
          continue;
 
       switch( cImageMode ) 
@@ -893,16 +893,17 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
         sprintf(s, "Z - Slice: %3d", cWinCenter[2]);
       gl_draw( s, 2, 2+5*(gl_height()+2) );
       sprintf(s, "Dims: %3d x %3d x %3d", 
-        cDimSize[0], cDimSize[1], cDimSize[2]);
+        (int)cDimSize[0], (int)cDimSize[1], (int)cDimSize[2]);
       gl_draw( s, 2, 2+4*(gl_height()+2) );
       sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f", 
         spacing[0], spacing[1], spacing[2]);
       gl_draw( s, 2, 2+3*(gl_height()+2) );
-      sprintf(s, "Int. Range: %0.3f - %0.3f", cDataMin, cDataMax);
+      sprintf(s, "Int. Range: %0.3f - %0.3f", (float)cDataMin, 
+              (float)cDataMax);
       gl_draw( s, 2, 2+2*(gl_height()+2) );
       sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)", 
-        cIWMin, IWModeTypeName[cIWModeMin], 
-        cIWMax, IWModeTypeName[cIWModeMax]);
+        (float)cIWMin, IWModeTypeName[cIWModeMin], 
+        (float)cIWMax, IWModeTypeName[cIWModeMax]);
       gl_draw( s, 2, 2+1*(gl_height()+2) );
       sprintf(s, "View Mode: %s", ImageModeTypeName[cImageMode]);
       gl_draw( s, 2, 2+0*(gl_height()+2) );

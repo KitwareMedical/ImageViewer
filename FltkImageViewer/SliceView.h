@@ -1181,19 +1181,19 @@ void SliceView<imType>::winCenter(int newWinCenterX,
 {
     if(newWinCenterX < 0)
       newWinCenterX = 0;
-    if(newWinCenterX >= cDimSize[0])
+    if(newWinCenterX >= (int)cDimSize[0])
       newWinCenterX = cDimSize[0] - 1;
     cWinCenter[0] = newWinCenterX;
     
     if(newWinCenterY < 0)
       newWinCenterY = 0;
-    if(newWinCenterY >= cDimSize[1])
+    if(newWinCenterY >= (int)cDimSize[1])
       newWinCenterY = cDimSize[1] - 1;
     cWinCenter[1] = newWinCenterY;
 
     if(newWinCenterZ < 0)
       newWinCenterZ = 0;
-    if(newWinCenterZ >= cDimSize[2])
+    if(newWinCenterZ >= (int)cDimSize[2])
       newWinCenterZ = cDimSize[2] - 1;
     cWinCenter[2] = newWinCenterZ;
     
@@ -1505,7 +1505,7 @@ int SliceView<imType>::handle(int event)
             break;
         case '>':
         case '.':
-            if((int)cWinCenter[cWinOrder[2]]+1>cDimSize[cWinOrder[2]]-1)
+            if((int)cWinCenter[cWinOrder[2]]+1>(int)cDimSize[cWinOrder[2]]-1)
                 return 1;
             sliceNum(cWinCenter[cWinOrder[2]]+1);
             update();
