@@ -1,14 +1,8 @@
 #ifndef METAIMAGE_H
 #define METAIMAGE_H
 
-#include "MetaImageTypes.h"
 #include "MetaUtils.h"
 #include "MetaFileLib.h"
-
-/*! 
- *   Example of loading and converting to VHTK::Image
- *   \example IView/iview.cpp
- */
 
 /*!
  *   Just a reminder of the dimension ordering in memory
@@ -18,6 +12,15 @@
 #define MET_DIM_Y                   1
 #define MET_DIM_Z                   2
 #define MET_DIM_S                   3
+
+
+typedef enum         {MET_MOD_UNKNOWN,
+                      MET_MOD_MRI,
+                      MET_MOD_MRA,
+                      MET_MOD_CT,
+                      MET_MOD_DSA,
+                      MET_MOD_CXR,
+                      MET_MOD_DRR} MET_ModType;
 
 /*!
  *    Given a string, convert it to the corresponding enumerated MET_ModType

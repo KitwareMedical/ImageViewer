@@ -10,7 +10,7 @@ using namespace std;
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #include <arpa/inet.h>
 #endif

@@ -26,16 +26,27 @@
 
 #include <cstdio>
 
-#include "MetaImageTypes.h"
 #include "MetaUtils.h"     // Generic Memory/IO/Debug/Misc Routines
 
+
 // Given an array of fieldRec that define a metaFile format, parse that file
-//    fTerm specifies what field (if any) marks the field (variable name) at which file parsing should stop (e.g., if binary data follows)
-//    fromTopOfFile indicates whether the File pointer fp should be reset to topOfFile before parsing begins
-extern bool MF_Read(FILE *fp, int nFields, MF_FieldRec *field, int fTerm=-1, bool fromTopOfFile=true, char _sepChar='=');
+//    fTerm specifies what field (if any) marks the field (variable name) 
+//       at which file parsing should stop (e.g., if binary data follows)
+//    fromTopOfFile indicates whether the File pointer fp should be reset
+//       to topOfFile before parsing begins
+
+extern bool MF_Read(FILE *fp,
+                    int nFields,
+                    MF_FieldRec *field,
+                    int fTerm=-1,
+                    bool fromTopOfFile=true,
+                    char _sepChar='=');
 
 // Given an array of fieldRecs, creates a metaFile.
-extern bool MF_Write(FILE *fp, int nFields, MF_FieldRec *field, char _sepChar='=');
+extern bool MF_Write(FILE *fp,
+                     int nFields,
+                     MF_FieldRec *field,
+                     char _sepChar='=');
 
 extern bool MF_ParseStringToCHAR_ARRAY(char *s, int *n, char ***val);
 

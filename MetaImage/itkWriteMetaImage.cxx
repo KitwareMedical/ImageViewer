@@ -17,6 +17,8 @@
 #include "itkImage.h"
 #include <itkScalar.h>
 
+#include "MetaUtils.h"
+
 #define ITK_MANUAL_INSTANTIATION
 #include "itkWriteMetaImage.h"
 
@@ -30,14 +32,25 @@ namespace itk
 
 
 /**
- *   Type Code for unsigned char
+ *   Type Code for char
  */
 template <>
 MET_Type 
-WriteMetaImage<Image<unsigned char,3> >
+WriteMetaImage<Image<signed char,2> >
 ::GetTypeCode(void) const
 {
-  return MET_UCHAR;
+  return MET_CHAR;
+}
+
+/**
+ *   Type Code for char
+ */
+template <>
+MET_Type 
+WriteMetaImage<Image<signed char,3> >
+::GetTypeCode(void) const
+{
+  return MET_CHAR;
 }
 
 /**
@@ -52,28 +65,15 @@ WriteMetaImage<Image<unsigned char,2> >
 }
 
 /**
- *   Type Code for float
+ *   Type Code for unsigned char
  */
 template <>
 MET_Type 
-WriteMetaImage<Image<float,3> >
+WriteMetaImage<Image<unsigned char,3> >
 ::GetTypeCode(void) const
 {
-  return MET_FLOAT;
+  return MET_UCHAR;
 }
-
-
-/**
- *   Type Code for float
- */
-template <>
-MET_Type 
-WriteMetaImage<Image<Scalar<float>,3> >
-::GetTypeCode(void) const
-{
-  return MET_FLOAT;
-}
-
 
 /**
  *   Type Code for float
@@ -86,16 +86,26 @@ WriteMetaImage<Image<float,2> >
   return MET_FLOAT;
 }
 
-
 /**
- *   Type Code for unsigned short
+ *   Type Code for float
  */
 template <>
 MET_Type 
-WriteMetaImage<Image<unsigned short,3> >
+WriteMetaImage<Image<float,3> >
 ::GetTypeCode(void) const
 {
-  return MET_USHORT;
+  return MET_FLOAT;
+}
+
+/**
+ *   Type Code for float
+ */
+template <>
+MET_Type 
+WriteMetaImage<Image<Scalar<float>,3> >
+::GetTypeCode(void) const
+{
+  return MET_FLOAT;
 }
 
 /**
@@ -109,10 +119,37 @@ WriteMetaImage<Image<unsigned short,2> >
   return MET_USHORT;
 }
 
+/**
+ *   Type Code for unsigned short
+ */
+template <>
+MET_Type 
+WriteMetaImage<Image<unsigned short,3> >
+::GetTypeCode(void) const
+{
+  return MET_USHORT;
+}
 
+/**
+ *   Type Code for short
+ */
+template <>
+MET_Type 
+WriteMetaImage<Image<short,2> >
+::GetTypeCode(void) const
+{
+  return MET_SHORT;
+}
 
-
-
-
+/**
+ *   Type Code for short
+ */
+template <>
+MET_Type 
+WriteMetaImage<Image<short,3> >
+::GetTypeCode(void) const
+{
+  return MET_SHORT;
+}
 
 } // end namespace itk

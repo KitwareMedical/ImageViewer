@@ -18,7 +18,6 @@
 
 #include "itkWriteImage.h"
 #include <vector>
-#include <MetaImageTypes.h>
 
 namespace itk
 {
