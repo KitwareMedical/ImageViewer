@@ -22,8 +22,7 @@
 #include <FL/Fl_Multiline_Input.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Widget.H>
-#include <FL/Fl_Text_Buffer.H>
-#include <FL/Fl_Text_Display.H>
+#include <FL/Fl_Multiline_Output.H>
 
 #include "fltkUtils.h"
 
