@@ -11,6 +11,129 @@
 #include "itkImageRegionConstIterator.h"
 
 
+template <class TPixelType >
+class FilterModule {
+public:
+  
+  FilterModule() {};
+  ~FilterModule() {};
+
+  void ProcessData( vtkVVPluginInfo * info, const vtkVVProcessDataStruct * pds )
+  {
+    // Instantiate the image types
+    typedef TPixelType                     InputPixelType;
+    typedef float                          InternalPixelType;
+
+    const unsigned int Dimension = 3;
+
+    typedef itk::Image< InputPixelType,    Dimension > InputImageType;
+    typedef itk::Image< InternalPixelType, Dimension > InternalImageType;
+
+
+    // Instantiate the ImportImageFilter
+    // This filter is used for building an ITK image using 
+    // the data passed in a buffer.
+    typedef itk::ImportImageFilter< InputPixelType, 
+                                    Dimension       > ImportFilterType;
+
+    ImportFilterType::Pointer importFilter = ImportFilterType::New();
+
+    typedef ImportFilterType::SizeType      SizeType;
+    typedef ImportFilterType::IndexType     IndexType;
+
+    SizeType   size;
+    IndexType  start;
+
+    double     origin[3];
+    double     spacing[3];
+
+    for(unsigned int i=0; i<3; i++)
+      {
+      size[i]     =  info->InputVolumeDimensions[i];
+      origin[i]   =  info->InputVolumeOrigin[i];
+      spacing[i]  =  info->InputVolumeSpacing[i];
+      start[i]    =  0;
+      }
+
+    typedef ImportFilterType::RegionType    RegionType;
+
+    RegionType region;
+
+    region.SetIndex( start );
+    region.SetSize(  size  );
+   
+    importFilter->SetSpacing( spacing );
+    importFilter->SetOrigin(  origin  );
+    importFilter->SetRegion(  region  );
+
+    const unsigned int totalNumberOfPixels = region.GetNumberOfPixels();
+
+    const bool         importFilterWillDeleteTheInputBuffer = false;
+
+    importFilter->SetImportPointer( static_cast< InputPixelType * >( pds->inData ), 
+                                    totalNumberOfPixels,
+                                    importFilterWillDeleteTheInputBuffer );
+
+    // Instantiate the CastImageFilter
+    // This filter is used for converting the pixel type from the input
+    // data buffer into 'float' pixel types. This is required because
+    // the CurvatureFlowImageFilter only operates on float and double
+    // pixel types.
+    typedef itk::CastImageFilter< InputImageType, 
+                                  InternalImageType > CastFilterType;
+
+    CastFilterType::Pointer castFilter = CastFilterType::New();
+
+    castFilter->SetInput( importFilter->GetOutput() );
+
+
+    // Instantiate the filter type
+    typedef itk::CurvatureFlowImageFilter< 
+                    InternalImageType,InternalImageType > FilterType;
+
+    FilterType::Pointer curvaturFlowFilter = FilterType::New();
+
+    // Set the parameters on it
+    curvaturFlowFilter->SetNumberOfIterations(
+      atoi(info->GUIItems[0].CurrentValue));
+    curvaturFlowFilter->SetTimeStep(
+      atof(info->GUIItems[1].CurrentValue));
+    curvaturFlowFilter->SetInput( castFilter->GetOutput() );
+
+    curvaturFlowFilter->Update();
+
+  /*
+    // setup progress
+    vtkCallbackCommand *cc = vtkCallbackCommand::New();
+    cc->SetCallback(vvCurvatureFlowProgress);
+    cc->SetClientData(inf);
+    ig->AddObserver(vtkCommand::ProgressEvent,cc);
+    cc->Delete();
+    
+  */
+
+    InternalImageType::ConstPointer outputImage = curvaturFlowFilter->GetOutput();
+
+    typedef itk::ImageRegionConstIterator< InternalImageType >  OutputIteratorType;
+
+    OutputIteratorType ot( outputImage, outputImage->GetBufferedRegion() );
+
+    InputPixelType * outData = (InputPixelType *)(pds->outData);
+
+    ot.GoToBegin(); 
+    while( !ot.IsAtEnd() )
+      {
+      *outData = static_cast< InputPixelType >( ot.Get() );
+      ++ot;
+      ++outData;
+      }
+
+  } // end of ProcessData
+
+};
+
+
+
 extern "C" {  
 /*
   void vvCurvatureFlowProgress(vtkObject *obj, unsigned long, void *inf, 
@@ -29,114 +152,21 @@ extern "C" {
 static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
-  int *dim = info->InputVolumeDimensions;
 
-  // Instantiate the image types
-  typedef unsigned char                  InputPixelType;
-  typedef float                          InternalPixelType;
-
-  const unsigned int Dimension = 3;
-
-  typedef itk::Image< InputPixelType,    Dimension > InputImageType;
-  typedef itk::Image< InternalPixelType, Dimension > InternalImageType;
-
-
-  // Instantiate the ImportImageFilter
-  // This filter is used for building an ITK image using 
-  // the data passed in a buffer.
-  typedef itk::ImportImageFilter< InputPixelType, 
-                                  Dimension       > ImportFilterType;
-
-  ImportFilterType::Pointer importFilter = ImportFilterType::New();
-
-  typedef ImportFilterType::SizeType      SizeType;
-  typedef ImportFilterType::IndexType     IndexType;
-
-  SizeType   size;
-  IndexType  start;
-
-  double     origin[3];
-  double     spacing[3];
-
-  for(unsigned int i=0; i<3; i++)
+  switch( info->InputVolumeScalarType )
     {
-    size[i]     =  info->InputVolumeDimensions[i];
-    origin[i]   =  info->InputVolumeOrigin[i];
-    spacing[i]  =  info->InputVolumeSpacing[i];
-    start[i]    =  0;
-    }
-
-  typedef ImportFilterType::RegionType    RegionType;
-
-  RegionType region;
-
-  region.SetIndex( start );
-  region.SetSize(  size  );
- 
-  importFilter->SetSpacing( spacing );
-  importFilter->SetOrigin(  origin  );
-  importFilter->SetRegion(  region  );
-
-  const unsigned int totalNumberOfPixels = region.GetNumberOfPixels();
-
-  const bool         importFilterWillDeleteTheInputBuffer = false;
-
-  importFilter->SetImportPointer( static_cast< InputPixelType * >( pds->inData ), 
-                                  totalNumberOfPixels,
-                                  importFilterWillDeleteTheInputBuffer );
-
-  // Instantiate the CastImageFilter
-  // This filter is used for converting the pixel type from the input
-  // data buffer into 'float' pixel types. This is required because
-  // the CurvatureFlowImageFilter only operates on float and double
-  // pixel types.
-  typedef itk::CastImageFilter< InputImageType, 
-                                InternalImageType > CastFilterType;
-
-  CastFilterType::Pointer castFilter = CastFilterType::New();
-
-  castFilter->SetInput( importFilter->GetOutput() );
-
-
-  // Instantiate the filter type
-  typedef itk::CurvatureFlowImageFilter< 
-                  InternalImageType,InternalImageType > FilterType;
-
-  FilterType::Pointer curvaturFlowFilter = FilterType::New();
-
-  // Set the parameters on it
-  curvaturFlowFilter->SetNumberOfIterations(
-    atoi(info->GUIItems[0].CurrentValue));
-  curvaturFlowFilter->SetTimeStep(
-    atof(info->GUIItems[1].CurrentValue));
-  curvaturFlowFilter->SetInput( castFilter->GetOutput() );
-
-  curvaturFlowFilter->Update();
-
-/*
-  // setup progress
-  vtkCallbackCommand *cc = vtkCallbackCommand::New();
-  cc->SetCallback(vvCurvatureFlowProgress);
-  cc->SetClientData(inf);
-  ig->AddObserver(vtkCommand::ProgressEvent,cc);
-  cc->Delete();
-  
-*/
-
-  InternalImageType::ConstPointer outputImage = curvaturFlowFilter->GetOutput();
-
-  typedef itk::ImageRegionConstIterator< InternalImageType >  OutputIteratorType;
-
-  OutputIteratorType ot( outputImage, outputImage->GetBufferedRegion() );
-
-  InputPixelType * outData = (InputPixelType *)(pds->outData);
-
-  ot.GoToBegin(); 
-  while( !ot.IsAtEnd() )
-    {
-    *outData = static_cast< InputPixelType >( ot.Get() );
-    ++ot;
-    ++outData;
+    case VTK_UNSIGNED_CHAR:
+      {
+      FilterModule< unsigned char > module;
+      module.ProcessData( info, pds );
+      break; 
+      }
+    case VTK_UNSIGNED_SHORT:
+      {
+      FilterModule< unsigned short > module;
+      module.ProcessData( info, pds );
+      break; 
+      }
     }
 
   return 0;
