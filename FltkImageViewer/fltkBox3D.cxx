@@ -40,7 +40,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 
-#include "liBox3D.h"
+#include "fltkBox3D.h"
 
 
 namespace fltk {

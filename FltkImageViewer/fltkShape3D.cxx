@@ -532,7 +532,7 @@ void Shape3D::Redraw(void) const
 //    Invoke an event in the top of the hierarchy
 //
 //--------------------------------------------------
-void Shape3D::InvokeEvent( EventIds event ) const
+void Shape3D::InvokeEvent( unsigned long event ) const
 {
   
   this->itk::Object::InvokeEvent( event );

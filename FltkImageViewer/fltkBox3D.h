@@ -40,10 +40,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 =========================================================================*/
 
 
-#ifndef _fltkBox3D_h
-#define _fltkBox3D_h
+#ifndef __fltkBox3D_h
+#define __fltkBox3D_h
 
-#include "liShape3D.h"
+#include "fltkShape3D.h"
 
 
 
@@ -53,7 +53,7 @@ namespace fltk {
 
 
 /**
- *  \class Box3D derives from Shape3D and represents a parallepiped in 3D.
+ *  \class fltk::Box3D derives from Shape3D and represents a parallepiped in 3D.
  */
 class ITK_EXPORT Box3D : public Shape3D 
 {

@@ -315,7 +315,7 @@ public:
   /**
    * Invoke events recursively
    */
-  void InvokeEvent( EventIds event ) const;
+  void InvokeEvent( unsigned long event ) const;
 
   
   /**

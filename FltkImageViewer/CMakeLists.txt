@@ -5,6 +5,9 @@ IF(FLTK_LIBRARY)
   IF(FLTK_INCLUDE_PATH)
 
    SOURCE_FILES(FltkImageViewer_SRCS
+     fltkBox3D
+     fltkCone3D
+     fltkCylinder3D
      fltkDisplayGlWindowGUI
      fltkDisplayGlWindowFlatGUI
      fltkGlWindow
