@@ -8,6 +8,7 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+
 # Add an option to build or not build the Image Registration example
 OPTION(BUILD_IMAGE_REGISTRATION "Build the image registration example")
 IF(BUILD_IMAGE_REGISTRATION)
@@ -39,6 +40,12 @@ IF(BUILD_PRINCIPAL_AXES)
 SUBDIRS(PrincipalAxes)
 ENDIF(BUILD_PRINCIPAL_AXES)
 
+
+# Add an option to build or not build the MRIBiasCorrection example
+OPTION(BUILD_MRI_BIAS_CORRECTION "Build the MRI bias correction example" ON)
+IF(BUILD_MRI_BIAS_CORRECTION)
+SUBDIRS(MRIBiasCorrection)
+ENDIF(BUILD_MRI_BIAS_CORRECTION)
 
 LINK_LIBRARIES (
 VXLNumerics
