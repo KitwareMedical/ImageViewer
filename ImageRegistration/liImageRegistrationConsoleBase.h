@@ -33,6 +33,13 @@
 #include <itkConjugateGradientOptimizer.h>
 
 
+#include "itkLinearInterpolateImageFunction.h"
+#include "itkNearestNeighborInterpolateImageFunction.h"
+
+#include "itkTranslationTransform.h"
+#include "itkRigid3DTransform.h"
+
+
 /**
  * \brief ImageRegistrationConsoleBase class that instantiate
  * the elements required for a registration method without GUI
@@ -42,19 +49,36 @@ class liImageRegistrationConsoleBase
 {
 public:
 
-
+ /** Identifiers for the different types of Metrics */
   typedef enum {
     mutualInformation,
     normalizedCorrelation,
     patternIntensity,
     meanSquares
   } MetricIdentifier;
-  
+
+ /** Identifiers of the different types of Optimizers */
  typedef enum {
     gradientDescent,
     regularStepGradientDescent,
     conjugateGradient
   } OptimizerIdentifier;
+
+ /** Identifiers of the different types of Transforms */
+ typedef enum {
+    translationTransform,
+    rotationTransform,
+    scaleTransform,
+    rigidTransform,
+    affineTransform
+  } TransformIdentifier;
+
+ /** Identifiers of the different types of Interpolators */
+ typedef enum {
+    linearInterpolation,
+    nearestNeighborInterpolation
+  } InterpolatorIdentifier;
+
 
   /** Dimension of the images to be registered */ 
   enum { ImageDimension = 3 };
@@ -139,6 +163,8 @@ public:
 
   virtual void SelectMetric( MetricIdentifier metricType );
   virtual void SelectOptimizer( OptimizerIdentifier optimizerType );
+  virtual void SelectInterpolator( InterpolatorIdentifier interpolatorType );
+  virtual void SelectTransform( TransformIdentifier transformType );
 
 protected:
 
@@ -164,6 +190,10 @@ protected:
   MetricIdentifier                        m_SelectedMetric;
 
   OptimizerIdentifier                     m_SelectedOptimizer;
+
+  InterpolatorIdentifier                  m_SelectedInterpolator;
+
+  TransformIdentifier                     m_SelectedTransform;
 
 };
 

@@ -242,7 +242,7 @@ void
 liImageRegistrationConsoleBase 
 ::Execute( void )
 {
-  m_ImageRegistrationMethod->GetOptimizer()->StartOptimization();
+  m_ImageRegistrationMethod->StartRegistration();
 }
 
 
@@ -386,5 +386,82 @@ liImageRegistrationConsoleBase
 
 }
 
+
+
+ 
+/*****************************************
+ *
+ *  Select the interpolator to be used 
+ *  to evaluate images at non-grid positions
+ *
+ ****************************************/
+void
+liImageRegistrationConsoleBase 
+::SelectInterpolator( InterpolatorIdentifier interpolatorId )
+{
+
+  m_SelectedInterpolator = interpolatorId;
+
+  switch( m_SelectedInterpolator )
+  {
+  case linearInterpolation:
+    {
+    m_ImageRegistrationMethod->SetInterpolator( 
+        itk::LinearInterpolateImageFunction<MovingImageType, 
+                                            double >::New() );
+    break;
+    }
+  case nearestNeighborInterpolation:
+    {
+    m_ImageRegistrationMethod->SetInterpolator( 
+        itk::NearestNeighborInterpolateImageFunction<MovingImageType, 
+                                            double >::New() );
+    break;
+    }
+
+  default:
+    fl_alert("Unkown type of optimizer was selected");
+    return;
+  }
+
+}
+
+
+ 
+/*****************************************
+ *
+ *  Select the Transform  to be used 
+ *  to map the moving image into the 
+ *  fixed image
+ *
+ ****************************************/
+void
+liImageRegistrationConsoleBase 
+::SelectTransform( TransformIdentifier transformId )
+{
+
+  m_SelectedTransform = transformId;
+
+  switch( m_SelectedTransform )
+  {
+  case translationTransform:
+    {
+    m_ImageRegistrationMethod->SetTransform( 
+        itk::TranslationTransform<double,3>::New() );
+    break;
+    }
+  case rigidTransform:
+    {
+    m_ImageRegistrationMethod->SetTransform( 
+        itk::Rigid3DTransform<double>::New() );
+    break;
+    }
+
+  default:
+    fl_alert("Unkown type of optimizer was selected");
+    return;
+  }
+
+}
 
 
