@@ -3,7 +3,6 @@
 
 #include "CellsViewerBase.h"
 #include <Fl/fl_file_chooser.H>
-#include "itkMetaImageIOFactory.h"
 
 namespace bio {
 
@@ -35,7 +34,6 @@ CellsViewerBase
   m_ImageReader->AddObserver( itk::Command::EndEvent,
                               m_Display.GetRedrawCommand() );
                                
-  itk::MetaImageIOFactory::RegisterOneFactory();
 
 }
 
@@ -74,6 +72,16 @@ void CellsViewerBase
 	m_Display.Show();
 }
 
+
+
+/**
+ *    Show the Slicer controls
+ */ 
+void CellsViewerBase
+::ShowSlicerControls(void)
+{
+	m_SliceDrawer->Show();
+}
 
 
 

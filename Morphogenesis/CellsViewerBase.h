@@ -47,6 +47,7 @@ public:
 	virtual void Stop(void);
 	virtual void Restart(void);
   virtual void ShowDisplay(void);
+  virtual void ShowSlicerControls(void);
   virtual void HideDisplay(void);
   virtual void SetCellsAggregate( CellularAggregate * );
   virtual clock_t GetStartTime(void) const;

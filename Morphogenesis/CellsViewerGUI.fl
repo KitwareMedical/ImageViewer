@@ -7,18 +7,17 @@ gridy 5
 snap 3
 class CellsViewerGUI {open : {public bio::CellsViewerBase}
 } {
-  Function {CellsViewerGUI()} {open
-  } {
+  Function {CellsViewerGUI()} {} {
     Fl_Window controlWindow {
-      label {Control Panel} open
-      xywh {494 37 172 192}
+      label {Control Panel} open selected
+      xywh {494 37 252 162}
       code0 {\#include "CellsViewerBase.h"} visible
     } {
-      Fl_Menu_Bar {} {open selected
-        xywh {0 0 170 25}
+      Fl_Menu_Bar {} {open
+        xywh {0 0 250 25}
       } {
         submenu {} {
-          label File open
+          label File
           xywh {0 0 100 20}
         } {
           menuitem {} {
@@ -32,33 +31,47 @@ class CellsViewerGUI {open : {public bio::CellsViewerBase}
             xywh {0 0 100 20} shortcut 0x80071
           }
         }
+        submenu {} {
+          label View open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label {Image 3D controls}
+            callback {ShowSlicerControls();}
+            xywh {0 0 100 20}
+          }
+        }
       }
       Fl_Button {} {
         label {@-3>}
         callback {Run();}
-        xywh {15 40 45 20} labeltype SYMBOL_LABEL
+        xywh {20 35 60 20} labeltype SYMBOL_LABEL
       }
       Fl_Button {} {
         label {@\#-4square}
         callback {Stop();}
-        xywh {60 40 45 20} labeltype SYMBOL_LABEL
+        xywh {80 35 60 20} labeltype SYMBOL_LABEL
       }
       Fl_Value_Output iterationValueOutput {
         label {Iteration : }
-        xywh {85 70 60 25}
+        xywh {180 66 60 25}
       }
       Fl_Value_Output numberOfCellsValueOutput {
         label {Cells : }
-        xywh {85 100 60 25}
+        xywh {180 93 60 25}
       }
       Fl_Button {} {
         label {@\#|<}
         callback {Restart();}
-        xywh {105 40 45 20} labeltype SYMBOL_LABEL
+        xywh {140 35 60 20} labeltype SYMBOL_LABEL
       }
       Fl_Value_Output timeValueOutput {
         label {Time : }
-        xywh {85 130 60 25}
+        xywh {180 120 60 25}
+      }
+      Fl_Button {} {
+        label {/home/ibanez/src/Insight/Documentation/Art/itkLogoSmallTransparentBackground.xpm}
+        xywh {5 70 110 75} box FLAT_BOX labeltype image
       }
     }
   }
