@@ -35,9 +35,9 @@ ShapeDetectionLevelSet
 
   m_ThresholdedImageViewer.SetLabel("Thresholded Image");
 
-  m_ZeroSetImageViewer.SetLabel("Fast Marching Outputt");
+  m_ZeroSetImageViewer.SetLabel("Fast Marching Output");
 
-  m_InputThresholdImageViewer.SetLabel("Zero Set Image");
+  m_FastMarchingImageViewer.SetLabel("Zero Set Image");
 
   m_GradientMagnitudeImageViewer.SetLabel("Gradient Magnitude Image");
 
@@ -67,8 +67,8 @@ ShapeDetectionLevelSet
   timeCrossingButton->Observe( m_ShapeDetectionFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
   edgePotentialButton->Observe( m_ExpNegativeFilter.GetPointer() );
+  fastMarchingResultButton->Observe( m_AddImageFilter.GetPointer() );
   zeroSetButton->Observe( m_AddImageFilter.GetPointer() );
-  zeroSetButton->Observe( m_FastMarchingFilter.GetPointer() );
 
   progressSlider->Observe( m_CastImageFilter.GetPointer() );
   progressSlider->Observe( m_DerivativeFilter.GetPointer() );
@@ -164,7 +164,7 @@ ShapeDetectionLevelSet
   m_GradientMagnitudeImageViewer.Hide();
   m_TimeCrossingMapViewer.Hide();
   m_ZeroSetImageViewer.Hide();
-  m_InputThresholdImageViewer.Hide();
+  m_FastMarchingImageViewer.Hide();
   
   m_VTKSegmentedImageViewer->Hide();
 
@@ -295,11 +295,10 @@ ShapeDetectionLevelSet
     return;
     }
   this->ComputeZeroSet();
+
   m_ZeroSetImageViewer.SetImage( m_AddImageFilter->GetOutput() );  
   m_ZeroSetImageViewer.Show();
 
-  m_InputThresholdImageViewer.SetImage( m_InputThresholdFilter->GetOutput() );
-  m_InputThresholdImageViewer.Show();
 }
 
 
@@ -365,7 +364,29 @@ ShapeDetectionLevelSet
   m_ThresholdedImageViewer.SetOverlay( m_SeedImage );
   m_ThresholdedImageViewer.Show();
 
+
 }
+
+
+
+
+ 
+/************************************
+ *
+ *  Show Fast Marching Result Image
+ *
+ ***********************************/
+void
+ShapeDetectionLevelSet
+::ShowFastMarchingResultImage( void )
+{
+  m_InputThresholdFilter->Update();
+  m_FastMarchingImageViewer.SetImage( m_CastImageFilter->GetOutput() );
+  m_FastMarchingImageViewer.SetOverlay( m_InputThresholdFilter->GetOutput() );
+  m_FastMarchingImageViewer.Show();
+}
+
+
 
 
 
@@ -515,6 +536,7 @@ ShapeDetectionLevelSet
 {
   this->ShapeDetectionLevelSetBase::ClearSeeds();
   m_ZeroSetImageViewer.Update();
+  m_InputImageViewer.Update();
   Fl::check();
 }
   

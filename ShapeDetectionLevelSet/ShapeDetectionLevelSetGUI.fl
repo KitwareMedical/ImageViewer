@@ -4,7 +4,8 @@ header_name {.h}
 code_name {.cxx}
 class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
 } {
-  Function {ShapeDetectionLevelSetGUI()} {} {
+  Function {ShapeDetectionLevelSetGUI()} {open
+  } {
     Fl_Window consoleWindow {
       label {Shape Detection Segmentation Level Set} open
       xywh {259 69 830 305}
@@ -45,10 +46,10 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
           xywh {65 45 10 90} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {65 190 80 10} box UP_BOX color 4
+          xywh {65 190 265 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {360 80 10 70} box UP_BOX color 4
+          xywh {360 80 10 85} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {325 79 80 11} box UP_BOX color 4
@@ -60,16 +61,22 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
           xywh {415 90 10 110} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {195 190 230 10} box UP_BOX color 4
+          xywh {301 190 230 10} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {165 154 205 11} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {160 154 10 46} box UP_BOX color 4
         }
       }
       Fl_Group controlsGroup {
-        xywh {5 5 815 235} deactivate
+        xywh {0 5 820 236} deactivate
       } {
         Fl_Light_Button inputImageButton {
           label Display
           callback {ShowInputImage();}
-          xywh {34 126 70 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {61 130 70 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
@@ -122,7 +129,7 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
         Fl_Light_Button gradientMagnitudeButton {
           label Display
           callback {ShowGradientMagnitudeImage();}
-          xywh {205 121 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {205 116 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
@@ -133,46 +140,57 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
         Fl_Light_Button edgePotentialButton {
           label Display
           callback {ShowEdgePotentialImage();}
-          xywh {332 121 67 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {332 115 67 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Value_Input sigmaValueInput {
           label Sigma
           callback {m_DerivativeFilter->SetSigma( o->value() );}
-          xywh {165 35 35 25} labelsize 12 maximum 50 step 0.1 value 1.2 textsize 12
+          xywh {156 35 35 25} labelsize 12 maximum 50 step 0.1 value 1.2 textsize 12
         }
         Fl_Button {} {
           label {Select Zero Set}
           callback {this->ComputeZeroSet();}
-          xywh {115 180 110 30} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {296 180 110 30} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Value_Input zeroSetValueInput {
-          callback {this->SetZeroSetValue( o->value() );} selected
-          xywh {225 182 55 25} labelsize 12 maximum 1000 step 0.1 value 20 textsize 12
+          callback {this->SetZeroSetValue( o->value() );}
+          xywh {322 209 55 25} labelsize 12 maximum 1000 step 0.1 value 20 textsize 12
         }
         Fl_Light_Button zeroSetButton {
           label Display
           callback {ShowZeroSetImage();}
-          xywh {325 181 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {469 167 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Value_Output fastMarchingIterationValueOutput {
-          label Iteration
-          xywh {174 210 39 22} labelsize 12 textsize 12
+          label Iteration selected
+          xywh {190 211 39 22} labelsize 12 textsize 12
         }
         Fl_Button {} {
           label {Clear Seeds}
           callback {this->ClearSeeds();}
-          xywh {104 121 60 40} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {5 125 55 40} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Button {} {
+          label {Fast Marching}
+          callback {this->ComputeFastMarching();}
+          xywh {130 178 123 33} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Light_Button fastMarchingResultButton {
+          label Overlay
+          callback {ShowFastMarchingResultImage();}
+          xywh {469 196 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
         }
       }
       Fl_Slider progressSlider {
-        xywh {5 242 815 15} type {Horz Fill} selection_color 2
+        xywh {5 250 815 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 265 815 25}
+        xywh {5 272 815 25}
       }
       Fl_Button {} {
         label Quit
@@ -211,5 +229,7 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
   Function {ShowEdgePotentialImage( void )} {return_type {virtual void}
   } {}
   Function {ShowZeroSetImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowFastMarchingResultImage( void )} {return_type {virtual void}
   } {}
 } 

@@ -54,6 +54,9 @@ public:
   typedef fltk::ImageViewer< InternalPixelType, 
                                     OverlayPixelType >     InternalImageViewerType;
 
+  typedef fltk::ImageViewer< InternalPixelType, 
+                                    ThresholdPixelType >   SegmentedImageViewerType;
+
   typedef fltk::ImageViewer< ThresholdPixelType, 
                                     OverlayPixelType >     ThresholdedImageViewerType;
 
@@ -80,6 +83,8 @@ public:
 
   virtual void ShowThresholdedImage();
 
+  virtual void ShowFastMarchingResultImage();
+    
   virtual void ShowZeroSetImage();
 
   virtual void ShowThresholdedImageWithVTK();
@@ -104,11 +109,11 @@ private:
 
   ThresholdedImageViewerType      m_ThresholdedImageViewer;
 
+  SegmentedImageViewerType        m_FastMarchingImageViewer;
+  
   InternalImageViewerType         m_TimeCrossingMapViewer;
 
   InternalImageViewerType         m_InputImageViewer;
-
-  ThresholdedImageViewerType      m_InputThresholdImageViewer;
 
   InternalImageViewerType         m_GradientMagnitudeImageViewer;
 

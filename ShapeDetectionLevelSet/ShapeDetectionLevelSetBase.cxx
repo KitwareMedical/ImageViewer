@@ -42,6 +42,7 @@ ShapeDetectionLevelSetBase
   m_TrialPoints = NodeContainer::New();
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
+  m_FastMarchingFilter->SetSpeedImage( m_ExpNegativeFilter->GetOutput() );
   m_FastMarchingFilter->SetTrialPoints( m_TrialPoints );
 
   m_AddImageFilter = AddImageFilterType::New();
@@ -51,7 +52,7 @@ ShapeDetectionLevelSetBase
   m_InputThresholdFilter->SetInput( m_AddImageFilter->GetOutput() );
   m_InputThresholdFilter->SetUpperThreshold( itk::NumericTraits<InternalPixelType>::Zero ); 
   m_InputThresholdFilter->SetLowerThreshold( itk::NumericTraits<InternalPixelType>::NonpositiveMin() ); 
-  m_InputThresholdFilter->SetInsideValue( 200 );
+  m_InputThresholdFilter->SetInsideValue( 1 );
   m_InputThresholdFilter->SetOutsideValue(  0 );
 
   m_ShapeDetectionFilter = ShapeDetectionFilterType::New();
@@ -60,7 +61,7 @@ ShapeDetectionLevelSetBase
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_ShapeDetectionFilter->GetOutput() );
-  m_ThresholdFilter->SetInsideValue( 200 );
+  m_ThresholdFilter->SetInsideValue(   1 );
   m_ThresholdFilter->SetOutsideValue(  0 );
 
   m_SeedImage = SeedImageType::New();
@@ -113,13 +114,15 @@ ShapeDetectionLevelSetBase
   m_SeedImage->Allocate();
   m_SeedImage->FillBuffer( itk::NumericTraits<SeedImageType::PixelType>::Zero );
 
-  InternalImageType::Pointer speedImage = InternalImageType::New();
-  speedImage->SetRegions( region );
-  speedImage->Allocate();
-  speedImage->FillBuffer( 1.0 );
+//  InternalImageType::Pointer speedImage = InternalImageType::New();
+//  speedImage->SetRegions( region );
+//  speedImage->Allocate();
+//  speedImage->FillBuffer( 1.0 );
+//  m_FastMarchingFilter->SetSpeedImage( speedImage );
+
 
   m_FastMarchingFilter->SetOutputSize( region.GetSize() );
-  m_FastMarchingFilter->SetSpeedImage( speedImage );
+
 
   m_InputImageIsLoaded = true;
 
@@ -192,6 +195,21 @@ ShapeDetectionLevelSetBase
  
 /************************************
  *
+ *  Compute Fast Marching
+ *
+ ***********************************/
+void
+ShapeDetectionLevelSetBase
+::ComputeFastMarching( void )
+{
+  this->ShowStatus("Computing Fast Marching");
+  m_FastMarchingFilter->Update();
+}
+
+
+  
+/************************************
+ *
  *  Compute Zero Set
  *
  ***********************************/
@@ -206,6 +224,7 @@ ShapeDetectionLevelSetBase
 
 
  
+
 
 
 /************************************

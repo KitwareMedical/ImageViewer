@@ -131,6 +131,8 @@ public:
 
   virtual void ComputeEdgePotential();
 
+  virtual void ComputeFastMarching();
+
   virtual void ComputeZeroSet();
 
   virtual void RunShapeDetection();
