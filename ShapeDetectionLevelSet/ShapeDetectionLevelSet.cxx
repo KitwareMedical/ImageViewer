@@ -46,75 +46,37 @@ ShapeDetectionLevelSet
   m_InputImageViewer.ClickSelectCallBack( ClickSelectCallback, (void *)this);
 
   // Initialize ITK filter with GUI values
-  m_ThresholdFilter->SetLowerThreshold( 
-      static_cast<InternalPixelType>( lowerThresholdValueInput->value() ) );
+  m_SigmoidFilter->SetAlpha( sigmoidAlphaValueInput->value() );
+  m_SigmoidFilter->SetBeta(  sigmoidBetaValueInput->value()  );
 
-  m_ThresholdFilter->SetUpperThreshold( 
-      static_cast<InputPixelType>( upperThresholdValueInput->value() ) );
+  this->SetZeroSetValue( zeroSetValueInput->value() );
+  m_ShapeDetectionFilter->SetNumberOfIterations( 
+        static_cast<unsigned int>( shapeDetectionIterationsValueInput->value() ) );
 
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
-
-  m_AddImageFilter->GetAccessor().SetValue( - zeroSetValueInput->value() );
 
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
 
-  m_TimeCrossingMapViewer.SetLabel("Time Crossing Map");
+  m_OutputLevelSetViewer.SetLabel("Output Level Set");
 
   // Connect Observers in the GUI 
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   thresholdedImageButton->Observe( m_ThresholdFilter.GetPointer() );
-  timeCrossingButton->Observe( m_ShapeDetectionFilter.GetPointer() );
+  outputLevelSetButton->Observe( m_ShapeDetectionFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
-  edgePotentialButton->Observe( m_ExpNegativeFilter.GetPointer() );
-  fastMarchingResultButton->Observe( m_AddImageFilter.GetPointer() );
-  zeroSetButton->Observe( m_AddImageFilter.GetPointer() );
+  edgePotentialButton->Observe( m_SigmoidFilter.GetPointer() );
+  fastMarchingResultButton->Observe( m_FastMarchingFilter.GetPointer() );
 
   progressSlider->Observe( m_CastImageFilter.GetPointer() );
   progressSlider->Observe( m_DerivativeFilter.GetPointer() );
   progressSlider->Observe( m_ThresholdFilter.GetPointer() );
-  progressSlider->Observe( m_ExpNegativeFilter.GetPointer() );
+  progressSlider->Observe( m_SigmoidFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_ShapeDetectionFilter.GetPointer() );
-  progressSlider->Observe( m_AddImageFilter.GetPointer() );
+  progressSlider->Observe( m_FastMarchingFilter.GetPointer() );
   progressSlider->Observe( m_InputThresholdFilter.GetPointer() );
   
-  typedef itk::SimpleMemberCommand< ShapeDetectionLevelSet > SimpleCommandType;
-
-  SimpleCommandType::Pointer fastMarchingIterationCommand = SimpleCommandType::New();
-  fastMarchingIterationCommand->SetCallbackFunction( this, 
-      & ShapeDetectionLevelSet::UpdateGUIAfterFastMarchingIteration );
-
-  m_FastMarchingFilter->AddObserver( itk::IterationEvent(), 
-                                       fastMarchingIterationCommand );     
-
-
-  SimpleCommandType::Pointer shapeDetectionIterationCommand = SimpleCommandType::New();
-  shapeDetectionIterationCommand->SetCallbackFunction( this, 
-      & ShapeDetectionLevelSet::UpdateGUIAfterShapeDetectionIteration );
-
-  m_ShapeDetectionFilter->AddObserver( itk::IterationEvent(), 
-                                       shapeDetectionIterationCommand );     
-
-  SimpleCommandType::Pointer shapeDetectionStartCommand = SimpleCommandType::New();
-  shapeDetectionStartCommand->SetCallbackFunction( this, 
-      & ShapeDetectionLevelSet::CommandOnStartShapeDetection );
-
-  m_ShapeDetectionFilter->AddObserver( itk::StartEvent(), shapeDetectionStartCommand );      
-
-  SimpleCommandType::Pointer fastMarchingStartCommand = SimpleCommandType::New();
-  fastMarchingStartCommand->SetCallbackFunction( this, 
-      & ShapeDetectionLevelSet::CommandOnStartShapeDetection );
-
-  m_ShapeDetectionFilter->AddObserver( itk::StartEvent(), fastMarchingStartCommand );      
-
-
-
-  m_ThresholdFilter->SetLowerThreshold( lowerThresholdValueInput->value() );
-  m_ThresholdFilter->SetUpperThreshold( upperThresholdValueInput->value() );
-
-  m_ShapeDetectionIterationCounter = 0;
-  m_FastMarchingIterationCounter   = 0;
 
 }
 
@@ -162,7 +124,7 @@ ShapeDetectionLevelSet
   m_ThresholdedImageViewer.Hide();
   m_EdgePotentialImageViewer.Hide();
   m_GradientMagnitudeImageViewer.Hide();
-  m_TimeCrossingMapViewer.Hide();
+  m_OutputLevelSetViewer.Hide();
   m_ZeroSetImageViewer.Hide();
   m_FastMarchingImageViewer.Hide();
   
@@ -265,7 +227,7 @@ ShapeDetectionLevelSet
  ***********************************/
 void
 ShapeDetectionLevelSet
-::ShowTimeCrossingMapImage( void )
+::ShowOutputLevelSet( void )
 {
 
   if( !m_InputImageIsLoaded )
@@ -273,33 +235,14 @@ ShapeDetectionLevelSet
     return;
     }
   this->RunShapeDetection();
-  m_TimeCrossingMapViewer.SetImage( m_ShapeDetectionFilter->GetOutput() );  
-  m_TimeCrossingMapViewer.Show();
+  m_OutputLevelSetViewer.SetImage( m_ShapeDetectionFilter->GetOutput() );  
+  m_OutputLevelSetViewer.Show();
+  m_OutputLevelSetViewer.SetOverlayOpacity( 0.5 );
 
 }
 
 
   
-/************************************
- *
- *  Show Zero Set Image
- *
- ***********************************/
-void
-ShapeDetectionLevelSet
-::ShowZeroSetImage( void )
-{
-
-  if( !m_InputImageIsLoaded )
-    {
-    return;
-    }
-  this->ComputeZeroSet();
-
-  m_ZeroSetImageViewer.SetImage( m_AddImageFilter->GetOutput() );  
-  m_ZeroSetImageViewer.Show();
-
-}
 
 
 /************************************
@@ -340,7 +283,7 @@ ShapeDetectionLevelSet
     return;
     }
   this->ComputeEdgePotential();
-  m_EdgePotentialImageViewer.SetImage( m_ExpNegativeFilter->GetOutput() );  
+  m_EdgePotentialImageViewer.SetImage( m_SigmoidFilter->GetOutput() );  
   m_EdgePotentialImageViewer.Show();
 
 }
@@ -360,8 +303,8 @@ ShapeDetectionLevelSet
 ::ShowThresholdedImage( void )
 {
   m_ThresholdFilter->Update();
-  m_ThresholdedImageViewer.SetImage( m_ThresholdFilter->GetOutput() );  
-  m_ThresholdedImageViewer.SetOverlay( m_SeedImage );
+  m_ThresholdedImageViewer.SetImage( m_CastImageFilter->GetOutput() );
+  m_ThresholdedImageViewer.SetOverlay( m_ThresholdFilter->GetOutput() );  
   m_ThresholdedImageViewer.Show();
 
 
@@ -380,10 +323,12 @@ void
 ShapeDetectionLevelSet
 ::ShowFastMarchingResultImage( void )
 {
+  m_CastImageFilter->Update();
   m_InputThresholdFilter->Update();
   m_FastMarchingImageViewer.SetImage( m_CastImageFilter->GetOutput() );
   m_FastMarchingImageViewer.SetOverlay( m_InputThresholdFilter->GetOutput() );
   m_FastMarchingImageViewer.Show();
+  m_FastMarchingImageViewer.SetOverlayOpacity( 0.5 );
 }
 
 
@@ -453,75 +398,7 @@ ShapeDetectionLevelSet
 
 
   
-/*****************************************
- *
- *  Command to be run when the ShapeDetection
- *  filter starts execution
- *
- *****************************************/
-void
-ShapeDetectionLevelSet
-::CommandOnStartShapeDetection()
-{
-  m_ShapeDetectionIterationCounter = 0;
-  shapeDetectionIterationValueOutput->value( m_ShapeDetectionIterationCounter );
-  Fl::check();
-}
-
-
-
   
-/*****************************************
- *
- *  Command to be run when the FastMarching
- *  filter starts execution
- *
- *****************************************/
-void
-ShapeDetectionLevelSet
-::CommandOnStartFastMarching()
-{
-  m_FastMarchingIterationCounter = 0;
-  fastMarchingIterationValueOutput->value( 
-                    m_FastMarchingIterationCounter );
-  Fl::check();
-}
-
-
-
- 
-/*****************************************
- *
- *  Update GUI after iteration
- *
- *****************************************/
-void
-ShapeDetectionLevelSet
-::UpdateGUIAfterShapeDetectionIteration()
-{
-  shapeDetectionIterationValueOutput->value( m_ShapeDetectionIterationCounter );
-  m_ShapeDetectionIterationCounter++;
-  Fl::check();
-}
-
-
-
-  
-/*****************************************
- *
- *  Update GUI after fast marching iteration
- *
- *****************************************/
-void
-ShapeDetectionLevelSet
-::UpdateGUIAfterFastMarchingIteration()
-{
-  fastMarchingIterationValueOutput->value( m_FastMarchingIterationCounter );
-  m_FastMarchingIterationCounter++;
-  Fl::check();
-}
-
-
 
   
 /*****************************************

@@ -75,7 +75,7 @@ public:
 
   virtual void ShowInputImage();
 
-  virtual void ShowTimeCrossingMapImage();
+  virtual void ShowOutputLevelSet();
 
   virtual void ShowGradientMagnitudeImage();
 
@@ -85,24 +85,14 @@ public:
 
   virtual void ShowFastMarchingResultImage();
     
-  virtual void ShowZeroSetImage();
-
   virtual void ShowThresholdedImageWithVTK();
 
   virtual void Quit();
-
-  virtual void UpdateGUIAfterShapeDetectionIteration();
-
-  virtual void UpdateGUIAfterFastMarchingIteration();
 
   virtual void SelectSeedPoint( float x, float y, float z );
   
   static  void ClickSelectCallback(float x, float y, float z, float value, void * args );
 
-  virtual void CommandOnStartShapeDetection();
-
-  virtual void CommandOnStartFastMarching();
-  
   virtual void ClearSeeds();
 
 private:
@@ -111,7 +101,7 @@ private:
 
   SegmentedImageViewerType        m_FastMarchingImageViewer;
   
-  InternalImageViewerType         m_TimeCrossingMapViewer;
+  InternalImageViewerType         m_OutputLevelSetViewer;
 
   InternalImageViewerType         m_InputImageViewer;
 
@@ -122,10 +112,6 @@ private:
   InternalImageViewerType         m_ZeroSetImageViewer;
 
   VTKImageViewerType::Pointer     m_VTKSegmentedImageViewer;
-
-  unsigned long                   m_ShapeDetectionIterationCounter;
-
-  unsigned long                   m_FastMarchingIterationCounter;
 
 };
 

@@ -36,36 +36,41 @@ ShapeDetectionLevelSetBase
   m_DerivativeFilter   = DerivativeFilterType::New();
   m_DerivativeFilter->SetInput( m_CastImageFilter->GetOutput() );
 
-  m_ExpNegativeFilter  = ExpNegativeFilterType::New();
-  m_ExpNegativeFilter->SetInput( m_DerivativeFilter->GetOutput() );
+  m_SigmoidFilter  = SigmoidFilterType::New();
+  m_SigmoidFilter->SetInput( m_DerivativeFilter->GetOutput() );
+  m_SigmoidFilter->SetOutputMaximum( 1.0 );
+  m_SigmoidFilter->SetOutputMinimum( 0.0 );
 
   m_TrialPoints = NodeContainer::New();
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
-  m_FastMarchingFilter->SetInput( m_ExpNegativeFilter->GetOutput() );
+  m_FastMarchingFilter->SetSpeedConstant( 1.0 );
   m_FastMarchingFilter->SetTrialPoints( m_TrialPoints );
 
-  m_AddImageFilter = AddImageFilterType::New();
-  m_AddImageFilter->SetInput( m_FastMarchingFilter->GetOutput() );
-
   m_InputThresholdFilter = ThresholdFilterType::New();
-  m_InputThresholdFilter->SetInput( m_AddImageFilter->GetOutput() );
+  m_InputThresholdFilter->SetInput( m_FastMarchingFilter->GetOutput() );
   m_InputThresholdFilter->SetUpperThreshold( itk::NumericTraits<InternalPixelType>::Zero ); 
   m_InputThresholdFilter->SetLowerThreshold( itk::NumericTraits<InternalPixelType>::NonpositiveMin() ); 
   m_InputThresholdFilter->SetInsideValue( 1 );
   m_InputThresholdFilter->SetOutsideValue(  0 );
 
   m_ShapeDetectionFilter = ShapeDetectionFilterType::New();
-  m_ShapeDetectionFilter->SetInput(  m_AddImageFilter->GetOutput() );
-  m_ShapeDetectionFilter->SetEdgeImage( m_ExpNegativeFilter->GetOutput() );
+  m_ShapeDetectionFilter->SetInput(  m_FastMarchingFilter->GetOutput() );
+  m_ShapeDetectionFilter->SetEdgeImage(   m_SigmoidFilter->GetOutput() );
+
+  //  m_ShapeDetectionFilter->NarrowBandingOn();
+  m_ShapeDetectionFilter->SetTimeStepSize( 0.125 );
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_ShapeDetectionFilter->GetOutput() );
+  m_ThresholdFilter->SetUpperThreshold( itk::NumericTraits<InternalPixelType>::Zero ); 
+  m_ThresholdFilter->SetLowerThreshold( itk::NumericTraits<InternalPixelType>::NonpositiveMin() ); 
   m_ThresholdFilter->SetInsideValue(   1 );
   m_ThresholdFilter->SetOutsideValue(  0 );
 
   m_SeedImage = SeedImageType::New();
-  m_SeedValue = 1;
+
+  m_SeedValue = 0; // It must be set to the minus distance of the initial level set.
 
   m_NumberOfSeeds = 0;
 
@@ -114,15 +119,7 @@ ShapeDetectionLevelSetBase
   m_SeedImage->Allocate();
   m_SeedImage->FillBuffer( itk::NumericTraits<SeedImageType::PixelType>::Zero );
 
-//  InternalImageType::Pointer speedImage = InternalImageType::New();
-//  speedImage->SetRegions( region );
-//  speedImage->Allocate();
-//  speedImage->FillBuffer( 1.0 );
-//  m_FastMarchingFilter->SetInput( speedImage );
-
-
   m_FastMarchingFilter->SetOutputSize( region.GetSize() );
-
 
   m_InputImageIsLoaded = true;
 
@@ -218,7 +215,7 @@ ShapeDetectionLevelSetBase
 ::ComputeZeroSet( void )
 {
   this->ShowStatus("Computing Zero Set");
-  m_AddImageFilter->Update();
+  // This will also update the FastMarching
   m_InputThresholdFilter->Update();
 }
 
@@ -238,7 +235,7 @@ ShapeDetectionLevelSetBase
 {
   this->ComputeGradientMagnitude();
   this->ShowStatus("Computing Edge Potential Image");
-  m_ExpNegativeFilter->Update();
+  m_SigmoidFilter->Update();
 }
 
 
@@ -257,7 +254,8 @@ ShapeDetectionLevelSetBase
   // update the marching filter
   try
     {
-    this->ComputeGradientMagnitude();
+    this->ComputeEdgePotential();
+    this->ComputeFastMarching();
     this->ShowStatus("Computing Shape Detection Filter");
     m_ShapeDetectionFilter->Update();
     }
@@ -281,8 +279,20 @@ void
 ShapeDetectionLevelSetBase
 ::SetZeroSetValue( InternalPixelType value )
 {
-  m_AddImageFilter->GetAccessor().SetValue( - value );
-  m_AddImageFilter->Modified();
+  // By starting the FastMarching front at this value,
+  // the zero set will end up being placed at distance
+  // = value from the seeds. That can be seen as computing
+  // a distance map from the seeds.
+  m_SeedValue = - value;
+
+  NodeContainer::Iterator nodeItr = m_TrialPoints->Begin();
+  NodeContainer::Iterator endNode = m_TrialPoints->End();
+  while( nodeItr != endNode )
+    {
+    nodeItr.Value().SetValue( m_SeedValue );
+    ++nodeItr;
+    }
+  m_FastMarchingFilter->Modified();
 }
 
 

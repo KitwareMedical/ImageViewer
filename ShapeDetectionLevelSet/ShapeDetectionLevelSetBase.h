@@ -24,11 +24,8 @@
 #include "itkCastImageFilter.h"
 #include "itkShapeDetectionLevelSetFilter.h"
 #include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
-#include "itkExpNegativeImageFilter.h"
+#include "itkSigmoidImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
-#include "itkAdaptImageFilter.h"
-#include "itkAddPixelAccessor.h"
-
 
 
 /**
@@ -44,7 +41,7 @@ public:
   enum { ImageDimension = 3 };
 
   /** Pixel type used for reading the input image */
-  typedef   unsigned char                                InputPixelType;
+  typedef   signed short                                 InputPixelType;
 
   /** Pixel type to be used internally */
   typedef   float                                        InternalPixelType;
@@ -84,24 +81,15 @@ public:
   typedef itk::GradientMagnitudeRecursiveGaussianImageFilter<
                                     InternalImageType>  DerivativeFilterType;
 
-  /** Image Adaptor for selecting the zero set of the level set */
-  typedef itk::Accessor::AddPixelAccessor< 
-                                InternalPixelType >       AddPixelAccessorType;
-
-  typedef itk::AdaptImageFilter< InternalImageType,
-                                InternalImageType,
-                                AddPixelAccessorType >     AddImageFilterType;
-
-
   /** ShapeDetection filter used to evolve the contours */
   typedef   itk::ShapeDetectionLevelSetFilter< 
                                    InternalImageType, 
                                    InternalImageType >     ShapeDetectionFilterType;
 
   /** Filter to compute negative exponential of the gradient magnitude */
-  typedef   itk::ExpNegativeImageFilter< 
+  typedef   itk::SigmoidImageFilter< 
                     InternalImageType,
-                    InternalImageType >                   ExpNegativeFilterType;
+                    InternalImageType >                   SigmoidFilterType;
  
   /** Threshold filter used to select a time from the time map */
   typedef   itk::BinaryThresholdImageFilter< 
@@ -162,11 +150,9 @@ protected:
 
   DerivativeFilterType::Pointer               m_DerivativeFilter;
 
-  ExpNegativeFilterType::Pointer              m_ExpNegativeFilter;
+  SigmoidFilterType::Pointer                  m_SigmoidFilter;
 
   ThresholdFilterType::Pointer                m_ThresholdFilter;
-  
-  AddImageFilterType::Pointer                 m_AddImageFilter;
   
   SeedImageType::Pointer                      m_SeedImage;
 
@@ -175,7 +161,6 @@ protected:
   InternalPixelType                           m_SeedValue;
 
   unsigned int                                m_NumberOfSeeds;
-
 
 };
 
