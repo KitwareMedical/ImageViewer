@@ -42,9 +42,9 @@ SET(Project_FLTK_SRCS
 VDSegGrayUI.fl
 )
 
-ADD_EXECUTABLE(VDSegGray   ${Project_SRCS})
+ADD_EXECUTABLE(VoronoiSegmentation   ${Project_SRCS})
 
 IF(HAS_FLTK)
-FLTK_WRAP_UI(VDSegGray ${Project_FLTK_SRCS})
+FLTK_WRAP_UI(VoronoiSegmentation ${Project_FLTK_SRCS})
 ENDIF(HAS_FLTK)
 
