@@ -232,7 +232,7 @@ void vtkFlRenderWindowInteractor::draw(void){
     UpdateSize( this->w(), this->h() );
     
     RenderWindow->SetWindowId( (void *)fl_xid( this ) );
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
     RenderWindow->SetDisplayId( fl_display );
 #endif
     // get vtk to render to the Fl_Gl_Window
