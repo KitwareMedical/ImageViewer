@@ -18,6 +18,7 @@
 #define fltkREGULARSTEPGRADIENTDESCENT
 
 #include <fltkRegularStepGradientDescentGUI.h>
+#include <itkRegularStepGradientDescentOptimizer.h>
 
 
 namespace fltk {
@@ -34,7 +35,6 @@ namespace fltk {
  *  by using Command classes
  *
  */
-template<class TOptimizer>
 class RegularStepGradientDescent : public RegularStepGradientDescentGUI
 {
 
@@ -43,7 +43,7 @@ public:
   /**
    *  Type of the optimizer for which this class is a GUI
    */
-  typedef     TOptimizer      OptimizerType;
+  typedef  ::itk::RegularStepGradientDescentOptimizer      OptimizerType;
 
 
   /**
@@ -71,7 +71,7 @@ public:
   /**
    *  Return the optimizer
    */
-  typename TOptimizer::Pointer GetOptimizer( void )
+  OptimizerType::Pointer GetOptimizer( void )
   { return m_Optimizer.GetPointer(); }
       
 
@@ -120,14 +120,14 @@ public:
   /**
    *  Delegate the SetMaximumNumberOfIterations method to the optimizer
    */ 
-  void SetMaximumNumberOfIterations( unsigned long val ) 
-  { m_Optimizer->SetMaximumNumberOfIterations( val ); }
+  void SetNumberOfIterations( unsigned long val ) 
+  { m_Optimizer->SetNumberOfIterations( val ); }
 
 
 
 private:
 
-  typename OptimizerType::Pointer   m_Optimizer;
+  OptimizerType::Pointer   m_Optimizer;
     
 };
 
