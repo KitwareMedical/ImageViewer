@@ -15,11 +15,11 @@ ${ITK_BINARY_DIR}/Examples/StreamedWatershedSegmentation/ParameterFileParser
 )
 
 LINK_LIBRARIES (
+param
 ITKBasicFilters
 ITKCommon
 VXLNumerics
 ITKIO
-param
 )
 
 ADD_EXECUTABLE(itkAntiAliasBinaryImageFilterExample itkAntiAliasBinaryImageFilterExample)
