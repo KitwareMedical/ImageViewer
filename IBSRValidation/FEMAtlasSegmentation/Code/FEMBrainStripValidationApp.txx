@@ -77,13 +77,13 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   typedef itk::AffineTransform<double,ImageDimension>   AffineTransformType;
 
   // Create an affine transformation
-  itk::ResampleImageFilter< ImageType, ImageType >::Pointer resample;
-  AffineTransformType::Pointer aff = AffineTransformType::New();
+  typename itk::ResampleImageFilter< ImageType, ImageType >::Pointer resample;
+  typename AffineTransformType::Pointer aff = AffineTransformType::New();
   aff->Scale(0.90);
 
   // Create a linear interpolation image function
   typedef itk::LinearInterpolateImageFunction<ImageType,double>  InterpolatorType;
-  InterpolatorType::Pointer interp;
+  typename InterpolatorType::Pointer interp;
   
   
   interp = InterpolatorType::New();
@@ -116,9 +116,9 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 
   // Create a linear interpolation image function
   typedef itk::LinearInterpolateImageFunction<LabelImageType,double>  InterpolatorType2;
-  InterpolatorType2::Pointer interp2;
+  typename InterpolatorType2::Pointer interp2;
   // Create and configure a resampling filter
-  itk::ResampleImageFilter<  LabelImageType, LabelImageType >::Pointer resample2;
+  typename itk::ResampleImageFilter<  LabelImageType, LabelImageType >::Pointer resample2;
   
   
   interp2 = InterpolatorType2::New();
@@ -223,8 +223,8 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 
 
   typedef typename LabelImageType::PixelType PType;
-  itk::RawImageIO<PType,ImageDimension>::Pointer io;
-  itk::ImageFileWriter<LabelImageType>::Pointer writer;
+  typename itk::RawImageIO<PType,ImageDimension>::Pointer io;
+  typename itk::ImageFileWriter<LabelImageType>::Pointer writer;
   io = itk::RawImageIO<PType,ImageDimension>::New();
   writer = itk::ImageFileWriter<LabelImageType>::New();
   writer->SetImageIO(io);
@@ -232,8 +232,8 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   writer->SetInput(m_Parser->GetSubjectLabelImage() ); 
   writer->Write();
  
-  itk::RawImageIO<PType,ImageDimension>::Pointer io2;
-  itk::ImageFileWriter<LabelImageType>::Pointer writer2;
+  typename itk::RawImageIO<PType,ImageDimension>::Pointer io2;
+  typename itk::ImageFileWriter<LabelImageType>::Pointer writer2;
   io2 = itk::RawImageIO<PType,ImageDimension>::New();
   writer2 = itk::ImageFileWriter<LabelImageType>::New();
   writer2->SetImageIO(io2);

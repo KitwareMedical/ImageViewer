@@ -89,7 +89,7 @@ OutputImagePointer & output)
 {
 
   typedef itk::OtsuThresholdImageCalculator<OutputImageType>  CalculatorType;
-  CalculatorType::Pointer calculator = CalculatorType::New();
+  typename CalculatorType::Pointer calculator = CalculatorType::New();
    
   calculator->SetImage(input);
   calculator->SetNumberOfHistogramBins( 255);
@@ -111,7 +111,7 @@ OutputImagePointer & output)
   calculator->Update();
 */
   typedef BinaryThresholdImageFilter<OutputImageType,OutputImageType> InputThresholderType;
-  InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
+  typename InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
 
   inputThresholder->SetInput( input );
   inputThresholder->SetInsideValue( 1.0 );
@@ -123,7 +123,7 @@ OutputImagePointer & output)
   typedef itk::MultiplyImageFilter<OutputImageType,
                                 OutputImageType,OutputImageType >  MultFilterType;
  // Create an MULTIPLY Filter                                
-  MultFilterType::Pointer filter = MultFilterType::New();
+  typename MultFilterType::Pointer filter = MultFilterType::New();
 
   // Connect the input images
   filter->SetInput1( input ); 
