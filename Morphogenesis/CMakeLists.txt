@@ -54,8 +54,8 @@ ITKCommon
 ITKBasicFilters 
 ITKIO
 IView
-png
-zlib
+vtkpng
+vtkzlib
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
