@@ -5,7 +5,7 @@ IF(FLTK_LIB_PATH)
   IF(FLTK_INCLUDE_PATH)
 
    SOURCE_FILES(FltkImageViewer_SRCS
-     fltkDisplayGLWindowGUI
+     fltkDisplayGlWindowGUI
      fltkGlWindow
      fltkGlWindowInteractive
      fltkGlWindowInteractiveFlat
