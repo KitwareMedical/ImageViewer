@@ -17,9 +17,10 @@
 #include <iostream>
 
 #include <itkImage.h>
+#include <itkImageFileReader.h>
 
-#include <metaImage.h>
-#include <metaITKUtils.h>
+#include <itkMetaImageIO.h>
+#include <itkMetaImageIOFactory.h>
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
@@ -30,7 +31,6 @@
 
 
 Fl_Window *form;
-itk::Image<float, 3>::Pointer imP;
 
 int usage(void)
    {
@@ -44,8 +44,10 @@ int usage(void)
 
 int main(int argc, char **argv)
   {
-  char *fName;
+  typedef itk::Image< float, 3 > ImageType;
 
+  char *fName;
+  
   if(argc > 2)
     {
     return usage();
@@ -70,7 +72,25 @@ int main(int argc, char **argv)
         }
 
   std::cout << "Loading File: " << fName << std::endl;
-  imP = metaITKUtilLoadImage3D<float>(fName, MET_FLOAT);
+  typedef itk::ImageFileReader< ImageType > VolumeReaderType;
+  VolumeReaderType::Pointer reader = VolumeReaderType::New();
+
+  itk::MetaImageIOFactory::RegisterOneFactory();
+
+  reader->SetFileName(fName);
+
+  ImageType::Pointer imP;
+  imP = reader->GetOutput();
+
+  try
+    {
+    reader->Update();
+    }
+  catch( ... )
+    {
+    std::cout << "Problems reading file format" << std::endl;
+    return 1;
+    }
   std::cout << "...Done Loading File" << std::endl;
 
   char mainName[255];
