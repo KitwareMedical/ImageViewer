@@ -3,10 +3,4 @@ LINK_LIBRARIES (
   ITKIO
     )
 
-IF(WIN32)
-  LINK_LIBRARIES(
-    wsock32
-  )
-ENDIF(WIN32)
-
 ADD_EXECUTABLE( MetaImageReadWrite MetaImageReadWrite.cxx )
