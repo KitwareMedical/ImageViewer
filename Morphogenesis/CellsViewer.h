@@ -18,6 +18,7 @@
 #define __CellsViewer_H
 
 #include "CellsViewerGUI.h"
+#include <string>
 
 namespace bio {
 
@@ -34,24 +35,25 @@ public:
 
   virtual ~CellsViewer();
 
-  virtual void Quit(void);
-  virtual void Run(void);
-  virtual void Stop(void);
-  virtual void Restart(void);
-  virtual void Show(void);
-  virtual void ShowControls(void);
-  virtual void ShowSpecies(void);
-  virtual void HideControls(void);
-  virtual void HideSlicerControls(void);
-  virtual void HideClippingPlaneControls(void);
-  virtual void LoadSubstrate(void);
+  virtual void Quit();
+  virtual void Run();
+  virtual void Stop();
+  virtual void Restart();
+  virtual void Show();
+  virtual void ShowControls();
+  virtual void ShowSpecies();
+  virtual void HideControls();
+  virtual void HideSlicerControls();
+  virtual void HideClippingPlaneControls();
+  virtual void LoadSubstrate();
   virtual void AddSpeciesEggProducer( EggProducerFunction *, const char *); 
-  virtual void AddClippingPlane( void );
+  virtual void AddClippingPlane();
 
   virtual void SetCellsAggregate( CellularAggregate * );
 
 private:
   
+
 };
 
 

@@ -126,6 +126,9 @@ public:
   virtual void RemoveClippingPlane();
   virtual void ExportDrawing( void ) const;
   virtual void ExportXFIG( void ) const;
+  virtual void SaveCurrentImage();
+  virtual void SetBaseFileName(const char * basefilename);
+  virtual void SetNumberOfIterationsBetweenSaves(unsigned int);
   
   SpeciesContainerType & GetSpecies(void);
 
@@ -143,6 +146,10 @@ private:
   CellularAggregate::Pointer          m_Cells;
   SpeciesContainerType                m_SpeciesProducer;
   clock_t                             m_StartTime;
+  std::string                         m_BaseFileName;
+  unsigned int                        m_CurrentFile;
+  bool                                m_SavingImages;
+  unsigned int                        m_NumberOfIterationsBetweenSaves;
 };
 
 } // end namespace bio

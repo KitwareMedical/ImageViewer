@@ -66,6 +66,8 @@ int main()
               bio::BilayerOrganism::GetSpeciesName() );
 
 
+  viewer->SetNumberOfIterationsBetweenSaves( 100 );
+  viewer->SetBaseFileName( "animation" );
 
 
   viewer->Show();

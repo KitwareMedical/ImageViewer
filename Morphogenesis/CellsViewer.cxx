@@ -230,8 +230,16 @@ void CellsViewer
   viewerCommand->SetCellsViewer( this );
   cells->AddObserver( TimeStepEvent(), viewerCommand );
   
+  typedef  itk::SimpleMemberCommand<CellsViewer> SimpleCommandType;
+  SimpleCommandType::Pointer saveImageCommand = SimpleCommandType::New();
+  saveImageCommand->SetCallbackFunction( this, &CellsViewer::SaveCurrentImage );
+
+  cells->AddObserver( TimeStepEvent(), saveImageCommand );
 
 }
+
+
+
 
 
  

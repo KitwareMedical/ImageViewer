@@ -37,8 +37,9 @@ CellsViewerBase
   m_Display.SetLabel("Cell Viewer");
   m_Stop =            true;
   m_StartTime =          0;
-
-  
+  m_SavingImages =   false;
+  m_NumberOfIterationsBetweenSaves = 100;
+ 
 }
 
 
@@ -524,6 +525,68 @@ CellsViewerBase
 
   
  
+/**
+ *    Save the current image in m_Display to a file
+ *    this is done to facilitate the generation of
+ *    movies (animations) from the evolution of the
+ *    cellular aggregate
+ */ 
+void CellsViewerBase
+::SaveCurrentImage()
+{
+  static unsigned long numberOfIterations = 0;
+
+  if( !m_SavingImages )
+    {
+    return;
+    }
+
+  if( numberOfIterations < m_NumberOfIterationsBetweenSaves )
+    {
+    numberOfIterations++;
+    return;
+    }
+
+  m_CurrentFile++;
+  itk::OStringStream name;
+  name << m_BaseFileName;
+  name.width(4);
+  name.fill('0');
+  name << m_CurrentFile;
+  name << ".png";
+  m_Display.SaveImage( name.str().c_str() );
+  numberOfIterations = 0;
+
+}
+
+
+/**
+ *    Set the base name for the sequence of files
+ *    to be generated during the simulation. This 
+ *    is used by SaveCurrentImage().
+ */ 
+void CellsViewerBase
+::SetBaseFileName( const char * basefilename )
+{
+  m_BaseFileName  =  basefilename;
+  m_CurrentFile   =  0;
+  m_SavingImages  =  true;
+}
+
+
+
+/**
+ *    Set the number of iteration that must pass
+ *    between saving images to files. This will
+ *    regulate the speed of the animation and 
+ *    and take care of the free space in your disk.
+ */ 
+void CellsViewerBase
+::SetNumberOfIterationsBetweenSaves( unsigned int number )
+{
+  m_NumberOfIterationsBetweenSaves = number;
+}
+
 
 
 } // end namespace bio
