@@ -37,7 +37,9 @@ namespace fem
   typedef typename Superclass::MeshType                     MeshType; \
   typedef typename Superclass::MeshConstPointer             MeshConstPointer; \
   typedef typename Superclass::PointsContainerConstPointer  PointsContainerConstPointer; \
+  typedef typename MeshType::PointsContainer                PointsContainer; \
   typedef elementType                                       ElementType;  \
+  typedef typename ElementType::ParametricPointType         ParametricPointType;  \
   typedef typename elementType::BaseCellType                CellType;  \
   typedef typename CellType::PointType                      PointType;  \
   typedef typename CellType::PointIdConstIterator           PointIdConstIterator; \
