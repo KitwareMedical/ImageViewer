@@ -8,7 +8,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
   } {
     Fl_Window consoleWindow {
       label {Region Growing Segmentation} open
-      xywh {23 104 1079 459}
+      xywh {1 82 1079 459}
       code0 {\#include <RegionGrowingSegmentationBase2D.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -85,7 +85,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
           xywh {348 277 83 10} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {selected
+      Fl_Group controlsGroup {open
         xywh {5 5 1065 385} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -107,19 +107,19 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
         }
         Fl_Counter lowerThresholdCounter {
           label Lower
-          callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );}
-          xywh {643 61 121 25} labelsize 12 align 4 minimum 0 maximum 255 step 1 value 100 textsize 12
+          callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );} selected
+          xywh {643 61 121 25} labelsize 12 align 4 minimum 0 maximum 65535 step 1 value 100 textsize 12
           code0 {o->lstep(10.0);}
         }
         Fl_Counter upperThresholdCounter {
           label Upper
           callback {m_ConnectedThresholdImageFilter->SetUpper( static_cast<InputPixelType>( o->value() ) );}
-          xywh {643 86 121 25} labelsize 12 align 4 minimum 0 maximum 255 step 1 value 200 textsize 12
+          xywh {643 86 121 25} labelsize 12 align 4 minimum 0 maximum 65535 step 1 value 200 textsize 12
           code0 {o->lstep( 10.0 );}
         }
         Fl_Group seedGroup {
-          label {Seed Point}
-          xywh {453 183 95 115} box ENGRAVED_BOX align 17
+          label {Seed Point} open
+          xywh {453 183 95 142} box ENGRAVED_BOX align 17
         } {
           Fl_Value_Output xSeedPointValueOutput {
             label {X }
@@ -131,7 +131,11 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
           }
           Fl_Value_Output zSeedPointValueOutput {
             label {Z }
-            xywh {481 262 55 25} labelsize 12 step 0.01 textsize 12
+            xywh {480 262 55 25} labelsize 12 step 0.01 textsize 12
+          }
+          Fl_Value_Output vSeedPointValueOutput {
+            label {V }
+            xywh {480 290 55 25} labelsize 12 step 0.01 textsize 12
           }
         }
         Fl_Button {} {

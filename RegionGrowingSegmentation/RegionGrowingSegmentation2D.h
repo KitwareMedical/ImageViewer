@@ -47,8 +47,6 @@ public:
   typedef   RegionGrowingSegmentationBase2D::InternalImageType    InternalImageType;
 
   /** Image 2DViewer Types */
-  typedef unsigned char  OverlayPixelType;
-
   typedef fltk::Image2DViewer< InputPixelType >         InputImageViewerType;
   typedef InputImageViewerType::Pointer                 InputImageViewerPointer;
 
@@ -82,9 +80,9 @@ public:
 
   virtual void Quit(void);
 
-  virtual void SelectSeedPoint( float x, float y );
+  virtual void SelectSeedPoint( int x, int y );
   
-  static void ClickSelectCallback(float x, float y, float z, float value, void * args );
+  static void ClickSelectCallback(void * ptrObject, int & x, int & y ); 
 
 private:
 
