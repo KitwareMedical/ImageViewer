@@ -1,33 +1,31 @@
 % Configuration file for ITK FEM registration example
 
+3	% Number of levels in the multi-res pyramid
+3	% Maximum Level to use in the pyramid 
+2 4 8  %	% elts per dim each level
+690000 690000 690000   % Elasticity
+1.e4 1.e4 1.e4 %2.e2	% Rho
+8 8 8    	% NumberOfIntegrationPoints
+1 1 1  	  % WidthOfMetricRegion
+15 15 15 	% MaximumIterations
 1.	% Alpha
-1	% DescentDirection
-0	% DoLineSearch : 0 = none, 1 = Golden Section, 2 = Brent's method
-390000 %1.e4	% Elasticity
-15	% MaximumIterations
+0	% DescentDirection
+1	% DoLineSearch
+1	% frequency of line search
 1.	% TimeStep
 1.e-12  % Energy Reduction Factor
-1.e3  %2.e2	% Rho
-E:\\Avants\\MetaImages\\brain_slice1smth.im % brain3D64x64x31a.raw %	% ReferenceFileName
-E:\\Avants\\MetaImages\\brain_slice2smth.im % brain3D64x64x31b.raw %		% TargetFileName
+3     % dimension of images
+128	% Nx (image x dimension)
+128	% Ny (image y dimension)
+91      % Nz (image z dimension - not used if 2D)G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain10.buchar %brain_slice1smth.im % 	% ReferenceFileName
+G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain11.buchar %brain_slice2smth.im % 		% TargetFileName
 0	% UseLandmarks - read the file name below if this is true
 /mnt/data/tessa/temp/e15326s16i1_2.regLM	% LandmarkFileName
 E:\\Avants\\MetaImages\\result	% ResultsFileName
-2     % dimension of images
-128	% Nx (image x dimension)
-128	% Ny (image y dimension)
-62     % Nz (image z dimension - not used if 2D)
-8	% Elements per dimension of mesh
-8	% NumberOfIntegrationPoints
-1	% WidthOfMetricRegion
 0	% WriteDisplacementField
 /mnt/data/tessa/temp/disp	% DisplacementsFileName
-1	% DoMultiRes - read the parameters below if this is true
-1	% Line search frequency - 1 = every iteration, 2 = every other iteration, etc.
-2	% Number of levels in the multi-res pyramid
-2	% Maximum Level to use in the pyramid 
-4
-8
+0
+/temp/meshfile
 
 END
 
