@@ -123,7 +123,7 @@ public:
    * Command that will draw the object
    */
   typedef itk::SimpleConstMemberCommand< Self >   DrawCommandType;
-  typedef DrawCommandType::Pointer                DrawCommandPointer;
+  typedef typename DrawCommandType::Pointer       DrawCommandPointer;
 
 
   /**
