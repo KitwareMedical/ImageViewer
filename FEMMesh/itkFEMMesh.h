@@ -100,16 +100,24 @@ public:
   /** Return the number of nodes currently stored */
   unsigned long GetNumberOfNodes(void) const;
 
-  /** Add Point */
+  /** Add a Point to the point list. Points are managed by pointers
+   \warning the user is responsible for allocating and releasing 
+   the memory for the Point */
   void AddPoint( PointType * );
 
-  /** Add Node */
+  /** Add a Node to the node list. Nodes are managed through pointers
+   \warning the user is responsible for allocating and releasing 
+   the memory for the Node */
   void AddNode( NodeType * );
 
-  /** Add Cell */
+  /** Add a Cell to the cell list. Cells are managed through pointers
+   \warning the user is responsible for allocating and releasing 
+   the memory for the Cell */
   void AddCell( CellType * );
 
-  /** Add Element */
+  /** Add an Element to the elements list. Elements are managed through pointers
+   \warning the user is responsible for allocating and releasing 
+   the memory for the Element */
   void AddElement( ElementType * );
 
 protected:
@@ -127,16 +135,16 @@ private:
   unsigned int      m_PointsDimension;
   
   // Container of points defining the geometry of the mesh in space
-  PointsContainerType   m_Points;
+  PointsContainerType         m_Points;
 
   // Container of Nodes defining the degrees of freedom
-  NodesContainerType   m_Nodes;
+  NodesContainerType          m_Nodes;
 
   // Container of cells defining the geometry of the mesh in space
-  CellsContainerType    m_Cells;
+  CellsContainerType          m_Cells;
 
   // Container of Elements defining the physics of the problem
-  ElementsContainerType   m_Elements;
+  ElementsContainerType       m_Elements;
 
 
 
