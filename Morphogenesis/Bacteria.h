@@ -14,8 +14,9 @@ class Bacteria  : public Cell
 public:
   Bacteria();
   ~Bacteria();
-  void Draw(void) const;
-  void Grow(void);
+  virtual void Draw(void) const;
+  virtual void Grow(void);
+  virtual void Divide(void);
 
 private:
 

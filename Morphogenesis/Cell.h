@@ -28,6 +28,9 @@ public:
   const PointType & GetPosition(void) const;
   CellsListType   * GetAggregate(void);
   
+  // This is the additive
+  static void SetGrowthRadiusIncrement( double );
+  static void SetGrowthRadiusLimit( double );
 
 protected:
 
@@ -40,8 +43,8 @@ protected:
    static     Fl_Color    DefaultColor;
    static     PointType   DefaultPosition;
 
-   static     double      RadiusIncrement;
-   static     double      RadiusLimit;
+   static     double      GrowthRadiusIncrement;
+   static     double      GrowthRadiusLimit;
 
    static     CellsListType   m_Aggregate;
 

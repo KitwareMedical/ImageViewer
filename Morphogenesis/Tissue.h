@@ -26,6 +26,8 @@ public:
   VectorType WellPotentialGradient( const VectorType & relativePosition) const;
   unsigned int GetNumberOfCells(void) const;
   void SetCells( CellsListType * );
+  void SetGrowthRadiusLimit( double value );
+  void SetGrowthRadiusIncrement( double value );
 
 private:
 

@@ -20,7 +20,7 @@ public:
 
 private:
 
-	Tissue * m_Tissue;
+  Tissue * m_Tissue;
 
 
 };

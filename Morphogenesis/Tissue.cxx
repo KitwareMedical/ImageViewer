@@ -47,6 +47,23 @@ Tissue
 
 void
 Tissue
+::SetGrowthRadiusLimit( double value ) 
+{
+  Cell::SetGrowthRadiusLimit( value );
+}
+
+
+void
+Tissue
+::SetGrowthRadiusIncrement( double value ) 
+{
+  Cell::SetGrowthRadiusIncrement( value );
+}
+
+
+
+void
+Tissue
 ::Grow(void)
 {
   CellsListType::const_iterator cell = m_Cells->begin();
@@ -77,6 +94,7 @@ Tissue
   VectorType direction = relativePosition / distance;
   double factor        = 1/(distance*distance);
   factor *= 1e-5;
+
   return direction * factor;
 }
 

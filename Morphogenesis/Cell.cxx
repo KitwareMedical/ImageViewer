@@ -8,11 +8,11 @@ namespace bio {
 
   
 Cell::PointType    Cell::DefaultPosition;
-Fl_Color           Cell::DefaultColor    = FL_BLUE;
-double             Cell::DefaultRadius   = 10; // microns
+Fl_Color           Cell::DefaultColor          =  FL_BLUE;
+double             Cell::DefaultRadius         =       10; // microns
 
-double             Cell::RadiusIncrement =  1; // microns
-double             Cell::RadiusLimit     = 20; // microns
+double             Cell::GrowthRadiusIncrement =    0.001; // microns
+double             Cell::GrowthRadiusLimit     =       20; // microns
 
 std::list<Cell *>  Cell::m_Aggregate;       
 
@@ -52,10 +52,10 @@ void
 Cell
 ::Grow(void) 
 {
-  m_Radius += RadiusIncrement;
-  if( m_Radius > RadiusLimit )
+  m_Radius += GrowthRadiusIncrement;
+  if( m_Radius > GrowthRadiusLimit )
   {
-
+	m_Radius = GrowthRadiusLimit;
   }
 }
 
@@ -100,6 +100,22 @@ Cell
 ::UpdatePosition(void) 
 {
   m_Position += m_Force / 2.0;
+}
+
+
+void
+Cell
+::SetGrowthRadiusLimit( double value ) 
+{
+  GrowthRadiusLimit = value;
+}
+
+
+void
+Cell
+::SetGrowthRadiusIncrement( double value ) 
+{
+  GrowthRadiusIncrement = value;
 }
 
 

@@ -13,8 +13,10 @@ TissueViewer::TissueViewer()
   Bacteria * first = new Bacteria;
 
   m_Tissue.SetCells( first->GetAggregate() );
-
   tissueView->SetTissue( & m_Tissue );
+
+  first->Divide();
+
 }
 
 
