@@ -131,44 +131,6 @@ IF(HAS_VTK)
   ENDIF (VTK_WRAP_TCL)
 ENDIF(HAS_VTK)
 
-
-# Add an option to build the Tcl Wrap for the stl string class
-IF( ITK_WRAP_TCL )
-  IF( GCCXML )
-    IF( CABLE )
-      IF( TCL_TCLSH )
-        SUBDIRS(TclWrappedSTLString)
-      ENDIF( TCL_TCLSH )
-    ENDIF( CABLE )
-  ENDIF( GCCXML )
-ENDIF( ITK_WRAP_TCL )
-
-
-# Add an option to build the Tcl Wrap for the itk::Image class
-IF( ITK_WRAP_TCL )
-  IF( GCCXML )
-    IF( CABLE )
-      IF( TCL_TCLSH )
-        SUBDIRS(TclWrappedImage)
-      ENDIF( TCL_TCLSH )
-    ENDIF( CABLE )
-  ENDIF( GCCXML )
-ENDIF( ITK_WRAP_TCL )
-
-
-# Add an option to build the Tcl Wrap for the GaussianFilter example
-IF( ITK_WRAP_TCL )
-  IF( GCCXML )
-    IF( CABLE )
-      IF( TCL_TCLSH )
-        SUBDIRS(TclWrappedGaussianFilter)
-      ENDIF( TCL_TCLSH )
-    ENDIF( CABLE )
-  ENDIF( GCCXML )
-ENDIF( ITK_WRAP_TCL )
-
-
-
 LINK_LIBRARIES (
 ITKAlgorithms
 VXLNumerics
