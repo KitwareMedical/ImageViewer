@@ -24,7 +24,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 ::ImageViewer()
 {
   glSliceView = 0;
-  createGUI();
+  CreateGUI();
 }
 
 
@@ -38,16 +38,6 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 
 
 
-  
-template <class ImagePixelType, class OverlayPixelType>
-void 
-ImageViewer<ImagePixelType,OverlayPixelType>
-::open(void)
-{
-}
-
-
-
 
 template <class ImagePixelType, class OverlayPixelType>
 void
@@ -56,7 +46,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 {
   ImageType * image = dynamic_cast<ImageType *>( img );
   glSliceView->SetInputImage( image );
-  synchronize();
+  Synchronize();
 }
 
 
@@ -66,7 +56,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::show(void)
+::Show(void)
 {
   static bool firstTime = true;
   iviewWindow->show();
@@ -88,7 +78,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::hide(void)
+::Hide(void)
 {
   iviewWindow->hide();
   clickedPointsWindow->hide();
@@ -102,7 +92,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::update(void)
+::Update(void)
 {
   glSliceView->update();
 }
@@ -115,7 +105,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::imageMode(ImageModeType mode)
+::ImageMode(ImageModeType mode)
 {
   glSliceView->imageMode(mode);
   glSliceView->update();
@@ -130,7 +120,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::synchronize(void) 
+::Synchronize(void) 
 {
   float iwDiff  = glSliceView->iwMax() - glSliceView->iwMin();
   float b       = (float)((int)log10(iwDiff)-2);
@@ -156,7 +146,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::selectSlice(unsigned int num)
+::SelectSlice(unsigned int num)
 {
   sliceNumberSlider->value(num);
   glSliceView->sliceNum((int)sliceNumberSlider->value());
@@ -172,7 +162,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::setIntensityWindowingMin(float val)
+::SetIntensityWindowingMin(float val)
 {
   intensityWindowingMinSlider->value(val);
   glSliceView->iwMin(intensityWindowingMinSlider->value());  
@@ -189,7 +179,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::setIntensityWindowingMax(float val)
+::SetIntensityWindowingMax(float val)
 {
   intensityWindowingMaxSlider->value(val);
   glSliceView->iwMax(intensityWindowingMaxSlider->value());  
@@ -204,7 +194,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::centerWindow(void)
+::CenterWindow(void)
 {
   glSliceView->winCenter();
   glSliceView->update();
@@ -218,7 +208,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::zoomIn(void)
+::ZoomIn(void)
 {
   glSliceView->winZoom(glSliceView->winZoom()*2.0f);
  glSliceView->update();
@@ -233,7 +223,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::zoomOut(void)
+::ZoomOut(void)
 {
   glSliceView->winZoom(glSliceView->winZoom()/2.0f);
   glSliceView->update();
@@ -248,7 +238,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::shiftUp(void)
+::ShiftUp(void)
 {
   glSliceView->winShift(1,0);
   glSliceView->update();
@@ -263,7 +253,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::shiftDown(void)
+::ShiftDown(void)
 {
   glSliceView->winShift(-1,0);
   glSliceView->update();
@@ -279,7 +269,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::shiftLeft(void)
+::ShiftLeft(void)
 {
   glSliceView->winShift(0,-1);
   glSliceView->update();
@@ -294,7 +284,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::shiftRight(void)
+::ShiftRight(void)
 {
   glSliceView->winShift(0,1);
   glSliceView->update();
@@ -320,11 +310,11 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::setOrientation(void)
+::SetOrientation(void)
 {
   glSliceView->orientation( orientationChoice->value() );
   glSliceView->update();
-  synchronize();
+  Synchronize();
 }
 
 
@@ -369,7 +359,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::showClickedPointsWindow(void)
+::ShowClickedPointsWindow(void)
 {
   clickedPointsWindow->show();
 }
@@ -381,7 +371,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::clearClickedPoints(void)
+::ClearClickedPoints(void)
 {
   glSliceView->clearClickedPointsStored();
   clickedPointsBrowser->clear();
@@ -393,7 +383,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::updateClickedPoints(void)
+::UpdateClickedPoints(void)
 {
   clickedPointsBrowser->clear();
   char buffer[200];

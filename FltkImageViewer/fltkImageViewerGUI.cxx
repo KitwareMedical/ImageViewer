@@ -3,7 +3,7 @@
 #include "fltkImageViewerGUI.h"
 
 inline void fltkImageViewerGUI::cb_orientationChoice_i(Fl_Choice*, void*) {
-  setOrientation();
+  SetOrientation();
 }
 void fltkImageViewerGUI::cb_orientationChoice(Fl_Choice* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->parent()->user_data()))->cb_orientationChoice_i(o,v);
@@ -12,39 +12,28 @@ void fltkImageViewerGUI::cb_orientationChoice(Fl_Choice* o, void* v) {
 Fl_Menu_Item fltkImageViewerGUI::menu_orientationChoice[] = {
  {"X", 0,  0, 0, 0, 0, 0, 14, 0},
  {"Y", 0,  0, 0, 0, 0, 0, 14, 0},
- {"Z", 0,  0, 0, 0, 0, 0, 14, 0},
- {0},
  {0},
  {0}
 };
 
 inline void fltkImageViewerGUI::cb_Value_i(Fl_Menu_*, void*) {
-  imageMode(itk::IMG_VAL);
+  ImageMode(itk::IMG_VAL);
 }
 void fltkImageViewerGUI::cb_Value(Fl_Menu_* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Value_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Log_i(Fl_Menu_*, void*) {
-  imageMode(itk::IMG_LOG);
+  ImageMode(itk::IMG_LOG);
 }
 void fltkImageViewerGUI::cb_Log(Fl_Menu_* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Log_i(o,v);
-}
-
-inline void fltkImageViewerGUI::cb_MIP_i(Fl_Menu_*, void*) {
-  imageMode(itk::IMG_MIP);
-}
-void fltkImageViewerGUI::cb_MIP(Fl_Menu_* o, void* v) {
-  ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_MIP_i(o,v);
 }
 
 Fl_Menu_Item fltkImageViewerGUI::menu_[] = {
  {"Filter", 0,  0, 0, 64, 0, 0, 14, 0},
  {"Value", 0,  (Fl_Callback*)fltkImageViewerGUI::cb_Value, 0, 0, 0, 0, 14, 0},
  {"Log", 0,  (Fl_Callback*)fltkImageViewerGUI::cb_Log, 0, 0, 0, 0, 14, 0},
- {"MIP", 0,  (Fl_Callback*)fltkImageViewerGUI::cb_MIP, 0, 0, 0, 0, 14, 0},
- {0},
  {0},
  {0},
  {0},
@@ -52,91 +41,91 @@ Fl_Menu_Item fltkImageViewerGUI::menu_[] = {
 };
 
 inline void fltkImageViewerGUI::cb_sliceNumberSlider_i(Fl_Value_Slider* o, void*) {
-  selectSlice((unsigned int)o->value());
+  SelectSlice((unsigned int)o->value());
 }
 void fltkImageViewerGUI::cb_sliceNumberSlider(Fl_Value_Slider* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_sliceNumberSlider_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_intensityWindowingMinSlider_i(Fl_Value_Slider* o, void*) {
-  setIntensityWindowingMin(o->value());
+  SetIntensityWindowingMin(o->value());
 }
 void fltkImageViewerGUI::cb_intensityWindowingMinSlider(Fl_Value_Slider* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_intensityWindowingMinSlider_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_intensityWindowingMaxSlider_i(Fl_Value_Slider* o, void*) {
-  setIntensityWindowingMax(o->value());
+  SetIntensityWindowingMax(o->value());
 }
 void fltkImageViewerGUI::cb_intensityWindowingMaxSlider(Fl_Value_Slider* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_intensityWindowingMaxSlider_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Zoom_i(Fl_Button*, void*) {
-  zoomIn();
+  ZoomIn();
 }
 void fltkImageViewerGUI::cb_Zoom(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Zoom_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Zoom1_i(Fl_Button*, void*) {
-  zoomOut();
+  ZoomOut();
 }
 void fltkImageViewerGUI::cb_Zoom1(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Zoom1_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_U_i(Fl_Button*, void*) {
-  shiftUp();
+  ShiftUp();
 }
 void fltkImageViewerGUI::cb_U(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_U_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Reset_i(Fl_Button*, void*) {
-  centerWindow();
+  CenterWindow();
 }
 void fltkImageViewerGUI::cb_Reset(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Reset_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_R_i(Fl_Button*, void*) {
-  shiftRight();
+  ShiftRight();
 }
 void fltkImageViewerGUI::cb_R(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_R_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_L_i(Fl_Button*, void*) {
-  shiftLeft();
+  ShiftLeft();
 }
 void fltkImageViewerGUI::cb_L(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_L_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_D_i(Fl_Button*, void*) {
-  shiftDown();
+  ShiftDown();
 }
 void fltkImageViewerGUI::cb_D(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_D_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Points_i(Fl_Button*, void*) {
-  showClickedPointsWindow();
+  ShowClickedPointsWindow();
 }
 void fltkImageViewerGUI::cb_Points(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Points_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Update_i(Fl_Button*, void*) {
-  updateClickedPoints();
+  UpdateClickedPoints();
 }
 void fltkImageViewerGUI::cb_Update(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Update_i(o,v);
 }
 
 inline void fltkImageViewerGUI::cb_Clear_i(Fl_Button*, void*) {
-  clearClickedPoints();
+  ClearClickedPoints();
 }
 void fltkImageViewerGUI::cb_Clear(Fl_Button* o, void* v) {
   ((fltkImageViewerGUI*)(o->parent()->user_data()))->cb_Clear_i(o,v);
@@ -155,7 +144,7 @@ fltkImageViewerGUI::fltkImageViewerGUI() {
 fltkImageViewerGUI::~fltkImageViewerGUI() {
 }
 
-Fl_Window* fltkImageViewerGUI::createGUI() {
+Fl_Window* fltkImageViewerGUI::CreateGUI() {
   Fl_Window* w;
   { Fl_Window* o = iviewWindow = new Fl_Window(298, 401);
     w = o;
@@ -174,10 +163,10 @@ Fl_Window* fltkImageViewerGUI::createGUI() {
     }
     { Fl_Menu_Bar* o = new Fl_Menu_Bar(0, 0, 260, 25);
       { Fl_Menu_Item* o = &menu_[0];
-        addFilterMenuOptions();
+        AddFilterMenuOptions();
       }
       o->menu(menu_);
-      addMenuBarOptions();
+      AddMenuBarOptions();
     }
     { Fl_Value_Slider* o = sliceNumberSlider = new Fl_Value_Slider(270, 25, 20, 250, "Slice");
       o->type(4);
@@ -271,74 +260,71 @@ Fl_Window* fltkImageViewerGUI::createGUI() {
 void fltkImageViewerGUI::CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w ) {
 }
 
-void fltkImageViewerGUI::addMenuBarOptions(void) {
+void fltkImageViewerGUI::AddMenuBarOptions(void) {
 }
 
-void fltkImageViewerGUI::addFilterMenuOptions() {
+void fltkImageViewerGUI::AddFilterMenuOptions() {
 }
 
-void fltkImageViewerGUI::addFileMenuOptions() {
-}
-
-void fltkImageViewerGUI::open(void) {
+void fltkImageViewerGUI::AddFileMenuOptions() {
 }
 
 void fltkImageViewerGUI::SetImage( itk::ImageBase<3> * img ) {
 }
 
-void fltkImageViewerGUI::show(void) {
+void fltkImageViewerGUI::Show(void) {
 }
 
-void fltkImageViewerGUI::hide(void) {
+void fltkImageViewerGUI::Hide(void) {
 }
 
-void fltkImageViewerGUI::update(void) {
+void fltkImageViewerGUI::Update(void) {
 }
 
-void fltkImageViewerGUI::synchronize(void) {
+void fltkImageViewerGUI::Synchronize(void) {
 }
 
-void fltkImageViewerGUI::imageMode(itk::ImageModeType mode) {
+void fltkImageViewerGUI::ImageMode(itk::ImageModeType mode) {
 }
 
-void fltkImageViewerGUI::selectSlice(unsigned int) {
+void fltkImageViewerGUI::SelectSlice(unsigned int) {
 }
 
-void fltkImageViewerGUI::setIntensityWindowingMin(float) {
+void fltkImageViewerGUI::SetIntensityWindowingMin(float) {
 }
 
-void fltkImageViewerGUI::setIntensityWindowingMax(float) {
+void fltkImageViewerGUI::SetIntensityWindowingMax(float) {
 }
 
-void fltkImageViewerGUI::centerWindow(void) {
+void fltkImageViewerGUI::CenterWindow(void) {
 }
 
-void fltkImageViewerGUI::zoomIn(void) {
+void fltkImageViewerGUI::ZoomIn(void) {
 }
 
-void fltkImageViewerGUI::zoomOut(void) {
+void fltkImageViewerGUI::ZoomOut(void) {
 }
 
-void fltkImageViewerGUI::shiftUp(void) {
+void fltkImageViewerGUI::ShiftUp(void) {
 }
 
-void fltkImageViewerGUI::shiftDown(void) {
+void fltkImageViewerGUI::ShiftDown(void) {
 }
 
-void fltkImageViewerGUI::shiftLeft(void) {
+void fltkImageViewerGUI::ShiftLeft(void) {
 }
 
-void fltkImageViewerGUI::shiftRight(void) {
+void fltkImageViewerGUI::ShiftRight(void) {
 }
 
-void fltkImageViewerGUI::setOrientation(void) {
+void fltkImageViewerGUI::SetOrientation(void) {
 }
 
-void fltkImageViewerGUI::showClickedPointsWindow(void) {
+void fltkImageViewerGUI::ShowClickedPointsWindow(void) {
 }
 
-void fltkImageViewerGUI::clearClickedPoints(void) {
+void fltkImageViewerGUI::ClearClickedPoints(void) {
 }
 
-void fltkImageViewerGUI::updateClickedPoints(void) {
+void fltkImageViewerGUI::UpdateClickedPoints(void) {
 }

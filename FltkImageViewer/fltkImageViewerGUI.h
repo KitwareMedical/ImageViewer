@@ -16,7 +16,7 @@ class fltkImageViewerGUI {
 public:
   fltkImageViewerGUI();
   virtual ~fltkImageViewerGUI();
-  Fl_Window* createGUI();
+  Fl_Window* CreateGUI();
   Fl_Window *iviewWindow;
   Fl_Group *glWindowGroup;
   Fl_Choice *orientationChoice;
@@ -29,8 +29,6 @@ private:
   static void cb_Value(Fl_Menu_*, void*);
   inline void cb_Log_i(Fl_Menu_*, void*);
   static void cb_Log(Fl_Menu_*, void*);
-  inline void cb_MIP_i(Fl_Menu_*, void*);
-  static void cb_MIP(Fl_Menu_*, void*);
 public:
   Fl_Value_Slider *sliceNumberSlider;
 private:
@@ -74,29 +72,28 @@ private:
   static void cb_Close(Fl_Button*, void*);
 public:
   virtual void CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w );
-  virtual void addMenuBarOptions(void);
-  virtual void addFilterMenuOptions();
-  virtual void addFileMenuOptions();
-  virtual void open(void);
+  virtual void AddMenuBarOptions(void);
+  virtual void AddFilterMenuOptions();
+  virtual void AddFileMenuOptions();
   virtual void SetImage( itk::ImageBase<3> * img );
-  virtual void show(void);
-  virtual void hide(void);
-  virtual void update(void);
-  virtual void synchronize(void);
-  virtual void imageMode(itk::ImageModeType mode);
-  virtual void selectSlice(unsigned int);
-  virtual void setIntensityWindowingMin(float);
-  virtual void setIntensityWindowingMax(float);
-  virtual void centerWindow(void);
-  virtual void zoomIn(void);
-  virtual void zoomOut(void);
-  virtual void shiftUp(void);
-  virtual void shiftDown(void);
-  virtual void shiftLeft(void);
-  virtual void shiftRight(void);
-  virtual void setOrientation(void);
-  virtual void showClickedPointsWindow(void);
-  virtual void clearClickedPoints(void);
-  virtual void updateClickedPoints(void);
+  virtual void Show(void);
+  virtual void Hide(void);
+  virtual void Update(void);
+  virtual void Synchronize(void);
+  virtual void ImageMode(itk::ImageModeType mode);
+  virtual void SelectSlice(unsigned int);
+  virtual void SetIntensityWindowingMin(float);
+  virtual void SetIntensityWindowingMax(float);
+  virtual void CenterWindow(void);
+  virtual void ZoomIn(void);
+  virtual void ZoomOut(void);
+  virtual void ShiftUp(void);
+  virtual void ShiftDown(void);
+  virtual void ShiftLeft(void);
+  virtual void ShiftRight(void);
+  virtual void SetOrientation(void);
+  virtual void ShowClickedPointsWindow(void);
+  virtual void ClearClickedPoints(void);
+  virtual void UpdateClickedPoints(void);
 };
 #endif

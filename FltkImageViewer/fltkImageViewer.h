@@ -43,29 +43,28 @@ public:
     
   ImageViewer();
   virtual ~ImageViewer();
-  virtual void open(void);
   virtual void SetImage(ImageBase<3> * img);
-  virtual void show(void);
-  virtual void hide(void);
-  virtual void update(void);
-  virtual void synchronize(void);
-  virtual void imageMode(ImageModeType mode);
-  virtual void selectSlice(unsigned int num);
-  virtual void setIntensityWindowingMin(float val);
-  virtual void setIntensityWindowingMax(float val);
-  virtual void centerWindow(void);
-  virtual void zoomIn(void);
-  virtual void zoomOut(void);
-  virtual void shiftUp(void);
-  virtual void shiftDown(void);
-  virtual void shiftLeft(void);
-  virtual void shiftRight(void);
-  virtual void setOrientation(void);
+  virtual void Show(void);
+  virtual void Hide(void);
+  virtual void Update(void);
+  virtual void Synchronize(void);
+  virtual void ImageMode(ImageModeType mode);
+  virtual void SelectSlice(unsigned int num);
+  virtual void SetIntensityWindowingMin(float val);
+  virtual void SetIntensityWindowingMax(float val);
+  virtual void CenterWindow(void);
+  virtual void ZoomIn(void);
+  virtual void ZoomOut(void);
+  virtual void ShiftUp(void);
+  virtual void ShiftDown(void);
+  virtual void ShiftLeft(void);
+  virtual void ShiftRight(void);
+  virtual void SetOrientation(void);
   virtual void CreateGLSliceView( Fl_Group * g , Fl_Gl_Window * w );
   virtual void SetLabel( const char * );
-  virtual void showClickedPointsWindow(void);
-  virtual void updateClickedPoints(void);
-  virtual void clearClickedPoints(void);
+  virtual void ShowClickedPointsWindow(void);
+  virtual void UpdateClickedPoints(void);
+  virtual void ClearClickedPoints(void);
 
 private:
   GLSliceViewType * glSliceView;

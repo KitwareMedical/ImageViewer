@@ -10,7 +10,7 @@ class fltkImageViewerGUI {open
   Function {fltkImageViewerGUI()} {} {}
   Function {~fltkImageViewerGUI()} {return_type virtual
   } {}
-  Function {createGUI()} {} {
+  Function {CreateGUI()} {} {
     Fl_Window iviewWindow {
       xywh {855 28 298 401} labelsize 10 resizable visible
     } {
@@ -25,7 +25,7 @@ class fltkImageViewerGUI {open
           class Fl_Gl_Window
         }
         Fl_Choice orientationChoice {
-          callback {setOrientation();} open
+          callback {SetOrientation();} open
           xywh {20 325 50 20}
         } {
           menuitem {} {
@@ -36,89 +36,80 @@ class fltkImageViewerGUI {open
             label Y
             xywh {0 0 100 20}
           }
-          menuitem {} {
-            label Z
-            xywh {0 0 100 20}
-          }
         }
       }
       Fl_Menu_Bar {} {
         xywh {0 0 260 25}
-        code0 {addMenuBarOptions();}
+        code0 {AddMenuBarOptions();}
       } {
         submenu {} {
-          label Filter selected
+          label Filter
           xywh {0 0 100 20}
-          code0 {addFilterMenuOptions();}
+          code0 {AddFilterMenuOptions();}
         } {
           menuitem {} {
             label Value
-            callback {imageMode(itk::IMG_VAL);}
+            callback {ImageMode(itk::IMG_VAL);}
             xywh {0 0 100 20}
           }
           menuitem {} {
             label Log
-            callback {imageMode(itk::IMG_LOG);}
+            callback {ImageMode(itk::IMG_LOG);}
             xywh {10 10 100 20}
-          }
-          menuitem {} {
-            label MIP
-            callback {imageMode(itk::IMG_MIP);}
-            xywh {20 20 100 20}
           }
         }
       }
       Fl_Value_Slider sliceNumberSlider {
         label Slice
-        callback {selectSlice((unsigned int)o->value());}
+        callback {SelectSlice((unsigned int)o->value());}
         xywh {270 25 20 250} type {Vert Knob} labelsize 10 align 1 step 1 textsize 9
       }
       Fl_Value_Slider intensityWindowingMinSlider {
-        callback {setIntensityWindowingMin(o->value());}
+        callback {SetIntensityWindowingMin(o->value());}
         xywh {0 360 300 20} type {Horz Fill} selection_color 32 labeltype NO_LABEL labelsize 9 step 1 value 1 textsize 9
       }
       Fl_Value_Slider intensityWindowingMaxSlider {
-        callback {setIntensityWindowingMax(o->value());}
+        callback {SetIntensityWindowingMax(o->value());}
         xywh {0 380 300 20} type {Horz Fill} color 55 selection_color 47 labeltype NO_LABEL labelsize 9 step 1 value 1 textsize 9
       }
       Fl_Button {} {
         label {Zoom In}
-        callback {zoomIn();}
+        callback {ZoomIn();}
         xywh {170 280 55 20} labelsize 10
       }
       Fl_Button {} {
         label {Zoom Out}
-        callback {zoomOut();}
+        callback {ZoomOut();}
         xywh {170 335 55 20} labelsize 10
       }
       Fl_Button {} {
         label U
-        callback {shiftUp();}
+        callback {ShiftUp();}
         xywh {110 280 35 35} box DIAMOND_UP_BOX labelsize 10
       }
       Fl_Button {} {
         label Reset
-        callback {centerWindow();}
+        callback {CenterWindow();}
         xywh {180 305 35 25} box ROUND_UP_BOX labelsize 10
       }
       Fl_Button {} {
         label R
-        callback {shiftRight();}
+        callback {ShiftRight();}
         xywh {130 300 35 35} box DIAMOND_UP_BOX labelsize 10
       }
       Fl_Button {} {
         label L
-        callback {shiftLeft();}
+        callback {ShiftLeft();}
         xywh {90 300 35 35} box DIAMOND_UP_BOX labelsize 10
       }
       Fl_Button {} {
         label D
-        callback {shiftDown();}
+        callback {ShiftDown();}
         xywh {110 320 35 35} box DIAMOND_UP_BOX labelsize 10
       }
       Fl_Button {} {
         label Points
-        callback {showClickedPointsWindow();}
+        callback {ShowClickedPointsWindow();}
         xywh {15 290 55 20} labelsize 10
       }
     }
@@ -131,12 +122,12 @@ class fltkImageViewerGUI {open
       }
       Fl_Button {} {
         label Update
-        callback {updateClickedPoints();}
+        callback {UpdateClickedPoints();}
         xywh {27 370 65 25}
       }
       Fl_Button {} {
         label Clear
-        callback {clearClickedPoints();}
+        callback {ClearClickedPoints();}
         xywh {115 370 65 25}
       }
       Fl_Button {} {
@@ -148,52 +139,50 @@ class fltkImageViewerGUI {open
   }
   Function {CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w )} {return_type {virtual void}
   } {}
-  Function {addMenuBarOptions(void)} {return_type {virtual void}
+  Function {AddMenuBarOptions(void)} {return_type {virtual void}
   } {}
-  Function {addFilterMenuOptions()} {return_type {virtual void}
+  Function {AddFilterMenuOptions()} {return_type {virtual void}
   } {}
-  Function {addFileMenuOptions()} {return_type {virtual void}
-  } {}
-  Function {open(void)} {return_type {virtual void}
+  Function {AddFileMenuOptions()} {return_type {virtual void}
   } {}
   Function {SetImage( itk::ImageBase<3> * img )} {return_type {virtual void}
   } {}
-  Function {show(void)} {return_type {virtual void}
+  Function {Show(void)} {return_type {virtual void}
   } {}
-  Function {hide(void)} {return_type {virtual void}
+  Function {Hide(void)} {return_type {virtual void}
   } {}
-  Function {update(void)} {return_type {virtual void}
+  Function {Update(void)} {return_type {virtual void}
   } {}
-  Function {synchronize(void)} {return_type {virtual void}
+  Function {Synchronize(void)} {return_type {virtual void}
   } {}
-  Function {imageMode(itk::ImageModeType mode)} {return_type {virtual void}
+  Function {ImageMode(itk::ImageModeType mode)} {return_type {virtual void}
   } {}
-  Function {selectSlice(unsigned int)} {return_type {virtual void}
+  Function {SelectSlice(unsigned int)} {return_type {virtual void}
   } {}
-  Function {setIntensityWindowingMin(float)} {return_type {virtual void}
+  Function {SetIntensityWindowingMin(float)} {return_type {virtual void}
   } {}
-  Function {setIntensityWindowingMax(float)} {return_type {virtual void}
+  Function {SetIntensityWindowingMax(float)} {return_type {virtual void}
   } {}
-  Function {centerWindow(void)} {return_type {virtual void}
+  Function {CenterWindow(void)} {return_type {virtual void}
   } {}
-  Function {zoomIn(void)} {return_type {virtual void}
+  Function {ZoomIn(void)} {return_type {virtual void}
   } {}
-  Function {zoomOut(void)} {return_type {virtual void}
+  Function {ZoomOut(void)} {return_type {virtual void}
   } {}
-  Function {shiftUp(void)} {return_type {virtual void}
+  Function {ShiftUp(void)} {return_type {virtual void}
   } {}
-  Function {shiftDown(void)} {return_type {virtual void}
+  Function {ShiftDown(void)} {return_type {virtual void}
   } {}
-  Function {shiftLeft(void)} {return_type {virtual void}
+  Function {ShiftLeft(void)} {return_type {virtual void}
   } {}
-  Function {shiftRight(void)} {return_type {virtual void}
+  Function {ShiftRight(void)} {return_type {virtual void}
   } {}
-  Function {setOrientation(void)} {return_type {virtual void}
+  Function {SetOrientation(void)} {return_type {virtual void}
   } {}
-  Function {showClickedPointsWindow(void)} {return_type {virtual void}
+  Function {ShowClickedPointsWindow(void)} {return_type {virtual void}
   } {}
-  Function {clearClickedPoints(void)} {return_type {virtual void}
+  Function {ClearClickedPoints(void)} {return_type {virtual void}
   } {}
-  Function {updateClickedPoints(void)} {return_type {virtual void}
+  Function {UpdateClickedPoints(void)} {selected return_type {virtual void}
   } {}
 } 
