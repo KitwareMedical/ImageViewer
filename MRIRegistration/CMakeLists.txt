@@ -10,11 +10,23 @@ ${VTK_INCLUDE_PATH}/contrib
 ${VTK_BIN_PATH}
 )
 
+IF(UNIX)
+LINK_LIBRARIES(
+${VTK_LIB_PATH}/libVTKCommon.so
+${VTK_LIB_PATH}/libVTKImaging.so
+${VTK_LIBRARY}
+VXLNumerics
+ITKCommon
+)
+ENDIF(UNIX)
+
+IF(WIN32)
 LINK_LIBRARIES(
 ${VTK_LIBRARY}
 VXLNumerics
 ITKCommon
 )
+ENDIF(WIN32)
 
 SOURCE_FILES(MRIRegistration_SRCS
 OptionList
@@ -22,12 +34,5 @@ RegisterAD
 vtkImageStatistics
 )
 
-SOURCE_FILES(RegisterADAffine_SRCS
-OptionList
-RegisterADAffine
-vtkImageStatistics
-)
-
 ADD_EXECUTABLE(MRIRegistration MRIRegistration_SRCS)
-ADD_EXECUTABLE(RegisterADAffine RegisterADAffine_SRCS)
 
