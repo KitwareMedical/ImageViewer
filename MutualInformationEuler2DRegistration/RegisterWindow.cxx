@@ -271,7 +271,7 @@ void RegisterWindow::Execute(void)
   menuMixedChannel->activate() ;
   buSaveRegisteredImage->activate() ;
   grpControls->activate() ;
-  std::ostringstream message ;
+  std::ostrstream message ;
   message
     << "Registration done in " << 
     double(time_end - time_begin) / CLOCKS_PER_SEC << "seconds." 
@@ -279,8 +279,8 @@ void RegisterWindow::Execute(void)
   message << "angle = " 
     << m_Registrator->GetTransformParameters()[0] << ", x offset = "
     << m_Registrator->GetTransformParameters()[1] << ", y offset = "
-    << m_Registrator->GetTransformParameters()[2] ;
-  this->ShowStatus(message.str().c_str());
+    << m_Registrator->GetTransformParameters()[2] << std::ends;
+  this->ShowStatus(message.str());
 
 //    m_MovingImage->SetRequestedRegion(m_SelectedRegion) ;
 //    m_DebugViewer->SetImage(m_MovingImage) ;
