@@ -8,6 +8,7 @@
 
 #include "vtkImageImport.h"
 #include "vtkImageExport.h"
+#include "vtkImageToImageFIlter.h"
 #include "itkCommand.h"
 #include "itkProcessObject.h"
 
@@ -28,7 +29,7 @@
   std::cerr << message.str() << std::endl; \
   }
 
-class VTK_EXPORT vtkITKImageToImageFilter : public vtkProcessObject
+class VTK_EXPORT vtkITKImageToImageFilter : public vtkImageToImageFilter
 {
 public:
   static vtkITKImageToImageFilter *New()
@@ -36,7 +37,7 @@ public:
      return new vtkITKImageToImageFilter;
    };
   
-  vtkTypeMacro(vtkITKImageToImageFilter,vtkProcessObject);
+  vtkTypeMacro(vtkITKImageToImageFilter,vtkImageToImageFilter);
 
   void PrintSelf(ostream& os, vtkIndent indent)
   {
@@ -188,7 +189,7 @@ private:
   void operator=(const vtkITKImageToImageFilter&);  // Not implemented.
 };
 
-// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.8 $" );
+// vtkCxxRevisionMacro(vtkITKImageToImageFilter, "$Revision: 1.9 $" );
 // template <class InputType, class OutputType >
 // template <class InputType, class OutputType >
 // vtkStandardNewMacro(vtkITKImageToImageFilter);
