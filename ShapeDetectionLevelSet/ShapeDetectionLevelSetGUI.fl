@@ -60,9 +60,12 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
         Fl_Box {} {
           xywh {325 79 80 11} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {440 80 10 100} box UP_BOX color 4
+        }
       }
-      Fl_Group controlsGroup {selected
-        xywh {0 5 785 236} deactivate
+      Fl_Group controlsGroup {open
+        xywh {0 5 785 240} deactivate
       } {
         Fl_Light_Button inputImageButton {
           label Display
@@ -95,7 +98,7 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
         Fl_Light_Button outputLevelSetButton {
           label {Level Set}
           callback {this->ShowOutputLevelSet();}
-          xywh {475 121 80 24} type Normal value 1 selection_color 1 labelsize 12 align 144
+          xywh {500 115 80 24} type Normal value 1 selection_color 1 labelsize 12 align 144
           class {fltk::LightButton}
         }
         Fl_Button {} {
@@ -166,6 +169,20 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
           callback {m_FastMarchingFilter->SetStoppingValue( o->value() );}
           xywh {262 155 39 23} labelsize 12 maximum 100 step 0.1 value 10 textsize 12
         }
+        Fl_Group {} {open
+          xywh {436 151 125 80} box ENGRAVED_BOX
+        } {
+          Fl_Check_Button shapeDetectionNarrowBandingCheckButton {
+            label NarrowBanding
+            callback {m_ShapeDetectionFilter->SetNarrowBanding( static_cast<unsigned int>( o->value() ) );} selected
+            xywh {446 159 109 32} down_box DOWN_BOX value 1 labelsize 12
+          }
+          Fl_Value_Input shapeDetectionBandWidthValueInput {
+            label {Band Width}
+            callback {m_ShapeDetectionFilter->SetNarrowBandwidth( o->value() );}
+            xywh {516 192 33 28} labelsize 12 maximum 500 step 1 value 12 textsize 12
+          }
+        }
       }
       Fl_Slider progressSlider {
         xywh {5 250 780 15} type {Horz Fill} selection_color 2
@@ -178,7 +195,7 @@ class ShapeDetectionLevelSetGUI {open : {public ShapeDetectionLevelSetBase}
       Fl_Button {} {
         label Quit
         callback {this->Quit();}
-        xywh {580 175 90 35} box ROUND_UP_BOX labelsize 12 align 128
+        xywh {680 185 90 35} box ROUND_UP_BOX labelsize 12 align 128
       }
       Fl_Button {} {
         label Load

@@ -53,6 +53,12 @@ ShapeDetectionLevelSet
   m_ShapeDetectionFilter->SetNumberOfIterations( 
         static_cast<unsigned int>( shapeDetectionIterationsValueInput->value() ) );
 
+  m_ShapeDetectionFilter->SetNarrowBandwidth( 
+               shapeDetectionIterationsValueInput->value() );
+
+  m_ShapeDetectionFilter->SetNarrowBanding( 
+       static_cast<int>( shapeDetectionNarrowBandingCheckButton->value() ) );
+
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
 
   m_FastMarchingFilter->SetStoppingValue( fastMarchingStoppingValueInput->value() );
