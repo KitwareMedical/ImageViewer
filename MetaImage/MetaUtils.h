@@ -43,7 +43,7 @@
 //  #endif
 
 
-#if defined(_WIN32) || defined(__CYGWIN__) 
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__linux__)
 #define  MET_SYSTEM_BYTE_ORDER_MSB   false
 #else
 #define  MET_SYSTEM_BYTE_ORDER_MSB   true
