@@ -33,19 +33,25 @@
 typedef itk::Image< unsigned char, 2 >                     fileImageType;
 typedef itk::Image< float, 2 >                     ImageType;
 // We now declare an element type and load implementation pointer for the visitor class.
+typedef itk::fem::Element2DC0LinearTriangularMembrane   ElementType2;
 typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
 #endif 
 #ifdef THREED
 typedef itk::Image< unsigned char, 3 >                     fileImageType;
 typedef itk::Image< float, 3 >                     ImageType;
 typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
+typedef itk::fem::Element3DC0LinearTetrahedronMembrane   ElementType2;
 #endif
 typedef itk::fem::ImageMetricLoad<ImageType,ImageType>     ImageLoadType;
 template class itk::fem::ImageMetricLoadImplementation<ImageLoadType>;
 typedef ElementType::LoadImplementationFunctionPointer     LoadImpFP;
 typedef ElementType::LoadType                              ElementLoadType;
+typedef ElementType2::LoadImplementationFunctionPointer     LoadImpFP2;
+typedef ElementType2::LoadType                              ElementLoadType2;
 typedef itk::fem::VisitorDispatcher<ElementType,ElementLoadType, LoadImpFP>   
                                                           DispatcherType;
+typedef itk::fem::VisitorDispatcher<ElementType2,ElementLoadType2, LoadImpFP2>   
+                                                          DispatcherType2;
 
 typedef itk::fem::FEMRegistrationFilter<ImageType,ImageType> RegistrationType;
 
@@ -134,6 +140,8 @@ int main()
   
 // Register the correct load implementation with the element typed visitor dispatcher. 
   DispatcherType::RegisterVisitor((ImageLoadType*)0, 
+          &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
+  DispatcherType2::RegisterVisitor((ImageLoadType*)0, 
           &(itk::fem::ImageMetricLoadImplementation<ImageLoadType>::ImplementImageMetricLoad));
 
   RegistrationType X; // Declare the registration class
