@@ -19,11 +19,13 @@
 
 #include <itkImage.h>
 #include <itkImageFileReader.h>
+#include <itkImageFileWriter.h>
 #include <itkRecursiveGaussianImageFilter.h>
 #include <itkFirstDerivativeRecursiveGaussianImageFilter.h>
 #include <itkSecondDerivativeRecursiveGaussianImageFilter.h>
 #include <itkAddImageFilter.h>
 #include <itkBinaryMagnitudeImageFilter.h>
+#include <itkShiftScaleImageFilter.h>
 
 class liFilterConsole2DBase 
 {
@@ -31,13 +33,19 @@ class liFilterConsole2DBase
 public:
   typedef   unsigned short                    InputPixelType;
   typedef   float                             PixelType;
+  typedef   unsigned short                    OutputPixelType;
+
   typedef   float                             ComputationType;
 
   typedef   itk::Image< InputPixelType, 2 >   InputImageType;
   typedef   itk::Image< PixelType, 2 >        ImageType;
+  typedef   itk::Image< OutputPixelType, 2 >  OutputImageType;
 
   typedef   itk::ImageFileReader< 
-                            InputImageType >       VolumeReaderType;
+                            InputImageType >  VolumeReaderType;
+
+  typedef   itk::ImageFileWriter< 
+                      OutputImageType >       VolumeWriterType;
 
 
   typedef   itk::RecursiveGaussianImageFilter<
@@ -77,6 +85,10 @@ public:
                                  ImageType,
                                  ImageType >  ModulusFilterType;
 
+  typedef   itk::ShiftScaleImageFilter<
+                     ImageType,
+                     OutputImageType >  IntensityScaleImageFilterType; 
+                                 
 
 
 public:
@@ -89,10 +101,16 @@ public:
   virtual void ShowStatus(const char * text);
   virtual void Execute(void);
   virtual void SetSigma( ComputationType );
+  virtual void SaveSmoothed(void) = 0;
+  virtual void SaveLaplacian(void) = 0;
+  virtual void SaveModulus(void) = 0;
+  virtual void SaveSmoothed(const char * filename);
+  virtual void SaveLaplacian(const char * filename);
+  virtual void SaveModulus(const char * filename);
 
 protected:
 
-  VolumeReaderType::Pointer                   m_Reader;
+  VolumeReaderType::Pointer                       m_Reader;
 
   InputGaussianFilterType::Pointer                m_Hx;
   InputGaussianFilterType::Pointer                m_Hy;
@@ -105,11 +123,19 @@ protected:
   GaussianSecondDerivativeFilterType::Pointer    m_H2x;
   GaussianSecondDerivativeFilterType::Pointer    m_H2y;
 
-  AddFilterType::Pointer                   m_Laplacian;
-  SmoothingFilterType::Pointer              m_Smoothed;
-  ModulusFilterType::Pointer                 m_Modulus;
+  AddFilterType::Pointer                      m_Laplacian;
+  SmoothingFilterType::Pointer                m_Smoothed;
+  ModulusFilterType::Pointer                  m_Modulus;
 
-  bool                                   m_ImageLoaded;
+  bool                                        m_ImageLoaded;
+
+  IntensityScaleImageFilterType::Pointer      m_IntensityScaleSmoothed;  
+  IntensityScaleImageFilterType::Pointer      m_IntensityScaleLaplacian;  
+  IntensityScaleImageFilterType::Pointer      m_IntensityScaleModulus;  
+
+  VolumeWriterType::Pointer                   m_WriterSmoothed;
+  VolumeWriterType::Pointer                   m_WriterLaplacian;
+  VolumeWriterType::Pointer                   m_WriterModulus;
 
 };
 

@@ -65,6 +65,12 @@ liFilterConsole2D
   progressSlider->Observe( m_Laplacian.GetPointer() );
   progressSlider->Observe( m_Smoothed.GetPointer() );
   progressSlider->Observe( m_Modulus.GetPointer() );
+  progressSlider->Observe( m_IntensityScaleSmoothed.GetPointer() );
+  progressSlider->Observe( m_IntensityScaleLaplacian.GetPointer() );
+  progressSlider->Observe( m_IntensityScaleModulus.GetPointer() );
+  progressSlider->Observe( m_WriterSmoothed.GetPointer() );
+  progressSlider->Observe( m_WriterLaplacian.GetPointer() );
+  progressSlider->Observe( m_WriterModulus.GetPointer() );
                               
   loadButton->Observe( m_Reader.GetPointer() );
   inputButton->Observe( m_Reader.GetPointer() );
@@ -87,6 +93,14 @@ liFilterConsole2D
   m_Reader->AddObserver( itk::ModifiedEvent(), laplacianButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), smoothedButton->GetRedrawCommand().GetPointer() );
   m_Reader->AddObserver( itk::ModifiedEvent(), modulusButton->GetRedrawCommand().GetPointer() );
+
+  m_IntensityScaleModulus->SetScale(    0.2  );
+  m_IntensityScaleSmoothed->SetScale(   0.2  );
+  m_IntensityScaleLaplacian->SetScale(  0.2  );
+
+  m_IntensityScaleModulus->SetShift(   1000  );
+  m_IntensityScaleSmoothed->SetScale(  1000  );
+  m_IntensityScaleLaplacian->SetScale( 1000  );
 
   this->ShowStatus("Let's start by loading an image...");
 
@@ -409,6 +423,106 @@ liFilterConsole2D
 
 
 
+
+
+   
+/************************************
+ *
+ *  SaveLaplacian
+ *
+ ***********************************/
+void
+liFilterConsole2D
+::SaveLaplacian( void )
+{
+
+  const char * filename = fl_file_chooser("Image filename","*.png","");
+  if( !filename )
+  {
+    return;
+  }
+
+  this->ShowStatus("Saving image file...");
+  
+  try 
+  {
+    liFilterConsole2DBase::SaveLaplacian( filename );
+  }
+  catch( ... ) 
+  {
+    this->ShowStatus("Problems writing file format");
+    return;
+  }
+
+  this->ShowStatus("File Saved");
+
+}
+
+
+/************************************
+ *
+ *  SaveModulus
+ *
+ ***********************************/
+void
+liFilterConsole2D
+::SaveModulus( void )
+{
+
+  const char * filename = fl_file_chooser("Image filename","*.png","");
+  if( !filename )
+  {
+    return;
+  }
+
+  this->ShowStatus("Saving image file...");
+  
+  try 
+  {
+    liFilterConsole2DBase::SaveModulus( filename );
+  }
+  catch( ... ) 
+  {
+    this->ShowStatus("Problems writing file format");
+    return;
+  }
+
+  this->ShowStatus("File Saved");
+
+}
+
+
+/************************************
+ *
+ *  SaveSmoothed
+ *
+ ***********************************/
+void
+liFilterConsole2D
+::SaveSmoothed( void )
+{
+
+  const char * filename = fl_file_chooser("Image filename","*.png","");
+  if( !filename )
+  {
+    return;
+  }
+
+  this->ShowStatus("Saving image file...");
+  
+  try 
+  {
+    liFilterConsole2DBase::SaveSmoothed( filename );
+  }
+  catch( ... ) 
+  {
+    this->ShowStatus("Problems writing file format");
+    return;
+  }
+
+  this->ShowStatus("File Saved");
+
+}
 
 
 

@@ -44,6 +44,9 @@ public:
   virtual void ShowSmoothed(void);
   virtual void ShowGradientModulus(void);
   virtual void Execute(void);
+  virtual void SaveSmoothed(void);
+  virtual void SaveLaplacian(void);
+  virtual void SaveModulus(void);
 
 private:
   InputImageViewerType::Pointer      m_InputViewer;

@@ -11,12 +11,12 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
   } {
     Fl_Window consoleWindow {
       label {Gaussian Filter Console} open
-      xywh {63 118 598 322}
+      xywh {21 112 614 322}
       code0 {\#include <liFilterConsole2DBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {0 0 600 320}
+        xywh {0 0 610 320}
       } {
         Fl_Box {} {
           xywh {440 121 45 10} box UP_BOX color 4
@@ -83,7 +83,7 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
         }
       }
       Fl_Group controlsGroup {
-        xywh {0 1 595 319} deactivate
+        xywh {0 1 611 319} deactivate
       } {
         Fl_Light_Button inputButton {
           label Input
@@ -134,7 +134,7 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
         Fl_Light_Button modulusButton {
           label Modulus
           callback {ShowGradientModulus();}
-          xywh {471 44 85 25} type Normal value 1 selection_color 1
+          xywh {471 44 89 25} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
         Fl_Light_Button HxButton {
@@ -149,22 +149,37 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
         }
         Fl_Box {} {
           label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
-          xywh {465 172 103 68} labeltype image
+          xywh {480 172 103 68} labeltype image
         }
         Fl_Light_Button smoothedButton {
           label Smooth
-          callback {ShowSmoothed();} selected
-          xywh {471 80 87 24} type Normal value 1 selection_color 1
+          callback {ShowSmoothed();}
+          xywh {471 80 89 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
+        }
+        Fl_Button {} {
+          label {@>}
+          callback {this->SaveModulus();}
+          xywh {560 44 25 25} labeltype SYMBOL_LABEL
+        }
+        Fl_Button {} {
+          label {@>}
+          callback {this->SaveSmoothed();} selected
+          xywh {560 80 25 24} labeltype SYMBOL_LABEL
+        }
+        Fl_Button {} {
+          label {@>}
+          callback {this->SaveLaplacian();}
+          xywh {560 115 25 25} labeltype SYMBOL_LABEL
         }
       }
       Fl_Slider progressSlider {
-        xywh {5 260 580 15} type {Horz Fill} selection_color 2
+        xywh {5 260 598 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 280 580 25}
+        xywh {5 280 598 25}
       }
       Fl_Light_Button loadButton {
         label Load

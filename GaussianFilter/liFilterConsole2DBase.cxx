@@ -18,6 +18,7 @@
 
 #include <liFilterConsole2DBase.h>
 #include <itkMetaImageIOFactory.h>
+#include <itkPNGImageIO.h>
 #include <itkPNGImageIOFactory.h>
 
 
@@ -85,7 +86,26 @@ liFilterConsole2DBase
   m_Modulus->SetInput1( m_H1x->GetOutput() );
   m_Modulus->SetInput2( m_H1y->GetOutput() );
 
+  m_IntensityScaleModulus   = IntensityScaleImageFilterType::New();
+  m_IntensityScaleSmoothed  = IntensityScaleImageFilterType::New();
+  m_IntensityScaleLaplacian = IntensityScaleImageFilterType::New();
+
+  m_IntensityScaleSmoothed->SetInput(  m_Smoothed->GetOutput()  );
+  m_IntensityScaleModulus->SetInput(   m_Modulus->GetOutput()   );
+  m_IntensityScaleLaplacian->SetInput( m_Laplacian->GetOutput() );
+
+  m_WriterSmoothed   = VolumeWriterType::New();
+  m_WriterModulus    = VolumeWriterType::New();
+  m_WriterLaplacian  = VolumeWriterType::New();
  
+  m_WriterSmoothed->SetInput(  m_IntensityScaleSmoothed->GetOutput()  );
+  m_WriterModulus->SetInput(   m_IntensityScaleModulus->GetOutput()   );
+  m_WriterLaplacian->SetInput( m_IntensityScaleLaplacian->GetOutput() );
+
+  m_WriterSmoothed->SetImageIO(  itk::PNGImageIO::New() );
+  m_WriterModulus->SetImageIO(   itk::PNGImageIO::New() );
+  m_WriterLaplacian->SetImageIO( itk::PNGImageIO::New() );
+
   // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
   itk::PNGImageIOFactory::RegisterOneFactory();
@@ -129,6 +149,72 @@ liFilterConsole2DBase
   m_ImageLoaded = true;
 
 }
+
+
+ 
+/************************************
+ *
+ *  Save
+ *
+ ***********************************/
+void
+liFilterConsole2DBase 
+::SaveSmoothed( const char * filename )
+{
+  if( !filename )
+  {
+    return;
+  }
+
+  m_WriterSmoothed->SetFileName( filename );
+  m_WriterSmoothed->Write();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Save
+ *
+ ***********************************/
+void
+liFilterConsole2DBase 
+::SaveLaplacian( const char * filename )
+{
+  if( !filename )
+  {
+    return;
+  }
+
+  m_WriterLaplacian->SetFileName( filename );
+  m_WriterLaplacian->Write();
+
+}
+
+
+
+ 
+/************************************
+ *
+ *  Save
+ *
+ ***********************************/
+void
+liFilterConsole2DBase 
+::SaveModulus( const char * filename )
+{
+  if( !filename )
+  {
+    return;
+  }
+
+  m_WriterModulus->SetFileName( filename );
+  m_WriterModulus->Write();
+
+}
+
 
 
  
