@@ -75,6 +75,7 @@ public:
       text << m_Optimizer->GetCurrentIteration() << " = ";
       text << m_Optimizer->GetValue() << " : ";
       text << m_Optimizer->GetCurrentPosition() << std::endl;
+      text << std::ends;
       m_Browser->add( text.str() );
       }
     else if( typeid( event ) == typeid( itk::EndEvent ) )
@@ -89,6 +90,7 @@ public:
       text << std::endl;
       text << "Stop condition = " << m_Optimizer->GetStopCondition();
       text << std::endl;
+      text << std::ends;
       m_Browser->add( text.str() );
       }
     m_Browser->bottomline( m_Browser->size() );
