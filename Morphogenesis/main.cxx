@@ -67,7 +67,7 @@ int main()
 
 
   viewer->SetNumberOfIterationsBetweenSaves( 100 );
-  viewer->SetBaseFileName( "animation" );
+  viewer->SetMaximumNumberOfSaves( 10 );
 
 
   viewer->Show();

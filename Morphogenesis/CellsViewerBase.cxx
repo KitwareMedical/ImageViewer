@@ -524,6 +524,24 @@ CellsViewerBase
 }
 
   
+
+/**
+ *    Set up the configuration for saving the animation
+ */ 
+void CellsViewerBase
+::SaveAnimation()
+{
+  const char * basefilename = fl_file_chooser("","","");
+  if( !basefilename )
+    {
+    return;
+    }
+  this->SetBaseFileName( basefilename );
+}
+
+
+
+ 
  
 /**
  *    Save the current image in m_Display to a file
@@ -534,7 +552,8 @@ CellsViewerBase
 void CellsViewerBase
 ::SaveCurrentImage()
 {
-  static unsigned long numberOfIterations = 0;
+  static unsigned int numberOfIterations = 0;
+  static unsigned int numberOfSaves = 0;
 
   if( !m_SavingImages )
     {
@@ -547,14 +566,24 @@ void CellsViewerBase
     return;
     }
 
+  if( numberOfSaves >= m_MaximumNumberOfSaves )
+    {
+    m_SavingImages = false;
+    numberOfSaves = 0;
+    return;
+    }
+
   m_CurrentFile++;
   itk::OStringStream name;
   name << m_BaseFileName;
   name.width(4);
   name.fill('0');
   name << m_CurrentFile;
-  name << ".png";
+  name << ".ppm";
+
   m_Display.SaveImage( name.str().c_str() );
+  numberOfSaves++;
+
   numberOfIterations = 0;
 
 }
@@ -585,6 +614,18 @@ void CellsViewerBase
 ::SetNumberOfIterationsBetweenSaves( unsigned int number )
 {
   m_NumberOfIterationsBetweenSaves = number;
+}
+
+
+/**
+ *    Set the maximum number of saves to perform
+ *    this will protect your disk from being filled
+ *    with images....
+ */ 
+void CellsViewerBase
+::SetMaximumNumberOfSaves( unsigned int number )
+{
+  m_MaximumNumberOfSaves = number;
 }
 
 

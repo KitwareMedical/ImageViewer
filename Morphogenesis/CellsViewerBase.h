@@ -126,9 +126,11 @@ public:
   virtual void RemoveClippingPlane();
   virtual void ExportDrawing( void ) const;
   virtual void ExportXFIG( void ) const;
+  virtual void SaveAnimation();
   virtual void SaveCurrentImage();
   virtual void SetBaseFileName(const char * basefilename);
   virtual void SetNumberOfIterationsBetweenSaves(unsigned int);
+  virtual void SetMaximumNumberOfSaves(unsigned int);
   
   SpeciesContainerType & GetSpecies(void);
 
@@ -150,6 +152,7 @@ private:
   unsigned int                        m_CurrentFile;
   bool                                m_SavingImages;
   unsigned int                        m_NumberOfIterationsBetweenSaves;
+  unsigned int                        m_MaximumNumberOfSaves;
 };
 
 } // end namespace bio
