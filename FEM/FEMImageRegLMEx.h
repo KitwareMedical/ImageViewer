@@ -197,7 +197,9 @@ public:
 
   /** Set the following parameters to run the example */
   void      SetReferenceFile(const char* r) {m_ReferenceFileName=r;}
+  const char* GetReferenceFile() {return m_ReferenceFileName;}
   void      SetTargetFile(const char* t) {m_TargetFileName=t;}
+  const char* GetTargetFile() {return m_TargetFileName;}
   void      SetLandmarkFile(const char* l) {m_LandmarkFileName=l; }
   void      SetResultsFile(const char* r) {m_ResultsFileName=r;}
   void      SetDisplacementsFile(const char* r) {m_DisplacementsFileName=r;}
@@ -222,12 +224,13 @@ public:
   const char* GetConfigFileName () {return m_ConfigFileName; }
   void      SetResultsFileName (const char* f){m_ResultsFileName=f;}
   const char* GetResultsFileName () {return m_ResultsFileName;} 
+  ImageSizeType GetImageSize(){ return m_ImageSize; }
 
   /** Set/Get the Metric.  */
   void      SetMetric(MetricBaseTypePointer MP) { m_Metric=MP; }
   
   /** This function allows one to set the element and its material externally. */
-  void      SetElement(Element::Pointer e) {e1=e;}
+  void      SetElement(Element::Pointer e) {m_Element=e;}
 
 
   /** constructor */
@@ -301,7 +304,7 @@ private :
   typename ImageType::IndexType    m_Tindex;
 
   // element and metric pointers
-  typename Element::Pointer        e1;
+  typename Element::Pointer        m_Element;
   MetricBaseTypePointer            m_Metric;
  
 
