@@ -14,11 +14,6 @@ LINK_LIBRARIES (
   ITKCommon
 )
 
-IF(FEM_USE_SMART_POINTERS)
-# Define the macro that includes smartpointers
-ADD_DEFINITIONS( -DFEM_USE_SMART_POINTERS )
-ENDIF(FEM_USE_SMART_POINTERS)
-
 IF(FEM_VISUALIZATION)
 # Define the macro that includes all the required functions and include MFC support
 ADD_DEFINITIONS( -DFEM_BUILD_VISUALIZATION /D "_AFXDLL" )
