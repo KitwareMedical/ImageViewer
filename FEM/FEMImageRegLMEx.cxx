@@ -603,12 +603,12 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
    else 
    {
      cure=m_Load->EvaluateMetricGivenSolution(&(mySolver.el), 1.0);
-     if (cure <= m_MinE)
+ //    if (cure <= m_MinE)
      {
         m_MinE=cure;
         mint=iters;   
         mySolver.AddToDisplacements();  
-     } else iters=m_Maxiters;
+     } //else iters=m_Maxiters;
    }
    
    std::cout << " min E " << m_MinE << " Cur E " << cure << "  t " << mint << " iter " << iters << std::endl;
@@ -753,7 +753,7 @@ void ImageRegLMEx::MultiResSolve()
   Float LastScaleEnergy=0.0, ThisScaleEnergy=0.0;
   vnl_vector<Float> LastResolutionSolution;
 //   Setup a multi-resolution pyramid
-  typedef itk::MultiResolutionPyramidImageFilter<FloatImageType,FloatImageType>
+  typedef itk::RecursiveMultiResolutionPyramidImageFilter<FloatImageType,FloatImageType>
     PyramidType;
   typedef PyramidType::ScheduleType ScheduleType;
   PyramidType::Pointer pyramidR = PyramidType::New();
@@ -773,23 +773,38 @@ void ImageRegLMEx::MultiResSolve()
 
 // set schedule by specifying the number of levels;
   unsigned int numLevels = 2;
-  itk::Vector<unsigned int,ImageDimension> factors;
-  factors.Fill( 1 << (numLevels - 1) );
   pyramidR->SetNumberOfLevels( numLevels );
   pyramidT->SetNumberOfLevels( numLevels );
 
 //  ImageType::SizeType Isz=m_RefImg->GetLargestPossibleRegion().GetSize();
-  ScheduleType SizeReduction=pyramidR->GetSchedule();
-  for (unsigned int ii=0; ii<numLevels; ii++) for (unsigned int jj=0; jj<ImageDimension; jj++) SizeReduction[ii][jj]=1;
-  pyramidR->SetSchedule(SizeReduction);pyramidT->SetSchedule(SizeReduction);
-  std::cout << SizeReduction << std::endl;
+  ScheduleType SizeReductionR=pyramidR->GetSchedule();
+  ScheduleType SizeReductionT=pyramidT->GetSchedule();
+  //for (unsigned int ii=0; ii<numLevels; ii++) for (unsigned int jj=0; jj<ImageDimension; jj++) 
+  //{ SizeReductionR[ii][jj]=1;SizeReductionT[ii][jj]=1;}
+  pyramidR->SetSchedule(SizeReductionR); pyramidT->SetSchedule(SizeReductionT);
+  std::cout << SizeReductionR << std::endl;
+  pyramidR->Update();
+  pyramidT->Update();
+
+  itk::RawImageIO<unsigned char,2>::Pointer io;
+  itk::ImageFileWriter<ImageType>::Pointer writer;
+  io = itk::RawImageIO<unsigned char,2>::New();
+  writer = itk::ImageFileWriter<ImageType>::New();
+  writer->SetImageIO(io);
+  writer->SetFileName("E:\\Avants\\MetaImages\\junk64x64.raw");
+
   for (unsigned int i=0; i<numLevels; i++)
   {
-    pyramidR->Update();
     pyramidR->GetOutput( i )->Update();
-    pyramidT->Update();
     pyramidT->GetOutput( i )->Update();
 
+    Rcaster1 = CasterType1::New(); // Weird - don't know why but this worked
+    Tcaster1 = CasterType1::New(); // and declaring the casters outside the loop did not.
+    Rcaster2 = CasterType2::New();
+    Tcaster2 = CasterType2::New();
+ 
+//  Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update(); writer->SetInput(Tcaster2->GetOutput()); writer->Write();
+    
     ImageType::SizeType Isz=pyramidT->GetOutput( i )->GetLargestPossibleRegion().GetSize();
     m_MeshResolution=m_MeshResolution*(Float)(i+1);
 
@@ -850,11 +865,11 @@ void ImageRegLMEx::MultiResSolve()
 
     if ( i == numLevels-1 ) 
     { 
+    //  m_RefImg=Tcaster2->GetOutput(); // //FIXME for testing
       WarpImage();     
     }
   }
 
-  m_RefImg=Rcaster2->GetOutput(); // //FIXME for testing
   //LinearSystemSolverType* temp=
   //    dynamic_cast<LinearSystemSolverType*>(mySolver.GetLinearSystemWrapper());
   //delete temp;

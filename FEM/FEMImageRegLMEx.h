@@ -24,7 +24,7 @@
 #include "itkFileIOToImageFilter.h"
 #include "itkImageFileReader.h" 
 #include "itkCastImageFilter.h"
-#include "itkMultiResolutionPyramidImageFilter.h"
+#include "itkRecursiveMultiResolutionPyramidImageFilter.h"
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
 #include "itkRawImageIO.h"
