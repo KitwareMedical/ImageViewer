@@ -38,11 +38,11 @@
  * the given transform. The result is stored in the outIm image.
  **/
 template <class dataT>
-bool transformImage(itk::Image<dataT,3>::Pointer fixedIm, 
-                    itk::Image<dataT,3>::Pointer movingIm, 
+bool transformImage(typename itk::Image<dataT,3>::Pointer fixedIm, 
+                    typename itk::Image<dataT,3>::Pointer movingIm, 
                     itk::SmartPointer< itk::AffineTransform<double, 3> > 
                          transform,
-                    itk::Image<dataT,3>::Pointer outIm)
+                    typename itk::Image<dataT,3>::Pointer outIm)
   {
   typedef itk::Image<dataT, 3> ImageType;
   typedef itk::AffineTransform<double, 3> TransformType;
