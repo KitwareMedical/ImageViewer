@@ -19,7 +19,7 @@
 #include "itkWatershedImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_IMAGING_EXPORT vtkITKWatershedImageFilter : public vtkITKImageToImageFilterFUL
+class VTK_EXPORT vtkITKWatershedImageFilter : public vtkITKImageToImageFilterFUL
 {
  public:
   static vtkITKWatershedImageFilter *New();
@@ -43,7 +43,7 @@ private:
   void operator=(const vtkITKWatershedImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKWatershedImageFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKWatershedImageFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKWatershedImageFilter);
 
 #endif
