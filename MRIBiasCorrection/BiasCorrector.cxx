@@ -1,26 +1,25 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    BiasCorrector.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Program:   Insight Segmentation & Registration Toolkit
+Module:    BiasCorrector.cxx
+Language:  C++
+Date:      $Date$
+Version:   $Revision$
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright (c) 2002 Insight Consortium. All rights reserved.
+See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #include <string>
 #include <vector>
 #include <vnl/vnl_math.h>
 
-
-#include "mydefs.h"
 #include "imageutils.h"
+#include "itkWriteMetaImage.h"
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
 
@@ -37,7 +36,8 @@ void print_usage()
   print_line("       [--input-mask file]" ) ;
   print_line("       [--output-mask file]" ) ;
   print_line("       [--degree int] ") ;
-  print_line("       [--growth double] [--shrink double] [--max-iteration int]");
+  print_line("       [--growth double] [--shrink double] ") ;
+  print_line("       [--volume-max-iteration int] [--inter-slice-max-iteration int]");
   print_line("       [--init-step-size double] ");
   print_line("       [--use-slab-identification [yes|no]]") ;
   print_line("       [--slice-direction [0-2]]" ) ;
@@ -72,14 +72,17 @@ void print_usage()
   print_line("--shrink double") ;
   print_line("        stepsize shrink factor ") ;
   print_line("        [default growth^(-0.25)]" ) ; 
-  print_line("--max-iteration int") ;
-  print_line("        maximal number of iterations") ;
+  print_line("--volume-max-iteration int") ;
+  print_line("        maximal number of iterations for 3D volume correction") ;
+  print_line("        [default 20]" ) ;
+  print_line("--inter-slicemax-iteration int") ;
+  print_line("        maximal number of iterations for each inter-slice correction") ;
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
   print_line("        inital step size [default 1.02]" );
   print_line("--use-slab-identification [yes|no]") ;
   print_line("       if yes, the bias correction will first identify slabs,") ;
-  print_line("       and then apply the bias correction to each slab") ;
+  print_line("       and then apply the bias correction to each slab [default  no]") ;
   print_line("--slice-direction [0-2]" ) ;
   print_line("        slice creation direction ( 0 - x axis, 1 - y axis") ;
   print_line("        2 - z axis) [default 2]") ;
@@ -109,7 +112,8 @@ int main(int argc, char* argv[])
 
   OptionList options(argc, argv) ;
 
-  typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType> Corrector ;
+  typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> 
+    Corrector ;
   Corrector::Pointer filter = Corrector::New() ;
 
   std::string inputFileName ;
@@ -122,7 +126,8 @@ int main(int argc, char* argv[])
   vnl_vector<double> coefficientVector ;
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
-  int maximumIteration = 20; 
+  int volumeMaximumIteration = 20; 
+  int interSliceMaximumIteration = 20; 
   double initialRadius ;
   double growth = 1.05;
   double shrink = 0.0;
@@ -147,7 +152,8 @@ int main(int argc, char* argv[])
       options.GetMultiDoubleOption("class-sigma", &classSigmas, true) ;
 
       // get optimizer options
-      maximumIteration = options.GetIntOption("max-iteration", 20, false) ;
+      volumeMaximumIteration = options.GetIntOption("volume-max-iteration", 20, false) ;
+      interSliceMaximumIteration = options.GetIntOption("inter-slice-max-iteration", 20, false) ;
       growth = options.GetDoubleOption("growth", 1.05, false) ;
       shrink = pow(growth, -0.25) ;
       shrink = options.GetDoubleOption("shrink", shrink, false) ;
@@ -164,27 +170,37 @@ int main(int argc, char* argv[])
                 << std::endl ;
     }
 
-      
+  itk::MetaImageIOFactory::RegisterOneFactory();
+
   // load images
-  ImagePointer input = ImageType::New() ;
-  MaskPointer inputMask = MaskType::New() ;
-  MaskPointer outputMask = MaskType::New() ;
+  ImagePointer input ;
+  MaskPointer inputMask ;
+  MaskPointer outputMask ;
   
+  ImageReaderType::Pointer imageReader = ImageReaderType::New() ;
+  MaskReaderType::Pointer maskReader = MaskReaderType::New() ;
+  MaskReaderType::Pointer maskReader2 = MaskReaderType::New() ;
   try
     {
       std::cout << "Loading images..." << std::endl ;
-      loadImage(inputFileName, input) ;
+      imageReader->SetFileName(inputFileName.c_str()) ;
+      imageReader->Update() ;
+      input = imageReader->GetOutput() ;
       filter->SetInput(input) ;
       std::cout << "Input image loaded." << std::endl ;
       if (inputMaskFileName != "")
         {
-          loadMask(inputMaskFileName, inputMask) ;
+          maskReader->SetFileName(inputMaskFileName.c_str()) ;
+          maskReader->Update() ;
+          inputMask = maskReader->GetOutput() ;
           filter->SetInputMask(inputMask) ;
           std::cout << "Input mask image loaded." << std::endl ;
         }
       if (outputMaskFileName != "")
         {
-          loadMask(outputMaskFileName, outputMask) ;
+          maskReader2->SetFileName(outputMaskFileName.c_str()) ;
+          maskReader2->Update() ;
+          outputMask = maskReader2->GetOutput() ;
           filter->SetOutputMask(outputMask) ;
           std::cout << "Output mask image loaded." << std::endl ;
         }
@@ -197,35 +213,33 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
 
-  ImagePointer output = ImageType::New() ;
-  output->SetLargestPossibleRegion(input->GetLargestPossibleRegion()) ;
-  output->SetRequestedRegion(input->GetLargestPossibleRegion()) ;
-
-  filter->SetOutput(output) ;
-
+  filter->DebugOn() ;
   filter->IsBiasFieldMultiplicative(useLog) ;
   filter->SetTissueClassStatistics(classMeans, classSigmas) ;
   filter->SetOptimizerGrowthFactor(growth) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
-  filter->SetOptimizerMaximumIteration(maximumIteration) ;
+  filter->SetVolumeCorrectionMaximumIteration(volumeMaximumIteration) ;
+  filter->SetInterSliceCorrectionMaximumIteration(interSliceMaximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;
   filter->SetBiasFieldDegree(degree) ;
   filter->SetUsingSlabIdentification(usingSlabIdentification) ;
   filter->SetSlicingDirection(sliceDirection) ;
   filter->Update() ;
 
-  std::cout << "Writing the output image..." << std::endl ;
+  ImageType::Pointer output = filter->GetOutput() ;
 
-  try 
-    {
-      writeImage(outputFileName, output) ;
-    }
-  catch (ImageIOError e)
-    {
-      std::cout << "Error: " << e.Operation << " file name:" 
-                << e.FileName << std::endl ;
-      exit(0) ;
-    }
-  
+  // writes the corrected image
+  std::cout << "Writing corrected image..." << std::endl ;
+  typedef itk::WriteMetaImage<ImageType> Writer ;
+  Writer::Pointer writer = Writer::New() ;
+  writer->SetInput(output) ;
+  writer->SetFileName(outputFileName.c_str()) ;
+  writer->GenerateData() ;
+
+  //   ImageWriterType::Pointer writer = ImageWriterType::New() ;
+  //   writer->SetInput(output) ;
+  //   writer->SetFileName(outputFileName.c_str()) ;
+  //   writer->Write() ;
+
   return 0 ;
 }

@@ -1,30 +1,28 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    BiasFieldEstimator.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Program:   Insight Segmentation & Registration Toolkit
+Module:    BiasFieldEstimator.cxx
+Language:  C++
+Date:      $Date$
+Version:   $Revision$
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright (c) 2002 Insight Consortium. All rights reserved.
+See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+This software is distributed WITHOUT ANY WARRANTY; without even 
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
 #include <string>
 #include <vector>
 #include <vnl/vnl_math.h>
 
-
-#include "mydefs.h"
 #include "imageutils.h"
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
 
-typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType> Corrector ;
+typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType, MaskType> Corrector ;
 
 void print_usage()
 {
@@ -36,7 +34,8 @@ void print_usage()
   print_line("       --use-log [yes|no]") ;
   print_line("       [--input-mask file]" ) ;
   print_line("       [--degree int] [--coefficients c0,..,cn]" ) ;
-  print_line("       [--grow double] [--shrink double] [--max-iteration int]");
+  print_line("       [--growth double] [--shrink double] ") ;
+  print_line("       [--volume-max-iteration int] [--inter-slice-max-iteration int]");
   print_line("       [--init-step-size double] ");
 
   print_line("");
@@ -65,8 +64,11 @@ void print_usage()
   print_line("--shrink double") ;
   print_line("        stepsize shrink factor ") ;
   print_line("        [default grow^(-0.25)]" ) ; 
-  print_line("--max-iteration int") ;
-  print_line("        maximal number of iterations") ;
+  print_line("--volume-max-iteration int") ;
+  print_line("        maximal number of iterations for 3D volume correction") ;
+  print_line("        [default 20]" ) ;
+  print_line("--inter-slicemax-iteration int") ;
+  print_line("        maximal number of iterations for each inter-slice correction") ;
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
   print_line("        inital step size [default 1.02]" );
@@ -98,16 +100,17 @@ void printResult(Corrector::Pointer filter, OptionList& options)
   std::cout << " --degree " << filter->GetBiasFieldDegree() ;
 
   Corrector::BiasFieldType::DomainSizeType sizes = 
-                                        filter->GetBiasFieldDomainSize() ;
+    filter->GetBiasFieldDomainSize() ;
   std::cout << " --size " ;
   for (unsigned int i = 0 ; i < sizes.size() ; i++)
     {
-    std::cout << sizes[i] << " " ;
+      std::cout << sizes[i] << " " ;
     }
   
   std::cout << "--grow " << filter->GetOptimizerGrowthFactor() ;
   std::cout << " --shrink " << filter->GetOptimizerShrinkFactor() ;
-  std::cout << " --max-iteration " << filter->GetOptimizerMaximumIteration();
+  std::cout << " --volume-max-iteration " << filter->GetVolumeCorrectionMaximumIteration();
+  std::cout << " --inter-slice-max-iteration " << filter->GetInterSliceCorrectionMaximumIteration();
   
   if (filter->IsBiasFieldMultiplicative())
     std::cout << " --init-step-size " 
@@ -119,10 +122,10 @@ void printResult(Corrector::Pointer filter, OptionList& options)
   std::cout << " --coefficient-length " << filter->GetNoOfBiasFieldCoefficients()
             << " --coefficients " ;
 
-  Corrector::BiasFieldType::CoefficientVectorType coefficients = 
-                                  filter->GetEstimatedBiasFieldCoefficients() ;
+  Corrector::BiasFieldType::CoefficientArrayType coefficients = 
+    filter->GetEstimatedBiasFieldCoefficients() ;
 
-  Corrector::BiasFieldType::CoefficientVectorType::iterator iter =
+  Corrector::BiasFieldType::CoefficientArrayType::iterator iter =
     coefficients.begin() ;
 
   while (iter != coefficients.end()) 
@@ -130,6 +133,7 @@ void printResult(Corrector::Pointer filter, OptionList& options)
       std::cout << *iter << " " ;
       iter++ ;
     } 
+  std::cout << std::endl ;
 }
     
 
@@ -153,7 +157,8 @@ int main(int argc, char* argv[])
   itk::Array<double> coefficientVector ;
   itk::Array<double> classMeans ;
   itk::Array<double> classSigmas ;
-  int maximumIteration = 20;
+  int volumeMaximumIteration = 20; 
+  int interSliceMaximumIteration = 20; 
   double initialRadius = 1.02;
   double grow  = 1.05;
   double shrink = pow(grow, -0.25);
@@ -181,7 +186,8 @@ int main(int argc, char* argv[])
       options.GetMultiDoubleOption("class-sigma", &classSigmas, true) ;
 
       // get optimizer options
-      maximumIteration = options.GetIntOption("max-iteration", 20, false) ;
+      volumeMaximumIteration = options.GetIntOption("volume-max-iteration", 20, false) ;
+      interSliceMaximumIteration = options.GetIntOption("inter-slice-max-iteration", 20, false) ;
       grow = options.GetDoubleOption("grow", 1.05, false) ;
       shrink = pow(grow, -0.25) ;
       shrink = options.GetDoubleOption("shrink", shrink, false) ;
@@ -194,19 +200,26 @@ int main(int argc, char* argv[])
                 << std::endl ;
     }
 
+  itk::MetaImageIOFactory::RegisterOneFactory();
       
   // load images
-  ImagePointer input = ImageType::New() ;
-  MaskPointer inputMask = MaskType::New() ;
-  
+  ImagePointer input ;
+  MaskPointer inputMask ;
+
+  ImageReaderType::Pointer imageReader = ImageReaderType::New() ;
+  MaskReaderType::Pointer maskReader = MaskReaderType::New() ;
   try
     {
       std::cout << "Loading images..." << std::endl ;
-      loadImage(inputFileName, input) ;
+      imageReader->SetFileName(inputFileName.c_str()) ;
+      imageReader->Update() ;
+      input = imageReader->GetOutput() ;
       filter->SetInput(input) ;
       if (inputMaskFileName != "")
         {
-          loadMask(inputMaskFileName, inputMask) ;
+          maskReader->SetFileName(inputMaskFileName.c_str()) ;
+          maskReader->Update() ;
+          inputMask = maskReader->GetOutput() ;
           filter->SetInputMask(inputMask) ;
         }
       std::cout << "Images loaded." << std::endl ;
@@ -217,7 +230,7 @@ int main(int argc, char* argv[])
                 << e.FileName << std::endl ;
       exit(0) ;
     }
-
+  
   filter->IsBiasFieldMultiplicative(useLog) ;
   filter->SetInitialBiasFieldCoefficients(coefficientVector) ;
   // sets tissue classes' statistics for creating the energy function
@@ -225,7 +238,8 @@ int main(int argc, char* argv[])
   // setting standard optimizer parameters 
   filter->SetOptimizerGrowthFactor(grow) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
-  filter->SetOptimizerMaximumIteration(maximumIteration) ;
+  filter->SetVolumeCorrectionMaximumIteration(volumeMaximumIteration) ;
+  filter->SetInterSliceCorrectionMaximumIteration(interSliceMaximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;
   // this member function call is not necessary since the filter's internal
   // InterSliceIntensityCorrection() member sets the bias field degree to
