@@ -69,7 +69,7 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
   commandGLRedrawModelRoom->SetModelShape( m_OperatingRoomModel.GetPointer() );
 
   m_OperatingRoomViewGUI.GetWindow()->GetNotifier()->
-              AddObserver( li::GLDrawEvent, commandGLRedrawModelRoom );
+              AddObserver( li::GLDrawEvent(), commandGLRedrawModelRoom );
 
 
   li::CommandGLRedrawModelFixed::Pointer commandGLRedrawModelPatientFixed = 
@@ -79,10 +79,10 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
                     m_OperatingRoomModel->GetPatient().GetPointer() );
 
   m_FluoroscopyUnitViewGUI.fluoroscopyUnitViewWindow->GetNotifier()->
-              AddObserver( li::GLDrawEvent, commandGLRedrawModelPatientFixed );
+              AddObserver( li::GLDrawEvent(), commandGLRedrawModelPatientFixed );
 
 
-  m_OperatingRoomModel->AddObserver( li::RedrawEvent,
+  m_OperatingRoomModel->AddObserver( li::RedrawEvent(),
                                      m_OperatingRoomViewGUI.GetRedrawCommand() );
 
 
@@ -96,39 +96,39 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
   // Add Observers. The order of addition is relevant
 
   m_OperatingRoomModel->GetPatient()->AddObserver( 
-                              li::PatientMovedEvent,
+                              li::PatientMovedEvent(),
                               m_FluoroscopyUnitViewGUI.GetRedrawCommand() );
  
   m_OperatingRoomModel->GetPatient()->AddObserver( 
-                              li::PatientMovedEvent,
+                              li::PatientMovedEvent(),
                               m_OperatingRoomViewGUI.GetRedrawCommand()  );
 
   m_OperatingRoomModel->GetSurgeryTable()->AddObserver( 
-                              li::TableMovedEvent,
+                              li::TableMovedEvent(),
                               m_OperatingRoomViewGUI.GetRedrawCommand() );
 
    m_OperatingRoomModel->GetSurgeryTable()->AddObserver( 
-                              li::TableMovedEvent,
+                              li::TableMovedEvent(),
                               m_FluoroscopyUnitViewGUI.GetRedrawCommand() );
   
   m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver( 
-                              li::FluoroscopyUnitMovedEvent,
+                              li::FluoroscopyUnitMovedEvent(),
                               m_OperatingRoomViewGUI.GetRedrawCommand() );
   
   m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver(
-                              li::FluoroscopyUnitMovedEvent,
+                              li::FluoroscopyUnitMovedEvent(),
                               updateImageIntensifier );
 
   m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver( 
-                              li::FluoroscopyUnitMovedEvent,
+                              li::FluoroscopyUnitMovedEvent(),
                               m_FluoroscopyUnitViewGUI.GetRedrawCommand() );
  
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->AddObserver( 
-                              li::VesselsChangedEvent,
+                              li::VesselsChangedEvent(),
                               m_FluoroscopyUnitViewGUI.GetRedrawCommand() );
  
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->AddObserver( 
-                              li::VesselsChangedEvent,
+                              li::VesselsChangedEvent(),
                               m_OperatingRoomViewGUI.GetRedrawCommand() );
   
   
@@ -142,25 +142,25 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
 
   m_VolumeSliceDrawer = VolumeSlicerType::New();
 
-  m_VolumeSliceDrawer->AddObserver( fltk::VolumeReslicedEvent,
+  m_VolumeSliceDrawer->AddObserver( fltk::VolumeReslicedEvent(),
                                     m_VolumeViewGUI.GetRedrawCommand() );
 
   m_OperatingRoomModel->GetPatient()->GetVesselsModel()->AddObserver( 
-                                      li::VesselsChangedEvent,
+                                      li::VesselsChangedEvent(),
                                       m_VolumeViewGUI.GetRedrawCommand() );
 
   m_OperatingRoomModel->GetPatient()->AddObserver( 
-                                    li::PatientMovedEvent,
+                                    li::PatientMovedEvent(),
                                     m_VolumeViewGUI.GetRedrawCommand() );
 
 
   m_VolumeViewGUI.GetNotifier()->AddObserver( 
-                                  fltk::GlDrawEvent, 
+                                  fltk::GlDrawEvent(), 
                                   m_VolumeSliceDrawer->GetDrawCommand() );
 
 
   m_VolumeViewGUI.GetNotifier()->AddObserver( 
-                    fltk::GlDrawEvent, 
+                    fltk::GlDrawEvent(), 
                     m_OperatingRoomModel->GetPatient()->GetDrawCommand() );
 
   li::CommandUpdateSpineModelGUI::Pointer commandUpdateSpineModelGUI =
@@ -169,7 +169,7 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
   commandUpdateSpineModelGUI->SetSpineModelGUI( &m_SpineGUI );
 
   m_OperatingRoomModel->GetPatient()->GetSpineModel()->AddObserver( 
-                                    li::SpineChangedEvent,
+                                    li::SpineChangedEvent(),
                                     commandUpdateSpineModelGUI );
 
 
@@ -178,7 +178,7 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
                            li::CommandUpdateRegistratorFieldOfView::New();
 
   m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver( 
-                              li::FieldOfViewChangedEvent,
+                              li::FieldOfViewChangedEvent(),
                               commandUpdateRegistratorFieldOfView );
  
   commandUpdateRegistratorFieldOfView->SetRegistrator( 
@@ -196,15 +196,15 @@ SpineInterventionConfiguration::SpineInterventionConfiguration()
       m_OperatingRoomModel->GetPatient()->GetVesselsModel().GetPointer() );
 
   m_OperatingRoomModel->GetPatient()->AddObserver( 
-                                        li::PatientMovedEvent,
+                                        li::PatientMovedEvent(),
                                         commandTubesGeneratePointSet );
 
   m_OperatingRoomModel->GetFluoroscopyUnit()->AddObserver(
-                                    li::FluoroscopyUnitMovedEvent,
+                                    li::FluoroscopyUnitMovedEvent(),
                                     commandTubesGeneratePointSet );
 
   m_OperatingRoomModel->GetSurgeryTable()->AddObserver( 
-                                li::TableMovedEvent,
+                                li::TableMovedEvent(),
                                 commandTubesGeneratePointSet );
                               
 
@@ -263,7 +263,7 @@ SpineInterventionConfiguration::ShowRoomView()
   // This event is sent to inform the Fluoroscopic Unit View
   // of the source and detector position in world coordinates
   m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
-                          li::FluoroscopyUnitMovedEvent );
+                          li::FluoroscopyUnitMovedEvent() );
 }
 
 
@@ -278,7 +278,7 @@ SpineInterventionConfiguration::ShowFluoroscopyView()
   m_FluoroscopyUnitViewGUI.Show();
 
   m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
-                          li::FluoroscopyUnitMovedEvent );
+                          li::FluoroscopyUnitMovedEvent() );
 }
 
 
@@ -584,10 +584,10 @@ SpineInterventionConfiguration
              m_FluoroscopyImageReader->GetOutput().GetPointer() );
 
   m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
-                                li::FluoroscopyUnitMovedEvent );
+                                li::FluoroscopyUnitMovedEvent() );
 
   m_OperatingRoomModel->GetFluoroscopyUnit()->InvokeEvent(
-                                li::FluoroscopyUnitMovedEvent );
+                                li::FluoroscopyUnitMovedEvent() );
 
 }
 
@@ -656,7 +656,7 @@ SpineInterventionConfiguration
   m_VolumeSliceDrawer->SetInput( 
              m_VolumeImageReader->GetOutput().GetPointer() );
 
-  m_VolumeSliceDrawer->InvokeEvent( li::VolumeReslicedEvent );
+  m_VolumeSliceDrawer->InvokeEvent( li::VolumeReslicedEvent() );
 
 }
 

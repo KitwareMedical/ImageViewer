@@ -127,7 +127,7 @@ SurgeryTable::DrawGeometry(void) const
 void SurgeryTable::SetAxial( double axial ) 
 {
   m_Axial = axial;
-  InvokeEvent( TableMovedEvent );
+  InvokeEvent( TableMovedEvent() );
 }
 
 
@@ -141,7 +141,7 @@ void SurgeryTable::SetAxial( double axial )
 void SurgeryTable::SetVertical( double vertical ) 
 {
   m_Vertical = vertical;
-  InvokeEvent( TableMovedEvent );
+  InvokeEvent( TableMovedEvent() );
 }
 
 
@@ -155,7 +155,7 @@ void SurgeryTable::SetVertical( double vertical )
 void SurgeryTable::SetLateral( double lateral ) 
 {
   m_Lateral = lateral;
-  InvokeEvent( TableMovedEvent );
+  InvokeEvent( TableMovedEvent() );
 }
 
 

@@ -58,8 +58,8 @@ public:
   /**
    * Execute method will call redraw in the GL Window
    */
-  void Execute(itk::Object *caller, unsigned long event);
-  void Execute(const itk::Object *caller, unsigned long event);
+  void Execute(itk::Object *caller, const itk::EventObject & event);
+  void Execute(const itk::Object *caller, const itk::EventObject & event);
 
 
   /** 

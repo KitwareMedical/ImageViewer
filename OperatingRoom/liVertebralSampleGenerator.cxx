@@ -118,7 +118,7 @@ void VertebralSampleGenerator::GenerateSamples(void )
   UpdateParameters(); 
   m_SampleGenerator.GenerateSamples( m_Samples );
   TransferSamplesToPointSet();
-  m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );
+  m_VertebralSegment->InvokeEvent( li::PatientMovedEvent() );
   
 }
 

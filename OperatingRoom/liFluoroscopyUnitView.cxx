@@ -473,7 +473,7 @@ void FluoroscopyUnitView::draw(void)
 
 
   // Draw the object as viewed by the Fluoroscopy Unit
-  m_Notifier->InvokeEvent( GLDrawEvent  );
+  m_Notifier->InvokeEvent( GLDrawEvent()  );
 
   
 

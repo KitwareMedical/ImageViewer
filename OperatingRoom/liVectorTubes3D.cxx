@@ -359,8 +359,8 @@ void VectorTubes3D::Read(fltk::Shape3D::IfstreamType & is)
   m_Boundary->SetHeight( nz*dz );
 
   // the first time needs two redraws
-  InvokeEvent( li::PatientMovedEvent );
-  InvokeEvent( li::PatientMovedEvent ); 
+  InvokeEvent( li::PatientMovedEvent() );
+  InvokeEvent( li::PatientMovedEvent() ); 
 
 
 }

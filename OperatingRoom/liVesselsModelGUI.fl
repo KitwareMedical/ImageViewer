@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0009 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -94,31 +94,31 @@ UpdateExternalOffset();}
             menuitem {} {
               label None
               callback {m_Vessels->SetDrawingMode( fltk::Shape3D::none );
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );}
               xywh {0 0 100 20}
             }
             menuitem {} {
               label Points
               callback {m_Vessels->SetDrawingMode( fltk::Shape3D::points );
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );}
               xywh {10 10 100 20}
             }
             menuitem {} {
               label Lines
               callback {m_Vessels->SetDrawingMode( fltk::Shape3D::lines );
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );}
               xywh {20 20 100 20}
             }
             menuitem {} {
               label Triangles
               callback {m_Vessels->SetDrawingMode( fltk::Shape3D::triangles );
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );}
               xywh {30 30 100 20}
             }
             menuitem {} {
               label SurfacePoints
               callback {m_Vessels->SetDrawingMode( fltk::Shape3D::surfacepoints );
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );}
               xywh {40 40 100 20}
             }
           }
@@ -192,7 +192,7 @@ offset[0] = xExternalOffsetAdjuster->value();
 offset[1] = yExternalOffsetAdjuster->value();
 offset[2] = zExternalOffsetAdjuster->value();
 m_Vessels->SetExternalOffset( offset );
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );} {}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );} {}
   }
   Function {SetDisplayPointSet(void)} {open return_type {virtual void}
   } {
@@ -205,7 +205,7 @@ else
   m_Vessels->SetDisplayPointSet( false );
 }
 
-m_Vessels->InvokeEvent( li::VesselsChangedEvent );} {}
+m_Vessels->InvokeEvent( li::VesselsChangedEvent() );} {}
   }
   Function {ShowRegistrationControl(void)} {return_type {virtual void}
   } {

@@ -434,10 +434,10 @@ SpineModel::Read( fltk::Shape3D::IfstreamType &is )
 
   }
 
-  InvokeEvent( li::PatientMovedEvent );
+  InvokeEvent( li::PatientMovedEvent() );
   // the first time needs two redraws
-  InvokeEvent( li::PatientMovedEvent ); 
-  InvokeEvent( li::SpineChangedEvent );
+  InvokeEvent( li::PatientMovedEvent() ); 
+  InvokeEvent( li::SpineChangedEvent() );
 
   return 1;
 }

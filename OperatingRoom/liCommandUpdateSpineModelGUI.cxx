@@ -51,10 +51,12 @@ CommandUpdateSpineModelGUI::SetSpineModelGUI(
 //
 //--------------------------------------------------
 void
-CommandUpdateSpineModelGUI::Execute( itk::Object * unit, unsigned long event )
+CommandUpdateSpineModelGUI::Execute( 
+                    itk::Object * unit, 
+                    const itk::EventObject & event )
 {
 
-  if( event == li::SpineChangedEvent )
+  if( typeid( event ) == typeid( li::SpineChangedEvent ) )
   {
 
     if( m_SpineModelGUI )
@@ -74,10 +76,12 @@ CommandUpdateSpineModelGUI::Execute( itk::Object * unit, unsigned long event )
 //
 //--------------------------------------------------
 void
-CommandUpdateSpineModelGUI::Execute(const itk::Object * unit, unsigned long event )
+CommandUpdateSpineModelGUI::Execute(
+                  const itk::Object * unit,
+                  const itk::EventObject & event )
 {
 
-  if( event == FluoroscopyUnitMovedEvent )
+  if( typeid( event ) == typeid( FluoroscopyUnitMovedEvent ) )
   {
     if( m_SpineModelGUI )
     {

@@ -48,7 +48,7 @@ CommandGLRedrawModelSensitive::SetModelShape( fltk::Shape3D * model )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelSensitive::Execute( itk::Object *, unsigned long )
+CommandGLRedrawModelSensitive::Execute( itk::Object *, const itk::EventObject & )
 {
   if( m_ModelShape )
   {
@@ -68,7 +68,7 @@ CommandGLRedrawModelSensitive::Execute( itk::Object *, unsigned long )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelSensitive::Execute(const itk::Object * , unsigned long )
+CommandGLRedrawModelSensitive::Execute(const itk::Object * , const itk::EventObject & )
 {
   if( m_ModelShape )
   {

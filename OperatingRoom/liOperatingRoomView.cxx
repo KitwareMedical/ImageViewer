@@ -91,7 +91,7 @@ void OperatingRoomView::draw(void)
 
   glEnable( GL_LIGHTING );
 
-  m_Notifier->InvokeEvent( GLDrawEvent  );
+  m_Notifier->InvokeEvent( GLDrawEvent() );
 
 
 }

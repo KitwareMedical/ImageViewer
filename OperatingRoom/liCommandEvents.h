@@ -16,6 +16,7 @@
 #define liCOMMANDEVENTS
 
 #include "itkCommand.h"
+#include "itkEventObject.h"
 
 
 namespace li {
@@ -23,20 +24,17 @@ namespace li {
 /**
  *  List of the events expected in this domain
  */
-enum EventIds 
-{
-  RedrawEvent = itk::Command::UserEvent+1,
-  FluoroscopyUnitMovedEvent,
-  TableMovedEvent,
-  PatientMovedEvent,
-  VolumeReslicedEvent,
-  GLDrawEvent,
-  SpineChangedEvent,
-  VesselsChangedEvent,
-  RequestVesselPointSetGenerationEvent,
-  FieldOfViewChangedEvent
 
-};
+itkEventMacro( RedrawEvent,                 itk::UserEvent );
+itkEventMacro( FluoroscopyUnitMovedEvent,   itk::UserEvent );
+itkEventMacro( TableMovedEvent,             itk::UserEvent );
+itkEventMacro( PatientMovedEvent,           itk::UserEvent );
+itkEventMacro( VolumeReslicedEvent,         itk::UserEvent );
+itkEventMacro( GLDrawEvent,                 itk::UserEvent );
+itkEventMacro( SpineChangedEvent,           itk::UserEvent );
+itkEventMacro( VesselsChangedEvent,         itk::UserEvent );
+itkEventMacro( FieldOfViewChangedEvent,     itk::UserEvent );
+itkEventMacro( RequestVesselPointSetGenerationEvent, itk::UserEvent );
 
 
   

@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0009 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -189,7 +189,7 @@ lateralPositionValueOutput->value( m_Unit->GetCranioCaudalPosition() );} {}
 detectorDiameterValueInput->value( vps );
 m_Unit->SetSourceToFilmDistance( stfd );
 m_Unit->SetDetectorRadius( vps / 2.0 );
-m_Unit->InvokeEvent( li::FieldOfViewChangedEvent );
+m_Unit->InvokeEvent( li::FieldOfViewChangedEvent() );
 const double angle = atan2( vps/2.0, stfd );
 fieldOfViewValueOutput->value( 2.0 * angle * 45.0 / atan(1.0f) );} {}
   }

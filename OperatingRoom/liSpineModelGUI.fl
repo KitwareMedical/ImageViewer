@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0010 
+version 1.0011 
 header_name {.h} 
 code_name {.cxx} 
 gridx 5 
@@ -44,7 +44,7 @@ if( vgui )
           Fl_Counter angleCounter {
             label Angle
             callback {m_SpineModel->SetCranioCaudalAngle(o->value());
-m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
+m_SpineModel->InvokeEvent( li::PatientMovedEvent() );}
             xywh {75 60 115 25} align 4
           }
           Fl_Counter xPositionCounter {
@@ -52,7 +52,7 @@ m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
             callback {li::SpineModel::PointType pnt = m_SpineModel->GetPosition();
 pnt[0] = o->value();
 m_SpineModel->SetPosition( pnt );
-m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
+m_SpineModel->InvokeEvent( li::PatientMovedEvent() );}
             xywh {75 85 115 25} align 4
           }
           Fl_Counter yPositionCounter {
@@ -60,7 +60,7 @@ m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
             callback {li::SpineModel::PointType pnt = m_SpineModel->GetPosition();
 pnt[1] = o->value();
 m_SpineModel->SetPosition( pnt );
-m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
+m_SpineModel->InvokeEvent( li::PatientMovedEvent() );}
             xywh {75 110 115 25} align 4
           }
           Fl_Counter zPositionCounter {
@@ -68,7 +68,7 @@ m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
             callback {li::SpineModel::PointType pnt = m_SpineModel->GetPosition();
 pnt[2] = o->value();
 m_SpineModel->SetPosition( pnt );
-m_SpineModel->InvokeEvent( li::PatientMovedEvent );}
+m_SpineModel->InvokeEvent( li::PatientMovedEvent() );}
             xywh {75 135 115 25} align 4
           }
         }

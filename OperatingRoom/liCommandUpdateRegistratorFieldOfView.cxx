@@ -50,10 +50,12 @@ CommandUpdateRegistratorFieldOfView::SetRegistrator( RegistratorType * unit )
 //
 //--------------------------------------------------
 void
-CommandUpdateRegistratorFieldOfView::Execute( itk::Object * unit, unsigned long event )
+CommandUpdateRegistratorFieldOfView::Execute( 
+                            itk::Object * unit, 
+                            const itk::EventObject & event )
 {
 
-  if( event == FieldOfViewChangedEvent )
+  if( typeid( event ) == typeid( FieldOfViewChangedEvent ) )
   {
     if( m_Registrator )
     {
@@ -94,10 +96,12 @@ CommandUpdateRegistratorFieldOfView::Execute( itk::Object * unit, unsigned long 
 //
 //--------------------------------------------------
 void
-CommandUpdateRegistratorFieldOfView::Execute(const itk::Object * unit, unsigned long event )
+CommandUpdateRegistratorFieldOfView::Execute(
+                            const itk::Object * unit, 
+                            const itk::EventObject &  event )
 {
 
-  if( event == FieldOfViewChangedEvent )
+  if( typeid( event ) == typeid( FieldOfViewChangedEvent ) )
   {
     if( m_Registrator )
     {

@@ -36,12 +36,13 @@ CommandTubesGeneratePointSet::CommandTubesGeneratePointSet(void)
 //
 //--------------------------------------------------
 void
-CommandTubesGeneratePointSet::Execute( itk::Object * unit, unsigned long event )
+CommandTubesGeneratePointSet::Execute( itk::Object * unit, 
+                                        const itk::EventObject & event )
 {
   
-  if( event == FluoroscopyUnitMovedEvent ||
-      event == PatientMovedEvent         ||
-      event == TableMovedEvent              )
+  if( typeid( event ) == typeid( FluoroscopyUnitMovedEvent ) ||
+      typeid( event ) == typeid( PatientMovedEvent         ) ||
+      typeid( event ) == typeid( TableMovedEvent           )   )
   {
     if( m_FluoroscopyUnit && m_Tubes )
     {
@@ -69,12 +70,13 @@ CommandTubesGeneratePointSet::Execute( itk::Object * unit, unsigned long event )
 //
 //--------------------------------------------------
 void
-CommandTubesGeneratePointSet::Execute(const itk::Object * unit, unsigned long event )
+CommandTubesGeneratePointSet::Execute(const itk::Object * unit, 
+                                      const itk::EventObject & event )
 {
 
-  if( event == FluoroscopyUnitMovedEvent   ||
-      event == PatientMovedEvent           ||
-      event == TableMovedEvent              )
+  if( typeid( event ) == typeid( FluoroscopyUnitMovedEvent )   ||
+      typeid( event ) == typeid( PatientMovedEvent         )   ||
+      typeid( event ) == typeid( TableMovedEvent           )    )
   {
     if( m_FluoroscopyUnit && m_Tubes )
     {

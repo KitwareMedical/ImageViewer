@@ -371,7 +371,7 @@ void
 VertebralSegment::SetAxisVisible( bool visible ) 
 {
   m_AxisVisible = visible;
-  InvokeEvent( li::PatientMovedEvent );
+  InvokeEvent( li::PatientMovedEvent() );
 }
 
 
@@ -384,7 +384,7 @@ void
 VertebralSegment::SetSamplesVisible( bool visible ) 
 {
   m_SamplesVisible = visible;
-  InvokeEvent( li::PatientMovedEvent );
+  InvokeEvent( li::PatientMovedEvent() );
 }
 
 

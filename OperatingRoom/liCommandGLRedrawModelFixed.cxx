@@ -48,7 +48,7 @@ CommandGLRedrawModelFixed::SetModelShape( fltk::Shape3D * model )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelFixed::Execute( itk::Object *, unsigned long )
+CommandGLRedrawModelFixed::Execute( itk::Object *, const itk::EventObject & )
 {
   if( m_ModelShape )
   {
@@ -68,7 +68,7 @@ CommandGLRedrawModelFixed::Execute( itk::Object *, unsigned long )
 //
 //--------------------------------------------------
 void
-CommandGLRedrawModelFixed::Execute(const itk::Object * , unsigned long )
+CommandGLRedrawModelFixed::Execute(const itk::Object * , const itk::EventObject & )
 {
   if( m_ModelShape )
   {
