@@ -18,6 +18,8 @@ BacterialColony
   color.SetBlue(0.0);
   Cell::SetDefaultColor( color );
 
+  m_RedrawCommand = RedrawCommandType::New();
+  m_RedrawCommand->SetCallbackFunction( this, &CellularAggregate::Draw );
 }
 
 

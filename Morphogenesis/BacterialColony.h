@@ -7,6 +7,7 @@
 #include "CellularAggregate.h"
 #include "Bacteria.h"
 #include "BacterialColonyGUI.h"
+#include "itkCommand.h"
 
 
 
@@ -55,6 +56,14 @@ public:
 
 
   /**
+   *  Command to receive redraw events 
+   */ 
+  typedef itk::SimpleConstMemberCommand< BacterialColony > RedrawCommandType;
+  
+  RedrawCommandType::Pointer GetRedrawCommand(void)
+                                  { return m_RedrawCommand.GetPointer(); }
+
+  /**
    * Show the GUI
    */
   void Show(void);
@@ -67,7 +76,7 @@ public:
 
 protected:
 
-	BacterialColony();
+  BacterialColony();
   virtual ~BacterialColony();
   BacterialColony( const Self & ) {}
   void operator=(const Self&) {}
@@ -78,6 +87,7 @@ private:
 
   BacterialColonyGUI               m_GUI;
 
+  RedrawCommandType::Pointer       m_RedrawCommand;
 
 };
 
