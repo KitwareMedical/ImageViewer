@@ -29,8 +29,6 @@ public:
   FEMMeshApplication();
   ~FEMMeshApplication();
   
-  void CreateSphere(void);
-  void CreateTriangle(void);
   void CreateFEMMesh(void);
   void DisplayFEMMesh(void);
 

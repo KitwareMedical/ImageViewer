@@ -37,31 +37,6 @@ FEMMeshApplication
 
 
 
-void
-FEMMeshApplication
-::CreateSphere(void)
-{
-  this->FEMMeshApplicationBase::CreateSphere();
-  m_FlRenderWindowInteractor->redraw();
-  Fl::check();
-}
-
-
-
-
-
-void
-FEMMeshApplication
-::CreateTriangle(void)
-{
-  this->FEMMeshApplicationBase::CreateTriangle();
-  m_FlRenderWindowInteractor->redraw();
-  Fl::check();
-}
-
-
-
-
 
 
 void
