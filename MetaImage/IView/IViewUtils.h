@@ -7,7 +7,6 @@
 #include<itkProcessObject.h>
 #include<itkSimpleImageRegionIterator.h>
 
-using namespace itk;
 
 template <class T>
 PhysicalImage<T, 3>::Pointer loadImage(char *fname)
@@ -16,9 +15,9 @@ PhysicalImage<T, 3>::Pointer loadImage(char *fname)
  imIO->OpenMetaFile(fname);
  imIO->PrintMetaInfo();
 
- PhysicalImage<T,3>::Pointer image = PhysicalImage<T,3>::New();
+ itk::PhysicalImage<T,3>::Pointer image = itk::PhysicalImage<T,3>::New();
 
- PhysicalImage<T,3>::SizeType size;
+ itk::PhysicalImage<T,3>::SizeType size;
 
  double spacing[3];
 
@@ -47,7 +46,7 @@ PhysicalImage<T, 3>::Pointer loadImage(char *fname)
  image->Allocate();
 
 
- SimpleImageRegionIterator< PhysicalImage<T,3> > it(image, region);
+ itk::SimpleImageRegionIterator< itk::PhysicalImage<T,3> > it(image, region);
  int i;
  for(i = 0, it.Begin(); !it.IsAtEnd(); i++, ++it)
    it.Set(imIO->Get(i));
