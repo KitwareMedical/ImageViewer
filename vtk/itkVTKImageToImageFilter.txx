@@ -27,8 +27,8 @@ namespace itk
 /**
  * Constructor
  */
-template <class TInputImage>
-VTKImageToImageFilter<TInputImage>
+template <class TOutputImage>
+VTKImageToImageFilter<TOutputImage>
 ::VTKImageToImageFilter()
 {
 
@@ -57,8 +57,8 @@ VTKImageToImageFilter<TInputImage>
 /**
  * Destructor
  */
-template <class TInputImage>
-VTKImageToImageFilter<TInputImage>
+template <class TOutputImage>
+VTKImageToImageFilter<TOutputImage>
 ::~VTKImageToImageFilter()
 {
 }
@@ -66,12 +66,12 @@ VTKImageToImageFilter<TInputImage>
 
 
 /**
- * Set an itk::Image as input 
+ * Set a vtkImageData as input 
  */
-template <class TInputImage>
+template <class TOutputImage>
 void
-VTKImageToImageFilter<TInputImage>
-::SetInput( const InputImageType * inputImage )
+VTKImageToImageFilter<TOutputImage>
+::SetInput( vtkImageData * inputImage )
 {
   m_Exporter->SetInput( inputImage );
 }
@@ -79,11 +79,11 @@ VTKImageToImageFilter<TInputImage>
 
 
 /**
- * Get a vtkImage as output
+ * Get an itk::Image as output
  */
-template <class TInputImage>
-vtkImageData *
-VTKImageToImageFilter<TInputImage>
+template <class TOutputImage>
+const typename VTKImageToImageFilter<TOutputImage>::OutputImageType *
+VTKImageToImageFilter<TOutputImage>
 ::GetOutput() const
 {
   return m_Importer->GetOutput();
@@ -93,11 +93,24 @@ VTKImageToImageFilter<TInputImage>
 
 
 /**
+ * Get the exporter filter
+ */
+template <class TOutputImage>
+vtkImageExport *
+VTKImageToImageFilter<TOutputImage>
+::GetExporter() const
+{
+  return m_Exporter;
+}
+
+
+
+/**
  * Get the importer filter
  */
-template <class TInputImage>
-vtkImageImport *
-VTKImageToImageFilter<TInputImage>
+template <class TOutputImage>
+typename VTKImageToImageFilter<TOutputImage>::ImporterFilterType *
+VTKImageToImageFilter<TOutputImage>
 ::GetImporter() const
 {
   return m_Importer;

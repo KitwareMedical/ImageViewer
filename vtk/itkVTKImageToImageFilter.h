@@ -68,7 +68,7 @@ public:
   /** Return the internal VTK image exporter filter.
       This is intended to facilitate users the access 
       to methods in the exporter */
-  vtkImageExporter * GetExporter() const;
+  vtkImageExport * GetExporter() const;
 
   /** Return the internal ITK image importer filter.
       This is intended to facilitate users the access 
