@@ -869,7 +869,7 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
       gl_font(FL_TIMES_BOLD, 12);
       char s[80];
-      if((ImagePixelType)1.1==1.1)
+      if((ImagePixelType)1.5==1.5)
         {
         sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f", 
           cClickSelect[0],
