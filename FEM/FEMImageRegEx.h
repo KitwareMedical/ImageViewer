@@ -91,6 +91,8 @@ namespace fem {
         Choose the time step to control the size of the deformation at each step.
         Choose enough iterations to allow the solution to converge (this may be automated).
 
+     We read metaimages and output raw images.
+
      FIXMEs :  We should be able to vary the region size of the metric at run-time,
      allowing a kind of multi-resolution approach.
      However, there are some issues with the FEMP array and the pointer gets lost.
@@ -164,8 +166,8 @@ public:
   unsigned int m_Maxiters; // max iterations
   Float m_dT; // time step
   Float m_E;  // elasticity 
-  Float m_Nx; // image x size
-  Float m_Ny; // image y size
+  unsigned int m_Nx; // image x size
+  unsigned int m_Ny; // image y size
   Float m_Energy; // current value of energy
   Float m_MinE;  // minimum recorded energy
   Float m_Rho;   // mass matrix weight

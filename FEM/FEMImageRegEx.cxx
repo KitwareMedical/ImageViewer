@@ -251,7 +251,7 @@ void ImageRegEx::GenRegMesh()
 //  MembraneC02D::Pointer e1;
   Element2DC0LinearQuadrilateralStress::Pointer e1;
   
-  int ctGN=0,jct=0,ict=0,temp;
+  unsigned int ctGN=0,jct=0,ict=0,temp;
     for (int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
       ict=0;
       for (int i=0; i<=m_Nx-m_MeshResolution;i=i+m_MeshResolution){ 
@@ -282,7 +282,7 @@ void ImageRegEx::GenRegMesh()
   LoadBC::Pointer l1;
 
   // elements for the corner of the image only valid if nx=ny
-  int ind0=0, ind1=m_Nx/m_MeshResolution-1, ind2=ind1*(ind1+1), ind3=ind2+ind1;
+  unsigned int ind0=0, ind1=(unsigned int) (float)m_Nx/(float)m_MeshResolution-1, ind2=ind1*(ind1+1), ind3=ind2+ind1;
 
   l1=LoadBC::New();
   l1->m_element=( &*m_Solver.el.Find(ind0));
@@ -366,7 +366,7 @@ void ImageRegEx::IterativeSolve()
 
     float radparam=1.-(float)iters/((float)m_Maxiters-1.);
     unsigned int maxrad=9,minrad=1;
-    SetWidthOfMetricRegion(minrad+maxrad*radparam);
+    SetWidthOfMetricRegion(minrad+maxrad*(unsigned int)radparam);
     /*
      * Assemble the master force vector (from the applied loads)
      */
@@ -454,9 +454,9 @@ void ImageRegEx::GetVectorField()
       Sol=(*elt)->InterpolateSolution(Pos,*(m_Solver.GetLS()),1); // for total solution index
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        rindex[ii]=Gpt[ii];
+        rindex[ii]=(long int) Gpt[ii];
         disp[ii] =(Float) Sol[ii];
-        tindex[ii]=rindex[ii]+disp[ii];
+        tindex[ii]=(long int) rindex[ii]+(long int)(disp[ii]+0.5);
       }
       
       m_Field->SetPixel(rindex, disp );
@@ -479,7 +479,6 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
   std::ostringstream os;
   os<<(m_FileCount+10);
   fnum=os.str();
-
   std::string fullfname=(fname+fnum+exte);
 
   ImgIterator wimIter( m_WarpedImage,m_Wregion );
