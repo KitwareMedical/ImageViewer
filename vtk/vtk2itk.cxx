@@ -313,6 +313,10 @@ int main(int ac, char** av)
   reader->Update();
   std::cerr << "End reading vtk data " << std::endl;
   vtkDataSet* data = reader->GetOutput();
+  if( !data )
+    {
+    std::cerr << "Data is null" << std::endl;
+    }
   // Convert from vtk to itk
   std::cerr << "Begin conversion to itkMesh " << std::endl;
   floatMesh::Pointer m = 
