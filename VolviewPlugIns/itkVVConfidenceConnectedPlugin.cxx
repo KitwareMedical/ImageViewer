@@ -41,7 +41,6 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       seed[1] =                                  atoi( info->GUIItems[ 5 ].CurrentValue);      
       seed[2] =                                  atoi( info->GUIItems[ 6 ].CurrentValue);      
       module.GetFilter()->SetSeed( seed );
-      module.SetNeedCasting( true );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -61,7 +60,6 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       seed[1] =                                  atoi( info->GUIItems[ 5 ].CurrentValue);      
       seed[2] =                                  atoi( info->GUIItems[ 6 ].CurrentValue);      
       module.GetFilter()->SetSeed( seed );
-      module.SetNeedCasting( true );
       // Execute the filter
       module.ProcessData( pds );
       break; 
