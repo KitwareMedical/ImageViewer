@@ -17,6 +17,8 @@
 
 #include "vtkLookupTableEquivalencyHash.h"
 
+#include <iostream>
+
 bool vtkLookupTableEquivalencyHash::Add(unsigned long a, unsigned long b)
 {
   //
