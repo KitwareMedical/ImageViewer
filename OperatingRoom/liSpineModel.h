@@ -34,7 +34,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -55,7 +55,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( SpineModel, Shape3D );
+  itkTypeMacro( SpineModel, fltk::Shape3D );
 
 
   /**
@@ -103,7 +103,7 @@ public:
    /**
    * Get Position
    */
-  const Shape3D::PointType & GetPosition( void ) const;
+  const fltk::Shape3D::PointType & GetPosition( void ) const;
 
 
   /**
@@ -165,12 +165,12 @@ public:
   /**
    *  Write to an ofstream
    */
-	int Write( Shape3D::OfstreamType &os,int level ) const;
+	int Write( fltk::Shape3D::OfstreamType &os,int level ) const;
 
   /**
    *  Read from an ifstream
    */
-	int Read( Shape3D::IfstreamType &is );
+	int Read( fltk::Shape3D::IfstreamType &is );
 
 
 private:

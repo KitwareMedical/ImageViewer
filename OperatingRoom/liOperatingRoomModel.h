@@ -44,7 +44,7 @@ public:
   /**
    * Standard "Superclass" typedef.
    */
-  typedef Shape3D  Superclass;
+  typedef fltk::Shape3D  Superclass;
 
   /** 
    * Smart pointer typedef support.
@@ -59,7 +59,7 @@ public:
   /** 
    * Run-time type information (and related methods).
    */
-  itkTypeMacro( OperatingRoomModel, Shape3D );
+  itkTypeMacro( OperatingRoomModel, fltk::Shape3D );
 
 
   /**

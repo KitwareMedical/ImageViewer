@@ -316,14 +316,14 @@ void Tube3D::DrawGeometry(void) const
 //    Read from a file
 //
 //--------------------------------------------------
-int Tube3D::Read( Shape3D::IfstreamType & is )
+int Tube3D::Read( fltk::Shape3D::IfstreamType & is )
 {
 
   Clear();
 
   m_NumberOfSectors = 6; // default number of sectors
 
-  Shape3D::ColorType color;
+  fltk::Shape3D::ColorType color;
   float opacity;
 
   char field[200];

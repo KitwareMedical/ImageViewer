@@ -36,7 +36,7 @@ OperatingRoomModel::OperatingRoomModel()
   m_Floor->SetLength( 3000.0f );
   m_Floor->SetHeight(  100.0f );
 
-  Shape3D::ColorType color;
+  fltk::Shape3D::ColorType color;
 
   color.SetRed(   0.9f );
   color.SetGreen( 0.8f );
