@@ -1,0 +1,51 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0011 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+class TimeProbesCollectorGUI {open : {public itk::TimeProbesCollectorBase}
+} {
+  Function {TimeProbesCollectorGUI()} {open
+  } {
+    Fl_Window controlPanel {
+      label {Time Probes} open
+      xywh {464 178 378 282} box UP_BOX resizable
+      code0 {\#include "itkTimeProbesCollectorBase.h"} visible
+    } {
+      Fl_Button {} {
+        label Close
+        callback {this->Hide();}
+        xywh {295 240 75 25}
+      }
+      Fl_Button {} {
+        label Clear
+        callback {Clear();}
+        xywh {15 241 73 24}
+      }
+      Fl_Button {} {
+        label Report
+        callback {Report();}
+        xywh {100 241 73 24}
+      }
+      Fl_Browser probesBrowser {
+        xywh {10 15 355 215}
+      }
+      Fl_Check_Button continuousCheckButton {
+        label Continuous selected
+        xywh {185 240 105 25} box ENGRAVED_FRAME down_box DIAMOND_DOWN_BOX
+      }
+    }
+  }
+  Function {~TimeProbesCollectorGUI()} {return_type virtual
+  } {}
+  Function {Show(void)} {return_type {virtual void}
+  } {
+    code {controlPanel->show();} {}
+  }
+  Function {Hide(void)} {return_type {virtual void}
+  } {
+    code {controlPanel->hide();} {}
+  }
+} 

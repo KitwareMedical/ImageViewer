@@ -1,0 +1,49 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    fltkTimeProbeGUI.h
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
+#ifndef __fltkTimeProbeGUI_h
+#define __fltkTimeProbeGUI_h
+
+#include <Fl/Fl_Tile.H>
+#include <Fl/Fl_Button.H>
+#include <Fl/Fl_Value_Output.H>
+#include <string>
+
+
+namespace fltk
+{
+
+
+class TimeProbeGUI : public Fl_Tile
+{
+
+  public:
+    TimeProbeGUI(unsigned int line);
+    ~TimeProbeGUI();
+    void SetName( const std::string & );
+    void SetNumberOfCalls( unsigned int );
+    void SetMeanTime( double );
+
+  private:
+    Fl_Button        * m_NameButton;
+    Fl_Value_Output  * m_MeanTime;
+    Fl_Value_Output  * m_NumberOfCalls;
+
+};
+
+};
+
+#endif
