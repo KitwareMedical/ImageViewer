@@ -32,6 +32,10 @@
 #include "itkNumericTraits.h"
 
 
+#include "itkFEM2DDeformationNode.h"
+#include "itkFEMLineCell.h"
+
+
 
 FEMMeshApplicationBase
 ::FEMMeshApplicationBase()
@@ -183,19 +187,6 @@ FEMMeshApplicationBase
 ::DisplayFEMMesh(void)
 {
  
-  typedef vtkItkCellMultiVisitor< 
-                                  FEMMeshType::CellTraits 
-                                                            > VisitorType;
-
-  typedef itk::fem::VertexCell< NodeType::CellTraits > VertexCellType;
-
-
-  // Define the Cell Visitor Types
-  typedef itk::fem::CellInterfaceVisitorImplementation<
-                                  FEMMeshType::CellTraits,
-                                  VertexCellType,
-                                  VisitorType  > VertexVisitorType;
-
 
   // Get the number of points in the mesh
   const unsigned int numPoints = m_FEMMesh->GetNumberOfPoints();
@@ -211,59 +202,8 @@ FEMMeshApplicationBase
   vtkPoints * vpoints = vtkPoints::New();
   vpoints->SetNumberOfPoints(numPoints);
 
-  // iterate over all the points in the itk mesh filling in
-  // the vtkPoints object as we go
-  FEMMeshType::PointsContainer::Pointer points = m_FEMMesh->GetPoints();
-
-  for(FEMMeshType::PointsContainer::Iterator i = points->Begin();
-      i != points->End(); ++i)
-    {
-    // Get the point index from the point container iterator
-    int idx = i->Index();
-    // Set the vtk point at the index with the the coord array from itk
-    // itk returns a const pointer, but vtk is not const correct, so
-    // we have to use a const cast to get rid of the const
-    vpoints->SetPoint(idx, const_cast<float*>(i->Value().GetDataPointer()));
-    }
-  // Set the points on the vtk grid
-  vgrid->SetPoints(vpoints);
   
-  // Now create the cells using the MulitVisitor
-  // 1. Create a MultiVisitor
-  CellMultiVisitorType::Pointer multiVisitor = CellMultiVisitorType::New();
-
-  // 2. Create a VertexCell visitor
-  VertexVisitorType::Pointer vertexVisitor = VertexVisitorType::New();
-
-  // 3. Set up the visitors
-  int vtkCellCount = 0; // running counter for current cell being inserted into vtk
-  int numCells = m_FEMMesh->GetNumberOfCells();
-
-  int *types = new int[numCells]; // type array for vtk 
-
-  // create vtk cells and estimate the size
-  vtkCellArray* cells = vtkCellArray::New();
-  cells->EstimateSize(numCells, 4);
-
-  // Set the TypeArray CellCount and CellArray for both visitors
-  vertexVisitor->SetTypeArray( types );
-  vertexVisitor->SetCellCounter( &vtkCellCount );
-  vertexVisitor->SetCellArray( cells );
-
-  // add the visitors to the multivisitor
-  multiVisitor->AddVisitor( vertexVisitor );
-
-  // Now ask the mesh to accept the multivisitor which
-  // will Call Visit for each cell in the mesh that matches the
-  // cell types of the visitors added to the MultiVisitor
-  m_FEMMesh->Accept( multiVisitor );
-  
-  // Now set the cells on the vtk grid with the type array and cell array
-  vgrid->SetCells( types, cells );
-  
-  // Clean up vtk objects (no vtkSmartPointer ... )
-  cells->Delete();
-  vpoints->Delete();
+  // HERE CONVERT THE MESH to a VTK Mesh
 
 
   // connect the vtkUnstructuredGrid to a visualization Pipeline
@@ -301,102 +241,31 @@ FEMMeshApplicationBase
   // and the Physical representation of the problem 
   m_FEMMesh = FEMMeshType::New();
 
+  PointType * point1 = new PointType;
+  (*point1)[0] = 10;
+  (*point1)[1] = 15;
+  (*point1)[2] = 13;
+  m_FEMMesh->AddPoint( point1 );
 
 
-  // In this section we create Points and the Nodes associated with them
+  typedef itk::fem::FEM2DDeformationNode   NodeType;
 
-  // Start numbering points
-  PointIdentifierType pointId = 
-              ::itk::NumericTraits<PointIdentifierType>::Zero;
-
-  // Start numbering Nodes (Note that Nodes are Zero Dimensional Cells !)
-   CellIdentifierType cellId = 
-              ::itk::NumericTraits<CellIdentifierType>::Zero;
-
-   
-  PointType           point;
-  NodeType::Pointer   node;
+  NodeType  * node1  = new NodeType;
+  m_FEMMesh->AddNode( node1 );
 
 
-  // BTW we are making just a pyramid here
+  typedef itk::fem::FEMLineCell<PointsDimension>   LineCellType;
 
-  const float baseLength  = 10.0f;
-  const float a           = baseLength / 2.0f;
-
-  // First point of the base
-  point[0] = -a; 
-  point[1] = -a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  node = NodeType::New();
-  node->SetPointId( pointId );
-  m_FEMMesh->SetCell( cellId, node.GetPointer() );
-
-  pointId++;
-  cellId++;
-
-  // Second point of the base
-  point[0] =  a; 
-  point[1] = -a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  node = NodeType::New();
-  node->SetPointId( pointId );
-  m_FEMMesh->SetCell( cellId, node.GetPointer() );
-
-  pointId++;
-  cellId++;
-
-  // Third point of the base
-  point[0] =  a; 
-  point[1] =  a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  node = NodeType::New();
-  node->SetPointId( pointId );
-  m_FEMMesh->SetCell( cellId, node.GetPointer() );
-
-  pointId++;
-  cellId++;
-
-  // Fourth point of the base
-  point[0] = -a; 
-  point[1] =  a; 
-  point[2] = 0.0; 
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  node = NodeType::New();
-  node->SetPointId( pointId );
-  m_FEMMesh->SetCell( cellId, node.GetPointer() );
-
-  pointId++;
-  cellId++;
+  LineCellType  * cell1 = new LineCellType;
+  cell1->SetPoint( 0, point1 );
+  m_FEMMesh->AddCell( cell1 );
 
 
-  // point at the top of the pyramid 
-  point[0] = 0.0;
-  point[1] = 0.0; 
-  point[2] = 10;
-
-  m_FEMMesh->SetPoint( pointId, point );
-
-  node = NodeType::New();
-  node->SetPointId( pointId );
-  m_FEMMesh->SetCell( cellId, node.GetPointer() );
-
-  pointId++;
-  cellId++;
-
-
-  std::cout << "Number of points = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
-  std::cout << "Number of cells  = " << m_FEMMesh->GetNumberOfCells() << std::endl;
+  
+  std::cout << "Number of points    = " << m_FEMMesh->GetNumberOfPoints() << std::endl;
+  std::cout << "Number of cells     = " << m_FEMMesh->GetNumberOfCells() << std::endl;
+  std::cout << "Number of nodes     = " << m_FEMMesh->GetNumberOfNodes() << std::endl;
+  std::cout << "Number of elements  = " << m_FEMMesh->GetNumberOfElements() << std::endl;
 
   this->DisplayFEMMesh();
 

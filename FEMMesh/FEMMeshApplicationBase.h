@@ -23,7 +23,6 @@
 
 #include "vtkRenderWindow.h"
 #include "itkFEMMesh.h"
-#include "itkDefaultDynamicMeshTraits.h"
 
 // This is the base classe for the Application
 
@@ -33,49 +32,29 @@ class FEMMeshApplicationBase
 public:
 
   enum { PointsDimension              = 3 };
-  enum { MaximumTopologicalDimension  = 3 };
 
-  typedef float     CoordinateRepresentationType;
-
-  typedef double    InterpolationWeightsType;
-
-  // These two types are provided here but 
-  // not used because the additional data is
-  // added through derivation of the itk::CellInterface
-  // class and polymorphism.
-  typedef char      PointDataType;
-  typedef char      CellDataType;
+  // Type for the FEM Mesh containing both the geometrical
+  // and physical aspects of the problem.
+  typedef itk::fem::FEMMesh< PointsDimension > FEMMeshType;
 
 
-  // Traits for all the elements of the Mesh
-  typedef itk::fem::DefaultDynamicMeshTraits<
-                                PointDataType,
-                                PointsDimension,
-                                MaximumTopologicalDimension,
-                                CoordinateRepresentationType,
-                                InterpolationWeightsType,
-                                CellDataType
-                                                  >  MeshTraits;
-
-
-  // Type for the Geometrical level
-  typedef itk::fem::Mesh< MeshTraits >        MeshType;
-
-  // Type for the Physical level
-  typedef itk::fem::FEMMesh< MeshType >       FEMMeshType;
-
-  // Node type. It is derived from a Zero dimension Cell
-  typedef  FEMMeshType::NodeType              NodeType;
-  typedef  NodeType::Pointer                  NodePointer;
-  typedef  FEMMeshType::CellIdentifier        CellIdentifierType;
-
-
-  // Types related with Points
+  // Types related with Geometry. The points represent space
+  // positions and the cells define the topology of the mesh.
+  // Cells are also responsible for providing methods for 
+  // mapping from geometrical space to parametric coordinates.
   typedef  FEMMeshType::PointType             PointType;
-  typedef  FEMMeshType::PointIdentifier       PointIdentifierType;
+  typedef  FEMMeshType::CellType              CellType;
 
-  // Type for the Multivisitor that will iterate over the Cells
-  typedef  FEMMeshType::CellMultiVisitorType  CellMultiVisitorType;
+
+  // Node type containing the Degrees of Freedom 
+  // of the physical problem. 
+  // Note that Nodes are not necessarily associated with 
+  // points because the geometry can be represented by 
+  // interpolating with a certain order while the physical
+  // layer can use a different order.
+  typedef  FEMMeshType::NodeType              NodeType;
+  typedef  FEMMeshType::ElementType           ElementType;
+
 
 public:
 
