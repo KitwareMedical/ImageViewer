@@ -8,7 +8,7 @@
 #include "itkCurvatureFlowImageFilter.h"
 #include "itkImportImageFilter.h"
 #include "itkCastImageFilter.h"
-
+#include "itkImageRegionConstIterator.h"
 
 
 extern "C" {  
@@ -121,49 +121,24 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
   ig->AddObserver(vtkCommand::ProgressEvent,cc);
   cc->Delete();
   
-  // setup the input
-  vtkImageImport *ii = vtkImageImport::New();
-  ii->SetDataExtent(0, dim[0] - 1, 0, dim[1] - 1, 0, dim[2] - 1);
-  ii->SetWholeExtent(0, dim[0] - 1, 0, dim[1] - 1, 0, dim[2] - 1);
-  ii->SetDataScalarType(info->InputVolumeScalarType);
-  ii->SetNumberOfScalarComponents(
-    info->InputVolumeNumberOfComponents);
-  ii->SetDataOrigin(info->InputVolumeOrigin);
-  ii->SetDataSpacing(info->InputVolumeSpacing);
-  ii->SetImportVoidPointer(pds->inData);
-  ig->SetInput(ii->GetOutput());
-  
-  // get the output, would be nice to have VTK write directly 
-  // into the output buffer but... VTK is often broken in that regard
-  // so we will try, but check afterwards to see if it worked
-  vtkImageData *od = ig->GetOutput();
-  od->UpdateInformation();
-  od->SetExtent(0,0,0,0,0,0);
-  od->AllocateScalars();
-  int size = dim[0] * dim[1] * pds->NumberOfSlicesToProcess * 
-    info->InputVolumeNumberOfComponents;
-  od->SetExtent(0, dim[0] - 1, 0, dim[1] - 1,
-                pds->StartSlice, 
-                pds->StartSlice + pds->NumberOfSlicesToProcess - 1);
-  od->GetPointData()->GetScalars()->SetVoidArray(pds->outData,size,1);
-
-  // run the filter
-  od->SetUpdateExtent(od->GetExtent());
-  od->Update();
-
-  // did VTK not use our memory?
-  if (od->GetScalarPointer() != pds->outData)
-    {
-    memcpy(pds->outData, od->GetScalarPointer(), 
-           (od->GetPointData()->GetScalars()->GetMaxId() + 1)*
-           od->GetPointData()->GetScalars()->GetDataTypeSize());
-    }
-  
-  // clean up
-  ii->Delete();
-  ig->Delete();
-
 */
+
+  InternalImageType::ConstPointer outputImage = curvaturFlowFilter->GetOutput();
+
+  typedef itk::ImageRegionConstIterator< InternalImageType >  OutputIteratorType;
+
+  OutputIteratorType ot( outputImage, outputImage->GetBufferedRegion() );
+
+  InputPixelType * outData = (InputPixelType *)(pds->outData);
+
+  ot.GoToBegin(); 
+  while( !ot.IsAtEnd() )
+    {
+    *outData = static_cast< InputPixelType >( ot.Get() );
+    ++ot;
+    ++outData;
+    }
+
   return 0;
 }
 
