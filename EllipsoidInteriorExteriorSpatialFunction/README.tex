@@ -1,0 +1,138 @@
+%
+% Complete documentation on the extended LaTeX markup used for Insight
+% documentation is available in ``Documenting Insight'', which is part
+% of the standard documentation for Insight.  It may be found online
+% at:
+%
+%     http://www.itk.org/
+
+\documentclass{InsightHowto}
+\usepackage[dvips]{graphicx}
+\usepackage{amsmath}
+
+\title{How-To Create an Ellipsoid Image Using itkEllipsoidInteriorExteriorSpatialFunction}
+
+\release{0.01}
+
+% At minimum, give your name and an email address.  You can include a
+% snail-mail address if you like.
+\author{Robert J. Tamburo}
+
+\authoraddress{
+University of Pittsburgh\\
+749 Benedum Hall\\
+Pittsburgh, PA 15261\\
+rjtst21@pitt.edu}
+
+\begin{document}
+
+\maketitle
+
+% This makes the Abstract go on a separate page in the HTML version;
+% if a copyright notice is used, it should go immediately after this.
+%
+\input{Copyright.tex}
+
+\ifhtml
+\chapter*{Front Matter\label{front}}
+\fi
+
+% The abstract should be a paragraph or two long, and describe the
+% scope of the document.
+\begin{abstract}
+\noindent This example demonstrates how to create a geometrical shape within an itkImage
+using Spatial Functions. Specifically, this example will create an itkImage consisting of an
+ellipsoid using the itkEllipsoidInteriorExteriorSpatialFunction found in the Insight
+\module{functions} module.
+\end{abstract}
+
+\tableofcontents
+
+\section{Example Description}
+
+First, an \emph{itkImage} $\big($dimension of $3$, size of $50x50x50$, spacing of $(1,1,1)$,
+and origin $(0,0,0)$ $\big)$ is created and completely filled with pixels of intensity value
+$128$. Then, \emph{itkFloodFilledSpatialFunctionConditionalIterator} is used to iterate
+through the image and set pixels to 256 if
+\emph{itkEllipsoidInteriorExteriorSpatialFunction} returns 1, meaning that it is within the
+interior of the ellipsoid. The ellipsoid is defined by its axes lengths (from edge-to-edge
+of the ellipsoid) as well as the orientations of these axes. This example is restricted to
+3D to allow for the visualization of the resulting image, which is done via a \emph{VTK}
+image. The volume of the ellipsoid is measured by counting the number of interior pixels of
+the ellipsoid. This measure can be used to verify the resulting ellipsoid by comparing it
+against the calculated volume (percent difference) of the ellipsoid given by:
+\begin{equation}\label{1}
+  V=\frac{4}{3} \pi \Big(\frac{a}{2}\Big) \Big(\frac{b}{2}\Big) \Big(\frac{c}{2}\Big),
+\end{equation}
+where a, b, and c are the lengths of the ellipsoid axes.
+
+The ellipsoid is also validated by checking that the center of the ellipsoid has been
+labeled as an interior pixel (a function value of 1) by evaluating the spatial function at
+the origin of the ellipsoid.
+
+NOTE: Orientation vectors must be orthogonal to each other!
+
+\section{What is Needed to Run This Example?}
+
+Build and run itkEllipsoidInteriorExteriorSpatialFunctionExample.cxx from the workspace
+generated from CMake. The resulting VTK image file is stored as:
+
+\begin{center}
+"Insight/Examples/EllipsoidInteriorExteriorSpatialFunction/ellipsoid.vtk"
+\end{center}
+
+Default settings should result in an image of an ellipsoid with its axis of length 40
+oriented along the (0,1,0) direction, axis of length 30 oriented along the (1,0,0)
+direction, and axis of length 20 oriented along the (0,0,1) direction. The origin of the
+ellipsoid is sampled and evaluated by the spatial function and returns \emph{function
+value}, which is $1$ since the origin of the ellipsoid is within the ellipsoid.
+
+   \begin{center}
+   Results of the example (with defaults):\\
+   \begin{tabular}{|c|c|}  % start the table
+                     % two columns "c" centered
+   \hline            % top line of the table
+   calculated ellipsoid volume & 12566.4 pixels \\
+   \hline
+   measured ellipsoid volume & 12428 pixels \\
+   \hline
+   volume error & 1.10907 \% \\
+   \hline
+   function value  &  1 \\
+   \hline
+   \end{tabular}
+   \end{center}
+
+\begin{figure}[!hbp]
+       \centering
+       \includegraphics[width=.5\textwidth]{ellipsoid.eps}
+       \caption{Resulting Image Containing an Ellipsoid From This Example* \label{Fig. 1.} }
+\end{figure}
+
+*See "Insight/Examples/EllipsoidInteriorExteriorSpatialFunction/ellipsoid.jpg" for snapshot
+of resulting image.
+
+\section{Insight Classes Used}
+
+These are the Insight classes used for this example with a brief description. They appear in
+order of first use:
+
+\begin{itemize}
+\item itkImage.h: generates a physical image.
+\item itkImageRegionIterator.h: iterates through the pixels in the physical image and sets
+them to $128$.
+\item itkEllipsoidInteriorExteriorSpatialFunction.h: evaluates pixels in the image and determines whether they are within the ellipsoid or
+not.
+\item itkFloodFilledSpatialFunctionConditionalIterator.h: iterates the image and sets them to $256$ if they are within the
+ellipsoid.
+\end{itemize}
+
+\section{Possible Uses Of Ellipsoids}
+The ellipsoid images created by EllipsoidInteriorExteriorSpatialFunction are useful for
+testing imaging algorithms, pixel sampling routines, establishing geometric domains of
+influence, etc.
+
+\section{Non-ITK Requirements}
+A VTK image viewer is needed to visualize the output file ellipsoid.vtk.
+
+\end{document}
