@@ -3,6 +3,7 @@ SUBDIRS(IView)
 LINK_LIBRARIES(
 MetaImageIO
 ITKCommon
+ITKIO
 ITKBasicFilters
 VXLNumerics
 )
@@ -22,7 +23,9 @@ itkFileIOMetaImage
 )
 
 INCLUDE_DIRECTORIES(
+${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
+${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 )
 
