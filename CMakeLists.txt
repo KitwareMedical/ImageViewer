@@ -27,6 +27,9 @@ SUBDIRS(WatershedSegmentation)
 # Build the SimpleLevelSetsExample
 SUBDIRS(SimpleLevelSetsExample)
 
+# Build the FloodFilledSpatialFunctionExample
+SUBDIRS(FloodFilledSpatialFunction)
+
 # Test the condition to build or not build the Image Registration example
 IF(HAS_METAIMAGE)
  IF(HAS_FLTKIMAGEVIEWER)
