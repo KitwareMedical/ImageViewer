@@ -90,6 +90,22 @@ ImageToVTKImageFilter<TInputImage>
 }
 
 
+
+
+/**
+ * Get the importer filter
+ */
+template <class TInputImage>
+vtkImageImport *
+ImageToVTKImageFilter<TInputImage>
+::GetImporter() const
+{
+  return m_Importer;
+}
+
+
+
+
 } // end namespace itk
 
 #endif
