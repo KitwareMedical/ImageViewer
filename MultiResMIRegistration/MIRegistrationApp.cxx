@@ -22,6 +22,8 @@
 #include "itkRawImageWriter.h"
 //#include "itkImageFileWriter.h"
 #include "itkExceptionObject.h"
+#include "itkResampleImageFilter.h"
+#include "itkLinearInterpolateImageFunction.h"
 
 #include "vnl/vnl_math.h"
 #include "vnl/vnl_quaternion.h"
@@ -390,60 +392,31 @@ MIRegistrationApp
 ::TransformReference()
 {
 
-  //*****
-  //FIXME - use itkResampleImageFilter instead once its stable
-  //*****
-  // set up the mapper
-  typedef InternalRegistratorType::TransformationType   TransformationType;
-  typedef itk::ImageMapper<InputImageType,TransformationType> MapperType;
-  typedef MapperType::Pointer                   MapperPointer;
-  MapperPointer mapper = MapperType::New();
+  // set up the resampler
+  typedef InternalRegistratorType::TransformationType TransformationType;
+  typedef itk::LinearInterpolateImageFunction<InputImageType> InterpolatorType;
+  typedef itk::ResampleImageFilter<InputImageType,InputImageType,
+    TransformationType,InterpolatorType> ResamplerType;
 
-  mapper->GetTransform()->SetParameters( m_Parameters );
-  mapper->SetDomain( m_Reference );
+  TransformationType::Pointer transform = TransformationType::New();
+  transform->SetParameters( m_Parameters );
 
-  // allocate memory in the output image]
-  m_RegisteredImage = InputImageType::New();
+  InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
-  m_RegisteredImage->SetLargestPossibleRegion( 
-    m_Target->GetLargestPossibleRegion() );
-  m_RegisteredImage->SetBufferedRegion(
-    m_Target->GetBufferedRegion() );
-  m_RegisteredImage->Allocate();
+  ResamplerType::Pointer resampler = ResamplerType::New();
+  resampler->SetInput( m_Reference );
+  resampler->SetTransform( transform );
+  resampler->SetInterpolator( interpolator );
+  resampler->SetSize( m_Target->GetLargestPossibleRegion().GetSize() );
+  resampler->SetOutputOrigin( m_Target->GetOrigin() );
+  resampler->SetOutputSpacing( m_Target->GetSpacing() );
+  resampler->SetDefaultPixelValue( 0 );
 
-  const double * spacing = m_Target->GetSpacing();
-  const double * origin = m_Target->GetOrigin();
-  m_RegisteredImage->SetSpacing( spacing );
-  m_RegisteredImage->SetOrigin( origin );
+  // resample the reference image
+  resampler->Update();
 
-  // set up the iterators
-  typedef itk::ImageRegionIterator<InputImageType> Iterator;
-  Iterator inIter( m_RegisteredImage, 
-    m_RegisteredImage->GetBufferedRegion() );
-  
-  while( !inIter.IsAtEnd() )
-    {
-    typedef InputImageType::IndexType IndexType;
-    typedef MapperType::InputPointType PointType;
+  m_RegisteredImage = resampler->GetOutput();
 
-    IndexType index = inIter.GetIndex();
-    PointType point;
-
-    for( int j = 0; j < ImageDimension; j++ )
-      {
-      point[j] = double(index[j]) * spacing[j] + origin[j];
-      }
-    if( mapper->IsInside( point ) )
-      {
-      inIter.Set( mapper->Evaluate() );
-      }
-    else
-      {
-      inIter.Set( 0 );
-      }
-    
-    ++inIter;
-    }
  
 }
 
