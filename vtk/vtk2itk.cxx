@@ -309,7 +309,9 @@ int main(int ac, char** av)
   writer->SetInput(grid);
   writer->SetFileName("./itkblow.vtk");
   writer->Update();
+#ifdef VTK_USE_ANSI_STDLIB  
   grid->Print(std::cout);
+#endif
   reader->Delete();
   grid->Delete();
   return 0;
