@@ -23,7 +23,7 @@ will cause this application to build:
 2. To run this application:
 
  cd INSIGHT_SOURCE/Examples/SegmentationEditor/Scripts
- INSIGHT_BUILD/Examples/SegmentationEditor/Wrapping/Tcl/WSTITK Main.tcl
+ INSIGHT_BUILD/bin/WSTITK Main.tcl
 
  where "INSIGHT_SOURCE" is the path to your Insight source tree and
  "INSIGHT_BUILD" is the path to your Insight build.
