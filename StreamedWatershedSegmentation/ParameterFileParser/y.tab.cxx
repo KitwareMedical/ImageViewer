@@ -419,8 +419,8 @@ __yy_memcpy (char *to, char *from, unsigned int count)
 
 #endif
 #endif
-
-#line 217 "/usr/lib/bison.simple"
+
+/*#line 217 "/usr/lib/bison.simple"*/
 
 /* The user can define YYPARSE_PARAM as the name of an argument to be passed
    into yyparse.  The argument should have type void *.
@@ -843,8 +843,8 @@ case 13:
     break;}
 }
    /* the action file gets copied in in place of this dollarsign */
-#line 543 "/usr/lib/bison.simple"
-
+  /*#line 543 "/usr/lib/bison.simple"*/
+
   yyvsp -= yylen;
   yyssp -= yylen;
 #ifdef YYLSP_NEEDED
