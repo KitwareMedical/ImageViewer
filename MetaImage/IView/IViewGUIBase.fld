@@ -29,7 +29,7 @@ saveCB = NULL;} {}
     Fl_Window iviewWindow {
       label IView open
       xywh {1236 66 315 430} labelsize 10 resizable
-      code0 {\#include<itkImageRegionIterator.h>} visible
+      code0 {\#include<itkImageRegionIteratorWithIndex.h>} visible
     } {
       Fl_Box sliceView {
         label {3D Win}
@@ -337,18 +337,27 @@ Function {imageMinandMax(Image<float,3>::Pointer img, float &min, float &max)} {
 } {
   code {float v;
 Image<float,3>::RegionType img_region = img->GetLargestPossibleRegion();
-  ImageRegionIterator<float,3> it(img,img_region);
+  ImageRegionIteratorWithIndex< Image<float,3> > it(img,img_region);
 
   if(!it.IsAtEnd())
-    min = max = *it;
+    {
+    min = max = it.Get();
+    }
 
   while(!it.IsAtEnd())
-  {
-    v = *it;
+    {
+    v = it.Get();
     if(v < min)
+      {
       min = v;
-    else if(v > max)
-      max = v;
+      }
+    else 
+      {
+      if(v > max)
+        {
+        max = v;
+        }
+      }
     ++it;
   }} {}
 } 
