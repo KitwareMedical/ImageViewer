@@ -5,21 +5,27 @@ namespace itk
 
 FileIOMetaImageFactory::FileIOMetaImageFactory()
 {
-	myProductType::Pointer m_MyProduct = FileIOMetaImage::New();
+  myProductType::Pointer m_MyProduct = FileIOMetaImage::New();
+  FileIOMetaImage::FileExtensionsListType& extensionsList =
+    m_MyProduct->GetSupportedFileExtensions();
+  int i;
 
-  RegisterOverride(m_MyProduct->GetSupportedFileExtensions().c_str(),
-                   "FileIOMetaImage", "Create FileIOMetaImage", true,
-                   CreateObjectFunction<FileIOMetaImage>::New());
+  for (i = 0; i < extensionsList.size(); i++)
+  {
+    RegisterOverride(m_MyProduct->GetSupportedFileExtensions()[i].c_str(),
+                     "FileIOMetaImage", "Create FileIOMetaImage", true,
+                     CreateObjectFunction<FileIOMetaImage>::New());
+  }
 }
 
 const char* FileIOMetaImageFactory::GetITKSourceVersion()
 {
-	return ITK_SOURCE_VERSION;
+  return ITK_SOURCE_VERSION;
 }
 
 const char* FileIOMetaImageFactory::GetDescription()
 {
-	return "FileIOMetaImageFactory - TObject factory with registry";
+  return "FileIOMetaImageFactory - TObject factory with registry";
 }
 
 const char META_EXT1[] = "mha";
@@ -229,10 +235,20 @@ void FileIOMetaImage::ReadHeader(const std::string fileName)
   m_MetaImage = NULL;
 }
 
-std::string FileIOMetaImage::GetSupportedFileExtensions() const
+FileIOMetaImage::FileExtensionsListType 
+FileIOMetaImage::GetSupportedFileExtensions() const
 {
-//  return "mhd";
-  return "mha";
+  static FileExtensionsListType fileExtensionsList;
+
+  // This means this is the first call to us
+  if (fileExtensionsList.size() == 0)
+  {
+    fileExtensionsList.push_back(META_EXT1);
+    fileExtensionsList.push_back(META_EXT2);
+    fileExtensionsList.push_back(META_EXT3);
+  }
+
+  return fileExtensionsList;
 }
 
 void FileIOMetaImage::Print(std::ostream& os)
