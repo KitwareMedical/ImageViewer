@@ -1,24 +1,21 @@
-
 # This directory only builds if FLTK and VTK can be found
+INCLUDE_DIRECTORIES(
+  ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
+  ${FLTK_INCLUDE_PATH}
+  ${VTK_INCLUDE_PATH}
+)
 
-SET(vtkFltk_SRCS
+ADD_LIBRARY(vtkFltk
   vtkFlRenderWindowInteractor.cxx
   fltkVTKImageViewerBase.cxx
-  )
-
-INCLUDE_DIRECTORIES(
-   ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
-   ${FLTK_INCLUDE_PATH}
-   ${VTK_INCLUDE_PATH}
-   )
-
-SET(fltkVTKImageViewer_GUI_SRCS
-  fltkVTKImageViewerGUI.fl
 )
- 
 
-FLTK_WRAP_UI(vtkFltk ${fltkVTKImageViewer_GUI_SRCS} )
+FLTK_WRAP_UI(vtkFltk fltkVTKImageViewerGUI.fl)
 
-ADD_LIBRARY( vtkFltk ${vtkFltk_SRCS} )
+TARGET_LINK_LIBRARIES(vtkFltk ${FLTK_LIBRARIES} ${GLU_LIBRARY})
 
+INSTALL_TARGETS(/lib/InsightToolkit vtkFltk)
 
+INSTALL_FILES(/include/InsightToolkit/Auxiliary/FltkImageViewer ".h"
+  fltkVTKImageViewerGUI
+  )
