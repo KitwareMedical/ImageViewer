@@ -46,15 +46,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mydefs.h"
 #include "imageutils.h"
 #include "OptionList.h"
-#include "EnergyFunction.h"
-#include "BiasField.h"
-#include "itkFastRandomUnitNormalVariateGenerator.h"
+#include "itkMRIBiasFieldCorrectionFilter.h"
 
-#include <itkOnePlusOneEvolutionaryOptimizer.h>
-
-typedef EnergyFunction<ImageType, MaskType> MyEnergy ;
-typedef itk::OnePlusOneEvolutionaryOptimizer<MyEnergy, 
-  itk::FastRandomUnitNormalVariateGenerator> MyOptimizer ;
+typedef itk::MRIBiasFieldCorrectionFilter<ImageType, ImageType> Corrector ;
 
 void print_usage()
 {
@@ -91,7 +85,7 @@ void print_usage()
   print_line("         and init-step-size)" );
   print_line("--grow double") ;
   print_line("        stepsize growth factor. must be greater than 1.0") ;
-  print_line("        [default 2.0]" ) ;
+  print_line("        [default 1.05]" ) ;
   print_line("--shrink double") ;
   print_line("        stepsize shrink factor ") ;
   print_line("        [default grow^(-0.25)]" ) ; 
@@ -99,7 +93,7 @@ void print_usage()
   print_line("        maximal number of iterations") ;
   print_line("        [default 20]" ) ;
   print_line("--init-step-size double") ;
-  print_line("        inital step size [default 2.0]" );
+  print_line("        inital step size [default 1.02]" );
   print_line("--coefficients c(0),..,c(n)") ;
   print_line("        coefficients of the polynomial") ;
   print_line("        (used for generating bias field)") ;
@@ -111,12 +105,12 @@ void print_usage()
   print_line("         --class-sigma 100 70 --use-log yes");
   print_line("         --input-mask sample.mask.mhd ") ;
   print_line("         --degree 3 --grow 1.05 --shrink 0.9");
-  print_line("         --max-iteration 2000 --init-step-size 1.1") ;
+  print_line("         --max-iteration 2000 --init-step-size 1.02") ;
   print_line("         --coefficients 0.056789 -1.00004 0.78945 ... -0.02345");
 }
 
 
-void printResult(BiasField& biasField, MyOptimizer::Pointer optimizer, OptionList& options)
+void printResult(Corrector::Pointer filter, OptionList& options)
 {
 
   options.DumpOption("input") ;
@@ -125,29 +119,33 @@ void printResult(BiasField& biasField, MyOptimizer::Pointer optimizer, OptionLis
   options.DumpOption("class-sigma") ;
   options.DumpOption("use-log") ;
 
-  std::cout << " --degree " << biasField.GetDegree() ;
+  std::cout << " --degree " << filter->GetBiasFieldDegree() ;
 
-  itk::Size<3> sizes = biasField.GetSize() ;
+  Corrector::BiasField::DomainSizeType sizes = 
+    filter->GetBiasFieldDomainSize() ;
   std::cout << " --size " ;
-  for (int i = 0 ; i < 3 ; i++)
+  for (int i = 0 ; i < sizes.size() ; i++)
     std::cout << sizes[i] << " " ;
   
-  std::cout << "--grow " << optimizer->GetGrowFactor() ;
-  std::cout << " --shrink " << optimizer->GetShrinkFactor() ;
-  std::cout << " --max-iteration " << optimizer->GetMaximumIteration();
+  std::cout << "--grow " << filter->GetOptimizerGrowFactor() ;
+  std::cout << " --shrink " << filter->GetOptimizerShrinkFactor() ;
+  std::cout << " --max-iteration " << filter->GetOptimizerMaximumIteration();
   
-  if (biasField.IsMultiplicative())
-    std::cout << " --init-step-size " << exp(optimizer->GetInitialRadius()) ;
+  if (filter->IsBiasFieldMultiplicative())
+    std::cout << " --init-step-size " 
+              << exp(filter->GetOptimizerInitialRadius()) ;
   else
-    std::cout << " --init-step-size " << optimizer->GetInitialRadius() ;
+    std::cout << " --init-step-size " << filter->GetOptimizerInitialRadius() ;
 
 
-  std::cout << " --dimension " << biasField.GetDimension() 
-            << " --coefficient-length " << biasField.GetNoOfCoefficients()
+  std::cout << " --dimension " << filter->GetBiasFieldDimension() 
+            << " --coefficient-length " << filter->GetNoOfBiasFieldCoefficients()
             << " --coefficients " ;
 
-  BiasField::CoefficientVector coefficients = biasField.GetCoefficients() ;
-  BiasField::CoefficientVector::iterator iter = coefficients.begin() ;
+  Corrector::BiasField::CoefficientVector coefficients = 
+    filter->GetEstimatedBiasFieldCoefficients() ;
+  Corrector::BiasField::CoefficientVector::iterator iter =
+    coefficients.begin() ;
 
   while (iter != coefficients.end()) 
     {
@@ -169,6 +167,8 @@ int main(int argc, char* argv[])
     }
 
   OptionList options(argc, argv) ;
+
+  Corrector::Pointer filter = Corrector::New() ;
 
   std::string inputFileName ;
   std::string inputMaskFileName = "" ;
@@ -192,8 +192,8 @@ int main(int argc, char* argv[])
       options.GetStringOption("input-mask", &inputMaskFileName, false) ;
       
       // get bias field options
-      useLog = options.GetBooleanOption("use-log", true) ;
-      degree = options.GetIntOption("degree", false) ;
+      useLog = options.GetBooleanOption("use-log", true, true) ;
+      degree = options.GetIntOption("degree", 3, false) ;
       
       std::vector<double> coefficients ;
       options.GetMultiDoubleOption("coefficients", &coefficients, false) ;
@@ -208,14 +208,11 @@ int main(int argc, char* argv[])
       options.GetMultiDoubleOption("class-sigma", &classSigmas, true) ;
 
       // get optimizer options
-      maximumIteration = options.GetIntOption("max-iteration", false) ;
-      initialRadius = options.GetDoubleOption("init-step-size", false) ;
-      grow = options.GetDoubleOption("grow", false) ;
-      shrink = options.GetDoubleOption("shrink", false) ;
-
-      if (initialRadius <= 0)
-        initialRadius = 2.0 ;
-  
+      maximumIteration = options.GetIntOption("max-iteration", 20, false) ;
+      grow = options.GetDoubleOption("grow", 1.05, false) ;
+      shrink = pow(grow, -0.25) ;
+      shrink = options.GetDoubleOption("shrink", shrink, false) ;
+      initialRadius = options.GetDoubleOption("init-step-size", 1.02, false) ;
     }
   catch(OptionList::RequiredOptionMissing e)
     {
@@ -228,15 +225,18 @@ int main(int argc, char* argv[])
   // load images
   ImagePointer input = ImageType::New() ;
   MaskPointer inputMask = MaskType::New() ;
-  MaskPointer outputMask = MaskType::New() ;
   
   try
     {
       std::cout << "Loading images..." << std::endl ;
       readMetaImageHeader(inputFileName, inputDimension, inputSize) ;
       loadImage(inputFileName, input) ;
+      filter->SetInput(input) ;
       if (inputMaskFileName != "")
-        loadMask(inputMaskFileName, inputMask) ;
+        {
+          loadMask(inputMaskFileName, inputMask) ;
+          filter->SetInputMask(inputMask) ;
+        }
       std::cout << "Images loaded." << std::endl ;
     }
   catch (ImageIOError e)
@@ -246,71 +246,34 @@ int main(int argc, char* argv[])
       exit(0) ;
     }
 
+  filter->IsBiasFieldMultiplicative(useLog) ;
+  filter->SetInitialBiasFieldCoefficients(coefficientVector) ;
+  // sets tissue classes' statistics for creating the energy function
+  filter->SetTissueClassStatistics(classMeans, classSigmas) ;
+  // setting standard optimizer parameters 
+  filter->SetOptimizerGrowFactor(grow) ;
+  filter->SetOptimizerShrinkFactor(shrink) ;
+  filter->SetOptimizerMaximumIteration(maximumIteration) ;
+  filter->SetOptimizerInitialRadius(initialRadius) ;
+  // this member function call is not necessary since the filter's internal
+  // InterSliceIntensityCorrection() member sets the bias field degree to
+  // zero.
+  filter->SetBiasFieldDegree(degree) ;
+  // turn on inter-slice intensity correction 
+  filter->SetUsingInterSliceIntensityCorrection(false) ;
+  // disable slab identifcation
+  // the filter will think the largest possible region as the only one
+  // slab.
+  filter->SetUsingSlabIdentification(false) ;
+  // disable 3D bias correction
+  filter->SetUsingBiasFieldCorrection(true) ;
+  // disable output image generation
+  filter->SetGeneratingOutput(false) ;
 
-  if (useLog)
-    {
-      for (int i = 0 ; i < classMeans.size() ; i++) 
-        {
-          classSigmas[i] = log(1.0 + classSigmas[i] / (classMeans[i] + 1.0)) ;
-          classMeans[i] = log(classMeans[i] + 1.0) ;
-        }
-      
-      if (initialRadius > 0)
-        initialRadius = log(initialRadius) ;
-      
-      logImage(input, input) ;
-    }
-  
-  // create energy function
-  std::cout << "Initializing energy table..." << std::endl ;
-  MyEnergy energy(classMeans, classSigmas) ;
-  std::cout << "Energy table initialized." << std::endl ;
+  std::cout << "Estimating the bias field..." << std::endl ;
+  filter->Update() ;
 
-  energy.SetImage(input) ;
-  
-  energy.SetMask(inputMask) ;
-  
-  // initialize optimizer
-  MyOptimizer::Pointer optimizer = MyOptimizer::New() ;
-  optimizer->SetCostFunction(&energy) ;
-  
-  if (grow > 0)
-    {
-      if (shrink > 0)
-        optimizer->Initialize(initialRadius, grow, shrink) ;
-      else
-        optimizer->Initialize(initialRadius, grow) ;
-    }
-  else
-    {
-      if (shrink > 0)
-        optimizer->Initialize(initialRadius, shrink) ;
-      else
-        optimizer->Initialize(initialRadius) ;
-    }
-  
-  optimizer->SetMaximumIteration(maximumIteration) ;
+  printResult(filter, options) ;
 
-  BiasField biasField(3, degree, inputSize) ;
-  biasField.IsMultiplicative(useLog) ;
-
-  energy.SetBiasField(&biasField) ;
-
-  if (coefficientVector.size() != biasField.GetNoOfCoefficients())
-    optimizer->SetInitialPosition(biasField.GetCoefficients()) ;
-  else
-    optimizer->SetInitialPosition(coefficientVector) ;
-  
-  optimizer->SetSpaceDimension(biasField.GetNoOfCoefficients()) ;
-  optimizer->SetVerboseMode(true) ;
-  std::cout << "Optimizing..." << std::endl ;
-  optimizer->Run() ;
-  std::cout << "Optimization done." << std::endl ;
-  biasField.SetCoefficients(optimizer->GetCurrentPosition()) ;
-  //biasField.SetCoefficients(optimizer->GetCurrentPosition()) ;
-
-  printResult(biasField, optimizer, options) ;
-
- 
   return 0 ;
 }
