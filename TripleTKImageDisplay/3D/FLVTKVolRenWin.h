@@ -1,8 +1,9 @@
 #ifndef FLVTK_VOLUME_RENDER_WINDOW
 #define FLVTK_VOLUME_RENDER_WINDOW
 
-#include "vtkCommon.h"
-#include <vtkextractvoi.h>
+#include "itkImage.h"
+
+#include <vtkExtractVOI.h>
 #include <vtkPlaneSource.h>
 #include <vtkTexture.h>
 #include <vtkPolyDataMapper.h>
@@ -11,9 +12,6 @@
 #include <vtkOutlineFilter.h>
 
 #include "VTKVolRen.h"
-
-#include "itkImage.h"
-
 #include "FLVTKWin.h"
 
 
