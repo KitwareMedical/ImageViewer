@@ -1,0 +1,22 @@
+#!${TCL_TCLSH}
+
+load ${CABLE_TCL_LIBRARY}
+load ${ITK_BINARY_DIR}/Examples/TclWrappedImage/libImageTcl.so
+
+
+# Create an object of itk::Image<char,3> class.
+# the Tcl equivalent type is "itkImage"
+#
+set imagePointer [ itkImage New ]
+
+
+
+
+# Try the wrap::TypeOf command
+#
+puts "This is the type of an Image SmartPointer"
+puts [ wrap::TypeOf $imagePointer ]
+
+
+
+
