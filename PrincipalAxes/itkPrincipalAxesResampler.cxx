@@ -64,6 +64,7 @@ enum {NDimensions = 3};
 
 typedef unsigned short                      PixelType;
 typedef itk::Image<PixelType, NDimensions>  ImageType;
+typedef ImageType::IndexValueType           ImageIndexValueType;
 typedef ImageType::RegionType               ImageRegionType;
 typedef ImageType::SizeType                 ImageSizeType;
 typedef ImageType::AffineTransformType      AffineTransformType;
@@ -123,7 +124,7 @@ main(int argc, char *argv[])
     /* FIXME: Find or write Insightful tools for this */
     std::cout << "Reading image file." << std::endl;
     ImageIndexType index;        // Index to current pixel
-    unsigned long point[3];      // Location of current pixel
+    ImageIndexValueType point[3];      // Location of current pixel
     PixelType *buff = new PixelType[ImageWidth];  // Input/output buffer
     PixelType maxval = 0;        // Maximum pixel value in image
     size_t count;
