@@ -159,7 +159,13 @@ int main(int argc, char *argv[])
   diffusion->SetTimeStep(0.125f);
   diffusion->SetIterations(diffusion_iterations);
   diffusion->SetConductanceParameter(conductance_term);
-  diffusion->SetNumberOfThreads(2);
+
+  // Set the following line to the number of processors on your machine
+  // to multithread the diffusion.
+  //
+  //  diffusion->SetNumberOfThreads(2);
+  //
+  
   diffusion->SetInput(input_image);
   
   // Set up a gradient magnitude image filter.
