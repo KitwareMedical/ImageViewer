@@ -134,37 +134,43 @@ SetInputImage(ImageType * newImData)
 {
  
   if( cValidOverlayData )
-  {
-   RegionType region = 
+    {
+    RegionType region = 
                               newImData->GetLargestPossibleRegion();
 
-   SizeType   size   = region.GetSize();
+    SizeType   size   = region.GetSize();
 
-   unsigned long *newdimsize = new unsigned long[3] ; 
-   newdimsize[0]=size[0];
-   newdimsize[1]=size[1];
-   newdimsize[2]=size[2];
+    unsigned long *newdimsize = new unsigned long[3] ; 
+    newdimsize[0]=size[0];
+    newdimsize[1]=size[1];
+    newdimsize[2]=size[2];
 
-   RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
-   SizeType   overlay_size   = overlay_region.GetSize();
+    RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
+    SizeType   overlay_size   = overlay_region.GetSize();
 
-   unsigned long *overlaydimsize = new unsigned long [3] ; 
-   overlaydimsize[0]=overlay_size[0];
-   overlaydimsize[1]=overlay_size[1];
-   overlaydimsize[2]=overlay_size[2];
+    unsigned long *overlaydimsize = new unsigned long [3] ; 
+    overlaydimsize[0]=overlay_size[0];
+    overlaydimsize[1]=overlay_size[1];
+    overlaydimsize[2]=overlay_size[2];
 
     for( int i=0; i<3; i++ )
-    {
-      if( newdimsize[i] != overlaydimsize[i] )
       {
-        return;
+      if( newdimsize[i] != overlaydimsize[i] )
+        {
+      return;
+        }
       }
-    }
-  } 
+    } 
   cImData = newImData;
 
   //calculating cDataMax and cDataMin
   RegionType cImData_region = cImData->GetLargestPossibleRegion();
+
+  if( cImData_region.GetNumberOfPixels() == 0 ) 
+    {
+    return;
+    }
+
   SizeType   cImData_size   = cImData_region.GetSize();
 
    cDimSize = new unsigned long[3];
