@@ -23,7 +23,7 @@ const char* FileIOMetaImageFactory::GetITKSourceVersion()
   return ITK_SOURCE_VERSION;
 }
 
-const char* FileIOMetaImageFactory::GetDescription()
+const char* FileIOMetaImageFactory::GetDescription() const
 {
   return "FileIOMetaImageFactory - TObject factory with registry";
 }
@@ -276,6 +276,7 @@ void FileIOMetaImage::CopyAcquisitionParamsToMetaImage (MetaImage* toHere)
   toHere->Modality(GetModality());
   toHere->Orientation(GetOrientation());
   toHere->PatPosition(GetPatientPosition());
+  toHere->Position(GetImagePosition());
   toHere->SequenceID(GetSequenceID());
   toHere->ElemSize(GetElementSize());
   toHere->ElemSpacing(GetElementSpacing());

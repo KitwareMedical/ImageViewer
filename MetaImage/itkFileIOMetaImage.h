@@ -206,7 +206,7 @@ class ITK_EXPORT FileIOMetaImageFactory : public ObjectFactoryBase
 public:
   FileIOMetaImageFactory();
   const char* GetITKSourceVersion();
-  const char* GetDescription();
+  const char* GetDescription() const;
 
 
 protected:
