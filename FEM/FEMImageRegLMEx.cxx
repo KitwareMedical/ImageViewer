@@ -143,7 +143,7 @@ ImageRegLMEx<TReference,TTarget,TElement>::ImageRegLMEx( )
   
   
   // Register the correct element type and load implementation with the visitor dispatcher 
-  VisitorDispatcher<ElementType,Element::LoadType, ElementType::LoadImplementationFunctionPointer>
+  VisitorDispatcher<ElementType,typename Element::LoadType, typename ElementType::LoadImplementationFunctionPointer>
   ::RegisterVisitor((ImageMetricLoadType*)0, &ImageMetricLoadImplementation<ImageMetricLoadType>::ImplementImageMetricLoad);
 
 
@@ -183,7 +183,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::RunRegistration()
     m_Load->SetTargetImage(m_TarImg);
     m_Load->SetMetric(m_Metric);
     m_Load->InitializeMetric();
-    ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+    typename ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
     m_Load->SetMetricRadius(r);
     m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
     m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
@@ -216,7 +216,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::ReadImages()
  
   // Read a Raw File
   typedef  itk::ImageFileReader< ImageType >      FileSourceType;
-  typedef  itk::RawImageIO<ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
+  typedef  itk::RawImageIO<typename ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
 
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
@@ -488,8 +488,8 @@ void ImageRegLMEx<TReference,TTarget,TElement>::WarpImage()
     bool InImage=true;
     FieldIterator m_FieldIter( m_Field, m_FieldRegion );
     m_FieldIter.GoToBegin();
-    ImageType::IndexType rindex = m_FieldIter.GetIndex();
-    ImageType::IndexType tindex = m_FieldIter.GetIndex();
+    typename ImageType::IndexType rindex = m_FieldIter.GetIndex();
+    typename ImageType::IndexType tindex = m_FieldIter.GetIndex();
 
     m_FieldIter.GoToBegin();  
     for( ; !m_FieldIter.IsAtEnd(); ++m_FieldIter )
@@ -537,7 +537,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::WarpImage()
   warper->SetInterpolator( interpolator );
   warper->SetOutputSpacing( m_RefImg->GetSpacing() );
   warper->SetOutputOrigin( m_RefImg->GetOrigin() );
-  ImageType::PixelType padValue = 1;
+  typename ImageType::PixelType padValue = 1;
   warper->SetEdgePaddingValue( padValue );
   warper->Update();
 
@@ -692,7 +692,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::ApplyLoads(SolverType& mySolver,
   
   m_Load->SetMetric(m_Metric);
   m_Load->InitializeMetric();
-  ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+  typename ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
   m_Load->SetMetricRadius(r);
   m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
   m_Load->GN=mySolver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
@@ -781,7 +781,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::GetVectorField(SolverType& mySol
   vnl_vector_fixed<double,ImageDimension> Gpt(0.0);  // global position given by local point
   FieldIterator m_FieldIter( m_Field, m_FieldRegion );
   m_FieldIter.GoToBegin();
-  ImageType::IndexType rindex = m_FieldIter.GetIndex();
+  typename ImageType::IndexType rindex = m_FieldIter.GetIndex();
 
   for(  Element::ArrayType::iterator elt=el->begin(); elt!=el->end(); elt++) 
   {
@@ -907,7 +907,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::SampleVectorFieldAtNodes(SolverT
 
   FieldIterator m_FieldIter( m_Field, m_FieldRegion );
   m_FieldIter.GoToBegin();
-  ImageType::IndexType rindex = m_FieldIter.GetIndex();
+  typename ImageType::IndexType rindex = m_FieldIter.GetIndex();
 
   for(  Node::ArrayType::iterator node=nodes->begin(); node!=nodes->end(); node++) 
   {
@@ -988,7 +988,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::MultiResSolve()
 
 //    Tcaster2->SetInput(pyramidT->GetOutput(i)); Tcaster2->Update(); writer->SetInput(Tcaster2->GetOutput()); writer->Write();
     
-    ImageType::SizeType Isz=pyramidT->GetOutput( i )->GetLargestPossibleRegion().GetSize();
+    typename ImageType::SizeType Isz=pyramidT->GetOutput( i )->GetLargestPossibleRegion().GetSize();
 
     for (unsigned int d=0; d < ImageDimension; d++)
     {
@@ -1024,7 +1024,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::MultiResSolve()
 
       m_Load->SetMetric(m_Metric);
       m_Load->InitializeMetric();
-      ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+      typename ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
       m_Load->SetMetricRadius(r);
       m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
       m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER

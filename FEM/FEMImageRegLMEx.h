@@ -137,8 +137,8 @@ public:
   typedef typename ImageType::PixelType ImageDataType;
   typedef TElement ElementType;
   typedef Image< float, ImageDimension > FloatImageType;
-  typedef ImageType::SizeType ImageSizeType;
-  typedef   ImageToImageMetric<TTarget,TReference > MetricBaseType;
+  typedef typename ImageType::SizeType ImageSizeType;
+  typedef ImageToImageMetric<TTarget,TReference > MetricBaseType;
   typedef typename MetricBaseType::Pointer             MetricBaseTypePointer;
   typedef itk::Vector<Float,ImageDimension> VectorType;
   typedef itk::Image<VectorType,ImageDimension> FieldType;
@@ -282,27 +282,27 @@ private :
 
   ImageMetricLoad<ImageType,ImageType>* m_Load; // Defines the load to use
    
-  ImageType::RegionType m_FieldRegion;
-  ImageType::SizeType m_FieldSize;
-  FieldType::Pointer m_Field;
+  typename ImageType::RegionType m_FieldRegion;
+  typename ImageType::SizeType m_FieldSize;
+  typename FieldType::Pointer m_Field;
 
   // define the warper
   WarperType::Pointer m_Warper; 
   
  // declare a new image to hold the warped  reference
-  ImageType::Pointer  m_WarpedImage;
-  ImageType::RegionType m_Wregion; 
-  ImageType::IndexType m_Windex;
+  typename ImageType::Pointer  m_WarpedImage;
+  typename ImageType::RegionType m_Wregion; 
+  typename ImageType::IndexType m_Windex;
  
  // declare images for target and reference
-  ImageType::Pointer  m_RefImg;
-  ImageType::Pointer  m_TarImg;
-  ImageType::RegionType m_Rregion;
-  ImageType::RegionType m_Tregion;
-  ImageType::IndexType m_Rindex;
-  ImageType::IndexType m_Tindex;
+  typename ImageType::Pointer  m_RefImg;
+  typename ImageType::Pointer  m_TarImg;
+  typename ImageType::RegionType m_Rregion;
+  typename ImageType::RegionType m_Tregion;
+  typename ImageType::IndexType m_Rindex;
+  typename ImageType::IndexType m_Tindex;
 
-  ElementType::Pointer e1;
+  typename ElementType::Pointer e1;
 
   MetricBaseTypePointer                               m_Metric;
  
