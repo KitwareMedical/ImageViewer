@@ -679,10 +679,10 @@ int main()
 
   X.SetNumberOfIntegrationPoints(6);// Resolution of energy integration
   X.SetWidthOfMetricRegion(2);
-  X.DoMultiRes(false);// Use multi-resolution strategy
+  X.DoMultiRes(true);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
-  X.m_MaxSmoothing=12.0; // set multi-res parameters
-  X.m_MinSmoothing=12.;
+  X.m_MaxSmoothing=4.0; // set multi-res parameters
+  X.m_MinSmoothing=4.;
   X.m_SmoothingStep=4.0;
   X.RunRegistration();
   X.WriteWarpedImage("E:\\Avants\\MetaImages\\result");
