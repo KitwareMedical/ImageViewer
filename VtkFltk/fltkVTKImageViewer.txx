@@ -16,17 +16,7 @@
 =========================================================================*/
 
 #include "fltkVTKImageViewer.h"
-
-#include "vtkAxes.h"
-#include "vtkTubeFilter.h"
-#include "vtkPolyDataMapper.h"
 #include "vtkCamera.h"
-
-#include "vtkPiecewiseFunction.h"
-#include "vtkVolumeProperty.h"
-#include "vtkVolumeRayCastCompositeFunction.h"
-#include "vtkVolumeRayCastMapper.h"
-#include "vtkVolume.h"
 
 namespace fltk {
   
@@ -71,7 +61,7 @@ VTKImageViewer<ImagePixelType>
 
   // Create a ray function - this is a compositing ray function
   vtkVolumeRayCastCompositeFunction *compositeFunction =
-    vtkVolumeRayCastCompositeFunction::New();
+                            vtkVolumeRayCastCompositeFunction::New();
 
   // Create the volume mapper and set the ray function and scalar input
   vtkVolumeRayCastMapper *volumeMapper = vtkVolumeRayCastMapper::New();
@@ -80,11 +70,11 @@ VTKImageViewer<ImagePixelType>
 
   // Create the volume and set the mapper and property
   vtkVolume *volume = vtkVolume::New();
-    volume->SetMapper(volumeMapper);
-    volume->SetProperty(volumeProperty);
+    volume->SetMapper( volumeMapper );
+    volume->SetProperty( volumeProperty );
 
   // Add this volume to the renderer 
-  m_Renderer->AddVolume(volume);
+  m_Renderer->AddProp( volume );
   
   // Interact with the data at 3 frames per second
   fltkRenderWindowInteractor->SetDesiredUpdateRate(3.0);

@@ -21,10 +21,14 @@
 
 #include "itkImageToVTKImageFilter.h"
 
-#include "vtkRenderWindow.h"
-#include "vtkActor.h"
 #include "vtkRenderer.h"
-#include "vtkImageMapper.h"
+#include "vtkRenderWindow.h"
+#include "vtkRenderWindowInteractor.h"
+#include "vtkPiecewiseFunction.h"
+#include "vtkColorTransferFunction.h"
+#include "vtkVolumeProperty.h"
+#include "vtkVolumeRayCastMapper.h"
+#include "vtkVolumeRayCastCompositeFunction.h"
 
 
 namespace fltk {
@@ -78,7 +82,6 @@ protected:
 private:
 
   vtkRenderWindow           *  m_RenderWindow;
-
   vtkRenderer               *  m_Renderer;
 
   AdaptorFilterPointer         m_AdaptorFilter;
