@@ -15,15 +15,15 @@
 #define __vtkITKConnectedThresholdImageFilter_h
 
 
-#include "vtkITKImageToImageFilterUSUS.h"
+#include "vtkITKImageToImageFilterFF.h"
 #include "itkConnectedThresholdImageFilter.h"
 #include "vtkObjectFactory.h"
 
-class VTK_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImageFilterUSUS
+class VTK_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImageFilterFF
 {
  public:
   static vtkITKConnectedThresholdImageFilter *New();
-  vtkTypeRevisionMacro(vtkITKConnectedThresholdImageFilter, vtkITKImageToImageFilterUSUS);
+  vtkTypeRevisionMacro(vtkITKConnectedThresholdImageFilter, vtkITKImageToImageFilterFF);
 
   void SetReplaceValue ( double value )
   {
@@ -44,14 +44,15 @@ class VTK_EXPORT vtkITKConnectedThresholdImageFilter : public vtkITKImageToImage
   };
   double GetLower()
   { DelegateITKOutputMacro ( GetLower ); };
-  
-  void SetSeed ( int x, int y, int z )
+
+  void ClearSeeds () { this->GetImageFilterPointer()->ClearSeeds(); };
+  void AddSeed ( int x, int y, int z )
   {
     ImageFilterType::IndexType seed;
     seed[0] = x;
     seed[1] = y;
     seed[2] = z;
-    this->GetImageFilterPointer()->SetSeed ( seed );
+    this->GetImageFilterPointer()->AddSeed ( seed );
   }
 
 protected:
@@ -67,7 +68,7 @@ private:
   void operator=(const vtkITKConnectedThresholdImageFilter&);  // Not implemented.
 };
 
-vtkCxxRevisionMacro(vtkITKConnectedThresholdImageFilter, "$Revision: 1.2 $");
+vtkCxxRevisionMacro(vtkITKConnectedThresholdImageFilter, "$Revision: 1.3 $");
 vtkStandardNewMacro(vtkITKConnectedThresholdImageFilter);
 
 #endif
