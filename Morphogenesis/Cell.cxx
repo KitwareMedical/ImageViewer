@@ -16,6 +16,7 @@ Cell::ColorType    Cell::DefaultColor;
 
 double             Cell::DefaultRadius         =       1.0; // microns
 
+
 double             Cell::GrowthRadiusIncrement =       0.1; // 0.001 microns
 double             Cell::GrowthRadiusLimit     =       2.0; // microns
 
@@ -208,22 +209,26 @@ Cell
 ::Draw( const PointType & position ) const
 {
 
-  glColor3f( m_Color.GetRed(), m_Color.GetGreen(), m_Color.GetBlue() );
-
   glPushMatrix();
 
   switch( Dimension )
   {
-  case 2: 
-    {
+  case 2:
     glTranslated( position[0], position[1], 0.0 );
+    glColor3f( m_Color.GetRed(), 
+               m_Color.GetGreen(), 
+               m_Color.GetBlue() );
     break;
-    }
-  case 3: 
-    {
+  case 3:  
     glTranslated( position[0], position[1], position[2] );
+    GLfloat color[] = { 
+      static_cast<GLfloat>( m_Color.GetRed() ), 
+      static_cast<GLfloat>( m_Color.GetGreen() ),
+      static_cast<GLfloat>( m_Color.GetBlue() ), 
+      static_cast<GLfloat>( 1.0 )
+      };
+    glMaterialfv(GL_FRONT,GL_DIFFUSE,color);
     break;
-    }
   }
 
   const double scale = m_Radius;
@@ -255,6 +260,7 @@ Cell
     }
 
   glPopMatrix();
+
 }
 
 
