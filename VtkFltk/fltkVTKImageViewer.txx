@@ -40,6 +40,10 @@ VTKImageViewer<ImagePixelType>
 
   m_AdaptorFilter  = AdaptorFilterType::New();
 
+  // ray casting can only be performed on 
+  // unsigned short or unsigned char data
+  m_AdaptorFilter->GetImporter()->SetDataScalarTypeToUnsignedChar();
+
   fltkRenderWindowInteractor->SetRenderWindow( m_RenderWindow );
 
   // a renderer and render window
