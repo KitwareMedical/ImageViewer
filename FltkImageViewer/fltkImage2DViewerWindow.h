@@ -34,12 +34,17 @@ public:
 
   typedef itk::RGBPixel<float>  ColorType;
 
-  struct SelectionBox {
+  class SelectionBox {
+  public:
     int X1 ;
     int X2 ;
     int Y1 ;
     int Y2 ;
+  public:
+    SelectionBox():X1(0),X2(0),Y1(0),Y2(0) {};
+    ~SelectionBox() {};
   } ;
+
   typedef SelectionBox SelectionBoxType ;
 
   Image2DViewerWindow(int x,int y,int w,int h, const char * label=0);

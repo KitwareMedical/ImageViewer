@@ -52,7 +52,8 @@ Image2DViewerWindow(int x,int y,int w,int h, const char * label)
   m_Width = 0;
   m_Height = 0;
 
-  m_SelectionCallBack = 0 ;
+  m_SelectionCallBack = 0;
+  m_ClickCallBack = 0;
 
   m_InteractionMode = SelectMode;
 
@@ -313,25 +314,29 @@ void Image2DViewerWindow::draw(void)
   glPixelZoom( m_Zoom, m_Zoom );
 
 
-  // drawing selection box begin
-  int X1 = m_Box.X1 * 2 + m_ShiftX ;
-  int X2 = m_Box.X2 * 2 + m_ShiftX ;
-  int Y1 = -(m_Box.Y1 * 2 + m_ShiftY) ;
-  int Y2 = -(m_Box.Y2 * 2 + m_ShiftY) ;
-
-  if (Y2 >= m_Height - 2 )
+  if( m_InteractionMode == SelectMode )
     {
+    // drawing selection box begin
+    int X1 = m_Box.X1 * 2 + m_ShiftX ;
+    int X2 = m_Box.X2 * 2 + m_ShiftX ;
+    int Y1 = -(m_Box.Y1 * 2 + m_ShiftY) ;
+    int Y2 = -(m_Box.Y2 * 2 + m_ShiftY) ;
+
+    if (Y2 >= m_Height - 2 )
+      {
       Y2 = m_Height - 2 ;
+      }
+
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(X1, Y1) ;
+    glVertex2i(X2, Y1) ;
+    glVertex2i(X2, Y2) ;
+    glVertex2i(X1, Y2) ;
+    glVertex2i(X1, Y1) ;
+    glEnd();
+    // end 
     }
 
-  glBegin(GL_LINE_STRIP);
-  glVertex2i(X1, Y1) ;
-  glVertex2i(X2, Y1) ;
-  glVertex2i(X2, Y2) ;
-  glVertex2i(X1, Y2) ;
-  glVertex2i(X1, Y1) ;
-  glEnd();
-  // end 
 
   glDrawPixels( m_Width, m_Height, 
                 GL_LUMINANCE, GL_UNSIGNED_BYTE, 
@@ -560,10 +565,10 @@ Image2DViewerWindow
   m_ShiftY -= dy; // Mouse Y -> - OpenGl Y
   p1x = p2x;
   p1y = p2y;
-  
   redraw();
   Fl::check();
 }
+
 
 void 
 Image2DViewerWindow
@@ -573,7 +578,6 @@ Image2DViewerWindow
   m_Box.Y1 = box->Y1 ;
   m_Box.X2 = box->X2 ;
   m_Box.Y2 = box->Y2 ;
-
   redraw();
   Fl::check();
 }
@@ -615,7 +619,6 @@ Image2DViewerWindow
     {
     m_ClickCallBack( m_ClickCallBackTargetObject, px, py ) ;
     }
-
   redraw();
   Fl::check();
 }
