@@ -399,7 +399,7 @@ int main(int argc, char** argv)
     
     itk::MorphFilter::Pointer mf = itk::MorphFilter::New();
     mf->SetDistanceTransform(vol_target);
-    mf->SetIterations(n);
+    mf->SetNumberOfIterations(n);
     mf->SetInput(vol_init);
     mf->SetNumberOfLayers(3);
     mf->SetCurvatureWeight(0.1);

@@ -245,7 +245,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
             }
             Fl_Value_Input gradientAnisotropicDiffusionIterationsValueInput {
               label Iterations
-              callback {m_GradientAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
+              callback {m_GradientAnisotropicDiffusionImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
               xywh {242 195 55 25} labelsize 12 minimum 1 maximum 1000 value 10 textsize 12
             }
             Fl_Value_Input gradientAnisotropicDiffusionConductanceValueInput {
@@ -279,7 +279,7 @@ class RegionGrowingSegmentation2DGUI {open : {public RegionGrowingSegmentationBa
             }
             Fl_Value_Input curvatureAnisotropicDiffusionIterationsValueInput {
               label Iterations
-              callback {m_CurvatureAnisotropicDiffusionImageFilter->SetIterations( static_cast<unsigned int>( o->value() ) );}
+              callback {m_CurvatureAnisotropicDiffusionImageFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );}
               xywh {235 195 55 25} labelsize 12 minimum 1 maximum 100 value 10 textsize 12
             }
             Fl_Value_Input curvatureAnisotropicDiffusionConductanceValueInput {

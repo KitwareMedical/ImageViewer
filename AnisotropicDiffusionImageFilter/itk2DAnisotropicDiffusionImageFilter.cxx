@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
   // Create the diffusion filter
   DiffusionFilterType::Pointer diffusion = DiffusionFilterType::New();
   diffusion->SetTimeStep(0.25);
-  diffusion->SetIterations(iterations);
+  diffusion->SetNumberOfIterations(iterations);
   diffusion->SetConductanceParameter(conductance);
 
   // Connect the pipeline

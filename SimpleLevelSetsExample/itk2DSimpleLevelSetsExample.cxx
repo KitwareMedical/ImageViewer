@@ -153,7 +153,7 @@ public:
    */
   itkNewMacro(Self);
 
-  itkSetMacro(Iterations, unsigned int);
+  itkSetMacro(NumberOfIterations, unsigned int);
 
   void SetDistanceTransform(Image<float, 2> *im)
     {
@@ -176,11 +176,11 @@ protected:
   MorphFilter(const Self &) {}
   
 private:
-  unsigned int m_Iterations; 
+  unsigned int m_NumberOfIterations; 
   
   virtual bool Halt()
     {
-      if (this->GetElapsedIterations() == m_Iterations) return true;
+      if (this->GetElapsedIterations() == m_NumberOfIterations) return true;
       else return false;
     }  
 };
@@ -256,7 +256,7 @@ int main(int argc, char *argv[])
   
   itk::MorphFilter::Pointer mf = itk::MorphFilter::New();
   mf->SetDistanceTransform(im_target);
-  mf->SetIterations(n);
+  mf->SetNumberOfIterations(n);
   mf->SetInput(im_init);
   mf->SetNumberOfLayers(2);
   

@@ -34,13 +34,13 @@ liFilterConsole2DBase
   m_Reader = VolumeReaderType::New();
   
   m_FilterG = GradientAnisotropicDiffusionFilterType::New();
-  m_FilterG->SetIterations( 10 );
+  m_FilterG->SetNumberOfIterations( 10 );
   m_FilterG->SetTimeStep( 0.25 );
   m_FilterG->SetConductanceParameter( 1.0 );
   m_FilterG->SetInput( m_Reader->GetOutput() );
 
   m_FilterC = CurvatureAnisotropicDiffusionFilterType::New();
-  m_FilterC->SetIterations( 10 );
+  m_FilterC->SetNumberOfIterations( 10 );
   m_FilterC->SetTimeStep( 0.25 );
   m_FilterC->SetConductanceParameter( 1.0 );
   m_FilterC->SetInput( m_Reader->GetOutput() );
@@ -201,7 +201,7 @@ void
 liFilterConsole2DBase 
 ::SetIterationsForGradient( double value )
 {
-  m_FilterG->SetIterations( (unsigned int)value );
+  m_FilterG->SetNumberOfIterations( (unsigned int)value );
 }
 
 /************************************
@@ -225,7 +225,7 @@ void
 liFilterConsole2DBase 
 ::SetIterationsForCurvature( double value )
 {
-  m_FilterC->SetIterations( (unsigned int)value );
+  m_FilterC->SetNumberOfIterations( (unsigned int)value );
 }
 
 /************************************

@@ -132,7 +132,7 @@ SetOutputData(g_ItkFilterLibDataType * imageData)
 void itkFilterLib::
 SetIterationsOfAnisotropicDiffusionFilter(int iterations)
   {
-  g_anisoFilter->SetIterations(iterations);
+  g_anisoFilter->SetNumberOfIterations(iterations);
   }
 
 void itkFilterLib::

@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
     diffusion = itk::CurvatureAnisotropicDiffusionImageFilter<ImageType,
     ImageType>::New();
   diffusion->SetTimeStep(0.125f);
-  diffusion->SetIterations(diffusion_iterations);
+  diffusion->SetNumberOfIterations(diffusion_iterations);
   diffusion->SetConductanceParameter(conductance_term);
   diffusion->SetInput(input_image);
 

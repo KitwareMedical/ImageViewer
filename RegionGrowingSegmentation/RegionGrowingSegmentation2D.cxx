@@ -101,7 +101,7 @@
     m_CurvatureFlowImageFilter->SetTimeStep(
                                      curvatureFlowTimeStepValueInput->value() );
 
-    m_CurvatureAnisotropicDiffusionImageFilter->SetIterations(
+    m_CurvatureAnisotropicDiffusionImageFilter->SetNumberOfIterations(
            static_cast<unsigned int>(curvatureAnisotropicDiffusionIterationsValueInput->value()) );
 
     m_CurvatureAnisotropicDiffusionImageFilter->SetTimeStep(
@@ -110,7 +110,7 @@
     m_CurvatureAnisotropicDiffusionImageFilter->SetConductanceParameter(
                                      curvatureAnisotropicDiffusionConductanceValueInput->value() );
 
-    m_GradientAnisotropicDiffusionImageFilter->SetIterations(
+    m_GradientAnisotropicDiffusionImageFilter->SetNumberOfIterations(
            static_cast<unsigned int>(gradientAnisotropicDiffusionIterationsValueInput->value()) );
 
     m_GradientAnisotropicDiffusionImageFilter->SetTimeStep(

@@ -128,7 +128,7 @@ proc ConstructPreprocessorFrame {f} {
     entry $f.diffusion.conductance -width 6 -justify r
     entry $f.diffusion.iterations -width 6 -justify r
     label $f.diffusion.conductance_label -text "Conductance"
-    label $f.diffusion.iterations_label -text "Iterations"
+    label $f.diffusion.iterations_label -text "NumberOfIterations"
 
     set PreprocessorGlobals(conductance_entry) $f.diffusion.conductance
     set PreprocessorGlobals(iterations_entry)  $f.diffusion.iterations
@@ -423,7 +423,7 @@ proc PreprocessorInitialize {} {
     PreprocessorDiffuser SetTimeStep $PreprocessorGlobals(default_time_step)
     PreprocessorDiffuser SetConductanceParameter \
         $PreprocessorGlobals(default_conductance_parameter)
-    PreprocessorDiffuser SetIterations $PreprocessorGlobals(default_iterations)
+    PreprocessorDiffuser SetNumberOfIterations $PreprocessorGlobals(default_iterations)
     set PreprocessorGlobals(diffuser) PreprocessorDiffuser
 
     #
@@ -433,7 +433,7 @@ proc PreprocessorInitialize {} {
     CurvaturePreprocessorDiffuser SetTimeStep $PreprocessorGlobals(default_time_step)
     CurvaturePreprocessorDiffuser SetConductanceParameter \
         $PreprocessorGlobals(default_conductance_parameter)
-    CurvaturePreprocessorDiffuser SetIterations $PreprocessorGlobals(default_iterations)
+    CurvaturePreprocessorDiffuser SetNumberOfIterations $PreprocessorGlobals(default_iterations)
     set PreprocessorGlobals(curvature_diffuser) CurvaturePreprocessorDiffuser
 
 
@@ -614,12 +614,12 @@ proc PreprocessorStartDiffusion {} {
   
     ConstructProgressWindow preprocessorDiffusionProgressWindow
 
-    $PreprocessorGlobals(diffuser) SetIterations \
+    $PreprocessorGlobals(diffuser) SetNumberOfIterations \
         [expr int([$PreprocessorGlobals(iterations_entry) get]) ]
     $PreprocessorGlobals(diffuser) SetConductanceParameter \
         [$PreprocessorGlobals(conductance_entry) get]
 
-    $PreprocessorGlobals(curvature_diffuser) SetIterations \
+    $PreprocessorGlobals(curvature_diffuser) SetNumberOfIterations \
         [expr int([$PreprocessorGlobals(iterations_entry) get]) ]
     $PreprocessorGlobals(curvature_diffuser) SetConductanceParameter \
         [$PreprocessorGlobals(conductance_entry) get]
