@@ -87,7 +87,6 @@ int OptionList::DumpOption(std::string option_tag, bool withTag,
 int OptionList::GetMultiDoubleOption(std::string tag, 
                                      std::vector<double>* args, 
                                      bool required)
-  throw (RequiredOptionMissing) 
 {
   args->clear() ;
   
@@ -112,7 +111,6 @@ int OptionList::GetMultiDoubleOption(std::string tag,
 }
 
 double OptionList::GetDoubleOption(std::string tag, bool required)
-  throw (RequiredOptionMissing) 
 {
   StringVector temp_args ;
   int arg_no = this->GetOption(tag, &temp_args) ;
@@ -127,7 +125,6 @@ double OptionList::GetDoubleOption(std::string tag, bool required)
 }
 
 bool OptionList::GetBooleanOption(std::string tag, bool required)
-  throw (RequiredOptionMissing) 
 {
   StringVector args ;
   int arg_no = this->GetOption(tag, &args) ;
@@ -151,7 +148,6 @@ bool OptionList::GetBooleanOption(std::string tag, bool required)
 int OptionList::GetMultiIntOption(std::string tag, 
                                   std::vector<int>* args, 
                                   bool required)
-  throw (RequiredOptionMissing) 
 {
   args->clear() ;
   
@@ -176,7 +172,6 @@ int OptionList::GetMultiIntOption(std::string tag,
 }
 
 int OptionList::GetIntOption(std::string tag, bool required)
-  throw (RequiredOptionMissing) 
 {
   StringVector args ;
   int arg_no = this->GetOption(tag, &args) ;
@@ -193,7 +188,6 @@ int OptionList::GetIntOption(std::string tag, bool required)
 int OptionList::GetStringOption(std::string tag, 
                                 std::string* ret, 
                                 bool required)
-  throw (RequiredOptionMissing) 
 {
   StringVector args ;
   int arg_no = this->GetOption(tag, &args) ;

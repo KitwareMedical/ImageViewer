@@ -51,26 +51,19 @@ public:
 
   int GetMultiDoubleOption(std::string tag, 
                            std::vector<double>* args, 
-                           bool required) 
-    throw (RequiredOptionMissing) ;
+                           bool required);
 
-  double GetDoubleOption(std::string tag, bool required) 
-    throw (RequiredOptionMissing) ; 
+  double GetDoubleOption(std::string tag, bool required);
 
-  bool GetBooleanOption(std::string tag, bool required) 
-    throw (RequiredOptionMissing) ;
+  bool GetBooleanOption(std::string tag, bool required);
 
   int GetMultiIntOption(std::string tag, 
                         std::vector<int>* args,
-                        bool required) 
-    throw (RequiredOptionMissing) ;
+                        bool required);
 
+  int GetIntOption(std::string tag, bool required);
 
-  int GetIntOption(std::string tag, bool required) 
-    throw (RequiredOptionMissing) ;
-
-  int GetStringOption(std::string tag, std::string* ret, bool required) 
-    throw (RequiredOptionMissing) ;
+  int GetStringOption(std::string tag, std::string* ret, bool required);
   
 
 protected:
