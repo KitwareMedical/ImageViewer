@@ -28,10 +28,21 @@ int main()
     Fl::run();
     delete console;
     }
-  catch(...)
+  catch( itk::ExceptionObject & e )
     {
-    std::cerr << "Exception caught in main" << std::endl;
+    std::cerr << "ITK exception caught in main" << std::endl;
+    std::cerr << e << std::endl;
     }
+  catch( std::exception & e )
+    {
+    std::cerr << "STD exception caught in main" << std::endl;
+    std::cerr << e.what() << std::endl;
+    }
+  catch( ... )
+    {
+    std::cerr << "unknown exception caught in main" << std::endl;
+    }
+
 
   return 0;
 
