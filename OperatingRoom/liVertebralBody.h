@@ -14,7 +14,6 @@
 #ifndef liVERTEBRALBODYCLASS
 #define liVERTEBRALBODYCLASS
 
-#include <fstream>
 #include <liShape3D.h>
 #include <vector>
 

@@ -12,9 +12,9 @@
 //--------------------------------------------
 
 
+#include <liShape3D.h>
 #include <liCommandGLRedrawModelSensitive.h>
 #include <FL/Fl.h>
-#include <liShape3D.h>
 
 namespace li {
 

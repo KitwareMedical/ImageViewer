@@ -44,10 +44,6 @@ VertebralBody::VertebralBody()
   
   GeneratePoints();
   
-//  Shape3D::OfstreamType ofx;
-//  ofx.open("hi");
-//  ofx.close();
-
   Shape3D::IfstreamType ifx;
   ifx.open("hi");
   ifx.close();

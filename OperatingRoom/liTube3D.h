@@ -15,7 +15,6 @@
 #ifndef liTUBE3DCLASS
 #define liTUBE3DCLASS
 
-#include <fstream>
 #include <liShape3D.h>
 #include <itkVector.h>
 #include <liPointSet3D.h>

@@ -14,7 +14,6 @@
 #ifndef liVERTEBRALSEGMENTMODELCLASS
 #define liVERTEBRALSEGMENTMODELCLASS
 
-#include <fstream>
 #include <liPointSet3D.h>
 #include <liVertebralBody.h>
 #include <liVertebralPedicle.h>

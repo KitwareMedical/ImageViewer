@@ -15,8 +15,8 @@
 #ifndef liPOINTSET3DCLASS
 #define liPOINTSET3DCLASS
 
-#include <itkPointSet.h>
 #include <liShape3D.h>
+#include <itkPointSet.h>
 
 namespace li {
 

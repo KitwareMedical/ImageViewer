@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liCommandUpdateRegistratorFieldOfView.h>
 #include <liShape3D.h>
+#include <liCommandUpdateRegistratorFieldOfView.h>
 #include <FL/Fl.h>
 
 namespace li {

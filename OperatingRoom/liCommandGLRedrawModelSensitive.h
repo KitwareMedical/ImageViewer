@@ -15,9 +15,9 @@
 #ifndef liCOMMANDGLREDRAWMODELSENSITIVECLASS
 #define liCOMMANDGLREDRAWMODELSENSITIVECLASS
 
+#include <liShape3D.h>
 #include <itkCommand.h>
 #include <liCommandEvents.h>
-#include <liShape3D.h>
 
 
 namespace li {

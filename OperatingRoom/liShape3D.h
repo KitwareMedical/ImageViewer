@@ -15,6 +15,8 @@
 #ifndef liSHAPE3DCLASS
 #define liSHAPE3DCLASS
 
+#include <fstream>
+
 #if  defined(_WIN32)
 #include <itkWindows.h>
 #endif
@@ -27,8 +29,6 @@
 #include <liCommandEvents.h>
 #include <list>
 #include <FL/gl.h>
-
-
 
 namespace li {
 

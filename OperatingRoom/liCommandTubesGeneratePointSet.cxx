@@ -12,8 +12,8 @@
 //--------------------------------------------
 
 
-#include <liCommandTubesGeneratePointSet.h>
 #include <liShape3D.h>
+#include <liCommandTubesGeneratePointSet.h>
 #include <FL/Fl.h>
 
 namespace li {

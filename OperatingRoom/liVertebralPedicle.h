@@ -15,7 +15,6 @@
 #define liVERTEBRALPEDICLECLASS
 
 
-#include <fstream>
 #include <liCylinder3D.h>
 
 

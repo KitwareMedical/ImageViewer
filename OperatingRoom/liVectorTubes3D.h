@@ -14,7 +14,6 @@
 #ifndef liVECTORTUBES3DCLASS
 #define liVECTORTUBES3DCLASS
 
-#include <fstream>
 #include <liTube3D.h>
 #include <liBox3D.h>
 #include <liPointSet3D.h>
