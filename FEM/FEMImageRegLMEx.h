@@ -30,6 +30,8 @@
 #include "itkCannyEdgeDetectionImageFilter.h"
 #include "itkSobelEdgeDetectionImageFilter.h"
 #include "itkZeroCrossingBasedEdgeDetectionImageFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
+#include "itkHistogramMatchingImageFilter.h"
 
 #include "itkVector.h"
 #include "itkDiscreteGaussianImageFilter.h"
@@ -96,7 +98,7 @@ namespace fem {
         Choose enough iterations to allow the solution to converge (this may be automated).
 
      Reading images is up to the user.  Either set the images using 
-     SetReference/TargetImage or see the ReadImages() function.  Outputs are raw images
+     SetReference/TargetImage or see the ReadImages function.  Outputs are raw images
      of the same type as the reference image.
 
      \note This code works for only 2 or 3 dimensions.
@@ -119,6 +121,7 @@ public:
   /** Dimensionality of input and output data is assumed to be the same.
    * It is inherited from the superclass. */
   typedef TReference                                ImageType;
+  typedef TTarget                                   TargetImageType;
   enum { ImageDimension = ImageType::ImageDimension };
   typedef typename ImageType::PixelType             ImageDataType;
   typedef Image< float, ImageDimension >            FloatImageType;
@@ -144,7 +147,7 @@ public:
   /* Main functions */
  
   /** Read the configuration file to set up the example parameters */
-  bool      ReadConfigFile(const char*,SolverType& S);
+  bool      ReadConfigFile(const char*);
 
   /** Call this to register two images. */
   void      RunRegistration(); 
@@ -156,9 +159,6 @@ public:
 
 
   /** Helper functions */
-
-  /** Reads images from m_ReferenceFileName and m_TargetFileName */
-  void      ReadImages();  
 
   /** This function generates a regular mesh of ElementsPerSide^D size */
   void      CreateMesh(ImageSizeType MeshOrigin, ImageSizeType MeshSize, 
@@ -196,10 +196,19 @@ public:
   int       WriteDisplacementField(unsigned int index);
 
   /** Set the following parameters to run the example */
+  /** One can set the referencen file names to read images from files */
   void      SetReferenceFile(const char* r) {m_ReferenceFileName=r;}
   const char* GetReferenceFile() {return m_ReferenceFileName;}
   void      SetTargetFile(const char* t) {m_TargetFileName=t;}
   const char* GetTargetFile() {return m_TargetFileName;}
+  /** One can set the images directly to input images in an application */ 
+  /** Define the reference (moving) image. */
+  void SetReferenceImage(ImageType* R);
+  /** Define the target (fixed) image. */
+  void SetTargetImage(TargetImageType* T);
+  ImageType* GetReferenceImage(){return m_RefImg;}
+  TargetImageType* GetTargetImage(){return m_TarImg;}
+
   void      SetLandmarkFile(const char* l) {m_LandmarkFileName=l; }
   void      SetResultsFile(const char* r) {m_ResultsFileName=r;}
   void      SetDisplacementsFile(const char* r) {m_DisplacementsFileName=r;}
@@ -268,6 +277,7 @@ private :
   Float     m_Energy; // current value of energy
   Float     m_MinE;  // minimum recorded energy
   Float     m_Rho;   // mass matrix weight
+  Float     m_Alpha; // difference parameter
   Float     m_LineSearchStep;
 
   bool  m_DoLineSearchOnImageEnergy;  

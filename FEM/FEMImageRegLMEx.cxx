@@ -204,25 +204,21 @@ ImageRegLMEx<TReference,TTarget>::ImageRegLMEx( )
      m_ImageOrigin[i]=0;
   }
   
- 
-
 }
 
 
 template<class TReference,class TTarget>
 void ImageRegLMEx<TReference,TTarget>::RunRegistration()
 {
-    std::cout << "beginning \n";  
-    m_Solver.SetDeltatT(m_dT);  
-    m_Solver.SetRho(m_Rho);    
+    std::cout << "beginning registration\n";  
 
-    ReadImages();
- 
-   
   // Solve the system in time 
 
   if (!m_DoMultiRes) 
   {
+    m_Solver.SetDeltatT(m_dT);  
+    m_Solver.SetRho(m_Rho);      
+    m_Solver.SetAlpha(m_Alpha); 
     
     CreateMesh(m_ImageOrigin,m_ImageSize,(double)m_MeshResolution,m_Solver); 
     m_Solver.GenerateGFN(); 
@@ -231,8 +227,8 @@ void ImageRegLMEx<TReference,TTarget>::RunRegistration()
 
     LinearSystemWrapperItpack itpackWrapper; 
     itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
-    itpackWrapper.SetMaximumNumberIterations(m_Solver.GetNGFN()); 
-    itpackWrapper.SetTolerance(1.e-6);
+    itpackWrapper.SetMaximumNumberIterations(2*m_Solver.GetNGFN()); 
+    itpackWrapper.SetTolerance(1.e-13);
     itpackWrapper.JacobianSemiIterative(); 
     m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
 
@@ -242,7 +238,8 @@ void ImageRegLMEx<TReference,TTarget>::RunRegistration()
     m_Load->SetTargetImage(m_TarImg);
     m_Load->SetMetric(m_Metric);
     m_Load->InitializeMetric();
-    typename ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+    ImageSizeType r;
+  for (unsigned int i=0; i<ImageDimension; i++) r[i]=m_MetricWidth;
     m_Load->SetMetricRadius(r);
     m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
     m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
@@ -268,60 +265,14 @@ void ImageRegLMEx<TReference,TTarget>::RunRegistration()
   
 }
 
+
+
 template<class TReference,class TTarget>
-void ImageRegLMEx<TReference,TTarget>::ReadImages()
+void ImageRegLMEx<TReference,TTarget>::SetReferenceImage(ImageType* R)
 {
-  // DEFINE INPUT FILES
- 
-  // Read a Raw File
-  typedef  itk::ImageFileReader< ImageType >      FileSourceType;
-  typedef typename ImageType::PixelType PixType;
-  typedef  itk::RawImageIO< PixType,ImageDimension>   RawReaderType;
-
-  FileSourceType::Pointer reffilter = FileSourceType::New();
-  reffilter->SetFileName( m_ReferenceFileName );
-  FileSourceType::Pointer tarfilter = FileSourceType::New();
-  tarfilter->SetFileName( m_TargetFileName );
-
-  RawReaderType::Pointer  rawReader  = RawReaderType::New();
-  
-  rawReader->SetFileDimensionality( ImageDimension );
-  for (int ii=0; ii<ImageDimension; ii++)     
-  {
-    unsigned int temp=(unsigned int) m_ImageSize[ii];
-    rawReader->SetDimensions( ii, temp );
-  }
-  reffilter->SetImageIO( rawReader );
-  tarfilter->SetImageIO( rawReader );
-
-  try
-    {
-    reffilter->Update();
-    }
-  catch( itk::ExceptionObject & e )
-    {
-    std::cerr << "Exception caught during reference file reading " << std::endl;
-    std::cerr << e << std::endl;
-    return;
-    }
-  try
-    {
-    tarfilter->Update();
-    }
-  catch( itk::ExceptionObject & e )
-    {
-    std::cerr << "Exception caught during target file reading " << std::endl;
-    std::cerr << e << std::endl;
-    return;
-    }
-  
-  std::cout << "File succesfully read ! " << std::endl;
- // now set variables
-  m_RefImg=reffilter->GetOutput();
-  m_TarImg=tarfilter->GetOutput();
+  m_RefImg=R;
   m_Rregion = m_RefImg->GetLargestPossibleRegion();
-  m_Tregion = m_TarImg->GetLargestPossibleRegion();
-  m_ImageSize = m_TarImg->GetLargestPossibleRegion().GetSize();
+  m_ImageSize = m_RefImg->GetLargestPossibleRegion().GetSize();
   
   VectorType disp;
   for (unsigned int i=0; i < ImageDimension; i++) 
@@ -352,9 +303,15 @@ void ImageRegLMEx<TReference,TTarget>::ReadImages()
 
 }
 
+template<class TReference,class TTarget>
+void ImageRegLMEx<TReference,TTarget>::SetTargetImage(TargetImageType* T)
+{
+  m_TarImg=T;
+  m_Tregion = m_TarImg->GetLargestPossibleRegion();
+}
 
 template<class TReference,class TTarget>
-bool ImageRegLMEx<TReference,TTarget>::ReadConfigFile(const char* fname, SolverType& mySolver)
+bool ImageRegLMEx<TReference,TTarget>::ReadConfigFile(const char* fname)
   // Reads the parameters necessary to configure the example & returns
   // false if no configuration file is found
 {
@@ -370,7 +327,7 @@ bool ImageRegLMEx<TReference,TTarget>::ReadConfigFile(const char* fname, SolverT
     
     FEMLightObject::SkipWhiteSpace(f);
     f >> fbuf;
-    mySolver.SetAlpha(fbuf);
+    this->m_Alpha=fbuf;
     
     FEMLightObject::SkipWhiteSpace(f);
     f >> ibuf;
@@ -396,7 +353,7 @@ bool ImageRegLMEx<TReference,TTarget>::ReadConfigFile(const char* fname, SolverT
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> fbuf;
-    this->SetRho(fbuf);
+    m_Rho=fbuf;
 
     FEMLightObject::SkipWhiteSpace(f);
     f >> buffer;
@@ -674,7 +631,6 @@ void ImageRegLMEx<TReference,TTarget>::ApplyLoads(SolverType& mySolver,unsigned 
   }
   if (CornerCounter == ImageDimension) // the node is located at a true corner
   {
-      unsigned int tgn=(*((*node)->m_elements.begin()))->GN;
     unsigned int ndofpernode=(*((*node)->m_elements.begin()))->GetNumberOfDegreesOfFreedomPerNode();
     unsigned int numnodesperelt=(*((*node)->m_elements.begin()))->GetNumberOfNodes();
     unsigned int whichnode=0;
@@ -688,8 +644,8 @@ void ImageRegLMEx<TReference,TTarget>::ApplyLoads(SolverType& mySolver,unsigned 
         l1=LoadBC::New();
       // now we get the element from the node -- we assume we need fix the dof only once
       // even if more than one element shares it.
-        l1->m_element=( &*mySolver.el.Find(tgn)); 
-    unsigned int localdof=whichnode*ndofpernode+jj;
+        l1->m_element=( *((*node)->m_elements.begin())); 
+        unsigned int localdof=whichnode*ndofpernode+jj;
         l1->m_dof=localdof; // FIXME should be correct for each element
         l1->m_value=vnl_vector<double>(1,0.0);
         mySolver.load.push_back( FEMP<Load>(&*l1) );
@@ -754,7 +710,8 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
   // iterative solve  
   //for (unsigned int iters=0; iters<m_Maxiters; iters++){
   unsigned int iters=0;
-  while ( (iters < m_Maxiters && m_MinE >= LastE && deltE > ETol )  || minct < NumMins){
+  while ( (iters < m_Maxiters && m_MinE >= LastE && deltE > ETol )  || 
+        (minct < NumMins && iters < m_Maxiters) ){
   /*
      * Assemble the master force vector (from the applied loads)
      */
@@ -764,12 +721,15 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
      * Solve the system of equations for displacements (u=K^-1*F)
      */
     mySolver.Solve();  
-    mySolver.GoldenSection();
-    Float cure=0.0,mint=0.0,tstep=m_LineSearchStep;
   
+    Float cure=0.0,mint=1.0,tstep=m_LineSearchStep;
 
    if (m_DoLineSearchOnImageEnergy) 
    {
+     std::cout << " line search " ;
+   mySolver.GoldenSection(1.e-1);
+   std::cout << " line search done " << std::endl;
+  /*
      for (Float t=tstep; t <= 1.0; t=t+tstep) 
      {
         cure=m_Load->EvaluateMetricGivenSolution(&(mySolver.el), t);
@@ -779,23 +739,20 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
           mint=t;       
         }
      }
-     mySolver.AddToDisplacements(mint); 
+     mySolver.AddToDisplacements(mint); */
    }
-   else 
+   LastE=mySolver.EvaluateResidual(1.0);
+   deltE=fabs(LastE-m_MinE);
+   if (LastE <= m_MinE  || minct < NumMins )
    {
-     LastE=m_Solver.EvaluateResidual(1.0);
-     deltE=fabs(LastE-m_MinE);
-     if (LastE <= m_MinE  || minct < NumMins )
-     {
-        mint=iters;   
-        mySolver.AddToDisplacements();  
-        if (LastE >= m_MinE) minct++; 
-        m_MinE=LastE;
-     } //else iters=m_Maxiters;
-   if (LastE == 0.0) {
-       iters=m_Maxiters;
+     mint=iters;   
+     mySolver.AddToDisplacements();  
+     if (LastE >= m_MinE) minct++; else m_MinE=LastE;
+   } //else iters=m_Maxiters;
+   if (LastE == 0.0) 
+   {
+     iters=m_Maxiters;
      minct=NumMins;
-     }
    }
    
    std::cout << " min E " << m_MinE << " Cur E " << LastE << "  t " << mint << " iter " << iters << std::endl;
@@ -815,7 +772,7 @@ void ImageRegLMEx<TReference,TTarget>::IterativeSolve(SolverType& mySolver)
 template<class TReference,class TTarget>
 void ImageRegLMEx<TReference,TTarget>::GetVectorField(SolverType& mySolver)
 {
-
+  std::cout << " computing vector field " << std::endl;
   Element::ArrayType* el = &(mySolver.el);
   vnl_vector_fixed<double,ImageDimension> Pos(0.0);  // solution at the point
   vnl_vector_fixed<double,ImageDimension> Sol(0.0);  // solution at the local point
@@ -939,6 +896,7 @@ template<class TReference,class TTarget>
 void ImageRegLMEx<TReference,TTarget>::SampleVectorFieldAtNodes(SolverType& mySolver)
 {
 
+  std::cout << " upsampling vector field " << std::endl;
   // Here, we need to iterate through the nodes, get the nodal coordinates,
   // sample the VF at the node and place the values in the SolutionVector.
 
@@ -988,8 +946,8 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
   typedef itk::CastImageFilter<FloatImageType,ImageType> CasterType2;
   CasterType1::Pointer Rcaster1 = CasterType1::New();
   CasterType1::Pointer Tcaster1 = CasterType1::New();
-  CasterType2::Pointer Rcaster2 = CasterType2::New();
-  CasterType2::Pointer Tcaster2 = CasterType2::New();
+  CasterType2::Pointer Rcaster2;
+  CasterType2::Pointer Tcaster2;
 
   Rcaster1->SetInput(m_RefImg); Rcaster1->Update();
   pyramidR->SetInput( Rcaster1->GetOutput());
@@ -1041,34 +999,23 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
       Rcaster2 = CasterType2::New();// Weird - don't know why but this worked
       Tcaster2 = CasterType2::New();// and declaring the casters outside the loop did not.
       
-/*    // Choose the material properties
-      itk::fem::MaterialLinearElasticity::Pointer m;
-      m=itk::fem::MaterialLinearElasticity::New();
-      m->GN=0;       // Global number of the material ///
-      m->E=this->GetElasticity();  // Young modulus -- used in the membrane ///
-      m->A=1.0;     // Crossection area ///
-      m->h=1.0;     // Crossection area ///
-      m->I=1.0;    // Moment of inertia ///
-      m->nu=0.; //.0;    // poissons -- DONT CHOOSE 1.0!!///
-      m->RhoC=1.0;
-  
-      typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
-      // Create the element type 
-      ElementType::Pointer ee=ElementType::New();
-      ee->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
-      this->SetElement(ee);*/
+      SolverType SSS;
 
-      CreateMesh(m_ImageOrigin,Isz,MeshResolution,m_Solver); 
-      m_Solver.GenerateGFN();
-      ApplyLoads(m_Solver,(unsigned int)MeshResolution);
+      SSS.SetDeltatT(m_dT);  
+      SSS.SetRho(m_Rho);     
+      SSS.SetAlpha(m_Alpha);    
+
+      CreateMesh(m_ImageOrigin,Isz,MeshResolution,SSS); 
+      SSS.GenerateGFN();
+      ApplyLoads(SSS,(unsigned int)MeshResolution);
  
 
       LinearSystemWrapperItpack itpackWrapper; 
-      itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
-      itpackWrapper.SetMaximumNumberIterations(m_Solver.GetNGFN()); 
-      itpackWrapper.SetTolerance(1.e-6);
+      itpackWrapper.SetMaximumNonZeroValuesInMatrix(25*SSS.GetNGFN());
+      itpackWrapper.SetMaximumNumberIterations(2*SSS.GetNGFN()); 
+      itpackWrapper.SetTolerance(1.e-13);
       itpackWrapper.JacobianSemiIterative(); 
-      m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
+      SSS.SetLinearSystemWrapper(&itpackWrapper); 
 
       m_Load=ImageRegLMEx<TReference,TTarget>::ImageMetricLoadType::New();
 
@@ -1080,30 +1027,31 @@ void ImageRegLMEx<TReference,TTarget>::MultiResSolve()
 
       m_Load->SetMetric(m_Metric);
       m_Load->InitializeMetric();
-      typename ImageType::SizeType r={{m_MetricWidth,m_MetricWidth}};
+      ImageSizeType r;
+      for (unsigned int i=0; i<ImageDimension; i++) r[i]=m_MetricWidth;
       m_Load->SetMetricRadius(r);
       m_Load->SetNumberOfIntegrationPoints(m_NumberOfIntegrationPoints);
-      m_Load->GN=m_Solver.load.size()+1; //NOTE SETTING GN FOR FIND LATER
+      m_Load->GN=SSS.load.size()+1; //NOTE SETTING GN FOR FIND LATER
       m_Load->SetSign((Float)m_DescentDirection);
-      m_Solver.load.push_back( FEMP<Load>(&*m_Load) );    
-      m_Load=dynamic_cast<ImageRegLMEx<TReference,TTarget>::ImageMetricLoadType*> (&*m_Solver.load.Find(m_Solver.load.size()));  
+      SSS.load.push_back( FEMP<Load>(&*m_Load) );    
+      m_Load=dynamic_cast<ImageRegLMEx<TReference,TTarget>::ImageMetricLoadType*> (&*SSS.load.Find(SSS.load.size()));  
    
-      m_Solver.AssembleKandM();
+      SSS.AssembleKandM();
  
       if ( i > 0) 
       {
-        SampleVectorFieldAtNodes(m_Solver);
+        SampleVectorFieldAtNodes(SSS);
         LastScaleEnergy=ThisScaleEnergy; ThisScaleEnergy=LastScaleEnergy; // need to resolve this
-        ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
+        ThisScaleEnergy=SSS.EvaluateResidual(0.0);
       }
-//    m_Solver.PrintDisplacements();
+//    SSS.PrintDisplacements();
 
-      IterativeSolve(m_Solver);
+      IterativeSolve(SSS);
 
-      ThisScaleEnergy=m_Solver.EvaluateResidual(0.0);
+      ThisScaleEnergy=SSS.EvaluateResidual(0.0);
       std::cout << " E " << ThisScaleEnergy << std::endl;
 
-      GetVectorField(m_Solver);
+      GetVectorField(SSS);
       if ( i == m_MaxLevel-1) 
       { 
       //  m_RefImg=Tcaster2->GetOutput(); // for testing
@@ -1129,7 +1077,7 @@ void ImageRegLMEx<TReference,TTarget>::CreateLinearSystemSolver()
     LinearSystemSolverType* itpackWrapper=new LinearSystemSolverType; 
     itpackWrapper->SetMaximumNonZeroValuesInMatrix(25*m_Solver.GetNGFN());
     itpackWrapper->SetMaximumNumberIterations(m_Solver.GetNGFN()); 
-    itpackWrapper->SetTolerance(1.e-6);
+    itpackWrapper->SetTolerance(1.e-13);
 
     // select solution type
     // did converge in test
@@ -1159,26 +1107,35 @@ void ImageRegLMEx<TReference,TTarget>::CreateLinearSystemSolver()
 // Below, we have typedefs that instantiate all necessary classes.
 // Here, we instantiate the image type, load type and 
 // explicitly template the load implementation type.
+
+
+#define TWOD
+#ifdef TWOD
+typedef itk::Image< unsigned char, 2 >                     fileImageType;
+typedef itk::Image< unsigned char, 2 >                     ImageType;
+// We now declare an element type and load implementation pointer for the visitor class.
+typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
+#endif 
+#ifdef THREED
+typedef itk::Image< unsigned char, 3 >                     fileImageType;
 typedef itk::Image< unsigned char, 3 >                     ImageType;
+typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
+#endif
 typedef itk::fem::ImageMetricLoad<ImageType,ImageType>     ImageLoadType;
 template class itk::fem::ImageMetricLoadImplementation<ImageLoadType>;
-
-// We now declare an element type and load implementation pointer for the visitor class.
-//typedef itk::fem::Element2DC0LinearQuadrilateralMembrane   ElementType;
-typedef itk::fem::Element3DC0LinearHexahedronMembrane   ElementType;
+typedef itk::fem::ImageRegLMEx<ImageType,ImageType> RegistrationType;
 typedef ElementType::LoadImplementationFunctionPointer     LoadImpFP;
 typedef ElementType::LoadType                              ElementLoadType;
 typedef itk::fem::VisitorDispatcher<ElementType,ElementLoadType, LoadImpFP>   
-                                                           DispatcherType;
+                                                          DispatcherType;
 
-typedef itk::fem::ImageRegLMEx<ImageType,ImageType> RegistrationType;
 
 void ReadRawImageFiles( RegistrationType&  X )
 {
 
-  typedef  itk::ImageFileReader< ImageType >      FileSourceType;
-  typedef ImageType::PixelType PixType;
-  const unsigned int ImageDimension=ImageType::ImageDimension;
+  typedef  itk::ImageFileReader< fileImageType >      FileSourceType;
+  typedef  fileImageType::PixelType PixType;
+  const unsigned int ImageDimension=fileImageType::ImageDimension;
   typedef  itk::RawImageIO< PixType,ImageDimension>   RawReaderType;
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
@@ -1190,7 +1147,7 @@ void ReadRawImageFiles( RegistrationType&  X )
   rawReader->SetFileDimensionality( ImageDimension );
 
   ImageType::SizeType ImageSize=X.GetImageSize();
-  for (int ii=0; ii<ImageDimension; ii++)     
+  for (unsigned int ii=0; ii<ImageDimension; ii++)     
   {
     unsigned int temp=(unsigned int) ImageSize[ii];
     rawReader->SetDimensions( ii, temp );
@@ -1219,17 +1176,38 @@ void ReadRawImageFiles( RegistrationType&  X )
     return ;
     }
   
-  std::cout << "File succesfully read ! " << std::endl;
-  ImageType::IndexType rindex;
-  rindex[0]=15;
-  rindex[1]=10;
-  rindex[2]=11;
-  std::cout << " pix val " << (unsigned int) reffilter->GetOutput()->GetPixel(rindex) << std::endl;
-  rindex[0]=11;
-  rindex[1]=10;
-  rindex[2]=15;
-  std::cout << " pix val " << (unsigned int) reffilter->GetOutput()->GetPixel(rindex) << std::endl;
- 
+  typedef itk::RescaleIntensityImageFilter<fileImageType,ImageType> FilterType;
+  FilterType::Pointer refrescalefilter = FilterType::New();
+  FilterType::Pointer tarrescalefilter = FilterType::New();
+
+  refrescalefilter->SetInput(reffilter->GetOutput());
+  tarrescalefilter->SetInput(tarfilter->GetOutput());
+
+  const double desiredMinimum =  0.0;
+  const double desiredMaximum =  1.0;
+
+  refrescalefilter->SetOutputMinimum( desiredMinimum );
+  refrescalefilter->SetOutputMaximum( desiredMaximum );
+  refrescalefilter->UpdateLargestPossibleRegion();
+  tarrescalefilter->SetOutputMinimum( desiredMinimum );
+  tarrescalefilter->SetOutputMaximum( desiredMaximum );
+  tarrescalefilter->UpdateLargestPossibleRegion();
+  
+  
+  typedef itk::HistogramMatchingImageFilter<ImageType,ImageType> HEFilterType;
+  HEFilterType::Pointer IntensityEqualizeFilter = HEFilterType::New();
+
+  IntensityEqualizeFilter->SetReferenceImage( refrescalefilter->GetOutput() );
+  IntensityEqualizeFilter->SetSourceImage( tarrescalefilter->GetOutput() );
+  IntensityEqualizeFilter->SetNumberOfHistogramLevels( 128 );
+  IntensityEqualizeFilter->SetNumberOfMatchPoints( 11 );
+  IntensityEqualizeFilter->ThresholdAtMeanIntensityOn();
+  IntensityEqualizeFilter->Update();
+
+//  X.SetReferenceImage(refrescalefilter->GetOutput());
+//  X.SetTargetImage(IntensityEqualizeFilter->GetOutput());
+  X.SetReferenceImage(reffilter->GetOutput());
+  X.SetTargetImage(tarfilter->GetOutput());
 }
 
 int main() 
@@ -1243,8 +1221,11 @@ int main()
 
   X.SetConfigFileName("U://itk//Insight//Examples//FEM//FEMregLMparams.txt");
   //X.SetConfigFileName("c:\\itk\\Insight\\Examples\\FEM\\FEMregLMparams.txt");
-  if (!X.ReadConfigFile(X.GetConfigFileName(),*X.GetSolver())) { return -1; }
+  if (!X.ReadConfigFile(X.GetConfigFileName())) { return -1; }
  
+  // Read Raw Files 
+  ReadRawImageFiles(X);
+  
   // Choose the similarity metric
 
   typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType0;
@@ -1273,7 +1254,6 @@ int main()
   e1->m_mat=dynamic_cast<itk::fem::MaterialLinearElasticity*>( m );
   X.SetElement(e1);
 
-  // Read Raw Files ReadRawImageFiles();
   // Register the images
   X.RunRegistration();
 
@@ -1285,7 +1265,7 @@ int main()
     X.WriteDisplacementField(0);
     X.WriteDisplacementField(1);
   }
-
+  delete e1;
   return 0;
 }
 
