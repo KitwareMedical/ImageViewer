@@ -55,6 +55,7 @@ public:
    */
   enum { NumberOfDisplacementComponents = 2 };
   enum { ParametricSpaceDimension       = 1 };
+  enum { NumberOfGaussIntegrationPoints = 1 };
 
   // This macro takes care of declaring all the types
   // required by the API of the superclass. This is 
