@@ -1,7 +1,7 @@
-INCLUDE(${CMAKE_SOURCE_DIR}/CMake/Modules/FindFLTK.cmake)
+INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 
 # Only build this if FLTK can be found
-IF(FLTK_LIB_PATH)
+IF(FLTK_LIBRARY)
   IF(FLTK_INCLUDE_PATH)
 
    SOURCE_FILES(FltkImageViewer_SRCS
@@ -28,6 +28,6 @@ IF(FLTK_LIB_PATH)
      FltkImageViewer FltkImageViewer_SRCS
      )
 
-  ENDIF(FLTK_LIB_PATH)
+  ENDIF(FLTK_LIBRARY)
 ENDIF(FLTK_INCLUDE_PATH)
 
