@@ -96,15 +96,12 @@ public:
 
   virtual void Quit();
 
-  virtual void UpdateGUIAfterIteration();
-
   virtual void SelectSeedPoint( float x, float y, float z );
   
   static  void ClickSelectCallback(float x, float y, float z, float value, void * args );
 
   virtual void ClearSeeds();
 
-  virtual void CommandOnStartFastMarching();
 
 private:
 

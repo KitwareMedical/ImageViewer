@@ -83,10 +83,6 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
           xywh {714 107 90 30} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
-        Fl_Value_Output iterationValueOutput {
-          label Iteration
-          xywh {425 40 55 25} labelsize 12 textsize 12
-        }
         Fl_Button {} {
           label {Clear Seeds}
           callback {this->ClearSeeds();}
@@ -159,7 +155,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
         Fl_Value_Input stoppingValueInput {
           label Stopping
           callback {m_FastMarchingFilter->SetStoppingValue( o->value()  );} selected
-          xywh {425 15 55 25} labelsize 12 maximum 50000 step 1 value 500 textsize 12
+          xywh {435 40 55 25} labelsize 12 maximum 50000 step 1 value 50 textsize 12
         }
       }
       Fl_Slider progressSlider {

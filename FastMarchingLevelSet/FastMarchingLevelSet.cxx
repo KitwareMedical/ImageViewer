@@ -83,21 +83,6 @@ FastMarchingLevelSet
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_FastMarchingFilter.GetPointer() );
   
-  typedef itk::SimpleMemberCommand< FastMarchingLevelSet > SimpleCommandType;
-
-  SimpleCommandType::Pointer iterationCommand = SimpleCommandType::New();
-  iterationCommand->SetCallbackFunction( this, 
-      & FastMarchingLevelSet::UpdateGUIAfterIteration );
-
-  m_FastMarchingFilter->AddObserver( itk::IterationEvent(), iterationCommand );      
-
-  SimpleCommandType::Pointer startCommand = SimpleCommandType::New();
-  startCommand->SetCallbackFunction( this, 
-      & FastMarchingLevelSet::CommandOnStartFastMarching );
-
-  m_FastMarchingFilter->AddObserver( itk::StartEvent(), startCommand );      
-
-
   m_ThresholdFilter->SetLowerThreshold( lowerThresholdValueInput->value() );
   m_ThresholdFilter->SetUpperThreshold( upperThresholdValueInput->value() );
 
@@ -438,40 +423,6 @@ FastMarchingLevelSet
 
 
   
-/*****************************************
- *
- *  Command to be run when the FastMarching
- *  filter starts execution
- *
- *****************************************/
-void
-FastMarchingLevelSet
-::CommandOnStartFastMarching()
-{
-  m_IterationCounter = 0;
-  iterationValueOutput->value( m_IterationCounter );
-  Fl::check();
-}
-
-
-
- 
-/*****************************************
- *
- *  Update GUI after iteration
- *
- *****************************************/
-void
-FastMarchingLevelSet
-::UpdateGUIAfterIteration()
-{
-  iterationValueOutput->value( m_IterationCounter );
-  m_IterationCounter++;
-  Fl::check();
-}
-
-
-
  
 
 
