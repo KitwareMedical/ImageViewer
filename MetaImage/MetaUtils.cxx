@@ -1,7 +1,7 @@
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
-#include <vcl_cstring.h>
+#include <string.h>
 #include <ctype.h>
 
 

@@ -9,7 +9,7 @@
 
 #include "SliceView.h"
 
-#include <vcl_cmath.h>
+#include <math.h>
 
 namespace itk {
 

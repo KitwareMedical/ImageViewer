@@ -24,7 +24,7 @@
 #ifndef METAFILELIB_H
 #define METAFILELIB_H
 
-#include <vcl_cstdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <fstream>
 

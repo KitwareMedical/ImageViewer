@@ -1,7 +1,7 @@
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
-#include <vcl_cstring.h>
+#include <string.h>
 #include <ctype.h>
 
 
@@ -99,7 +99,7 @@ bool MF_Read(std::ifstream &fp, int nFields, MF_FieldRec *field, int fTerm, bool
           case MF_NONE:
             if( !fp.eof() )
             {
-              char c = fp.get();
+              fp.get();
             }
             break;
           case MF_CHAR:

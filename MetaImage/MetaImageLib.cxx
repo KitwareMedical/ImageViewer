@@ -1,9 +1,9 @@
-#include <vcl_cstdlib.h>
-#include <vcl_cstdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include <vcl_cstring.h>
-#include <vcl_cmath.h>
+#include <string.h>
+#include <math.h>
 
 
 #include "MetaUtils.h"

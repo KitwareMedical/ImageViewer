@@ -8,9 +8,8 @@ FileIOMetaImageFactory::FileIOMetaImageFactory()
   myProductType::Pointer m_MyProduct = FileIOMetaImage::New();
   FileIOMetaImage::FileExtensionsListType& extensionsList =
     m_MyProduct->GetSupportedFileExtensions();
-  int i;
 
-  for (i = 0; i < extensionsList.size(); i++)
+  for (unsigned int i = 0; i < extensionsList.size(); i++)
     {
     RegisterOverride(m_MyProduct->GetSupportedFileExtensions()[i].c_str(),
                      "FileIOMetaImage", "Create FileIOMetaImage", true,
