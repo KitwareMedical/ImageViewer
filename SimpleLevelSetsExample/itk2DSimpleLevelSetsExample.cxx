@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    itkSimpleLevelSetsExample.cxx
+  Module:    itk2DSimpleLevelSetsExample.cxx
   Language:  C++
   Date:      $Date$
   Version:   $Revision$
@@ -15,22 +15,21 @@
 
 =========================================================================*/
 #include "itkImageRegionIterator.h"
-#include "itkLevelSetFunction.h"
 #include "itkLevelSet2DFunction.h"
-#include "itkRawImageWriter.h"
-#include "itkDenseFiniteDifferenceImageFilter.h"
+#include "itkRawImageIO.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
+#include "itkSparseFieldLevelSetImageFilter.h"
 
 extern "C" {
 #include "stdio.h"
 }
 
-
 /**
- * This test morphs a circle to a square using the level-set surface
+ * This test morphs a square to a circle using the level-set surface
  * modeling framework.  Speed function input to the level-set equation
  * is a distance transform between the two shapes.
  */
-
 const int HEIGHT = (256);
 const int WIDTH  = (256);
 
@@ -39,23 +38,25 @@ const int WIDTH  = (256);
 float circle(unsigned x, unsigned y)
 {
   float dis;
-    dis = (x - (float)WIDTH/2.0)*(x - (float)WIDTH/2.0)
-      + (y - (float)HEIGHT/2.0)*(y - (float)HEIGHT/2.0);
-    dis = RADIUS - sqrt(dis);
-    return(dis);
+  dis = (x - (float)WIDTH/2.0)*(x - (float)WIDTH/2.0)
+    + (y - (float)HEIGHT/2.0)*(y - (float)HEIGHT/2.0);
+  dis = RADIUS - sqrt(dis);
+  return(dis);
 }
 
 float square(unsigned x, unsigned y)
 {
-    float X, Y;
-    X = ::fabs(x - (float)WIDTH/2.0);
-    Y = ::fabs(y - (float)HEIGHT/2.0);
-    float dis;
-    if (!((X > RADIUS)&&(Y > RADIUS)))
-      dis = RADIUS - vnl_math_max(X, Y);
-    else
-      dis = -sqrt((X - RADIUS)*(X - RADIUS) +  (Y - RADIUS)*(Y - RADIUS));
-    return(dis);
+  int rad = RADIUS;
+  
+  float X, Y;
+  X = ::fabs(x - (float)WIDTH/2.0);
+  Y = ::fabs(y - (float)HEIGHT/2.0);
+  float dis;
+  if (!((X > rad)&&(Y > rad)))
+    {  dis = rad - vnl_math_max(X, Y); }
+  else
+    { dis = -sqrt((X - rad)*(X - rad) +  (Y - rad)*(Y - rad)); }
+  return(dis);
 }
 
 void evaluate_function(itk::Image<float, 2> *im,
@@ -115,28 +116,30 @@ protected:
 
 private:
   Image<float, 2>::Pointer m_DistanceTransform;
-
+ 
   virtual ScalarValueType PropagationSpeed(
                             const NeighborhoodType& neighborhood,
                             const FloatOffsetType
                           ) const
     {
       Index<2> idx = neighborhood.GetIndex();
+
       return m_DistanceTransform->GetPixel(idx);
     }
 
   virtual ScalarValueType PropagationSpeed(const BoundaryNeighborhoodType
                                &neighborhood, const FloatOffsetType &
                                            ) const
-    {
-      Index<2> idx = neighborhood.GetIndex();
-      return m_DistanceTransform->GetPixel(idx);
-    }
+  {
+    Index<2> idx = neighborhood.GetIndex();
+    return m_DistanceTransform->GetPixel(idx);
+  }
+  
 };
 
 
 class MorphFilter : public
-DenseFiniteDifferenceImageFilter< Image<float, 2>, Image<float, 2> >
+SparseFieldLevelSetImageFilter< Image<float, 2>, Image<float, 2> >
 {
 public:
   typedef MorphFilter Self;
@@ -150,7 +153,7 @@ public:
   /**
    * Run-time type information (and related methods)
    */
-  itkTypeMacro( MorphFilter, DenseFiniteDifferenceImageFilter );
+  itkTypeMacro( MorphFilter, SparseFieldLevelSetImageFilter );
   
   /**
    * Method for creation through the object factory.
@@ -193,7 +196,18 @@ private:
 int main(int argc, char *argv[])
 {
   typedef itk::Image<float, 2> ImageType;
-  
+    
+  try {
+
+  itk::RawImageIO<float, 2>::Pointer output_io = itk::RawImageIO<float, 2>::New();
+   output_io->SetByteOrderToLittleEndian();
+   output_io->SetFileTypeToBinary();
+   output_io->SetFileDimensionality(2);
+
+  itk::ImageFileWriter<ImageType>::Pointer writer
+     = itk::ImageFileWriter<ImageType>::New(); 
+  writer->SetImageIO(output_io);
+   
   int n;
   if (argc < 2)
     {
@@ -222,8 +236,8 @@ int main(int argc, char *argv[])
   im_init->Allocate();
   im_target->Allocate();
 
-  evaluate_function(im_init, circle);
-  evaluate_function(im_target, square);
+  evaluate_function(im_init, square);
+  evaluate_function(im_target, circle);
 
   itk::ImageRegionIterator<ImageType> itr(im_target,
                                           im_target->GetRequestedRegion());
@@ -234,29 +248,30 @@ int main(int argc, char *argv[])
     itr.Value() = itr.Value() /vnl_math_sqrt((5.0f +vnl_math_sqr(itr.Value())));
   
   }
-
-  itk::RawImageWriter<ImageType>::Pointer writer
-    = itk::RawImageWriter<ImageType>::New();
   
-  writer->SetFileName("im_target.raw");
+  writer->SetFileName("distance_transform_2D.raw");
   writer->SetInput(im_target);
   writer->Write();
-
-  writer->SetFileName("im_init.raw");
+  
+  writer->SetFileName("initial_image_2D.raw");
   writer->SetInput(im_init);
   writer->Write();
- 
+  
   itk::MorphFilter::Pointer mf = itk::MorphFilter::New();
   mf->SetDistanceTransform(im_target);
   mf->SetIterations(n);
   mf->SetInput(im_init);
-  mf->SetNumberOfThreads(2);
-
-  writer->SetFileName("final.raw");
+  mf->SetNumberOfLayers(2);
+  
+  writer->SetFileName("final_image_2D.raw");
   writer->SetInput(mf->GetOutput());
   writer->Write();
-
-
- return 0;
   
+  }
+  catch (itk::ExceptionObject &e)
+    {
+      std::cout << e << std::endl;
+    }
+  
+  return 0;
 }
