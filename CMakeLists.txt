@@ -15,7 +15,6 @@ IF(BUILD_IMAGE_REGISTRATION)
 SUBDIRS(ImageRegistration)
 ENDIF(BUILD_IMAGE_REGISTRATION)
 
-
 # Add an option to build or not build the Multiresolution Registration example
 OPTION(BUILD_MULTIRESOLUTION "Build the multiresolution example")
 IF(BUILD_MULTIRESOLUTION)
@@ -40,6 +39,11 @@ IF(BUILD_PRINCIPAL_AXES)
 SUBDIRS(PrincipalAxes)
 ENDIF(BUILD_PRINCIPAL_AXES)
 
+# Add an option to build or not build the Morphogenesis example
+OPTION(BUILD_MORPHOGENESIS "Build the morphogenesis example")
+IF(BUILD_MORPHOGENESIS)
+SUBDIRS(Morphogenesis)
+ENDIF(BUILD_MORPHOGENESIS)
 
 # Add an option to build or not build the MRIBiasCorrection example
 OPTION(BUILD_MRI_BIAS_CORRECTION "Build the MRI bias correction example" ON)
