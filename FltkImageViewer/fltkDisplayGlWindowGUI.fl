@@ -1,10 +1,7 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0011 
+version 1.0100 
 header_name {.h} 
-code_name {.cxx} 
-gridx 5 
-gridy 5 
-snap 3
+code_name {.cxx}
 class fltkDisplayGlWindowGUI {open private
 } {
   Function {fltkDisplayGlWindowGUI()} {} {
@@ -64,8 +61,7 @@ drawWindow->size(nx,ny);} {}
   }
   Function {GetRedrawCommand(void)} {return_type {fltk::GlWindow::RedrawCommandType *}
   } {
-    code {return drawWindow->GetRedrawCommand();} {selected
-    }
+    code {return drawWindow->GetRedrawCommand();} {}
   }
   Function {GetNotifier(void)} {return_type {itk::Object *}
   } {
@@ -74,5 +70,10 @@ drawWindow->size(nx,ny);} {}
   Function {GetGlWindow(void)} {return_type {fltk::GlWindowInteractive *}
   } {
     code {return drawWindow;} {}
+  }
+  Function {SaveImage(const char * filename)} {open return_type {virtual void}
+  } {
+    code {drawWindow->SaveImage( filename );} {selected
+    }
   }
 } 
