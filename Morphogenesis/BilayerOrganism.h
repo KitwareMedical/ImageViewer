@@ -26,7 +26,7 @@ namespace bio {
 class BilayerOrganism  : public Eukariote
 {
 public:
-  typedef  Cell  Eukariote;
+  typedef  Eukariote  Superclass;
 
   BilayerOrganism();
   virtual ~BilayerOrganism();
