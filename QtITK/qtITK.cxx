@@ -1,7 +1,24 @@
+/*=========================================================================
+
+  Program:   Insight Segmentation & Registration Toolkit
+  Module:    qtITK.cxx
+  Language:  C++
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) 2002 Insight Consortium. All rights reserved.
+  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+
+     This software is distributed WITHOUT ANY WARRANTY; without even 
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     PURPOSE.  See the above copyright notices for more information.
+
+=========================================================================*/
+
+
 
 #include <qapplication.h>
 #include <qpushbutton.h>
-#include <qslider.h>
 #include <qvbox.h>
 
 #include "itkImage.h"
@@ -9,6 +26,7 @@
 #include "itkDiscreteGaussianImageFilter.h"
 
 #include "itkQtAdaptor.h"
+#include "itkQtProgressBar.h"
 
 
 int main(int argc, char **argv)
@@ -46,11 +64,14 @@ int main(int argc, char **argv)
   QPushButton  qt( "Quit", &qb );
   qt.resize( 100, 30 );
 
-  QSlider qs( QSlider::Horizontal, &qb, "Progress");
+  itk::QtProgressBar qs( Qt::Horizontal, &qb, "Progress");
   qs.resize( 100, 30 );
   qs.setRange(0,100);
   qs.setValue(0);
   
+  // Connect the progress bar to the ITK processObject
+  qs.Observe( filter.GetPointer() );
+  qs.Observe( reader.GetPointer() );
 
   typedef itk::QtSlotAdaptor<FilterType> SlotAdaptorType;
   SlotAdaptorType slotAdaptor;
