@@ -111,7 +111,7 @@ liImageRegistrationConsoleBase
     return;
   }
 
-  m_Reader->SetFileToLoad( filename );
+  m_Reader->SetFileName( filename );
   m_Reader->Update();
 
   m_ImageLoaded = true;
@@ -362,7 +362,7 @@ liImageRegistrationConsoleBase
     m_MeansSquaresMethod->GetOptimizer()->SetMaximumStepLength( 1.0  );
     m_MeansSquaresMethod->GetOptimizer()->SetMinimumStepLength( 1e-3 );
     m_MeansSquaresMethod->GetOptimizer()->SetGradientMagnitudeTolerance( 1e-8 );
-    m_MeansSquaresMethod->GetOptimizer()->SetMaximumNumberOfIterations( 200 );
+    m_MeansSquaresMethod->GetOptimizer()->SetNumberOfIterations( 200 );
     m_MeansSquaresMethod->StartRegistration();
 
     m_ReferenceMapper->GetTransform()->SetParameters(
