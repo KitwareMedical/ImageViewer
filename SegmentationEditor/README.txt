@@ -26,7 +26,8 @@ will cause this application to build:
 
 
 3. The rest of the documentation you will need is displayed by the program
-itself.
+itself.  Also see the documentation in the Examples section of the
+www.itk.org website.
 
 
 4. Report any problems to the Insight-users list (see www.itk.org).
