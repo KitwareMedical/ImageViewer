@@ -18,6 +18,8 @@
 #define __itkReadMetaImage_h
 
 #include "itkImageSource.h"
+#include "itkSize.h"
+#include "itkImageRegion.h"
 
 namespace itk
 {
