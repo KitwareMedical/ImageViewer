@@ -45,7 +45,7 @@ RegisterWindow::~RegisterWindow()
 void RegisterWindow::LoadMovingImage(void)
 {
   const char * filename = 
-    fl_file_chooser("Moving Image filename","*.png","");
+    fl_file_chooser("Moving Image filename","*.*","");
   if( !filename )
     {
       return;
@@ -80,7 +80,7 @@ void RegisterWindow::LoadMovingImage(void)
 void RegisterWindow::LoadFixedImage(void)
 {
   const char * filename = 
-    fl_file_chooser("Fixed Image filename","*.png","");
+    fl_file_chooser("Fixed Image filename","*.*","");
 
   if( !filename )
     {
@@ -419,7 +419,7 @@ void RegisterWindow::SaveRegisteredImage( void )
 {
 
   const char * filename = 
-    fl_file_chooser("Registered Image filename","*.png","");
+    fl_file_chooser("Registered Image filename","*.*","");
 
   if( !filename )
     {
