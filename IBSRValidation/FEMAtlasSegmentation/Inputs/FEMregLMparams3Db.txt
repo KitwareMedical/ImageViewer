@@ -6,7 +6,7 @@
 390000 %1.e4	% Elasticity
 40	% MaximumIterations
 1.	% TimeStep
-1.e12  % Energy Reduction Factor
+1.e-12  % Energy Reduction Factor
 1.e3  %2.e2	% Rho
 G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain10.buchar %brain_slice1smth.im % 	% ReferenceFileName
 G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain11.buchar %brain_slice2smth.im % 		% TargetFileName
