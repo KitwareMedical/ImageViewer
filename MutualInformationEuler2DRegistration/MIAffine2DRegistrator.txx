@@ -62,7 +62,6 @@ MIAffine2DRegistrator<TFixedImage,TMovingImage>
 
   m_InitialParameters = m_Transform->GetParameters();
 
-std::cout << "InitialParameters = " << m_InitialParameters << std::endl;
 }
 
 template <typename TFixedImage, typename TMovingImage>
@@ -117,8 +116,8 @@ MIAffine2DRegistrator<TFixedImage,TMovingImage>
     }
   catch( itk::ExceptionObject & err )
     {
-    std::cout << "Caught an exception: " << std::endl;
-    std::cout << err << std::endl;
+    std::cerr << "Caught an exception: " << std::endl;
+    std::cerr << err << std::endl;
     throw err;
     }
 }
