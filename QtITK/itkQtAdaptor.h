@@ -69,7 +69,6 @@ public:
   /** Slot to be connected to Qt Signals. */
   void Slot() 
   {
-  std::cout << "Slot(void)" << std::endl;
   if( m_MemberFunctionVoid ) 
     {
     ((*m_This).*(m_MemberFunctionVoid))();
@@ -79,7 +78,6 @@ public:
   /** Slot to be connected to Qt Signals. */
   void Slot(int value) 
   {
-  std::cout << "Slot(int)" << std::endl;
   if( m_MemberFunctionInt ) 
     {
     ((*m_This).*(m_MemberFunctionInt))(value);
@@ -89,7 +87,6 @@ public:
   /** Slot to be connected to Qt Signals. */
   void Slot(double value) 
   {
-  std::cout << "Slot(double)" << std::endl;
   if( m_MemberFunctionDouble ) 
     {
     ((*m_This).*(m_MemberFunctionDouble))(value);
@@ -106,6 +103,8 @@ protected:
 
  
 };
+
+
 
 
 
