@@ -68,7 +68,7 @@ WriteMetaImage<TInputImage>
 
   int dimSize[ dimension ];
 
-  const typename TInputImage::Size& size = 
+  const typename TInputImage::SizeType & size = 
         m_InputImage->GetBufferedRegion().GetSize();
         
   const float         *spacing = m_InputImage->GetSpacing();                

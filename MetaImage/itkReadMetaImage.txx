@@ -66,7 +66,7 @@ ReadMetaImage<TOutputImage>
     }
 
   const long startPosition[] = { 0, 0, 0 };
-  typename TOutputImage::Index start;
+  typename TOutputImage::IndexType start;
   start.SetIndex( startPosition );
 
   Region region;
