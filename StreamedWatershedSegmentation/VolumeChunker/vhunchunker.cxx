@@ -339,9 +339,10 @@ int main(int argc, char *argv[])
                 << std::endl;
       ::exit(1);
     }
-  in.read(&chunknumber, sizeof(int));
+  in.read((unsigned char *)&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
-  in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
+  in.read((unsigned char *)chunk_list, chunknumber *
+          sizeof(ctk::chunk_info_struct));
   in.close();
 
   // Some properties of the output volume that we are going to create
@@ -469,7 +470,7 @@ int main(int argc, char *argv[])
           for (long yy = startY; yy < endY; yy++)
             {
               yPos = yy - o_Yextent[0];
-              chunkin.read(scanbuf, scanlen);
+              chunkin.read((unsigned char *)scanbuf, scanlen);
               outstream->write(xPos, yPos, zPos,  scanbuf, scanlen);
               chunkin.seekg(c_Yoffset, ios::cur);
             }

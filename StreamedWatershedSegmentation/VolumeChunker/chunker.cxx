@@ -169,8 +169,10 @@ int main(int argc, char * argv[])
   // Write chunk list to disk
   std::ofstream cfo;
   cfo.open(cfn.c_str());
-  cfo.write(&chunknumber, sizeof(int)); //write the number of chunks to follow
-  cfo.write(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
+  //write the number of chunks to follow
+  cfo.write((unsigned char *)&chunknumber, sizeof(int));
+  cfo.write((unsigned char *)chunk_list, chunknumber *
+            sizeof(ctk::chunk_info_struct)); 
   cfo.close();
 
   // Now split the file into its chunks
@@ -242,8 +244,8 @@ int main(int argc, char * argv[])
         {
           for (unsigned yy = 0; yy < y_max; yy++)
             {
-              in.read(scanline, scanlen);
-              out.write(scanline, scanlen);
+              in.read((unsigned char *)scanline, scanlen);
+              out.write((unsigned char *)scanline, scanlen);
               in.seekg(y_scan_offset,ios::cur);
             }
           in.seekg(z_scan_offset, ios::cur);

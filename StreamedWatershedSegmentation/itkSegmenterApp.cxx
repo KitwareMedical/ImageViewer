@@ -143,10 +143,11 @@ int main(int argc, char *argv[])
       std::cerr << "Could not open file" << in_chunkfile << std::endl;
       ::exit(1);
     }
-  
-  in.read(&chunknumber, sizeof(int)); //read the number of chunks to follow
+  //read the number of   chunks to follow 
+  in.read((unsigned char *)&chunknumber, sizeof(int)); 
   chunk_list = new ctk::chunk_info_struct[chunknumber];
-  in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
+  in.read((unsigned char *)chunk_list, chunknumber *
+          sizeof(ctk::chunk_info_struct)); 
   in.close();
 
   FloatImageType::RegionType largestReg;
@@ -264,9 +265,10 @@ int main(int argc, char *argv[])
         std::endl;
       ::exit(1);
     }
-  
-  out.write(&chunknumber, sizeof(int)); //write the number of chunks to follow
-  out.write(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
+  //write the number of chunks to follow
+  out.write((unsigned char *)&chunknumber, sizeof(int));
+  out.write((unsigned char *)chunk_list, chunknumber *
+            sizeof(ctk::chunk_info_struct));
   out.close();
   
   }

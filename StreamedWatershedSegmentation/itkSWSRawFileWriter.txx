@@ -69,7 +69,8 @@ void RawFileWriter<TOutputImage>::GenerateData()
   if (!out) throw ExceptionObject();
 
   // JUST DUMPS THE WHOLE IMAGE BUFFER
-  out.write(input->GetBufferPointer(), num * sizeof(PixelType));
+  out.write((unsigned char *)(input->GetBufferPointer()), num *
+            sizeof(PixelType));
   out.close();
 }
 

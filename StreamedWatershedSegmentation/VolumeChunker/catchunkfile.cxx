@@ -63,9 +63,10 @@ int main(int argc, char *argv[])
       ::exit(1);
     }
   
-  in.read(&chunknumber, sizeof(int));
+  in.read((unsigned char *)&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
-  in.read(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
+  in.read((unsigned char *)chunk_list, chunknumber *
+          sizeof(ctk::chunk_info_struct));
   in.close();
 
   // List the chunks

@@ -216,8 +216,10 @@ int main(int argc, char * argv[])
   // Write chunk list to disk
   std::ofstream cfo;
   cfo.open(cfn.c_str());
-  cfo.write(&chunknumber, sizeof(int)); //write the number of chunks to follow
-  cfo.write(chunk_list, chunknumber * sizeof(ctk::chunk_info_struct));
+  //write the number of chunks to follow
+  cfo.write((unsigned char *)&chunknumber, sizeof(int));
+  cfo.write((unsigned char *)chunk_list, chunknumber *
+            sizeof(ctk::chunk_info_struct));
   cfo.close();
 
   
@@ -292,12 +294,12 @@ int main(int argc, char * argv[])
           in.seekg(start_offset, ios::beg);
           for (unsigned yy = 0; yy < y_max; yy++)
             {
-              in.read(scanline, scanlen);
+              in.read((unsigned char *)scanline, scanlen);
               pos = in.tellg();
               in.seekg(z_stride - scanlen, ios::cur);
-              in.read(scanline2, scanlen);
+              in.read((unsigned char *)scanline2, scanlen);
               in.seekg(z_stride - scanlen, ios::cur);
-              in.read(scanline3, scanlen);
+              in.read((unsigned char *)scanline3, scanlen);
 
               for (ggg = 0, fff = 0; ggg < scanlen; ++ggg)
                 {
@@ -309,7 +311,7 @@ int main(int argc, char * argv[])
                   fff++;
                 }
 
-              out.write(interlaced_scanline, scanlen *3);
+              out.write((unsigned char *)interlaced_scanline, scanlen *3);
               
               in.seekg(pos);
               in.seekg(y_scan_offset,ios::cur);
