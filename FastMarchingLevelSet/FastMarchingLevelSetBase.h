@@ -23,8 +23,7 @@
 #include "itkImage.h"
 #include "itkCastImageFilter.h"
 #include "itkFastMarchingImageFilter.h"
-#include "itkGradientRecursiveGaussianImageFilter.h"
-#include "itkGradientToMagnitudeImageFilter.h"
+#include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
 #include "itkExpNegativeImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 
@@ -72,7 +71,7 @@ public:
                  InternalImageType >     CastImageFilterType;
 
   /** Derivative filter type, */
-  typedef itk::GradientRecursiveGaussianImageFilter<
+  typedef itk::GradientMagnitudeRecursiveGaussianImageFilter<
                                     InternalImageType>  DerivativeFilterType;
 
   /** Fast Marching filte use to evolve the contours */
@@ -80,11 +79,6 @@ public:
                  InternalImageType, 
                  InternalImageType >     FastMarchingFilterType;
 
-  /** Filter to compute the magnitude of the Gradient */
-  typedef   itk::GradientToMagnitudeImageFilter< 
-                    DerivativeFilterType::OutputImageType,
-                    InternalImageType >                   MagnitudeImageFilterType;
-  
   /** Filter to compute negative exponential of the gradient magnitude */
   typedef   itk::ExpNegativeImageFilter< 
                     InternalImageType,
@@ -132,8 +126,6 @@ protected:
   FastMarchingFilterType::Pointer             m_FastMarchingFilter;
 
   DerivativeFilterType::Pointer               m_DerivativeFilter;
-
-  MagnitudeImageFilterType::Pointer           m_MagnitudeFilter;
 
   ExpNegativeFilterType::Pointer              m_ExpNegativeFilter;
 

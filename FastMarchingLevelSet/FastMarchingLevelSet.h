@@ -56,13 +56,11 @@ public:
   /** Image Viewer Types */
   typedef SeedPixelType OverlayPixelType;
 
-  typedef fltk::ImageViewer< InputPixelType, 
-                                    OverlayPixelType >          InputImageViewerType;
-
+  /** FLTK viewer module */
   typedef fltk::ImageViewer< InternalPixelType, 
-                                    OverlayPixelType >          InternalImageViewerType;
+                                    OverlayPixelType >     InternalImageViewerType;
 
-  typedef fltk::VTKImageViewer< ThresholdPixelType >             VTKImageViewerType;
+  typedef fltk::VTKImageViewer< ThresholdPixelType >       VTKImageViewerType;
 
 
 public:

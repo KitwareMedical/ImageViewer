@@ -62,12 +62,10 @@ FastMarchingLevelSet
   thresholdedImageButton->Observe( m_ThresholdFilter.GetPointer() );
   timeCrossingButton->Observe( m_FastMarchingFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
-  gradientMagnitudeButton->Observe( m_MagnitudeFilter.GetPointer() );
   edgePotentialButton->Observe( m_ExpNegativeFilter.GetPointer() );
 
   progressSlider->Observe( m_CastImageFilter.GetPointer() );
   progressSlider->Observe( m_DerivativeFilter.GetPointer() );
-  progressSlider->Observe( m_MagnitudeFilter.GetPointer() );
   progressSlider->Observe( m_ThresholdFilter.GetPointer() );
   progressSlider->Observe( m_ExpNegativeFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
@@ -127,8 +125,11 @@ FastMarchingLevelSet
 {
   m_InputImageViewer.Hide();
   m_ThresholdedImageViewer.Hide();
-  m_VTKSegmentedImageViewer->Hide();
+  m_EdgePotentialImageViewer.Hide();
+  m_GradientMagnitudeImageViewer.Hide();
   
+  m_VTKSegmentedImageViewer->Hide();
+
   consoleWindow->hide();
 }
 
@@ -261,7 +262,7 @@ FastMarchingLevelSet
     return;
     }
   this->ComputeGradientMagnitude();
-  m_GradientMagnitudeImageViewer.SetImage( m_MagnitudeFilter->GetOutput() );  
+  m_GradientMagnitudeImageViewer.SetImage( m_DerivativeFilter->GetOutput() );  
   m_GradientMagnitudeImageViewer.Show();
 
 }
@@ -367,6 +368,8 @@ FastMarchingLevelSet
   seed[2] = static_cast<IndexType::IndexValueType>( z );
 
   FastMarchingLevelSetBase::AddSeed( seed );
+
+  m_SeedImage->SetPixel( seed, 1 );
 
   m_InputImageViewer.Update();
 

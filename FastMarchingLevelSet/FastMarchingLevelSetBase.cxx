@@ -36,11 +36,8 @@ FastMarchingLevelSetBase
   m_DerivativeFilter   = DerivativeFilterType::New();
   m_DerivativeFilter->SetInput( m_CastImageFilter->GetOutput() );
 
-  m_MagnitudeFilter    = MagnitudeImageFilterType::New();
-  m_MagnitudeFilter->SetInput( m_DerivativeFilter->GetOutput() );
-
   m_ExpNegativeFilter  = ExpNegativeFilterType::New();
-  m_ExpNegativeFilter->SetInput( m_MagnitudeFilter->GetOutput() );
+  m_ExpNegativeFilter->SetInput( m_DerivativeFilter->GetOutput() );
 
   m_FastMarchingFilter = FastMarchingFilterType::New();
   m_FastMarchingFilter->SetSpeedImage( m_ExpNegativeFilter->GetOutput() );
@@ -156,8 +153,6 @@ FastMarchingLevelSetBase
 {
   this->ShowStatus("Computing Gradient Image");
   m_DerivativeFilter->Update();
-  this->ShowStatus("Computing Gradient Magnitude Image");
-  m_MagnitudeFilter->Update();
 }
 
 
