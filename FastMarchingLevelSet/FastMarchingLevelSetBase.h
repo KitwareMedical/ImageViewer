@@ -26,6 +26,7 @@
 #include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
 #include "itkSigmoidImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
+#include "itkIntensityWindowingImageFilter.h"
 
 
 /**
@@ -84,6 +85,12 @@ public:
                     InternalImageType,
                     InternalImageType >                   SigmoidFilterType;
  
+  /** Threshold filter used to eliminate the infinite times assigned 
+      to non-visited pixels in the FastMarching filter. */
+  typedef   itk::IntensityWindowingImageFilter< 
+                    InternalImageType,
+                    InternalImageType >      FastMarchingWindowingFilterType;
+    
   /** Threshold filter used to select a time from the time map */
   typedef   itk::BinaryThresholdImageFilter< 
                     InternalImageType,
@@ -117,6 +124,10 @@ public:
 
 protected:
 
+  void SetStoppingValue( double value );
+
+protected:
+
   ImageReaderType::Pointer                    m_ImageReader;
 
   bool                                        m_InputImageIsLoaded;
@@ -124,6 +135,8 @@ protected:
   CastImageFilterType::Pointer                m_CastImageFilter;
 
   FastMarchingFilterType::Pointer             m_FastMarchingFilter;
+
+  FastMarchingWindowingFilterType::Pointer    m_FastMarchingWindowingFilter;
 
   DerivativeFilterType::Pointer               m_DerivativeFilter;
 

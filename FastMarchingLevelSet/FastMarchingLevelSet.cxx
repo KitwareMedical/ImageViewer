@@ -60,7 +60,7 @@ FastMarchingLevelSet
   m_SigmoidFilter->SetAlpha( alphaValueInput->value() );
   m_SigmoidFilter->SetBeta(  betaValueInput->value()  );
 
-  m_FastMarchingFilter->SetStoppingValue( stoppingValueInput->value() );
+  this->SetStoppingValue( stoppingValueInput->value() );
 
   m_VTKSegmentedImageViewer = VTKImageViewerType::New();
   m_VTKSegmentedImageViewer->SetImage( m_ThresholdFilter->GetOutput() );
@@ -82,6 +82,7 @@ FastMarchingLevelSet
   progressSlider->Observe( m_SigmoidFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
   progressSlider->Observe( m_FastMarchingFilter.GetPointer() );
+  progressSlider->Observe( m_FastMarchingWindowingFilter.GetPointer() );
   
   m_ThresholdFilter->SetLowerThreshold( lowerThresholdValueInput->value() );
   m_ThresholdFilter->SetUpperThreshold( upperThresholdValueInput->value() );
@@ -265,7 +266,7 @@ FastMarchingLevelSet
     return;
     }
   this->RunFastMarching();
-  m_TimeCrossingMapViewer.SetImage( m_FastMarchingFilter->GetOutput() );  
+  m_TimeCrossingMapViewer.SetImage( m_FastMarchingWindowingFilter->GetOutput() );  
   m_TimeCrossingMapViewer.Show();
 
 }

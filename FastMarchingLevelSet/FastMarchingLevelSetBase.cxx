@@ -48,15 +48,26 @@ FastMarchingLevelSetBase
   m_FastMarchingFilter = FastMarchingFilterType::New();
   m_FastMarchingFilter->SetInput( m_SigmoidFilter->GetOutput() );
 
+  m_SeedValue     = 0;
+
+  m_FastMarchingWindowingFilter = FastMarchingWindowingFilterType::New();
+  m_FastMarchingWindowingFilter->SetInput( m_FastMarchingFilter->GetOutput() );
+  m_FastMarchingWindowingFilter->SetWindowMinimum( m_SeedValue );
+  m_FastMarchingWindowingFilter->SetWindowMaximum( 
+                                  m_FastMarchingFilter->GetStoppingValue() );
+  m_FastMarchingWindowingFilter->SetOutputMinimum( m_SeedValue );
+  m_FastMarchingWindowingFilter->SetOutputMaximum( 
+                                  m_FastMarchingFilter->GetStoppingValue() );
+
+
   m_ThresholdFilter = ThresholdFilterType::New();
-  m_ThresholdFilter->SetInput( m_FastMarchingFilter->GetOutput() );
+  m_ThresholdFilter->SetInput( m_FastMarchingWindowingFilter->GetOutput() );
   m_ThresholdFilter->SetInsideValue(   1 );
   m_ThresholdFilter->SetOutsideValue(  0 );
 
   m_TrialPoints = NodeContainer::New();
   m_FastMarchingFilter->SetTrialPoints( m_TrialPoints );
 
-  m_SeedValue     = 0;
   m_NumberOfSeeds = 0;
 
   m_InputImageIsLoaded  = false;
@@ -178,6 +189,21 @@ FastMarchingLevelSetBase
 }
 
 
+/***********************************************************
+ *
+ *   Set the stopping value of the FastMarching and update
+ *   the value for the subsequent intensity window filter.
+ *
+ ***********************************************************/
+void
+FastMarchingLevelSetBase
+::SetStoppingValue( double value )
+{
+   m_FastMarchingFilter->SetStoppingValue( value );
+   m_FastMarchingWindowingFilter->SetWindowMaximum( value );
+   m_FastMarchingWindowingFilter->SetOutputMaximum( value );
+}
+
   
 
 /************************************
@@ -195,7 +221,7 @@ FastMarchingLevelSetBase
     {
     this->ComputeGradientMagnitude();
     this->ShowStatus("Computing Fast Marching Filter");
-    m_FastMarchingFilter->Update();
+    m_FastMarchingWindowingFilter->Update();
     }
   catch( itk::ExceptionObject & exp )
     {

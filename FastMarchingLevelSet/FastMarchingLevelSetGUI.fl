@@ -154,7 +154,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
         }
         Fl_Value_Input stoppingValueInput {
           label Stopping
-          callback {m_FastMarchingFilter->SetStoppingValue( o->value()  );} selected
+          callback {this->SetStoppingValue( o->value()  );} selected
           xywh {435 40 55 25} labelsize 12 maximum 50000 step 1 value 50 textsize 12
         }
       }
