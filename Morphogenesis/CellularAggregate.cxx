@@ -89,6 +89,7 @@ CellularAggregate
 ::ExportXFIG(const char * filename) const
 {
 
+  /*
   std::ofstream output;
   output.open( filename );
 
@@ -132,7 +133,7 @@ CellularAggregate
     }
 
   output.close();
-
+  */
 }
 
 
@@ -143,7 +144,7 @@ void
 CellularAggregate
 ::ExportDrawing(const char * filename) const
 {
-
+  /*
   std::ofstream output;
   output.open( filename );
 
@@ -167,7 +168,7 @@ CellularAggregate
     }
 
   output.close();
-
+  */
 }
 
 
