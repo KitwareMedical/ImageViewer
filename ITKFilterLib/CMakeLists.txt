@@ -31,7 +31,6 @@ Example_ITKFilterLib
 )
 
 LINK_LIBRARIES (
-VXLNumerics
 ITKNumerics
 ITKCommon
 ITKIO

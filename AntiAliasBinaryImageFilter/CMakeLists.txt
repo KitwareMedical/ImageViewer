@@ -7,6 +7,7 @@ ${AntiAliasBinaryImageFilter_SOURCE_DIR}/../StreamedWatershedSegmentation/Parame
 
 LINK_LIBRARIES (
 param
+ITKAlgorithms
 ITKBasicFilters
 ITKCommon
 VXLNumerics

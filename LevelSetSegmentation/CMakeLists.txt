@@ -1,4 +1,5 @@
 LINK_LIBRARIES (
+ITKAlgorithms
 ITKBasicFilters
 ITKCommon
 ITKIO
