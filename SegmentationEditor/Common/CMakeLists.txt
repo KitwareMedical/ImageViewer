@@ -46,25 +46,6 @@ LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Code/Numerics/Statistics )
                          vtkFilteringTCL 
                          vtkCommonTCL 
                          ${TCL_LIBRARY})
-# if we are wrapping into Python then add the library and extra 
-# source files
-#
-IF (VTK_WRAP_PYTHON)
-  VTK_WRAP_PYTHON(vtkWSTCommonPython WSTCommonPython_SRCS WSTCommon_SRCS)
-  ADD_LIBRARY(vtkWSTCommonPython SHARED WSTCommonPython_SRCS)
-  TARGET_LINK_LIBRARIES (vtkWSTCommonPython 
-                         vtkFilteringPython 
-                         vtkCommonPython)
-  IF(WIN32)
-    TARGET_LINK_LIBRARIES (vtkWSTCommonPython 
-                           debug ${PYTHON_DEBUG_LIBRARY} 
-                           optimized ${PYTHON_LIBRARY})
-  ELSE(WIN32)
-    TARGET_LINK_LIBRARIES (vtkWSTCommonPython ${PYTHON_LIBRARY})
-  ENDIF(WIN32)
-
-ENDIF (VTK_WRAP_PYTHON)
-
 
 LINK_LIBRARIES (
 vtkCommon 
