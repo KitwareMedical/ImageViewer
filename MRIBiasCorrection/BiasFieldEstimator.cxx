@@ -244,7 +244,7 @@ int main(int argc, char* argv[])
   // zero.
   filter->SetBiasFieldDegree(degree) ;
   // turn on inter-slice intensity correction 
-  filter->SetUsingInterSliceIntensityCorrection(true) ;
+  filter->SetUsingInterSliceIntensityCorrection(false) ;
   // disable slab identifcation
   // the filter will think the largest possible region as the only one
   // slab.
