@@ -30,7 +30,7 @@ removeCB = NULL;
 saveCB = NULL;} {}
     Fl_Window iviewWindow {
       label IView open
-      xywh {1179 627 315 430} labelsize 10 resizable
+      xywh {961 562 315 430} labelsize 10 resizable
       code0 {\#include<itkImageRegionIterator.h>} visible
     } {
       Fl_Menu_Bar {} {open
@@ -132,7 +132,7 @@ saveCB = NULL;} {}
           }
           menuitem {} {
             label YZ
-            callback {Orientation(0);} selected
+            callback {Orientation(0);}
             xywh {20 20 100 20}
           }
         }
@@ -256,5 +256,7 @@ saveCB = NULL;} {}
   Function {FlipY(void)} {return_type {virtual void}
   } {}
   Function {Orientation(unsigned int)} {return_type {virtual void}
+  } {}
+  Function {setOverlay(const PhysicalImage<unsigned char,3>::Pointer img)} {selected return_type {virtual void}
   } {}
 } 

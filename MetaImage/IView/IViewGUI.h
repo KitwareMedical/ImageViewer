@@ -130,5 +130,6 @@ public:
   virtual void CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w );
   virtual void FlipY(void);
   virtual void Orientation(unsigned int);
+  virtual void setOverlay(const PhysicalImage<unsigned char,3>::Pointer img);
 };
 #endif

@@ -408,3 +408,6 @@ void IViewGUI::FlipY(void) {
 
 void IViewGUI::Orientation(unsigned int) {
 }
+
+void IViewGUI::setOverlay(const PhysicalImage<unsigned char,3>::Pointer img) {
+}

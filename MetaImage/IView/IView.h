@@ -31,6 +31,7 @@ public:
   virtual ~IView();
   virtual void open(void);
   virtual void SetImage(ImageType::Pointer img);
+  virtual void SetOverlay(OverlayType::Pointer overlay);
   virtual void show(void);
   virtual void hide(void);
   virtual void update(void);

@@ -69,6 +69,26 @@ IView<ImagePixelType,OverlayPixelType>
   synchronize();
 }
 
+template <class ImagePixelType, class OverlayPixelType>
+void
+IView<ImagePixelType,OverlayPixelType>
+::SetOverlay(OverlayType::Pointer overlay)
+{ 
+  /*Set a spacing if there is no define in the header file*/
+  double *spacing = (double*)overlay->GetSpacing();
+
+  if (spacing[0] == NULL )
+    spacing[0] = 1;
+  if (spacing[1] == NULL )
+    spacing[1] = 1;
+  if (spacing[2] == NULL )
+    spacing[2] = 1;
+
+  overlay->SetSpacing(spacing);
+  glSliceView->SetInputOverlay( overlay );
+  synchronize();
+}
+
 
 
 
