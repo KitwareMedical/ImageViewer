@@ -345,7 +345,7 @@ void ImageRegLMEx::WarpImage()
 
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        tindex[ii]+=(long int)(disp[ii]);  //+0.5);
+        tindex[ii]+=(long int)(disp[ii]+0.5);
         if (tindex[ii] >=0 && tindex[ii] < m_FieldSize[ii]) InImage=true;
           else 
           {
@@ -582,11 +582,6 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
         m_MinE=cure;
         mint=iters;   
         m_Solver.AddToDisplacements();  
-        m_Solver.PrintDisplacements();
-        GetVectorField();
-        SampleVectorFieldAtNodes(); 
-        m_Solver.PrintDisplacements();
-        std::cout;
      } else iters=m_Maxiters;
    }
    
@@ -633,23 +628,39 @@ void ImageRegLMEx::GetVectorField()
     unsigned int sfsz= (*elt)->GetNumberOfNodes();
     vnl_vector<double> shapeF( sfsz );
 
-    for (double r=-1.; r <= 1.; r=r+ 1./(float)m_MeshResolution)
-    for (double s=-1.; s <= 1.; s=s+ 1./(float)m_MeshResolution)
+    for (double r=-1.; r <= 1.; r=r+ 1./(((float)m_MeshResolution)*2.0))
+    for (double s=-1.; s <= 1.; s=s+ 1./(((float)m_MeshResolution)*2.0))
     {
-     Pos[0]=r; 
-      Pos[1]=s;;
+      Pos[0]=r; 
+      Pos[1]=s;
       VectorType disp; 
       vnl_vector<double> ncoord(2); 
       Gpt=(*elt)->GetGlobalFromLocalCoordinates(Pos);
-      Sol=(*elt)->InterpolateSolution(Pos,*(m_Solver.GetLS()),1); // for total solution index
+      Sol=(*elt)->InterpolateSolution(Pos,*(m_Solver.GetLS()),m_Solver.TotalSolutionIndex); // for total solution index
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
-        rindex[ii]=(long int) (Gpt[ii]+0.5);
-        disp[ii] =(Float) 1.*Sol[ii];
+        rindex[ii]=(long int) (Gpt[ii]*(Float)m_ImageScaling[ii]+0.5);
+        disp[ii] =(Float) 1.*Sol[ii]*((Float)m_ImageScaling[ii]);
       }
       m_Field->SetPixel(rindex, disp );
     }    
   }
+  /* Insure that the values are exact at the nodes. They won't be unless we use this code.
+  Node::ArrayType* nodes = &(m_Solver.node);
+  Element::VectorType coord;  
+  VectorType SolutionAtNode;
+  for(  Node::ArrayType::iterator node=nodes->begin(); node!=nodes->end(); node++) 
+  {
+    coord=(*node)->GetCoordinates();
+    for (unsigned int ii=0; ii < ImageDimension; ii++)
+    { 
+      rindex[ii]=(long int) (coord[ii]*(Float)m_ImageScaling[ii]+0.5);
+      Float OldSol=m_Solver.GetLinearSystemWrapper()->
+        GetSolutionValue((*node)->GetDegreeOfFreedom(ii),m_Solver.TotalSolutionIndex);
+      SolutionAtNode[ii]=OldSol*((Float)m_ImageScaling[ii]);    
+    }
+    m_Field->SetPixel(rindex, SolutionAtNode );
+  }*/
 }
 
 
@@ -704,16 +715,16 @@ void ImageRegLMEx::SampleVectorFieldAtNodes()
     coord=(*node)->GetCoordinates();
     for (unsigned int ii=0; ii < ImageDimension; ii++)
     { 
-      rindex[ii]=(long int) (coord[ii]+0.5);
+      rindex[ii]=(long int) (coord[ii]*(Float)m_ImageScaling[ii]+0.5);
     }
     SolutionAtNode=m_Field->GetPixel(rindex);
     // Now put it into the solution!
     for (unsigned int ii=0; ii < ImageDimension; ii++)
     { 
-      Float Sol=SolutionAtNode[ii]*((Float)m_ImageScaling[ii]);
-      Float OldSol=m_Solver.GetLinearSystemWrapper()->
-        GetSolutionValue((*node)->GetDegreeOfFreedom(ii),m_Solver.TotalSolutionIndex);   
-      Float diff=Sol-OldSol;
+      Float Sol=SolutionAtNode[ii]/((Float)m_ImageScaling[ii]); // Scale back to current scale
+//      Float OldSol=m_Solver.GetLinearSystemWrapper()->
+//        GetSolutionValue((*node)->GetDegreeOfFreedom(ii),m_Solver.TotalSolutionIndex);   
+//      Float diff=Sol-OldSol;// for testing
       m_Solver.GetLinearSystemWrapper()->
         SetSolutionValue((*node)->GetDegreeOfFreedom(ii),Sol,m_Solver.TotalSolutionIndex);   
     }
@@ -752,7 +763,9 @@ void ImageRegLMEx::MultiResSolve()
 
 //  ImageType::SizeType Isz=m_RefImg->GetLargestPossibleRegion().GetSize();
   ScheduleType SizeReduction=pyramid1->GetSchedule();
-
+  for (unsigned int ii=0; ii<numLevels; ii++) for (unsigned int jj=0; jj<ImageDimension; jj++) SizeReduction[ii][jj]=1;
+  pyramid1->SetSchedule(SizeReduction);pyramid2->SetSchedule(SizeReduction);
+  std::cout << SizeReduction << std::endl;
   for (unsigned int i=0; i<numLevels; i++)
   {
     pyramid1->Update();
@@ -774,7 +787,7 @@ void ImageRegLMEx::MultiResSolve()
     itpackWrapper.SetTolerance(1.e-6);
     itpackWrapper.JacobianSemiIterative(); 
     m_Solver.SetLinearSystemWrapper(&itpackWrapper); 
-
+    
     m_Load=LMClass2::New();
 
     caster2->SetInput(pyramid1->GetOutput(i)); caster2->Update();
@@ -803,15 +816,9 @@ void ImageRegLMEx::MultiResSolve()
 
     m_Solver.AssembleKandM();
  
-    if (i > 0)
-    {
-      for (unsigned int j=0; j<m_Solver.GetNGFN(); j++)
-      {
-        m_Solver.GetLinearSystemWrapper()->
-          SetSolutionValue(j,LastResolutionSolution[j],m_Solver.TotalSolutionIndex);
-      }
-    }
+    if ( i > 0) SampleVectorFieldAtNodes();
 
+    m_Solver.PrintDisplacements();
 
     IterativeSolve();
 
@@ -820,21 +827,12 @@ void ImageRegLMEx::MultiResSolve()
       Float s1=(Float)SizeReduction[i][0];  
       Float s2=(Float)SizeReduction[i+1][0];  
       Float Magnification=s1/s2;
-
-      LastResolutionSolution.clear();
-      LastResolutionSolution.resize(m_Solver.GetNGFN());
-      unsigned int TotalSolutionIndex=1; // from SolverType
-      for (unsigned int j=0; j<m_Solver.GetNGFN(); j++)
-      {
-        double temp=m_Solver.GetLinearSystemWrapper()->
-          GetSolutionValue(j,TotalSolutionIndex);
-        LastResolutionSolution[j]=temp*Magnification;
-      } 
     }
     
+    GetVectorField();
+
     if ( i == numLevels-1 ) 
     { 
-      GetVectorField();
       WarpImage();     
     }
   }

@@ -169,14 +169,17 @@ public:
   void  MultiResPyramidSolve();
   /** Evaluates the energy by calling the image metric */
   Float EvaluateEnergy();
-  /** Interpolates the vector field over the domain */
+  /** Interpolates the vector field over the domain.  
+    * Our convention is to always keep the vector field
+    * at the scale of the original images.
+    */
   void  GetVectorField(); 
-  /** This is used for changing between mesh resolutions */
+  /** This is used for changing between mesh resolutions. */
   void SampleVectorFieldAtNodes();
-  /** Applies the warp to the reference image */
+  /** Applies the warp to the reference image. */
   void  WarpImage();      
 
-  /** Writes the displacement field to a file */
+  /** Writes the displacement field to a file. */
   void WriteDispField();
 
   /** Set the following parameters to run the example */
