@@ -81,6 +81,8 @@ public:
 
   virtual void ShowGradientMagnitudeImage();
 
+  virtual void ShowEdgePotentialImage();
+
   virtual void ShowThresholdedImage();
 
   virtual void ShowThresholdedImageWithVTK();
@@ -104,6 +106,8 @@ private:
   InternalImageViewerType         m_InputImageViewer;
 
   InternalImageViewerType         m_GradientMagnitudeImageViewer;
+
+  InternalImageViewerType         m_EdgePotentialImageViewer;
 
   VTKImageViewerType::Pointer     m_VTKSegmentedImageViewer;
 

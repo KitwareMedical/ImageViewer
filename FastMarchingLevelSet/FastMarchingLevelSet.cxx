@@ -41,6 +41,8 @@ FastMarchingLevelSet
 
   m_GradientMagnitudeImageViewer.SetLabel("Gradient Magnitude Image");
 
+  m_EdgePotentialImageViewer.SetLabel("Edge Potential Image");
+
   m_InputImageViewer.ClickSelectCallBack( ClickSelectCallback, (void *)this);
 
   // Initialize ITK filter with GUI values
@@ -59,12 +61,15 @@ FastMarchingLevelSet
   inputImageButton->Observe( m_ImageReader.GetPointer() );
   thresholdedImageButton->Observe( m_ThresholdFilter.GetPointer() );
   timeCrossingButton->Observe( m_FastMarchingFilter.GetPointer() );
+  gradientMagnitudeButton->Observe( m_DerivativeFilter.GetPointer() );
   gradientMagnitudeButton->Observe( m_MagnitudeFilter.GetPointer() );
+  edgePotentialButton->Observe( m_ExpNegativeFilter.GetPointer() );
 
   progressSlider->Observe( m_CastImageFilter.GetPointer() );
   progressSlider->Observe( m_DerivativeFilter.GetPointer() );
   progressSlider->Observe( m_MagnitudeFilter.GetPointer() );
   progressSlider->Observe( m_ThresholdFilter.GetPointer() );
+  progressSlider->Observe( m_ExpNegativeFilter.GetPointer() );
   progressSlider->Observe( m_ImageReader.GetPointer() );
   
   typedef itk::SimpleMemberCommand< FastMarchingLevelSet > SimpleCommandType;
@@ -123,6 +128,7 @@ FastMarchingLevelSet
   m_InputImageViewer.Hide();
   m_ThresholdedImageViewer.Hide();
   m_VTKSegmentedImageViewer->Hide();
+  
   consoleWindow->hide();
 }
 
@@ -243,7 +249,6 @@ FastMarchingLevelSet
 /************************************
  *
  *  Show Gradient Magnitude
- *  This is the potential edge map
  *
  ***********************************/
 void
@@ -260,6 +265,30 @@ FastMarchingLevelSet
   m_GradientMagnitudeImageViewer.Show();
 
 }
+
+
+
+ 
+/************************************
+ *
+ *  Show The Edge Potential Map
+ *
+ ***********************************/
+void
+FastMarchingLevelSet
+::ShowEdgePotentialImage( void )
+{
+
+  if( !m_InputImageIsLoaded )
+    {
+    return;
+    }
+  this->ComputeEdgePotential();
+  m_EdgePotentialImageViewer.SetImage( m_ExpNegativeFilter->GetOutput() );  
+  m_EdgePotentialImageViewer.Show();
+
+}
+
 
 
 

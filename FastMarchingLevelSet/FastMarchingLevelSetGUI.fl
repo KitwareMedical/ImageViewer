@@ -7,124 +7,149 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
   Function {FastMarchingLevelSetGUI()} {} {
     Fl_Window consoleWindow {
       label {Fast Marching Segmentation Level Set}
-      xywh {31 260 740 280}
+      xywh {259 69 830 280}
       code0 {\#include <FastMarchingLevelSetBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
       Fl_Group Connectors {
-        xywh {0 0 735 210}
+        xywh {0 0 794 210}
       } {
         Fl_Box {} {
-          xywh {589 55 61 10} box UP_BOX color 4
+          xywh {679 55 61 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {270 80 10 70} box UP_BOX color 4
+          xywh {230 80 10 70} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {65 79 97 10} box UP_BOX color 4
+          xywh {65 79 80 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {235 78 80 11} box UP_BOX color 4
+          xywh {200 78 80 11} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {589 100 61 10} box UP_BOX color 4
+          xywh {679 100 61 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {415 80 10 70} box UP_BOX color 4
+          xywh {505 80 10 70} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {589 55 10 55} box UP_BOX color 4
+          xywh {679 55 10 55} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {380 79 80 11} box UP_BOX color 4
+          xywh {470 79 80 11} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {520 79 80 11} box UP_BOX color 4
+          xywh {610 79 80 11} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {65 45 10 95} box UP_BOX color 4
         }
+        Fl_Box {} {
+          xywh {360 80 10 70} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {325 79 80 11} box UP_BOX color 4
+        }
+        Fl_Box {} {
+          xywh {415 90 10 95} box UP_BOX color 21
+        }
       }
-      Fl_Group controlsGroup {
-        xywh {5 5 725 215} deactivate
+      Fl_Group controlsGroup {selected
+        xywh {5 5 815 215} deactivate
       } {
         Fl_Light_Button inputImageButton {
-          label {Input Image}
+          label Display
           callback {ShowInputImage();}
-          xywh {25 126 84 39} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {34 129 70 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Fast Marching}
           callback {this->RunFastMarching();}
-          xywh {291 66 117 34} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {381 66 117 34} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button thresholdedImageButton {
           label Display
           callback {this->ShowThresholdedImage();}
-          xywh {624 45 90 31} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {714 45 90 31} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Light_Button thresholdedImageVTKButton {
           label {VTK Render}
           callback {ShowThresholdedImageWithVTK();}
-          xywh {624 90 90 30} type Normal value 1 selection_color 1 labelsize 12 align 148
+          xywh {714 90 90 30} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Value_Output iterationValueOutput {
           label Iteration
-          xywh {335 40 55 25} labelsize 12 textsize 12
+          xywh {425 40 55 25} labelsize 12 textsize 12
         }
         Fl_Button {} {
           label {Clear Seeds}
           callback {this->ClearSeeds();}
-          xywh {20 165 90 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {400 170 94 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Button {} {
           label Threshold
           callback {m_ThresholdFilter->Update();}
-          xywh {435 66 117 34} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {525 66 117 34} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Value_Input upperThresholdValueInput {
           label Upper
           callback {m_ThresholdFilter->SetUpperThreshold( o->value() );}
-          xywh {480 15 55 25} labelsize 12 maximum 1000 value 100 textsize 12
+          xywh {570 15 55 25} labelsize 12 maximum 1000 value 100 textsize 12
         }
         Fl_Value_Input lowerThresholdValueInput {
           label Lower
           callback {m_ThresholdFilter->SetLowerThreshold( o->value() );}
-          xywh {480 40 55 25} labelsize 12 maximum 1000 textsize 12
+          xywh {570 40 55 25} labelsize 12 maximum 1000 textsize 12
         }
         Fl_Light_Button timeCrossingButton {
           label {Time Crossing Map}
           callback {ShowTimeCrossingMapImage();}
-          xywh {352 129 145 29} type Normal value 1 selection_color 1 labelsize 12 align 144
+          xywh {442 129 145 29} type Normal value 1 selection_color 1 labelsize 12 align 144
           class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Gradient Magnitude}
-          callback {this->ShowGradientMagnitudeImage();}
-          xywh {125 66 132 34} box ROUND_UP_BOX labelsize 12 align 128
+          callback {this->ComputeGradientMagnitude();}
+          xywh {112 61 103 49} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button gradientMagnitudeButton {
-          label {Gradient Magnitude}
-          callback {ShowGradientMagnitudeImage();} selected
-          xywh {203 129 135 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          label Display
+          callback {ShowGradientMagnitudeImage();}
+          xywh {210 131 65 29} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
+        }
+        Fl_Button {} {
+          label {Negative Exponential}
+          callback {this->ComputeEdgePotential();}
+          xywh {257 61 95 49} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Light_Button edgePotentialButton {
+          label Display
+          callback {ShowEdgePotentialImage();}
+          xywh {332 129 67 29} type Normal value 1 selection_color 1 labelsize 12 align 148
+          class {fltk::LightButton}
+        }
+        Fl_Value_Input sigmaValueInput {
+          label Sigma
+          callback {m_DerivativeFilter->SetSigma( o->value() );}
+          xywh {159 110 35 25} labelsize 12 maximum 50 step 0.1 value 5 textsize 12
         }
       }
       Fl_Slider progressSlider {
-        xywh {5 222 725 15} type {Horz Fill} selection_color 2
+        xywh {5 222 815 15} type {Horz Fill} selection_color 2
         code0 {\#include <fltkProgressBar.h>}
         class {fltk::ProgressBar}
       }
       Fl_Output statusTextOutput {
-        xywh {5 245 725 25}
+        xywh {5 245 815 25}
       }
       Fl_Button {} {
         label Quit
         callback {this->Quit();}
-        xywh {575 155 90 35} box ROUND_UP_BOX labelsize 12 align 128
+        xywh {665 155 90 35} box ROUND_UP_BOX labelsize 12 align 128
       }
       Fl_Button {} {
         label Load
@@ -154,5 +179,7 @@ class FastMarchingLevelSetGUI {open : {public FastMarchingLevelSetBase}
   Function {ShowTimeCrossingMapImage( void )} {return_type {virtual void}
   } {}
   Function {ShowGradientMagnitudeImage( void )} {return_type {virtual void}
+  } {}
+  Function {ShowEdgePotentialImage( void )} {return_type {virtual void}
   } {}
 } 

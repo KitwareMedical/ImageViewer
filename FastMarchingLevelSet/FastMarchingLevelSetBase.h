@@ -25,6 +25,7 @@
 #include "itkFastMarchingImageFilter.h"
 #include "itkGradientRecursiveGaussianImageFilter.h"
 #include "itkGradientToMagnitudeImageFilter.h"
+#include "itkExpNegativeImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 
 
@@ -84,7 +85,11 @@ public:
                     DerivativeFilterType::OutputImageType,
                     InternalImageType >                   MagnitudeImageFilterType;
   
-
+  /** Filter to compute negative exponential of the gradient magnitude */
+  typedef   itk::ExpNegativeImageFilter< 
+                    InternalImageType,
+                    InternalImageType >                   ExpNegativeFilterType;
+ 
   /** Threshold filter used to select a time from the time map */
   typedef   itk::BinaryThresholdImageFilter< 
                     InternalImageType,
@@ -105,6 +110,8 @@ public:
   virtual void ShowStatus(const char * text)=0;
 
   virtual void ComputeGradientMagnitude();
+
+  virtual void ComputeEdgePotential();
 
   virtual void RunFastMarching();
 
@@ -127,6 +134,8 @@ protected:
   DerivativeFilterType::Pointer               m_DerivativeFilter;
 
   MagnitudeImageFilterType::Pointer           m_MagnitudeFilter;
+
+  ExpNegativeFilterType::Pointer              m_ExpNegativeFilter;
 
   ThresholdFilterType::Pointer                m_ThresholdFilter;
   
