@@ -77,8 +77,8 @@ value using class statistics given by users. Users can use the list to
 adjust to tissue class sigma. 
 
 7. SlabIdentifier (New)
-This utility search for slabs in an MR image. 
-In many cases, a 3D MR image is constructed by merging  smaller 3D 
+This utility search for slabs in an MR ansiogram (MRA) image. 
+In many cases, a 3D MRA image is constructed by merging  smaller 3D 
 blocks (slabs) which were acquired with different settings such as magnetic
 settings and patient positions. Therefore, stripe like patterns with slabs 
 can be present in the resulting image. Such artifacts are called "slab 
@@ -91,7 +91,7 @@ methods. For example, MRIBiasFieldCorrectionFilter assumes a smooth bias
 field. However, with the slab boundary artifacts, the bias field estimation
 scheme that MRIBiasFieldCorrectionFilter uses might not adopt well.
 So, the MRIBiasFieldCorrectionFilter creates regions for slabs using the 
-MRISlabIdentifier and then apply its bias correction scheme to each slab.
+MRASlabIdentifier and then apply its bias correction scheme to each slab.
 
 8. BiasCorrector (New)
 This utility performs slab identification, inter-slice intensity correction,
