@@ -62,9 +62,8 @@ int main(int argc, char **argv)
   // Set the image to write
   writer->SetInput( im );
 
-  // Write the image - NOTE: This does not use the itk standard
   //   Update function.   Writers are the exception to that rule
-  writer->Write();
+  writer->Update();
 
   // Make sure the image in memory hasn't been corrupted by writing
   it.GoToBegin();
