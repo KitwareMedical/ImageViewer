@@ -85,7 +85,20 @@ GlWindowInteractive
 }
 
 
-
+//------------------------------------------
+//
+//    Reset Viewing Parameters
+//
+//------------------------------------------
+void
+GlWindowInteractive::
+ResetViewingParameters(void)
+{
+  m_Altitude  = 0.0;
+  m_Azimuth   = 0.0; 
+  m_Zoom      = 1.0;
+  m_Center.Fill( 0.0 );
+}
 
 
 
@@ -120,6 +133,19 @@ GlWindowInteractive
 
 
 
+    
+//------------------------------------------
+//
+//    Set Center for viewpoint parameters
+//
+//------------------------------------------
+void 
+GlWindowInteractive
+::SetCenter( const Point3DType & center ) 
+{
+  m_Center  = center ;
+}
+
 
     
 //------------------------------------------
@@ -131,9 +157,22 @@ void
 GlWindowInteractive
 ::SetAltitude( GLdouble altitude ) 
 {
-  altitude = m_Altitude;
+  m_Altitude  = altitude ;
 }
 
+
+    
+//------------------------------------------
+//
+//    Set Zoom for viewpoint parameters
+//
+//------------------------------------------
+void 
+GlWindowInteractive
+::SetZoom( GLdouble zoom ) 
+{
+  m_Zoom  = zoom ;
+}
 
 
 
@@ -364,11 +403,11 @@ GlWindowInteractive
       m_Mouse_b[1] = Fl::event_y();
       const float factorW = m_Sensitivity / ( w() * m_Zoom );
       const float factorH = m_Sensitivity / ( h() * m_Zoom );
-      if( Fl::event_key( FL_Control_L ) ) 
+      if( Fl::event_state( FL_CTRL ) ) 
       {
         m_Zoom *= exp(2.0*(m_Mouse_b[1] - m_Mouse_a[1])/h());
       }
-      else if( Fl::event_key(FL_Shift_L) ) 
+      else if( Fl::event_state(FL_SHIFT) ) 
       {
         m_Center[2] += -factorH*(m_Mouse_b[1] - m_Mouse_a[1]);
         if( m_Azimuth > -90.0 && m_Azimuth < 90.0 ) 
@@ -380,7 +419,7 @@ GlWindowInteractive
           m_Center[0] -=  factorW * ( m_Mouse_b[0] - m_Mouse_a[0] );
         }
       }
-      else if( Fl::event_key(FL_Alt_L) ) 
+      else if( Fl::event_state(FL_ALT) ) 
       {
         m_Center[2] += -factorH * ( m_Mouse_b[1] - m_Mouse_a[1] );
         if( m_Azimuth > 0 && m_Azimuth < 180.0 ) 

@@ -73,8 +73,11 @@ public:
   void SetSensitivity(GLdouble newSensitivity);
   void SetAltitude(GLdouble newAltitude);
   void SetAzimuth(GLdouble newAzimuth);
+  void SetZoom(GLdouble newZoom);
+  void SetCenter(const Point3DType & center);
   void SetBackground(GLfloat r, GLfloat g, GLfloat b);
   void SetBackground(const ColorType & color);
+  void ResetViewingParameters(void);
   
   const ColorType & GetBackground(void) const;
   GLdouble GetSensitivity(void) const;
