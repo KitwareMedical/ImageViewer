@@ -1,3 +1,6 @@
+# Look for OpenGL
+INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindOpenGL.cmake)
+
 # Add an option to build or not build the FltkImageViewer Library
 IF(HAS_FLTK)
   SET(HAS_FLTKIMAGEVIEWER 1 CACHE INTERNAL "FLTK image support")
