@@ -101,9 +101,9 @@ protected:
 
 
 private:
-  ImageType::Pointer              m_Image;
-  ObserverCommandType::Pointer    m_Command;
-  unsigned long                   m_Tag;
+  typename ImageType::Pointer              m_Image;
+  typename ObserverCommandType::Pointer    m_Command;
+  unsigned long                            m_Tag;
 
 };
 

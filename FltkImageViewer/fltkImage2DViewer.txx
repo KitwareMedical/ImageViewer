@@ -101,8 +101,8 @@ Image2DViewer<ImagePixelType>
     return;
     }
 
-  ImageType::RegionType region  = m_Image->GetRequestedRegion();
-  ImageType::SizeType   size    = region.GetSize();  
+  typename ImageType::RegionType region  = m_Image->GetRequestedRegion();
+  typename ImageType::SizeType   size    = region.GetSize();  
 
   if(    size[0] != static_cast<unsigned int>(imageViewer->GetWidth())
       || size[1] != static_cast<unsigned int>(imageViewer->GetHeight())  )
@@ -118,8 +118,8 @@ Image2DViewer<ImagePixelType>
   MinMaxCalculator->SetImage(m_Image);
   MinMaxCalculator->Compute();
 
-  ImageType::PixelType max = MinMaxCalculator->GetMaximum();
-  ImageType::PixelType min = MinMaxCalculator->GetMinimum();
+  typename ImageType::PixelType max = MinMaxCalculator->GetMaximum();
+  typename ImageType::PixelType min = MinMaxCalculator->GetMinimum();
 
 
   double factor = 
