@@ -159,7 +159,6 @@ static uchar color[8][3] =
   {137,143,145},
   {99,81,64}
   };
-static int thickness = 3;
 
 int which = 0;
 
