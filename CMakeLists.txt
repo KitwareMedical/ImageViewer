@@ -79,10 +79,6 @@ SUBDIRS(Auxiliary)
 #on a PNG image
 SUBDIRS (AnisotropicDiffusionImageFilter)
 
-#Build the example of how to do simple feature extraction of gradient edges
-#on a PNG image
-SUBDIRS (GradientMagnitudeImageFilter)
-
 #Build the example of various methods of segmentation using level sets.
 SUBDIRS (LevelSetSegmentation)
 
@@ -94,9 +90,6 @@ SUBDIRS (ITKFilterLib)
 # the multi-resolution mutual information registration framework in itk.
 SUBDIRS (ITKRegistrationLib)
 
-# Build the BasicIOAndFilter example
-SUBDIRS(BasicIOAndFilter)
-
 #Build the parameter file parser necessary for several applications that follow
 SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 
@@ -105,9 +98,6 @@ SUBDIRS(StreamedWatershedSegmentation/ParameterFileParser)
 
 # Build the AntiAliasBinaryImageFilter example
 SUBDIRS(AntiAliasBinaryImageFilter)
-
-# Build the WatershedSegmentation example
-SUBDIRS(WatershedSegmentation)
 
 # Build the SimpleLevelSetsExample
 SUBDIRS(SimpleLevelSetsExample)
@@ -127,22 +117,8 @@ SUBDIRS(IBSRValidation)
 # Build the multichannel tissue classification validation
 SUBDIRS(MultichannelTissueClassificationValidation)
 
-# Build the RawImageReadWrite example
-SUBDIRS(RawImageReadWrite)
-
-# Build the PNGImageReadWrite example
-SUBDIRS(PNGImageReadWrite)
-
-# Build the ExtractImageRegion example
-SUBDIRS(ExtractImageRegion)
-
 # Build the DICOMApp example to output raw and png versions of DICOM file
 SUBDIRS(DICOMApp)
-
-# Build the simple ImageViewer example. This requires GLUT to be installed
-IF(GLUT_FOUND)
-  SUBDIRS(ImageViewer)
-ENDIF(GLUT_FOUND)
 
 # Applications requiring MetaImages and Fltk GUI 
 IF(FLTK_FOUND)
@@ -153,7 +129,6 @@ IF(FLTK_FOUND)
   SUBDIRS(DistanceMapFilter)
   SUBDIRS(DicomImageViewer)
   SUBDIRS(GaussianFilter)
-  SUBDIRS(GradientRecursiveGaussianFilter)
   SUBDIRS(Curves2DExtractor)
   SUBDIRS(Morphogenesis)
   SUBDIRS(MutualInformationEuler2DRegistration)
@@ -162,9 +137,7 @@ IF(FLTK_FOUND)
   SUBDIRS(RawImageReaderViewer)
   SUBDIRS(VoronoiSegmentation)
   SUBDIRS(SimpleFuzzyConnectedness)
-  #SUBDIRS(OperatingRoom)
   IF(VTK_FOUND)
-    SUBDIRS(TripleTKImageDisplay)
     SUBDIRS(RegionGrowingSegmentation)
     SUBDIRS(ThresholdSegmentationLevelSet)
     SUBDIRS(FastMarchingLevelSet)
@@ -173,7 +146,6 @@ IF(FLTK_FOUND)
   ENDIF(VTK_FOUND)
   SUBDIRS(MetaImageViewer)
   SUBDIRS(MetaImageColorViewer)
-  SUBDIRS(SurfaceGenerator)
 ENDIF(FLTK_FOUND)
 
 # MetaImage Utilities
@@ -188,9 +160,6 @@ SUBDIRS(FEM)
 
 # Add an option to build or not build the FuzzyConnectedness example
 SUBDIRS(FuzzyConnectedness)
-
-# Add an option to build or not build the ShapeDetection example
-SUBDIRS(ShapeDetection)
 
 # Add an option to build or not build the
 # GaussianMinimumErrorClassifier example
