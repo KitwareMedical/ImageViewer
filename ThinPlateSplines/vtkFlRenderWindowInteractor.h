@@ -27,8 +27,8 @@
 #ifndef _vtkFlRenderWindowInteractor_h
 #define _vtkFlRenderWindowInteractor_h
 
-#include <Fl/Fl.H>
-#include <Fl/Fl_Gl_Window.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Gl_Window.H>
 #include <vtkRenderWindowInteractor.h>
 
 class vtkFlRenderWindowInteractor : public Fl_Gl_Window, public vtkRenderWindowInteractor {
@@ -42,7 +42,7 @@ class vtkFlRenderWindowInteractor : public Fl_Gl_Window, public vtkRenderWindowI
  public:
    // ctors
    vtkFlRenderWindowInteractor();
-   vtkFlRenderWindowInteractor( int x, int y, int w, int h, const char *l = NULL );
+   vtkFlRenderWindowInteractor( int x, int y, int w, int h, const char *l="" );
    // vtk ::New()
    static vtkFlRenderWindowInteractor * New();
    // dtor
