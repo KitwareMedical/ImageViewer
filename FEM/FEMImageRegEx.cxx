@@ -35,9 +35,9 @@ template class itk::fem::ImageMetricLoadImplementation<LMClass2>;
 ImageRegEx::ImageRegEx( )
 {
   m_FileCount=0;    
-  m_Nx=256*1.;
-  m_Ny=256*1.;      
-  m_MeshResolution=16*2;  // determines the 'resolution' of the grid 
+  m_Nx=256;
+  m_Ny=256;
+  m_MeshResolution=16*2;  // determines the 'resolution' of the grid
  
   m_DescentDirection=positive;
   m_E=1.; 
@@ -249,7 +249,7 @@ void ImageRegEx::GenRegMesh()
   Element2DC0LinearQuadrilateralStress::Pointer e1;
   
   unsigned int ctGN=0,jct=0,ict=0;
-    for (int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
+    for (unsigned int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
       ict=0;
       for (int i=0; i<=m_Nx-m_MeshResolution;i=i+m_MeshResolution){ 
         e1=Element2DC0LinearQuadrilateralStress::New();
@@ -278,7 +278,7 @@ void ImageRegEx::GenRegMesh()
   LoadBC::Pointer l1;
 
   // elements for the corner of the image only valid if nx=ny
-  unsigned int ind0=0, ind1=(unsigned int) (float)m_Nx/(float)m_MeshResolution-1, ind2=ind1*(ind1+1), ind3=ind2+ind1;
+  unsigned int ind0=0, ind1=(unsigned int)( (float)m_Nx/(float)m_MeshResolution-1.0), ind2=ind1*(ind1+1), ind3=ind2+ind1;
 
   l1=LoadBC::New();
   l1->m_element=( &*m_Solver.el.Find(ind0));
@@ -356,7 +356,7 @@ void ImageRegEx::IterativeSolve()
   
   // iterative solve  
   Float mine=9.e9;
-  for (int iters=0; iters<m_Maxiters; iters++){
+  for (unsigned int iters=0; iters<m_Maxiters; iters++){
 
     float radparam=1.-(float)iters/((float)m_Maxiters-1.);
     unsigned int maxrad=9,minrad=1;
@@ -520,8 +520,8 @@ int main()
    m_TargetFileName="E:\\Avants\\MetaImages\\brain_slice2.mhd";
     
   itk::fem::ImageRegEx X; // Declare the registration clasm_Solver.
-  X.m_Nx=256*1.;   // set image size
-  X.m_Ny=256*1.;  
+  X.m_Nx=256;   // set image size
+  X.m_Ny=256;
  
   X.SetReferenceFile(m_ReferenceFileName);
   X.SetTargetFile(m_TargetFileName);
