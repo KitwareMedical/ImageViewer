@@ -1,5 +1,7 @@
 SOURCE_FILES( VTKITKCommon_SRCS
 vtkITKAntiAliasBinaryImageFilter.h
+vtkITKGradientAnisotropicDiffusionImageFilter.h
+vtkITKGradientMagnitudeImageFilter.h
 vtkITKMutualInformationTransform.cxx
 vtkITKWatershedImageFilter.cxx
 vtkITKNormalizeImageFilter.cxx
