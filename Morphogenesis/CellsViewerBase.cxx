@@ -16,6 +16,7 @@ CellsViewerBase
 {
   m_Display.GetGlWindow()->SetBackground( 0.8, 0.8, 0.9 );
   m_Display.GetGlWindow()->SetZoom( 5.0 );
+  m_Display.SetLabel("Cell Viewer");
   m_Stop =            true;
   m_StartTime =          0;
 
@@ -32,7 +33,7 @@ CellsViewerBase
 ::~CellsViewerBase()
 {
 
-	this->HideDisplay();
+  this->HideDisplay();
 }
 
 
@@ -46,7 +47,7 @@ void CellsViewerBase
   this->Stop();
   this->HideSlicerControls();
   this->HideCellularAggregateControls();
-	this->HideDisplay();
+  this->HideDisplay();
 
   // Hide the substrate controls
   SubstratesDrawersType::const_iterator slicer = 
@@ -67,8 +68,19 @@ void CellsViewerBase
 void CellsViewerBase
 ::ShowDisplay(void)
 {
-	m_Display.Show();
+  m_Display.Show();
 }
+
+
+/**
+ *    Show the Set of Registered Species
+ */ 
+void CellsViewerBase
+::ShowSpecies(void)
+{
+  // To be overrided
+}
+
 
 
 
@@ -78,7 +90,7 @@ void CellsViewerBase
 void CellsViewerBase
 ::HideDisplay(void)
 {
-	m_Display.Hide();
+  m_Display.Hide();
 }
 
 
@@ -92,7 +104,7 @@ void CellsViewerBase
 {
   if( Cell::Dimension==3 )
     {
-  	//m_SliceDrawer->Show();
+    //m_SliceDrawer->Show();
     }
 }
 
@@ -138,7 +150,7 @@ void
 CellsViewerBase
 ::Run(void)
 {
-	m_Stop = false;
+  m_Stop = false;
   if( !m_StartTime ) 
   {
     m_StartTime = clock();
@@ -159,7 +171,19 @@ void
 CellsViewerBase
 ::Stop(void)
 {
-	m_Stop = true;
+  m_Stop = true;
+}
+
+
+
+/**
+ *    Clear the Aggregate
+ */ 
+void CellsViewerBase
+::ClearAggregate(void)
+{
+  m_Cells->KillAll();
+  m_Display.Redraw();
 }
 
 
@@ -171,7 +195,7 @@ CellsViewerBase
 void CellsViewerBase
 ::Restart(void)
 {
-	m_Stop = false;
+  m_Stop = false;
 }
 
 
@@ -182,7 +206,7 @@ void CellsViewerBase
 void CellsViewerBase
 ::SetCellsAggregate( CellularAggregate * cells )
 {
-	m_Cells = cells;
+  m_Cells = cells;
 }
 
 
@@ -197,7 +221,7 @@ CellsViewerBase
   
   command = m_Display.GetRedrawCommand();
 
-	return command.GetPointer();
+  return command.GetPointer();
 }
 
 
@@ -209,7 +233,48 @@ itk::Object::Pointer
 CellsViewerBase
 ::GetNotifier(void)
 {
-	return m_Display.GetNotifier().GetPointer();
+  return m_Display.GetNotifier().GetPointer();
+}
+
+
+
+/**
+ *    Add the egg of a species to the container 
+ */ 
+void
+CellsViewerBase
+::AddSpeciesEggProducer( EggProducerFunction * producer ) 
+{
+  m_SpeciesProducer.push_back( producer );
+}
+
+
+
+/**
+ *    Return the container of species eggs
+ */ 
+CellsViewerBase::SpeciesContainerType &
+CellsViewerBase
+::GetSpecies(void) 
+{
+  return m_SpeciesProducer;
+}
+
+
+
+/**
+ *   Select the egg of one of the Registered Species
+ */ 
+void CellsViewerBase
+::SelectSpecies( unsigned int species )
+{
+  if( species < m_SpeciesProducer.size() )
+    {
+    m_Cells->KillAll();
+    Cell * theEgg = m_SpeciesProducer[ species ]();
+    m_Cells->SetEgg( theEgg );
+    }
+  m_Display.Redraw();
 }
 
 
@@ -220,7 +285,7 @@ clock_t
 CellsViewerBase
 ::GetStartTime(void) const
 {
-	return m_StartTime;
+  return m_StartTime;
 }
 
 
@@ -307,9 +372,11 @@ CellsViewerBase
   m_SubstrateSliceDrawer[ substrateName ] 
                   = substrateSliceDrawer.GetPointer();
 
+  m_Cells->AddSubstrate( imageReader->GetOutput().GetPointer() );
 
   substrateSliceDrawer->SetLabel( substrateName.c_str() );
   substrateSliceDrawer->Show();
+  
   
 }
 

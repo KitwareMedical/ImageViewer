@@ -2,8 +2,8 @@
 #ifndef __CellsViewerBase_H
 #define __CellsViewerBase_H
 
-#include "itkImage.h"
 #include "itkImageFileReader.h"
+#include "fltkSlice2DDrawer.h"
 #include "fltkSlice3DDrawer.h"
 #include "fltkDisplayGlWindowGUI.h"
 #include "CellularAggregate.h"
@@ -13,6 +13,42 @@
 
 
 namespace bio {
+
+
+template <typename TInputImage>
+class SliceDrawer
+{
+  typedef int Type;
+};
+    
+
+template <>
+class SliceDrawer< itk::Image<unsigned char,2> > 
+{
+  typedef fltk::Slice2DDrawer< itk::Image<unsigned char, 2> > Type;
+};
+
+
+template <>
+class SliceDrawer< itk::Image<unsigned char,3> > 
+{
+  typedef fltk::Slice3DDrawer< itk::Image<unsigned char, 3> > Type;
+};
+
+template <>
+class SliceDrawer< itk::Image<double,2> > 
+{
+  typedef fltk::Slice2DDrawer< itk::Image<double, 2> > Type;
+};
+
+
+template <>
+class SliceDrawer< itk::Image<double,3> > 
+{
+  typedef fltk::Slice3DDrawer< itk::Image<double, 3> > Type;
+};
+
+
 
 
 /**
@@ -27,32 +63,35 @@ class CellsViewerBase
 {
 public:
     
-  typedef unsigned char                               PixelType;
   
-  typedef itk::Image<PixelType, Cell::Dimension >     ImageType;
+  typedef CellularAggregate::SubstrateType            ImageType;
   typedef ImageType::Pointer                          ImagePointer;
  
   typedef itk::ImageFileReader< ImageType >           ImageReaderType;
   typedef ImageReaderType::Pointer                    ImageReaderPointer;
     
-  typedef fltk::Slice3DDrawer<ImageType>              SliceDrawerType;
+  typedef SliceDrawer< ImageType >::Type              SliceDrawerType;
   typedef SliceDrawerType::Pointer                    SliceDrawerPointer;
 
   typedef std::map< std::string, ImagePointer >       SubstratesType;
 
   typedef std::map< std::string, SliceDrawerPointer > SubstratesDrawersType;
 
+  typedef Cell * (EggProducerFunction)(void);
+
+  typedef std::vector< EggProducerFunction * >        SpeciesContainerType;
+
 
 public:
 
-	CellsViewerBase();
+  CellsViewerBase();
 
-	virtual ~CellsViewerBase();
+  virtual ~CellsViewerBase();
 
-	virtual void Quit(void);
-	virtual void Run(void);
-	virtual void Stop(void);
-	virtual void Restart(void);
+  virtual void Quit(void);
+  virtual void Run(void);
+  virtual void Stop(void);
+  virtual void Restart(void);
   virtual void ShowDisplay(void);
   virtual void ShowSlicerControls(void);
   virtual void ShowCellularAggregateControls(void);
@@ -63,6 +102,12 @@ public:
   virtual clock_t GetStartTime(void) const;
   virtual void LoadSubstrate(void);
   virtual void ShowSubstrate( const char * name );
+  virtual void ClearAggregate(void);
+  virtual void AddSpeciesEggProducer( EggProducerFunction * ); 
+  virtual void ShowSpecies( void );
+  virtual void SelectSpecies( unsigned int );
+  
+  SpeciesContainerType & GetSpecies(void);
 
   itk::Command::Pointer GetRedrawCommand(void);
   itk::Object::Pointer GetNotifier(void);
@@ -77,14 +122,16 @@ protected:
 
 private:
   
-	bool                                m_Stop;
+  bool                                m_Stop;
 
   fltkDisplayGlWindowGUI              m_Display;
 
   CellularAggregate::Pointer          m_Cells;
 
-  clock_t   m_StartTime;
+  SpeciesContainerType                m_SpeciesProducer;
 
+  clock_t   m_StartTime;
+    
 };
 
 
