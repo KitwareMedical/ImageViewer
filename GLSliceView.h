@@ -62,7 +62,7 @@ protected:
   unsigned char * cWinOverlayData;
   
 
-  
+  SizeType               cImData_size;
   ColorTablePointer      cColorTable;
   
 public:
@@ -119,7 +119,6 @@ public:
   SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
     {
     when(FL_WHEN_NOT_CHANGED | FL_WHEN_ENTER_KEY);
-    
     cValidOverlayData     = false;
     cViewOverlayData      = false;
     cViewOverlayCallBack  = NULL;
@@ -164,6 +163,7 @@ public:
       } 
 
     cImData = newImData;
+
     cDimSize[0]=size[0];
     cDimSize[1]=size[1];
     cDimSize[2]=size[2];
@@ -171,6 +171,7 @@ public:
     cSpacing[1]=cImData->GetSpacing()[1];
     cSpacing[2]=cImData->GetSpacing()[2];
       
+    cImData_size = cImData->GetLargestPossibleRegion().GetSize();
     //calculating cDataMax and cDataMin    
     IndexType ind;
     ind[0] = 0; 
@@ -288,14 +289,9 @@ GLSliceView<ImagePixelType, OverlayPixelType>
   {
   RegionType newoverlay_region = 
     newOverlayData->GetLargestPossibleRegion();
-  
+
   SizeType   newoverlay_size   = newoverlay_region.GetSize();
-  
-  RegionType cImData_region = 
-    cImData->GetLargestPossibleRegion();
-  
-  SizeType   cImData_size   = cImData_region.GetSize();
-  
+
   if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
     {
     cOverlayData = newOverlayData;
@@ -309,9 +305,12 @@ GLSliceView<ImagePixelType, OverlayPixelType>
       delete [] cWinOverlayData;
       }
     
+
     const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY * 4;
     cWinOverlayData = new unsigned char[ bufferSize ];
+
     this->update();
+
     }
   }
 

@@ -115,7 +115,9 @@ SetInputImage(ImageType * newImData)
   cSpacing[0] = cImData->GetSpacing()[0];
   cSpacing[1] = cImData->GetSpacing()[1];
   cSpacing[2] = cImData->GetSpacing()[2];
-    
+
+  cImData_size = cImData->GetLargestPossibleRegion().GetSize();
+
   //calculating cDataMax and cDataMin
   IndexType ind;
   ind[0] = 0; 
