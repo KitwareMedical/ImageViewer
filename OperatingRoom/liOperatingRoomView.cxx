@@ -17,7 +17,12 @@
 
 #include <liCommandEvents.h>
 #include <liOperatingRoomView.h>
+
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 
 
 
