@@ -91,12 +91,12 @@ TempImagePointer& image )
   filePrefix += "_";
  
   typedef RawSliceVolumeReader<TempImagePixelType,TempImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
 
   // Defaults for IBSR data
-  ReaderType::SpacingType spacing;
-  ReaderType::SizeType    size;
+  typename ReaderType::SpacingType spacing;
+  typename ReaderType::SizeType    size;
   bool                    bigEndian = true;
 
   spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 3.0;
@@ -142,12 +142,12 @@ MaskImagePointer& image )
  
   typedef typename MaskImageType::PixelType PixelType;
   typedef RawVolumeReader<PixelType,MaskImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
 
   // Defaults for IBSR data
-  ReaderType::SpacingType spacing;
-  ReaderType::SizeType    size;
+  typename ReaderType::SpacingType spacing;
+  typename ReaderType::SizeType    size;
   bool                    bigEndian = true;
 
   spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 3.0;
@@ -190,12 +190,12 @@ TruthImagePointer& image )
  
   typedef typename MaskImageType::PixelType PixelType;
   typedef RawVolumeReader<PixelType,MaskImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
 
   // Defaults for IBSR data
-  ReaderType::SpacingType spacing;
-  ReaderType::SizeType    size;
+  typename ReaderType::SpacingType spacing;
+  typename ReaderType::SizeType    size;
   bool                    bigEndian = true;
 
   spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 3.0;
@@ -249,8 +249,8 @@ ClassifierValidationInputParser<TVectorInputImage,TMaskImage>
                            MaskImageType,
                            TempImageType  >   MaskFilterType;
 
-  typedef TempImageType::Pointer   MaskedOutputImagePointer;
-  typedef MaskFilterType::Pointer  MaskFilterTypePointer;
+  typedef typename TempImageType::Pointer   MaskedOutputImagePointer;
+  typedef typename MaskFilterType::Pointer  MaskFilterTypePointer;
 
   // Create an ADD Filter                                
   MaskFilterTypePointer maskfilter = MaskFilterType::New();

@@ -21,7 +21,7 @@
 #endif
 #include <fstream>
 
-#include "FEMImageRegLMEX.h"
+#include "FEMImageRegLMEx.h"
 
 // Below, we have typedefs that instantiate all necessary classes.
 // Here, we instantiate the image type, load type and 

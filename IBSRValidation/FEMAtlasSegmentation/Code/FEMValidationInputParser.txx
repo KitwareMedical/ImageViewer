@@ -79,9 +79,9 @@ ImagePointer& image )
   const unsigned int ImageDimension=ImageType::ImageDimension;
   typedef  itk::RawImageIO< PixelType,ImageDimension>   RawReaderType;
 
-  FileSourceType::Pointer reffilter = FileSourceType::New();
+  typename FileSourceType::Pointer reffilter = FileSourceType::New();
 
-  RawReaderType::Pointer  rawReader  = RawReaderType::New();
+  typename RawReaderType::Pointer  rawReader  = RawReaderType::New();
   rawReader->SetFileDimensionality( ImageDimension );
   
   rawReader->SetDimensions( 0,  m_ImageXSize );
@@ -141,9 +141,9 @@ LabelImagePointer& image )
   const unsigned int ImageDimension=ImageType::ImageDimension;
   typedef  itk::RawImageIO< PixelType,ImageDimension>   RawReaderType;
 
-  FileSourceType::Pointer reffilter = FileSourceType::New();
+  typename FileSourceType::Pointer reffilter = FileSourceType::New();
 
-  RawReaderType::Pointer  rawReader  = RawReaderType::New();
+  typename RawReaderType::Pointer  rawReader  = RawReaderType::New();
   rawReader->SetFileDimensionality( ImageDimension );
   
   rawReader->SetDimensions( 0, m_ImageXSize );

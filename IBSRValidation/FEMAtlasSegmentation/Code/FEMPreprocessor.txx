@@ -120,10 +120,10 @@ OutputImagePointer & output, int whichfilter, float variance)
   typedef CannyEdgeDetectionImageFilter<OutputImageType, OutputImageType> filtertype0;
   typedef SobelEdgeDetectionImageFilter<OutputImageType, OutputImageType> filtertype1;
   typedef ZeroCrossingBasedEdgeDetectionImageFilter<OutputImageType, OutputImageType> filtertype2;
-  filtertype::Pointer  edgefilter;
-  filtertype0::Pointer  edgefilter0;
-  filtertype1::Pointer  edgefilter1;
-  filtertype2::Pointer  edgefilter2;
+  typename filtertype::Pointer  edgefilter;
+  typename filtertype0::Pointer  edgefilter0;
+  typename filtertype1::Pointer  edgefilter1;
+  typename filtertype2::Pointer  edgefilter2;
 
   switch (whichfilter){
   case 0:

@@ -84,12 +84,12 @@ ImagePointer& image )
 
   typedef typename ImageType::PixelType PixelType;
   typedef RawSliceVolumeReader<PixelType,ImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
 
   // Defaults for IBSR data
-  ReaderType::SpacingType spacing;
-  ReaderType::SizeType    size;
+  typename ReaderType::SpacingType spacing;
+  typename ReaderType::SizeType    size;
   bool                    bigEndian = true;
 
   spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 3.0;
@@ -136,12 +136,12 @@ LabelImagePointer& image )
  
   typedef typename LabelImageType::PixelType PixelType;
   typedef RawVolumeReader<PixelType,LabelImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
 
   // Defaults for IBSR data
-  ReaderType::SpacingType spacing;
-  ReaderType::SizeType    size;
+  typename ReaderType::SpacingType spacing;
+  typename ReaderType::SizeType    size;
   bool                    bigEndian = true;
 
   spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 3.0;

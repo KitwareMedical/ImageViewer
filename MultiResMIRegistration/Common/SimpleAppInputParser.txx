@@ -290,7 +290,7 @@ SimpleAppInputParser<TImage>
    ***********************/
    typedef typename ImageType::PixelType PixelType;
    typedef itk::RawVolumeReader<PixelType,ImageType> ReaderType;
-   ReaderType::Pointer reader = ReaderType::New();
+   typename ReaderType::Pointer reader = ReaderType::New();
   
    try 
     {

@@ -90,12 +90,12 @@ TempImagePointer& image )
   fileName += m_FileExtensions[vectorNumber];
  
   typedef RawVolumeReader<TempImagePixelType,TempImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
 
   // Defaults for IBSR data
-  ReaderType::SpacingType spacing;
-  ReaderType::SizeType    size;
+  typename ReaderType::SpacingType spacing;
+  typename ReaderType::SizeType    size;
   bool                    bigEndian = true;
 
   spacing[0] = 1.0; spacing[1] = 1.0; spacing[2] = 3.0;

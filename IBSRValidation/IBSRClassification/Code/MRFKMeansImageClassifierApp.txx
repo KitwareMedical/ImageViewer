@@ -69,7 +69,7 @@ MRFKMeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef Statistics::DistanceToCentroidMembershipFunction< VectorInputPixelType > 
     MembershipFunctionType ;
 
-  typedef MembershipFunctionType::Pointer MembershipFunctionPointer ;
+  typedef typename MembershipFunctionType::Pointer MembershipFunctionPointer ;
 
   typedef std::vector< MembershipFunctionPointer > 
     MembershipFunctionPointerVector;
@@ -80,7 +80,7 @@ MRFKMeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef itk::ImageKmeansModelEstimator< VectorInputImageType, 
     MembershipFunctionType> ImageKmeansModelEstimatorType;
 
-  ImageKmeansModelEstimatorType::Pointer 
+  typename ImageKmeansModelEstimatorType::Pointer 
     applyKmeansModelEstimator = ImageKmeansModelEstimatorType::New();
 
   //----------------------------------------------------------------------
@@ -149,7 +149,7 @@ MRFKMeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef ImageClassifierBase< VectorInputImageType,ClassifiedImageType > 
     SupervisedClassifierType;
 
-  SupervisedClassifierType::Pointer 
+  typename SupervisedClassifierType::Pointer 
     classifierPointer = SupervisedClassifierType::New();
 
 
@@ -227,7 +227,7 @@ MRFKMeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef itk::MRFImageFilter<VectorInputImageType,ClassifiedImageType> 
     MRFFilterType;
 
-  MRFFilterType::Pointer applyMRFFilter = MRFFilterType::New();
+  typename MRFFilterType::Pointer applyMRFFilter = MRFFilterType::New();
 
   // Set the MRF labeller parameters
   applyMRFFilter->SetNumberOfClasses(m_NumberOfClasses);

@@ -67,15 +67,15 @@ GaussianImageMSClassifierApp<TVectorInputImage,TMaskImage>
   typedef Statistics::MahalanobisDistanceMembershipFunction< VectorInputPixelType > 
     MembershipFunctionType ;
 
-  typedef MembershipFunctionType::Pointer MembershipFunctionPointer ;
+  typedef typename MembershipFunctionType::Pointer MembershipFunctionPointer ;
 
   //----------------------------------------------------------------------
   //Set the decision rule 
   //----------------------------------------------------------------------  
-  typedef DecisionRuleBase::Pointer DecisionRuleBasePointer;
+  typedef typename DecisionRuleBase::Pointer DecisionRuleBasePointer;
 
   typedef MinimumDecisionRule DecisionRuleType;
-  DecisionRuleType::Pointer  
+  typename DecisionRuleType::Pointer  
     classifierDecisionRule = DecisionRuleType::New();
 
   //------------------------------------------------------
@@ -86,7 +86,7 @@ GaussianImageMSClassifierApp<TVectorInputImage,TMaskImage>
   typedef ImageClassifierBase< VectorInputImageType,ClassifiedImageType > 
     SupervisedClassifierType;
 
-  SupervisedClassifierType::Pointer 
+  typename SupervisedClassifierType::Pointer 
     classifierPointer = SupervisedClassifierType::New();
 
 

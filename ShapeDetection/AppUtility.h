@@ -28,7 +28,7 @@ const char * basename )
 {
 
   typedef itk::PGMVolumeWriter<TImage> WriterType;
-  WriterType::Pointer writer = WriterType::New();
+  typename WriterType::Pointer writer = WriterType::New();
   writer->SetImage( input );
   writer->SetDirectoryName( dirname );
   writer->SetFilePrefix( basename );

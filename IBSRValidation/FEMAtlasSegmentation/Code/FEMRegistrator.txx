@@ -98,8 +98,8 @@ FEMRegistrator<TFixedImage,TMovingImage,TFieldValue>
 
   typedef itk::CastImageFilter<MovingImageType,LabelImageType> CasterType1;
   typedef itk::CastImageFilter<LabelImageType,MovingImageType> CasterType2;
-  CasterType1::Pointer Rcaster1 = CasterType1::New();
-  CasterType2::Pointer Rcaster2 = CasterType2::New();
+  typename CasterType1::Pointer Rcaster1 = CasterType1::New();
+  typename CasterType2::Pointer Rcaster2 = CasterType2::New();
 
   Rcaster2->SetInput(m_AtlasLabelImage); Rcaster2->Update();
   m_Registration.WarpImage(Rcaster2->GetOutput());

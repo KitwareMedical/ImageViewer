@@ -57,13 +57,13 @@ MIMPreprocessor<TInputImage,TOutputImage>
   typedef NormalizeImageFilter<TInputImage,TOutputImage>
     NormalizerType;
 
-  AffineTransformType::MatrixType matrix;
-  AffineTransformType::OffsetType offset;
+  typename AffineTransformType::MatrixType matrix;
+  typename AffineTransformType::OffsetType offset;
 
-  CentererType::Pointer   centerer;
-  NormalizerType::Pointer normalizer;
-  PermuterType::Pointer   permuter;
-  FlipperType::Pointer    flipper;
+  typename CentererType::Pointer   centerer;
+  typename NormalizerType::Pointer normalizer;
+  typename PermuterType::Pointer   permuter;
+  typename FlipperType::Pointer    flipper;
 
   // Process the fixed image
   centerer =  CentererType::New();
@@ -144,7 +144,7 @@ MIMPreprocessor<TInputImage,TOutputImage>
     matrix.Fill( 0.0 );
     offset.Fill( 0.0 );
 
-    AffineTransformType::Pointer transform = AffineTransformType::New();
+    typename AffineTransformType::Pointer transform = AffineTransformType::New();
  
     PermuteOrderArrayType invOrder = permuter->GetInverseOrder();
 
@@ -163,7 +163,7 @@ MIMPreprocessor<TInputImage,TOutputImage>
   if ( needToFlip )
     {
 
-    AffineTransformType::Pointer transform = AffineTransformType::New();
+    typename AffineTransformType::Pointer transform = AffineTransformType::New();
     matrix.SetIdentity();
     offset.Fill( 0.0 );
 

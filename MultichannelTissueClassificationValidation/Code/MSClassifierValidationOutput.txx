@@ -65,7 +65,7 @@ MSClassifierValidationOutput<TImage>
   /*** Write out the classified volume ****/
 
   typedef itk::RawVolumeWriter<TImage> ByteWriterType;
-  ByteWriterType::Pointer bytewriter = ByteWriterType::New();
+  typename ByteWriterType::Pointer bytewriter = ByteWriterType::New();
 
   bytewriter->SetInputImage( m_ClassifiedImage );
   bytewriter->SetFileName( "classified.raw" );
@@ -83,7 +83,7 @@ MSClassifierValidationOutput<TImage>
   IndexType classifiedRegionIndex = 
     (m_ClassifiedImage)->GetBufferedRegion().GetIndex();
 
-  ByteWriterType::Pointer bytewriter2 = ByteWriterType::New();
+  typename ByteWriterType::Pointer bytewriter2 = ByteWriterType::New();
 
   bytewriter2->SetInputImage( m_ClassifiedImage );
   bytewriter2->SetFileName( "classifiedImage.raw" );

@@ -149,7 +149,7 @@ MIMRegistrator<TFixedImage,TMovingImage>
 
 template <typename TFixedImage, typename TMovingImage>
 const 
-MIMRegistrator<TFixedImage,TMovingImage>
+typename MIMRegistrator<TFixedImage,TMovingImage>
 ::ParametersType &
 MIMRegistrator<TFixedImage,TMovingImage>
 ::GetTransformParameters()
@@ -159,7 +159,7 @@ MIMRegistrator<TFixedImage,TMovingImage>
 
 
 template <typename TFixedImage, typename TMovingImage>
-MIMRegistrator<TFixedImage,TMovingImage>
+typename MIMRegistrator<TFixedImage,TMovingImage>
 ::AffineTransformPointer
 MIMRegistrator<TFixedImage,TMovingImage>
 ::GetAffineTransform()

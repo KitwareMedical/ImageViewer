@@ -66,7 +66,7 @@ KmeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef Statistics::DistanceToCentroidMembershipFunction< VectorInputPixelType > 
     MembershipFunctionType ;
 
-  typedef MembershipFunctionType::Pointer MembershipFunctionPointer ;
+  typedef typename MembershipFunctionType::Pointer MembershipFunctionPointer ;
 
   typedef std::vector< MembershipFunctionPointer > 
     MembershipFunctionPointerVector;
@@ -79,7 +79,7 @@ KmeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef itk::ImageKmeansModelEstimator< VectorInputImageType, 
     MembershipFunctionType> ImageKmeansModelEstimatorType;
 
-  ImageKmeansModelEstimatorType::Pointer 
+  typename ImageKmeansModelEstimatorType::Pointer 
     applyKmeansModelEstimator = ImageKmeansModelEstimatorType::New();
 
   //----------------------------------------------------------------------
@@ -148,14 +148,14 @@ KmeansImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef ImageClassifierBase< VectorInputImageType,ClassifiedImageType > 
     SupervisedClassifierType;
 
-  SupervisedClassifierType::Pointer 
+  typename SupervisedClassifierType::Pointer 
     classifierPointer = SupervisedClassifierType::New();
 
 
   typedef ShowProgressObject ProgressType;
 
   ProgressType progressWatch(classifierPointer);
-  SimpleMemberCommand<ProgressType>::Pointer command;
+  typename SimpleMemberCommand<ProgressType>::Pointer command;
   command = SimpleMemberCommand<ProgressType>::New();
 
   command->SetCallbackFunction(&progressWatch,

@@ -50,9 +50,9 @@ bool transformImage(typename itk::Image<dataT,3>::Pointer fixedIm,
           InterpolatorType;
   typedef itk::ResampleImageFilter<ImageType,ImageType> ResamplerType;
 
-  InterpolatorType::Pointer interpolator = InterpolatorType::New();
+  typename InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
-  ResamplerType::Pointer resampler = ResamplerType::New();
+  typename ResamplerType::Pointer resampler = ResamplerType::New();
   resampler->SetInput( movingIm );
 
   resampler->SetTransform( transform.GetPointer() );

@@ -62,9 +62,9 @@ PGMVolumeWriter<TImage>
   typedef ShiftScaleImageFilter<ImageType,FloatImageType> RescalerType;
   typedef CastImageFilter<FloatImageType,CharImageType> CasterType;
 
-  StatsCalculatorType::Pointer statsCalculator = StatsCalculatorType::New();
-  RescalerType::Pointer rescaler = RescalerType::New();
-  CasterType::Pointer caster = CasterType::New();
+  typename StatsCalculatorType::Pointer statsCalculator = StatsCalculatorType::New();
+  typename RescalerType::Pointer rescaler = RescalerType::New();
+  typename CasterType::Pointer caster = CasterType::New();
 
   statsCalculator->SetInput( m_Image );
   statsCalculator->Update();

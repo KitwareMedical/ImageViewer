@@ -93,7 +93,7 @@ FlipAxesType& direction )
   fileName += "/header.ascii";
  
   typedef VanderbiltHeaderParser<ImageDimension> ParserType;
-  ParserType::Pointer parser = ParserType::New();
+  typename ParserType::Pointer parser = ParserType::New();
   parser->SetFileName( fileName.c_str() );
 
   try
@@ -123,7 +123,7 @@ FlipAxesType& direction )
 
   typedef typename ImageType::PixelType PixelType;
   typedef RawVolumeReader<PixelType,ImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
+  typename ReaderType::Pointer reader = ReaderType::New();
 
   reader->SetFileName( fileName.c_str() );
   reader->SetSize( parser->GetImageSize() );

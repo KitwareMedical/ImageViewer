@@ -65,7 +65,7 @@ ClassifierValidationOutput<TImage>
   /*** Write out the classified volume ****/
 
   typedef itk::RawVolumeWriter<TImage> ByteWriterType;
-  ByteWriterType::Pointer bytewriter = ByteWriterType::New();
+  typename ByteWriterType::Pointer bytewriter = ByteWriterType::New();
 
   bytewriter->SetInputImage( m_ClassifiedImage );
   bytewriter->SetFileName( "classified.raw" );
@@ -137,13 +137,13 @@ ClassifierValidationOutput<TImage>
 
 
 
-  ByteWriterType::Pointer bytewriter1 = ByteWriterType::New();
+  typename ByteWriterType::Pointer bytewriter1 = ByteWriterType::New();
 
   bytewriter1->SetInputImage( m_TruthImage );
   bytewriter1->SetFileName( "truthImage.raw" );
   bytewriter1->Execute();
 
-  ByteWriterType::Pointer bytewriter2 = ByteWriterType::New();
+  typename ByteWriterType::Pointer bytewriter2 = ByteWriterType::New();
 
   bytewriter2->SetInputImage( m_ClassifiedImage );
   bytewriter2->SetFileName( "classifiedImage.raw" );
@@ -208,7 +208,7 @@ ClassifierValidationOutput<TImage>
   ImageRegionIterator<ImageType> iterator(image, region);
 
   // Create a filter
-  CropImageFilter< ImageType, ImageType >::Pointer extract;
+  typename CropImageFilter< ImageType, ImageType >::Pointer extract;
   extract = CropImageFilter< ImageType, ImageType >::New();
   extract->SetInput( image );
   

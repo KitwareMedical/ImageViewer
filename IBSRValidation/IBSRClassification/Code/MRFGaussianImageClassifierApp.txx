@@ -69,15 +69,15 @@ MRFGaussianImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef Statistics::MahalanobisDistanceMembershipFunction< VectorInputPixelType > 
     MembershipFunctionType ;
 
-  typedef MembershipFunctionType::Pointer MembershipFunctionPointer ;
+  typedef typename MembershipFunctionType::Pointer MembershipFunctionPointer ;
 
   //----------------------------------------------------------------------
   //Set the decision rule 
   //----------------------------------------------------------------------  
-  typedef DecisionRuleBase::Pointer DecisionRuleBasePointer;
+  typedef typename DecisionRuleBase::Pointer DecisionRuleBasePointer;
 
   typedef MinimumDecisionRule DecisionRuleType;
-  DecisionRuleType::Pointer  
+  typename DecisionRuleType::Pointer  
     classifierDecisionRule = DecisionRuleType::New();
 
   //------------------------------------------------------
@@ -88,7 +88,7 @@ MRFGaussianImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef ImageClassifierBase< VectorInputImageType,ClassifiedImageType > 
     SupervisedClassifierType;
 
-  SupervisedClassifierType::Pointer 
+  typename SupervisedClassifierType::Pointer 
     classifierPointer = SupervisedClassifierType::New();
 
 
@@ -181,7 +181,7 @@ MRFGaussianImageClassifierApp<TVectorInputImage,TMaskImage>
   typedef itk::MRFImageFilter<VectorInputImageType,ClassifiedImageType> 
     MRFFilterType;
 
-  MRFFilterType::Pointer applyMRFFilter = MRFFilterType::New();
+  typename MRFFilterType::Pointer applyMRFFilter = MRFFilterType::New();
 
   // Set the MRF labeller parameters
   applyMRFFilter->SetNumberOfClasses(m_NumberOfClasses);

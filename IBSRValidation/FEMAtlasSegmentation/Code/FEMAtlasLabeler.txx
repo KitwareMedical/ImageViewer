@@ -68,7 +68,7 @@ FEMAtlasLabeler<TLabelImage, TDeformationField>
   typedef Image<RealType, ImageDimension> RealImageType;
 
   typedef BinaryThresholdImageFilter<LabelImageType,RealImageType> InputThresholderType;
-  InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
+  typename InputThresholderType::Pointer inputThresholder = InputThresholderType::New();
 
   inputThresholder->SetInput( m_AtlasLabelImage );
   inputThresholder->SetInsideValue( -0.5 );
@@ -77,13 +77,13 @@ FEMAtlasLabeler<TLabelImage, TDeformationField>
   inputThresholder->SetUpperThreshold( m_UpperThreshold );
 
   typedef ReinitializeLevelSetImageFilter<RealImageType> DistanceType;
-  DistanceType::Pointer distance = DistanceType::New();
+  typename DistanceType::Pointer distance = DistanceType::New();
 
   distance->SetInput( inputThresholder->GetOutput() );
   distance->NarrowBandingOn();
 
   typedef BinaryThresholdImageFilter<RealImageType,LabelImageType> OutputThresholderType;
-  OutputThresholderType::Pointer outputThresholder = OutputThresholderType::New();
+  typename OutputThresholderType::Pointer outputThresholder = OutputThresholderType::New();
 
   outputThresholder->SetInput( distance->GetOutput()  );
   outputThresholder->SetUpperThreshold( NumericTraits<RealType>::Zero );
