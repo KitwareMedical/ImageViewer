@@ -119,10 +119,15 @@ main(int argc, char *argv[])
                 exit(EXIT_FAILURE); 
             }
             if (bigend)
-                itk::ByteSwapper<PixelType>::SwapRangeBE(buff, ImageWidth);
+                {
+                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToBigEndian(buff, ImageWidth);
+                }
             else
-                itk::ByteSwapper<PixelType>::SwapRangeLE(buff, ImageWidth);
-            for (long col = 0; col < ImageWidth; col++) {
+                {
+                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToLittleEndian(buff, ImageWidth);
+                }
+            for (long col = 0; col < ImageWidth; col++) 
+                {
                 point[0] = col;
                 index.SetIndex(point);
                 image->SetPixel(index, buff[col]);
@@ -254,9 +259,13 @@ main(int argc, char *argv[])
                 buff[col] = resamp->GetPixel(index);
             }
             if (bigend)
-                itk::ByteSwapper<PixelType>::SwapRangeBE(buff, ImageWidth);
+                {
+                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToBigEndian(buff, ImageWidth);
+                }
             else
-                itk::ByteSwapper<PixelType>::SwapRangeLE(buff, ImageWidth);
+                {
+                itk::ByteSwapper<PixelType>::SwapRangeFromSystemToLittleEndian(buff, ImageWidth);
+                }
             count = fwrite(buff, 2, ImageWidth, outfile);
             if (count != (size_t)ImageWidth) {
                 fprintf(stderr, "Error writing output file\n");
