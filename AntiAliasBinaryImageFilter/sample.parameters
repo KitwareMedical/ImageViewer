@@ -1,0 +1,14 @@
+(INPUT_FILENAME  "sample_input.64x64x64.char"  )
+(OUTPUT_FILENAME "sample_output.64x64x64.float" )
+
+(IMAGE_SIZE 64 64 64)  // The size of the input image
+
+(MAXIMUM_ERROR 0.03 )  // Maximum error threshold parameter
+
+(NUMBER_OF_LAYERS 3)  // Number of layers to use in the calculations.
+                      // For 3 dimensional volumes, this should be 3.  
+                      // For 2d this can be decreased to 2.
+
+(OUTPUT_TYPE 0) // 0 == level set output, 
+                // 1 == zero crossings, may be interesting to see
+
