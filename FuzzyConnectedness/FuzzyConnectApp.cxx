@@ -264,7 +264,7 @@ FuzzyConnectApp
 
 	m_Filter->SetThreshold( m_Threshold );
 
-  m_Filter->ExcuteSegment();
+  m_Filter->Update();
  
 }
 
@@ -274,8 +274,7 @@ FuzzyConnectApp
 ::ComputeSegmentationImage()
 {
 
-  m_Filter->SetThreshold( m_Threshold );
-  m_Filter->MakeSegmentObject();
+  m_Filter->UpdateThreshold( m_Threshold );
 
 }
 
