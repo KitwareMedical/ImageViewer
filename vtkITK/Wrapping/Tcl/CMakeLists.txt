@@ -101,7 +101,7 @@ IF (VTK_USE_PARALLEL)
   ENDIF (VTK_USE_MPI)
 ENDIF (VTK_USE_PARALLEL)
 
-LINK_LIBRARIES(vtkVTKITKCommonTCL vtkVTKITKCommon)
+LINK_LIBRARIES(vtkVTKITKCommonTCL vtkVTKITKCommon itkNumerics)
 
 #
 # link in the PNG library if it was found
