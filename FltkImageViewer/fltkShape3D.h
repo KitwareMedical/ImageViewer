@@ -136,14 +136,14 @@ public:
   /**
    * Command that will draw the object
    */
-  typedef itk::SimpleMemberCommand< const Self >   DrawCommandType;
-  typedef DrawCommandType::Pointer                 DrawCommandPointer;
+  typedef itk::SimpleConstMemberCommand< Self >   DrawCommandType;
+  typedef DrawCommandType::Pointer                DrawCommandPointer;
 
   /**
    * Command that will schedule the Display list for an Update
    */
-  typedef itk::SimpleMemberCommand< const Self >   DisplayListUpdateCommandType;
-  typedef DisplayListUpdateCommandType::Pointer    DisplayListUpdateCommandPointer;
+  typedef itk::SimpleConstMemberCommand< Self >   DisplayListUpdateCommandType;
+  typedef DisplayListUpdateCommandType::Pointer   DisplayListUpdateCommandPointer;
 
  
   /**
