@@ -46,8 +46,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mydefs.h"
 #include "imageutils.h"
 #include "OptionList.h"
-#include "BiasField.h"
+#include "itkMultivariateLegendrePolynomial.h"
 
+typedef itk::MultivariateLegendrePolynomial BiasField ;
 
 void print_usage()
 {
@@ -90,7 +91,7 @@ void generateBiasImage(BiasField& biasField, ImagePointer output)
   ImageType::SizeType size ;
   ImageType::RegionType region ;
 
-  itk::Size<3> biasSize = biasField.GetSize() ;
+  BiasField::DomainSizeType biasSize = biasField.GetDomainSize() ;
   for (int i = 0 ; i < ImageType::ImageDimension ; i++)
     {
       if (i < biasField.GetDimension())
@@ -140,7 +141,7 @@ int main(int argc, char* argv[])
   int dimension ;
   int degree ;
   vnl_vector<double> coefficientVector ;
-  itk::Size<3> biasSize ;
+  BiasField::DomainSizeType biasSize ;
 
   try
     {
@@ -152,8 +153,8 @@ int main(int argc, char* argv[])
       coefficientVector.resize(length) ;
       for (int i = 0 ; i < length ; i++)
         coefficientVector[i] = coefficients[i] ;
-      degree = options.GetIntOption("degree", true) ;
-      dimension = options.GetIntOption("dimension", true) ;
+      degree = options.GetIntOption("degree", 3, true) ;
+      dimension = options.GetIntOption("dimension", 3,  true) ;
 
       std::vector<int> sizes ;
       options.GetMultiIntOption("size", &sizes, true) ;
@@ -167,7 +168,7 @@ int main(int argc, char* argv[])
       for (int i = 0 ; i < sizes.size() ; i++)
         {
           if (i < 3)
-            biasSize[i] = sizes[i] ;
+            biasSize.push_back(sizes[i]) ;
         }
     }
   catch(OptionList::RequiredOptionMissing e)
@@ -180,7 +181,7 @@ int main(int argc, char* argv[])
   
   
   
-  BiasField biasField(dimension, degree, biasSize) ;
+  BiasField biasField(biasSize.size(), degree, biasSize) ;
   //biasField.IsMultiplicative(useLog) ;
   try
     {
