@@ -188,7 +188,7 @@ RGBImage2DViewer<ImagePixelType>
 
   fltk::RGBImage2DViewerWindow::ValueType * buffer = imageViewer->GetBuffer();
   const unsigned char valuec = static_cast<unsigned char>( value * factor );
-  for (int index = totalSize + channel - totalWidth;
+  for (unsigned int index = totalSize + channel - totalWidth;
        index < totalSize ; index++)
     {
       buffer[index] = valuec;
