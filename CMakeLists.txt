@@ -37,6 +37,14 @@ IF(HAS_METAIMAGE)
  ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
+# Test the condition to build or not build the Image Registration example
+IF(HAS_METAIMAGE)
+ IF(HAS_FLTKIMAGEVIEWER)
+   SUBDIRS(ImageRegistration2D)
+ ENDIF(HAS_FLTKIMAGEVIEWER)
+ENDIF(HAS_METAIMAGE)
+
+
 # Build the Multiresolution Registration example
 SUBDIRS(MultiResMIRegistration)
 
