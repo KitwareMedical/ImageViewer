@@ -32,6 +32,7 @@ liCommandGLRedrawModelFixed
 liCommandGLRedrawModelSensitive
 liCommandUpdateImageIntensifier
 liCommandUpdateRegistratorFieldOfView
+liCommandUpdateSpineModelGUI
 liCommandTubesGeneratePointSet
 liFluoroscopyCArm
 liFluoroscopyCArmMobile
@@ -74,7 +75,6 @@ liSampleGeneratorBodyPlaneGUI.fl
 liOperatingRoomViewGUI.fl
 liFluoroscopyUnitViewGUI.fl
 liFluoroscopyCArmMobileGUI.fl
-liCommandUpdateSpineModelGUI.fl
 )
 
 LINK_LIBRARIES (
