@@ -13,16 +13,9 @@ LINK_LIBRARIES(
 
 LINK_LIBRARIES(VXLNumerics ITKCommon ITKIO ITKNumerics)
 
-SOURCE_FILES(MRIRegistration_SRCS
-OptionList
-RegisterAD
-vtkImageStatistics
-)
-
 SOURCE_FILES(MIRegistration_SRCS
 OptionList
 MIRegistration
 )
 
-# ADD_EXECUTABLE(MRIRegistration MRIRegistration_SRCS)
 ADD_EXECUTABLE(MIRegistration MIRegistration_SRCS)
