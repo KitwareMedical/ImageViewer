@@ -127,8 +127,8 @@ public:
   typedef ImageType::SizeType ImageSizeType;
   enum { ImageDimension = 2 };
   typedef itk::fem::Element2DC0LinearQuadrilateralMembrane ElementType;
-  typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType1;
-  typedef itk::NormalizedCorrelationImageToImageMetric<ImageType,ImageType> MetricType;
+  typedef itk::MeanSquaresImageToImageMetric<ImageType,ImageType> MetricType;
+  typedef itk::NormalizedCorrelationImageToImageMetric<ImageType,ImageType> MetricType1;
   typedef itk::PatternIntensityImageToImageMetric<ImageType,ImageType> MetricType2;
   typedef itk::MutualInformationImageToImageMetric<ImageType,ImageType> MetricType3;
   typedef itk::Vector<Float,ImageDimension> VectorType;
