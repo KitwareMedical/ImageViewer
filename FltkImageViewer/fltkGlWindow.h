@@ -44,8 +44,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <FL/gl.h> 
 #include <FL/Fl_Gl_Window.H>
-#include <fltkGlDrawer.h>
 #include <fltkWidgetRedrawCommand.h>
+#include <fltkCommandEvents.h>
 #include <vector>
 
 namespace fltk {
@@ -61,28 +61,25 @@ namespace fltk {
 class GlWindow : public Fl_Gl_Window 
 {
 
-  std::vector< GlDrawerPtr > drawer;
 
 public:
 
   typedef WidgetRedrawCommand< Fl_Gl_Window >  RedrawCommandType;
     
-protected:
-  void CallDrawers(void) const;
-
 public:
 
   GlWindow(int x,int y,int w,int h, const char * label=0);
   virtual ~GlWindow();
   void SaveImage( void );
   void SaveImage( const char * filename );
-  void AddDrawer( GlDrawerPtr dr );
   const RedrawCommandType::Pointer & GetRedrawCommand(void);
+  itk::LightObject::Pointer & GetNotifier(void);
 
 private:
 
   RedrawCommandType::Pointer   m_RedrawCommand;
     
+  itk::LightObject::Pointer    m_Notifier;
 
 };
 

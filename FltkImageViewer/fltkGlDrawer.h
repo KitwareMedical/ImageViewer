@@ -46,7 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace fltk {
 
-class GlDrawer 
+class ITK_EXPORT GlDrawer 
 {
 
 public:

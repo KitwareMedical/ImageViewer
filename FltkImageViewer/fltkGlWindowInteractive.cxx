@@ -332,7 +332,7 @@ void GlWindowInteractive::draw(void)
   glEnable(GL_NORMALIZE);
   glEnable(GL_DEPTH_TEST);
 
-  CallDrawers();
+  GetNotifier()->InvokeEvent( fltk::GlDrawEvent );
 
 }
 

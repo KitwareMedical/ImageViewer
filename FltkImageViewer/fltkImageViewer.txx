@@ -417,10 +417,10 @@ ImageViewer<ImagePixelType,OverlayPixelType>
   for(int i=numPoints-1; i>=0; i--)
   {
     const ClickPoint * point = glSliceView->getClickedPoint(i);
-	const int x = (int)(point->x);
-	const int y = (int)(point->y);
-	const int z = (int)(point->z);
-	const float value = point->value;
+    const int x = (int)(point->x);
+    const int y = (int)(point->y);
+    const int z = (int)(point->z);
+    const float value = point->value;
     sprintf(buffer,"%3d %3d %3d %f",x,y,z,value);
     clickedPointsBrowser->add( buffer );
   }
