@@ -67,6 +67,11 @@ public:
   virtual void ShowClickedPointsWindow(void);
   virtual void UpdateClickedPoints(void);
   virtual void ClearClickedPoints(void);
+  virtual void ClickSelectCallBack(
+                void (*newClickSelectArgCallBack)(float, float,
+                                                  float, float,
+                                                  void *),
+                     void * newClickSelectArg);
 
 private:
   GLSliceViewType * glSliceView;

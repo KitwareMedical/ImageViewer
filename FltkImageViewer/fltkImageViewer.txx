@@ -414,4 +414,18 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 
 
 
+template <class ImagePixelType, class OverlayPixelType>
+void 
+ImageViewer<ImagePixelType,OverlayPixelType>
+::ClickSelectCallBack( void (*newClickSelectArgCallBack)(float, float,
+                                                         float, float,
+                                                         void *),
+                                                         void * newClickSelectArg)
+{
+  glSliceView->clickSelectCallBack( newClickSelectArgCallBack, 
+                                    newClickSelectArg           ); 
+}
+
+
+
 } // end namespace itk
