@@ -103,6 +103,9 @@ ENDIF (VTK_USE_PARALLEL)
 
 LINK_LIBRARIES(vtkVTKITKCommonTCL vtkVTKITKCommon ITKNumerics)
 
+LINK_DIRECTORIES ( ${ITK_BINARY_DIR}/Examples/vtkITK/Common )
+
+
 #
 # link in the PNG library if it was found
 #
