@@ -4,7 +4,7 @@
 #
 
 set MRIDATA=/home/lorensen/InsightData/MultiFieldMRI
-set MRIRegistration=/home/lorensen/Insight-solaris/Applications/MRIRegistration/MIRegistration
+set MRIRegistration=/home/lorensen/Insight-solaris/bin/MIRegistration
 echo 0 0 0 1 20 40 0 >guess0
 ${MRIRegistration}     --study2Prefix ${MRIDATA}/HighField/e2     --study2Resolution 256 256 55     --study2Spacing .78125 .78125 1.5     --study1Prefix ${MRIDATA}/LowField/e2     --study1Resolution 256 256 55     --study1Spacing .78125 .78125 1.5     --translateScale 64     --shrink 8 8 1     --learningRate .005     --standardDeviation 2     --numberOfSamples 50     --numberOfIterations 1000 <guess0 >guess1
 ${MRIRegistration}     --study2Prefix ${MRIDATA}/HighField/e2     --study2Resolution 256 256 55     --study2Spacing .78125 .78125 1.5     --study1Prefix ${MRIDATA}/LowField/e2     --study1Resolution 256 256 55     --study1Spacing .78125 .78125 1.5     --translateScale 64     --shrink 4 4 1     --learningRate .005     --standardDeviation 2     --numberOfSamples 50     --numberOfIterations 1000 <guess1 >guess2
