@@ -16,7 +16,6 @@
 =========================================================================*/
 
 #include "itkFEM.h"
-#include "itkFEMGenerateMesh.h"
 //#include "itkFEMLoadLandmark.h"
 #include "itkFEMLinearSystemWrapperItpack.h"
 #include "itkFEMLinearSystemWrapperDenseVNL.h"
@@ -142,7 +141,7 @@ public:
   /* Main functions */
  
   /** Read the configuration file to set up the example parameters */
-  bool ReadConfigFile(const char*);
+  bool ReadConfigFile(const char*,SolverType& S);
 
   /** Call this to register two images. */
   void  RunRegistration(); 
@@ -159,11 +158,11 @@ public:
   void CreateMesh(ImageSizeType MeshOrigin, ImageSizeType MeshSize, 
                               double ElementsPerSide, Solver& S);
   /** The loads are entered into the solver. */
-  void ApplyLoads(); 
+  void ApplyLoads(SolverType& S); 
   /**  Builds the itpack linear system wrapper with appropriate parameters. */
   void CreateLinearSystemSolver();
   /** The solution loop */
-  void  IterativeSolve();  
+  void  IterativeSolve(SolverType& S);  
   /** The solution loop for a simple multi-resolution strategy. */
   void  MultiResSolve();
   void  MultiResPyramidSolve();
@@ -173,9 +172,9 @@ public:
     * Our convention is to always keep the vector field
     * at the scale of the original images.
     */
-  void  GetVectorField(); 
+  void  GetVectorField(SolverType& S); 
   /** This is used for changing between mesh resolutions. */
-  void SampleVectorFieldAtNodes();
+  void SampleVectorFieldAtNodes(SolverType& S);
   /** Applies the warp to the reference image. */
   void  WarpImage();      
 
@@ -255,6 +254,7 @@ public:
   ImageType::IndexType m_Rindex;
   ImageType::IndexType m_Tindex;
 
+  const char* ConfigFileName;
   ElementType::Pointer e1;
 /** for quadrature rules, see
 "Exact Integrations of Polynomials and Symmetric 
