@@ -2,11 +2,11 @@
 
 1.	% Alpha
 1	% DescentDirection
-1	% DoLineSearch : 0 = none, 1 = Golden Section, 2 = Brent's method
-190000 %1.e4	% Elasticity
+0	% DoLineSearch : 0 = none, 1 = Golden Section, 2 = Brent's method
+390000 %1.e4	% Elasticity
 15	% MaximumIterations
 1.	% TimeStep
-1.e12  % Energy Reduction Factor
+1.e-12  % Energy Reduction Factor
 1.e3  %2.e2	% Rho
 E:\\Avants\\MetaImages\\brain_slice1smth.im % brain3D64x64x31a.raw %	% ReferenceFileName
 E:\\Avants\\MetaImages\\brain_slice2smth.im % brain3D64x64x31b.raw %		% TargetFileName
