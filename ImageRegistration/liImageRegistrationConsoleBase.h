@@ -51,7 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkImageToImageAffinePatternIntensityRegularStepGradientDescentRegistration.h>
 #include <itkImageToImageAffineNormalizedCorrelationRegularStepGradientDescentRegistration.h>
 #include <itkImageToImageAffineMutualInformationGradientDescentRegistration.h>
-#include <itkDataAccessor.h>
+#include <itkPixelAccessor.h>
 
 
 /**
@@ -88,13 +88,13 @@ public:
 
   // Data Accessor to convert image pixels from 
   // the type in the file to the internal type
-  typedef   itk::DataAccessor< InputPixelType, PixelType > DataAccessorType;                                
+  typedef   itk::PixelAccessor< InputPixelType, PixelType > PixelAccessorType;                                
 
 
   // ImageAdaptor that will simulate that the input image
   // is an image with pixels of internal type
   typedef   itk::ImageAdaptor< InputImageType,
-                                       DataAccessorType >   TargetType;
+                                       PixelAccessorType >   TargetType;
                                        
   // Type of the Reference image                                     
   typedef   itk::Image< PixelType, 
