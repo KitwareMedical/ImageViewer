@@ -24,7 +24,12 @@ class VTK_EXPORT vtkITKPDEDeformableRegistrationFilter : public vtkITKImageToIma
  public:
   static vtkITKPDEDeformableRegistrationFilter *New();
   vtkTypeRevisionMacro(vtkITKPDEDeformableRegistrationFilter, vtkITKImageToImageFilterF3F3);
-
+  //BTX
+  typedef itk::Image<float, 3> RegistrationImageType;
+  typedef itk::VTKImageImport<RegistrationImageType> FixedImageImportType;
+  typedef itk::VTKImageImport<RegistrationImageType> MovingImageImportType;
+  //ETX
+  
   void SetNumberOfIterations ( unsigned int n ) { DelegateSetMacro ( NumberOfIterations, n ); };
   unsigned int GetNumberOfIterations () { DelegateGetMacro ( NumberOfIterations ); };
   void SetStandardDeviations ( double d ) { DelegateSetMacro ( StandardDeviations, d ); };
@@ -39,16 +44,16 @@ class VTK_EXPORT vtkITKPDEDeformableRegistrationFilter : public vtkITKImageToIma
   
 protected:
   //BTX
-  typedef itk::PDEDeformableRegistrationFilter<Superclass::InputImageType,Superclass::InputImageType,Superclass::OutputImageType> ImageFilterType;
+  typedef itk::PDEDeformableRegistrationFilter<RegistrationImageType,RegistrationImageType,Superclass::OutputImageType> ImageFilterType;
   vtkITKPDEDeformableRegistrationFilter() :
     Superclass ( dynamic_cast<Superclass::GenericFilterType*> ( ImageFilterType::New().GetPointer() ) )
   {
     // Create the import/exports for Fixed and Moving Images
     this->vtkFixedImageExporter = vtkImageExport::New();
-    this->itkFixedImageImporter = Superclass::ImageImportType::New();
+    this->itkFixedImageImporter = FixedImageImportType::New();
     ConnectPipelines ( this->vtkFixedImageExporter, this->itkFixedImageImporter );
     this->vtkMovingImageExporter = vtkImageExport::New();
-    this->itkMovingImageImporter = Superclass::ImageImportType::New();
+    this->itkMovingImageImporter = MovingImageImportType::New();
     ConnectPipelines ( this->vtkMovingImageExporter, this->itkMovingImageImporter );
     this->GetFilterPointer()->SetFixedImage ( itkFixedImageImporter->GetOutput() );
     this->GetFilterPointer()->SetMovingImage ( itkMovingImageImporter->GetOutput() );
@@ -76,14 +81,15 @@ private:
   // Need to have two vtkExporters
   vtkImageExport* vtkFixedImageExporter;
   vtkImageExport* vtkMovingImageExporter;
-  Superclass::ImageImportType::Pointer itkFixedImageImporter;
-  Superclass::ImageImportType::Pointer itkMovingImageImporter;
+  
+  FixedImageImportType::Pointer itkFixedImageImporter;
+  MovingImageImportType::Pointer itkMovingImageImporter;
   //ETX
   
   
 };
 
-vtkCxxRevisionMacro(vtkITKPDEDeformableRegistrationFilter, "$Revision: 1.1 $");
+vtkCxxRevisionMacro(vtkITKPDEDeformableRegistrationFilter, "$Revision: 1.2 $");
 vtkStandardNewMacro(vtkITKPDEDeformableRegistrationFilter);
 
 #endif
