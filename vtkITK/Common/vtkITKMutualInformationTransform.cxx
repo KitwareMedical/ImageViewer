@@ -54,7 +54,7 @@
 #include "itkNumericTraits.h"
 #include "vnl/vnl_math.h"
 
-vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.7 $");
+vtkCxxRevisionMacro(vtkITKMutualInformationTransform, "$Revision: 1.8 $");
 vtkStandardNewMacro(vtkITKMutualInformationTransform);
 
 //----------------------------------------------------------------------------
@@ -134,25 +134,25 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
 
   typedef itk::VTKImageImport<OutputType> ImageImportType;
 
-  ImageImportType::Pointer movingItkImporter = ImageImportType::New();
+  typename ImageImportType::Pointer movingItkImporter = ImageImportType::New();
   ConnectPipelines(movingVtkExporter, movingItkImporter);
 
   // Target
   vtkImageExport *fixedVtkExporter = vtkImageExport::New();
     fixedVtkExporter->SetInput(target);
 
-  ImageImportType::Pointer fixedItkImporter = ImageImportType::New();
+  typename ImageImportType::Pointer fixedItkImporter = ImageImportType::New();
   ConnectPipelines(fixedVtkExporter, fixedItkImporter);
 
 //-----------------------------------------------------------
 // Set up the registrator
 //-----------------------------------------------------------
-  MetricType::Pointer         metric        = MetricType::New();
-  TransformType::Pointer      transform     = TransformType::New();
-  OptimizerType::Pointer      optimizer     = OptimizerType::New();
-  InterpolatorType::Pointer   interpolator  = InterpolatorType::New();
-  RegistrationType::Pointer   registration  = RegistrationType::New();
-  RegistrationType::ParametersType guess(transform->GetNumberOfParameters() );
+  typename MetricType::Pointer metric = MetricType::New();
+  typename TransformType::Pointer transform = TransformType::New();
+  typename OptimizerType::Pointer optimizer = OptimizerType::New();
+  typename InterpolatorType::Pointer interpolator  = InterpolatorType::New();
+  typename RegistrationType::Pointer registration  = RegistrationType::New();
+  typename RegistrationType::ParametersType guess(transform->GetNumberOfParameters() );
 
   // the guess is derived from the current matrix.
   vnl_matrix<double> matrix3x4(3,4);
@@ -220,7 +220,7 @@ static void vtkITKMutualInformationExecute(vtkITKMutualInformationTransform *sel
   registration->StartRegistration();
 
   // Get the results
-  RegistrationType::ParametersType solution = 
+  typename RegistrationType::ParametersType solution = 
     registration->GetLastTransformParameters();
 
   vnl_quaternion<double> quat(solution[0],solution[1],solution[2],solution[3]);
