@@ -46,7 +46,7 @@ SUBDIRS(Morphogenesis)
 ENDIF(BUILD_MORPHOGENESIS)
 
 # Add an option to build or not build the MRIBiasCorrection example
-OPTION(BUILD_MRI_BIAS_CORRECTION "Build the MRI bias correction example" ON)
+OPTION(BUILD_MRI_BIAS_CORRECTION "Build the MRI bias correction example")
 IF(BUILD_MRI_BIAS_CORRECTION)
 SUBDIRS(MRIBiasCorrection)
 ENDIF(BUILD_MRI_BIAS_CORRECTION)
