@@ -18,7 +18,6 @@
 
 #include <liImageRegistrationConsole.h>
 #include <FL/fl_file_chooser.H>
-#include <itkFileIOMetaImage.h>
  
 
 // This macro helps to connect observers for events
@@ -36,10 +35,6 @@ liImageRegistrationConsole
 ::liImageRegistrationConsole()
 {
  
-  FileIOMetaImageFactory * factory = new FileIOMetaImageFactory;
-  ObjectFactoryBase * factoryBase = static_cast<ObjectFactoryBase *>( factory );
-  ObjectFactoryBase::RegisterFactory( factoryBase );  
-
   m_MovingImageViewer.SetLabel( "Moving Image" );
   m_FixedImageViewer.SetLabel( "Fixed Image" );
   m_InputMovingImageViewer.SetLabel( "Input Moving Image" );
