@@ -5,7 +5,7 @@ ${ITK_SOURCE_DIR}/Unsupported/MetaImage
 ${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/GaussianFilter
-${FLTK_SOURCE_DIR}
+${FLTK_INCLUDE_DIR}
 )
 
 LINK_DIRECTORIES(
@@ -15,7 +15,7 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Unsupported/MetaImage
 ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
 ${ITK_BINARY_DIR}/Unsupported/MetaImage/IView
-${FLTK_BINARY_DIR}
+${FLTK_LIBRARY_DIR}
 )
 
 SOURCE_FILES(
