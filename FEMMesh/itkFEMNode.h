@@ -19,7 +19,8 @@
 #ifndef __itkFEMNode_h
 #define __itkFEMNode_h
 
-#include "itkVertexCell.h"
+#include "itkArray.h"
+
 
 namespace itk {
 namespace fem {
@@ -33,27 +34,45 @@ namespace fem {
  * Every point in finite element mesh should also define the degrees of freedom
  * that exist at that point. A point with the degrees of freedom defined will
  * be refered to as a FEM Node.
+ *
  * Derived class should define a function that creates and initializes a
  * proper FEM Node object. 
  * 
- * The Node derives from the itk::CellVertex which is naturally associated to
- * a Point in the PointSet level of the Mesh.  The Id used for the node when
- * added to the FEMMesh provides a natural association with the Point having 
- * the same Id at the PointSet level.
- *
- * By using different derived classes in a mesh as a Node types (zero dimensional cells)
+ * By using different derived classes in a mesh as a Node types 
  * it is possible to create different FEM Nodes in a system.
  *
+ * Note that Nodes are not necessarily associated one-to-one with the Points
+ * at the geometrical level. This is due to the fact that the Cells representing
+ * the geometry of the element can use a different order than the one used for
+ * interpolating the degrees of freedom.
+ *
  */
-template< typename TCellTraits >
-class FEMNode : public VertexCell<TCellTraits>
+class FEMNode 
 {
+
 public:
 
 
-protected:
+  // Type used for representing the deegrees of freedom.
+  // This is defined in order to provide a common API for the 
+  // FEM solver which will only receive arrays of this type 
+  typedef  float  DisplacementType;
+  typedef  float  FloatType;
+
+  typedef Array< DisplacementType >   DisplacementContainerType;
+
+  virtual unsigned int GetNumberOfDegreesOfFreedom(void) const = 0;
+
+  const DisplacementContainerType & GetDisplacements( void ) const
+    { return m_Displacements; }
+
   FEMNode()  {}            /** default constructor */
   virtual ~FEMNode() {}    /** virtual destructor */
+
+  
+protected:
+
+  DisplacementContainerType m_Displacements; 
 
 };
 
