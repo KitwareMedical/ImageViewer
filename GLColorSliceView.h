@@ -70,6 +70,10 @@ class GLColorSliceView
 
   protected:
 
+    float         cClickSelectR;
+    float         cClickSelectG;
+    float         cClickSelectB;
+
     ImagePointer  cImData;
   };
   
@@ -78,6 +82,9 @@ GLColorSliceView<ImagePixelType, OverlayPixelType>::
 GLColorSliceView(int x, int y, int w, int h, const char *l):
   GLSliceView<ImagePixelType, OverlayPixelType>(x, y, w, h, l)
   {
+  cClickSelectR = 0;
+  cClickSelectG = 0;
+  cClickSelectB = 0;
   }
   
 //
@@ -265,6 +272,9 @@ clickSelect(float newX, float newY, float newZ)
   ind[1] = (unsigned long)cClickSelect[1];
   ind[2] = (unsigned long)cClickSelect[2];
   cClickSelectV = cImData->GetPixel(ind)[0];
+  cClickSelectR = cImData->GetPixel(ind)[0];
+  cClickSelectG = cImData->GetPixel(ind)[1];
+  cClickSelectB = cImData->GetPixel(ind)[2];
       
   /*if length of list is equal to max, remove the earliest point stored */
   if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
@@ -769,19 +779,23 @@ draw()
       char s[80];
       if((ImagePixelType)1.1==1.1)
         {
-        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f", 
+        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f,%03f,%0.3f", 
           cClickSelect[0],
           cClickSelect[1], 
           cClickSelect[2], 
-          (float)cClickSelectV);
+          (float)cClickSelectR,
+          (float)cClickSelectG,
+          (float)cClickSelectB);
         }
       else
         {
-        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %d", 
+        sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %d,%d,%d", 
           cClickSelect[0],
           cClickSelect[1], 
           cClickSelect[2], 
-          (int)cClickSelectV);
+          (int)cClickSelectR,
+          (int)cClickSelectG,
+          (int)cClickSelectB);
         }
       gl_draw( s,
         (int)(cW-(gl_width(s)+2)), 2);
