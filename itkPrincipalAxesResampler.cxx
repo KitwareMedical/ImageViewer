@@ -57,7 +57,7 @@ main(int argc, char *argv[])
     long ImageHeight    = 256;
     long NumberOfSlices = 192;
     int bigend  = 1;             // Bigendian data in external files?
-    int verbose = 1;             // Give lots of interim messages?
+    int verbose = 1;             // Show intermediate results?
 
     /* Get input and output file names from the command line */
     if (argc < 2)
@@ -93,9 +93,10 @@ main(int argc, char *argv[])
     std::cout << "Reading image file." << std::endl;
     ImageIndexType index;        // Index to current pixel
     unsigned long point[3];      // Location of current pixel
-    unsigned char bytes[2];      // Upper and lower bytes
-    PixelType value;
+    unsigned char bytes[2];      // First and second bytes of pixel
+    PixelType value;             // Value of pixel
     size_t count;
+#if 1       // Version using explicit loops
     for (long slice = 0; slice < NumberOfSlices; slice++) {
         point[2] = slice;
         for (long row = 0; row < ImageHeight; row++) {
@@ -108,29 +109,26 @@ main(int argc, char *argv[])
                     fprintf(stderr, "Error reading input file\n");
                     exit(EXIT_FAILURE); }
                 if (bigend)
-                    value = bytes[0] << 8 + bytes[1];
+                    value = (bytes[0] << 8) + bytes[1];
                 else
-                    value = bytes[1] << 8 + bytes[0];
+                    value = (bytes[1] << 8) + bytes[0];
                 image->SetPixel(index, value);
             }
         }
     }
-    
-
-#if 0    // Broken version using iterators
+#else    // Broken version using iterators
     region = image->GetRequestedRegion();
     ImageIteratorType iterator(image, region);
-    unsigned char bytes[2];      // Upper and lower bytes
-    size_t count;
-    unsigned short value;
     for (iterator.Begin(); !iterator.IsAtEnd(); ++iterator)
         {
             count = fread(bytes, 1, 2, infile);
             if (count != 2) {
                 fprintf(stderr, "Error reading input file\n");
                 exit(EXIT_FAILURE); }
-            // Assume little endian data
-            value = bytes[1]<<8 + bytes[0];
+                if (bigend)
+                    value = (bytes[0] << 8) + bytes[1];
+                else
+                    value = (bytes[1] << 8) + bytes[0];
             iterator.Set(value);
         }
 #endif
@@ -165,14 +163,22 @@ main(int argc, char *argv[])
     resamp->Allocate();
 
     /* Compute the transform from principal axes to original axes */
+    double pi = 3.14159265359;
     AffineTransformType trans = resamp->GetIndexToPhysicalTransform();
     vnl_vector_fixed<double,3> center;
     center[0] = -ImageWidth / 2.0;
     center[1] = -ImageHeight / 2.0;
     center[2] = -NumberOfSlices / 2.0;
     trans.Translate(center);
-    trans.Compose(moments.GetPrincipalAxesToPhysicalAxesTransform());
-    trans.Translate(ccg);
+    trans.Rotate(1, 0, pi/2.0);   // Rotate into radiological orientation
+    trans.Rotate(2, 0, -pi/2.0);
+    AffineTransformType pa2phys =
+        moments.GetPrincipalAxesToPhysicalAxesTransform();
+    if (verbose) {
+        std::cout << "Principal axes to physical axes transform"
+                  << std::endl << pa2phys << std::endl;
+    }
+    trans.Compose(pa2phys);
     trans.Compose(image->GetPhysicalToIndexTransform());
     if (verbose) {
         std::cout << "Backprojection transform:" << std::endl;
