@@ -13,7 +13,7 @@
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Button.H>
 #include <Fl/Fl_Color_Chooser.h>
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <FL/Fl_Check_Button.H>
 #include <fltkRegularStepGradientDescent.h>
 #include <liVertebralSegmentRegistrator.h>

@@ -15,7 +15,7 @@
 #define liVERTEBRALSEGMENTREGISTRATORCLASS
 
 #include <liVertebralSegment.h>
-#include <itkPhysicalImage.h>
+#include <itkImage.h>
 #include <itkPointSetToImageRigid3DPatternIntensityRegularStepGradientDescentRegistration.h>
 
 
@@ -60,14 +60,14 @@ public:
    * Fluoroscopic image type 
    */
   // Azucar
-  // typedef itk::PhysicalImage<unsigned char, 2> FluoroscopicImageType;
-  typedef itk::PhysicalImage<unsigned short, 2> FluoroscopicImageType;
+  // typedef itk::Image<unsigned char, 2> FluoroscopicImageType;
+  typedef itk::Image<unsigned short, 2> FluoroscopicImageType;
 
 
   /** 
    * Volume image type 
    */
-  typedef itk::PhysicalImage<unsigned char, 3> VolumeImageType;
+  typedef itk::Image<unsigned char, 3> VolumeImageType;
 
 
   /** 

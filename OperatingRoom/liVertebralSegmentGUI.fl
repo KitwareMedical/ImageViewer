@@ -329,7 +329,7 @@ m_VertebralSegment->InvokeEvent( li::PatientMovedEvent );}
         Fl_Group {} {
           label Samples open
           xywh {15 80 500 275} hide
-          code0 {\#include <itkPhysicalImage.h>}
+          code0 {\#include <itkImage.h>}
         } {
           Fl_Button {} {
             label {Show Sample Generator}
