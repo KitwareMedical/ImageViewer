@@ -39,15 +39,18 @@ FltkImageViewer
 fltk
 )
 
-WIN32_LIBRARIES(
-wsock32
-opengl32
-)
+IF(WIN32)
+  LINK_LIBRARIES(
+  wsock32
+  opengl32
+  )
+ENDIF(WIN32)
 
-UNIX_LIBRARIES (
--lm
-)
-
+IF(UNIX)
+  LINK_LIBRARIES (
+  -lm
+  )
+ENDIF(UNIX)
 
 ADD_EXECUTABLE(GaussianFilter GaussianFilter_SRCS)
 

@@ -14,9 +14,11 @@ ITKCommon
 ITKBasicFilters 
 )
 
-UNIX_LIBRARIES (
--lm
-)
+IF(UNIX)
+  LINK_LIBRARIES (
+  -lm
+  )
+ENDIF(UNIX)
 
 ADD_EXECUTABLE(itkPrincipalAxesResampler itkPrincipalAxesResampler)
 
