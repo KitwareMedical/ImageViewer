@@ -59,6 +59,4 @@ ENDIF(UNIX)
 
 ADD_EXECUTABLE(FEMMesh ${FEMMeshApplication_SRCS})
 
-FLTK_WRAP_UI(FEMMesh $(FEMMeshApplication_GUI_SRCS})
-
-
+FLTK_WRAP_UI(FEMMesh ${FEMMeshApplication_GUI_SRCS})
