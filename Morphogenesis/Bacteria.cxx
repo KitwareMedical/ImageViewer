@@ -57,7 +57,7 @@ Bacteria
     sibling->m_Radius   = m_Radius;
 
     // Create a perturbation for separating the daugther cells
-    double angle = static_cast<double>( random() ) / 
+    double angle = static_cast<double>( rand() ) / 
                    static_cast<double>( RAND_MAX ) *
                    atan(1) * 4.0;
 
