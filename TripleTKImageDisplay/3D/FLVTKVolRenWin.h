@@ -82,7 +82,7 @@ class FLVTKVolRenWin : public FLVTKWin
        ImagePointer GetInputImage(void);
        void SetInputImage(ImageType * newIm);
        
-       OverlaymaskData(void);
+       void OverlaymaskData(void);
        void maskData(OverlayType * newMaskData);
        
        void useMask(bool newUseMask);
