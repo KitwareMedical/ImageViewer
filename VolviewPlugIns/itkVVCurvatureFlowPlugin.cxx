@@ -152,7 +152,7 @@ public:
       atof(m_Info->GUIItems[1].CurrentValue));
     m_CurvaturFlowFilter->SetInput( m_CastFilter->GetOutput() );
 
-    m_CommandObserver->SetCallbackFunction( this, ProgressUpdate );
+    m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
 
     m_CurvaturFlowFilter->AddObserver( itk::ProgressEvent(), m_CommandObserver );
 
