@@ -35,7 +35,7 @@ integer.  (But see below for hooks to change these parameters.)
 #include "itkImage.h"
 #include "itkImageMomentsCalculator.h"
 #include "itkResampleImageFilter.h"
-#include "itkSimpleImageRegionIterator.h"
+#include "itkImageRegionIterator.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkMinimumMaximumImageFilter.h"
 
@@ -54,7 +54,7 @@ typedef itk::AffineTransform< CoordRepType,
                               NDimensions >        AffineTransformType;
 
 typedef itk::Index<NDimensions>                    ImageIndexType;
-typedef itk::SimpleImageRegionIterator<ImageType>  ImageIteratorType;
+typedef itk::ImageRegionIterator<ImageType>        ImageIteratorType;
 typedef itk::ImageMomentsCalculator<ImageType>  ImageMomentsCalculatorType;
 typedef itk::LinearInterpolateImageFunction<ImageType,CoordRepType>  InterpolatorType;
 typedef itk::Point<double, NDimensions>            PointType;
