@@ -23,7 +23,7 @@
 
 #include <itkImageRegionIterator.h>
 
-int main(int argc, char **argv)
+int main()
   {
   // Declare the image
   typedef itk::Image<short, 3> ImageType;
