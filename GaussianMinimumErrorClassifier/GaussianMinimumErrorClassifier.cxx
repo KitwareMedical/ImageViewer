@@ -16,8 +16,7 @@
 =========================================================================*/
 #include "OptionList.h"
 #include "itkImage.h"
-#include "itkReadMetaImage.h"
-#include "itkWriteMetaImage.h"
+#include "metaITKUtils.h"
 #include "itkImageRegionIterator.h"
 #include "itkScalarToArrayCastImageFilter.h"
 
@@ -123,25 +122,16 @@ int main(int argc, char* argv[])
   ImagePointer target ;
 
   std::cout << "Loading image(s)..." << std::endl ;
-  //      readMetaImageHeader(trainingFileName, trainingDimension, trainingSize) ;
-  typedef itk::ReadMetaImage<ImageType> Reader ;
-  Reader::Pointer reader = Reader::New() ;
-      
-  reader->SetFileName(trainingFileName.c_str()) ;
-  reader->Update() ;
-  training = reader->GetOutput() ;
+  training = metaITKUtilLoadImage3D<short>(trainingFileName.c_str(),
+                                    MET_SHORT);
   std::cout << "Training image loaded." << std::endl ;
 
-  Reader::Pointer reader2 = Reader::New() ;
-  reader2->SetFileName(classMaskFileName.c_str()) ;
-  reader2->Update() ;
-  classMask = reader2->GetOutput() ;
+  classMask = metaITKUtilLoadImage3D<short>(classMaskFileName.c_str(),
+                                     MET_SHORT);
   std::cout << "Class mask loaded." << std::endl ;
 
-  Reader::Pointer reader3 = Reader::New() ;
-  reader3->SetFileName(targetFileName.c_str()) ;
-  reader3->Update() ;
-  target = reader3->GetOutput() ;
+  target = metaITKUtilLoadImage3D<short>(targetFileName.c_str(),
+                                  MET_SHORT);
   std::cout << "Target image loaded." << std::endl ;
 
   /* ================================================== */
@@ -285,8 +275,6 @@ int main(int argc, char* argv[])
   /* ===================================================== */
   std::cout << "Creating a image with result class labels..." << std::endl ;
   typedef itk::ImageRegionIterator< ImageType > ImageIteratorType ;
-  typedef itk::WriteMetaImage< ImageType > Writer ;
-  Writer::Pointer writer = Writer::New() ;
 
   ImagePointer output = ImageType::New() ;
   output->SetBufferedRegion(target->GetLargestPossibleRegion()) ;
@@ -302,9 +290,8 @@ int main(int argc, char* argv[])
       ++m_iter ;
     }
 
-  writer->SetInput(output) ;
-  writer->SetFileName(outputFileName.c_str()) ;
-  writer->GenerateData() ;
+  metaITKUtilSaveImage<ImageType>(outputFileName.c_str(), NULL,
+                                  output, MET_SHORT, 1, MET_SHORT);
 
   return 0 ;
 }

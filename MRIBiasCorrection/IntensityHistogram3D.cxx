@@ -21,7 +21,7 @@ PURPOSE.  See the above copyright notices for more information.
 #include <map>
 
 #include <itkImage.h>
-#include <itkReadMetaImage.h>
+#include <itkMetaImageIOFactory.h>
 #include <itkImageRegionIteratorWithIndex.h>
 
 #include "imageutils.h"

@@ -19,7 +19,7 @@ PURPOSE.  See the above copyright notices for more information.
 #include <vnl/vnl_math.h>
 
 #include "imageutils.h"
-#include "itkWriteMetaImage.h"
+#include "metaITKUtils.h"
 #include "OptionList.h"
 #include "itkMRIBiasFieldCorrectionFilter.h"
 
@@ -229,11 +229,8 @@ int main(int argc, char* argv[])
 
   // writes the corrected image
   std::cout << "Writing corrected image..." << std::endl ;
-  typedef itk::WriteMetaImage<ImageType> Writer ;
-  Writer::Pointer writer = Writer::New() ;
-  writer->SetInput(output) ;
-  writer->SetFileName(outputFileName.c_str()) ;
-  writer->GenerateData() ;
+  metaITKUtilSaveImage<ImageType>(outputFileName.c_str(), NULL, output,
+                                  MET_FLOAT, 1, MET_FLOAT);
 
   //   ImageWriterType::Pointer writer = ImageWriterType::New() ;
   //   writer->SetInput(output) ;

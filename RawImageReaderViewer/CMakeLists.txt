@@ -6,8 +6,6 @@ ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/RawImageReaderViewer
@@ -20,9 +18,7 @@ ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Auxiliary/MetaImage
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/RawImageReaderViewer
 )
 
@@ -30,7 +26,7 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 ITKIO
-IView
+MetaIO
 itkpng
 itkzlib
 FltkImageViewer

@@ -24,8 +24,6 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_file_chooser.H>
 #include <itkImage.h>
-#include <itkFileIOMetaImage.h>
-#include <itkFileIOToImageFilter.h>
 
 /** \class TripleTKMain
  * \brief Main for TTKID.

@@ -5,7 +5,6 @@ ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Numerics
 ${ITK_SOURCE_DIR}/Code/Numerics/Statistics
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
 ${ITK_SOURCE_DIR}/Examples/GaussianMinimumErrorClassifier
 )
@@ -13,7 +12,6 @@ ${ITK_SOURCE_DIR}/Examples/GaussianMinimumErrorClassifier
 LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Numerics/vxl
-${ITK_BINARY_DIR}/Auxilary/MetaImage
 )
 
 
@@ -22,7 +20,7 @@ VXLNumerics
 ITKCommon
 ITKBasicFilters
 ITKIO
-MetaImageIO
+MetaIO
 )
 
 SOURCE_FILES (GaussianMinimumErrorClassifier_SRCS

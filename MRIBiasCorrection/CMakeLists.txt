@@ -5,7 +5,6 @@ ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/Numerics
 ${ITK_SOURCE_DIR}/Code/Numerics/Statistics
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage
 ${ITK_SOURCE_DIR}/Examples/MRIBiasCorrection
 )
 
@@ -56,7 +55,6 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Numerics
 ${ITK_BINARY_DIR}/Code/Numerics/Statistics
 ${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Auxiliary/MetaImage
 )
 
 
@@ -66,7 +64,7 @@ ITKIO
 ITKBasicFilters
 ITKStatistics
 ITKNumerics
-MetaImageIO
+MetaIO
 VXLNumerics
 )
 

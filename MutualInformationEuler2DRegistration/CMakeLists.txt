@@ -10,11 +10,8 @@ ${ITK_SOURCE_DIR}/Utilities/png
 ${ITK_SOURCE_DIR}/Utilities/zlib
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
 ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/MutualInformationEuler2DRegistration
-${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/MutualInformationEuler2DRegistration
 ${FLTK_INCLUDE_PATH}
@@ -29,9 +26,7 @@ ${ITK_BINARY_DIR}/Utilities/zlib
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/Numerics
-${ITK_BINARY_DIR}/Auxiliary/MetaImage
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/MutualInformationEuler2DRegistration
 )
 
@@ -41,11 +36,10 @@ VXLNumerics
 ITKNumerics
 ITKCommon
 ITKIO
+MetaIO
 itkpng
 itkzlib
 ITKBasicFilters 
-MetaImageIO
-IView
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}

@@ -15,6 +15,7 @@
 
 =========================================================================*/
 #include "TripleTKMain.h"
+#include <MetaITKUtils.h>
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -217,7 +218,8 @@ int main()
   
   //Specify Images to load
   char *metaImageFileName;
-  metaImageFileName = fl_file_chooser("Pick a MetaImage file", "*.mh*", "/images");
+  metaImageFileName = fl_file_chooser("Pick a MetaImage file", "*.mh*",
+                                      "/images");
   if(metaImageFileName == NULL)  return 0;
 
   std::cout << "Creating window..." << std::endl;
@@ -237,14 +239,15 @@ int main()
   ImageType::Pointer input_image;
 
   //Load the image
-  typedef FileIOToImageFilter<ImageType> LoaderType;
-  ObjectFactoryBase::RegisterFactory(new FileIOMetaImageFactory);
-  LoaderType::Pointer loader = LoaderType::New();
-
+  //typedef FileIOToImageFilter<ImageType> LoaderType;
+  //ObjectFactoryBase::RegisterFactory(new FileIOMetaImageFactory);
+  //LoaderType::Pointer loader = LoaderType::New();
   //set mh* file
-  loader->SetFileName(metaImageFileName); 
-  loader->Update();
-  input_image  = loader->GetOutput(); 
+  //loader->SetFileName(metaImageFileName); 
+  //loader->Update();
+  //input_image  = loader->GetOutput(); 
+
+  input_image = metaITKUtilLoadImage3D<short>(metaImageFileName, MET_SHORT);
 
   std::cout << "Showing Images..." << std::endl;
 

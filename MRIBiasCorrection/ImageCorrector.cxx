@@ -20,7 +20,7 @@ PURPOSE.  See the above copyright notices for more information.
 
 #include "imageutils.h"
 #include "OptionList.h"
-#include "itkWriteMetaImage.h"
+#include "metaITKUtils.h"
 #include "itkMultivariateLegendrePolynomial.h"
 
 typedef itk::MultivariateLegendrePolynomial BiasField ;
@@ -267,11 +267,9 @@ int main(int argc, char* argv[])
 
   // writes the corrected image
   std::cout << "Writing corrected image..." << std::endl ;
-  typedef itk::WriteMetaImage<ImageType> Writer ;
-  Writer::Pointer writer = Writer::New() ;
-  writer->SetInput(output) ;
-  writer->SetFileName(outputFileName.c_str()) ;
-  writer->GenerateData() ;
+  metaITKUtilSaveImage<ImageType>(outputFileName.c_str(), NULL,
+                                  output, MET_FLOAT, 1, MET_FLOAT);
+                  
   std::cout << "Corrected image created." << std::endl ;
 
   return 0 ;

@@ -5,8 +5,6 @@ ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl
 ${ITK_SOURCE_DIR}/Code/Numerics/vxl/vcl
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage
-${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
@@ -15,8 +13,6 @@ LINK_DIRECTORIES(
 ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
-${ITK_BINARY_DIR}/Auxiliary/MetaImage
-${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${FLTK_LIB_PATH}
 )
 
@@ -47,7 +43,7 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 VXLNumerics
-MetaImageIO
+MetaIO
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}
 )

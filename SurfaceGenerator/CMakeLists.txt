@@ -25,7 +25,6 @@ ${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Utilities/png
 ${ITK_BINARY_DIR}/Utilities/zlib
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/MetaImage/IView
 ${ITK_BINARY_DIR}/Examples/SurfaceGenerator
 )
 
@@ -44,7 +43,7 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 ITKIO
-IView
+MetaIO
 itkpng
 itkzlib
 FltkImageViewer
