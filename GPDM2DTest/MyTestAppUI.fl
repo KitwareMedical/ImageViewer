@@ -1,0 +1,504 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0100 
+header_name {.h} 
+code_name {.cxx}
+class MyTestAppInterface {open : MySegmentation
+} {
+  Function {MyTestAppInterface()} {open
+  } {
+    Fl_Window mainwin {
+      label Main open
+      xywh {589 237 214 540} box DOWN_BOX resizable
+      code0 {\#include "MySegmentation.h"} visible
+    } {
+      Fl_Button execute {
+        label Execute
+        callback {this->segment();}
+        private xywh {20 165 100 25}
+      }
+      Fl_Group {} {open
+        xywh {228 20 520 520}
+      } {
+        Fl_Box {} {
+          label frame1
+          xywh {228 20 258 258} box DOWN_BOX
+        }
+        Fl_Box {} {
+          label frame2
+          xywh {486 20 258 258} box DOWN_BOX
+        }
+        Fl_Box {} {
+          label frame3
+          xywh {228 278 258 258} box DOWN_BOX
+        }
+        Fl_Box {} {
+          label frame4
+          xywh {486 278 258 258} box DOWN_BOX
+        }
+      }
+      Fl_Button load {
+        label Load
+        callback {this->LoadImage();
+currentslice->value("0");
+if (slices > 1) nload->activate();}
+        private xywh {20 45 100 25}
+      }
+      Fl_Button Display {
+        label Display
+        callback {this->display();}
+        private xywh {20 205 100 25}
+      }
+      Fl_Menu_Bar {} {open
+        xywh {0 0 750 20}
+      } {
+        submenu {} {
+          label File open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label New
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Open
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Save
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Save as}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Close
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Exit
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label Setting open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label {Gibbs Model}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {Deformable Model}
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Seed
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label Display open
+          xywh {0 0 100 20}
+        } {}
+        submenu {} {
+          label Model open
+          xywh {0 0 100 20}
+        } {
+          submenu {} {
+            label Gibbs open
+            xywh {0 0 100 20}
+          } {
+            menuitem {} {
+              label Run
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Stat
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Save
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label Update
+              xywh {0 0 100 20}
+            }
+          }
+          submenu {} {
+            label Deformable open
+            xywh {0 0 100 20}
+          } {
+            menuitem {} {
+              label {Gradient Map}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label {Gradient Fit}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label {Balloon Fit}
+              xywh {0 0 100 20}
+            }
+            menuitem {} {
+              label {Comb ined Fit}
+              xywh {0 0 100 20}
+            }
+          }
+        }
+      }
+      Fl_Button Set {
+        label Set
+        callback {this->setpar();}
+        private xywh {20 85 100 25}
+      }
+      Fl_Light_Button Seed {
+        label {Pick Seed}
+        callback {this->ClearClicked();
+this->PickSeed();}
+        private xywh {20 125 100 25}
+      }
+      Fl_Button save {
+        label Save
+        callback {this->SaveResult();}
+        private xywh {20 245 100 25}
+      }
+      Fl_Button nload {
+        label {Load Next}
+        callback {this->LoadNextImage(++cslices, m_FileName);
+  itoa(cslices, str_slice, 10);
+  currentslice->value(str_slice);}
+        private xywh {20 285 100 25} deactivate
+      }
+      Fl_Output currentslice {
+        label {Slice:}
+        private xywh {45 510 95 25} box FLAT_BOX color 48
+      }
+      Fl_Box {} {
+        label {Gibbs Fitting}
+        xywh {15 40 110 275} box DOWN_FRAME align 5
+      }
+      Fl_Box {} {
+        label {Deformable Fitting}
+        xywh {15 340 165 155} box DOWN_FRAME align 5
+      }
+      Fl_Button dseed {
+        label {Deformable Seeding}
+        callback {this->ClearClicked();
+this->PickDeformableSeed();
+setpotential->activate();
+dseed->deactivate();} selected
+        private xywh {20 345 155 25} deactivate
+      }
+      Fl_Button dsetting {
+        label {Deformable Setting}
+        callback {dfsetting->show();
+dseed->activate();}
+        private xywh {20 385 155 25}
+      }
+      Fl_Button dfitting {
+        label {Deformable Fitting }
+        callback {unsigned int numPoints=m_Viewer->numClickedPointsStored();
+ClickPoint *point;
+itk::Index<2> center;
+
+for (int j=0; j<numPoints; j++) {
+  point = m_Viewer->getClickedPoint(j);
+  center[0] = point->x; center[1] = point->y;
+  m_bffilter[j]->SetCenter(center);
+}
+
+DeformableFit();
+dfitting->deactivate();
+showdm = TRUE;
+this->ShowResult();
+showdm = FALSE;}
+        private xywh {20 465 155 25} deactivate
+      }
+      Fl_Button setpotential {
+        label {Set Potential}
+        callback {this->LoadPotential();
+dfitting->activate();
+setpotential->deactivate();}
+        private xywh {20 425 155 25} deactivate
+      }
+    }
+    Fl_Window setting {
+      label Setting open
+      xywh {622 199 196 193} hide
+    } {
+      Fl_Group iscolor {open
+        private xywh {-5 135 205 60} box DOWN_BOX
+      } {
+        Fl_Check_Button rgb {
+          label RGB
+          private xywh {35 150 25 25} type Radio down_box DOWN_BOX value 1
+        }
+        Fl_Check_Button gray {
+          label Grayvalue
+          private xywh {95 150 25 25} type Radio down_box DOWN_BOX
+        }
+      }
+      Fl_Value_Input width {
+        label {Width:}
+        private xywh {65 10 85 25} maximum 400 value 256
+      }
+      Fl_Value_Input height {
+        label {Height:}
+        private xywh {65 50 85 25} maximum 400 value 256
+      }
+      Fl_Value_Input slice {
+        label {Slices:}
+        private xywh {65 90 85 25} maximum 400 value 1
+      }
+    }
+    Fl_Window gsetting {
+      label {Gibbs Setting} open
+      xywh {4 34 375 460} box SHADOW_BOX hide
+    } {
+      Fl_Group {} {
+        label sampling open
+        xywh {10 15 180 100} box DOWN_BOX align 21
+      } {
+        Fl_Value_Input radius {
+          label {Radius:}
+          private xywh {80 45 100 25} maximum 20 value 10
+        }
+        Fl_Value_Input classnum {
+          label {Classes:}
+          private xywh {80 80 100 25} maximum 8 value 2
+        }
+      }
+      Fl_Group {} {
+        label {Gibbs Loop} open
+        xywh {195 15 170 100} box DOWN_FRAME align 21
+      } {
+        Fl_Value_Input step {
+          label {Steps:}
+          private xywh {255 45 100 25} maximum 100 value 1
+        }
+        Fl_Value_Input errorrate {
+          label {Error:}
+          private xywh {255 80 100 25} maximum 25
+        }
+      }
+      Fl_Group {} {
+        label Parameters open
+        xywh {10 120 355 290} box DOWN_FRAME align 21
+      } {
+        Fl_Value_Input gradient {
+          label {Gradient:}
+          private xywh {80 150 100 25} maximum 20 value 6
+        }
+        Fl_Value_Input regionlimit {
+          label {Region:}
+          private xywh {255 150 100 25} maximum 1000 value 100
+        }
+        Fl_Group {} {
+          label {Weight I} open
+          xywh {15 180 345 85} box DOWN_FRAME align 21
+        } {
+          Fl_Value_Slider weight_grad {
+            label {Gradient Weight}
+            private xywh {135 205 210 20} type Horizontal box PLASTIC_UP_BOX align 4
+          }
+          Fl_Value_Slider weight_gibbs {
+            label {Gibbs Weight}
+            private xywh {135 235 210 20} type Horizontal box PLASTIC_UP_BOX align 4
+          }
+        }
+        Fl_Group {} {
+          label {Boundary Weight} open
+          xywh {15 270 345 135} box DOWN_FRAME align 21
+        } {
+          Fl_Value_Slider weight_c1 {
+            label {Type I}
+            private xywh {65 305 25 90} box PLASTIC_UP_BOX align 5
+          }
+          Fl_Value_Slider weight_c2 {
+            label {Type II}
+            private xywh {120 305 25 90} box PLASTIC_UP_BOX align 5
+          }
+          Fl_Value_Slider weight_c3 {
+            label {Type III}
+            private xywh {175 305 25 90} box PLASTIC_UP_BOX align 5
+          }
+          Fl_Value_Slider weight_c4 {
+            label {Type IV}
+            private xywh {230 305 25 90} box PLASTIC_UP_BOX align 5
+          }
+          Fl_Value_Slider weight_o {
+            label Other
+            private xywh {285 305 25 90} box PLASTIC_UP_BOX align 5
+          }
+        }
+      }
+      Fl_Button ok {
+        label Ok
+        callback {m_Region = regionlimit->value();
+m_Radius = radius->value();
+m_ClassNum = classnum->value()+1;
+m_Gradient = gradient->value();
+m_Step = step->value();
+gsetting->hide();
+return;}
+        private xywh {150 420 100 25}
+      }
+      Fl_Button cancel {
+        label Cancel
+        callback {gsetting->hide();
+return;}
+        private xywh {265 420 100 25}
+      }
+    }
+    Fl_Window dfsetting {
+      label {Deformable Model Setting} open
+      xywh {-32000 -32000 516 232} hide
+    } {
+      Fl_Value_Input bfsteps {
+        label {Distance to Stop Deformable Model:}
+        private xywh {315 25 100 25} maximum 20 value 5.5
+      }
+      Fl_Value_Input gfsteps {
+        label {Distance to Start Gradient fitting:}
+        private xywh {315 65 100 25} maximum 20 value 2
+      }
+      Fl_Value_Input vstiffness {
+        label {Vertical Stiffness:}
+        private xywh {145 145 100 25} maximum 20 value 0.0001
+      }
+      Fl_Value_Input hstiffness {
+        label {Hrizon Stiffness:}
+        private xywh {375 145 100 25} maximum 20 value 0.04
+      }
+      Fl_Button dfok {
+        label Ok
+        callback {m_Stiffness[0] = vstiffness->value();
+m_Stiffness[1] = hstiffness->value();
+m_DistanceToStop = bfsteps->value();
+m_DistanceForGradient = gfsteps->value();
+m_TimeStep = timestep->value();
+m_Resolution = resolution->value();
+dfsetting->hide();
+return;}
+        private xywh {255 185 100 25}
+      }
+      Fl_Button dfcancel {
+        label Cancel
+        callback {dfsetting->hide();
+return;}
+        private xywh {375 185 100 25}
+      }
+      Fl_Value_Input resolution {
+        label {Resolution:}
+        private xywh {375 105 100 25} maximum 20 value 30
+      }
+      Fl_Value_Input timestep {
+        label {Time Step:}
+        private xywh {145 105 100 25} maximum 20 value 0.001
+      }
+    }
+  }
+  Function {~MyTestAppInterface()} {open
+  } {}
+  Function {segment()} {open return_type {virtual void}
+  } {
+    code {this->init();
+  if ( !m_GibbsFilter ) m_GibbsFilter = GibbsFilterType::New();
+  m_GibbsFilter->SetNumberOfClasses(m_ClassNum);
+  m_GibbsFilter->SetMaximumNumberOfIterations(m_Step);
+//  m_GibbsFilter->SetErrorTollerance(0.00);
+  m_GibbsFilter->SetClusterSize(m_Region);
+  m_GibbsFilter->SetBoundaryGradient(m_Gradient);
+  m_GibbsFilter->SetObjectLabel(1);
+ 
+  m_GibbsFilter->SetInput(m_DataImage);
+  m_GibbsFilter->SetClassifier( myClassifier ); 
+
+  //Since a suvervised classifier is used, it requires a training image
+  m_GibbsFilter->SetTrainingImage(m_ClassImage);  
+
+  //Kick off the Gibbs labeller function
+  m_GibbsFilter->Modified();
+  m_GibbsFilter->Update();} {}
+  }
+  Function {display()} {open
+  } {
+    code {this->ShowResult();} {}
+  }
+  Function {Show()} {open
+  } {
+    code {mainwin->show();} {}
+  }
+  Function {init()} {open
+  } {
+    code {//create the initial class image
+  m_ClassImage = ImageType3D::New();
+  ImageType3D::SizeType  classImgSize = {{cols, rows, 1}};
+  ImageType3D::IndexType classindex;
+  classindex.Fill(0);
+  ImageType3D::RegionType classregion;
+
+  classregion.SetSize(classImgSize);
+  classregion.SetIndex(classindex);
+
+  m_ClassImage->SetLargestPossibleRegion(classregion);
+  m_ClassImage->SetBufferedRegion(classregion);
+  m_ClassImage->Allocate();
+
+  // setup the iterators
+  typedef  itk::ImageRegionIteratorWithIndex<ImageType3D>  ClassImageIterator;
+
+  ClassImageIterator classIt( m_ClassImage, m_ClassImage->GetBufferedRegion() );
+  classIt.GoToBegin();
+
+  //--------------------------------------------------------------------------
+
+  unsigned int numPoints=m_Viewer->numClickedPointsStored();
+  ClickPoint *point;
+
+  int i = 0;
+  while ( !classIt.IsAtEnd() ) {
+    classIt.Set(0);  
+    for ( int j = 0; j < numPoints; j++ ) {
+      point=m_Viewer->getClickedPoint(j);
+      if (((i%cols-(int)(point->x))*(i%cols-(int)(point->x))+
+        (i/cols-((int)point->y))*(i/cols-(int)(point->y))) < m_Radius*m_Radius) 
+        classIt.Set(j+1);
+    }
+
+    ++classIt;
+    i++;
+  }
+
+//setup the classifier
+  applyEstimateModel = ImageGaussianModelEstimatorType::New();
+
+  applyEstimateModel->SetNumberOfModels(m_ClassNum);
+  applyEstimateModel->SetInputImage(m_DataImage);
+  applyEstimateModel->SetTrainingImage(m_ClassImage);
+  applyEstimateModel->Update();
+
+  membershipFunctions = applyEstimateModel->GetMembershipFunctions();
+
+  if (!myDecisionRule) myDecisionRule = DecisionRuleType::New();
+
+//  if ( myClassifier ) delete myClassifier;
+  myClassifier = ClassifierType::New();
+
+  myClassifier->SetNumberOfClasses(m_ClassNum);
+  myClassifier->SetDecisionRule((DecisionRuleBasePointer) myDecisionRule);
+  for ( i=0; i<m_ClassNum; i++ ) 
+    myClassifier->AddMembershipFunction(membershipFunctions[i]);} {}
+  }
+  Function {setpar()} {open
+  } {
+    code {gsetting->show();} {}
+  }
+  Function {dminit()} {open
+  } {
+    code {PickDeformableSeed();} {}
+  }
+} 
