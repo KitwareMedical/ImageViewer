@@ -21,7 +21,7 @@ ENDIF(FEM_USE_SMART_POINTERS)
 
 IF(FEM_VISUALIZATION)
 # Define the macro that includes all the required functions and include MFC support
-ADD_DEFINITIONS( -D_FEM_Build_Visualization_Routines_ /D "_AFXDLL" )
+ADD_DEFINITIONS( -DFEM_BUILD_VISUALIZATION /D "_AFXDLL" )
 ENDIF(FEM_VISUALIZATION)
 
 # Create project files for all examples
