@@ -8,12 +8,14 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+SUBDIRS(MetaImage2D3D)
 
 # Add an option to build or not build the Image Registration example
 OPTION(BUILD_IMAGE_REGISTRATION "Build the image registration example")
 IF(BUILD_IMAGE_REGISTRATION)
 SUBDIRS(ImageRegistration)
 ENDIF(BUILD_IMAGE_REGISTRATION)
+
 
 # Add an option to build or not build the Multiresolution Registration example
 OPTION(BUILD_MULTIRESOLUTION "Build the multiresolution example")
@@ -39,35 +41,12 @@ IF(BUILD_PRINCIPAL_AXES)
 SUBDIRS(PrincipalAxes)
 ENDIF(BUILD_PRINCIPAL_AXES)
 
-# Add an option to build or not build the Morphogenesis example
-OPTION(BUILD_MORPHOGENESIS "Build the morphogenesis example")
-IF(BUILD_MORPHOGENESIS)
-SUBDIRS(Morphogenesis)
-ENDIF(BUILD_MORPHOGENESIS)
+# Add an option to build or not build the MetaImage2D3DViewer example
+OPTION(BUILD_METAIMAGE_2D3D "Build the principal axes example")
+IF(BUILD_METAIMAGE_2D3D)
+SUBDIRS(MetaImage2D3DViewer)
+ENDIF(BUILD_METAIMAGE_2D3D)
 
-# Add an option to build or not build the MRIBiasCorrection example
-OPTION(BUILD_MRI_BIAS_CORRECTION "Build the MRI bias correction example" ON)
-IF(BUILD_MRI_BIAS_CORRECTION)
-SUBDIRS(MRIBiasCorrection)
-ENDIF(BUILD_MRI_BIAS_CORRECTION)
-
-# Add an option to build or not build the FuzzyConnectedness example
-OPTION(BUILD_FUZZY_CONNECTEDNESS "Build the Fuzzy connectedness example")
-IF(BUILD_FUZZY_CONNECTEDNESS)
-SUBDIRS(FuzzyConnectedness)
-ENDIF(BUILD_FUZZY_CONNECTEDNESS)
-
-# Add an option to build or not build the ShapeDetection example
-OPTION(BUILD_SHAPE_DETECTION "Build the Shape Detection example")
-IF(BUILD_SHAPE_DETECTION)
-SUBDIRS(ShapeDetection)
-ENDIF(BUILD_SHAPE_DETECTION)
-
-# Add an option to build or not build the MRI Registration example
-OPTION(BUILD_MRI_REGISTRATION "Build the MRI Registration example")
-IF(BUILD_MRI_REGISTRATION)
-SUBDIRS(MRIRegistration)
-ENDIF(BUILD_MRI_REGISTRATION)
 
 LINK_LIBRARIES (
 VXLNumerics
