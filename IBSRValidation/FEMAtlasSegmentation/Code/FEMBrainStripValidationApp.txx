@@ -95,7 +95,6 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 {
 
   m_Labeler->SetAtlasLabelImage( m_Registrator->GetWarpedAtlasLabelImage() );
-  m_Labeler->SetDeformationField( m_Registrator->GetDeformationField() );
 
   typedef typename TLabelImage::PixelType LabelPixelType;
   m_Labeler->SetLowerThreshold( 1 );
@@ -119,7 +118,7 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
 
   m_Generator->SetOutputFileName( m_OutputFileName.c_str() );
   m_Generator->SetAppendOutputFile( m_AppendOutputFile );
-
+/*
   typedef typename LabelImageType::PixelType PType;
   itk::RawImageIO<PType,ImageDimension>::Pointer io;
   itk::ImageFileWriter<LabelImageType>::Pointer writer;
@@ -138,7 +137,7 @@ FEMBrainStripValidationApp<TImage,TLabelImage,TRealImage>
   writer2->SetFileName("E:\\Avants\\MetaImages\\junk128x128d.raw");
   writer2->SetInput(m_Labeler->GetOutputLabelImage()); 
   writer2->Write();
- 
+ */
 
 }
 

@@ -58,7 +58,7 @@ FEMAtlasLabeler<TLabelImage, TDeformationField>
 ::Execute()
 {
 
-  if ( !m_AtlasLabelImage || !m_DeformationField )
+  if ( !m_AtlasLabelImage  )
     {
     itkExceptionMacro( << "Either altas label or deformation field not set" );
     return;
@@ -81,16 +81,6 @@ FEMAtlasLabeler<TLabelImage, TDeformationField>
 
   distance->SetInput( inputThresholder->GetOutput() );
   distance->NarrowBandingOn();
-
-/*  
-  typedef WarpImageFilter<RealImageType,RealImageType,DeformationFieldType> WarperType;
-  WarperType::Pointer warper = WarperType::New();
-
-  warper->SetInput( distance->GetOutput() );
-  warper->SetDeformationField( m_DeformationField );
-  warper->SetOutputOrigin( m_DeformationField->GetOrigin() );
-  warper->SetOutputSpacing( m_DeformationField->GetSpacing() );
-  warper->SetEdgePaddingValue( NumericTraits<RealType>::max() );*/
 
   typedef BinaryThresholdImageFilter<RealImageType,LabelImageType> OutputThresholderType;
   OutputThresholderType::Pointer outputThresholder = OutputThresholderType::New();
