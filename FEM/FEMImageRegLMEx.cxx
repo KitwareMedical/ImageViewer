@@ -29,7 +29,8 @@ namespace fem {
  * Generate a rectangular mesh of hexahedron elements
  */
 void GenerateRegular3DMesh
-(Element::ConstPointer e0, Solver& S, vnl_vector<double>& orig, vnl_vector<double>& size, vnl_vector<double>& Nel)
+(itk::fem::Element::ConstPointer e0, Solver& S, vnl_vector<double>& orig, 
+ vnl_vector<double>& size, vnl_vector<double>& Nel)
 {
 
   // Check for correct number of dimensions
@@ -69,7 +70,7 @@ void GenerateRegular3DMesh
 
   // Create elements  
   gn=0; // global number of the element
-  Element3DC0LinearHexahedron::Pointer e;
+  itk::fem::Element3DC0LinearHexahedron::Pointer e;
   for(unsigned int k=0; k<Nk; k++)
   {
     for(unsigned int j=0; j<Nj; j++)
@@ -143,7 +144,7 @@ ImageRegLMEx<TReference,TTarget,TElement>::ImageRegLMEx( )
   
   
   // Register the correct element type and load implementation with the visitor dispatcher 
-  VisitorDispatcher<ElementType,typename Element::LoadType, typename ElementType::LoadImplementationFunctionPointer>
+  VisitorDispatcher<ElementType,itk::fem::Element::LoadType, ElementType::LoadImplementationFunctionPointer>
   ::RegisterVisitor((ImageMetricLoadType*)0, &ImageMetricLoadImplementation<ImageMetricLoadType>::ImplementImageMetricLoad);
 
 
@@ -216,7 +217,7 @@ void ImageRegLMEx<TReference,TTarget,TElement>::ReadImages()
  
   // Read a Raw File
   typedef  itk::ImageFileReader< ImageType >      FileSourceType;
-  typedef  itk::RawImageIO<typename ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
+  typedef  itk::RawImageIO< ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
 
 
   FileSourceType::Pointer reffilter = FileSourceType::New();
