@@ -19,8 +19,8 @@
 #ifndef __itkFEMNode_h
 #define __itkFEMNode_h
 
-#include "itkArray.h"
-
+#include "itkFEMNodeBase.h"
+#include "itkFixedArray.h"
 
 namespace itk {
 namespace fem {
@@ -29,60 +29,54 @@ namespace fem {
 
 /**
  * \class FEMNode
- * \brief Base class for Nodes in a mesh which is used for finite element modeling.
+ * \brief FEMNode with a Displacement Field of N-D components.
  *
- * Every Node in a finite element mesh should also define the Displacement Field 
- * Variables that exist at that parametric point. A parametric point with the 
- * Displacement Field defined will be refered to as a FEM Node.
- *
- * Derived class should define a function that creates and initializes a
- * proper FEM Node object. 
- * 
- * By using different derived classes in a mesh as a Node types 
- * it is possible to create different FEM Nodes in a system.
- *
- * Note that Nodes are not necessarily associated one-to-one with the Points
- * at the geometrical level. This is due to the fact that the Cells representing
- * the geometry of the element can use a different order than the one used for
- * interpolating the degrees of freedom. For example triangular flat cells are
- * a linear approximation to the shape of an object but they can still be associated
- * to quadric Elements that compute a second order representation of the Displacement
- * Fields Variables.
  *
  */
-class FEMNode 
+template < unsigned int NNumberOfDisplacementComponents >
+class FEMNode : public FEMNodeBase
 {
 
 public:
 
+  
+  typedef FEMNodeBase     Superclass;
 
-  // Type used for representing the displacement field variables
-  // (also known as "Deegrees of Freedom").
-  //
-  // This is defined in order to provide a common API for the 
-  // FEM solver which will only receive arrays of this type 
-  //
-  typedef  float  DisplacementType;
-
-  virtual unsigned int GetNumberOfDisplacementComponents(void) const = 0;
-
-  // Return one of the components of the Displacement field.
-  // The component is identified by the integer "Id".
-  virtual const DisplacementType & GetDisplacement( unsigned int Id ) const = 0;
+  /** Type used for representing the Displacement Field Variables
+      This is defined in order to provide a common API for the 
+      FEM solver which will only receive arrays of this type   */
+  typedef  Superclass::DisplacementType   DisplacementType;
 
 
+  /** Number of Components comforming the Displacement Field
+      (also known as the number of Degrees of Freedom)    */
+  enum { NumberOfDisplacementComponents = NNumberOfDisplacementComponents };
 
-  FEMNode()  {}            /** default constructor */
+  /** Container type used for storing the values of the Displacement
+      Field Variables. A FixedArray is used here because is has zero
+      memory overhead  */
+  typedef FixedArray< DisplacementType >  DisplacementContainerType;
+
+  /** Return the number of components of the Displacement Field 
+      (also known as the number of Degrees of Freedom */
+  virtual unsigned int GetNumberOfDisplacementComponents(void) const 
+    { return NumberOfDisplacementComponents; }
+
+  /** Return one of the components of the Displacement field.
+   The component is identified by the integer "Id".
+   \warning No bound checking is performed in order to improve performance */
+  const DisplacementType & GetDisplacement( unsigned int Id ) const 
+    { return m_Displacement[ Id ]; }
+
+
+
+  FEMNode()  {}  /** default constructor */
   virtual ~FEMNode() {}    /** virtual destructor */
 
-  
+
 private:
 
-   // Every Derived class is responsible for instantiating ivars
-   // for its Displacement Field Components.
-   // That should allow to minimize the extra memory required for
-   // storage. It should be expected to create thousands or millions
-   // of nodes.
+  DisplacementContainerType     m_Displacement;
 
 };
 
