@@ -41,6 +41,9 @@ public:
   typedef itk::Image< ImagePixelType, 3 >   ImageType;
   typedef itk::Image< OverlayPixelType, 3 > OverlayType;
   typedef GLSliceView< ImagePixelType, OverlayPixelType > GLSliceViewType;
+  typedef GLSliceViewType::ColorTablePointer ColorTablePointer;
+
+
     
   ImageViewer();
   virtual ~ImageViewer();
@@ -77,6 +80,19 @@ public:
   virtual void ViewDetails(bool detail);
   virtual void ViewValue(bool value);
   virtual void ViewCrosshairs(bool crosshairs);
+
+  /** Specify the opacity of the overlay */
+  virtual void  SetOverlayOpacity(float newOverlayOpacity);
+  
+  /** Get the opacity of the overlay */
+  virtual float GetOverlayOpacity(void) const;
+  
+  /** Get the ColorTable for the Overlay */
+  virtual ColorTablePointer GetOverlayColorTable(void);
+
+  /** Set the ColorTable for the Overlay */
+  virtual void SetOverlayColorTable(ColorTablePointer newColorTable);
+
 
 private:
   GLSliceViewType * glSliceView;

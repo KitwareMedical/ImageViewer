@@ -94,7 +94,10 @@ public:
   /*! Called when overlay is toggled or opacity is changed */
   void  ViewOverlayCallBack(void (* newOverlayCallBack)(void));
   
-  ColorTableType * GetColorTable(void);
+  ColorTablePointer GetColorTable(void);
+  void SetColorTable(ColorTablePointer newColorTable);
+
+
   
   virtual void clickSelect(float x, float y, float z);
   
@@ -400,12 +403,25 @@ GLSliceView<ImagePixelType, OverlayPixelType>::OverlayOpacity(void)
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-typename GLSliceView<ImagePixelType, OverlayPixelType>::ColorTableType 
-* 
+typename GLSliceView<ImagePixelType, OverlayPixelType>::ColorTablePointer 
 GLSliceView<ImagePixelType, OverlayPixelType>::GetColorTable(void)
   {
-  return &cColorTable;
+  return cColorTable;
   }
+
+
+
+//
+//
+//
+template <class ImagePixelType, class OverlayPixelType>
+void
+GLSliceView<ImagePixelType, OverlayPixelType>::SetColorTable(typename 
+GLSliceView<ImagePixelType, OverlayPixelType>::ColorTablePointer 
+newColorTable)
+{
+  cColorTable = newColorTable;
+}
 
 
 
@@ -640,9 +656,21 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
             (k-cWinMinY)*cWinDataSizeX];
           }
         
-        if( sizeof( OverlayPixelType ) == 1 )
+        if( sizeof( OverlayPixelType ) == 1  ||
+            sizeof( OverlayPixelType ) == 2      )
           {
-          m = (int)*((unsigned char *)&(cOverlayData->GetPixel(ind)));
+          if (sizeof( OverlayPixelType ) == 1)
+            {
+            m = (int)*((unsigned char *)&(cOverlayData->GetPixel(ind)));
+            }
+          else
+            {
+            m = (int)*((unsigned short *)&(cOverlayData->GetPixel(ind)));
+            }
+          if( m >= cColorTable->size() ) 
+            { 
+            m = cColorTable->size() - 1;
+            }
           if( m > 0 ) {
             m = m - 1;
             cWinOverlayData[l+0] = 

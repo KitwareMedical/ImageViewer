@@ -61,6 +61,44 @@ ImageViewer<ImagePixelType,OverlayPixelType>
   Synchronize();
 }
 
+/* Specify the opacity of the overlay */
+template <class ImagePixelType, class OverlayPixelType>
+void
+ImageViewer<ImagePixelType,OverlayPixelType>
+::SetOverlayOpacity(float newOverlayOpacity)
+{
+  glSliceView->OverlayOpacity( newOverlayOpacity );
+}
+
+
+/* Get the opacity of the overlay */
+template <class ImagePixelType, class OverlayPixelType>
+float
+ImageViewer<ImagePixelType,OverlayPixelType>
+::GetOverlayOpacity(void) const
+{
+  return glSliceView->OverlayOpacity();
+}
+
+
+/* Get the ColorTable for the Overlay */
+template <class ImagePixelType, class OverlayPixelType>
+typename ImageViewer<ImagePixelType, OverlayPixelType>::ColorTablePointer
+ImageViewer<ImagePixelType,OverlayPixelType>
+::GetOverlayColorTable(void)
+{
+  return glSliceView->GetColorTable();
+}
+
+/* Set the ColorTable for the Overlay */
+template <class ImagePixelType, class OverlayPixelType>
+void
+ImageViewer<ImagePixelType,OverlayPixelType>
+::SetOverlayColorTable(ColorTablePointer newColorTable)
+{
+  glSliceView->SetColorTable(newColorTable);
+}
+
 
 
 template <class ImagePixelType, class OverlayPixelType>
