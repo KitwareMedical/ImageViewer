@@ -70,7 +70,7 @@ proc InitializeWindowLevelInterface {} {
 proc SetCheckerboard { val } {
     global checkerboard
     checkers SetNumberOfDivisions $checkerboard $checkerboard 1
-    imgWin Render
+    renWin Render
 }
 
 proc SwapCheckers {} {
@@ -82,7 +82,7 @@ proc SwapCheckers {} {
     checkers SetInput 1 $temp0
     checkers Modified
 
-    imgWin Render
+    renWin Render
 
 }
 
@@ -93,7 +93,7 @@ proc SetSlice { slice } {
     map1 SetZSlice $sliceNumber
     map2 SetZSlice $sliceNumber
     mapDiff SetZSlice $sliceNumber
-    imgWin Render
+    renWin Render
 }
 
 proc SetWindow window {
@@ -109,7 +109,7 @@ proc SetWindow window {
       mapCheckers SetColorWindow $window
       mapDiff SetColorWindow $window
    }
-   imgWin Render
+   renWin Render
 }
 
 proc SetLevel level {
@@ -117,7 +117,7 @@ proc SetLevel level {
     map2 SetColorLevel $level
     mapCheckers SetColorLevel $level
     mapDiff SetColorLevel $level
-    imgWin Render
+    renWin Render
 }
 
 proc SetInverseVideo {} {
@@ -131,13 +131,13 @@ proc SetInverseVideo {} {
       map2 SetColorWindow $window
       mapCheckers SetColorWindow $window
    }
-   imgWin Render
+   renWin Render
 }
 
 
 InitializeWindowLevelInterface
 
 } else {
-  imgWin Render
+  renWin Render
 }
 
