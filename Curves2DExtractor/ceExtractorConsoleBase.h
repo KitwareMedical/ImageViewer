@@ -56,7 +56,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <itkMultiplyImageFilter.h>
 #include <itkImageToParametricSpaceFilter.h>
 #include <itkMesh.h>
-#include <itkMetaImageIOFactory.h>
 #include <itkImageFileReader.h>
 
 

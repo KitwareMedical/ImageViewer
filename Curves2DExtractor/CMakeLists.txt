@@ -7,6 +7,8 @@ ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
 ${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
+${ITK_SOURCE_DIR}/Utilities/zlib
+${ITK_SOURCE_DIR}/Utilities/png
 ${ITK_SOURCE_DIR}/Examples/Curves2DExtractor
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
@@ -19,6 +21,8 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/IO
 ${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/Curves2DExtractor
+${ITK_BINARY_DIR}/Utilities/png
+${ITK_BINARY_DIR}/Utilities/zlib
 )
 
 SOURCE_FILES(Curves2DExtractor_SRCS
@@ -31,6 +35,8 @@ LINK_LIBRARIES (
 ITKCommon
 ITKBasicFilters 
 ITKIO
+png
+zlib
 FltkImageViewer
 ${FLTK_LIBRARY}
 ${OPENGL_LIBRARY}

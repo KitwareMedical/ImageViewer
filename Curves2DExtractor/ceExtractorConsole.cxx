@@ -43,6 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ceExtractorConsole.h"
 #include "fltkLightButtonRedrawCommand.h"
 #include "itkMetaImageIOFactory.h"
+#include "itkPNGImageIOFactory.h"
 #include <FL/fl_file_chooser.H>
  
 
@@ -56,6 +57,7 @@ ceExtractorConsole
 ::ceExtractorConsole()
 {
  
+  itk::PNGImageIOFactory::RegisterOneFactory();
   itk::MetaImageIOFactory::RegisterOneFactory();
 
   
@@ -268,7 +270,7 @@ ceExtractorConsole
 ::Load( void )
 {
 
-  const char * filename = fl_file_chooser("Image filename","*.mh[da]","");
+  const char * filename = fl_file_chooser("Image filename","*.*","");
   if( !filename )
   {
     return;
