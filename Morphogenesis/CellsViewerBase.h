@@ -5,7 +5,7 @@
 #include "itkObject.h"
 #include "fltkDisplayGlWindowFlatGUI.h"
 #include "CellularAggregate.h"
-#include <ctime>
+#include <time.h>
 
 
 namespace bio {
