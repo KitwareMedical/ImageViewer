@@ -12,9 +12,14 @@ ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
+# Build the StreamedWatershedSegmentation example
+#SUBDIRS(StreamedWatershedSegmentation)
 
-# build the Watershed example
-SUBDIRS(WatershedSegmentation)
+# Build the WatershedSegmentation example
+#SUBDIRS(WatershedSegmentation)
+
+# Build the AntiAliasBinaryImageFilter example
+SUBDIRS(AntiAliasBinaryImageFilter)
 
 # Test the condition to build or not build the Image Registration example
 IF(HAS_METAIMAGE)
