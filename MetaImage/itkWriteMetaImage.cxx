@@ -41,7 +41,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "itkImage.h"
 #include "itkPhysicalImage.h"
-#include <itkScalar.h>
 
 #define ITK_MANUAL_INSTANTIATION
 #include "itkWriteMetaImage.h"
@@ -121,16 +120,6 @@ WriteMetaImage<Image<float,3> >
   return MET_FLOAT;
 }
 
-/**
- *   Type Code for float
- */
-template <>
-MET_Type
-WriteMetaImage<Image<Scalar<float>,3> >
-::GetTypeCode(void) const
-{
-  return MET_FLOAT;
-}
 
 /**
  *   Type Code for unsigned short
@@ -235,17 +224,6 @@ WriteMetaImage<PhysicalImage<float,2> >
 template <>
 MET_Type
 WriteMetaImage<PhysicalImage<float,3> >
-::GetTypeCode(void) const
-{
-  return MET_FLOAT;
-}
-
-/**
- *   Type Code for float
- */
-template <>
-MET_Type
-WriteMetaImage<PhysicalImage<Scalar<float>,3> >
 ::GetTypeCode(void) const
 {
   return MET_FLOAT;
