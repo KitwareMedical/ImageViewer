@@ -33,7 +33,7 @@ See COPYRIGHT.txt for copyright details.
 #include "vtkImageGradientMagnitude.h"
 void print_usage();
 
-int main(int argc, char **argv)
+void main(int argc, char **argv)
 {
   if (argc < 2)
     {
@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 
 void print_usage()
 {
-  std::cerr << "RegisterAD $Revision: 1.3 $  $Date: 2001-09-19 20:48:23 $"  << std::endl;
+  std::cerr << "RegisterAD $Revision: 1.4 $  $Date: 2001-09-20 11:10:34 $"  << std::endl;
 
   std::cerr <<  " usage: RegisterAD" << std::endl;
   std::cerr <<  "    --study1Prefix prefix" << std::endl;
