@@ -25,23 +25,33 @@ LINK_LIBRARIES (
 
 ADD_LIBRARY (ImageTcl SHARED)
 
+
+#
+#  Definitions equivalent to C-typedefs
+#
+CABLE_CLASS_SET( PixelType                "unsigned char"                          )
+CABLE_CLASS_SET( Dimension                  3                                      )
+CABLE_CLASS_SET( itkImage3DBase           "itk::ImageBase<$Dimension>"             )
+CABLE_CLASS_SET( itkImage3DUchar          "itk::Image<$PixelType,$Dimension>"      )
+CABLE_CLASS_SET( itkImage3DUcharPointer   "itk::SmartPointer< $itkImage3DUchar >"  )
+CABLE_CLASS_SET( itkVector3Ddouble        "itk::Vector<double, $Dimension>"        )
+CABLE_CLASS_SET( itkImage3DRegion         "itk::ImageRegion<$Dimension>"           )
+CABLE_CLASS_SET( itkSize3DType            "itk::Size<$Dimension>"                  )
+CABLE_CLASS_SET( itkIndex3DType           "itk::Index<$Dimension>"                 )
+
+
+#
 # Each class follows the format:
 # [tag:]class_name[;source1;source2;...]
 #  
 CABLE_WRAP_TCL ( ImageTcl 
-    "itkVector3D:itk::Vector<double,3>;itkVector.h"
-    "itkLightObject:itkLightObject;itkLightObject.h"
-    "itkObject:itk::Object;itkObject.h"
-    "itkDataObject:itkDataObject;itkDataObject.h"
-    "itkSize3D:itk::Size<3>:itkSize.h"
-    "itkIndex3D:itk::Index<3>:itkIndex.h"
-    "itkArray3DULong:itk::Array<unsigned long,3>;itkArray.h"
-    "itkArray3DDouble:itk::Array<double,3>;itkArray.h"
-    "itkArray3DInt:itk::Array<int,3>;itkArray.h"
-    "itkImage3DBase:itk::ImageBase<3>;itkImageBase.h"
-    "itkImage3DChar:itk::Image<char,3>;itkImage.h"
-    "itkImage3DRegion:itk::ImageRegion<3>;itkImageRegion.h" 
-    "itkImage3DCharPointer:itk::Image<char,3>::Pointer;itkImage.h"
+    "$itkImage3DBase;itkImageBase.h"
+    "$itkImage3DUchar;itkImage.h"
+    "$itkImage3DUcharPointer;itkImage.h"
+    "$itkVector3Ddouble;itkVector.h"
+    "$itkImage3DRegion;itkImageRegion.h"
+    "$itkSize3DType;itkSize.h"
+    "$itkIndex3DType;itkIndex.h"
     )
 
 # Configure files

@@ -7,7 +7,7 @@ load ${ITK_BINARY_DIR}/Examples/TclWrappedImage/libImageTcl.so
 # Create an object of itk::Image<char,3> class.
 # the Tcl equivalent type is "itkImage"
 #
-set imagePointer [ itkImage3DChar New ]
+set imagePointer [ itkImage_uchar_3 New ]
 
 
 # Try the wrap::TypeOf command
@@ -20,9 +20,9 @@ puts [ wrap::TypeOf $imagePointer ]
 
 # Create an object of itk::ImageRegion<3> class
 #
-set imageRegion [ itkImage3DRegion ]
-set size  [ $imageRegion GetSize  ]
-set start [ $imageRegion GetIndex ]
+set imageRegion [ itkImageRegion_3 ]
+set size        [ itkSize_3  ]
+set start       [ itkIndex_3 ]
 
 # Try the wrap::TypeOf command
 #
@@ -35,11 +35,26 @@ puts [ wrap::TypeOf $size ]
 puts "This is the type of an Index object" 
 puts [ wrap::TypeOf $start ]
 
+#
+#  Define the image region: size and index 
+#
+$size SetElement 0 100
+$size SetElement 1 100
+$size SetElement 2 100
+
+$start SetElement 0 0
+$start SetElement 1 0
+$start SetElement 1 0
+
+$imageRegion SetSize  $size
+$imageRegion SetIndex $start
+
+
 
 #
 #  Print all the methods available for the image
 # 
-puts "These are the methos available for the image"
+puts "These are the methods available for the image"
 puts [ wrap::ListMethods [ $imagePointer ->] ]
 
 puts "--- End of Image Methods ------------------\n"
@@ -48,7 +63,7 @@ puts "--- End of Image Methods ------------------\n"
 #
 #  Print all the methods available for "Size"
 # 
-puts "These are the methos available for the Size class"
+puts "These are the methods available for the Size class"
 puts [ wrap::ListMethods $size  ]
 
 puts "--- End of Size Methods ------------------\n"
@@ -67,8 +82,6 @@ puts "--- End of Size Methods ------------------\n"
 [ $imagePointer -> ] GetBufferPointer
 
 
-
-
 #
 #  Typical allocation for an image
 #
@@ -76,6 +89,7 @@ puts "--- End of Size Methods ------------------\n"
 [ $imagePointer -> ] SetRequestedRegion       $imageRegion 
 [ $imagePointer -> ] SetBufferedRegion        $imageRegion 
 [ $imagePointer -> ] Allocate
+
 
 
 
