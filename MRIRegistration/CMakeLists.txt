@@ -11,7 +11,7 @@ LINK_LIBRARIES(
   vtkCommon
 )
 
-LINK_LIBRARIES(VXLNumerics ITKCommon ITKIO ITKNumerics)
+LINK_LIBRARIES(ITKCommon ITKIO ITKNumerics)
 
 SET(MIRegistration_SRCS
 OptionList

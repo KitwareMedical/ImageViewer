@@ -10,7 +10,6 @@ param
 ITKAlgorithms
 ITKBasicFilters
 ITKCommon
-VXLNumerics
 ITKIO
 )
 

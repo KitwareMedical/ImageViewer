@@ -50,7 +50,6 @@ LINK_LIBRARIES (
   vtkFiltering
   vtkCommon
   ITKCommon
-  VXLNumerics
 )
 
 SET(MatroxInput_SRCS
