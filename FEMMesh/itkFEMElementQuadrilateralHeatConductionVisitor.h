@@ -56,18 +56,6 @@ public:
   // Visit the Element and compute the HeatConduction
   void Visit( unsigned long cellId, ElementType * t )
     {
-    const CellType           & cell   = t->GetCell();
-    PointIdConstIterator       pts    = cell.PointIdsBegin();
-    const PointsContainer    & points = *(m_Points.GetPointer());
-    const PointDataContainer & values = *(m_PointData.GetPointer());
-    const FieldVariableType  & v0  = values.ElementAt( *pts   );
-    const PointType          & p0  = points.ElementAt( *pts++ );
-    const FieldVariableType  & v1  = values.ElementAt( *pts   );
-    const PointType          & p1  = points.ElementAt( *pts++ );
-    const FieldVariableType  & v2  = values.ElementAt( *pts   );
-    const PointType          & p2  = points.ElementAt( *pts++ );
-    const FieldVariableType  & v3  = values.ElementAt( *pts   );
-    const PointType          & p3  = points.ElementAt( *pts++ );
     }
 };
   

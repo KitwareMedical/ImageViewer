@@ -84,6 +84,8 @@ public:
   MeshType::PointDataContainerConstPointer    PointDataContainerConstPointer;
 
 
+  typedef vnl_matrix< RealType >              StiffnessMatrixType;
+
 
   // Set the mesh and cache some pointer for improving 
   // performance by taking this out from the Visit() method.
@@ -104,8 +106,10 @@ public:
        {
        itkGenericExceptionMacro(<<"SetMesh() called with a Mesh without PointData");
        }
-    
      }
+
+  void SetStiffnessMatrix( StiffnessMatrixType & matrix ) 
+                                { m_StiffnessMatrix = &matrix;  }
 
 
 protected:
@@ -123,6 +127,8 @@ protected:
   // at each element visit.
   PointDataContainerConstPointer    m_PointData;
 
+  // Normal pointer to the global Stiffness Matrix
+  StiffnessMatrixType             * m_StiffnessMatrix;
 
 };
   

@@ -52,7 +52,7 @@ public:
   FEMElementHeatConductionVisitorTypesMacro( 
                   FEMElementHeatConductionVisitor< TMesh >,
                   FEMElementTriangle< TMesh >        
-                                                               );
+                                                   );
  
 
   // Visit the Element and compute the HeatConduction
@@ -61,16 +61,14 @@ public:
     const CellType           & cell   = t->GetCell();
     PointIdConstIterator       pts    = cell.PointIdsBegin();
     const PointsContainer    & points = *(m_Points.GetPointer());
-    const PointDataContainer & values = *(m_PointData.GetPointer());
     const PointIdentifier    & id0 = *pts++;
     const PointIdentifier    & id1 = *pts++;
     const PointIdentifier    & id2 = *pts++;
-    const FieldVariableType  & v0  = values.ElementAt( id0 );
-    const FieldVariableType  & v1  = values.ElementAt( id1 );
-    const FieldVariableType  & v2  = values.ElementAt( id2 );
     const PointType          & p0  = points.ElementAt( id0 );
     const PointType          & p1  = points.ElementAt( id1 );
     const PointType          & p2  = points.ElementAt( id2 );
+
+    StiffnessMatrixType & stiffnessMatrix = *(m_StiffnessMatrix);
     
     const double areaTwice = ( p1[0] * p2[1] - p1[1] * p2[0] + 
                                p2[0] * p0[1] - p2[1] * p0[0] +
@@ -88,22 +86,28 @@ public:
 
     // Compute the contributions to the StiffnessMatrix 
     // in the master equation.
-    m_StiffnessMatrix[ 0 ][ 0 ] = ( b0*b0 + c0*c0 ) / areaTwice;
-    m_StiffnessMatrix[ 0 ][ 1 ] = ( b0*b1 + c0*c1 ) / areaTwice;
-    m_StiffnessMatrix[ 0 ][ 2 ] = ( b0*b2 + c0*c2 ) / areaTwice;
-    m_StiffnessMatrix[ 1 ][ 0 ] = ( b1*b0 + c1*c0 ) / areaTwice;
-    m_StiffnessMatrix[ 1 ][ 1 ] = ( b1*b1 + c1*c1 ) / areaTwice;
-    m_StiffnessMatrix[ 1 ][ 2 ] = ( b1*b2 + c1*c2 ) / areaTwice;
-    m_StiffnessMatrix[ 2 ][ 0 ] = ( b2*b0 + c2*c0 ) / areaTwice;
-    m_StiffnessMatrix[ 2 ][ 1 ] = ( b2*b1 + c2*c1 ) / areaTwice;
-    m_StiffnessMatrix[ 2 ][ 2 ] = ( b2*b2 + c2*c2 ) / areaTwice;
+    const RealType sm00 = ( b0*b0 + c0*c0 ) / areaTwice;
+    const RealType sm01 = ( b0*b1 + c0*c1 ) / areaTwice;
+    const RealType sm02 = ( b0*b2 + c0*c2 ) / areaTwice;
+    const RealType sm10 = sm01;
+    const RealType sm11 = ( b1*b1 + c1*c1 ) / areaTwice;
+    const RealType sm12 = ( b1*b2 + c1*c2 ) / areaTwice;
+    const RealType sm20 = sm02;
+    const RealType sm21 = sm12;
+    const RealType sm22 = ( b2*b2 + c2*c2 ) / areaTwice;
 
-    std::cout << "StiffnessMatrix = " << m_StiffnessMatrix << std::endl;
+    // add the contributions to the stiffness matrix
+    stiffnessMatrix[ id0 ][ id0 ] += sm00;
+    stiffnessMatrix[ id0 ][ id1 ] += sm01;
+    stiffnessMatrix[ id0 ][ id2 ] += sm02;
+    stiffnessMatrix[ id1 ][ id0 ] += sm10;
+    stiffnessMatrix[ id1 ][ id1 ] += sm11;
+    stiffnessMatrix[ id1 ][ id2 ] += sm12;
+    stiffnessMatrix[ id2 ][ id0 ] += sm20;
+    stiffnessMatrix[ id2 ][ id1 ] += sm21;
+    stiffnessMatrix[ id2 ][ id2 ] += sm22;
     }
 
-private:
-
-  Matrix< RealType, 3, 3 >      m_StiffnessMatrix;
 
 
 };

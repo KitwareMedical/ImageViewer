@@ -20,6 +20,7 @@
 
 
 #include "itkFEMMesh.h"
+#include "itkFEMElementHeatConductionVisitor.h"
 
 
 namespace itk {
@@ -55,6 +56,11 @@ public:
   typedef double                DisplacementRepresentationType;
   typedef double                DisplacementType; // one Temperature
 
+
+  // Type used for computation and for the global stiffness matrix
+  typedef double                RealType; 
+
+
   typedef DisplacementType      PointDataType;
 
   // For FEM it is expected that eventual values stored
@@ -87,6 +93,16 @@ public:
   /** Hold on to the type information specified by the template parameters. */
   typedef MeshType::CellMultiVisitorType          CellMultiVisitorType;
 
+  
+  typedef FEMElementHeatConductionVisitor< FEMMeshType > VisitorBaseType;
+
+
+  typedef VisitorBaseType::StiffnessMatrixType    StiffnessMatrixType;
+
+
+   const StiffnessMatrixType & GetStiffnessMatrix(void) const
+            { return m_StiffnessMatrix;  }
+
 public:
 
    /** Standard typedefs. */
@@ -108,7 +124,7 @@ public:
   
 
   // this method visits every cell, applies the CellEquation() method
-  // and collect values in the Master Matrix.
+  // and collect values in the global Stiffness Matrix
   void AssembleMasterEquation(void);
 
   // Set/Get the Mesh used to solve this FEM problem
@@ -123,21 +139,21 @@ protected:
   virtual ~FEMHeatConduction2D();
   void PrintSelf(std::ostream& os, Indent indent) const;
      
-  // This is the most important element of this class
-  // this function define the physics of the problem 
-  // in terms of the shape elements their derivatives
-  // for integrating the stiffness matrix.
-  DisplacementType CellEquation(unsigned int i, unsigned int j) const;
+  // allocate the apropiated size for the matrix
+  void InitializeStiffnessMatrix(void);
+
 
 private:
 
   FEMHeatConduction2D(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
           
-  vnl_matrix< DisplacementType >  m_MasterMatrix; 
+  // FEM Mesh
+  FEMMeshType::Pointer            m_Mesh;
 
-  FEMMeshType::Pointer       m_Mesh;
-
+  // Global Stiffness Matrix
+  StiffnessMatrixType             m_StiffnessMatrix;
+  
 };
 
 

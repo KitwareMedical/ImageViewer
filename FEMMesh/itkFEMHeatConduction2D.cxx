@@ -58,6 +58,10 @@ FEMHeatConduction2D
 ::AssembleMasterEquation(void)
 {
 
+  // Allocate memory and initialize the global stiffness matrix
+  this->InitializeStiffnessMatrix();
+
+
   // Instantiate Visitors
 
   // Types for Triangles
@@ -104,6 +108,11 @@ FEMHeatConduction2D
   quadrilateralVisitor->SetMesh( m_Mesh );
 
 
+  triangleVisitor->SetStiffnessMatrix( m_StiffnessMatrix );
+  quadrilateralVisitor->SetStiffnessMatrix( m_StiffnessMatrix );
+
+
+
   // Create a MultiVisitor
   typedef FEMMeshType::ElementMultiVisitorType       MultiVisitorType;
 
@@ -122,8 +131,21 @@ FEMHeatConduction2D
   
   std::cout << "Heat Conduction Visitors Done ! " << std::endl;
 
+  std::cout << "Stiffness Matrix = " << std::endl;
+  std::cout << m_StiffnessMatrix     << std::endl;
+
 }
 
+
+
+void
+FEMHeatConduction2D
+::InitializeStiffnessMatrix(void)
+{
+  const unsigned int numberOfPoints = m_Mesh->GetNumberOfPoints();
+  m_StiffnessMatrix = StiffnessMatrixType( numberOfPoints, numberOfPoints ); 
+  m_StiffnessMatrix.fill( NumericTraits< RealType >::Zero );
+}
 
 
 
