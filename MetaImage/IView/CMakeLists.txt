@@ -1,4 +1,4 @@
-FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.h H:/usr/local/fltk )
+FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.h H:/usr/local/fltk /usr/local/fltk )
 
 LIBRARY(
 IView

@@ -1,10 +1,11 @@
-FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.H H:/usr/local/fltk )
+FIND_INCLUDE( FLTK_INCLUDE_DIR FL/Fl.H H:/usr/local/fltk /usr/local/fltk )
 
 LIBRARY(
 FltkImageViewer
 )
 
 SOURCE_FILES(
+fltkDisplayWindowGUI
 fltkGlWindow
 fltkGlWindowInteractive
 fltkGlWindowInteractiveFlat
