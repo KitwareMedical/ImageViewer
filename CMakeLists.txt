@@ -140,11 +140,11 @@ IF(HAS_VTK)
 ENDIF(HAS_VTK)
 
 
-IF(HAS_VTK)
-  IF (VTK_WRAP_TCL)
-    SUBDIRS(WST)
-  ENDIF (VTK_WRAP_TCL)
-ENDIF(HAS_VTK)
+#IF(HAS_VTK)
+#  IF (VTK_WRAP_TCL)
+#    SUBDIRS(WST)
+#  ENDIF (VTK_WRAP_TCL)
+#ENDIF(HAS_VTK)
 
 # Add an option to build the Tcl Wrap for the stl string class
 IF( ITK_WRAP_TCL )
