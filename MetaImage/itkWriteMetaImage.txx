@@ -41,6 +41,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _itkWriteMetaImage_txx
 #define _itkWriteMetaImage_txx
 
+#include <string>
+
 #include "itkWriteMetaImage.h"
 #include "itkObjectFactory.h"
 #include <MetaImageLib.h>
@@ -136,7 +138,22 @@ WriteMetaImage<TInputImage>
                     yetAnotherBuffer  );
 
 
-  saver.Save( this->m_FileName.c_str(),0,1);
+  std::string fileExtension ;
+  fileExtension= m_FileName.substr(m_FileName.rfind('.') + 1, 
+                                   m_FileName.size() - m_FileName.rfind('.')) ;
+
+  // if file extension is mhd, then save the file with header file (.mhd)
+  // and data file (.raw)
+  if (fileExtension == "mhd")
+    {
+      std::string baseFileName = 
+        m_FileName.substr(0, m_FileName.rfind('.')) ;
+      std::string rawFileName = baseFileName + ".raw" ;
+      saver.Save( this->m_FileName.c_str(), rawFileName.c_str(), 1);
+    }
+  else
+      saver.Save( this->m_FileName.c_str(), 0, 1);
+    
 
   delete [] yetAnotherBuffer;
 
