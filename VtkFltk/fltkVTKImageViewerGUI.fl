@@ -7,11 +7,11 @@ class fltkVTKImageViewerGUI {open : {public fltk::VTKImageViewerBase}
   Function {fltkVTKImageViewerGUI()} {open
   } {
     Fl_Window externalWindow {open
-      xywh {447 428 435 465} resizable
+      xywh {133 346 435 465} resizable
       code0 {\#include "fltkVTKImageViewerBase.h"} visible
     } {
       Fl_Box fltkRenderWindowInteractor {selected
-        xywh {5 10 425 445} resizable
+        xywh {5 10 425 445} box DOWN_FRAME resizable
         code0 {\#include "vtkFlRenderWindowInteractor.h"}
         class vtkFlRenderWindowInteractor
       }

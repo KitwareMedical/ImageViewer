@@ -65,9 +65,9 @@ VTKImageViewer<ImagePixelType>
 
   m_Renderer->AddActor( axesActor );
 
-//  axesMapper->Delete();
-//  axesTubes->Delete();
-//  axes->Delete();
+  axesMapper->Delete();
+  axesTubes->Delete();
+  axes->Delete();
 
 
 }
@@ -124,6 +124,7 @@ void
 VTKImageViewer<ImagePixelType>
 ::Show(void)
 {
+  fltkRenderWindowInteractor->Initialize();
   Superclass::Show(); 
 }
 
