@@ -6,26 +6,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
 
-/*
-*	  Constructor
-*/
+//------------------------------------------------------------
 TripleTKMain ::TripleTKMain()
   {
   window = make_window();
   }
 
 
-/*
-*	  Destructor 
-*/
+//------------------------------------------------------------
 TripleTKMain ::~TripleTKMain()
   {
   }
 
 
-/*
-*	  Fully coordinates the 2D system after loading an image, 
-*/
+//------------------------------------------------------------
 void TripleTKMain::synchronize2D(void) 
   {
   float iwDiff  = tk2D->iwMax() - tk2D->iwMin();
@@ -47,9 +41,7 @@ void TripleTKMain::synchronize2D(void)
   }
 
 
-/*
-* 	Fully coordinates the 3D system after loading an image, 
-*/
+//-------------------------------------------------------------
 void TripleTKMain::synchronize3D(void) 
   {
   tk3D->viewAxial(true);
@@ -63,9 +55,7 @@ void TripleTKMain::synchronize3D(void)
   }
 
 
-/*
-*	  Sets the image the be viewed in the 2D aspect of the program.
-*/
+//-------------------------------------------------------------
 void TripleTKMain::SetImage(ImageType::Pointer img)
   { 
   //Set a spacing
@@ -85,9 +75,7 @@ void TripleTKMain::SetImage(ImageType::Pointer img)
   }
 
 
-/*
-*	  Function that refreshes the display of the GUI.
-*/
+//-------------------------------------------------------------
 void TripleTKMain::show(void)
   {
   tk2D->show();
@@ -95,9 +83,7 @@ void TripleTKMain::show(void)
   }
 
 
-/*
-*	  Function refreshes the display and structure of the GUI.
-*/
+//-------------------------------------------------------------
 void TripleTKMain::update(void)
   {
   tk2D->update();
@@ -105,9 +91,7 @@ void TripleTKMain::update(void)
   }
 
 
-/*
-* 	Redraw the windows -- used at the end of main()
-*/
+//-------------------------------------------------------------
 void TripleTKMain::redraw(void) 
   {
   tk2D->redraw();
@@ -129,18 +113,14 @@ void selectSliceCB(void)
   }
 
 
-/*
-*	  Initialize any necessary callbacks
-*/
+//-------------------------------------------------------------
 void TripleTKMain::setCallBacks(void)
   {
   tk2D->sliceNumCallBack(selectSliceCB);
   }
 
 
-/*
-*   Return the protected variable window.
-*/
+//-------------------------------------------------------------
 Fl_Window * TripleTKMain::getWindow()
   {
   return window;
