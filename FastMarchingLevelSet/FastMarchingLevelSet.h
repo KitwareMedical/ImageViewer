@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef THRESHOLDSEGMENTATIONLEVELSET
-#define THRESHOLDSEGMENTATIONLEVELSET
+#ifndef FASTMARCHINGLEVELSET
+#define FASTMARCHINGLEVELSET
 
 #include "FastMarchingLevelSetGUI.h"
 #include "fltkImageViewer.h"
