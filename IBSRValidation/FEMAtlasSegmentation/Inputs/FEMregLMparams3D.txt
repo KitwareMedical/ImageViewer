@@ -7,7 +7,7 @@
 4 4 6   	% NumberOfIntegrationPoints
 5 5 3 	  % WidthOfMetricRegion
 23 20 20 	% MaximumIterations
-0       % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
+0   0    % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
 1.	% Alpha
 1	% DescentDirection
 1	% DoLineSearch
