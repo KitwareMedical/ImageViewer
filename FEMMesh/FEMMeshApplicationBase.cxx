@@ -548,7 +548,7 @@ FEMMeshApplicationBase
     }
 
 
-  heatMesh->SetElements( elements.GetPointer() );
+  heatMesh->SetElementsContainer( elements.GetPointer() );
 
 
   this->DisplayFEMMesh();
