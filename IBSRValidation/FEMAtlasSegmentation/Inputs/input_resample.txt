@@ -1,23 +1,11 @@
-G:\Avants\IBSR\OriginalNormals\20Normals_T1_8bit_small_heq
-G:\Avants\IBSR\OriginalNormals\20Normals_T1_brain_small_heq
-U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Results\output_1.txt
+.\temp\IBSR\OriginalNormals\20Normals_T1_8bit
+.\temp\IBSR\OriginalNormals\20Normals_T1_brain
+.\temp\output_ncc.txt
 10 128 128 0 91 200 11
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D0.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D1.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D2.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D3.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D4.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D5.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D6.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D7.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D8.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D9.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D10.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D11.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D12.txt
-18 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D13.txt
-25 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D13.txt
-26 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D13.txt
-27 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D13.txt
-28 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D13.txt
-29 128 128 0 91 U:\itk\Insight\Examples\IBSRValidation\FEMAtlasSegmentation\Inputs\FEMregLMparams3D13.txt
+11 128 128 0 91 .\temp\FEMregLMparams3D.txt
+18 128 128 0 91 .\temp\FEMregLMparams3D.txt
+25 128 128 0 91 .\temp\FEMregLMparams3D.txt
+26 128 128 0 91 .\temp\FEMregLMparams3D.txt
+27 128 128 0 91 .\temp\FEMregLMparams3D.txt
+28 128 128 0 91 .\temp\FEMregLMparams3D.txt
+29 128 128 0 91 .\temp\FEMregLMparams3D.txt

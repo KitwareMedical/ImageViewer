@@ -1,33 +1,30 @@
 % Configuration file for ITK FEM registration example
-
 3	% Number of levels in the multi-res pyramid
-1	% Maximum Level to use in the pyramid 
-2 2 2  %	% elts per dim each level
-1.e2 1.e2 1.e2   % Elasticity
+3	% Maximum Level to use in the pyramid 
+4 8 12 %	% elts per dim each level
+1.e1 1.e1 1.e1   % Elasticity
 1.e0 1.e0 1.e0 %2.e2	% Rho
-5 10 10    	% NumberOfIntegrationPoints
-5 5 5  	  % WidthOfMetricRegion
-15 15 15 	% MaximumIterations
-1     % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
+4 4 6   	% NumberOfIntegrationPoints
+5 5 3 	  % WidthOfMetricRegion
+23 20 20 	% MaximumIterations
+0       % 0 = mean square, 1 = ncc, 2= pattern intensity, 3=MI
 1.	% Alpha
 1	% DescentDirection
 1	% DoLineSearch
-66	% frequency of line search
+1	% frequency of line search
 1.	% TimeStep
-1.e-12  % Energy Reduction Factor
-3     % dimension of images
+1.e-19  % Energy Reduction Factor
+3       % dimension of images
 128	% Nx (image x dimension)
 128	% Ny (image y dimension)
 91      % Nz (image z dimension - not used if 2D)
-G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain10.buchar %brain_slice1smth.im % 	% ReferenceFileName
-G:\\Avants\\IBSR\\OriginalNormals\\20Normals_T1_8bit_small_heq\\brain11.buchar %brain_slice2smth.im % 		% TargetFileName
+.\temp\img1filename % ReferenceFileName - not necessary if setting image from outside
+.\temp\img2filename % TargetFileName
 0	% UseLandmarks - read the file name below if this is true
-/mnt/data/tessa/temp/e15326s16i1_2.regLM	% LandmarkFileName
-E:\\Avants\\MetaImages\\result	% ResultsFileName
+.\temp\LM1.txt	% LandmarkFileName
+.\temp\result	% ResultsFileName
 0	% WriteDisplacementField
-/mnt/data/tessa/temp/disp	% DisplacementsFileName
+.\temp\disp	% DisplacementsFileName
 0
-/temp/meshfile
-
+.\temp\meshfile
 END
-
