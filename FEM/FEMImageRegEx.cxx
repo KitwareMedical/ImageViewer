@@ -225,13 +225,10 @@ void ImageRegEx::GenRegMesh()
   }
   }
  
-  int TotalNodes=ct;
-
   /*
    * Then we have to create the materials that will define
    * the elementm_Solver.  Only E is used in the membrane.
    */
-  Float ni=10.;
   MaterialLinearElasticity::Pointer m;
   m=MaterialLinearElasticity::New();
   m->GN=0;       /* Global number of the material */
@@ -251,7 +248,7 @@ void ImageRegEx::GenRegMesh()
 //  MembraneC02D::Pointer e1;
   Element2DC0LinearQuadrilateralStress::Pointer e1;
   
-  unsigned int ctGN=0,jct=0,ict=0,temp;
+  unsigned int ctGN=0,jct=0,ict=0;
     for (int j=0; j<=m_Ny-m_MeshResolution;j=j+m_MeshResolution){ 
       ict=0;
       for (int i=0; i<=m_Nx-m_MeshResolution;i=i+m_MeshResolution){ 
@@ -262,7 +259,6 @@ void ImageRegEx::GenRegMesh()
         e1->SetNode(2,dynamic_cast<Node*>( &*m_Solver.node.Find((ctGN+m_Nx/m_MeshResolution)+jct+1) ));
         e1->SetNode(3,dynamic_cast<Node*>( &*m_Solver.node.Find((ctGN+m_Nx/m_MeshResolution)+jct) ));
         e1->m_mat=dynamic_cast<MaterialLinearElasticity*>( &*m_Solver.mat.Find(0) );
-        temp=ctGN+jct;
         m_Solver.el.push_back( FEMP<Element>(&*e1) );
         ict++;
        // std::cout << ctGN << "  elt nodes : a  " << ctGN+jct -1 << " b " <<
@@ -355,12 +351,10 @@ void ImageRegEx::GenRegMesh()
 
 void ImageRegEx::IterativeSolve()
 {
-  Float maxval=0.,minval=999.,minF=9.e8;
   m_Energy=9.e9;
   m_MinE=m_Energy;
   
   // iterative solve  
-  int upd = 1,ect=0;
   Float mine=9.e9;
   for (int iters=0; iters<m_Maxiters; iters++){
 
@@ -435,8 +429,6 @@ void ImageRegEx::GetVectorField()
   ImageType::IndexType rindex = m_FieldIter.GetIndex();
   ImageType::IndexType tindex = m_FieldIter.GetIndex();
 
-  unsigned int ct=0;
-  unsigned char tpix;
   for(  Element::ArrayType::iterator elt=el->begin(); elt!=el->end(); elt++) 
   {
   
@@ -460,10 +452,7 @@ void ImageRegEx::GetVectorField()
       }
       
       m_Field->SetPixel(rindex, disp );
-      tpix=m_RefImg->GetPixel(rindex);
-    }
-    
-    ct++;
+    }    
   }
 }
 
