@@ -19,7 +19,6 @@
 #define liCOMMANDUPDATELIGHTBUTTONCLASS
 
 #include <itkCommand.h>
-#include <liFilterConsoleBase.h>
 #include <FL/Fl_Light_Button.H>
 
 
