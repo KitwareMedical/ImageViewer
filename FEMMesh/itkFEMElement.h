@@ -45,13 +45,15 @@ public:
   // and the Stiffness matrix
   typedef float       RealType;
 
-  typedef TFEMMesh                                FEMMeshType;
-  typedef typename FEMMeshType::PixelType         DisplacementType;
-  typedef typename FEMMeshType::CellTraits        CellTraits;
+  typedef TFEMMesh                                  FEMMeshType;
+  typedef typename FEMMeshType::PixelType           DisplacementType;
+  typedef typename FEMMeshType::CellTraits          CellTraits;
 
   
-  typedef TCell                                   CellType;
-  typedef CellType                                Superclass;
+  // note that we cannot use "CellType" here because there 
+  // is already an enum called "CellType" defined in CellInterface<>
+  typedef TCell                                     BaseCellType;
+  typedef BaseCellType                              Superclass;
 
   typedef typename FEMMeshType::PointsContainer     PointsContainer;
   typedef typename FEMMeshType::PointDataContainer  PointDataContainer;
