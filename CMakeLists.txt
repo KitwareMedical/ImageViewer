@@ -85,7 +85,9 @@ ENDIF(HAS_METAIMAGE)
 
 
 # Add an option to build FEM examples
-SUBDIRS(FEM)
+IF(HAS_FEM)
+  SUBDIRS(FEM)
+ENDIF(HAS_FEM)
 
 # Add an option to build or not build the FuzzyConnectedness example
 SUBDIRS(FuzzyConnectedness)
