@@ -45,6 +45,10 @@ class GLColorSliceView
     typedef itk::Image<RGBPixel<ImagePixelType>, 3> ImageType;
     typedef typename ImageType::Pointer ImagePointer;
     typedef typename ImageType::ConstPointer ImageConstPointer;
+    typedef GLSliceView<ImagePixelType, OverlayPixelType> Superclass;
+    typedef typename Superclass::RegionType RegionType;
+    typedef typename Superclass::SizeType SizeType;
+    typedef typename Superclass::IndexType IndexType;
 
     /*! FLTK required constructor - must use imData() to complete 
      *  definition */

@@ -103,7 +103,7 @@ RGBImage2DViewer<ImagePixelType>
 
   typedef itk::MinimumMaximumImageCalculator<ChannelImageType> 
     MinMaxCalculatorType;
-  MinMaxCalculatorType::Pointer MinMaxCalculator = 
+  typename MinMaxCalculatorType::Pointer MinMaxCalculator = 
     MinMaxCalculatorType::New();
   MinMaxCalculator->SetImage(image);
   MinMaxCalculator->Compute();
