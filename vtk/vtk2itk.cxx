@@ -116,25 +116,25 @@ floatMesh::Pointer MeshFromUnstructuredGrid(vtkUnstructuredGrid* grid)
   cellId = 0;
   for(vtkcells->InitTraversal(); vtkcells->GetNextCell(npts, pts); cellId++)
     {
-    floatMesh::Cell::Pointer c;
+    floatMesh::CellAutoPointer c;
     switch(vtkCellTypes[cellId])
       {
       case VTK_TRIANGLE:
         {
         typedef itk::CellInterface<float, floatMesh::CellTraits> CellInterfaceType;
         typedef itk::TriangleCell<CellInterfaceType> TriangleCellType;
-        TriangleCellType::Pointer t = TriangleCellType::New();
+        TriangleCellType * t = new TriangleCellType;
         t->SetPointIds((unsigned long*)pts);
-        c = t;
+        c.TakeOwnership( t );
         break;
         }  
       case VTK_QUAD:
         {
         typedef itk::CellInterface<float, floatMesh::CellTraits> CellInterfaceType;
         typedef itk::QuadrilateralCell<CellInterfaceType> QuadrilateralCellType;
-        QuadrilateralCellType::Pointer t = QuadrilateralCellType::New();
+        QuadrilateralCellType * t = new QuadrilateralCellType;
         t->SetPointIds((unsigned long*)pts);
-        c = t;
+        c.TakeOwnership( t );
         break;
         }  
       case VTK_EMPTY_CELL:
@@ -258,8 +258,8 @@ vtkUnstructuredGrid* MeshToUnstructuredGrid(floatMesh* mesh)
   
   // Now create the cells using the MulitVisitor
   // 1. Create a MultiVisitor
-  floatMesh::Cell::MultiVisitor::Pointer mv =
-    floatMesh::Cell::MultiVisitor::New();
+  floatMesh::CellType::MultiVisitor::Pointer mv =
+    floatMesh::CellType::MultiVisitor::New();
   // 2. Create a triangle and quadrilateral visitor
   TriangleVisitor::Pointer tv = TriangleVisitor::New();
   QuadrilateralVisitor::Pointer qv =  QuadrilateralVisitor::New();
