@@ -9,6 +9,16 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
+
+std::cout << "ProcessData() called " << std::endl;
+std::cout << "Dimensions : " << std::endl;
+std::cout << info->InputVolumeDimensions[0] << std::endl; 
+std::cout << info->InputVolumeDimensions[1] << std::endl; 
+std::cout << info->InputVolumeDimensions[2] << std::endl; 
+
+
+info->DisplayError( info, "Processing One Slab" );
+
   const unsigned int Dimension = 3;
 
   typedef   float       InternalPixelType;
@@ -31,7 +41,6 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.GetFilter()->SetNumberOfIterations(     atoi( info->GUIItems[ 0 ].CurrentValue) );
       module.GetFilter()->SetTimeStep(               atof( info->GUIItems[ 1 ].CurrentValue) );
       module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 2 ].CurrentValue) );
-      module.SetNeedCasting( true );
       // Execute the filter
       module.ProcessData( pds  );
       break; 
@@ -45,7 +54,6 @@ static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
       module.GetFilter()->SetNumberOfIterations(     atoi( info->GUIItems[ 0 ].CurrentValue) );
       module.GetFilter()->SetTimeStep(               atof( info->GUIItems[ 1 ].CurrentValue) );
       module.GetFilter()->SetConductanceParameter(   atof( info->GUIItems[ 2 ].CurrentValue) );
-      module.SetNeedCasting( true );
       // Execute the filter
       module.ProcessData( pds );
       break; 
@@ -83,13 +91,18 @@ static int UpdateGUI(void *inf)
   info->GUIItems[2].Help = "Factor that multiplies the image gradient in order to compute the effective conductance locally. The higher the value of this parameter, the stronger the diffusion will be";
   info->GUIItems[2].Hints = "0.1 10.0 0.1";
 
-  info->RequiredZOverlap = 0;
+  const unsigned int numberOfIterations = atoi( info->GUIItems[ 0 ].CurrentValue );
+
+  info->RequiredZOverlap = numberOfIterations;
   
   info->OutputVolumeScalarType = info->InputVolumeScalarType;
   info->OutputVolumeNumberOfComponents = 
     info->InputVolumeNumberOfComponents;
-  memcpy(info->OutputVolumeDimensions,info->InputVolumeDimensions,
-         3*sizeof(int));
+
+  info->OutputVolumeDimensions[0] = info->InputVolumeDimensions[0]; // + 2 * numberOfIterations;
+  info->OutputVolumeDimensions[1] = info->InputVolumeDimensions[1]; // + 2 * numberOfIterations;
+  info->OutputVolumeDimensions[2] = info->InputVolumeDimensions[2]; // + 2 * numberOfIterations;
+
   memcpy(info->OutputVolumeSpacing,info->InputVolumeSpacing,
          3*sizeof(float));
   memcpy(info->OutputVolumeOrigin,info->InputVolumeOrigin,
@@ -110,7 +123,7 @@ void VV_PLUGIN_EXPORT vvGradientAnisotropicDiffusionInit(vtkVVPluginInfo *info)
   info->FullDocumentation = 
     "This filter applies an edge-preserving smoothing to a volume by computing the evolution of an anisotropic diffusion partial differential equation. Diffusion is regulated by the gradient of the image. This filter processes the whole image in one piece, and does not change the dimensions, data type, or spacing of the volume.";
   info->SupportsInPlaceProcessing = 0;
-  info->SupportsProcessingPieces = 0;
+  info->SupportsProcessingPieces = 1;
   info->RequiredZOverlap = 0;
   
   /* setup the GUI components */
