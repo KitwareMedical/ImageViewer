@@ -663,20 +663,12 @@ const char * basename )
 
   for( unsigned int k = 0; k < nslice; k++ )
     {
-    if( k < 10 )
-      {
-      sprintf(filename,"%s/%s00%d.pgm", dirname, basename, k );
-      }
-    else if( k < 100 )
-      {
-      sprintf(filename, "%s/%s0%d.pgm", dirname, basename, k );
-      }
-    else
-      {
-      sprintf(filename, "%s/%s%d.pgm", dirname, basename, k );
-      }
 
-    // open up the stream  
+    // generate filename for this slice
+    // NOTE: "%03d" generates a 3-digit number with leading zeros
+    sprintf(filename, "%s/%s%03d.pgm", dirname, basename, k );
+
+    // open the stream  
     std::ofstream imgStream( filename, std::ios::out | std::ios::binary );
   
     if( !imgStream.is_open() )
@@ -684,7 +676,7 @@ const char * basename )
       return false;
       }
 
-    // writer the header
+    // write the header
     imgStream.write( buffer, nchar );
 
     // write the bytes
