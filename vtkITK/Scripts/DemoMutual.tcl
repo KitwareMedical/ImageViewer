@@ -86,7 +86,7 @@ vtkImageChangeInformation changeTarget
 vtkImageShrink3D shrinkTarget
   shrinkTarget SetShrinkFactors 4 4 1
   shrinkTarget SetInput [changeTarget GetOutput]
-  shrinkTarget AveragingOff
+  shrinkTarget AveragingOn
 
 vtkITKNormalizeImageFilter normalizeTarget
     normalizeTarget SetInput [shrinkTarget GetOutput]
@@ -187,7 +187,7 @@ proc slice {n} {
 
 proc go {m n} {
   shrinkSource SetShrinkFactors $n $n 1
-  shrinkSource SetShrinkFactors $n $n 1
+  shrinkTarget SetShrinkFactors $n $n 1
     if {$n >= 4} { set l .01 }
     if {$n == 3} { set l .05 }
     if {$n == 2} { set l .001 }
