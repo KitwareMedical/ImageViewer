@@ -394,7 +394,9 @@ MIRegistrationApp
 
   // set up the resampler
   typedef InternalRegistratorType::TransformationType TransformationType;
-  typedef itk::LinearInterpolateImageFunction<InputImageType> InterpolatorType;
+  typedef TransformationType::ScalarType CoordRepType;
+  typedef itk::LinearInterpolateImageFunction<InputImageType,CoordRepType> 
+    InterpolatorType;
   typedef itk::ResampleImageFilter<InputImageType,InputImageType,
     TransformationType,InterpolatorType> ResamplerType;
 
