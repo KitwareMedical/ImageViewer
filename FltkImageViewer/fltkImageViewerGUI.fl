@@ -25,7 +25,7 @@ class fltkImageViewerGUI {open
           class Fl_Gl_Window
         }
         Fl_Choice orientationChoice {
-          callback {SetOrientation();} open
+          callback {SetOrientation();} selected
           xywh {20 325 50 20}
         } {
           menuitem {} {
@@ -35,6 +35,10 @@ class fltkImageViewerGUI {open
           menuitem {} {
             label Y
             xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label Z
+            xywh {10 10 100 20}
           }
         }
       }
@@ -183,6 +187,6 @@ class fltkImageViewerGUI {open
   } {}
   Function {ClearClickedPoints(void)} {return_type {virtual void}
   } {}
-  Function {UpdateClickedPoints(void)} {selected return_type {virtual void}
+  Function {UpdateClickedPoints(void)} {return_type {virtual void}
   } {}
 } 

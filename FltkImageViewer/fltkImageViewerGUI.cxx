@@ -12,6 +12,8 @@ void fltkImageViewerGUI::cb_orientationChoice(Fl_Choice* o, void* v) {
 Fl_Menu_Item fltkImageViewerGUI::menu_orientationChoice[] = {
  {"X", 0,  0, 0, 0, 0, 0, 14, 0},
  {"Y", 0,  0, 0, 0, 0, 0, 14, 0},
+ {"Z", 0,  0, 0, 0, 0, 0, 14, 0},
+ {0},
  {0},
  {0}
 };
