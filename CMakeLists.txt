@@ -13,11 +13,8 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 )
 
 
-# Add an option to build or not build the Watershed example
-OPTION(BUILD_WATERSHED_SEGMENTATION "Build the watershed segmentation" OFF)
-IF(BUILD_WATERSHED_SEGMENTATION)
+# build the Watershed example
 SUBDIRS(WatershedSegmentation)
-ENDIF(BUILD_WATERSHED_SEGMENTATION)
 
 # Test the condition to build or not build the Image Registration example
 IF(HAS_METAIMAGE)
@@ -127,13 +124,15 @@ ENDIF(HAS_METAIMAGE)
 # Add an option to build or not build the FEM - Mesh example
 OPTION(BUILD_FEM_MESH_EXAMPLE "Build the FEM-Mesh example" OFF)
 IF(BUILD_FEM_MESH_EXAMPLE)
-  IF(HAS_FLTKIMAGEVIEWER)
-    IF(HAS_VTK)
-      IF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
-        SUBDIRS(FEMMesh)
-      ENDIF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
-    ENDIF(HAS_VTK)
-  ENDIF(HAS_FLTKIMAGEVIEWER)
+  IF(HAS_FEM)
+    IF(HAS_FLTKIMAGEVIEWER)
+      IF(HAS_VTK)
+        IF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
+          SUBDIRS(FEMMesh)
+        ENDIF(HAS_VTK_FLTK_WINDOW_INTERACTOR)
+      ENDIF(HAS_VTK)
+    ENDIF(HAS_FLTKIMAGEVIEWER)
+  ENDIF(HAS_FEM)
 ENDIF(BUILD_FEM_MESH_EXAMPLE)
 MARK_AS_ADVANCED( BUILD_FEM_MESH_EXAMPLE )
   
