@@ -153,20 +153,6 @@ PointSet3D<TPointSet>
       {
         
         const PointType point = p.Value();
-       
-        if( pointDataValuesExist )
-        {
-          if( d.Value() > 0 ) 
-          { // color in blue
-            glColor3f( (GLfloat)0.0, (GLfloat)0.0, (GLfloat)1.0 ); 
-          }
-          else 
-          { // color in red
-            glColor3f( (GLfloat)1.0, (GLfloat)0.0, (GLfloat)0.0 ); 
-          }
-          ++d;
-        }
-        
         glVertex3d( point[0], point[1], point[2] );
         ++p;
       }
