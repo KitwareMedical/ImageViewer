@@ -1,6 +1,10 @@
 #ifndef Genome_H
 #define Genome_H
 
+#if defined(_WIN32)
+#include "itkWindows.h"
+#endif
+
 #include <map>
 #include <string>
 #include <math.h>
@@ -39,7 +43,7 @@ public:
   void KnockOutGene( const GeneIdType & geneId );
 
   double GetExpressionLevel( const GeneIdType & geneId );
-  double SetExpressionLevel( const GeneIdType & geneId, double level );
+  void   SetExpressionLevel( const GeneIdType & geneId, double level );
 
   /** This methods computes a normalized Sigmoide function that can
       be used for gene network computations.  */
