@@ -1,7 +1,7 @@
 # data file for the Fltk User Interface Designer (fluid)
 version 1.00 
 header_name {.h} 
-code_name {.cpp} 
+code_name {.cxx} 
 gridx 5 
 gridy 5 
 snap 3
@@ -34,7 +34,7 @@ saveCB = NULL;} {}
       Fl_Box sliceView {
         label {3D Win}
         xywh {0 25 275 280} box EMBOSSED_BOX resizable
-        code0 {\#include <DisplayLib/GLSliceView.h>}
+        code0 {\#include <GLSliceView.h>}
         class {GLSliceView<float, unsigned char>}
       }
       Fl_Menu_Bar {} {open selected
