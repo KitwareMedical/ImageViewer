@@ -18,8 +18,13 @@
 #include "ITKFilterLib.h"
 
 #include <iostream>
-#include <cstdlib>
 
+/**
+ * This test demonstrates how to use the .lib created in 
+ *   Examples/ITKFilterLib.  That .lib wraps multiple itk filters
+ *   so that they can be easily called from outside of itk (even
+ *   from ANIS C).
+ **/
 int main(int argc, char ** argv)
   {
 
@@ -43,9 +48,10 @@ int main(int argc, char ** argv)
   inputSpacing[2] = 1;
 
   g_ItkFilterLibDataType * inputImageData = 
-      (g_ItkFilterLibDataType *)calloc(
-          inputDimSize[0]*inputDimSize[1]*inputDimSize[2], 
-          sizeof(g_ItkFilterLibDataType));
+      new g_ItkFilterLibDataType [ inputDimSize[0]
+                                   * inputDimSize[1]
+                                   * inputDimSize[2]
+                                   * sizeof(g_ItkFilterLibDataType)];
 
   // Fill the sample input image with bogus data
   int i,j,k,cnt;
@@ -93,9 +99,10 @@ int main(int argc, char ** argv)
   // Allocate space for storing the results image,
   //   i.e., the moving image after alignment with the fixed image
   g_ItkFilterLibDataType * outputImageData = 
-      (g_ItkFilterLibDataType *)calloc(
-          inputDimSize[0]*inputDimSize[1]*inputDimSize[2], 
-          sizeof(g_ItkFilterLibDataType));
+      new g_ItkFilterLibDataType [ inputDimSize[0]
+                                   * inputDimSize[1]
+                                   * inputDimSize[2]
+                                   * sizeof(g_ItkFilterLibDataType) ];
 
   // Create an instance of the filter
   itkFilterLib filter(inputDimSize, inputOrigin, inputSpacing);
