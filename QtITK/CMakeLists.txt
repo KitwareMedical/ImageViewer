@@ -26,6 +26,7 @@ ${QT_QT_LIBRARY}
 )
 
 SET(QtITK_SRCS
+itkQtProgressBar.cxx
 qtITK.cxx
 )
 
