@@ -7,6 +7,7 @@ SET(vtkFltk_SRCS
   )
 
 INCLUDE_DIRECTORIES(
+   ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
    ${FLTK_INCLUDE_PATH}
    ${VTK_INCLUDE_PATH}
    )
