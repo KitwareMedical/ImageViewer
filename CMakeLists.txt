@@ -40,8 +40,6 @@ ENDIF(USE_VTK)
 # Look for OpenGL
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
-# Look for Tcl
-# INCLUDE (${CMAKE_ROOT}/Modules/FindTCL.cmake)
 
 # Find X11 (This should be done by FindFLTK...
 IF(UNIX)
