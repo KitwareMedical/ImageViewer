@@ -1,3 +1,5 @@
+INCLUDE_REGULAR_EXPRESSION("^.*$")
+
 INCLUDE (${ITK_SOURCE_DIR}/Examples/vtkITK/vtkITK.cmake)
 
 # Add the common directory
