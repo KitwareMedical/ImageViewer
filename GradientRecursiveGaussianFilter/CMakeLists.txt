@@ -1,8 +1,8 @@
 PROJECT( GradientRecursiveGaussianFilter )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${GradientRecursiveGaussianFilter_SOURCE_DIR}
 ${GradientRecursiveGaussianFilter_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}

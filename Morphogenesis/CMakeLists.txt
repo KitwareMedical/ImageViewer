@@ -1,8 +1,8 @@
 PROJECT( Morphogenesis )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${Morphogenesis_SOURCE_DIR}
 ${Morphogenesis_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
@@ -11,7 +11,7 @@ ${GLU_INCLUDE_PATH}
 )
 
 LINK_DIRECTORIES(
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${Morphogenesis_BINARY_DIR}
 )
 

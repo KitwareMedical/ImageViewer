@@ -1,8 +1,8 @@
 PROJECT(Curves2DExtractor)
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${Curves2DExtractor_SOURCE_DIR}
 ${Curves2DExtractor_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}

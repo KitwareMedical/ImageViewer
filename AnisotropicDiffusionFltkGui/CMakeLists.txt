@@ -5,8 +5,8 @@ ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${AnisotropicDiffusionFltkGui_SOURCE_DIR}
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}

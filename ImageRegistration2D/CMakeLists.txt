@@ -1,8 +1,8 @@
 PROJECT( ImageRegistration2D )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ImageRegistration2D_SOURCE_DIR}
 ${ImageRegistration2D_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}

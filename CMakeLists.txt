@@ -1,3 +1,5 @@
+PROJECT(InsightApplications)
+
 INCLUDE_REGULAR_EXPRESSION("^.*$")
 
 

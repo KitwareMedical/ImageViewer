@@ -4,7 +4,7 @@ SET ( MetaImageViewer_SRCS
   )
 
 INCLUDE_DIRECTORIES (
-  ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
+  ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
   ${FLTK_INCLUDE_PATH}
   ${OPENGL_INCLUDE_PATH}
 )

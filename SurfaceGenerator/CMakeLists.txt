@@ -1,8 +1,8 @@
 PROJECT( SurfaceGenerator )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${SurfaceGenerator_SOURCE_DIR}
 ${SurfaceGenerator_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}

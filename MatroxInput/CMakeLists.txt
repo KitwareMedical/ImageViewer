@@ -27,8 +27,8 @@ ENDIF (USE_VTK_FILE)
 INCLUDE_DIRECTORIES (
   ${MatroxInput_SOURCE_DIR}
   ${ITK_SOURCE_DIR}
-  ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-  ${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
+  ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+  ${InsightApplications_SOURCE_DIR}/Auxiliary/VtkFltk
   ${FLTK_INCLUDE_DIR}
   ${VTK_INCLUDE_DIR}
 )

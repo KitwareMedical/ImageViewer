@@ -1,11 +1,11 @@
 PROJECT( RegionGrowingSegmentation )
 
 INCLUDE_DIRECTORIES(
-${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
-${ITK_SOURCE_DIR}/Auxiliary/VtkFltk
-${ITK_SOURCE_DIR}/Auxiliary/vtk
-${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
-${ITK_BINARY_DIR}/Auxiliary/VtkFltk
+${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_SOURCE_DIR}/Auxiliary/VtkFltk
+${InsightApplications_SOURCE_DIR}/Auxiliary/vtk
+${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
+${InsightApplications_BINARY_DIR}/Auxiliary/VtkFltk
 ${RegionGrowingSegmentation_SOURCE_DIR}
 ${RegionGrowingSegmentation_BINARY_DIR}
 ${FLTK_INCLUDE_PATH}
