@@ -12,7 +12,7 @@
 
 #include "VTKVolRen.h"
 
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 
 #include "FLVTKWin.h"
 
@@ -22,8 +22,8 @@ template <class T>
 class FLVTKVolRenWin : public FLVTKWin
   {
 
-  typedef itk::PhysicalImage<T,3>  ImageType;
-  typedef itk::PhysicalImage<unsigned char,3>  OverlayType;
+  typedef itk::Image<T,3>  ImageType;
+  typedef itk::Image<unsigned char,3>  OverlayType;
 
     protected:
        

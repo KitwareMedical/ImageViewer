@@ -238,7 +238,7 @@ int main()
   std::cout << "loading MetaImage..." << std::endl; 
 
   //Define the Image type
-  typedef itk::PhysicalImage<short,3>  ImageType;
+  typedef itk::Image<short,3>  ImageType;
   ImageType::Pointer input_image;
 
   //Load the image
@@ -247,7 +247,7 @@ int main()
   LoaderType::Pointer loader = LoaderType::New();
 
   //set mh* file
-  loader->SetFileToLoad(metaImageFileName); 
+  loader->SetFileName(metaImageFileName); 
   loader->Update();
   input_image  = loader->GetOutput(); 
 

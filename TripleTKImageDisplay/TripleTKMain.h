@@ -34,7 +34,7 @@ class TripleTKMain
 
   public:
   
-    typedef itk::PhysicalImage<short, 3> ImageType;
+    typedef itk::Image<short, 3> ImageType;
 
     TripleTKMain();
     ~TripleTKMain();

@@ -74,7 +74,9 @@ ENDIF(BUILD_MRI_REGISTRATION)
 # Add an option to build or not build the TripleTKImageDisplay example
 OPTION(BUILD_TRIPLETKID "Build the Triple TK Image Display example")
 IF(BUILD_TRIPLETKID)
-SUBDIRS(TripleTKImageDisplay)
+  IF(HAS_METAIMAGE)
+    SUBDIRS(TripleTKImageDisplay)
+  ENDIF(HAS_METAIMAGE)
 ENDIF(BUILD_TRIPLETKID)
 
 

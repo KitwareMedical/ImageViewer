@@ -41,7 +41,6 @@ ITKCommon
 ITKBasicFilters 
 VXLNumerics
 MetaImageIO
-IView
 ${FLTK_LIBRARY}
 ${VTK_LIBRARY}
 ${OPENGL_LIBRARY}

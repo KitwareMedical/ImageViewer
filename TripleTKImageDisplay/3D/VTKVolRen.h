@@ -12,7 +12,7 @@ so check before use.
 #define _VTKVolRen_h
 #include <vtkVolumeRayCastMapper.h>
 #include <vtkVolumeRayCastMIPFunction.h>
-#include "itkPhysicalImage.h"
+#include "itkImage.h"
 #include "itkSimpleImageRegionIterator.h"
 
 
@@ -20,8 +20,8 @@ template <class T>
 class VTKVolRen
   {
   
-  typedef itk::PhysicalImage<T,3>  ImageType;
-  typedef itk::PhysicalImage<unsigned char,3>  OverlayType;
+  typedef itk::Image<T,3>  ImageType;
+  typedef itk::Image<unsigned char,3>  OverlayType;
 
   protected:
 
