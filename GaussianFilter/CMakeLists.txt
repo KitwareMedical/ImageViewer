@@ -1,5 +1,5 @@
-FIND_INCLUDE( FLTK_INCLUDE_DIR    FL/Fl.H     H:/usr/local/fltk /usr/local/fltk /usr/local/include )
-FIND_LIBRARY( FLTK_LIBRARY_DIR    fltk.lib    H:/usr/local/fltk/lib /usr/local/fltk/lib /usr/local/lib )
+FIND_INCLUDE( FLTK_INCLUDE_DIR    FL/Fl.H     H:/usr/local/fltk /usr/local/fltk /usr/local/include /usr/X11R6/include )
+FIND_LIBRARY( FLTK_LIBRARY_DIR    fltk.lib    H:/usr/local/fltk/lib /usr/local/fltk/lib /usr/local/lib /usr/X11R6/lib )
 
 INCLUDE_DIRECTORIES(
 ${ITK_SOURCE_DIR}/Code/Common
@@ -49,6 +49,8 @@ ENDIF(WIN32)
 IF(UNIX)
   LINK_LIBRARIES (
   -lm
+  -lfltk
+  -lGL
   )
 ENDIF(UNIX)
 
