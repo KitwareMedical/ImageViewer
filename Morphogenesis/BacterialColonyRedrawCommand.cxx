@@ -81,10 +81,10 @@ BacterialColonyRedrawCommand
 //--------------------------------------------------
 void
 BacterialColonyRedrawCommand
-::Execute( const itk::Object * caller, unsigned long event )
+::Execute( const itk::Object * caller, const itk::EventObject & event )
 {
 
-  if( event == fltk::GlDrawEvent )
+  if( typeid( event ) == typeid( fltk::GlDrawEvent ) )
     {
     if( m_BacterialColony )
       {
@@ -104,7 +104,7 @@ BacterialColonyRedrawCommand
 //--------------------------------------------------
 void
 BacterialColonyRedrawCommand
-::Execute( itk::Object * caller, unsigned long event )
+::Execute( itk::Object * caller, const itk::EventObject & event )
 {
   const itk::Object * constcaller = caller;
   Execute( constcaller, event );

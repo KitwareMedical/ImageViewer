@@ -293,11 +293,11 @@ CellsViewerBase
   substrateSliceDrawer->SetInput( imageReader->GetOutput().GetPointer() );
 
   m_Display.GetNotifier()->AddObserver( 
-             fltk::GlDrawEvent,
+             fltk::GlDrawEvent(),
              substrateSliceDrawer->GetDrawCommand().GetPointer() );
 
   substrateSliceDrawer->AddObserver( 
-                           fltk::VolumeReslicedEvent,
+                           fltk::VolumeReslicedEvent(),
                            m_Display.GetRedrawCommand() );
  
   

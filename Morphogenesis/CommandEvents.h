@@ -2,7 +2,8 @@
 #ifndef bio_Command_Events_h
 #define bio_Command_Events_h
 
-#include <itkCommand.h>
+#include "itkCommand.h"
+#include "itkEventObject.h"
 
 
 namespace bio {
@@ -10,10 +11,7 @@ namespace bio {
 /**
  *  List of the events expected in this domain
  */
-enum EventIds 
-{
-  TimeStepEvent= itk::Command::UserEvent+1
-};
+itkEventMacro( TimeStepEvent, itk::UserEvent );
 
 
   

@@ -61,6 +61,11 @@ Cell
   // too young to die...
   m_MarkedForRemoval = false;
 
+  // Create the representation for 3D
+  m_SphereShape = fltk::Sphere3D::New();
+  m_SphereShape->SetNumberOfSlices( 24 );
+  m_SphereShape->SetNumberOfStacks( 12 );
+
 }
 
 
@@ -252,7 +257,8 @@ Cell
         }
       case 3: 
         {
-        DrawIcosaedron();
+        DrawSphere();
+        //DrawIcosaedron();
         break;
         }
       }
@@ -591,6 +597,16 @@ Cell
  
 
 
+
+/**
+ *   Draw a Sphere representing a 3D cell
+ */ 
+void
+Cell
+::DrawSphere(void) const
+{
+  m_SphereShape->glDraw();
+}
 
 
 /**

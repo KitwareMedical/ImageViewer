@@ -5,6 +5,7 @@
 #include <FL/fl_draw.H>
 #include "itkVector.h"
 #include "itkPoint.h"
+#include "fltkSphere3D.h"
 
 
 namespace bio {
@@ -134,15 +135,17 @@ protected:
 private:
 
    void DrawCircle(void) const;
+   void DrawSphere(void) const;
    void DrawIcosaedron(void) const;
 
 private:
 
-   CellularAggregate  *   m_Aggregate;
+   CellularAggregate  *       m_Aggregate;
 
 
-   bool                   m_MarkedForRemoval;
+   bool                       m_MarkedForRemoval;
 
+   fltk::Sphere3D::Pointer    m_SphereShape;
 
 };
 

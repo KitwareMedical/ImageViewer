@@ -81,13 +81,13 @@ CellsViewerCommand
 //--------------------------------------------------
 void
 CellsViewerCommand
-::Execute( const itk::Object * caller, unsigned long event )
+::Execute( const itk::Object * caller, const itk::EventObject & event )
 {
 
   CellularAggregate::ConstPointer aggregate(
       dynamic_cast< const CellularAggregate * >( caller ) );
 
-  if( event == bio::TimeStepEvent )
+  if( typeid( event ) == typeid( bio::TimeStepEvent ) )
     {
     if( m_CellsViewer )
       {
@@ -110,7 +110,7 @@ CellsViewerCommand
 //--------------------------------------------------
 void
 CellsViewerCommand
-::Execute( itk::Object * caller, unsigned long event )
+::Execute( itk::Object * caller, const itk::EventObject & event )
 {
   const itk::Object * constcaller = caller;
   Execute( constcaller, event );

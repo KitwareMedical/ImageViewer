@@ -30,9 +30,9 @@ int main()
   viewerCommand->SetCellsViewer( viewer );
 
   itk::Command::Pointer redrawCommand = viewer->GetRedrawCommand();
-  colony->AddObserver( bio::TimeStepEvent, redrawCommand );
+  colony->AddObserver( bio::TimeStepEvent(), redrawCommand );
 
-  colony->AddObserver( bio::TimeStepEvent, viewerCommand );
+  colony->AddObserver( bio::TimeStepEvent(), viewerCommand );
 
   viewer->SetCellsAggregate( colony );
   
@@ -41,7 +41,7 @@ int main()
 
   colonyRedrawCommand->SetBacterialColony( colony );
 
-  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent, colonyRedrawCommand );
+  viewer->GetNotifier()->AddObserver( fltk::GlDrawEvent(), colonyRedrawCommand );
 
   colony->SetGrowthRadiusIncrement( 0.01 );
 

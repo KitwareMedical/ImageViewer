@@ -315,7 +315,7 @@ CellularAggregate
       }
     }
   
-  this->InvokeEvent( TimeStepEvent );
+  this->InvokeEvent( TimeStepEvent() );
 
   m_Iteration++;
 
