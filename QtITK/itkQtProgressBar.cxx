@@ -53,7 +53,6 @@ void
 QtProgressBar::ProcessEvent( itk::Object * caller, 
                            const itk::EventObject & event )
 {
-  std::cout << "ProcessEvent" <<std::endl;
   if( typeid( itk::ProgressEvent )   ==  typeid( event ) )
     {
     ::itk::ProcessObject::Pointer  process = 
@@ -70,7 +69,6 @@ void
 QtProgressBar::ConstProcessEvent( const itk::Object * caller, 
                                 const itk::EventObject & event )
 {
-  std::cout << "ConstProcessEvent" <<std::endl;
   if( typeid( itk::ProgressEvent )   ==  typeid( event ) ) 
     {
     itk::ProcessObject::ConstPointer  process = 
