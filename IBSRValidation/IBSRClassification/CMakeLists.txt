@@ -23,7 +23,7 @@ ITKBasicFilters
 ITKIO
 )
 
-ADD_EXECUTABLE(IBSRClassificationApp Code/KmeansClassifierValidationApp)
-
+ADD_EXECUTABLE(GaussianIBSRClassificationApp Code/GaussianClassifierValidationApp)
+ADD_EXECUTABLE(KmeansIBSRClassificationApp Code/KmeansClassifierValidationApp)
 
 
