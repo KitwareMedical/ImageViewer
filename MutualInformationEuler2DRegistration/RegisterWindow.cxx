@@ -1,6 +1,6 @@
 #include "time.h"
 
-#include <sstream>
+#include <strstream>
 #include <RegisterWindow.h>
 #include <FL/fl_file_chooser.H>
 
