@@ -9,6 +9,7 @@ ${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
+${ITK_SOURCE_DIR}/Examples/TripleTKImageDisplay
 )
 
 LINK_DIRECTORIES(
