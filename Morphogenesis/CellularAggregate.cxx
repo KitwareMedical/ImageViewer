@@ -46,7 +46,7 @@ CellularAggregate
   m_Mesh->SetCells( VoronoiRegionsContainer::New() );
 
   m_Iteration = 0;
-  m_ClosestPointComputationInterval = 40;
+  m_ClosestPointComputationInterval = 5;
 
   m_FrictionForce = 1.0f;
 
@@ -100,6 +100,55 @@ CellularAggregate
     cell->Draw( position );
     cellIt++;
     }
+
+  switch( Cell::Dimension )
+  {
+  case 2:
+    glColor3f( 1.0, 0.0, 0.0 ); 
+    break;
+  case 3:
+    GLfloat color[] = { 1.0, 0.0, 0.0, 1.0 };
+    glMaterialfv(GL_FRONT,GL_DIFFUSE,color);
+    break;
+  }
+ 
+  // Draw edges connecting neighbor cells
+  glBegin(GL_LINES);
+  cellIt = m_Mesh->GetPointData()->Begin();
+  while( cellIt != end )
+    {
+    Cell * cell = cellIt.Value();
+    const IdentifierType id1 = cell->GetSelfIdentifier();
+
+    PointType position1;
+    PointType position2;
+
+    m_Mesh->GetPoint( id1, &position1 );
+
+    VoronoiRegionAutoPointer voronoiRegion;
+    this->GetVoronoi( id1, voronoiRegion );
+              
+    VoronoiRegionType::PointIdIterator neighbor = voronoiRegion->PointIdsBegin();
+    VoronoiRegionType::PointIdIterator end      = voronoiRegion->PointIdsEnd();
+
+    while( neighbor != end )
+      {
+      const IdentifierType id2 = (*neighbor);  
+      
+      if( !m_Mesh->GetPoint( id2, &position2 ) )
+        {
+        ++neighbor;
+        continue;// if the neigbor has been removed, skip it
+        }
+      glVertex3f( position1[0], position1[1], position1[2] );
+      glVertex3f( position2[0], position2[1], position2[2] );
+
+      ++neighbor;
+      }
+    cellIt++;
+    }
+    glEnd();
+
 }
 
 
@@ -369,6 +418,15 @@ CellularAggregate
   if( !newcellparentId )
     {
     position.Fill( 0.0 );
+    // AZUCAR, temporary initialization to the right
+    {
+      position[0] =  2.0;
+      position[1] = 10.0;
+      if( Cell::Dimension) {
+        position[2] = 0.0;
+        }
+    }
+    // END AZUCAR
     selfVoronoi.TakeOwnership( new VoronoiRegionType );
     }
   else

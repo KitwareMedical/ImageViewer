@@ -32,20 +32,20 @@ namespace bio {
   
 Cell::ColorType    Cell::DefaultColor;
 
-double             Cell::DefaultRadius         =       1.0; // microns
+double             Cell::DefaultRadius         =        1.00; // microns
 
 
-double             Cell::GrowthRadiusIncrement =       0.01; // microns
-double             Cell::GrowthRadiusLimit     =       2.0; // microns
-unsigned long      Cell::MaximumGenerationLimit =      30L; // 30th generation 
+double             Cell::GrowthRadiusIncrement =        0.01; // microns
+double             Cell::GrowthRadiusLimit     =        2.00; // microns
+unsigned long      Cell::MaximumGenerationLimit =        30L; // 30th generation 
 
-unsigned long      Cell::GrowthMaximumLatencyTime    = 50; 
+unsigned long      Cell::GrowthMaximumLatencyTime    =   50; 
 
-double             Cell::NutrientSelfRepairLevel  =      0; 
-double             Cell::EnergySelfRepairLevel    =      0; 
+double             Cell::NutrientSelfRepairLevel  =       0; 
+double             Cell::EnergySelfRepairLevel    =       0; 
 
-double             Cell::DefaultEnergyIntake      =      1; 
-double             Cell::DefaultNutrientsIntake   =      1; 
+double             Cell::DefaultEnergyIntake      =       1; 
+double             Cell::DefaultNutrientsIntake   =       1; 
 
 fltk::Sphere3D::Pointer    Cell::SphereShape;
 
@@ -356,7 +356,7 @@ Cell
     break;
   }
 
-  const double scale = m_Radius;
+  const double scale = m_Radius / 5.0;
   glScaled( scale, scale, scale );
 
   if( DisplayList )

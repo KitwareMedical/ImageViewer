@@ -35,6 +35,7 @@ public:
   virtual ~GradientEatingBacteria();
 
   virtual bool CheckPointDNAReplication(void);
+  virtual bool CheckPointApoptosis(void);
 
   virtual void ClearForce(void);
   virtual void AddForce(const VectorType & force);

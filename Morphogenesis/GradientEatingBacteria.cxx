@@ -27,8 +27,8 @@ namespace bio {
 
 
 // Class static variables
-double    GradientEatingBacteria::ChemoAttractantLowThreshold  =  5.0f;
-double    GradientEatingBacteria::ChemoAttractantHighThreshold = 100.0f;
+double    GradientEatingBacteria::ChemoAttractantLowThreshold  = 220.0f;
+double    GradientEatingBacteria::ChemoAttractantHighThreshold = 200.0f;
 
 Cell::ColorType GradientEatingBacteria::WellNourishedColor;
 Cell::ColorType GradientEatingBacteria::HopefullColor;
@@ -84,13 +84,26 @@ Cell *
 GradientEatingBacteria
 ::CreateEgg()
 {
+
+  // Create the representation for 3D
+  SphereShape = fltk::Sphere3D::New();
+  SphereShape->SetNumberOfSlices( 12 );
+  SphereShape->SetNumberOfStacks( 6 );
+
+  std::ifstream file;
+
+  file.open("GradientEatingBacteria.dat");
+  file >> Cell::DefaultRadius;
+  file >> Cell::GrowthRadiusIncrement;
+  file >> Cell::GrowthRadiusLimit;
+  file >> GradientEatingBacteria::ChemoAttractantLowThreshold;
+  file >> GradientEatingBacteria::ChemoAttractantHighThreshold;
+  file.close();
+
   SetGrowthMaximumLatencyTime( 100 );
   SetDivisionMaximumLatencyTime( 100 );
 
   SetMaximumGenerationLimit( 40 );
-
-  Cell::GrowthRadiusIncrement = 0.01;
-  Cell::GrowthRadiusLimit     = 2.00;
 
   WellNourishedColor.Set(    0.0, 0.0, 1.0 );
   HopefullColor.Set(         0.0, 1.0, 0.0 );
@@ -107,6 +120,33 @@ GradientEatingBacteria
 
   return bacteria;
   
+}
+
+
+
+/**
+ *    Check point for Apoptosis
+ */ 
+bool
+GradientEatingBacteria
+::CheckPointApoptosis(void) 
+{
+  bool super = SuperClass::CheckPointApoptosis();
+
+  if( !super )
+    {
+    return super;
+    }
+
+  bool here = false;
+
+  if( m_ChemoAttractantLevel < ChemoAttractantLowThreshold )
+    {
+    here = true;
+    }
+
+  return ( super && here );
+
 }
 
 
@@ -131,6 +171,7 @@ GradientEatingBacteria
 
   if( !m_ScheduleApoptosis )
     {
+
     if( m_ChemoAttractantLevel > ChemoAttractantLowThreshold )
       {
       here = true;
@@ -150,7 +191,15 @@ void
 GradientEatingBacteria
 ::AddForce( const VectorType & force )
 {
-  SuperClass::AddForce( force );
+  if( m_ChemoAttractantLevel > ChemoAttractantLowThreshold )
+    {
+    SuperClass::AddForce( force );
+    }
+  else
+    {
+    // no force so it is fixed in place....
+    }
+
 }
 
 
@@ -202,6 +251,7 @@ GradientEatingBacteria
     }
   else
     {
+    m_ScheduleApoptosis    = true;
     m_Color = StarvingColor;
     }
 }
