@@ -31,7 +31,7 @@ NOTE: All utilities supports only metaimage file format (.mha or .mhd).
 HOW TO COMPILE
 
 Before compile the utilities in this example, you have to turn on the
-BUILD_UNSUPPORTED option and BUILD_EXAMPLE option which you can find
+BUILD_AUXILIARY option and BUILD_EXAMPLE option which you can find
 in the CMakeList.txt file in the root of the Insight source
 directory. Then, turn on the BUILD_MRI_BIAS_CORRECTION option in the
 CMakeLists.txt file in the Insight/Example directory.
