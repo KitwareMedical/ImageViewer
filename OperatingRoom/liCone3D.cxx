@@ -13,8 +13,8 @@
 
 
 
-#include <liCone3D.h>
-#include <vcl_cmath.h>
+#include "liCone3D.h"
+#include <math.h>
 
 
 namespace li {

@@ -13,8 +13,8 @@
 
 
 
-#include <liC_Arm3D.h>
-#include <vcl_cmath.h>
+#include "liC_Arm3D.h"
+#include <math.h>
 
 namespace li {
 

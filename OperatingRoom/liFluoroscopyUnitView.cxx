@@ -11,14 +11,14 @@
 //
 //--------------------------------------------
 
-#include <liFluoroscopyUnitView.h>
-#include <liBox3D.h>
-#include <liCommandEvents.h>
-#include <itkPoint.h>
-#include <itkImageSliceConstIteratorWithIndex.h>
-#include <itkImageRegionConstIteratorWithIndex.h>
+#include "liFluoroscopyUnitView.h"
+#include "liBox3D.h"
+#include "liCommandEvents.h"
+#include "itkPoint.h"
+#include "itkImageSliceConstIteratorWithIndex.h"
+#include "itkImageRegionConstIteratorWithIndex.h"
 #include <GL/glu.h>
-#include <vcl_cmath.h>
+#include <math.h>
 
 
 namespace li {

@@ -13,8 +13,8 @@
 
 
 
-#include <liCylinder3D.h>
-#include <vcl_cmath.h>
+#include "liCylinder3D.h"
+#include <math.h>
 
 
 namespace li {
