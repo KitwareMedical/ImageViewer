@@ -10,7 +10,10 @@ ENDIF(BUILD_METAIMAGE)
 # Add an option to build or not build the FltkImageViewer Library
 OPTION(BUILD_FLTKIMAGEVIEWER "Build the FltkImageViewer Library")
 IF(BUILD_FLTKIMAGEVIEWER)
-SUBDIRS(FltkImageViewer)
+  SET(HAS_FLTKIMAGEVIEWER 1 CACHE INTERNAL "FLTK image support")
+  SUBDIRS(FltkImageViewer)
+ELSE(BUILD_FLTKIMAGEVIEWER)
+  SET(HAS_FLTKIMAGEVIEWER 0 CACHE INTERNAL "no FLTK image support")
 ENDIF(BUILD_FLTKIMAGEVIEWER)
 
 # Add an option to build or not build the vtk interface Library
