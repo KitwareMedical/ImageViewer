@@ -190,14 +190,14 @@ main(int argc, char *argv[])
     AffineTransformType::Pointer pa2phys =
         moments.GetPrincipalAxesToPhysicalAxesTransform();
     if (verbose) {
-        std::cout << "Principal axes to physical axes transform"
-                  << std::endl << pa2phys << std::endl;
+        std::cout << "Principal axes to physical axes transform" << std::endl;
+        pa2phys->PrintSelf( std::cout );
     }
     trans->Compose(pa2phys);
     trans->Compose(image->GetPhysicalToIndexTransform());
     if (verbose) {
         std::cout << "Backprojection transform:" << std::endl;
-        std::cout << *trans << std::endl;
+        trans->PrintSelf( std::cout );
     }
 
     /* Create and initialize the interpolator */
