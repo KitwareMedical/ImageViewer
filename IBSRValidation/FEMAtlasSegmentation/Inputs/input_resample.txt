@@ -1,7 +1,7 @@
 .\temp\IBSR\OriginalNormals\20Normals_T1_8bit
 .\temp\IBSR\OriginalNormals\20Normals_T1_brain
 .\temp\output_ncc.txt
-10 128 128 0 91 200 11
+10 128 128 0 91 200 11 -1
 11 128 128 0 91 .\temp\FEMregLMparams3D.txt
 18 128 128 0 91 .\temp\FEMregLMparams3D.txt
 25 128 128 0 91 .\temp\FEMregLMparams3D.txt
