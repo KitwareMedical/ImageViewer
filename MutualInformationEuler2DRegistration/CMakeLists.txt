@@ -23,11 +23,4 @@ TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration
                       ITKNumerics ITKBasicFilters ITKIO ITKFltkImageViewer
                       ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
-IF(WIN32)
-  TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration wsock32)
-ENDIF(WIN32)
-
-IF(UNIX)
-  TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration ${CMAKE_X_LIBS})
-ENDIF(UNIX)
 

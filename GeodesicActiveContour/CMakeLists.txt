@@ -41,18 +41,6 @@ ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}
 )
 
-IF(WIN32)
-  LINK_LIBRARIES(
-  wsock32
-  )
-ENDIF(WIN32)
-
-IF(UNIX)
-  LINK_LIBRARIES (
-  ${CMAKE_X_LIBS}
-  )
-ENDIF(UNIX)
-
 ADD_EXECUTABLE(GeodesicActiveContour ${GeodesicActiveContour_SRCS})
 FLTK_WRAP_UI( GeodesicActiveContour ${GeodesicActiveContour_GUI_SRCS} )
 

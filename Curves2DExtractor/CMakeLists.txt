@@ -23,14 +23,6 @@ TARGET_LINK_LIBRARIES (Curves2DExtractorLib
                        ITKBasicFilters ITKIO ITKFltkImageViewer
                        ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
-IF(WIN32)
-  TARGET_LINK_LIBRARIES(Curves2DExtractorLib wsock32)
-ENDIF(WIN32)
-
-IF(UNIX)
-  TARGET_LINK_LIBRARIES(Curves2DExtractorLib ${CMAKE_X_LIBS})
-ENDIF(UNIX)
-
 ADD_EXECUTABLE(Curves2DExtractor main.cxx)
 TARGET_LINK_LIBRARIES(Curves2DExtractor Curves2DExtractorLib)
 

@@ -24,11 +24,4 @@ TARGET_LINK_LIBRARIES(GradientRecursiveGaussianFilter
                       ITKBasicFilters ITKIO ITKFltkImageViewer
                       ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
 
-IF(WIN32)
-  TARGET_LINK_LIBRARIES(GradientRecursiveGaussianFilter wsock32)
-ENDIF(WIN32)
-
-IF(UNIX)
-  TARGET_LINK_LIBRARIES(GradientRecursiveGaussianFilter ${CMAKE_X_LIBS} -lm)
-ENDIF(UNIX)
 

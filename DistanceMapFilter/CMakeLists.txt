@@ -29,18 +29,6 @@ ${OPENGL_LIBRARY}
 ${GLU_LIBRARY}
 )
 
-IF(WIN32)
-  LINK_LIBRARIES(
-  wsock32
-  )
-ENDIF(WIN32)
-
-IF(UNIX)
-  LINK_LIBRARIES (
-  ${CMAKE_X_LIBS} 
-  )
-ENDIF(UNIX)
-
 ADD_EXECUTABLE(DistanceMapFilter ${DistanceMapFilter_SRCS})
 
 FLTK_WRAP_UI(DistanceMapFilter  ${DistanceMapFilter_GUI_SRCS})

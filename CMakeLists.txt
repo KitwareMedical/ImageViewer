@@ -41,19 +41,12 @@ ENDIF(USE_VTK)
 INCLUDE (${CMAKE_ROOT}/Modules/FindOpenGL.cmake)
 
 
-# Find X11 (This should be done by FindFLTK...
-IF(UNIX)
-  INCLUDE (${CMAKE_ROOT}/Modules/FindX11.cmake)
-  SET(CMAKE_X_LIBS ${X11_LIBRARIES})
-ENDIF(UNIX)
-
-
 # Add an option to use or not use FLTK (http://www.fltk.org)
 OPTION(USE_FLTK "Use FLTK (The Fast Light Toolkit) for GUI (some applications need this)" 0)
 IF(USE_FLTK)
   INCLUDE (${CMAKE_ROOT}/Modules/FindFLTK.cmake)
   IF(FLTK_VERSION_1.0.11)
-    MESSAGE(SEND_ERROR "FLTK Version 1.0.11 is no longer supported in ITK. Please upgrade to FLTK version 1.1")
+    MESSAGE(SEND_ERROR "FLTK Version 1.0.11 is no longer supported in ITK. Please upgrade to FLTK version 1.1.3")
   ENDIF(FLTK_VERSION_1.0.11)
 ELSE(USE_FLTK)
   SET (HAS_FLTK 0)
