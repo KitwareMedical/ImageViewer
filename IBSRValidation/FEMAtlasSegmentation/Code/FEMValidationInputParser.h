@@ -131,6 +131,19 @@ public:
 
   /** Get pointer to the subject label image. */
   itkGetObjectMacro( SubjectLabelImage, LabelImageType );
+  
+  /** Get pointer to the atlas image. */
+  itkSetObjectMacro( AtlasImage, ImageType );
+
+  /** Get pointer to the subject image. */
+  itkSetObjectMacro( SubjectImage, ImageType );
+
+  /** Get pointer to the atlas label image. */
+  itkSetObjectMacro( AtlasLabelImage, LabelImageType );
+
+  /** Get pointer to the subject label image. */
+  itkSetObjectMacro( SubjectLabelImage, LabelImageType );
+
 
   /** Get the number of histogram bins. */
   itkGetConstMacro( NumberOfHistogramLevels, unsigned long );
