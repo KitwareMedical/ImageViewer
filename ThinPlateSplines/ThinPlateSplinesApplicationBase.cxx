@@ -428,27 +428,7 @@ ThinPlateSplinesApplicationBase
 
   m_TimeCollector.Stop("ITK Thin Plate Spline");
 
-  // Convert transformed point to a VTK structure for visualization
-  m_VTKPointsTransformedByITK->Delete();
-  m_VTKPointsTransformedByITK = vtkPoints::New();
-
-  m_VTKLinesTransformedByITK->Delete();
-  m_VTKLinesTransformedByITK = vtkCellArray::New();
-
-  m_VTKPointsTransformedByITK->SetNumberOfPoints( m_PointsTransformedByITK.size() );
-
-  vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
-  point = m_PointsTransformedByITK.begin();
-  end   = m_PointsTransformedByITK.end();
-  while( point != end )
-    {
-    const PointType p = *point;
-    m_VTKPointsTransformedByITK->SetPoint( pointCounter, p[0], p[1], p[2] );
-    m_VTKLinesTransformedByITK->InsertNextCell( VTK_VERTEX, &pointCounter );
-    ++point;
-    ++pointCounter;
-    }
-
+  this->ConvertITKMappedPointsToVTK();
 
 }
 
@@ -520,6 +500,7 @@ void
 ThinPlateSplinesApplicationBase
 ::ConvertITKMappedPointsToVTK(void)
 {
+
   // Convert ITK transformed points to a VTK structure for visualization
   m_VTKPointsTransformedByITK->Delete();
   m_VTKPointsTransformedByITK = vtkPoints::New();
@@ -529,8 +510,8 @@ ThinPlateSplinesApplicationBase
 
   m_VTKPointsTransformedByITK->SetNumberOfPoints( m_PointsTransformedByITK.size() );
 
-  PointArrayType::iterator point = m_PointsToTransform.begin();
-  PointArrayType::iterator end   = m_PointsToTransform.end();
+  PointArrayType::iterator point = m_PointsTransformedByITK.begin();
+  PointArrayType::iterator end   = m_PointsTransformedByITK.end();
 
   vtkIdType pointCounter = itk::NumericTraits< vtkIdType >::Zero;
 
@@ -542,7 +523,6 @@ ThinPlateSplinesApplicationBase
     ++point;
     ++pointCounter;
     }
-
 
 }
 
