@@ -89,7 +89,7 @@ struct ClickPoint
 
 public:
   
-  typedef unsigned char                    ImagePixelType;
+  typedef double                           ImagePixelType;
   typedef unsigned char                    OverlayPixelType;
   typedef itk::Image<ImagePixelType,3>     ImageType;
   typedef itk::Image<OverlayPixelType,3>   OverlayType;

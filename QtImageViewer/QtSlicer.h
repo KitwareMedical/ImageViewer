@@ -12,7 +12,7 @@ public:
   QtSlicer( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
   ~QtSlicer();
   
-  typedef itk::Image<unsigned char,3> ImageType;
+  typedef itk::Image<double,3> ImageType;
 
   void DisplayPosition(int x,int y ,int z,float value);
   void Help();

@@ -28,7 +28,7 @@ int main( int argc, char* argv[] )
   QPalette p( QColor( 239, 239, 239 ) );
   myApp.setPalette( p, TRUE );
 
-  typedef unsigned char                     PixelType;
+  typedef double                            PixelType;
   typedef itk::Image<PixelType, 3>          ImageType;
   typedef itk::ImageFileReader<ImageType>   ReaderType;
 
@@ -38,6 +38,7 @@ int main( int argc, char* argv[] )
 
   reader->SetFileName( s.latin1() );
   
+  std::cout << "loading image " << s.latin1() << " ... ";
   try
     {
     reader->Update();
@@ -49,6 +50,7 @@ int main( int argc, char* argv[] )
     return EXIT_FAILURE;
     }
  
+  std::cout << "Done!" << std::endl;
   m_GUI.SetInputImage( reader->GetOutput() );
   
   try

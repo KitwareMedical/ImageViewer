@@ -179,13 +179,12 @@ SetInputImage(ImageType * newImData)
 //
 //
 
-const Image<unsigned char,3>::Pointer &
+const QtGlSliceView::ImagePointer &
 QtGlSliceView
 ::GetInputImage(void) const
-  {
+{
   return cImData;
-  }
-
+}
 
 
 //
