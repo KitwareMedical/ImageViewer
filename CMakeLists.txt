@@ -51,7 +51,9 @@ SUBDIRS(RawImageReadWrite)
 
 
 # Build the RawImageReaderViewer example
-SUBDIRS(RawImageReaderViewer)
+IF(HAS_FLTKIMAGEVIEWER)
+  SUBDIRS(RawImageReaderViewer)
+ENDIF(HAS_FLTKIMAGEVIEWER)
 
 # Test the conditions for building the Gaussian Filter GUI example
 IF(HAS_METAIMAGE)
