@@ -318,11 +318,13 @@ ThinPlateSplinesApplicationBase
   vtkActor * sourceActor = vtkActor::New();
   sourceActor->SetMapper( sourceMapper );
   sourceActor->GetProperty()->SetColor(0,0,1); 
+  sourceActor->GetProperty()->SetPointSize(2); 
 
   // actor coordinates geometry, properties, transformation
   vtkActor * targetActor = vtkActor::New();
   targetActor->SetMapper( targetMapper );
   targetActor->GetProperty()->SetColor(1,0,0); 
+  targetActor->GetProperty()->SetPointSize(2); 
 
   // add the actor to the scene
   m_Renderer->AddActor( sourceActor );
