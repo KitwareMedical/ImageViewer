@@ -104,8 +104,8 @@ int main(int argc, char* argv[])
   int sliceDirection ;
   bool useLog ;
   int degree ;
-  std::vector<double> classMeans ;
-  std::vector<double> classSigmas ;
+  itk::Array<double> classMeans ;
+  itk::Array<double> classSigmas ;
   int maximumIteration ;
   double initialRadius ;
   double grow ;
@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
   // sets tissue classes' statistics for creating the energy function
   filter->SetTissueClassStatistics(classMeans, classSigmas) ;
   // setting standard optimizer parameters 
-  filter->SetOptimizerGrowFactor(grow) ;
+  filter->SetOptimizerGrowthFactor(grow) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
   filter->SetOptimizerMaximumIteration(maximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;

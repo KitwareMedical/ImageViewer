@@ -37,7 +37,7 @@ void print_usage()
   print_line("       [--input-mask file]" ) ;
   print_line("       [--output-mask file]" ) ;
   print_line("       [--degree int] ") ;
-  print_line("       [--grow double] [--shrink double] [--max-iteration int]");
+  print_line("       [--growth double] [--shrink double] [--max-iteration int]");
   print_line("       [--init-step-size double] ");
   print_line("       [--use-slab-identification [yes|no]]") ;
   print_line("       [--slice-direction [0-2]]" ) ;
@@ -66,12 +66,12 @@ void print_usage()
   print_line("        if yes, assume a multiplicative bias field") ;
   print_line("        (use log of image, class-mean, class-sigma,") ;
   print_line("         and init-step-size)" );
-  print_line("--grow double") ;
+  print_line("--growth double") ;
   print_line("        stepsize growth factor. must be greater than 1.0") ;
   print_line("        [default 1.05]" ) ;
   print_line("--shrink double") ;
   print_line("        stepsize shrink factor ") ;
-  print_line("        [default grow^(-0.25)]" ) ; 
+  print_line("        [default growth^(-0.25)]" ) ; 
   print_line("--max-iteration int") ;
   print_line("        maximal number of iterations") ;
   print_line("        [default 20]" ) ;
@@ -92,7 +92,7 @@ void print_usage()
   print_line("         --class-sigma 100 70 --use-log yes");
   print_line("         --input-mask sample.mask.mhd ") ;
   print_line("         --output-mask sample.mask2.mhd ") ;
-  print_line("         --degree 3 --grow 1.05 --shrink 0.9");
+  print_line("         --degree 3 --growth 1.05 --shrink 0.9");
   print_line("         --max-iteration 2000 --init-step-size 1.1") ;
   print_line("         --use-slab-identification no") ;
   print_line("         --slice-direction 2") ;
@@ -120,11 +120,11 @@ int main(int argc, char* argv[])
   int degree ;
   int sliceDirection ;
   vnl_vector<double> coefficientVector ;
-  std::vector<double> classMeans ;
-  std::vector<double> classSigmas ;
+  itk::Array<double> classMeans ;
+  itk::Array<double> classSigmas ;
   int maximumIteration ; 
   double initialRadius ;
-  double grow ;
+  double growth ;
   double shrink ;
 
   bool usingSlabIdentification ;
@@ -148,8 +148,8 @@ int main(int argc, char* argv[])
 
       // get optimizer options
       maximumIteration = options.GetIntOption("max-iteration", 20, false) ;
-      grow = options.GetDoubleOption("grow", 1.05, false) ;
-      shrink = pow(grow, -0.25) ;
+      growth = options.GetDoubleOption("growth", 1.05, false) ;
+      shrink = pow(growth, -0.25) ;
       shrink = options.GetDoubleOption("shrink", shrink, false) ;
       initialRadius = options.GetDoubleOption("init-step-size", 1.02, false) ;
 
@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
 
   filter->IsBiasFieldMultiplicative(useLog) ;
   filter->SetTissueClassStatistics(classMeans, classSigmas) ;
-  filter->SetOptimizerGrowFactor(grow) ;
+  filter->SetOptimizerGrowthFactor(growth) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
   filter->SetOptimizerMaximumIteration(maximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;

@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "itkArray.h"
 
 class OptionList
 {
@@ -51,6 +52,12 @@ public:
                            std::vector<double>* args, 
                            bool required) 
     throw (RequiredOptionMissing) ;
+
+  int GetMultiDoubleOption(std::string tag, 
+                           itk::Array<double>* args, 
+                           bool required) 
+    throw (RequiredOptionMissing) ;
+
 
   double GetDoubleOption(std::string tag, double default_value, bool required) 
     throw (RequiredOptionMissing) ; 

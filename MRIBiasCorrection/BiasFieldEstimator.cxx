@@ -97,13 +97,13 @@ void printResult(Corrector::Pointer filter, OptionList& options)
 
   std::cout << " --degree " << filter->GetBiasFieldDegree() ;
 
-  Corrector::BiasField::DomainSizeType sizes = 
-    filter->GetBiasFieldDomainSize() ;
+  Corrector::BiasFieldType::DomainSizeType sizes = 
+                                        filter->GetBiasFieldDomainSize() ;
   std::cout << " --size " ;
   for (int i = 0 ; i < sizes.size() ; i++)
     std::cout << sizes[i] << " " ;
   
-  std::cout << "--grow " << filter->GetOptimizerGrowFactor() ;
+  std::cout << "--grow " << filter->GetOptimizerGrowthFactor() ;
   std::cout << " --shrink " << filter->GetOptimizerShrinkFactor() ;
   std::cout << " --max-iteration " << filter->GetOptimizerMaximumIteration();
   
@@ -117,9 +117,10 @@ void printResult(Corrector::Pointer filter, OptionList& options)
   std::cout << " --coefficient-length " << filter->GetNoOfBiasFieldCoefficients()
             << " --coefficients " ;
 
-  Corrector::BiasField::CoefficientVector coefficients = 
-    filter->GetEstimatedBiasFieldCoefficients() ;
-  Corrector::BiasField::CoefficientVector::iterator iter =
+  Corrector::BiasFieldType::CoefficientVector coefficients = 
+                                  filter->GetEstimatedBiasFieldCoefficients() ;
+
+  Corrector::BiasFieldType::CoefficientVector::iterator iter =
     coefficients.begin() ;
 
   while (iter != coefficients.end()) 
@@ -148,8 +149,8 @@ int main(int argc, char* argv[])
   bool useLog ;
   int degree ;
   vnl_vector<double> coefficientVector ;
-  std::vector<double> classMeans ;
-  std::vector<double> classSigmas ;
+  itk::Array<double> classMeans ;
+  itk::Array<double> classSigmas ;
   int maximumIteration ; 
   double initialRadius ;
   double grow ;
@@ -220,7 +221,7 @@ int main(int argc, char* argv[])
   // sets tissue classes' statistics for creating the energy function
   filter->SetTissueClassStatistics(classMeans, classSigmas) ;
   // setting standard optimizer parameters 
-  filter->SetOptimizerGrowFactor(grow) ;
+  filter->SetOptimizerGrowthFactor(grow) ;
   filter->SetOptimizerShrinkFactor(shrink) ;
   filter->SetOptimizerMaximumIteration(maximumIteration) ;
   filter->SetOptimizerInitialRadius(initialRadius) ;

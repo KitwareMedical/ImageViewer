@@ -65,8 +65,8 @@ int main(int argc, char* argv[])
 
   OptionList options(argc, argv) ;
 
-  std::vector<double> classMeans ;
-  std::vector<double> classSigmas ;
+  itk::Array <double> classMeans ;
+  itk::Array<double> classSigmas ;
   bool useLog ;
   int interval ;
   try

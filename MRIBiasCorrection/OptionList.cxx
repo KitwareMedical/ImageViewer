@@ -111,6 +111,35 @@ int OptionList::GetMultiDoubleOption(std::string tag,
   return arg_no ;
 }
 
+
+
+int OptionList::GetMultiDoubleOption(std::string tag, 
+                                     itk::Array<double>* args, 
+                                     bool required)
+  throw (RequiredOptionMissing) 
+{
+  // use a temporary std::vector<> because the size is not 
+  // known in advance
+  std::vector<double> tmp;
+  int arg_no =  GetMultiDoubleOption( tag, &tmp, required);
+  if( arg_no <= 0 )
+    {
+    return arg_no;
+    }
+ 
+  itk::Array<double> array( arg_no );
+  
+  for (int i = 0 ; i < arg_no ; i++)
+    {
+    array[i] = tmp[i];  
+    }
+  
+  *args = array;
+
+  return arg_no ;
+}
+
+
 double OptionList::GetDoubleOption(std::string tag, double default_value,
                                    bool required)
   throw (RequiredOptionMissing) 
