@@ -1,6 +1,5 @@
 #include "RegisterApplication.h"
 #include "itkMetaImageIOFactory.h"
-#include "itkPNGImageIO.h"
 #include "itkPNGImageIOFactory.h"
 
 RegisterApplication::RegisterApplication()
@@ -8,10 +7,6 @@ RegisterApplication::RegisterApplication()
   m_FixedImageReader = ImageReaderType::New() ;
   m_MovingImageReader = ImageReaderType::New() ;
   m_RegisteredImageWriter = ImageWriterType::New() ;
-
-  m_FixedImageReader->SetImageIO( itk::PNGImageIO::New() ) ;
-  m_MovingImageReader->SetImageIO(itk::PNGImageIO::New() ) ;
-  m_RegisteredImageWriter->SetImageIO(itk::PNGImageIO::New() ) ;
 
   m_FixedImageFlipper = ImageFlipperType::New() ;
   m_MovingImageFlipper = ImageFlipperType::New() ;
