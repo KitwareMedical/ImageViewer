@@ -390,8 +390,7 @@ template <class imType>
 
 
 template<class imType>
-SliceView<imType>::SliceView(int x, int y, int w, int h, const char * 
-                             l)
+SliceView<imType>::SliceView(int x, int y, int w, int h, const char * )
   {
   cX = x;
   cY = y;
@@ -713,8 +712,8 @@ void SliceView<imType>::sliceNum(unsigned int newSliceNum)
   if(newSliceNum>=cDimSize[cWinOrder[2]])
     newSliceNum = cDimSize[cWinOrder[2]]-1;
   cWinCenter[cWinOrder[2]] = newSliceNum;
-  if(newSliceNum < 0)
-    newSliceNum = 0;
+  //if(newSliceNum < 0)
+  //  newSliceNum = 0;
   
   if(cSliceNumCallBack != NULL)
     cSliceNumCallBack();
