@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =========================================================================*/
 #include "ShapeDetectApp.h"
+#include "AppUtility.h"
 
 #include "itkByteSwapper.h"
 #include "itkImageRegionIterator.h"
@@ -46,11 +47,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "itkRawImageWriter.h"
 #include "itkExceptionObject.h"
 
-#include "vnl/vnl_math.h"
-#include "vnl/vnl_quaternion.h"
-#include "vnl/vnl_diag_matrix.h"
+#include "itkFastMarchingImageFilter.h"
 
-#include <fstream>
+#include "vnl/vnl_math.h"
+
 #include <string>
 
 
@@ -67,18 +67,13 @@ ShapeDetectApp
 {
 
   m_InputImage = InputImageType::New();
-  m_Filter = FilterType::New();
-  m_ObjectVariance = 2500.0;
-  m_DiffMean = 1.0;
-  m_DiffVariance = 1.0;
-  m_Weight = 1.0;
+  m_EdgePotentialImage = ImageType::New();
+  m_SegmentationMask = ImageType::New();
+  m_DetectionFilter = DetectionFilterType::New();
+
+  m_Sigma = 1.0;
 
   m_DumpPGMFiles = true;
-
-  for( int j = 0; j < ImageDimension; j++ )
-    {
-    m_InputSpacing[j] = 1.0;
-    }
 
 }
 
@@ -140,7 +135,7 @@ ShapeDetectApp
 
   // Read in input image
   if( !this->ReadImage( m_InputFileName.c_str(), m_InputSize, 
-    m_InputSpacing, m_InputBigEndian, m_InputImage ) )
+    m_InputBigEndian, m_InputImage ) )
    {
     std::cout << "Error while reading in input volume: ";
     std::cout << m_InputFileName.c_str() << std::endl;
@@ -161,13 +156,16 @@ ShapeDetectApp
     {
     //dump out the input image
     std::cout << "Writing PGM files of the input volume." << std::endl;
-    if( !this->WritePGMFiles( m_InputImage, m_PGMDirectory.c_str(), "input" ))
+    if( !WritePGMFiles<InputImageType>( 
+        m_InputImage, m_PGMDirectory.c_str(), "input" ))
       { 
       std::cout << "Error while writing PGM files.";
       std::cout << "Please make sure the path is valid." << std::endl; 
       return; 
       }
     }
+
+  this->ComputeEdgePotentialMap();
 
   std::cout << std::endl << std::endl;
   // Set the initial seed
@@ -183,20 +181,11 @@ ShapeDetectApp
     m_Seed[j] = uNumbers[j];
     }
   
-  // Set the initial threshold
-  while(1)
-    {
-    std::cout << "Set initial threshold value: ";
-    std::cin.getline( currentLine, 150 );
-    if( sscanf( currentLine, "%f", &fValue ) >= 1 ) break;
-    std::cout << "Error: one floating point value expected." << std::endl;
-    } 
-  m_Threshold = fValue;
  
   // run the filter
-  std::cout << "Generating the fuzzy connectedness map." << std::endl;
-  this->ComputeMap();
-  this->WriteSegmentationImage();
+  std::cout << "Generating time crossing map." << std::endl;
+  this->ComputeTimeCrossingMap();
+
 
   while(1)
    {
@@ -217,8 +206,9 @@ ShapeDetectApp
           {
           m_Seed[j] = uNumbers[j];
           }
-         std::cout << "Re-generating the fuzzy connectedness map." << std::endl;
-         this->ComputeMap();
+         std::cout << "Re-generating time crossing map." << std::endl;
+         this->ComputeTimeCrossingMap();
+         this->ThresholdTimeCrossingMap();
          this->WriteSegmentationImage();
          break;
       case 't' :
@@ -228,8 +218,8 @@ ShapeDetectApp
           continue;
           }
          m_Threshold = fValue;;
-         std::cout << "Re-thresholding the map." << std::endl;
-         this->ComputeSegmentationImage();
+         std::cout << "Re-thresholding time crossing map." << std::endl;
+         this->ThresholdTimeCrossingMap();
          this->WriteSegmentationImage();
          break;
         break;
@@ -253,34 +243,70 @@ ShapeDetectApp
 
 void
 ShapeDetectApp
-::ComputeMap()
+::ComputeTimeCrossingMap()
 {
 
-  m_Filter->SetInput( m_InputImage );
-  m_Filter->SetSeed( m_Seed );
+  // connect edge potential map
+  m_DetectionFilter->SetSpeedImage( m_EdgePotentialImage );
+  
+  // setup trial points
+  typedef DetectionFilterType::NodeType NodeType;
+  typedef DetectionFilterType::NodeContainer NodeContainer;
 
-  m_ObjectMean = double( m_InputImage->GetPixel( m_Seed ) );
+  NodeContainer::Pointer trialPoints = NodeContainer::New();
 
-	m_Filter->SetParameters( m_ObjectMean, m_ObjectVariance,
-    m_DiffMean, m_DiffVariance, m_Weight );
+  NodeType node;
+  
+  node.value = 0.0;
+  node.index = m_Seed;
+  trialPoints->InsertElement(0, node);
+  
+  m_DetectionFilter->SetTrialPoints( trialPoints );
 
-	m_Filter->SetThreshold( m_Threshold );
+  // specify the size of the output image
+  m_DetectionFilter->SetOutputSize( m_InputImage->GetBufferedRegion().GetSize() );
 
-  m_Filter->ExcuteSegment();
- 
+  // update the marcher
+  m_DetectionFilter->Update();
+
 }
 
 
 void
 ShapeDetectApp
-::ComputeSegmentationImage()
+::ThresholdTimeCrossingMap()
 {
 
-  m_Filter->SetThreshold( m_Threshold );
-  m_Filter->MakeSegmentObject();
+  // threshold the time crossing map
+  m_SegmentationMask->SetLargestPossibleRegion(
+    m_InputImage->GetLargestPossibleRegion() );
+  m_SegmentationMask->SetBufferedRegion(
+    m_InputImage->GetBufferedRegion() );
+  m_SegmentationMask->Allocate();
+
+  typedef itk::ImageRegionIterator<ImageType>
+   Iterator;
+  Iterator inIter( m_DetectionFilter->GetOutput(),
+    m_DetectionFilter->GetOutput()->GetBufferedRegion() );
+
+  Iterator outIter( m_SegmentationMask,
+    m_SegmentationMask->GetBufferedRegion() );
+
+  while( !inIter.IsAtEnd() )
+    {
+    if( inIter.Get() <= m_Threshold )
+      {
+      outIter.Set( 1 );
+      }
+    else
+      {
+      outIter.Set( 0 );
+      }
+    ++inIter;
+    ++outIter;
+    }
 
 }
-
 
 void
 ShapeDetectApp
@@ -290,7 +316,7 @@ ShapeDetectApp
    if( m_DumpPGMFiles )
     {
     //dump out the segmented image
-    if( !this->WritePGMFiles( m_Filter->GetOutput(), m_PGMDirectory.c_str(), "seg" ) )
+    if( !WritePGMFiles<ImageType>( m_SegmentationMask, m_PGMDirectory.c_str(), "seg" ) )
       { 
       std::cout << "Error while writing PGM files.";
       std::cout << "Please make sure the path is valid." << std::endl; 
@@ -300,12 +326,81 @@ ShapeDetectApp
 
 }
 
+
+void
+ShapeDetectApp
+::ComputeEdgePotentialMap()
+{
+
+  // compute derivative of the input image
+  DerivativeFilterPointer deriv = DerivativeFilterType::New();
+  deriv->SetInput( m_InputImage );
+  deriv->SetSigma( m_Sigma );
+  deriv->Update();
+
+  // allocate memory for the map
+  m_EdgePotentialImage->SetLargestPossibleRegion(
+    m_InputImage->GetLargestPossibleRegion() );
+  m_EdgePotentialImage->SetBufferedRegion(
+    m_InputImage->GetBufferedRegion() );
+  m_EdgePotentialImage->Allocate();
+
+  //****
+  //FIXME - use an itk filter once API are consistent
+  //****
+  // compute the magnitude 
+  typedef itk::ImageRegionIterator<DerivativeImageType> 
+    DerivativeIterator;
+  typedef itk::ImageRegionIterator<ImageType>
+    ImageIterator;
+
+  DerivativeIterator derivIter( deriv->GetOutput(),
+    deriv->GetOutput()->GetBufferedRegion() );
+  ImageIterator mapIter( m_EdgePotentialImage,
+    m_EdgePotentialImage->GetBufferedRegion() );
+
+  while( !derivIter.IsAtEnd() )
+    {
+
+    float accum = 0;
+    VectorType grad = derivIter.Get();
+
+    for( int j = 0; j < ImageDimension; j++ )
+      {
+      accum += vnl_math_sqr( grad[j] );
+      }
+    
+    accum = vnl_math_sqrt( accum );
+//    mapIter.Set( 1.0 / ( 1.0 + accum ) );
+    mapIter.Set( exp( -1.0 * accum ) );
+
+    ++derivIter;
+    ++mapIter;
+
+    } 
+
+
+  if( m_DumpPGMFiles )
+    {
+    //dump out the input image
+    std::cout << "Writing PGM files of the edge potential map." << std::endl;
+    if( !WritePGMFiles<ImageType>( 
+        m_EdgePotentialImage, m_PGMDirectory.c_str(), "map" ))
+      { 
+      std::cout << "Error while writing PGM files.";
+      std::cout << "Please make sure the path is valid." << std::endl; 
+      return; 
+      }
+    }    
+
+}
+
+
 bool 
 ShapeDetectApp
 ::ReadImage(
 const char * filename,
 const SizeType& size,
-const double * spacing,
 bool  bigEndian,
 InputImageType * imgPtr
 )
@@ -321,15 +416,6 @@ InputImageType * imgPtr
   imgPtr->SetLargestPossibleRegion( region );
   imgPtr->SetBufferedRegion( region );
   imgPtr->Allocate();
-
-  double origin[ImageDimension];
-  for( int j = 0; j < ImageDimension; j++ )
-    {
-    origin[j] = -0.5 * ( double(size[j]) - 1.0 ) * spacing[j];
-    }
-
-  imgPtr->SetSpacing( spacing );
-  imgPtr->SetOrigin( origin ); 
 
   unsigned int numPixels = region.GetNumberOfPixels(); 
 
@@ -364,88 +450,4 @@ InputImageType * imgPtr
 
 }
 
-bool
-ShapeDetectApp
-::WritePGMFiles(
-InputImageType * input, 
-const char * dirname,
-const char * basename )
-{
 
-  // go through the image and compute the offset and scale
-  // to make it normalized to between 0 and 255
-  typedef itk::ImageRegionIterator<InputImageType>
-   InputIterator;
-
-  InputIterator inIter( input, input->GetBufferedRegion() );
-
-  inIter = inIter.Begin();
-  InputPixelType minValue = inIter.Get();
-  InputPixelType maxValue = minValue;
-  while( !inIter.IsAtEnd() )
-    {
-    InputPixelType value = inIter.Get();
-    if( value < minValue ) minValue = value;
-    if( value > maxValue ) maxValue = value;
-    ++inIter;
-    }
-
-  double scale = double( maxValue - minValue );
-  if( !scale ) scale = 1.0;
-  double offset = double(minValue);
-  
-  // write image out to pgm files
-  char filename[256];
-  char buffer[50];
-  unsigned long ncol = input->GetBufferedRegion().GetSize()[0];
-  unsigned long nrow = input->GetBufferedRegion().GetSize()[1];
-  unsigned long nslice = input->GetBufferedRegion().GetSize()[2];
-
-  sprintf(buffer,"P5 %ld %ld 255\n", ncol, nrow );
-  unsigned int nchar = strlen(buffer);
-  unsigned long npixels = nrow * ncol;
-
-  inIter = inIter.Begin();
-
-  for( unsigned int k = 0; k < nslice; k++ )
-    {
-    if( k < 10 )
-      {
-      sprintf(filename,"%s/%s00%d.pgm", dirname, basename, k );
-      }
-    else if( k < 100 )
-      {
-      sprintf(filename, "%s/%s0%d.pgm", dirname, basename, k );
-      }
-    else
-      {
-      sprintf(filename, "%s/%s%d.pgm", dirname, basename, k );
-      }
-
-    // open up the stream  
-    std::ofstream imgStream( filename, std::ios::out | std::ios::binary );
-  
-    if( !imgStream.is_open() )
-      {
-      return false;
-      }
-
-    // writer the header
-    imgStream.write( buffer, nchar );
-
-    // write the bytes
-    for( unsigned long i = 0; i < npixels; i++ )
-      {
-      double value = (double(inIter.Get()) - offset) / scale * 255;
-      char num = vnl_math_rnd( value );
-      imgStream.put( num );
-      ++inIter;
-      }
-
-    // close this file
-    imgStream.close();
-    
-    }
-
-  return true;
-}

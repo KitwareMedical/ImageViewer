@@ -42,8 +42,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __ShapeDetectApp_h
 
 #include "itkPhysicalImage.h"
-#include "itkFuzzyConnectednessImageFilter.h"
+#include "itkCovariantVector.h"
+#include "itkGradientRecursiveGaussianImageFilter.h"
+#include "itkFastMarchingImageFilter.h"
 #include <string>
+
 
 /**
  * \class ShapeDetectApp
@@ -68,16 +71,16 @@ public:
   /**
    * InputImageType is the raw image type
    */
-  typedef itk::PhysicalImage<InputPixelType,ImageDimension>
+  typedef itk::Image<InputPixelType,ImageDimension>
     InputImageType;
   typedef InputImageType::Pointer InputImagePointer;
 
   /**
-   * BinaryImageType is the binary image type
+   * ImageType is the internal image type
    */
-  typedef itk::PhysicalImage<bool,ImageDimension>
-    BinaryImageType;
-  typedef BinaryImageType::Pointer BinaryImagePointer;
+  typedef itk::Image<float,ImageDimension>
+    ImageType;
+  typedef ImageType::Pointer ImagePointer;
 
   /**
    * SizeType is the image size type
@@ -90,11 +93,25 @@ public:
   typedef InputImageType::IndexType IndexType;
 
   /**
-   * Fuzzy connectedness filter type
+   * DerivativeImageType is the derivative image type
    */
-  typedef itk::FuzzyConnectednessImageFilter<
-    InputImageType,InputImageType>  FilterType;
-  typedef FilterType::Pointer FilterPointer;
+  typedef itk::CovariantVector<float,ImageDimension> VectorType;
+  typedef itk::Image<VectorType, ImageDimension>
+    DerivativeImageType;
+
+  /**
+   * Derivative filter type
+   */
+  typedef itk::GradientRecursiveGaussianImageFilter<
+    InputImageType,DerivativeImageType,double>  DerivativeFilterType;
+  typedef DerivativeFilterType::Pointer DerivativeFilterPointer;
+
+  /**
+   * Shape Detection filter type
+   */
+  typedef itk::FastMarchingImageFilter<ImageType,ImageType> DetectionFilterType;
+  typedef DetectionFilterType::Pointer DetectionFilterPointer;
+    
 
   /**
    * Constructors
@@ -119,7 +136,6 @@ public:
    { return m_InputImage; }
 
 
-
 private:
 
    /**
@@ -133,11 +149,6 @@ private:
    SizeType             m_InputSize;
 
    /**
-    * Input image spacing
-    */
-   double               m_InputSpacing[ImageDimension];
-
-   /**
     * Input big endian flag
     */
    bool                 m_InputBigEndian;
@@ -146,31 +157,6 @@ private:
     * Input image
     */
    InputImagePointer    m_InputImage;
-
-
-   /**
-    * Fuzzy connectedness filter
-    */
-   FilterPointer        m_Filter;
-
-   /**
-    * The seed
-    */
-   IndexType            m_Seed;
-
-   /**
-    * Threshold value
-    */
-   double               m_Threshold;
-
-   /**
-    * Parameters
-    */
-   double               m_ObjectMean;
-   double               m_ObjectVariance;
-   double               m_DiffMean;
-   double               m_DiffVariance;
-   double               m_Weight;
 
    /**
     * Dump pgm files flag
@@ -183,25 +169,40 @@ private:
    std::string          m_PGMDirectory;
 
    /**
+    * Seed point
+    */
+   IndexType            m_Seed;
+
+   /**
+    * Time crossing threshold
+    */
+   double               m_Threshold;
+
+   /**
+    * Sigma for computing derivative of gaussian
+    */
+   double               m_Sigma;
+
+   /**
+    * Edge potential map
+    */
+   ImagePointer         m_EdgePotentialImage;
+
+   /**
+    * Shape detection filter
+    */
+   DetectionFilterPointer  m_DetectionFilter;
+
+   /**
+    * Segmentation mask
+    */
+   ImagePointer          m_SegmentationMask;
+
+   /**
     * Read in an image
     */
-   bool ReadImage( const char *, const SizeType&, const double *, bool,
+   bool ReadImage( const char *, const SizeType&, bool,
     InputImageType * );
-
-   /**
-    * Compute the fuzzy connectedness map
-    */
-   void ComputeMap();
-
-   /**
-    * Compute segmentation image
-    */
-   void ComputeSegmentationImage();
-
-   /**
-    * Write out segmentation image
-    */
-   void WriteSegmentationImage();
 
    /**
     * Initialize
@@ -209,9 +210,24 @@ private:
    void Initialize();
 
    /**
-    * Write PGM files
+    * Compute edge potential map
     */
-   bool WritePGMFiles(InputImageType *, const char *, const char * );
+   void ComputeEdgePotentialMap();
+
+   /**
+    * Compute time crossing map using fast marching
+    */
+   void ComputeTimeCrossingMap();
+
+   /**
+    * Threshold time crossing map
+    */
+   void ThresholdTimeCrossingMap();
+
+   /**
+    * Write segmentation mask
+    */
+  void WriteSegmentationImage();
 
   
 };
