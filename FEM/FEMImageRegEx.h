@@ -21,17 +21,15 @@
 
 #include "itkImage.h"
 #include "itkFileIOToImageFilter.h"
-#include "itkImageFileReader.h"
-/* Meta Image stuff 
- #include "itkFileIOMetaImage.h"
- #include "itkWriteMetaImage.h"
- #include "itkMetaImageIOFactory.h"
- */
+#include "itkImageFileReader.h" 
 
 #include "itkImageFileWriter.h"
 #include "itkImageFileReader.h"
 #include "itkRawImageIO.h"
 #include "itkRawImageWriter.h"
+#include "itkCannyEdgeDetectionImageFilter.h"
+#include "itkSobelEdgeDetectionImageFilter.h"
+#include "itkZeroCrossingBasedEdgeDetectionImageFilter.h"
 
 #include "itkVector.h"
 #include "itkDiscreteGaussianImageFilter.h"
@@ -46,6 +44,7 @@
 #include "itkTranslationTransform.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "vnl/vnl_vector.h"
+#include "vnl/vnl_math.h"
 #include "vnl/vnl_vector_fixed.h"
 
 #include <iostream>

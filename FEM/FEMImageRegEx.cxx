@@ -131,29 +131,58 @@ void ImageRegEx::RunRegistration()
 //  ReadImages(); //FIXME
   WarpImage();
 
-  std::cout<<"\n E " << m_E << " dt " << m_dT << "\n";
+  std::cout<<"\n E " << m_E << " dt " << m_dT << " rho " << m_Rho << "\n";
   
 }
 
 void ImageRegEx::ReadImages()
 {
   // DEFINE INPUT FILES
-    // Register on factory capable of creating MetaImage readers
-  itk::ImageFileReader<ImageType>::Pointer reffilter 
-                                = itk::ImageFileReader<ImageType>::New();
-  itk::ImageFileReader<ImageType>::Pointer tarfilter 
-                                = itk::ImageFileReader<ImageType>::New();
-  
-  // Put Your Factory Here.
-  //itk::MetaImageIOFactory::RegisterOneFactory();
-    
-  reffilter->SetFileName(m_ReferenceFileName); 
-  reffilter->Update();
-  tarfilter->SetFileName(m_TargetFileName); 
-  tarfilter->Update();    
  
-  reffilter->Update();
-  tarfilter->Update();
+  const unsigned int nx = m_Nx;
+  const unsigned int ny = m_Ny;
+
+  // Read a Raw File
+  typedef  itk::ImageFileReader< ImageType >      FileSourceType;
+  typedef  itk::RawImageIO<ImageType::PixelType,ImageType::ImageDimension>   RawReaderType;
+
+
+  FileSourceType::Pointer reffilter = FileSourceType::New();
+  reffilter->SetFileName( m_ReferenceFileName );
+  FileSourceType::Pointer tarfilter = FileSourceType::New();
+  tarfilter->SetFileName( m_TargetFileName );
+
+  RawReaderType::Pointer  rawReader  = RawReaderType::New();
+  rawReader->SetDimensions( 0, nx );
+  rawReader->SetDimensions( 1, ny );
+
+  reffilter->SetImageIO( rawReader );
+  tarfilter->SetImageIO( rawReader );
+
+  try
+    {
+    reffilter->Update();
+    }
+  catch( itk::ExceptionObject & e )
+    {
+    std::cerr << "Exception caught during reference file reading " << std::endl;
+    std::cerr << e << std::endl;
+    return;
+    }
+  try
+    {
+    tarfilter->Update();
+    }
+  catch( itk::ExceptionObject & e )
+    {
+    std::cerr << "Exception caught during target file reading " << std::endl;
+    std::cerr << e << std::endl;
+    return;
+    }
+  
+  std::cout << "File succesfully read ! " << std::endl;
+
+  // now set variables
   m_RefImg=reffilter->GetOutput();
   m_TarImg=tarfilter->GetOutput();
   m_Rregion = m_RefImg->GetLargestPossibleRegion();
@@ -387,9 +416,9 @@ if (m_SearchForMinAtEachLevel) m_MinE=9.e9;
    //m_Solver.ZeroVector(2);
    //m_Solver.ZeroVector(3);
    // uncomment to write out every deformation SLOW due to interpolating vector field everywhere
-   //GetVectorm_Field();
-   //WarpImage();
-   //WriteWarpedImage("E:\\Avants\\MetaImages\\result");
+   GetVectorField();
+   WarpImage();
+   WriteWarpedImage("E:\\Avants\\MetaImages\\result");
   } 
   
 }
@@ -411,7 +440,6 @@ void ImageRegEx::GetVectorField()
   m_WarpedImage = ImageType::New();
   m_WarpedImage->SetLargestPossibleRegion( m_Wregion );
   m_WarpedImage->SetBufferedRegion( m_Wregion );
-//  m_WarpedImage->Allocate(); 
 
   Element::ArrayType* el = &(m_Solver.el);
   vnl_vector_fixed<double,2> Pos(0.0);  // solution at the point
@@ -440,7 +468,7 @@ void ImageRegEx::GetVectorField()
       for (unsigned int ii=0; ii < ImageDimension; ii++)
       { 
         rindex[ii]=(long int) Gpt[ii];
-        disp[ii] =(Float) Sol[ii];
+        disp[ii] =(Float) 1.*Sol[ii];
         tindex[ii]=(long int) rindex[ii]+(long int)(disp[ii]+0.5);
       }
       
@@ -494,35 +522,50 @@ void ImageRegEx::WriteWarpedImage(const char* fname)
 void ImageRegEx::MultiResSolve()
 {
      
-//  typedef DiscreteGaussianImageFilter<ImageType, ImageType>  SmootherType;
-  typedef MeanImageFilter<ImageType, ImageType>  SmootherType;
+  typedef DiscreteGaussianImageFilter<ImageType, ImageType>  SmootherType;
+//  typedef MeanImageFilter<ImageType, ImageType>  SmootherType;
   SmootherType::Pointer filter = SmootherType::New();
+  //itk::CannyEdgeDetectionImageFilter<ImageType, ImageType>::Pointer  edgefilter = itk::CannyEdgeDetectionImageFilter<ImageType, ImageType>::New();
+  //itk::SobelEdgeDetectionImageFilter<ImageType, ImageType>::Pointer edgefilter
+  //  = itk::SobelEdgeDetectionImageFilter<ImageType, ImageType>::New();
+  itk::ZeroCrossingBasedEdgeDetectionImageFilter<ImageType, ImageType>::Pointer
+    edgefilter = itk::ZeroCrossingBasedEdgeDetectionImageFilter<ImageType, ImageType>::New();
+  
+  edgefilter->SetVariance(1.0f);
+  edgefilter->SetMaximumError(.01f);
 
   ImageType::SizeType neighRadius;
   neighRadius[0] = 1;
   neighRadius[1] = 1;
-  filter->SetRadius(neighRadius);
+  //filter->SetRadius(neighRadius);
 
   // run the algorithm
-//  filter->SetVariance(1.0f);
-//  filter->SetMaximumError(.01f);
+  filter->SetVariance(1.0f);
+  filter->SetMaximumError(.01f);
       
   float smoothing;
   // run the algorithm
   for (smoothing=m_MaxSmoothing; smoothing >= m_MinSmoothing; smoothing/=m_SmoothingStep)
   {
 
-    neighRadius[0] =(unsigned long) smoothing;
-    neighRadius[1] =(unsigned long) smoothing;
-    filter->SetRadius(neighRadius);
+//    neighRadius[0] =(unsigned long) smoothing;
+//    neighRadius[1] =(unsigned long) smoothing;
+//    filter->SetRadius(neighRadius);
 
-    //filter->SetVariance(smoothing);
+    filter->SetVariance(smoothing);
+    edgefilter->SetVariance(smoothing);
 
     filter->SetInput(m_TarImg);
     filter->Update();
+
+    edgefilter->SetInput(m_TarImg);
+    edgefilter->Update();    
+
     m_Load->SetMetricTargetImage(filter->GetOutput());    
     filter->SetInput(m_RefImg);
     filter->Update();
+    edgefilter->SetInput(m_RefImg);
+    edgefilter->Update();    
     m_Load->SetMetricReferenceImage(filter->GetOutput());
     IterativeSolve();
   }
@@ -530,7 +573,7 @@ void ImageRegEx::MultiResSolve()
   m_Load->SetMetricTargetImage(m_TarImg); 
   m_Load->SetMetricReferenceImage(m_RefImg);
   IterativeSolve();
-//  if (smoothing <= m_MinSmoothing) m_RefImg=filter->GetOutput(); // //FIXME for testing
+  //if (smoothing <= m_MinSmoothing) m_TarImg=edgefilter->GetOutput(); // //FIXME for testing
 
   return;
 }
@@ -541,42 +584,52 @@ void ImageRegEx::MultiResSolve()
 
 int main() 
 {
-  const char* m_ReferenceFileName="image1";
-  const char* m_TargetFileName="image2";
+  const char* m_ReferenceFileName;
+  const char* m_TargetFileName;
 
   itk::fem::ImageRegEx X; // Declare the registration clasm_Solver.
-  X.m_Nx=64;   // set image size
-  X.m_Ny=64;
- 
-  X.SetReferenceFile(m_ReferenceFileName);
-  X.SetTargetFile(m_TargetFileName);
  
   X.m_Solver.SetAlpha(0.5);
   X.SetDescentDirectionMinimize();// for Mean Squares
   X.DoLineSearch(true);// Perform line search at each iteration
 
 
-//  std::cout << "input E  , m_Maxiters , dt , rho :" ;  
-//  std::cin >> X.m_E >> X.m_Maxiters >> X.m_dT >> X.m_Rho; 
-  
 /* typically Set by user interaction */  
   X.SetMaximumIterations(5);// Iterations at each resolution
   X.SetTimeStep(0.01);// Time step (controls solution size)
   X.SetElasticity(1.0);// Physical property of elasticity
   X.SetRho(1.0);// Controls damping
 
+  std::cout << "input E  , m_Maxiters , dt , rho :" ;  
+  std::cin >> X.m_E >> X.m_Maxiters >> X.m_dT >> X.m_Rho; 
   
-  X.SetMeshResolution(2);//  Number of voxels per element
+//    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa_seg2.im"; 
+//    m_TargetFileName="E:\\Avants\\MetaImages\\callosa_seg1.im"; 
+//    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt_shift.im";  
+//    m_ReferenceFileName="E:\\Avants\\MetaImages\\callosa1_dt.im"; 
+//    m_TargetFileName="E:\\Avants\\MetaImages\\callosa2_dt.im"; 
+  X.m_Nx=64;   // set image size
+  X.m_Ny=64;
+ 
+//  m_ReferenceFileName="E:\\Avants\\MetaImages\\gauss_im1.im"; 
+//  m_TargetFileName="E:\\Avants\\MetaImages\\gauss_im2.im";
+  m_ReferenceFileName="E:\\Avants\\MetaImages\\brain_slice1smth.im"; // good params E=1 its=10 dt=1. rho= 1.e7
+  m_TargetFileName="E:\\Avants\\MetaImages\\brain_slice2smth.im";
+    
+  X.SetReferenceFile(m_ReferenceFileName);
+  X.SetTargetFile(m_TargetFileName);
+  
+  X.SetMeshResolution(8);//  Number of voxels per element
 
   X.SetNumberOfIntegrationPoints(2);// Resolution of energy integration
-  X.SetWidthOfMetricRegion(1);
-  X.DoMultiRes(true);// Use multi-resolution strategy
+  X.SetWidthOfMetricRegion(2);
+  X.DoMultiRes(false);// Use multi-resolution strategy
   X.DoSearchForMinAtEachResolution(true);// Minimize at each resolution
-  X.m_MaxSmoothing=16.0; // set multi-res parameters
-  X.m_MinSmoothing=1.;
-  X.m_SmoothingStep=2.0;
+  X.m_MaxSmoothing=12.0; // set multi-res parameters
+  X.m_MinSmoothing=12.;
+  X.m_SmoothingStep=4.0;
   X.RunRegistration();
-  X.WriteWarpedImage("result");
+  X.WriteWarpedImage("E:\\Avants\\MetaImages\\result");
 
   return 0;
 }
