@@ -20,6 +20,7 @@
 #include "RawVolumeReader.h"
 #include "PGMVolumeWriter.h"
 #include <string>
+#include <stdio.h>
 
 
 FuzzyConnectApp
