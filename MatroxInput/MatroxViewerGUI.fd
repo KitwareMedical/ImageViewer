@@ -1,0 +1,46 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0100 
+header_name {.h} 
+code_name {.cxx}
+class MatroxViewerGUI {open : {public ISIS::MatroxViewerBase}
+} {
+  Function {MatroxViewerGUI()} {open
+  } {
+    Fl_Window controlWindow {
+      label {Matrox Input Example} open selected
+      xywh {435 380 520 405}
+      code0 {\#include "MatroxViewerBase.h"} visible
+    } {
+      Fl_Box m_FlRenderWindowInteractor {
+        label {Matrox Video Input}
+        xywh {20 25 385 360} box DOWN_FRAME align 1
+        code0 {\#include "vtkFlRenderWindowInteractor.h"}
+        class vtkFlRenderWindowInteractor
+      }
+      Fl_Button {} {
+        label Load
+        callback {this->LoadImageFromFile();}
+        xywh {425 264 75 25}
+      }
+      Fl_Button {} {
+        label Stop
+        callback {this->Stop();}
+        xywh {425 180 75 25}
+      }
+      Fl_Button {} {
+        label Quit
+        callback {this->Quit();}
+        xywh {425 340 75 25}
+      }
+      Fl_Button {} {
+        label Grab
+        callback {this->Grab();}
+        xywh {425 140 75 25}
+      }
+    }
+  }
+  Function {~MatroxViewerGUI()} {open
+  } {}
+  Function {ShowCurvatureFlowImage( void )} {return_type {virtual void}
+  } {}
+} 
