@@ -17,11 +17,10 @@
 #ifndef _RawVolumeReader_txx
 #define _RawVolumeReader_txx
 
-//#include "itkImageFileReader.h"
-//#include "itkRawImageIO.h"
+#include "itkImageFileReader.h"
+#include "itkRawImageIO.h"
 
 #include "RawVolumeReader.h"
-#include "itkByteSwapper.h"
 
 namespace itk
 {
@@ -45,7 +44,6 @@ RawVolumeReader<TPixel,TImage>
 ::Execute()
 {
 
-/*
   typedef itk::RawImageIO<PixelType,ImageDimension> IOType;
   typename IOType::Pointer io = IOType::New();
 
@@ -74,58 +72,6 @@ RawVolumeReader<TPixel,TImage>
   reader->Update();
 
   m_Image = reader->GetOutput();
-*/
-
-
-/*
- * Old code waiting for RawImageIO to be fixed 
- */
-
-  // allocate memory in the image
-  typename ImageType::RegionType region;
-  region.SetSize( m_Size );
-
-  m_Image = ImageType::New();
-  m_Image->SetLargestPossibleRegion( region );
-  m_Image->SetBufferedRegion( region );
-  m_Image->Allocate();
-
-  m_Image->SetSpacing( m_Spacing.GetDataPointer() );
-
-  unsigned int numPixels = region.GetNumberOfPixels(); 
-
-  // open up the file
-  std::ifstream imgStream( m_FileName.c_str(), std::ios::binary | std::ios::in );
-  
-  if( !imgStream.is_open() )
-    {
-    ExceptionObject err(__FILE__, __LINE__);
-    err.SetLocation( "Execute()" );
-    err.SetDescription( "Can't open file." );
-    throw err;
-    }
-
-  // read the file
-  // NOTE: VC++ requires below that buffer be cast to (char *) rather
-  // than the more sensible (unsigned char *).
-  PixelType * buffer = m_Image->GetBufferPointer();
-  imgStream.read( (char *) buffer,
-                  numPixels * sizeof(PixelType) );
-
-  // clost the file
-  imgStream.close();
-
-
-  // swap bytes if neccessary
-  if( m_BigEndian )
-    {
-    itk::ByteSwapper<PixelType>::SwapRangeFromSystemToBigEndian( buffer, numPixels );
-    }
-  else
-    {
-    itk::ByteSwapper<PixelType>::SwapRangeFromSystemToLittleEndian( buffer, numPixels );
-    }
-
 
 }
 
