@@ -1,0 +1,44 @@
+
+
+     2D Curves Extractor Application
+
+
+WHAT IS THIS ?
+
+This program is an example of a small 
+application based on Insight.
+It includes image display, GUI, and IO.
+
+This program detects and extracts curves
+from 2D images. The extraction method is
+based on the computation of the Hessian
+matrix.
+
+
+WHAT DO I NEED TO RUN IT ?
+
+As GUI and visualization are not part of
+Insight, external libraries are required
+for this program. The GUI is implemented
+using FLTK (the Fast Light Toolkit) that
+can be freely downloaded from 
+http://www.fltk.org.
+
+FLTK is multiplatform and will run without
+trouble on Linux, IRIX and Windows 95/NT 
+and SunOS.
+
+This program also require some of the 
+code in the /Unsupported directory, in 
+particular the classes for read/write image
+in MetaImage format, and the base classes
+for display. This code is not built by 
+default, so you should have to activate it.
+
+
+
+We appreciate your feedback.
+Please send your comments to the Insight mailing list,
+or to:  ibanez@cs.unc.edu.
+
+
