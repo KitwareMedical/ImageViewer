@@ -45,9 +45,6 @@ ENDIF(FEM_VISUALIZATION)
 SOURCE_FILES(FEMImageRegEx_SRCS
   FEMImageRegEx.cxx
 )
-SOURCE_FILES(FEMImageRegLMEx_SRCS
-  FEMImageRegLMEx.cxx
-)
 
 # Header and template source files for FEM project
 # we can only include them if compiling on windows
@@ -55,9 +52,6 @@ IF(NOT UNIX)
 IF(WIN32)
 SOURCE_FILES(FEMImageRegEx_SRCS 
   FEMImageRegEx.h
-)
-SOURCE_FILES(FEMImageRegLMEx_SRCS
-  FEMImageRegLMEx.h
 )
 ENDIF(WIN32)
 ENDIF(NOT UNIX)
