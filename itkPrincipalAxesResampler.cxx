@@ -28,6 +28,7 @@ integer.  (But see below for hooks to change these parameters.)
 #include <stdlib.h>
 
 #include "itkAffineTransform.h"
+#include "itkByteSwapper.h"
 #include "itkPhysicalImage.h"
 #include "itkImageMomentsCalculator.h"
 #include "itkSimpleImageRegionIterator.h"
@@ -93,7 +94,7 @@ main(int argc, char *argv[])
     std::cout << "Reading image file." << std::endl;
     ImageIndexType index;        // Index to current pixel
     unsigned long point[3];      // Location of current pixel
-    unsigned char buff[2*ImageWidth];  // Input/output buffer
+    PixelType buff[ImageWidth];  // Input/output buffer
     PixelType value;             // Value of pixel
     size_t count;
 #if 1       // Version using explicit loops
@@ -101,23 +102,20 @@ main(int argc, char *argv[])
         point[2] = slice;
         for (long row = 0; row < ImageHeight; row++) {
             point[1] = row;
-            count = fread(buff, 1, 2*ImageWidth, infile);
-            if (count != 2*ImageWidth) {
+            count = fread(buff, sizeof(PixelType), ImageWidth, infile);
+            if (count != ImageWidth) {
                 fprintf(stderr, "Error reading input file\n");
                 exit(EXIT_FAILURE); 
-            }                
+            }
+            itk::ByteSwapper<PixelType>::SwapRangeBE(buff, ImageWidth);
             for (long col = 0; col < ImageWidth; col++) {
                 point[0] = col;
                 index.SetIndex(point);
-                if (bigend)
-                    value = (buff[2*col+0] << 8) + buff[2*col+1];
-                else
-                    value = (buff[2*col+1] << 8) + buff[2*col+0];
-                image->SetPixel(index, value);
+                image->SetPixel(index, buff[col]);
             }
         }
     }
-#else    // Broken version using iterators
+#else    // Broken and obsolete version using iterators
     unsigned char bytes[2];      // First and second bytes of pixel
     region = image->GetRequestedRegion();
     ImageIteratorType iterator(image, region);
@@ -231,18 +229,11 @@ main(int argc, char *argv[])
             for (long col = 0; col < ImageWidth; col++) {
                 point[0] = col;
                 index.SetIndex(point);
-                value = resamp->GetPixel(index);
-                if (bigend) {
-                    buff[2*col+0] = value >> 8;
-                    buff[2*col+1] = value & 0xff;
-                }
-                else {
-                    buff[2*col+1] = value >> 8;
-                    buff[2*col+0] = value & 0xff;
-                }
+                buff[col] = resamp->GetPixel(index);
             }
-            count = fwrite(buff, 1, 2*ImageWidth, outfile);
-            if (count != 2*ImageWidth) {
+            itk::ByteSwapper<PixelType>::SwapRangeBE(buff, ImageWidth);
+            count = fwrite(buff, 2, ImageWidth, outfile);
+            if (count != ImageWidth) {
                 fprintf(stderr, "Error writing output file\n");
                 exit(EXIT_FAILURE); }
         }
