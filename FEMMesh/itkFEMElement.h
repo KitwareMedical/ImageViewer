@@ -55,8 +55,110 @@ namespace fem {
  */
 class FEMElement {
 
-public:
- 
+  /**
+   * Float type used in Node and derived classes
+   */
+  typedef Node::Float Float;
+
+  /**
+   * Class type used in Node and derived classes to specify
+   * displacements is redefined here for easier access.
+   */
+  typedef Node::Displacement Displacement;
+
+  /**
+   * Return the number of degrees of freedom (DOF) for a derived element class
+   */
+  virtual int N() const = 0;
+
+  /**
+   * Pure virtual function that returns a pointer to an allocated memory that stores displacement
+   * of i-th degree of freedom (DOF) of this element.
+   *
+   * Number of different pointers in a whole system determines global number of DOF. If two
+   * pointers in two different elements point to the same location, this means that those two
+   * elements share that DOF and are connected together.
+   *
+   * Normally this function is overriden by defining a simple switch statement that returns
+   * pointers to members in nodes object that define the element. If an error occurs
+   * (when i is out of range for example), derived function should call
+   * implementation in base class (this one).
+   */
+  virtual Displacement* uDOF(int i) const = 0;
+
+  /**
+   * Compute and return element stiffnes matrix in global coordinate system
+   */
+  virtual vnl_matrix<Float> Ke() const = 0;
+
+  /**
+   * Compute and return element mass matrix in global coordinate system.
+   * This is needed if dynamic problems (parabolic or hyperbolix d.e.)
+   * need to be solved.
+   */
+  virtual vnl_matrix<Float> Me() const;
+
+  /**
+   * Easy access of LoadElement pointer type. When using SmartPointers,
+   * this is a pointer to FEMLightObject to avoid cyclic references between
+   * LoadElement and Element classes.
+   * As a consequence whenever you need to use a pointer to LoadElement class
+   * within the element's declaration or definition, ALWAYS use this typedef
+   * instead.
+   * When calling the Fe(...) function from outside, you should ALWAYS first
+   * convert the argument to Element::LoadElementPointer. See code of function
+   * Solver::AssembleF(...) for more info.
+   */
+#ifndef FEM_USE_SMART_POINTERS
+  typedef LoadElement* LoadElementPointer;
+#else
+  typedef SmartPointer<FEMLightObject> LoadElementPointer;
+#endif
+
+
+  /** 
+   * Compute and return the element force vector. Basically this is the contribution
+   * of this element on the right side of the master matrix equation. Returned vector
+   * should include only nodal forces that correspond to the given Load object.
+   * Within the function definition you should use the dynamic_cast operator on the 
+   * provided pointer to the Load object to obtain the pointer to the derived class
+   * and act accordingly. If the implementation of the Fe function does not handle
+   * given Load class (dynamic_cast returns 0), parent's Fe member should be called.
+   * Several types of loads can be implemented using several if statements.
+   *
+   * Example:
+   *
+   *  class Quad2D : public Element {
+   *    ...
+   *    vnl_vector<Float> Fe(LoadElement* l) {
+   *      if (LoadGravity l0=dynamic_cast<LoadGravity*>(l)) {
+   *        ... implement the gravity load using l0 pointer
+   *      } else
+   *        return Element::Fe(l);
+   *    }
+   *    ...
+   *  };
+   */
+  virtual vnl_vector<Float> Fe(LoadElementPointer l) const {
+    /**
+     * If this function is not defined in the derived class we return a vector
+     * containing all zeros. it has the dimension of N(). This quietly accepts
+     * all load classes, but they have no affect on the element.
+     */
+    return vnl_vector<Float>( N(), 0.0 );
+  };
+
+
+
+
+
+
+
+
+
+  /**
+   * Material 
+   */
   typedef  itk::Object    MaterialType;
   /** 
    * Storage type for pointers to nodes that define the element
