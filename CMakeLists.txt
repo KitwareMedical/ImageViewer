@@ -85,11 +85,11 @@ ENDIF (USE_VTK_FILE)
 
 # Add an option to build or not build the TripleTKImageDisplay example.
 # It needs VTK.
-#IF(HAS_METAIMAGE)
-#  IF(USE_VTK_FILE)
-#    SUBDIRS(TripleTKImageDisplay)
-#  ENDIF(USE_VTK_FILE)
-#ENDIF(HAS_METAIMAGE)
+IF(HAS_METAIMAGE)
+  IF(USE_VTK_FILE)
+    SUBDIRS(TripleTKImageDisplay)
+  ENDIF(USE_VTK_FILE)
+ENDIF(HAS_METAIMAGE)
 
 # Add an option to build or not build the
 # GaussianMinimumErrorClassifier example
