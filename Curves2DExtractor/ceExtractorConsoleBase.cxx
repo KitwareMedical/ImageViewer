@@ -19,7 +19,7 @@
 #pragma warning ( disable : 4786 )
 #endif
 
-#include <ceExtractorConsoleBase.h>
+#include "ceExtractorConsoleBase.h"
 
 
 /************************************
@@ -34,7 +34,11 @@ ceExtractorConsoleBase
   m_ImageLoaded = false;
 
   m_Reader     = VolumeReaderType::New();
-  
+
+  m_RescaleIntensitySmoothed   = RescaleIntensityFilterType::New();
+  m_RescaleIntensityMedialness = RescaleIntensityFilterType::New();
+  m_RescaleIntensityMaxEigen   = RescaleIntensityFilterType::New();
+
   m_Hx   = InputGaussianFilterType::New();
   m_Hy   = InputGaussianFilterType::New();
 
@@ -51,8 +55,8 @@ ceExtractorConsoleBase
   m_H1x->SetDirection( 0 );
   m_H1y->SetDirection( 1 );
 
-  m_H1x->SetOrder( GaussianFilterType::ZeroOrder );
-  m_H1y->SetOrder( GaussianFilterType::ZeroOrder );
+  m_H1x->SetOrder( GaussianFilterType::FirstOrder );
+  m_H1y->SetOrder( GaussianFilterType::FirstOrder );
 
   m_H1xy = GaussianFilterType::New();
   m_H1xy->SetDirection( 1 );
@@ -92,7 +96,6 @@ ceExtractorConsoleBase
   m_Modulus->SetInput1( m_H1x->GetOutput() );
   m_Modulus->SetInput2( m_H1y->GetOutput() );
 
-  
   m_Gradient = GradientFilterType::New();
   
   m_Gradient->SetInput( m_Reader->GetOutput() );
@@ -115,11 +118,24 @@ ceExtractorConsoleBase
   m_ScalarProduct->SetInput1( m_Join->GetOutput() );
   m_ScalarProduct->SetInput2( m_Eigen->GetMaxEigenVector() );
 
+  // Normalize the parametric space
+  m_RescaleIntensitySmoothed->SetInput( m_Hxy->GetOutput() );
+  m_RescaleIntensitySmoothed->SetOutputMinimum( -1.0 );
+  m_RescaleIntensitySmoothed->SetOutputMaximum(  1.0 );
+
+  m_RescaleIntensityMedialness->SetInput( m_ScalarProduct->GetOutput() );
+  m_RescaleIntensityMedialness->SetOutputMinimum( -1.0 );
+  m_RescaleIntensityMedialness->SetOutputMaximum(  1.0 );
+
+  m_RescaleIntensityMaxEigen->SetInput( m_Eigen->GetMaxEigenValue() );
+  m_RescaleIntensityMaxEigen->SetOutputMinimum( 0.0 );
+  m_RescaleIntensityMaxEigen->SetOutputMaximum( 1.0 );
+
   m_ParametricSpace = ParametricSpaceFilterType::New();
 
-  m_ParametricSpace->SetInput( 0, m_Eigen->GetMaxEigenValue() );
-  m_ParametricSpace->SetInput( 1, m_ScalarProduct->GetOutput() );
-  m_ParametricSpace->SetInput( 2, m_Hxy->GetOutput() );
+  m_ParametricSpace->SetInput( 0, m_RescaleIntensityMaxEigen->GetOutput() );
+  m_ParametricSpace->SetInput( 1, m_RescaleIntensityMedialness->GetOutput() );
+  m_ParametricSpace->SetInput( 2, m_RescaleIntensitySmoothed->GetOutput() );
 
   m_SpatialFunctionControl = SpatialFunctionControlType::New();
 
@@ -129,15 +145,22 @@ ceExtractorConsoleBase
                               m_ParametricSpace->GetOutput() );
 
   m_SpatialFunctionControl->SetSpatialFunction( 
-      m_SpatialFunctionFilter->GetSpatialFunction() );
+                  m_SpatialFunctionFilter->GetSpatialFunction() );
 
-
+#ifdef FRUSTUM_FUNCTION
   m_SpatialFunctionControl->SetAngleZ( 20.0f );
   m_SpatialFunctionControl->SetApertureAngleX( 12.0f );
-  m_SpatialFunctionControl->SetApertureAngleY(  2.0f );
-  m_SpatialFunctionControl->SetTopPlane( 10.0f );
-  m_SpatialFunctionControl->SetBottomPlane( 110.0f );
-  m_SpatialFunctionControl->SetApex( 0.0f, 0.0f, 105.0f );
+  m_SpatialFunctionControl->SetApertureAngleY(  3.0f );
+  m_SpatialFunctionControl->SetTopPlane( 0.1f );
+  m_SpatialFunctionControl->SetBottomPlane( 2.0f );
+  m_SpatialFunctionControl->SetApex( 0.4f, 0.0f, 1.0f );
+#endif
+
+
+#ifdef SPHERE_FUNCTION
+  m_SpatialFunctionControl->SetRadius( 0.1f );
+#endif
+
 
   
   m_InverseParametricFilter = InverseParametricFilterType::New();

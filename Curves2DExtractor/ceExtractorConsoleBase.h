@@ -33,6 +33,15 @@
 #include "fltkSphereFunctionControl.h"
 #include "fltkFrustumFunctionControl.h"
 #include "itkParametricSpaceToImageSpaceMeshFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
+
+
+// Define which type of spatial function to use
+// Only one of the following lines should be uncommented.
+// # define SPHERE_FUNCTION
+#define FRUSTUM_FUNCTION
+
+
 
 
 class ceExtractorConsoleBase 
@@ -91,6 +100,8 @@ public:
 
   typedef   itk::JoinImageFilter< ImageType, ImageType >      JoinFilterType;
 
+  typedef   itk::RescaleIntensityImageFilter< ImageType, 
+                                              ImageType > RescaleIntensityFilterType;
 
   typedef   itk::SphereSpatialFunction< 
                                 MeshType::PointDimension,
@@ -111,10 +122,15 @@ public:
                                             FrustumSpatialFunctionControlType;
   
 // These typedefs select the particular SpatialFunction
-// typedef  ShereSpatialFunctionType           SpatialFunctionType;
-// typedef  SphereSpatialFunctionControlType   SpatialFunctionControlType;
+#ifdef SPHERE_FUNCTION
+   typedef  SphereSpatialFunctionType          SpatialFunctionType;
+   typedef  SphereSpatialFunctionControlType   SpatialFunctionControlType;
+#endif 
+
+#ifdef FRUSTUM_FUNCTION
    typedef  FrustumSpatialFunctionType         SpatialFunctionType;
    typedef  FrustumSpatialFunctionControlType  SpatialFunctionControlType;
+#endif
                                 
   typedef itk::InteriorExteriorMeshFilter<
                                         MeshType,
@@ -166,7 +182,13 @@ protected:
   ScalarProductFilterType::Pointer        m_ScalarProduct;
 
   JoinFilterType::Pointer                 m_Join;
-    
+
+  RescaleIntensityFilterType::Pointer     m_RescaleIntensitySmoothed;
+  
+  RescaleIntensityFilterType::Pointer     m_RescaleIntensityMaxEigen;
+  
+  RescaleIntensityFilterType::Pointer     m_RescaleIntensityMedialness;
+  
   ParametricSpaceFilterType::Pointer      m_ParametricSpace;
 
   SpatialFunctionFilterType::Pointer      m_SpatialFunctionFilter;
