@@ -1,3 +1,0 @@
-
-/* what toolkits was VTKITK built with */
-#cmakedefine VTKITK_USE_COMMON
