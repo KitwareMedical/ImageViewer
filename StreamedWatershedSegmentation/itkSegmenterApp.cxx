@@ -144,9 +144,9 @@ int main(int argc, char *argv[])
       ::exit(1);
     }
   //read the number of   chunks to follow 
-  in.read((unsigned char *)&chunknumber, sizeof(int)); 
+  in.read((char *)&chunknumber, sizeof(int)); 
   chunk_list = new ctk::chunk_info_struct[chunknumber];
-  in.read((unsigned char *)chunk_list, chunknumber *
+  in.read((char *)chunk_list, chunknumber *
           sizeof(ctk::chunk_info_struct)); 
   in.close();
 
@@ -266,8 +266,8 @@ int main(int argc, char *argv[])
       ::exit(1);
     }
   //write the number of chunks to follow
-  out.write((unsigned char *)&chunknumber, sizeof(int));
-  out.write((unsigned char *)chunk_list, chunknumber *
+  out.write((char *)&chunknumber, sizeof(int));
+  out.write((char *)chunk_list, chunknumber *
             sizeof(ctk::chunk_info_struct));
   out.close();
   

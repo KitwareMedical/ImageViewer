@@ -71,10 +71,10 @@ void SegmentTableReader<TScalarType>
 
   // Read the header, the number of records
   unsigned long listsz;
-  in.read((unsigned char *)&listsz, sizeof(unsigned long));
+  in.read((char *)&listsz, sizeof(unsigned long));
 
   ScalarType depth;
-  in.read((unsigned char *)&depth, sizeof(ScalarType));
+  in.read((char *)&depth, sizeof(ScalarType));
   output->SetMaximumDepth(depth);
   
   // now read data, one painful record at a time...since records are not all
@@ -86,7 +86,7 @@ void SegmentTableReader<TScalarType>
   unsigned n = 0;
   for (unsigned k = 0; k < listsz; ++k)
     {
-      in.read((unsigned char *)&record, sizeof(record_t));
+      in.read((char *)&record, sizeof(record_t));
     
       segment.min = record.min;
 
@@ -98,7 +98,7 @@ void SegmentTableReader<TScalarType>
            list_ptr != segptr->edge_list.end();
            ++list_ptr)
         {
-          in.read((unsigned char *)&edge, sizeof(edge_pair_t));
+          in.read((char *)&edge, sizeof(edge_pair_t));
           list_ptr->label  = edge.label;
           list_ptr->height = edge.height;
         } 

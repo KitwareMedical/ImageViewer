@@ -87,7 +87,7 @@ void BoundaryDataWriter<TScalarType, TDimension>::SafeWrite()
       for (idx.second = 0; idx.second < 2; ++idx.second)
         {
           bool val = input->GetValid(idx);
-          out.write((unsigned char *)&val, sizeof(bool));
+          out.write((char *)&val, sizeof(bool));
         }
     }
 
@@ -98,17 +98,17 @@ void BoundaryDataWriter<TScalarType, TDimension>::SafeWrite()
         {
           if ( input->GetValid(idx) != true) continue;
           region = input->GetFace(idx)->GetLargestPossibleRegion();
-          out.write((unsigned char *)&region, sizeof(RegionType));
+          out.write((char *)&region, sizeof(RegionType));
           region = input->GetFace(idx)->GetRequestedRegion();
-          out.write((unsigned char *)&region, sizeof(RegionType));
+          out.write((char *)&region, sizeof(RegionType));
           region = input->GetFace(idx)->GetBufferedRegion();
-          out.write((unsigned char *)&region, sizeof(RegionType));
+          out.write((char *)&region, sizeof(RegionType));
 
           sz = region.GetSize();
           imgsz = 1;
           for (i = 0; i < Dimension; ++i) imgsz *= sz[i];
 
-          out.write((unsigned char *)input->GetFace(idx)->GetBufferPointer(),
+          out.write((char *)input->GetFace(idx)->GetBufferPointer(),
                     imgsz * sizeof(FacePixelType));
         }
     }
@@ -123,22 +123,22 @@ void BoundaryDataWriter<TScalarType, TDimension>::SafeWrite()
           hash_it = hash->begin();
           hashsz = hash->size();
 
-          out.write((unsigned char *)&hashsz, sizeof(unsigned long));
+          out.write((char *)&hashsz, sizeof(unsigned long));
 
           while ( hash_it != hash->end() )
             {
               fl_key    = (*hash_it).first;
-              out.write((unsigned char *)&fl_key, sizeof (unsigned long));
+              out.write((char *)&fl_key, sizeof (unsigned long));
               fl_bounds_min = (*hash_it).second.bounds_min;
-              out.write((unsigned char *)&fl_bounds_min, sizeof (ScalarType));
+              out.write((char *)&fl_bounds_min, sizeof (ScalarType));
               fl_min_label = (*hash_it).second.min_label;
-              out.write((unsigned char *)&fl_min_label, sizeof (unsigned long));
+              out.write((char *)&fl_min_label, sizeof (unsigned long));
               fl_value = (*hash_it).second.value;
-              out.write((unsigned char *)&fl_value, sizeof (ScalarType));
+              out.write((char *)&fl_value, sizeof (ScalarType));
 
               hashsz = (*hash_it).second.offset_list.size();
 
-              out.write((unsigned char *)&hashsz, sizeof (unsigned long));
+              out.write((char *)&hashsz, sizeof (unsigned long));
           
               FRBuf = new unsigned long[hashsz];
        
@@ -152,7 +152,7 @@ void BoundaryDataWriter<TScalarType, TDimension>::SafeWrite()
                   ++it;
                 }
 
-              out.write((unsigned char *)FRBuf, sizeof(unsigned long) * i);
+              out.write((char *)FRBuf, sizeof(unsigned long) * i);
               delete[] FRBuf;
               hash_it++;
 

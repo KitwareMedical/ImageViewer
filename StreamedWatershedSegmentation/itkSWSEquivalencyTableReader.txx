@@ -64,7 +64,7 @@ void EquivalencyTableReader
 
   // read header
   unsigned long listsz;
-  in.read((unsigned char *)&listsz, sizeof(unsigned long));
+  in.read((char *)&listsz, sizeof(unsigned long));
 
   // now read data
   EquivalencyTableType::ValueType *buf =
@@ -75,7 +75,7 @@ void EquivalencyTableReader
   while ( ! in.eof() )
     {
 
-      in.read((unsigned char *)buf, segsize * BUFSZ );
+      in.read((char *)buf, segsize * BUFSZ );
       n = in.gcount();
 
       for (unsigned int i = 0; i < (n / segsize );  ++i) 

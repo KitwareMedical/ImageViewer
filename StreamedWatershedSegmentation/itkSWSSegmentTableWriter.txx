@@ -70,11 +70,11 @@ void SegmentTableWriter<TScalarType>
 
   // Write the header, the number of records
   unsigned long listsz = input->Size();
-  out.write((unsigned char *)&listsz, sizeof(unsigned long));
+  out.write((char *)&listsz, sizeof(unsigned long));
 
   // write the maximum depth
   ScalarType depth = input->GetMaximumDepth();
-  out.write((unsigned char *)&depth, sizeof(ScalarType));
+  out.write((char *)&depth, sizeof(ScalarType));
   
   std::cout << "Writing segment table of size " << listsz << std::endl;
 
@@ -90,7 +90,7 @@ void SegmentTableWriter<TScalarType>
       record.label    = (*it).first;
       record.min      = (*it).second.min;
       record.edge_list_sz = (*it).second.edge_list.size();
-      out.write((unsigned char *)&record, sizeof(record_t));
+      out.write((char *)&record, sizeof(record_t));
 
       //now write the edge table
       edge_it = (*it).second.edge_list.begin();
@@ -98,7 +98,7 @@ void SegmentTableWriter<TScalarType>
         {
           edge.label  = (*edge_it).label;
           edge.height = (*edge_it).height;
-          out.write( (unsigned char *)&edge, sizeof(edge_pair_t) );
+          out.write( (char *)&edge, sizeof(edge_pair_t) );
           edge_it++;
         }
       ++it;

@@ -106,9 +106,9 @@ int main(int argc, char *argv[])
     }
   
   //read the number of chunks to follow
-  in.read((unsigned char *)&chunknumber, sizeof(int));
+  in.read((char *)&chunknumber, sizeof(int));
   chunk_list = new ctk::chunk_info_struct[chunknumber];
-  in.read((unsigned char *)chunk_list, chunknumber *
+  in.read((char *)chunk_list, chunknumber *
           sizeof(ctk::chunk_info_struct));
   in.close();
 

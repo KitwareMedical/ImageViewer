@@ -65,7 +65,7 @@ void SegmentTreeReader<TScalarType>
 
   // read header
   unsigned long listsz;
-  in.read((unsigned char *)&listsz, sizeof(unsigned long));
+  in.read((char *)&listsz, sizeof(unsigned long));
 
   // now read data
   typename SegmentTreeType::ValueType *buf =
@@ -76,7 +76,7 @@ void SegmentTreeReader<TScalarType>
   while ( ! in.eof() )
     {
 
-      in.read((unsigned char *)buf, segsize * BUFSZ );
+      in.read((char *)buf, segsize * BUFSZ );
       n = in.gcount();
 
       for (unsigned int i = 0; i < (n / segsize );  ++i) 

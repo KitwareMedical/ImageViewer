@@ -58,7 +58,7 @@ void EquivalencyTableWriter
   EquivalencyTableType::Pointer input = this->GetInput();
   typedef std::pair< unsigned long, unsigned long> VType;
   
-  ofstream out(m_FileName.c_str());
+  std::ofstream out(m_FileName.c_str());
   if (!out)
     {
       throw ExceptionObject(__FILE__, __LINE__);
@@ -66,7 +66,7 @@ void EquivalencyTableWriter
 
   // Write the header, the number of records
   tablesz = input->Size();
-  out.write((unsigned char *)&tablesz, sizeof(unsigned long));
+  out.write((char *)&tablesz, sizeof(unsigned long));
 
  // now write data
   VType *buf = new VType[BUFSZ];
@@ -83,11 +83,11 @@ void EquivalencyTableWriter
       ++it;
       if (n == BUFSZ)
         {
-          out.write((unsigned char *)buf,   sizeof (VType) *  BUFSZ);
+          out.write((char *)buf,   sizeof (VType) *  BUFSZ);
           n = 0;
         }
     }
-  out.write((unsigned char *)buf,  sizeof ( VType) *  n);
+  out.write((char *)buf,  sizeof ( VType) *  n);
 
   out.close();
   delete[] buf; 

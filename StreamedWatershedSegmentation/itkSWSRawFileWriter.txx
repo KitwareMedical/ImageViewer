@@ -53,7 +53,6 @@ namespace sws
 template <class TOutputImage>
 void RawFileWriter<TOutputImage>::GenerateData()
 {
-  PixelType *buf;
   unsigned int i, num;
 
   // Get input
@@ -69,7 +68,7 @@ void RawFileWriter<TOutputImage>::GenerateData()
   if (!out) throw ExceptionObject();
 
   // JUST DUMPS THE WHOLE IMAGE BUFFER
-  out.write((unsigned char *)(input->GetBufferPointer()), num *
+  out.write((char *)(input->GetBufferPointer()), num *
             sizeof(PixelType));
   out.close();
 }

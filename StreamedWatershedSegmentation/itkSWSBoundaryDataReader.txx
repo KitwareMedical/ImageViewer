@@ -91,7 +91,7 @@ void BoundaryDataReader<TScalarType, TDimension>::GenerateData()
     {
       for (idx.second = 0; idx.second < 2; ++idx.second)
         {
-          in.read((unsigned char *)&val, sizeof(bool));
+          in.read((char *)&val, sizeof(bool));
           output->SetValid(val, idx);
         }
     }
@@ -104,13 +104,13 @@ void BoundaryDataReader<TScalarType, TDimension>::GenerateData()
   
           if ( output->GetValid(idx) != true) continue;
           
-          in.read((unsigned char *)&region, sizeof(RegionType));
+          in.read((char *)&region, sizeof(RegionType));
           output->GetFace(idx)->SetLargestPossibleRegion(region);
 
-          in.read((unsigned char *)&region, sizeof(RegionType));
+          in.read((char *)&region, sizeof(RegionType));
           output->GetFace(idx)->SetRequestedRegion(region);
                    
-          in.read((unsigned char *)&region, sizeof(RegionType));
+          in.read((char *)&region, sizeof(RegionType));
           output->GetFace(idx)->SetBufferedRegion(region);
 
           output->GetFace(idx)->Allocate();
@@ -119,7 +119,7 @@ void BoundaryDataReader<TScalarType, TDimension>::GenerateData()
           imgsz = 1;
           for (i = 0; i < Dimension; ++i) imgsz *= sz[i];
 
-          in.read((unsigned char *)output->GetFace(idx)->GetBufferPointer(),
+          in.read((char *)output->GetFace(idx)->GetBufferPointer(),
                     imgsz * sizeof(FacePixelType));
         }
     }
@@ -132,15 +132,15 @@ void BoundaryDataReader<TScalarType, TDimension>::GenerateData()
           if ( output->GetValid(idx) != true) continue;
           hash    = output->GetFlatHash(idx);
 
-          in.read((unsigned char *)&hashsz, sizeof (unsigned long));
+          in.read((char *)&hashsz, sizeof (unsigned long));
   
           for (unsigned j = 0; j < hashsz; j++)
             {
-              in.read((unsigned char *)&fl_key, sizeof (unsigned long));          
-              in.read((unsigned char *)&fl_bounds_min, sizeof (ScalarType));          
-              in.read((unsigned char *)&fl_min_label, sizeof (unsigned long));          
-              in.read((unsigned char *)&fl_value, sizeof (ScalarType));
-              in.read((unsigned char *)&offsz, sizeof (unsigned long));
+              in.read((char *)&fl_key, sizeof (unsigned long));          
+              in.read((char *)&fl_bounds_min, sizeof (ScalarType));          
+              in.read((char *)&fl_min_label, sizeof (unsigned long));          
+              in.read((char *)&fl_value, sizeof (ScalarType));
+              in.read((char *)&offsz, sizeof (unsigned long));
 
               flat_reg.bounds_min = fl_bounds_min;
               flat_reg.min_label  = fl_min_label;
@@ -151,7 +151,7 @@ void BoundaryDataReader<TScalarType, TDimension>::GenerateData()
 
               for (i = 0; i < offsz; i++)
                 {
-                  in.read((unsigned char *)&offset, sizeof (unsigned long));
+                  in.read((char *)&offset, sizeof (unsigned long));
                   (*hash_it).second.offset_list.push_back(offset);
                 }
             }

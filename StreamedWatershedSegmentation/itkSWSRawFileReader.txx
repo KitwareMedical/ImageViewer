@@ -104,7 +104,7 @@ void RawFileReader<TOutputImage>::SafeRead()
     std::endl; 
   while ( !in.eof() )
     {
-      in.read((unsigned char *)buf, sizeof(PixelType) * 16384);
+      in.read((char *)buf, sizeof(PixelType) * 16384);
 
       num = in.gcount() / sizeof(PixelType);
       for (i = 0; i < num; ++i, ++ptr)

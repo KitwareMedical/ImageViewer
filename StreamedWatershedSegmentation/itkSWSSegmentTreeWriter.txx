@@ -57,7 +57,7 @@ void SegmentTreeWriter<TScalarType>
 
   typename SegmentTreeType::Pointer input = this->GetInput();
 
-  ::ofstream out(m_FileName.c_str());
+  std::ofstream out(m_FileName.c_str());
   if (!out)
     {
       throw ExceptionObject(__FILE__, __LINE__);
@@ -65,7 +65,7 @@ void SegmentTreeWriter<TScalarType>
 
   // write header
   unsigned long listsz = input->Size();
-  out.write((unsigned char *)&listsz, sizeof(unsigned long));
+  out.write((char *)&listsz, sizeof(unsigned long));
   
   // now write data
   typename SegmentTreeType::ValueType *buf =
@@ -82,12 +82,12 @@ void SegmentTreeWriter<TScalarType>
       ++it;
       if (n == BUFSZ)
         {
-          out.write((unsigned char *)buf,
+          out.write((char *)buf,
                     sizeof (typename SegmentTreeType::ValueType) *  BUFSZ);
           n = 0;
         }
     }
-  out.write((unsigned char *)buf,
+  out.write((char *)buf,
             sizeof (typename SegmentTreeType::ValueType) *  n);
 
   out.close();
