@@ -16,6 +16,7 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 LINK_LIBRARIES (
 ITKBasicFilters
 ITKCommon
+ITKIO
 VXLNumerics
 )
 
