@@ -11,7 +11,7 @@ these applications are tricky to build and depend on external packages.
 
 Some important configuration details:
 
-     * VTK requires VTK version 4.2
+     * VTK requires VTK version 4.2 and must be built ANSI_STDLIB
 
      * CMake version 1.6.5 or later should be used.
 
