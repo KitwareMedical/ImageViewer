@@ -281,8 +281,8 @@ ClassifierValidationInputParser<TVectorInputImage,TMaskImage>
 
   typedef typename VectorInputImageType::IndexType VectorInputImageIndexType;
 
-  VectorInputImageIndexType index = 
-    VectorInputImageIndexType::ZeroIndex;
+  VectorInputImageIndexType index;
+  index.Fill(0);
 
   typename VectorInputImageType::RegionType region;
 

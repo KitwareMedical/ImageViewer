@@ -134,7 +134,7 @@ void RawImageSequenceReader<TOutputImage, ConvertPixelTraits>::GenerateData()
   typedef typename TOutputImage::IndexType   IndexType;
 
   IndexType start;
-  start = IndexType::ZeroIndex;
+  start.Fill(0);
 
   Region region;
   region.SetSize(dimSize);
