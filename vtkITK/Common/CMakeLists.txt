@@ -10,11 +10,13 @@ vtkITKConnectedThresholdImageFilter.cxx
 vtkITKConfidenceConnectedImageFilter.cxx
 vtkITKIsolatedConnectedImageFilter.cxx
 vtkITKDanielssonDistanceMapImageFilter.cxx
+vtkITKPDEDeformableRegistrationFilter.h
 vtkITKImageToImageFilter.h
 vtkITKImageToImageFilterUSUL.h
 vtkITKImageToImageFilterUSUS.h
 vtkITKImageToImageFilterFUL.h
 vtkITKImageToImageFilterFF.h
+vtkITKImageToImageFilterF3F3.h
 vtkITKImageToImageFilter2DFF.h
 )
 
@@ -24,6 +26,7 @@ vtkITKImageToImageFilterUSUL.h
 vtkITKImageToImageFilterUSUS.h
 vtkITKImageToImageFilterFUL.h
 vtkITKImageToImageFilterFF.h
+vtkITKImageToImageFilterF3F3.h
 vtkITKImageToImageFilter2DFF.h
 )
 
