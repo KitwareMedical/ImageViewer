@@ -297,15 +297,15 @@ liFilterConsole
 {
 
   consoleWindow->hide();
-  this->m_Viewer_H1x->hide();
-  this->m_Viewer_H1y->hide();
-  this->m_Viewer_H1z->hide();
-  this->m_Viewer_H2x->hide();
-  this->m_Viewer_H2y->hide();
-  this->m_Viewer_H2z->hide();
-  this->m_InputViewer->hide();
-  this->m_Viewer_Laplacian->hide();
-  this->m_Viewer_Gradient_Modulus->hide();
+  this->m_Viewer_H1x->Hide();
+  this->m_Viewer_H1y->Hide();
+  this->m_Viewer_H1z->Hide();
+  this->m_Viewer_H2x->Hide();
+  this->m_Viewer_H2y->Hide();
+  this->m_Viewer_H2z->Hide();
+  this->m_InputViewer->Hide();
+  this->m_Viewer_Laplacian->Hide();
+  this->m_Viewer_Gradient_Modulus->Hide();
   aboutWindow->hide();
 }
 
@@ -383,7 +383,7 @@ liFilterConsole
   }
 */
   this->m_InputViewer->SetImage( this->m_Reader->GetOutput() );  
-  this->m_InputViewer->show();
+  this->m_InputViewer->Show();
 
 }
 
@@ -402,7 +402,7 @@ liFilterConsole
 
   this->m_H1x->Update();
   this->m_Viewer_H1x->SetImage( this->m_H1x->GetOutput() );  
-  this->m_Viewer_H1x->show();
+  this->m_Viewer_H1x->Show();
 
 }
 
@@ -420,7 +420,7 @@ liFilterConsole
 
   this->m_H1y->Update(); 
   this->m_Viewer_H1y->SetImage( this->m_H1y->GetOutput() );  
-  this->m_Viewer_H1y->show();
+  this->m_Viewer_H1y->Show();
 
 }
 
@@ -439,7 +439,7 @@ liFilterConsole
 
   this->m_H1z->Update();
   this->m_Viewer_H1z->SetImage( this->m_H1z->GetOutput() );  
-  this->m_Viewer_H1z->show();
+  this->m_Viewer_H1z->Show();
 
 }
 
@@ -457,7 +457,7 @@ liFilterConsole
 
   this->m_H2x->Update();
   this->m_Viewer_H2x->SetImage( this->m_H2x->GetOutput() );  
-  this->m_Viewer_H2x->show();
+  this->m_Viewer_H2x->Show();
 
 }
 
@@ -475,7 +475,7 @@ liFilterConsole
 
   this->m_H2y->Update();
   this->m_Viewer_H2y->SetImage( this->m_H2y->GetOutput() );  
-  this->m_Viewer_H2y->show();
+  this->m_Viewer_H2y->Show();
 
 }
 
@@ -495,7 +495,7 @@ liFilterConsole
 
   this->m_H2z->Update();
   this->m_Viewer_H2z->SetImage( this->m_H2z->GetOutput() );  
-  this->m_Viewer_H2z->show();
+  this->m_Viewer_H2z->Show();
 
 }
 
@@ -513,7 +513,7 @@ liFilterConsole
 
   this->m_Add->Update();
   this->m_Viewer_Laplacian->SetImage( this->m_Add->GetOutput() );  
-  this->m_Viewer_Laplacian->show();
+  this->m_Viewer_Laplacian->Show();
 
 }
 
@@ -532,7 +532,7 @@ liFilterConsole
 
   this->m_Modulus->Update();
   this->m_Viewer_Gradient_Modulus->SetImage( this->m_Modulus->GetOutput() );  
-  this->m_Viewer_Gradient_Modulus->show();
+  this->m_Viewer_Gradient_Modulus->Show();
 
 }
 
