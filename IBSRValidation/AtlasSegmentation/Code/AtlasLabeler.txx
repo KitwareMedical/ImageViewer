@@ -80,6 +80,7 @@ AtlasLabeler<TLabelImage, TDeformationField>
   DistanceType::Pointer distance = DistanceType::New();
 
   distance->SetInput( inputThresholder->GetOutput() );
+  distance->NarrowBandingOn();
 
   typedef WarpImageFilter<RealImageType,RealImageType,DeformationFieldType> WarperType;
   WarperType::Pointer warper = WarperType::New();
