@@ -1,227 +1,40 @@
 /* perform smoothing using an anisotropic diffusion filter */
 
-#include "vtkVVPluginAPI.h"
+#include "itkVVFilterModule.h"
 
-#include <string.h>
-#include <stdlib.h>
-
-#include "itkImage.h"
 #include "itkCurvatureFlowImageFilter.h"
-#include "itkImportImageFilter.h"
-#include "itkCastImageFilter.h"
-#include "itkImageRegionConstIterator.h"
-#include "itkCommand.h"
-
-
-template <class TPixelType >
-class FilterModule {
-
-public:
-
-   // Instantiate the image types
-  typedef TPixelType                     InputPixelType;
-  typedef float                          InternalPixelType;
-
-  itkStaticConstMacro( Dimension, unsigned int, 3);
-
-  typedef itk::Image< InputPixelType,    Dimension > InputImageType;
-  typedef itk::Image< InternalPixelType, Dimension > InternalImageType;
-
-  // Instantiate the ImportImageFilter
-  // This filter is used for building an ITK image using 
-  // the data passed in a buffer.
-  typedef itk::ImportImageFilter< InputPixelType, 
-                                  Dimension       > ImportFilterType;
-
-  typedef ImportFilterType::SizeType      SizeType;
-  typedef ImportFilterType::IndexType     IndexType;
-  typedef ImportFilterType::RegionType    RegionType;
-
-  // Instantiate the CastImageFilter
-  // This filter is used for converting the pixel type from the input
-  // data buffer into 'float' pixel types. This is required because
-  // the CurvatureFlowImageFilter only operates on float and double
-  // pixel types.
-  typedef itk::CastImageFilter< InputImageType, 
-                                InternalImageType > CastFilterType;
-
-
-  // Instantiate the filter type
-  typedef itk::CurvatureFlowImageFilter< 
-                                InternalImageType, 
-                                InternalImageType > CurvatureFlowFilterType;
-
-  // Command/Observer intended to update the progress
-  typedef itk::MemberCommand< FilterModule >  CommandType;
-
-
-public:
-
-  /**  Constructor */
-  FilterModule() 
-    {
-    m_ImportFilter       = ImportFilterType::New();
-    m_CastFilter         = CastFilterType::New();
-    m_CurvaturFlowFilter = CurvatureFlowFilterType::New();
-    m_CommandObserver    = CommandType::New();
-    m_Info               = 0;
-    }
-
-
-
-  /**  Destructor */
-  ~FilterModule() 
-    {
-    }
-
-
-
-
-  void 
-  ProgressUpdate( itk::Object * caller, const itk::EventObject & event )
-  {
-
-    if( typeid( itk::ProgressEvent ) != typeid( event ) )
-      {
-      return;
-      }
-
-    itk::ProcessObject::Pointer process =
-              dynamic_cast< itk::ProcessObject *>( caller );
-
-    const float progress = process->GetProgress();
-
-    m_Info->UpdateProgress(m_Info, progress, "Smoothing with Curvature Flow..."); 
-
-  }
-
-
-
-  /**  Set the Plugin Info structure */
-  void
-  SetPlugInfo( vtkVVPluginInfo * info )
-  {
-    m_Info = info;
-  }
-
-  /**  ProcessData performs the actual filtering on the data */
-  void 
-  ProcessData( const vtkVVProcessDataStruct * pds )
-  {
-
-    SizeType   size;
-    IndexType  start;
-
-    double     origin[3];
-    double     spacing[3];
-
-    for(unsigned int i=0; i<3; i++)
-      {
-      size[i]     =  m_Info->InputVolumeDimensions[i];
-      origin[i]   =  m_Info->InputVolumeOrigin[i];
-      spacing[i]  =  m_Info->InputVolumeSpacing[i];
-      start[i]    =  0;
-      }
-
-
-    RegionType region;
-
-    region.SetIndex( start );
-    region.SetSize(  size  );
-   
-    m_ImportFilter->SetSpacing( spacing );
-    m_ImportFilter->SetOrigin(  origin  );
-    m_ImportFilter->SetRegion(  region  );
-
-    const unsigned int totalNumberOfPixels = region.GetNumberOfPixels();
-
-    const bool         importFilterWillDeleteTheInputBuffer = false;
-
-    m_ImportFilter->SetImportPointer( static_cast< InputPixelType * >( pds->inData ), 
-                                    totalNumberOfPixels,
-                                    importFilterWillDeleteTheInputBuffer );
-
-
-    m_CastFilter->SetInput( m_ImportFilter->GetOutput() );
-
-
-    // Set the parameters on it
-    m_CurvaturFlowFilter->SetNumberOfIterations(
-      atoi(m_Info->GUIItems[0].CurrentValue));
-    m_CurvaturFlowFilter->SetTimeStep(
-      atof(m_Info->GUIItems[1].CurrentValue));
-    m_CurvaturFlowFilter->SetInput( m_CastFilter->GetOutput() );
-
-    m_CommandObserver->SetCallbackFunction( this, &FilterModule::ProgressUpdate );
-
-    m_CurvaturFlowFilter->AddObserver( itk::ProgressEvent(), m_CommandObserver );
-
-
-    m_CurvaturFlowFilter->Update();
-
-
-    typename InternalImageType::ConstPointer outputImage =
-                                               m_CurvaturFlowFilter->GetOutput();
-
-    typedef itk::ImageRegionConstIterator< InternalImageType >  OutputIteratorType;
-
-    OutputIteratorType ot( outputImage, outputImage->GetBufferedRegion() );
-
-    InputPixelType * outData = (InputPixelType *)(pds->outData);
-
-    ot.GoToBegin(); 
-    while( !ot.IsAtEnd() )
-      {
-      // NOTE: some combination of ClampMacro and 
-      // NumericTraits should be used here. 
-      // The code below is ok only for unsigned types in the InputPixelType...
-      InternalPixelType value = ot.Get();
-      if( value < 0.0 ) 
-        {
-        value = 0.0;
-        }
-      *outData = static_cast< InputPixelType >( value );
-      ++ot;
-      ++outData;
-      }
-
-  } // end of ProcessData
-
-
-private:
-    typename CastFilterType::Pointer   m_CastFilter;
-    typename ImportFilterType::Pointer m_ImportFilter;
-
-    typename CurvatureFlowFilterType::Pointer m_CurvaturFlowFilter;
-
-    typename CommandType::Pointer      m_CommandObserver    ;
-
-    vtkVVPluginInfo   * m_Info;
-};
-
-
-
 
 static int ProcessData(void *inf, vtkVVProcessDataStruct *pds)
 {
 
   vtkVVPluginInfo *info = (vtkVVPluginInfo *)inf;
 
+  const unsigned int Dimension = 3;
+
+  typedef   float       InternalPixelType;
+  typedef   itk::Image< InternalPixelType,Dimension > InternalImageType; 
+
+  typedef   itk::CurvatureFlowImageFilter< 
+                                InternalImageType,  
+                                InternalImageType >   FilterType;
+ 
   try 
   {
   switch( info->InputVolumeScalarType )
     {
     case VTK_UNSIGNED_CHAR:
       {
-      FilterModule< unsigned char > module;
+      FilterModule< unsigned char, FilterType > module;
       module.SetPlugInfo( info );
+      module.SetUpdateMessage("Smoothing with Curvature Flow...");
       module.ProcessData( pds  );
       break; 
       }
     case VTK_UNSIGNED_SHORT:
       {
-      FilterModule< unsigned short > module;
+      FilterModule< unsigned short, FilterType > module;
       module.SetPlugInfo( info );
+      module.SetUpdateMessage("Smoothing with Curvature Flow...");
       module.ProcessData( pds );
       break; 
       }
