@@ -432,11 +432,14 @@ CellularAggregate
     position.Fill( 0.0 );
     // AZUCAR, temporary initialization to the right
     {
-      position[0] =  2.0;
-      position[1] = 10.0;
-      if( Cell::Dimension) {
-        position[2] = 0.0;
+      std::ifstream ifs("CellularAggregate.dat");
+      ifs >> position[0];
+      ifs >> position[1];
+      if( Cell::Dimension > 2 ) 
+        {
+        ifs >> position[2];
         }
+      ifs.close();
     }
     // END AZUCAR
     selfVoronoi.TakeOwnership( new VoronoiRegionType );
