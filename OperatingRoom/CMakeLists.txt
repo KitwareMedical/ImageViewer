@@ -7,9 +7,9 @@ ${ITK_SOURCE_DIR}/Code/Common
 ${ITK_SOURCE_DIR}/Code/BasicFilters
 ${ITK_SOURCE_DIR}/Code/Algorithms
 ${ITK_SOURCE_DIR}/Code/IO
-${ITK_SOURCE_DIR}/Unsupported/MetaImage
-${ITK_SOURCE_DIR}/Unsupported/MetaImage/IView
-${ITK_SOURCE_DIR}/Unsupported/FltkImageViewer
+${ITK_SOURCE_DIR}/Auxiliary/MetaImage
+${ITK_SOURCE_DIR}/Auxiliary/MetaImage/IView
+${ITK_SOURCE_DIR}/Auxiliary/FltkImageViewer
 ${ITK_SOURCE_DIR}/Examples/OperatingRoom
 ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
@@ -21,8 +21,8 @@ ${ITK_BINARY_DIR}/Code/Common
 ${ITK_BINARY_DIR}/Code/BasicFilters
 ${ITK_BINARY_DIR}/Code/Algorithms
 ${ITK_BINARY_DIR}/Code/IO
-${ITK_BINARY_DIR}/Unsupported/MetaImage
-${ITK_BINARY_DIR}/Unsupported/FltkImageViewer
+${ITK_BINARY_DIR}/Auxiliary/MetaImage
+${ITK_BINARY_DIR}/Auxiliary/FltkImageViewer
 ${ITK_BINARY_DIR}/Examples/OperatingRoom
 )
 
@@ -31,47 +31,50 @@ liC_Arm3D
 liCommandGLRedrawModelFixed
 liCommandGLRedrawModelSensitive
 liCommandUpdateImageIntensifier
-liCommandUpdateSpineModelGUI
 liCommandUpdateRegistratorFieldOfView
 liCommandTubesGeneratePointSet
 liFluoroscopyCArm
 liFluoroscopyCArmMobile
-liFluoroscopyCArmMobileGUI
 liFluoroscopyUnitView
-liFluoroscopyUnitViewGUI
 liLight
 liOperatingRoomModel
 liOperatingRoomView
-liOperatingRoomViewGUI
 liPatient
 liPointSet3D
 liSampleGenerator
 liSampleGeneratorBase
 liSampleGeneratorBodyPlane
-liSampleGeneratorBodyPlaneGUI
 liSampleGeneratorCollection
 liSampleGeneratorCollectionBase
-liSampleGeneratorCollectionGUI
-liSampleGeneratorGUI
 liSampleGeneratorPedicle
-liSampleGeneratorPedicleGUI
 liSpineInterventionConfiguration
-liSpineInterventionConfigurationGUI
 liSpineModel
-liSpineModelGUI
 liSurgeryTable
-liSurgeryTableGUI
 liVectorTubes3D
 liVertebralBody
 liVertebralPedicle
 liVertebralSampleGenerator
 liVertebralSegment
-liVertebralSegmentGUI
 liVertebralSegmentRegistrator
-liVesselsModelGUI
 liVesselsRegistrator
 liTube3D
 main
+)
+
+SOURCE_FILES(OperatingRoom_GUI_SRCS
+liVesselsModelGUI.fl
+liVertebralSegmentGUI.fl
+liSurgeryTableGUI.fl
+liSpineModelGUI.fl
+liSpineInterventionConfigurationGUI.fl
+liSampleGeneratorPedicleGUI.fl
+liSampleGeneratorGUI.fl
+liSampleGeneratorCollectionGUI.fl
+liSampleGeneratorBodyPlaneGUI.fl
+liOperatingRoomViewGUI.fl
+liFluoroscopyUnitViewGUI.fl
+liFluoroscopyCArmMobileGUI.fl
+liCommandUpdateSpineModelGUI.fl
 )
 
 LINK_LIBRARIES (
@@ -99,4 +102,6 @@ IF(UNIX)
 ENDIF(UNIX)
 
 ADD_EXECUTABLE(OperatingRoom OperatingRoom_SRCS)
+
+FLTK_WRAP_UI(OperatingRoom OperatingRoom_GUI_SRCS)
 
