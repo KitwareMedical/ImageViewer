@@ -9,10 +9,10 @@ class fltkDisplayGlWindowFlatGUI {open private
 } {
   Function {fltkDisplayGlWindowFlatGUI()} {} {
     Fl_Window parentWindow {open
-      private xywh {289 120 565 585} resizable visible
+      private xywh {289 120 640 480} resizable visible
     } {
       Fl_Box drawWindow {
-        private xywh {0 0 565 585} resizable
+        private xywh {0 0 640 480} resizable
         code0 {\#include <fltkGlWindowInteractiveFlat.h>}
         code1 {\#include <fltkDrawer.h>}
         class {fltk::GlWindowInteractiveFlat}
