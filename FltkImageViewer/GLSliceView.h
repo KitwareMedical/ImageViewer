@@ -455,14 +455,14 @@ GLSliceView<ImagePixelType, OverlayPixelType>::update()
     cWinMaxX = cDimSize[ cWinOrder[0] ] - 1;
     }
   
-  winWidth = (int)( cDimSize[ cWinOrder[1] ] / cWinZoom );
-  cWinSizeY = ( (int) winWidth);
-  ti = (int)( (int)cWinCenter[ cWinOrder[1] ] - winWidth/2);
-  if( ti <= - (int) cDimSize[ cWinOrder[1] ] ) 
+  winWidth = static_cast<int>( cDimSize[ cWinOrder[1] ] / cWinZoom );
+  cWinSizeY = ( static_cast<int>( winWidth) );
+  ti = static_cast<int>( static_cast<int>(cWinCenter[ cWinOrder[1] ]) - winWidth/2);
+  if( ti <= - static_cast<int>( cDimSize[ cWinOrder[1] ] ) ) 
     {
     ti = -cDimSize[ cWinOrder[1] ] + 1;
     }
-  else if( ti >= (int)cDimSize[ cWinOrder[1] ] ) 
+  else if( ti >= static_cast<int>(cDimSize[ cWinOrder[1] ] ) ) 
     {
     ti = cDimSize[ cWinOrder[1] ] - 1;
     } 
