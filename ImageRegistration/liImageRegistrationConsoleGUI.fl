@@ -11,7 +11,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
   } {
     Fl_Window consoleWindow {
       label {Image Registration Console} open
-      xywh {89 51 830 405}
+      xywh {55 252 830 405}
       code0 {\#include <liImageRegistrationConsoleBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -76,7 +76,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           xywh {546 191 8 50} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {
+      Fl_Group controlsGroup {selected
         xywh {5 16 810 329}
       } {
         Fl_Light_Button fixedImageButton {
@@ -88,7 +88,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         Fl_Button {} {
           label Quit
           callback {this->Quit();}
-          xywh {719 281 65 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {565 281 65 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button movingImageButton {
           label {Moving Image}
@@ -138,7 +138,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           }
           Fl_Value_Input angleRotation {
             label {A : }
-            callback {m_ResampleInputMovingImageFilter->Modified();} selected
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {51 153 50 19} labelsize 12 textsize 12
           }
         }
@@ -210,7 +210,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         Fl_Button {} {
           label {Stop Registration}
           callback {Stop();}
-          xywh {454 281 126 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {396 281 126 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button inputMovingImageButton {
           label {Moving Image}
@@ -221,7 +221,11 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         Fl_Button {} {
           label {Start Registration}
           callback {Execute();}
-          xywh {294 281 125 35} box ROUND_UP_BOX labelsize 12 align 128
+          xywh {236 281 125 35} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Button {} {
+          label {../../Documentation/Art/itkLogoSmall.gif}
+          xywh {698 256 100 67} box DOWN_FRAME labeltype image
         }
       }
       Fl_Slider progressSlider {
