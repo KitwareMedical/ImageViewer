@@ -18,6 +18,7 @@
 #define __MYUTILS_H
 
 #include <vnl/vnl_vector.h>
+#include <iostream>
 
 void print_line(std::string msg)
 {
