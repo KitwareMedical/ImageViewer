@@ -29,7 +29,7 @@ trouble on Linux, IRIX and Windows 95/NT
 and SunOS.
 
 This program also require some of the 
-code in the /Unsupported directory, in 
+code in the /Auxiliary directory, in 
 particular the classes for read/write image
 in MetaImage format, and the base classes
 for display. This code is not built by 
@@ -48,7 +48,7 @@ these steps
 
 1) Download and install FLTK
 
-2) Activate the compilation of Unsupported
+2) Activate the compilation of Auxiliary
    classes.
 
 2.1)  Go to  your Insight directory and edit
@@ -56,12 +56,12 @@ these steps
       containing the command "SUBDIRS"
 
       Add at the end of the list between the 
-      parenthesis, the directories "Unsupported"
+      parenthesis, the directories "Auxiliary"
       and "Examples".
       
       the line will look similar to:
 
-      "SUBDIRS(Utilities Code Testing Examples Unsupported)"
+      "SUBDIRS(Utilities Code Testing Examples Auxiliary)"
 
       (without the quotes...)
 
@@ -73,7 +73,7 @@ these steps
       files and the portable maker CMake, please
       consult:  Insight/Documents/CMake.pdf
 
-2.2)  cd to Insight/Unsupported.
+2.2)  cd to Insight/Auxiliary.
       edit the CMakeList.txt file.
       Look for the line containing the command
       "SUBDIRS". Add the directories "MetaImage"
@@ -92,7 +92,7 @@ these steps
       GUI of image display.
 
 
-2.3)  cd to Insight/Unsupported/MetaImage.
+2.3)  cd to Insight/Auxiliary/MetaImage.
       edit the CMakeList.txt file.
       Look for the line containing the command
       "SUBDIRS". Add the directory "IView".
