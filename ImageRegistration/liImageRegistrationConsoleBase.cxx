@@ -34,26 +34,33 @@ liImageRegistrationConsoleBase
   
   m_MovingImageReader                 = MovingImageReaderType::New();
   
-  m_ResamplingInputMovingImageFilter  = ResamplingFilterType::New();
+  m_ResampleInputMovingImageFilter  = ResampleFilterType::New();
 
-  m_ResamplingInputMovingImageFilter->SetInput( m_MovingImageReader->GetOutput() );
+  m_ResampleInputMovingImageFilter->SetInput( m_MovingImageReader->GetOutput() );
 
-  m_ResamplingMovingImageFilter = ResamplingFilterType::New();
+  m_ResampleMovingImageFilter = ResampleFilterType::New();
 
-  m_ResamplingMovingImageFilter->SetInput( m_MovingImageReader->GetOutput() );
+  m_ResampleMovingImageFilter->SetInput( m_MovingImageReader->GetOutput() );
 
+  m_InputTransform = AffineTransformType::New();
+
+  m_ResampleInputMovingImageFilter->SetTransform( m_InputTransform );
 
 
   m_ImageRegistrationMethod     = ImageRegistrationMethodType::New();
 
   m_ImageRegistrationMethod->SetFixedImage(  m_FixedImageReader->GetOutput() );
-  m_ImageRegistrationMethod->SetMovingImage( m_ResamplingInputMovingImageFilter->GetOutput() );
+  m_ImageRegistrationMethod->SetMovingImage( m_ResampleInputMovingImageFilter->GetOutput() );
 
 
   m_SelectedMetric = meanSquares;
 
   // Register a producer of MetaImage readers
   itk::MetaImageIOFactory::RegisterOneFactory();
+
+  m_FixedImageIsLoaded  = false;
+  m_MovingImageIsLoaded = false;
+
 
 }
 
@@ -90,6 +97,8 @@ liImageRegistrationConsoleBase
 
   m_FixedImageReader->SetFileName( filename );
   m_FixedImageReader->Update();
+  
+  m_FixedImageIsLoaded = true;
 
 }
 
@@ -111,6 +120,8 @@ liImageRegistrationConsoleBase
 
   m_MovingImageReader->SetFileName( filename );
   m_MovingImageReader->Update();
+
+  m_MovingImageIsLoaded = true;
 
 }
 
@@ -152,10 +163,24 @@ void
 liImageRegistrationConsoleBase 
 ::GenerateMovingImage( void )
 {
+  
+  if( !m_MovingImageIsLoaded )
+    {
+    return;
+    }
 
   this->ShowStatus("Transforming the original image...");
 
-  m_ResamplingMovingImageFilter->Update();
+  m_ResampleInputMovingImageFilter->SetOutputSpacing( 
+        m_MovingImageReader->GetOutput()->GetSpacing() );
+
+  m_ResampleInputMovingImageFilter->SetOutputOrigin( 
+        m_MovingImageReader->GetOutput()->GetOrigin() );
+
+  m_ResampleInputMovingImageFilter->SetSize( 
+      m_MovingImageReader->GetOutput()->GetLargestPossibleRegion().GetSize() );
+
+  m_ResampleInputMovingImageFilter->Update();
 
   this->ShowProgress( 1.0 );
   this->ShowStatus("FixedImage Image Transformation done");
@@ -209,9 +234,14 @@ liImageRegistrationConsoleBase
 ::GenerateMappedMovingImage( void )
 {
 
+  if( !m_MovingImageIsLoaded )
+    {
+    return;
+    }
+
   this->ShowStatus("Transforming the reference image...");
 
-  m_ResamplingMovingImageFilter->Update();
+  m_ResampleMovingImageFilter->Update();
 
   this->ShowProgress( 1.0 );
   this->ShowStatus("MovingImage Image Transformation done");

@@ -28,13 +28,13 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           xywh {364 231 190 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {424 81 115 10} box UP_BOX color 4
+          xywh {425 90 160 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {324 151 8 85} box UP_BOX color 4
+          xywh {324 165 8 71} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {383 36 8 95} box UP_BOX color 4
+          xywh {383 50 8 95} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {449 136 105 10} box UP_BOX color 4
@@ -43,7 +43,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           xywh {629 176 75 10} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {424 81 8 50} box UP_BOX color 4
+          xywh {424 90 8 64} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {64 49 85 9} box UP_BOX color 4
@@ -52,10 +52,10 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           xywh {64 92 85 9} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {326 49 8 82} box UP_BOX color 4
+          xywh {326 49 8 101} box UP_BOX color 4
         }
         Fl_Box {} {
-          xywh {546 136 8 35} box UP_BOX color 4
+          xywh {546 136 8 39} box UP_BOX color 4
         }
         Fl_Box {} {
           xywh {234 234 50 9} box UP_BOX color 4
@@ -76,7 +76,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
           xywh {546 191 8 50} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {open
+      Fl_Group controlsGroup {
         xywh {5 16 810 329}
       } {
         Fl_Light_Button fixedImageButton {
@@ -87,7 +87,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         }
         Fl_Button {} {
           label Quit
-          callback {this->Quit();} selected
+          callback {this->Quit();}
           xywh {719 281 65 35} box ROUND_UP_BOX labelsize 12 align 128
         }
         Fl_Light_Button movingImageButton {
@@ -103,7 +103,7 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         }
         Fl_Light_Button registrationMethodButton {
           label {Registration Method}
-          xywh {279 111 205 56} type Normal box ROUND_UP_BOX value 1 selection_color 1 labelsize 12 align 148
+          xywh {279 129 205 56} type Normal value 1 selection_color 1 labelsize 12 align 148
           class {fltk::LightButton}
         }
         Fl_Button {} {
@@ -123,18 +123,22 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         } {
           Fl_Value_Input xRotation {
             label {X : }
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {51 172 50 19} labelsize 12 textsize 12
           }
           Fl_Value_Input yRotation {
             label {Y : }
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {51 192 50 19} labelsize 12 textsize 12
           }
           Fl_Value_Input zRotation {
             label {Z : }
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {51 213 50 18} labelsize 12 value 1 textsize 12
           }
           Fl_Value_Input angleRotation {
             label {A : }
+            callback {m_ResampleInputMovingImageFilter->Modified();} selected
             xywh {51 153 50 19} labelsize 12 textsize 12
           }
         }
@@ -144,20 +148,23 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
         } {
           Fl_Value_Input xTranslation {
             label {X : }
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {52 262 50 20} labelsize 12 textsize 12
           }
           Fl_Value_Input yTranslation {
             label {Y : }
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {52 283 50 19} labelsize 12 textsize 12
           }
           Fl_Value_Input zTranslation {
             label {Z : }
+            callback {m_ResampleInputMovingImageFilter->Modified();}
             xywh {52 304 50 20} labelsize 12 textsize 12
           }
         }
         Fl_Choice {} {
           label Metric
-          xywh {369 16 165 30} labelsize 12 align 1 textsize 12
+          xywh {355 35 165 30} labelsize 12 align 1 textsize 12
         } {
           menuitem {} {
             label {Mean Squares}
@@ -180,20 +187,9 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
             xywh {30 30 100 20} labelsize 12
           }
         }
-        Fl_Button {} {
-          label {Stop Registration}
-          callback {Stop();}
-          xywh {454 281 126 35} box ROUND_UP_BOX labelsize 12 align 128
-        }
-        Fl_Light_Button inputMovingImageButton {
-          label {Moving Image}
-          callback {this->ShowInputMovingImage();}
-          xywh {129 84 109 25} type Normal value 1 selection_color 1 labelsize 12
-          class {fltk::LightButton}
-        }
         Fl_Choice {} {
           label Optimizer
-          xywh {504 68 165 30} labelsize 12 align 1 textsize 12
+          xywh {555 80 165 30} labelsize 12 align 1 textsize 12
         } {
           menuitem {} {
             label {Gradient Descent}
@@ -210,11 +206,17 @@ class liImageRegistrationConsoleGUI {open : {public liImageRegistrationConsoleBa
             callback {this->SelectOptimizer( conjugateGradient );}
             xywh {30 30 100 20} labelsize 12
           }
-          menuitem {} {
-            label {Mutual Information}
-            callback {this->SelectMetric( mutualInformation );}
-            xywh {40 40 100 20} labelsize 12
-          }
+        }
+        Fl_Button {} {
+          label {Stop Registration}
+          callback {Stop();}
+          xywh {454 281 126 35} box ROUND_UP_BOX labelsize 12 align 128
+        }
+        Fl_Light_Button inputMovingImageButton {
+          label {Moving Image}
+          callback {this->ShowInputMovingImage();}
+          xywh {129 84 109 25} type Normal value 1 selection_color 1 labelsize 12
+          class {fltk::LightButton}
         }
         Fl_Button {} {
           label {Start Registration}

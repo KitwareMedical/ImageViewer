@@ -85,7 +85,7 @@ public:
 
 
   typedef   itk::AffineTransform< double,
-                                  ImageDimension >    TransformType;
+                                  ImageDimension >    AffineTransformType;
 
 
   typedef   itk::MutualInformationImageToImageMetric< 
@@ -110,8 +110,8 @@ public:
 
   typedef   itk::ResampleImageFilter< MovingImageType,
                                       MovingImageType,
-                                      TransformType 
-                                                  >  ResamplingFilterType;
+                                      AffineTransformType 
+                                                  >  ResampleFilterType;
 
 
 public:
@@ -143,15 +143,18 @@ protected:
 
   MovingImageReaderType::Pointer          m_MovingImageReader;
 
-  ResamplingFilterType::Pointer           m_ResamplingInputMovingImageFilter;
+  ResampleFilterType::Pointer             m_ResampleInputMovingImageFilter;
 
-  ResamplingFilterType::Pointer           m_ResamplingMovingImageFilter;
+  ResampleFilterType::Pointer             m_ResampleMovingImageFilter;
 
   ImageRegistrationMethodType::Pointer    m_ImageRegistrationMethod;
   
-  TransformType::Pointer                  m_Transform;
+  AffineTransformType::Pointer            m_Transform;
   
-  bool                                    m_ImageIsLoaded;
+  AffineTransformType::Pointer            m_InputTransform;
+
+  bool                                    m_FixedImageIsLoaded;
+  bool                                    m_MovingImageIsLoaded;
 
   MetricIdentifier                        m_SelectedMetric;
 
