@@ -35,6 +35,10 @@ ${ITK_BINARY_DIR}/Code/Numerics
 )
 
 LINK_LIBRARIES (
+Example_ITKFilterLib
+)
+
+LINK_LIBRARIES (
 VXLNumerics
 ITKNumerics
 ITKCommon
@@ -44,10 +48,6 @@ ITKBasicFilters
 
 
 ADD_LIBRARY( Example_ITKFilterLib ITKFilterLib )
-
-LINK_LIBRARIES (
-Example_ITKFilterLib
-)
 
 ADD_EXECUTABLE( Example_ITKFilterLibTest ITKFilterLibTest )
 

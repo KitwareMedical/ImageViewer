@@ -35,6 +35,7 @@ ${ITK_BINARY_DIR}/Code/Numerics
 )
 
 LINK_LIBRARIES (
+Example_ITKRegistrationLib
 VXLNumerics
 ITKNumerics
 ITKCommon
@@ -45,9 +46,5 @@ ITKBasicFilters
 
 ### HERE:  Modified this line
 ADD_LIBRARY(Example_ITKRegistrationLib ITKRegistrationLib )
-
-LINK_LIBRARIES (
-Example_ITKRegistrationLib
-)
 
 ADD_EXECUTABLE(Example_ITKRegistrationLibTest ITKRegistrationLibTest)
