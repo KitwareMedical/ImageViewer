@@ -52,45 +52,13 @@ FEMHeatConduction2D
 
 
 
-FEMHeatConduction2D::DisplacementType
-FEMHeatConduction2D
-::CellEquation(unsigned int i, unsigned int j) const
-{
-//  the integrand here is :
-//   kx dNi/dx dNj/dx + Ky dNi/dy dNj/dy
-  DisplacementType sum = NumericTraits< DisplacementType >::Zero;
-  return sum;
-}
-
-
-
-
 void
 FEMHeatConduction2D
 ::AssembleMasterEquation(void)
 {
 
-  typedef FEMMeshType::ElementBaseType    ElementBaseType;
-  typedef FEMMeshType::ElementsContainer  ElementsContainer;
-
-  // This has to be replaced by a Visitor when
-  // the mesh is composed of different elements types
-  // e.g. triangles and quads.
-
-  ElementsContainer::Pointer   elements = m_Mesh->GetElementsContainer();
-  if( !elements ) 
-    {
-    itkGenericExceptionMacro(<<"The Mesh is empty of Elements");
-    }
-
-  ElementsContainer::Iterator  elementItr = elements->Begin();
-  ElementsContainer::Iterator  end        = elements->End();
-  while( elementItr != end )
-    {
-    ElementBaseType * element = elementItr.Value();
-    element->GetStiffnessMatrix( m_Mesh );
-    elementItr++;
-    }
+   // Here instantiate all the visitors and
+   // send them to walk through the mesh
 
 }
 
