@@ -21,7 +21,7 @@ public:
   void PrintSelf(ostream& os, vtkIndent indent)
   {
     Superclass::PrintSelf ( os, indent );
-    os << m_Filter << endl;
+    os << m_Filter << std::endl;
   };
 
 protected:
