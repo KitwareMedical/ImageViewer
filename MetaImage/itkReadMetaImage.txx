@@ -119,37 +119,37 @@ ReadMetaImage<TOutputImage>
     {
     metaImage.ConvertTo(MET_UCHAR);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(char) )
+  else if( typeid(TOutputImage::PixelType) == typeid(char) )
     {
     metaImage.ConvertTo(MET_CHAR);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(unsigned short))
+  else if( typeid(TOutputImage::PixelType) == typeid(unsigned short))
     {
     metaImage.ConvertTo(MET_USHORT);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(short) )
+  else if( typeid(TOutputImage::PixelType) == typeid(short) )
     {
     metaImage.ConvertTo(MET_SHORT);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(unsigned int) )
+  else if( typeid(TOutputImage::PixelType) == typeid(unsigned int) )
     {
     metaImage.ConvertTo(MET_UINT);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(int) )
+  else if( typeid(TOutputImage::PixelType) == typeid(int) )
     {
     metaImage.ConvertTo(MET_INT);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(float) )
+  else if( typeid(TOutputImage::PixelType) == typeid(float) )
     {
     metaImage.ConvertTo(MET_FLOAT);
     }
-  else if( typeid(TOutputImage::PixelType), typeid(double) )
+  else if( typeid(TOutputImage::PixelType) == typeid(double) )
     {
     metaImage.ConvertTo(MET_DOUBLE);
     }
   else
     {
-    vtkErrorMacro(<<"Couldn't convert pixel type");
+    itkErrorMacro(<<"Couldn't convert pixel type");
     return;
     }
 
