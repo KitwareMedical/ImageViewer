@@ -140,7 +140,7 @@ int main()
     itk::SimpleMemberCommand<ProgressDisplay>::New();
   progressEvent->SetCallbackFunction(&progressDisplay,
                                      &ProgressDisplay::Display);
-  denoiser->AddObserver(itk::Command::ProgressEvent, progressEvent);
+  denoiser->AddObserver(itk::ProgressEvent(), progressEvent);
   
   //------------------------------------------------------------------------
   // ITK to VTK pipeline connection.
