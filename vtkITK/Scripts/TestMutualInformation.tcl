@@ -19,6 +19,7 @@ set DEF_ROT_STEP 0.005
 set DEF_TRA_STEP 100
 
 set GEVTK_DATA_ROOT c:/lorensen/GEVTKData
+set GEVTK_DATA_ROOT /projects/vtk/GEVTKproduction/GEVTKData
 #
 # Read in the test data.
 #
@@ -26,7 +27,7 @@ vtkImageReader reader
      reader SetDataByteOrderToLittleEndian
      reader SetDataScalarTypeToUnsignedShort
      reader SetDataSpacing 0.8  0.8  1.5
-     reader SetDataExtent 0 255 0 255 1 10
+     reader SetDataExtent 0 255 0 255 1 94
      reader SetFilePrefix "$GEVTK_DATA_ROOT/Data/fullHead/headsq"
      reader SetDataMask 0x7fff
 
@@ -39,7 +40,7 @@ set UpperZSlice 94
 set DefaultZSlice [expr {round(($LowerZSlice+$UpperZSlice)/2.0)}]
 
 vtkTransform trans
-    trans Translate -16 -20.0 10.0
+#    trans Translate -5 -5 5
     trans RotateX 10
     trans Update
 
@@ -54,28 +55,28 @@ vtkImageChangeInformation changeSource
   changeSource SetInput [slicer GetOutput]
   changeSource CenterImageOn
 
-vtkITKNormalizeImageFilter normalizeSource
-    normalizeSource SetInput [changeSource GetOutput]
-
 vtkImageShrink3D shrinkSource
-  shrinkSource SetInput [normalizeSource GetOutput]
+  shrinkSource SetInput [changeSource GetOutput]
   shrinkSource SetShrinkFactors 4 4 1
+
+vtkITKNormalizeImageFilter normalizeSource
+    normalizeSource SetInput [shrinkSource GetOutput]
 
 vtkImageChangeInformation changeTarget
   changeTarget SetInput [castToFloat GetOutput]
   changeTarget CenterImageOn
 
-vtkITKNormalizeImageFilter normalizeTarget
-    normalizeTarget SetInput [changeTarget GetOutput]
-
 vtkImageShrink3D shrinkTarget
   shrinkTarget SetShrinkFactors 4 4 1
-  shrinkTarget SetInput [normalizeTarget GetOutput]
+  shrinkTarget SetInput [changeTarget GetOutput]
+
+vtkITKNormalizeImageFilter normalizeTarget
+    normalizeTarget SetInput [shrinkTarget GetOutput]
 
 vtkITKMutualInformationTransform mutual
-    mutual SetSourceImage [shrinkSource GetOutput]
-    mutual SetTargetImage [shrinkTarget GetOutput]
-    mutual SetNumberOfIterations 200
+    mutual SetSourceImage [normalizeSource GetOutput]
+    mutual SetTargetImage [normalizeTarget GetOutput]
+    mutual SetNumberOfIterations 10
     mutual SetNumberOfSamples 50
     mutual SetLearningRate .001
     mutual SetTranslateScale 64
@@ -86,16 +87,16 @@ vtkImageReslice newSlicer
     newSlicer SetResliceTransform mutual
     newSlicer SetBackgroundLevel 0
 
-set colorLevel 100
-set colorWindow 1
+set colorLevel 1000
+set colorWindow 2000
 
 vtkImageCheckerboard checkers
-    checkers SetInput 0 [reader GetOutput]
-    checkers SetInput 1 [reader GetOutput]
-    checkers SetNumberOfDivisions 5 5 5
+    checkers SetInput 0 [changeTarget GetOutput]
+    checkers SetInput 1 [newSlicer GetOutput]
+    checkers SetNumberOfDivisions 2 2 1
 
 vtkImageMapper imageMapperSource
-    imageMapperSource SetInput [reader GetOutput]
+    imageMapperSource SetInput [checkers GetOutput]
     imageMapperSource SetZSlice 10
     imageMapperSource SetColorWindow $colorWindow
     imageMapperSource SetColorLevel $colorLevel
@@ -109,7 +110,7 @@ ren1 AddActor actor1
 #ren1 SetBackground 0.8 0.8 0.8
 
 renWin SetSize 256 256
-
+renWin Render
 
 #
 # Render the image
