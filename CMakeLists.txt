@@ -28,7 +28,7 @@ IF(HAS_METAIMAGE)
   ENDIF(HAS_FLTKIMAGEVIEWER)
 ENDIF(HAS_METAIMAGE)
 
-# Add an option to build or not build the Gaussian Filter GUI example
+# Add an option to build or not build the Extractor of 2D curves
 IF(HAS_METAIMAGE)
   IF(HAS_FLTKIMAGEVIEWER)
     SUBDIRS(Curves2DExtractor)
