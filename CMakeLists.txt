@@ -14,7 +14,7 @@ ${ITK_BINARY_DIR}/Code/Algorithms
 INCLUDE (${ITK_SOURCE_DIR}/Utilities/ITKFindVTK.cmake)
 
 # Add an option to build or not build the Watershed example
-OPTION(BUILD_WATERSHED_REGISTRATION "Build the watershed segmentation" OFF)
+OPTION(BUILD_WATERSHED_SEGMENTATION "Build the watershed segmentation" OFF)
 IF(BUILD_WATERSHED_SEGMENTATION)
 SUBDIRS(WatershedSegmentation)
 ENDIF(BUILD_WATERSHED_SEGMENTATION)
