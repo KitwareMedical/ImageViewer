@@ -215,7 +215,6 @@ ceExtractorConsole
                   fltk::GlDrawEvent(), 
                   m_ExtractedParametricSpaceSamplesShape->GetDrawCommand() );
 
-  m_SpatialFunctionControl->SetParametersFromGUI();
   
   this->ShowStatus("Let's start by loading an image...");
 
@@ -691,12 +690,12 @@ ceExtractorConsole
   fltk::GlWindowInteractive::Point3DType center;
   center[0] =   0;
   center[1] =   0;
-  center[2] = -60;
+  center[2] =   0;
 
   m_ParametricSpaceViewer.GetGlWindow()->ResetViewingParameters();
 
   m_ParametricSpaceViewer.GetGlWindow()->SetCenter( center );
-  m_ParametricSpaceViewer.GetGlWindow()->SetZoom( 2.0 );
+  m_ParametricSpaceViewer.GetGlWindow()->SetZoom( 50.0 );
   m_ParametricSpaceViewer.GetGlWindow()->SetAltitude( -90.0 );
   m_ParametricSpaceViewer.GetGlWindow()->SetAzimuth( 45.0 );
   
@@ -721,11 +720,11 @@ ceExtractorConsole
   fltk::GlWindowInteractive::Point3DType center;
   center[0] =   0;
   center[1] =   0;
-  center[2] = -60;
+  center[2] =   0;
 
   m_ExtractedParametricSpaceViewer.GetGlWindow()->ResetViewingParameters();
   
-  m_ExtractedParametricSpaceViewer.GetGlWindow()->SetZoom( 2.0 );
+  m_ExtractedParametricSpaceViewer.GetGlWindow()->SetZoom( 50.0 );
   m_ExtractedParametricSpaceViewer.GetGlWindow()->SetAltitude( -90.0 );
   m_ExtractedParametricSpaceViewer.GetGlWindow()->SetAzimuth( 45.0 );
   m_ExtractedParametricSpaceViewer.GetGlWindow()->SetCenter( center );
