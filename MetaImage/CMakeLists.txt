@@ -35,8 +35,12 @@ ADD_LIBRARY(
 MetaImageIO MetaImageIO_SRCS
 )
 
+SOURCE_FILES(itkFileIOMetaImageExample_SRCS
+itkFileIOMetaImageExample
+)
+
 ADD_EXECUTABLE(
-itkFileIOMetaImageExample itkFileIOMetaImageExample
+itkFileIOMetaImageExample itkFileIOMetaImageExample_SRCS
 )
 
 
