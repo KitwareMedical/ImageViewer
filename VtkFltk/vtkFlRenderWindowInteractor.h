@@ -42,7 +42,7 @@ class vtkFlRenderWindowInteractor : public Fl_Gl_Window, public vtkRenderWindowI
  public:
    // ctors
    vtkFlRenderWindowInteractor();
-   vtkFlRenderWindowInteractor( int x, int y, int w, int h, const char *l="" );
+   vtkFlRenderWindowInteractor( int x, int y, int w, int h, const char *l="");
    // vtk ::New()
    static vtkFlRenderWindowInteractor * New();
    // dtor

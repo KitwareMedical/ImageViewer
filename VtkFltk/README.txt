@@ -25,6 +25,8 @@
  
     Charl P. Botha <cpbotha@ieee.org> http://cpbotha.net/
  
+    Last Update: 
+    June 24 2002 according to version 0.8 of the vtkFlRenderWindowInteractor
  
   *****************************************************************
   *

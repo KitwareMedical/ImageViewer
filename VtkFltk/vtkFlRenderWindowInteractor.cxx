@@ -33,14 +33,11 @@
 // FLTK
 #include <FL/x.H>
 // vtk
-#include <vtkVersion.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkInteractorStyle.h>
-#if (VTK_MAJOR_VERSION == 4 && VTK_MINOR_VERSION > 0)
-#include <vtkCommand.h>
-#endif
 #include <vtkVersion.h>
+#include <vtkCommand.h>
 
 //---------------------------------------------------------------------------
 vtkFlRenderWindowInteractor::vtkFlRenderWindowInteractor() : 
@@ -85,10 +82,10 @@ void vtkFlRenderWindowInteractor::Initialize()
     int *size = RenderWindow->GetSize();
     // enable everything and start rendering
     Enable();
-    // here we USED to have RenderWindow->Start(); vtkRWI has it as ->Render(),
-    // so we'll try that to remain more consistent.
+    
+    // We should NOT call ->Render yet, as it's entirely possible that
+    // Initialize() is called before there's a valid Fl_Gl_Window!
     //RenderWindow->Render();
-   RenderWindow->Render();
 
     // set the size in the render window interactor
     Size[0] = size[0];
