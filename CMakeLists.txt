@@ -80,6 +80,12 @@ IF(HAS_METAIMAGE)
   SUBDIRS(TripleTKImageDisplay)
 ENDIF(HAS_METAIMAGE)
 
+# Add an option to build or not build 
+# the GaussianMinimumErrorClassifier example
+IF(HAS_METAIMAGE)
+  SUBDIRS(GaussianMinimumErrorClassifier)
+ENDIF(HAS_METAIMAGE)
+
 # Add an option to build or not build the EllipsoidInteriorExteriorSpatialFunction example
 SUBDIRS(EllipsoidInteriorExteriorSpatialFunction)
 
