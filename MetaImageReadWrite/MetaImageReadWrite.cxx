@@ -50,10 +50,14 @@ int main(int argc, char **argv)
   VolumeWriterType::Pointer writer = VolumeWriterType::New();
 
   // Add the MetaImage format to the writer
-  writer->SetImageIO( itk::MetaImageIO::New() );
+  itk::MetaImageIO::Pointer metaWriter = itk::MetaImageIO::New();
+  writer->SetImageIO( metaWriter );
+
+  // Uncomment the next line to write the data to one file.
+  // metaWriter->SetDataFileName( "LOCAL" );
 
   // Set the filename
-  writer->SetFileName( "test.mha" );
+  writer->SetFileName( "test.mhd" );
 
   // Set the image to write
   writer->SetInput( im );
@@ -80,7 +84,7 @@ int main(int argc, char **argv)
   VolumeReaderType::Pointer reader = VolumeReaderType::New();
 
   // Set the name of the file to read
-  reader->SetFileName( "test.mha" );
+  reader->SetFileName( "test.mhd" );
 
   // Set the image into which the results should be stored
   ImageType::Pointer imOut;
