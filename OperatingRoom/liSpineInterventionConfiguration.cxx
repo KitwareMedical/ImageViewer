@@ -25,8 +25,8 @@
 #include <liCommandUpdateRegistratorFieldOfView.h>
 #include <liCommandTubesGeneratePointSet.h>
 
-#include <Fl/fl_file_chooser.H>
-#include <Fl/fl_ask.H>
+#include <FL/fl_file_chooser.H>
+#include <FL/fl_ask.H>
 
 
 

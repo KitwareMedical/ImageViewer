@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #include <liFilterConsole.h>
-#include <Fl/fl_file_chooser.H>
+#include <FL/fl_file_chooser.H>
 #include <fltkLightButtonRedrawCommand.h>
 #include <itkFileIOMetaImage.h>
  

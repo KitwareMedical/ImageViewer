@@ -2,7 +2,7 @@
 #define Cell_H
 
 #include "itkPoint.h"
-#include <Fl/fl_draw.H>
+#include <FL/fl_draw.H>
 #include <list>
 
 

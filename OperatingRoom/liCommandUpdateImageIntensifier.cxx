@@ -14,7 +14,7 @@
 
 #include <liShape3D.h>
 #include <liCommandUpdateImageIntensifier.h>
-#include <FL/Fl.h>
+#include <FL/Fl.H>
 
 namespace li {
 

@@ -2,7 +2,7 @@
 #define TissueViewerWindow_H
 
 #include "Tissue.h"
-#include <Fl/Fl_Box.H>
+#include <FL/Fl_Box.H>
 
 
 namespace bio {

@@ -12,7 +12,7 @@
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Button.H>
-#include <Fl/Fl_Color_Chooser.h>
+#include <FL/Fl_Color_Chooser.H>
 #include <itkImage.h>
 #include <FL/Fl_Check_Button.H>
 #include <fltkRegularStepGradientDescent.h>
