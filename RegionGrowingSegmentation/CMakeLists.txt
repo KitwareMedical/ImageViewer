@@ -11,6 +11,16 @@ ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
+SET(RegionGrowingSegmentation2D_SRCS
+RegionGrowingSegmentationBase2D.cxx
+RegionGrowingSegmentation2D.cxx
+)
+
+SET(RegionGrowingSegmentation2D_GUI_SRCS
+RegionGrowingSegmentation2DGUI.fl
+)
+
+
 SET(RegionGrowingSegmentation_SRCS
 RegionGrowingSegmentationBase.cxx
 RegionGrowingSegmentation.cxx
@@ -43,7 +53,9 @@ IF(UNIX)
   )
 ENDIF(UNIX)
 
-ADD_EXECUTABLE(RegionGrowingSegmentation ${RegionGrowingSegmentation_SRCS})
+ADD_EXECUTABLE(RegionGrowingSegmentation2D ${RegionGrowingSegmentation2D_SRCS})
+FLTK_WRAP_UI( RegionGrowingSegmentation2D ${RegionGrowingSegmentation2D_GUI_SRCS} )
 
+ADD_EXECUTABLE(RegionGrowingSegmentation ${RegionGrowingSegmentation_SRCS})
 FLTK_WRAP_UI( RegionGrowingSegmentation ${RegionGrowingSegmentation_GUI_SRCS} )
 
