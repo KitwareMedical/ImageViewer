@@ -41,6 +41,25 @@ these steps
 
 1) Download and install FLTK
 
+1.1) For Visual C++ use the fltk.dsw 
+     file in /visualc.  Modify the project
+     setting to those required by ITK
+     (for more details see the file 
+     VC_Custom_Projects.doc in /Documentation)
+
+1.2) Build the projects: fluid and fltk
+     this last one in Relead and Debug 
+     configurations.
+
+1.3) Create a subdirectory '/Release' in 
+     fltk/lib and copy fltk.lib on it. 
+
+1.4) Create a subdirectory '/Debug' in 
+     fltk/lib and copy fltkd.lib on it 
+     renamed as fltk.lib
+
+
+
 2) Activate the compilation of Unsupported
    classes.
 
