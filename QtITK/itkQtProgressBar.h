@@ -1,10 +1,10 @@
-#include <qslider.h>
+#include <qprogressbar.h>
 #include "itkCommand.h"
 
 namespace itk {
 
 
-class QtProgressBar : public QSlider
+class QtProgressBar : public ::QProgressBar
 {
 
 public:
@@ -13,7 +13,7 @@ public:
   typedef itk::MemberCommand< QtProgressBar >  RedrawCommandType;
 
   /** Constructor */
-  QtProgressBar( Orientation orientation, QWidget *parent, char * name);
+  QtProgressBar( QWidget *parent, char * name);
 
   /** Get Command */
   RedrawCommandType * GetRedrawCommand( void ) const;
