@@ -12,43 +12,23 @@ ${FLTK_INCLUDE_PATH}
 ${OPENGL_INCLUDE_PATH}
 )
 
-
-LINK_LIBRARIES (
-VXLNumerics
-ITKNumerics
-ITKCommon
-ITKIO
-MetaIO
-itkpng
-itkzlib
-ITKBasicFilters 
-FltkImageViewer
-${FLTK_LIBRARY}
-${OPENGL_LIBRARY}
-${GLU_LIBRARY}
+ADD_EXECUTABLE(MutualInformationEuler2DRegistration
+  RegisterApplication.cxx
+  RegisterWindow.cxx
+  register.cxx
 )
 
+FLTK_WRAP_UI(MutualInformationEuler2DRegistration registerGUI.fl)
+
+TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration
+                      ITKNumerics ITKBasicFilters ITKIO FltkImageViewer
+                      ${FLTK_LIBRARY} ${OPENGL_LIBRARY} ${GLU_LIBRARY})
+
 IF(WIN32)
-  LINK_LIBRARIES(
-  wsock32
-  )
+  TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration wsock32)
 ENDIF(WIN32)
 
 IF(UNIX)
-  LINK_LIBRARIES (
-  ${CMAKE_X_LIBS}
-  )
+  TARGET_LINK_LIBRARIES(MutualInformationEuler2DRegistration ${CMAKE_X_LIBS})
 ENDIF(UNIX)
 
-SET(MutualInformationEuler2DRegistration_SRCS
-RegisterApplication.cxx
-RegisterWindow.cxx
-register.cxx
-)
-
-SET(MutualInformationEuler2DRegistration_GUI_SRCS
-registerGUI.fl
-)
-
-ADD_EXECUTABLE(MutualInformationEuler2DRegistration ${MutualInformationEuler2DRegistration_SRCS})
-FLTK_WRAP_UI(MutualInformationEuler2DRegistration ${MutualInformationEuler2DRegistration_GUI_SRCS})
