@@ -64,3 +64,7 @@ const fltk::GlWindow::RedrawCommandType::Pointer & fltkDisplayGlWindowFlatGUI::G
 itk::LightObject::Pointer & fltkDisplayGlWindowFlatGUI::GetNotifier(void) {
   return drawWindow->GetNotifier();
 }
+
+void fltkDisplayGlWindowFlatGUI::SetBackground(GLfloat r, GLfloat g, GLfloat b) {
+  drawWindow->SetBackground(r,g,b);
+}
