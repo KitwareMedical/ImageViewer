@@ -18,6 +18,7 @@ namespace bio {
 template <typename TInputImage>
 class SliceDrawer
 {
+public:
   typedef int Type;
 };
     
@@ -25,6 +26,7 @@ class SliceDrawer
 template <>
 class SliceDrawer< itk::Image<unsigned char,2> > 
 {
+public:
   typedef fltk::Slice2DDrawer< itk::Image<unsigned char, 2> > Type;
 };
 
@@ -32,12 +34,14 @@ class SliceDrawer< itk::Image<unsigned char,2> >
 template <>
 class SliceDrawer< itk::Image<unsigned char,3> > 
 {
+public:
   typedef fltk::Slice3DDrawer< itk::Image<unsigned char, 3> > Type;
 };
 
 template <>
 class SliceDrawer< itk::Image<double,2> > 
 {
+public:
   typedef fltk::Slice2DDrawer< itk::Image<double, 2> > Type;
 };
 
@@ -45,6 +49,7 @@ class SliceDrawer< itk::Image<double,2> >
 template <>
 class SliceDrawer< itk::Image<double,3> > 
 {
+public:
   typedef fltk::Slice3DDrawer< itk::Image<double, 3> > Type;
 };
 
