@@ -401,9 +401,6 @@ Slice3DDrawer<ImagePixelType>
 
   glPushMatrix();
 
-  glRotatef( 90.0, 0, 0, 1 );
-  glRotatef( 90.0, 1, 0, 0 );
-
   glTranslatef( -m_Ox, -m_Oy, -m_Oy );
 
   const GLfloat qx = -m_Cx; 
