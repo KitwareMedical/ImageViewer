@@ -1,4 +1,4 @@
-INCLUDE(${CMAKE_SOURCE_DIR}/CMake/Modules/FindFLTK.cmake)
+INCLUDE(${CMAKE_ROOT}/Modules/FindFLTK.cmake)
 
 SOURCE_FILES(IView_SRCS
 IView
