@@ -49,6 +49,9 @@ Image2DViewerWindow(int x,int y,int w,int h, const char * label)
 
   m_NumberOfBytesPerPixel = 1; // change by 4 in case of RGBA
 
+  m_Width = 0;
+  m_Height = 0;
+
 }
 
 
