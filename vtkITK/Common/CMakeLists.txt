@@ -2,6 +2,7 @@ SOURCE_FILES( VTKITKCommon_SRCS
 vtkITKMutualInformationTransform.cxx
 vtkITKWatershedImageFilter.cxx
 vtkITKNormalizeImageFilter.cxx
+vtkITKDiscreteGaussianImageFilter.h
 vtkITKConnectedThresholdImageFilter.cxx
 vtkITKConfidenceConnectedImageFilter.cxx
 vtkITKIsolatedConnectedImageFilter.cxx
