@@ -31,9 +31,13 @@ vtkImageReader reader
      reader SetFilePrefix "$GEVTK_DATA_ROOT/Data/fullHead/headsq"
      reader SetDataMask 0x7fff
 
+vtkImageChangeInformation reOrigin
+  reOrigin SetInput [slicer GetOutput]
+  reOrigin CenterImageOn
+
 vtkImageCast castToFloat
  castToFloat SetOutputScalarTypeToFloat
- castToFloat SetInput [reader GetOutput]
+ castToFloat SetInput [reOrigin GetOutput]
 
 set LowerZSlice 1
 set UpperZSlice 94
@@ -122,8 +126,8 @@ wm withdraw .
 vtkTransform a
 proc go {m n} {
   shrinkSource SetShrinkFactors $n $n 1
-  shrinkSource SetShrinkFactors $n $n 1
-    if {$n == 4} { set l .01 }
+  shrinkTarget SetShrinkFactors $n $n 1
+    if {$n >= 4} { set l .01 }
     if {$n == 3} { set l .05 }
     if {$n == 2} { set l .001 }
     if {$n == 1} { set l .005 }
