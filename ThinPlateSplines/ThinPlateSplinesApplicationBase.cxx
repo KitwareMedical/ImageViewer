@@ -38,15 +38,10 @@ ThinPlateSplinesApplicationBase
 ::ThinPlateSplinesApplicationBase()
 {
   m_RenderWindow = vtkRenderWindow::New();
-  m_Renderer     = vtkRenderer::New();
 
-  // a renderer and render window
-  m_RenderWindow->AddRenderer( m_Renderer );
-
-  m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
-  m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
-  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 10.0 ); 
-
+  m_Renderer = 0;
+  this->CreateRenderer();
+  
   m_VTKSourceLandMarks = vtkPoints::New();
   m_VTKTargetLandMarks = vtkPoints::New();
 
@@ -66,6 +61,44 @@ ThinPlateSplinesApplicationBase
 
 }
 
+
+
+void
+ThinPlateSplinesApplicationBase
+::CreateRenderer()
+{
+  if( m_Renderer )
+    {
+    m_Renderer->Delete();
+    }
+  
+  m_Renderer     = vtkRenderer::New();
+
+  // a renderer and render window
+  m_RenderWindow->AddRenderer( m_Renderer );
+
+  m_Renderer->SetBackground( 1.0, 1.0, 1.0 ); 
+  m_Renderer->GetActiveCamera()->Zoom( 1.0 ); 
+  m_Renderer->GetActiveCamera()->SetPosition(0.0, 0.0, 10.0 ); 
+}
+
+
+
+
+void
+ThinPlateSplinesApplicationBase
+::RemoveActors()
+{
+  
+  ActorsArrayType::iterator actor = m_ActorsToDelete.begin();
+  ActorsArrayType::iterator end   = m_ActorsToDelete.end();
+  while( actor != end )
+    {
+    m_Renderer->RemoveActor( *actor );
+    (*actor)->Delete();
+    actor++;
+    }
+}
 
 
 
@@ -92,8 +125,8 @@ ThinPlateSplinesApplicationBase
     axesActor->SetMapper(axesMapper);
 
   m_Renderer->AddActor( axesActor );
+  m_ActorsToDelete.insert( axesActor );
 
-  axesActor->Delete();
   axesMapper->Delete();
   axesTubes->Delete();
   axes->Delete();
@@ -121,6 +154,8 @@ ThinPlateSplinesApplicationBase
   const unsigned int ny =  6;
   const unsigned int nz =  1;
 
+  CoordinateRepresentationType deltax = 1;
+
   PointType p;
   for(unsigned int z=0; z<nz; z++)
     {
@@ -134,10 +169,11 @@ ThinPlateSplinesApplicationBase
       for(unsigned int x=0; x<nx; x++)
         {
         CoordinateRepresentationType rx = x;
-        rx -= 3*nx/2;  
+        rx -= nx + deltax;
         p[0] = rx;
         m_SourceLandMarks.push_back( p );
-        rx += 2*nx;
+        rx  =  x;
+        rx  += deltax;
         p[0] = rx;
         m_TargetLandMarks.push_back( p );
         }
@@ -166,7 +202,7 @@ ThinPlateSplinesApplicationBase
 
   if( numberOfLandMarks != m_TargetLandMarks.size() )
     {
-    itkGenericExceptionMacro( << "The number of Source Landmarks is different from the number of Target Landmarks " );
+    itkGenericExceptionMacro( << "Number of Source Landmarks != Target Landmarks " );
     }
 
   m_VTKSourceLandMarks->Allocate( numberOfLandMarks );
@@ -190,6 +226,7 @@ ThinPlateSplinesApplicationBase
 
 
 
+
 void
 ThinPlateSplinesApplicationBase
 ::DisplayLandMarks(void)
@@ -197,6 +234,8 @@ ThinPlateSplinesApplicationBase
 
   this->TransferLandMarksToVTK();
    
+  this->RemoveActors();
+
   vtkSphereSource * typicalSphere = vtkSphereSource::New();
   typicalSphere->SetRadius(0.05);
 
@@ -235,19 +274,32 @@ ThinPlateSplinesApplicationBase
   // add the actor to the scene
   m_Renderer->AddActor( sourceActor );
   m_Renderer->AddActor( targetActor );
-/*
-  sourceActor->Delete();
+
+  m_ActorsToDelete.insert( sourceActor );
+  m_ActorsToDelete.insert( targetActor );
+
   sourceMapper->Delete();
   sourceSpheres->Delete();
   sourcePolyData->Delete();
 
-  targetActor->Delete();
   targetMapper->Delete();
   targetSpheres->Delete();
   targetPolyData->Delete();
 
   typicalSphere->Delete();
-*/
+  
 }
 
    
+
+
+
+
+void
+ThinPlateSplinesApplicationBase
+::ShowTimeProbes(void)
+{
+  m_TimeCollector.Show();
+}
+
+

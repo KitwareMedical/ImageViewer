@@ -34,6 +34,12 @@ public:
   typedef ThinPlateSplinesApplicationBase::PointType        PointType;
   typedef ThinPlateSplinesApplicationBase::PointArrayType   PointArrayType;
 
+  virtual void DisplayLandMarks(void);
+  virtual void CreateLandMarks(void);
+  virtual void SelectSourceLandMark(void);
+  virtual void SelectTargetLandMark(void);
+  virtual void UpdateSelectedSourceLandMark(void);
+  virtual void UpdateSelectedTargetLandMark(void);
       
 public:
 

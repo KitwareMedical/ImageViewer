@@ -24,6 +24,7 @@
 #include "vtkRenderWindow.h"
 #include "itkPoint.h"
 #include "vtkPoints.h"
+#include "fltkTimeProbesCollector.h"
 
 #include <set>
 
@@ -54,6 +55,11 @@ public:
   virtual void CreateSpline(void);
   virtual void CreateLandMarks(void);
   virtual void DisplayLandMarks(void);
+  virtual void ShowTimeProbes(void);
+  virtual void SelectSourceLandMark(void) = 0;
+  virtual void SelectTargetLandMark(void) = 0;
+  virtual void UpdateSelectedSourceLandMark(void) = 0;
+  virtual void UpdateSelectedTargetLandMark(void) = 0;
 
 
 protected:
@@ -70,10 +76,16 @@ protected:
   vtkPoints       * m_VTKSourceLandMarks;
   vtkPoints       * m_VTKTargetLandMarks;
 
+  fltk::TimeProbesCollector  m_TimeCollector;
 
 private:
 
   void TransferLandMarksToVTK(void);
+  void CreateRenderer(void);
+  void RemoveActors(void);
+
+  typedef std::set< vtkActor * >  ActorsArrayType;
+  ActorsArrayType                 m_ActorsToDelete;
 
 };
 

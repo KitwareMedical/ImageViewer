@@ -36,3 +36,94 @@ ThinPlateSplinesApplication
 
 
 
+void 
+ThinPlateSplinesApplication
+::CreateLandMarks()
+{
+  this->ThinPlateSplinesApplicationBase::CreateLandMarks();
+  targetLandMarkIdCounter->range( 0, m_TargetLandMarks.size()-1 );
+  sourceLandMarkIdCounter->range( 0, m_TargetLandMarks.size()-1 );
+}
+
+
+
+
+void 
+ThinPlateSplinesApplication
+::DisplayLandMarks()
+{
+  this->ThinPlateSplinesApplicationBase::DisplayLandMarks();
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
+
+
+
+
+void 
+ThinPlateSplinesApplication
+::UpdateSelectedTargetLandMark()
+{
+  const unsigned int landMarkId = targetLandMarkIdCounter->value();
+  const CoordinateRepresentationType x =  xTargetValueInput->value();
+  const CoordinateRepresentationType y =  yTargetValueInput->value();
+  const CoordinateRepresentationType z =  zTargetValueInput->value();
+  m_TargetLandMarks[ landMarkId ][0] = x;
+  m_TargetLandMarks[ landMarkId ][1] = y;
+  m_TargetLandMarks[ landMarkId ][2] = z;
+  this->DisplayLandMarks();
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
+
+
+void 
+ThinPlateSplinesApplication
+::SelectTargetLandMark()
+{
+  const unsigned int landMarkId = targetLandMarkIdCounter->value();
+  const CoordinateRepresentationType x = m_TargetLandMarks[ landMarkId ][0];
+  const CoordinateRepresentationType y = m_TargetLandMarks[ landMarkId ][1];
+  const CoordinateRepresentationType z = m_TargetLandMarks[ landMarkId ][2];
+  xTargetValueInput->value( x );
+  yTargetValueInput->value( y );
+  zTargetValueInput->value( z );
+  Fl::check();
+}
+
+
+
+
+void 
+ThinPlateSplinesApplication
+::UpdateSelectedSourceLandMark()
+{
+  const unsigned int landMarkId = sourceLandMarkIdCounter->value();
+  const CoordinateRepresentationType x =  xSourceValueInput->value();
+  const CoordinateRepresentationType y =  ySourceValueInput->value();
+  const CoordinateRepresentationType z =  zSourceValueInput->value();
+  m_SourceLandMarks[ landMarkId ][0] = x;
+  m_SourceLandMarks[ landMarkId ][1] = y;
+  m_SourceLandMarks[ landMarkId ][2] = z;
+  this->DisplayLandMarks();
+  m_FlRenderWindowInteractor->redraw();
+  Fl::check();
+}
+
+
+void 
+ThinPlateSplinesApplication
+::SelectSourceLandMark()
+{
+  const unsigned int landMarkId = sourceLandMarkIdCounter->value();
+  const CoordinateRepresentationType x = m_SourceLandMarks[ landMarkId ][0];
+  const CoordinateRepresentationType y = m_SourceLandMarks[ landMarkId ][1];
+  const CoordinateRepresentationType z = m_SourceLandMarks[ landMarkId ][2];
+  xSourceValueInput->value( x );
+  ySourceValueInput->value( y );
+  zSourceValueInput->value( z );
+  Fl::check();
+}
+
+
+
