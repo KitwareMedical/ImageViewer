@@ -350,7 +350,7 @@ GLSliceView<ImagePixelType, OverlayPixelType>
 
 template <class ImagePixelType, class OverlayPixelType>
 const typename GLSliceView<ImagePixelType, 
-OverlayPixelType>::OverlayType::Pointer &
+OverlayPixelType>::OverlayPointer &
 GLSliceView<ImagePixelType, OverlayPixelType>::GetInputOverlay( void ) 
 const
   {
