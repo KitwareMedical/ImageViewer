@@ -51,17 +51,20 @@ GeodesicActiveContour
 
   this->SetZeroSetValue( zeroSetValueInput->value() );
 
-  m_GeodesicActiveContourFilter->SetNumberOfIterations( 
+  m_GeodesicActiveContourFilter->SetMaximumRMSError( 
+                         geodesicActiveContourRMSErrorValueInput->value() );
+
+  m_GeodesicActiveContourFilter->SetMaximumIterations( 
         static_cast<unsigned int>( geodesicActiveContourIterationsValueInput->value() ) );
 
-  m_GeodesicActiveContourFilter->SetNarrowBandwidth( 
-               geodesicActiveContourIterationsValueInput->value() );
+  m_GeodesicActiveContourFilter->SetCurvatureScaling( 
+                         geodesicActiveContourCurvatureScalingValueInput->value() );
 
-  m_GeodesicActiveContourFilter->SetNarrowBanding( 
-       static_cast<int>( geodesicActiveContourNarrowBandingCheckButton->value() ) );
+  m_GeodesicActiveContourFilter->SetPropagationScaling( 
+                         geodesicActiveContourPropagationScalingValueInput->value() );
 
-  m_GeodesicActiveContourFilter->SetInflationStrength( 
-       static_cast<int>( geodesicActiveContourInflationStrengthValueInput->value() ) );
+  m_GeodesicActiveContourFilter->SetAdvectionScaling( 
+                         geodesicActiveContourAdvectionScalingValueInput->value() );
 
   m_DerivativeFilter->SetSigma( sigmaValueInput->value() );
 

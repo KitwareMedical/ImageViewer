@@ -54,17 +54,13 @@ GeodesicActiveContourBase
   m_InputThresholdFilter->SetInsideValue( 1 );
   m_InputThresholdFilter->SetOutsideValue(  0 );
 
-  m_EdgeDerivativeFilter = EdgeDerivativeFilterType::New();
-  m_EdgeDerivativeFilter->SetInput( m_SigmoidFilter->GetOutput() );
-  m_EdgeDerivativeFilter->SetSigma( 1.0 );
-
   m_GeodesicActiveContourFilter = GeodesicActiveContourFilterType::New();
   m_GeodesicActiveContourFilter->SetInput(  m_FastMarchingFilter->GetOutput() );
-  m_GeodesicActiveContourFilter->SetEdgeImage(   m_SigmoidFilter->GetOutput() );
-  m_GeodesicActiveContourFilter->SetDerivativeImage( m_EdgeDerivativeFilter->GetOutput() );
+  m_GeodesicActiveContourFilter->SetFeatureImage(   m_SigmoidFilter->GetOutput() );
 
-  m_GeodesicActiveContourFilter->NarrowBandingOn();
-  m_GeodesicActiveContourFilter->SetTimeStepSize( 0.125 );
+  m_GeodesicActiveContourFilter->SetCurvatureScaling( 0.1 );
+  m_GeodesicActiveContourFilter->SetPropagationScaling( 1.0 );
+  m_GeodesicActiveContourFilter->SetAdvectionScaling( 1.0 );
 
   m_ThresholdFilter = ThresholdFilterType::New();
   m_ThresholdFilter->SetInput( m_GeodesicActiveContourFilter->GetOutput() );

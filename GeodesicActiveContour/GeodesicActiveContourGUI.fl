@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0100 
+version 1.0103 
 header_name {.h} 
 code_name {.cxx}
 class GeodesicActiveContourGUI {open : {public GeodesicActiveContourBase}
@@ -8,7 +8,7 @@ class GeodesicActiveContourGUI {open : {public GeodesicActiveContourBase}
   } {
     Fl_Window consoleWindow {
       label {Geodesic Active Contour Segmentation} open
-      xywh {332 65 795 305}
+      xywh {650 282 795 305}
       code0 {\#include <GeodesicActiveContourBase.h>}
       code1 {\#include <fltkLightButton.h>} visible
     } {
@@ -64,7 +64,7 @@ class GeodesicActiveContourGUI {open : {public GeodesicActiveContourBase}
           xywh {440 80 10 100} box UP_BOX color 4
         }
       }
-      Fl_Group controlsGroup {open
+      Fl_Group controlsGroup {
         xywh {0 5 785 240} deactivate
       } {
         Fl_Light_Button inputImageButton {
@@ -161,8 +161,8 @@ class GeodesicActiveContourGUI {open : {public GeodesicActiveContourBase}
         }
         Fl_Value_Input geodesicActiveContourIterationsValueInput {
           label Iterations
-          callback {m_GeodesicActiveContourFilter->SetNumberOfIterations( static_cast<unsigned int>( o->value() ) );} selected
-          xywh {447 43 33 23} labelsize 12 maximum 500 step 1 value 10 textsize 12
+          callback {m_GeodesicActiveContourFilter->SetMaximumIterations( static_cast<unsigned int>( o->value() ) );} selected
+          xywh {447 43 44 23} labelsize 12 maximum 500 step 1 value 50 textsize 12
         }
         Fl_Value_Input fastMarchingStoppingValueInput {
           label Stopping
@@ -170,23 +170,28 @@ class GeodesicActiveContourGUI {open : {public GeodesicActiveContourBase}
           xywh {262 155 39 23} labelsize 12 maximum 100 step 0.1 value 10 textsize 12
         }
         Fl_Group {} {open
-          xywh {436 151 125 80} box ENGRAVED_BOX
+          xywh {435 151 189 86} box ENGRAVED_BOX
         } {
-          Fl_Check_Button geodesicActiveContourNarrowBandingCheckButton {
-            label NarrowBanding
-            callback {m_GeodesicActiveContourFilter->SetNarrowBanding( static_cast<unsigned int>( o->value() ) );}
-            xywh {446 159 109 32} down_box DOWN_BOX value 1 labelsize 12
+          Fl_Value_Input geodesicActiveContourCurvatureScalingValueInput {
+            label {Curvature Scaling}
+            callback {m_GeodesicActiveContourFilter->SetCurvatureScaling( o->value() );}
+            xywh {444 157 45 23} labelsize 12 align 8 maximum 20 step 0.01 value 0.1 textsize 12
           }
-          Fl_Value_Input geodesicActiveContourBandWidthValueInput {
-            label {Band Width}
-            callback {m_GeodesicActiveContourFilter->SetNarrowBandwidth( o->value() );}
-            xywh {516 192 33 28} labelsize 12 maximum 500 step 1 value 12 textsize 12
+          Fl_Value_Input geodesicActiveContourPropagationScalingValueInput {
+            label {Propagation Scaling}
+            callback {m_GeodesicActiveContourFilter->SetPropagationScaling( o->value() );}
+            xywh {445 180 45 23} labelsize 12 align 8 maximum 20 step 0.1 value 1 textsize 12
+          }
+          Fl_Value_Input geodesicActiveContourAdvectionScalingValueInput {
+            label {Advection Scaling}
+            callback {m_GeodesicActiveContourFilter->SetAdvectionScaling( o->value() );}
+            xywh {445 205 45 23} labelsize 12 align 8 maximum 20 step 0.01 value 0.1 textsize 12
           }
         }
-        Fl_Value_Input geodesicActiveContourInflationStrengthValueInput {
-          label {Inflation  }
-          callback {m_GeodesicActiveContourFilter->SetInflationStrength( static_cast<unsigned int>( o->value() ) );}
-          xywh {447 22 33 23} labelsize 12 maximum 20 step 0.1 value 3 textsize 12
+        Fl_Value_Input geodesicActiveContourRMSErrorValueInput {
+          label {RMS Error }
+          callback {m_GeodesicActiveContourFilter->SetMaximumRMSError( o->value() );}
+          xywh {447 22 45 23} labelsize 12 maximum 20 step 0.01 value 0.1 textsize 12
         }
       }
       Fl_Slider progressSlider {

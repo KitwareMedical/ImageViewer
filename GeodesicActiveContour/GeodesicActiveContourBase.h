@@ -22,9 +22,9 @@
 
 #include "itkImage.h"
 #include "itkCastImageFilter.h"
-#include "itkGeodesicActiveContourImageFilter.h"
+#include "itkFastMarchingImageFilter.h"
+#include "itkGeodesicActiveContourLevelSetImageFilter.h"
 #include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
-#include "itkGradientRecursiveGaussianImageFilter.h"
 #include "itkSigmoidImageFilter.h"
 #include "itkBinaryThresholdImageFilter.h"
 
@@ -90,17 +90,12 @@ public:
   typedef itk::Image< EdgeDerivativePixelType, ImageDimension > EdgeDerivativeImageType;
 
 
-  /** Gradient filter for computing the edge potential derivative  */
-  typedef itk::GradientRecursiveGaussianImageFilter< 
-                                     InternalImageType, 
-                                     EdgeDerivativeImageType > EdgeDerivativeFilterType;
-
 
   /** GeodesicActiveContour filter used to evolve the contours */
-  typedef   itk::GeodesicActiveContourImageFilter< 
+  typedef   itk::GeodesicActiveContourLevelSetImageFilter< 
                                    InternalImageType, 
                                    InternalImageType,
-                                   EdgeDerivativeImageType
+                                   InternalPixelType
                                                  >     GeodesicActiveContourFilterType;
 
   /** Filter to compute negative exponential of the gradient magnitude */
@@ -163,8 +158,6 @@ protected:
 
   ThresholdFilterType::Pointer                m_InputThresholdFilter;
   
-  EdgeDerivativeFilterType::Pointer           m_EdgeDerivativeFilter;
-
   GeodesicActiveContourFilterType::Pointer    m_GeodesicActiveContourFilter;
 
   DerivativeFilterType::Pointer               m_DerivativeFilter;
