@@ -33,7 +33,7 @@ FileIOMetaImageFactory::FileIOMetaImageFactory()
     }
 }
 
-const char* FileIOMetaImageFactory::GetITKSourceVersion()
+const char* FileIOMetaImageFactory::GetITKSourceVersion(void) const
 {
   return ITK_SOURCE_VERSION;
 }
