@@ -147,6 +147,10 @@ class liFilterConsole2DGUI {open : {public liFilterConsole2DBase}
           xywh {139 93 90 24} type Normal value 1 selection_color 1
           class {fltk::LightButton}
         }
+        Fl_Box {} {
+          label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
+          xywh {480 172 103 68} labeltype image
+        }
         Fl_Light_Button smoothedButton {
           label Smooth
           callback {ShowSmoothed();}

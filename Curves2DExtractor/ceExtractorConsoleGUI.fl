@@ -292,6 +292,10 @@ class ceExtractorConsoleGUI {open : {public ceExtractorConsoleBase}
         callback {Execute();}
         xywh {305 275 215 30} box ROUND_UP_BOX
       }
+      Fl_Button {} {
+        label {../../Documentation/Art/itkLogoSmallTransparentBackground.gif}
+        xywh {850 300 110 75} box FLAT_BOX labeltype image
+      }
     }
   }
   Function {~ceExtractorConsoleGUI()} {return_type virtual

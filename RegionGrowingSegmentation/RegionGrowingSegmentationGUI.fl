@@ -113,6 +113,10 @@ class RegionGrowingSegmentationGUI {open : {public RegionGrowingSegmentationBase
           callback {m_ConnectedThresholdImageFilter->Update();}
           xywh {605 24 170 37} box ROUND_UP_BOX labelsize 12 align 128
         }
+        Fl_Button {} {
+          label {../../Documentation/Art/itkLogoSmall.gif}
+          xywh {940 303 105 67} box DOWN_FRAME labeltype image
+        }
         Fl_Counter lowerThresholdCounter {
           label Lower
           callback {m_ConnectedThresholdImageFilter->SetLower( static_cast<InputPixelType>( o->value() ) );}
