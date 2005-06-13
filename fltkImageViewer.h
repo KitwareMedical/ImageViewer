@@ -96,6 +96,11 @@ public:
   /** Set the ColorTable for the Overlay */
   virtual void SetOverlayColorTable(ColorTablePointer newColorTable);
 
+  void SetOverlayColorIndex( unsigned int c )
+    { 
+    glSliceView->SetOverlayColorIndex( c );
+    }
+
 
 private:
   GLSliceViewType * glSliceView;
