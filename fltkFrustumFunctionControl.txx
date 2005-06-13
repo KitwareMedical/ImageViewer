@@ -36,6 +36,8 @@ FrustumFunctionControl<ImagePixelType>
   m_DrawCommand  = DrawCommandType::New();
   m_DrawCommand->SetCallbackFunction( this, &Self::glDraw );
 
+  m_RotationPlane = RotateInXZPlane;
+
 }
 
 
@@ -241,7 +243,16 @@ FrustumFunctionControl<ImagePixelType>
                 yAdjuster->value(),
                 zAdjuster->value() );
   glRotated(     180.0, 0.0,  1.0, 0.0 );
-  glRotated(  m_AngleZ, 0.0, -1.0, 0.0 );
+
+  if( m_RotationPlane == RotateInXZPlane )
+    {
+    glRotated(  m_AngleZ, 0.0, -1.0, 0.0 );
+    }
+  else 
+    {
+    glRotated(  m_AngleZ, -1.0, 0.0, 0.0 );
+    }
+ 
   m_Shape->glDraw();
   glPopMatrix();
 

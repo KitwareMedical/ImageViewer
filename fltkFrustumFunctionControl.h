@@ -132,7 +132,22 @@ public:
    */
   void glDraw( void ) const;
 
-
+  /** Rotate the frustum in the XZ or the YZ plane */
+  typedef enum{ 
+    RotateInXZPlane=1,
+    RotateInYZPlane
+  } FrustumRotationPlaneType;
+  
+  /** Set the plane in which the frustum should rotate. Default: XZ plane. */
+  void SetRotationPlane( FrustumRotationPlaneType RotationPlane )
+    {
+    m_RotationPlane = RotateInYZPlane;
+    if( RotationPlane == RotateInYZPlane )
+      {
+      m_SpatialFunction->SetRotationPlane( SpatialFunctionType::RotateInYZPlane );
+      }
+    }
+  
 protected:
   
   FrustumFunctionControl();
@@ -144,6 +159,7 @@ private:
   ShapePointer                          m_Shape;
   DrawCommandPointer                    m_DrawCommand;
   double                                m_AngleZ;
+  FrustumRotationPlaneType              m_RotationPlane;
 
 };
 
