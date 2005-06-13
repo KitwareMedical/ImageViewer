@@ -63,6 +63,8 @@ protected:
   
 
   ColorTablePointer      cColorTable;
+
+  unsigned int           cOverlayColorIndex;
   
 public:
 /*! FLTK required constructor - must use imData() to complete 
@@ -113,6 +115,15 @@ public:
   virtual void draw();
   
   virtual int  handle(int event);
+  
+  /*! Display Overlay in Color 'c'. You must ensure that the color-table specified
+   * contains color 'c'. For example with the default useDiscrete() color table,
+   * SetOverlayColorIndex( 0 ) will display the overlay in red. 
+   * SetOverlayColorIndex( 1 ) purple etc.... */
+  void SetOverlayColorIndex( unsigned int c)
+    {
+    cOverlayColorIndex = c;
+    }
   };
   
   
@@ -131,6 +142,7 @@ SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
   cColorTable = ColorTableType::New();
   //cColorTable.useGray();
   cColorTable->useDiscrete();
+  cOverlayColorIndex = 7;  //default white
   }
   
   
@@ -722,6 +734,7 @@ update()
       
       l = (j-this->cWinMinX) + (k-this->cWinMinY)*this->cWinDataSizeX;
       this->cWinImData[l] = (unsigned char)tf;
+      unsigned int overlayColorIndex = 0;
       
       if( this->cValidOverlayData ) 
         {
@@ -748,13 +761,16 @@ update()
             m = cColorTable->GetNumberOfColors() - 1;
             }
           if( m > 0 ) {
-            m = m - 1;
+            if( m > cOverlayColorIndex ) 
+              {
+              overlayColorIndex = cOverlayColorIndex;
+              }
             cWinOverlayData[l+0] = 
-              (unsigned char)(cColorTable->GetColorComponent(m, 'r')*255);
+              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex, 'r')*255);
             cWinOverlayData[l+1] = 
-              (unsigned char)(cColorTable->GetColorComponent(m, 'g')*255);
+              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex, 'g')*255);
             cWinOverlayData[l+2] = 
-              (unsigned char)(cColorTable->GetColorComponent(m, 'b')*255);
+              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex, 'b')*255);
             cWinOverlayData[l+3] = 
               (unsigned char)(cOverlayOpacity*255);
             }
