@@ -100,7 +100,42 @@ PointSet3D<TPointSet>
 
     if( GetDrawingMode()== points ) 
     {
-
+     
+      // Draw the axes for context information
+      // red (+ve x ), green (+ve y), blue (+ve z)
+      glColor3f( 1, 0, 0 );
+      glBegin( GL_LINES );
+        glVertex3f( 0.0, 0.0, 0.0 );
+        glVertex3f( 20.0, 0.0, 0.0 );
+      glEnd();
+      glColor3f( 1, 1, .3 );
+      glBegin( GL_LINES );
+        glVertex3f( 0.0, 0.0, 0.0 );
+        glVertex3f( -20.0, 0.0, 0.0 );
+      glEnd();
+      glColor3f( 0, 1, 0 );
+      glBegin( GL_LINES );
+        glVertex3f( 0.0, 0.0, 0.0 );
+        glVertex3f( 0.0, 20.0, 0.0 );
+      glEnd();
+      glColor3f( 0, 1, 1);
+      glBegin( GL_LINES );
+        glVertex3f( 0.0, 0.0, 0.0 );
+        glVertex3f( 0.0, -20.0, 0.0 );
+      glEnd();
+      glColor3f( 0, 0, 1 );
+      glBegin( GL_LINES );
+        glVertex3f( 0.0, 0.0, 0.0 );
+        glVertex3f( 0.0, 0.0, 20.0 );
+      glEnd();
+      glColor3f( 1, 0, 1 );
+      glBegin( GL_LINES );
+        glVertex3f( 0.0, 0.0, 0.0 );
+        glVertex3f( 0.0, 0.0, -20.0 );
+      glEnd();
+      glColor();
+      
+      
       PointsContainerPointer    meshPoints = m_PointSet->GetPoints();
       PointDataContainerPointer meshData   = m_PointSet->GetPointData();
 
@@ -135,6 +170,7 @@ PointSet3D<TPointSet>
 
       glEnd();
     }
+    
 
 }
 
