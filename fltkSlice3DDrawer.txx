@@ -70,37 +70,37 @@ Slice3DDrawer<TImage>
 
   if( m_TextureX ) 
   {
-    delete m_TextureX;
+    delete [] m_TextureX;
     m_TextureX = 0;
   }
 
   if( m_TextureY ) 
   {
-    delete m_TextureY;
+    delete [] m_TextureY;
     m_TextureY = 0;
   }
 
   if( m_TextureZ ) 
   {
-    delete m_TextureZ;
+    delete [] m_TextureZ;
     m_TextureZ = 0;
   }
 
   if( m_SliceX ) 
   {
-    delete m_SliceX;
+    delete [] m_SliceX;
     m_SliceX = 0;
   }
 
   if( m_SliceY ) 
   {
-    delete m_SliceY;
+    delete [] m_SliceY;
     m_SliceY = 0;
   }
 
   if( m_SliceZ ) 
   {
-    delete m_SliceZ;
+    delete [] m_SliceZ;
     m_SliceZ = 0;
   }
 
@@ -215,17 +215,17 @@ Slice3DDrawer<TImage>
 
   if( m_SliceX ) 
   {
-    delete m_SliceX;
+    delete [] m_SliceX;
   }
 
   if( m_SliceY ) 
   {
-    delete m_SliceY;
+    delete [] m_SliceY;
   }
 
   if( m_SliceZ ) 
   {
-    delete m_SliceZ;
+    delete [] m_SliceZ;
   }
 
   m_SliceX = new unsigned char [ 4 * m_Ny * m_Nz ];
@@ -234,17 +234,17 @@ Slice3DDrawer<TImage>
 
   if( m_TextureX ) 
   {
-    delete m_TextureX;
+    delete [] m_TextureX;
   }
 
   if( m_TextureY ) 
   {
-    delete m_TextureY;
+    delete [] m_TextureY;
   }
 
   if( m_TextureZ ) 
   {
-    delete m_TextureZ;
+    delete [] m_TextureZ;
   }
 
   m_TextureX = new unsigned char [ 4 * m_Nyr * m_Nzr ];
