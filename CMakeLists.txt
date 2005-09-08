@@ -43,14 +43,16 @@ INCLUDE_DIRECTORIES(
   ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
 )
 
-ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS})
-
-TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_glu_LIBRARY}
-                      ${OPENGL_LIBRARIES})
-
 # Take the list of GUI files, generate .cxx and .h from them and add
 # them to the build process of the target
 FLTK_WRAP_UI(ITKFltkImageViewer ${FltkImageViewer_GUI_SRCS} )
+
+ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS}
+           ${ITKFltkImageViewer_FLTK_UI_SRCS}
+           )
+
+TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_glu_LIBRARY}
+                      ${OPENGL_LIBRARIES})
 
 # The fluid-generated fltk sources have many warnings.  Disable
 # warnings for the generated files on some compilers.
