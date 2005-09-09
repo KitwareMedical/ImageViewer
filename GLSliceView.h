@@ -946,7 +946,7 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
                 if ( static_cast<int>( pts[this->cWinOrder[2]] ) ==
                      (int)this->sliceNum() )
                 {
-                    float x = 0;
+                    float x;
                     if(this->cFlipX[this->cWinOrientation])
                     {
                         x = this->cW - (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
@@ -958,7 +958,7 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
                             + originX;
                     }
 
-                    float y = 0;
+                    float y;
                     if(this->cFlipY[this->cWinOrientation])
                     {
                         y = this->cH - (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
