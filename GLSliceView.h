@@ -501,27 +501,39 @@ update()
     return;
     }
 
-  double zoomBase = this->cW/(this->cDimSize[this->cWinOrder[0]]*(fabs(this->cSpacing[this->cWinOrder[0]])/fabs(this->cSpacing[0])));
-  if(zoomBase >
-      this->cH/(this->cDimSize[this->cWinOrder[1]]*(fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0]))))
+  double zoomBase = this->cW / (this->cDimSize[this->cWinOrder[0]]
+                                * (fabs(this->cSpacing[this->cWinOrder[0]])
+                                   /fabs(this->cSpacing[0])));
+  if(zoomBase > this->cH / (this->cDimSize[this->cWinOrder[1]]
+                            * (fabs(this->cSpacing[this->cWinOrder[1]])
+                              / fabs(this->cSpacing[0]))))
     {
-    zoomBase = this->cH/(this->cDimSize[this->cWinOrder[1]]*(fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0])));
+    zoomBase = this->cH / (this->cDimSize[this->cWinOrder[1]]
+                           * (fabs(this->cSpacing[this->cWinOrder[1]])
+                              / fabs(this->cSpacing[0])));
     }
-  double scale0 = this->cWinZoom * zoomBase * fabs(this->cSpacing[this->cWinOrder[0]])/fabs(this->cSpacing[0]);
-  double scale1 = this->cWinZoom * zoomBase * fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0]);
+  double scale0 = this->cWinZoom * zoomBase 
+                                 * fabs(this->cSpacing[this->cWinOrder[0]])
+                                 / fabs(this->cSpacing[0]);
+  double scale1 = this->cWinZoom * zoomBase 
+                                 * fabs(this->cSpacing[this->cWinOrder[1]]) 
+                                 / fabs(this->cSpacing[0]);
 
   if(this->cWinZoom>1)
     {
     this->cWinSizeX = (int)( this->cW / scale0 );
-    this->cWinMinX = (int)( (int)this->cWinCenter[ this->cWinOrder[0] ] - this->cWinSizeX/2);
-    this->cWinMaxX = (int)( (int)this->cWinCenter[ this->cWinOrder[0] ] + this->cWinSizeX/2);
+    this->cWinMinX = (int)( (int)this->cWinCenter[ this->cWinOrder[0] ] 
+                            - this->cWinSizeX/2 );
+    this->cWinMaxX = (int)( (int)this->cWinCenter[ this->cWinOrder[0] ] 
+                            + this->cWinSizeX/2 );
     }
   else
     {
     this->cWinSizeX = (int)(this->cDimSize[ this->cWinOrder[0] ]);
     this->cWinMinX = 0;
     this->cWinMaxX = (int)( (int)(this->cDimSize[ this->cWinOrder[0] ]) - 1 );
-    this->cWinCenter[this->cWinOrder[0]] = (int)( this->cDimSize[ this->cWinOrder[0] ] / 2);
+    this->cWinCenter[this->cWinOrder[0]] = 
+                     (int)( this->cDimSize[ this->cWinOrder[0] ] / 2);
     }
   if( this->cWinMinX <= - (int) this->cDimSize[ this->cWinOrder[0] ] ) 
     {
@@ -539,15 +551,18 @@ update()
   if(this->cWinZoom>1)
     {
     this->cWinSizeY = (int)( this->cH / scale1 );
-    this->cWinMinY = (int)( (int)(this->cWinCenter[ this->cWinOrder[1] ]) - this->cWinSizeY/2 );
-    this->cWinMaxY = (int)( (int)(this->cWinCenter[ this->cWinOrder[1] ]) + this->cWinSizeY/2 );
+    this->cWinMinY = (int)( (int)(this->cWinCenter[ this->cWinOrder[1] ]) 
+                             - this->cWinSizeY/2 );
+    this->cWinMaxY = (int)( (int)(this->cWinCenter[ this->cWinOrder[1] ]) 
+                             + this->cWinSizeY/2 );
     }
   else
     {
     this->cWinSizeY = (int)(this->cDimSize[ this->cWinOrder[1] ]);
     this->cWinMinY = 0;
     this->cWinMaxY = (int)( (int)(this->cDimSize[ this->cWinOrder[1] ]) - 1 );
-    this->cWinCenter[this->cWinOrder[1]] = (int)( this->cDimSize[ this->cWinOrder[1] ] / 2);
+    this->cWinCenter[this->cWinOrder[1]] = 
+                     (int)( this->cDimSize[ this->cWinOrder[1] ] / 2);
     }
   if( this->cWinMinY <= - (int)( this->cDimSize[ this->cWinOrder[1] ] ) ) 
     {
@@ -599,21 +614,25 @@ update()
         {
         default:
         case IMG_VAL:
-          tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin) 
+                       / (this->cIWMax-this->cIWMin)*255);
           break;
         case IMG_INV:
-          tf = (float)((this->cIWMax-this->cImData->GetPixel(ind))/(this->cIWMax-this->cIWMin)*255);
+          tf = (float)((this->cIWMax-this->cImData->GetPixel(ind)) 
+                       / (this->cIWMax-this->cIWMin)*255);
           break;
         case IMG_LOG:
           tf = (float)(log(this->cImData->GetPixel(ind)-this->cIWMin+0.00000001)
-            /log(this->cIWMax-this->cIWMin+0.00000001)*255);
+                       /log(this->cIWMax-this->cIWMin+0.00000001)*255);
           break;
         case IMG_DX:
           if(ind[0]>0) 
             {
-            tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin)
+                         / (this->cIWMax-this->cIWMin)*255);
             ind[0]--;
-            tf -= (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf -= (float)((this->cImData->GetPixel(ind)-this->cIWMin) 
+                         / (this->cIWMax-this->cIWMin)*255);
             ind[0]++;
             tf += 128;
             } 
@@ -625,9 +644,11 @@ update()
         case IMG_DY:
           if(ind[1]>0) 
             {
-            tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin) 
+                         / (this->cIWMax-this->cIWMin)*255);
             ind[1]--;
-            tf -= (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf -= (float)((this->cImData->GetPixel(ind)-this->cIWMin) 
+                          / (this->cIWMax-this->cIWMin)*255);
             ind[1]++;
             tf += 128;
             }
@@ -639,9 +660,11 @@ update()
         case IMG_DZ:
           if(ind[2]>0) 
             {
-            tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf = (float)((this->cImData->GetPixel(ind)-this->cIWMin)
+                         / (this->cIWMax-this->cIWMin)*255);
             ind[2]--;
-            tf -= (float)((this->cImData->GetPixel(ind)-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+            tf -= (float)((this->cImData->GetPixel(ind)-this->cIWMin)
+                          / (this->cIWMax-this->cIWMin)*255);
             ind[2]++;
             tf += 128;
             }
@@ -766,11 +789,14 @@ update()
               overlayColorIndex = cOverlayColorIndex;
               }
             cWinOverlayData[l+0] = 
-              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex, 'r')*255);
+              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex,
+                                                             'r') * 255);
             cWinOverlayData[l+1] = 
-              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex, 'g')*255);
+              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex,
+                                                             'g') * 255);
             cWinOverlayData[l+2] = 
-              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex, 'b')*255);
+              (unsigned char)(cColorTable->GetColorComponent(overlayColorIndex,
+                                                             'b') * 255);
             cWinOverlayData[l+3] = 
               (unsigned char)(cOverlayOpacity*255);
             }
@@ -887,15 +913,24 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       return;
       }
     
-    double zoomBase = this->cW/(this->cDimSize[this->cWinOrder[0]]*(fabs(this->cSpacing[this->cWinOrder[0]])/fabs(this->cSpacing[0])));
-    if(zoomBase >
-       this->cH/(this->cDimSize[this->cWinOrder[1]]*(fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0]))))
+    double zoomBase = this->cW / (this->cDimSize[this->cWinOrder[0]]
+                                  * (fabs(this->cSpacing[this->cWinOrder[0]])
+                                     / fabs(this->cSpacing[0])));
+    if(zoomBase > this->cH / (this->cDimSize[this->cWinOrder[1]]
+                              * (fabs(this->cSpacing[this->cWinOrder[1]])
+                                 / fabs(this->cSpacing[0]))))
       {
-      zoomBase = this->cH/(this->cDimSize[this->cWinOrder[1]]*(fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0])));
+      zoomBase = this->cH / (this->cDimSize[this->cWinOrder[1]]
+                             * (fabs(this->cSpacing[this->cWinOrder[1]])
+                                / fabs(this->cSpacing[0])));
       }
 
-    double scale0 = this->cWinZoom * zoomBase * fabs(this->cSpacing[this->cWinOrder[0]])/fabs(this->cSpacing[0]);
-    double scale1 = this->cWinZoom * zoomBase * fabs(this->cSpacing[this->cWinOrder[1]])/fabs(this->cSpacing[0]);
+    double scale0 = this->cWinZoom * zoomBase 
+                                   * fabs(this->cSpacing[this->cWinOrder[0]])
+                                   / fabs(this->cSpacing[0]);
+    double scale1 = this->cWinZoom * zoomBase 
+                                   * fabs(this->cSpacing[this->cWinOrder[1]])
+                                   / fabs(this->cSpacing[0]);
     
     int originX = 0;
     int originY = 0;
@@ -949,7 +984,8 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
                     float x;
                     if(this->cFlipX[this->cWinOrientation])
                     {
-                        x = this->cW - (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
+                        x = this->cW - (pts[this->cWinOrder[0]] 
+                                        - this->cWinMinX) * scale0
                             - originX;
                     }
                     else
@@ -961,7 +997,8 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
                     float y;
                     if(this->cFlipY[this->cWinOrientation])
                     {
-                        y = this->cH - (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
+                        y = this->cH - (pts[this->cWinOrder[1]] 
+                                        - this->cWinMinY) * scale1
                             - originY;
                     }
                     else
@@ -1099,20 +1136,24 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       int x;
       if(this->cFlipX[this->cWinOrientation])
         {
-        x = (int)(this->cW - (this->cClickSelect[this->cWinOrder[0]] - this->cWinMinX) * scale0 - originX);
+        x = (int)(this->cW - (this->cClickSelect[this->cWinOrder[0]] 
+                           - this->cWinMinX) * scale0 - originX);
         }
       else
         {
-        x = (int)((this->cClickSelect[this->cWinOrder[0]] - this->cWinMinX) * scale0 + originX);
+        x = (int)((this->cClickSelect[this->cWinOrder[0]] 
+                   - this->cWinMinX) * scale0 + originX);
         }
       int y;
       if(this->cFlipY[this->cWinOrientation])
         {
-        y = (int)(this->cH - (this->cClickSelect[this->cWinOrder[1]] - this->cWinMinY) * scale1 - originY);
+        y = (int)(this->cH - (this->cClickSelect[this->cWinOrder[1]] 
+                           - this->cWinMinY) * scale1 - originY);
         }
       else
         {
-        y = (int)((this->cClickSelect[this->cWinOrder[1]] - this->cWinMinY) * scale1 + originY);
+        y = (int)((this->cClickSelect[this->cWinOrder[1]] 
+                   - this->cWinMinY) * scale1 + originY);
         }
       glBegin(GL_LINES);
       glVertex2d(0, y);
