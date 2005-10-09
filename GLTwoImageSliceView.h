@@ -170,7 +170,7 @@ void GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
 clickSelect(float newX, float newY, float newZ)
   {    
 
-  if(!cImData)
+  if(!this->cImData)
     {
     return;
     }
