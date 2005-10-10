@@ -784,6 +784,7 @@ update()
             m = cColorTable->GetNumberOfColors() - 1;
             }
           if( m > 0 ) {
+            overlayColorIndex = m-1;
             if( m > cOverlayColorIndex ) 
               {
               overlayColorIndex = cOverlayColorIndex;
