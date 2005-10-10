@@ -66,6 +66,11 @@ class GLTwoImageSliceView
     virtual void draw();
     
     virtual int handle(int event);
+    
+    void        iw2Min(float newIWMin);
+    float       iw2Min(void);
+    void        iw2Max(float newIWMax);
+    float       iw2Max(void);
 
   protected:
 
@@ -80,6 +85,8 @@ class GLTwoImageSliceView
 
     double        cIm2DataMin;
     double        cIm2DataMax;
+    float         cIW2Min;
+    float         cIW2Max;
   };
   
 template <class ImagePixelType, class OverlayPixelType>
@@ -118,7 +125,7 @@ SetInputImage(ImageType * newImData)
 template <class ImagePixelType, class OverlayPixelType>
 void GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
 SetSecondInputImage(ImageType * newImData)
-  {
+{
   this->cIm2Data = newImData;
   this->cValidIm2Data = true;
 
@@ -134,6 +141,8 @@ SetSecondInputImage(ImageType * newImData)
   
   this->cIm2DataMax = this->cIm2Data->GetPixel(ind);
   this->cIm2DataMin = this->cIm2DataMax;
+  this->cIW2Min     = this->cIm2DataMin;
+  this->cIW2Max     = this->cIm2DataMax;
   ImagePixelType tf;
   
   for( unsigned int i=0; i<this->cIm2DimSize[0]; i++ )
@@ -161,7 +170,9 @@ SetSecondInputImage(ImageType * newImData)
       }
     }
 
-  }
+  this->cIW2Min     = this->cIm2DataMin;
+  this->cIW2Max     = this->cIm2DataMax;
+}
 
 //
 //
@@ -169,12 +180,6 @@ template <class ImagePixelType, class OverlayPixelType>
 void GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
 clickSelect(float newX, float newY, float newZ)
   {    
-
-  if(!this->cImData)
-    {
-    return;
-    }
-
   this->cClickSelect[0] = newX;
   if(this->cClickSelect[0]<0) 
     {
@@ -388,13 +393,11 @@ update()
         this->cImData->TransformIndexToPhysicalPoint(ind, pnt);
         if(this->cIm2Data->TransformPhysicalPointToIndex(pnt, ind2))
           {
-          tfv[1] = (this->cIm2Data->GetPixel(ind2)-this->cIm2DataMin)
-                   / (this->cIm2DataMax-this->cIm2DataMin);
-          tfv[1] = tfv[1] * (this->cDataMax-this->cDataMin) + this->cDataMin;
+          tfv[1] = (this->cIm2Data->GetPixel(ind2));
           }
         else
           {
-          tfv[1] = this->cDataMin;
+          tfv[1] = this->cIm2DataMin;
           }
         }
       else
@@ -407,7 +410,7 @@ update()
         default:
         case IMG_VAL:
           tf[0] = (float)(((float)tfv[0]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
-          tf[1] = (float)(((float)tfv[1]-this->cIWMin)/(this->cIWMax-this->cIWMin)*255);
+          tf[1] = (float)(((float)tfv[1]-this->cIW2Min)/(this->cIW2Max-this->cIW2Min)*255);
           break;
         case IMG_INV:
           tf[0] = (float)((this->cIWMax-(float)tfv[0])/(this->cIWMax-this->cIWMin)*255);
@@ -920,20 +923,27 @@ draw()
         sprintf(s, "Y - Slice: %3d", this->cWinCenter[1]);
       else
         sprintf(s, "Z - Slice: %3d", this->cWinCenter[2]);
-      gl_draw( s, 2, 2+5*(gl_height()+2) );
+      gl_draw( s, 2, 2+7*(gl_height()+2) );
       sprintf(s, "Dims: %3d x %3d x %3d", 
         (int)this->cDimSize[0], (int)this->cDimSize[1], (int)this->cDimSize[2]);
-      gl_draw( s, 2, 2+4*(gl_height()+2) );
+      gl_draw( s, 2, 2+6*(gl_height()+2) );
       sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f", 
         this->cSpacing[0], this->cSpacing[1], this->cSpacing[2]);
-      gl_draw( s, 2, 2+3*(gl_height()+2) );
+      gl_draw( s, 2, 2+5*(gl_height()+2) );
       sprintf(s, "Int. Range: %0.3f - %0.3f", (float)this->cDataMin, 
               (float)this->cDataMax);
-      gl_draw( s, 2, 2+2*(gl_height()+2) );
-      sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)", 
+      gl_draw( s, 2, 2+4*(gl_height()+2) );
+      sprintf(s, "Int. Range2: %0.3f - %0.3f", (float)this->cIm2DataMin, 
+              (float)this->cIm2DataMax);
+      gl_draw( s, 2, 2+3*(gl_height()+2) );
+       sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)", 
         (float)this->cIWMin, IWModeTypeName[this->cIWModeMin], 
         (float)this->cIWMax, IWModeTypeName[this->cIWModeMax]);
-      gl_draw( s, 2, 2+1*(gl_height()+2) );
+      gl_draw( s, 2, 2+2*(gl_height()+2) );
+      sprintf(s, "Int. Window2: %0.3f(%s) - %0.3f(%s)", 
+        (float)this->cIW2Min, IWModeTypeName[this->cIWModeMin], 
+        (float)this->cIW2Max, IWModeTypeName[this->cIWModeMax]);
+       gl_draw( s, 2, 2+1*(gl_height()+2) );
       sprintf(s, "View Mode: %s", ImageModeTypeName[this->cImageMode]);
       gl_draw( s, 2, 2+0*(gl_height()+2) );
       glDisable(GL_BLEND);
@@ -984,9 +994,164 @@ draw()
 template <class ImagePixelType, class OverlayPixelType>
 int GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
 handle(int event)
-  {
+{
+  int key;
+
+  switch(event)
+    {
+    case FL_SHORTCUT:
+      {  
+
+      int eventState = Fl::event_state();
+      key = Fl::event_text()[0];
+      
+      // Alt + 'a' etc.. window levels the second dataset independent of the first
+      // Alt + 'r' resets second dataset independent of the fist..
+      // 
+      if( eventState & FL_ALT )
+        {
+        switch(key)
+          {
+          case 'a':
+            iw2Min(cIW2Min-(float)0.02*(cIm2DataMax-cIm2DataMin));
+            this->update();
+            return 1;
+          case 'q':
+            iw2Max(cIW2Max-(float)0.02*(cIm2DataMax-cIm2DataMin));
+            this->update();
+            return 1;
+          case 'w':
+            {
+            iw2Max(cIW2Max+(float)0.02*(cIm2DataMax-cIm2DataMin));
+            this->update();
+            return 1;
+            }
+          case 's':
+            {
+            iw2Min(cIW2Min+(float)0.02*(cIm2DataMax-cIm2DataMin));
+            this->update();
+            return 1;
+            }
+          case 'r':
+            {
+            this->winZoom(1);
+            this->winCenter();
+            this->imageMode(IMG_VAL);
+            iw2Max(cIm2DataMax);
+            iw2Min(cIm2DataMin);
+            this->update();
+            return 1;
+            }
+          case 'h':
+            {
+            std::string a(" \
+  SliceViewer\n \
+  ===========\n \
+  \
+  This is a multi-dimensional image viewer.  It displays one 2D slice or \n \
+  a MIP view of that data. A variety of viewing options exist...\n \
+  \n \
+  Options: (press a key in the window)\n \
+  \n \
+    0 - View slices along the x-axis\n \
+    1 - View slices along the y-axis\n \
+    2 - View slices along the z-axis (default)\n \
+    \n \
+    < , - View the next slice\n \
+    < , - View the previous slice\n \
+    \n \
+    r      - reset all options, (W/L settings reset only for the first dataset)\n \
+    Alt +r - reset all options, (W/L settings reset only for the second dataset)\n \
+    \n");
+    std::string b(" \
+        h - help (this document)\n \
+    \n \
+    x - Flip the x-axis\n \
+    y - Flip the y-axis\n \
+    z - Flip the z-axis\n \
+    \n \
+    q w       - Decrease, Increase upper limit of intensity window for first dataset\n \
+    Alt + q w - Decrease, Increase upper limit of intensity window for second dataset\n \
+    e - Toggle between clipping and setting-to-black values above IW upper limit\n \
+    \n \
+    a s       - Decrease, Increase lower limit of intensity window for first dataset\n \
+    Alt + a s - Decrease, Increase lower limit of intensity window for second dataset\n \
+    d - Toggle between clipping and setting-to-white values below IW lower limit\n \
+    \n \
+    + = - Zoom-in by a factor of 2 \n \
+    - _ - Zoom-out by a factor of 2 \n \
+    \n \
+    i j k m - Shift the image in the corresponding direction\n \
+    \n \
+    t - Transpose the axis of the slice being viewed\n \
+    \n \
+    A - View axis labels: P=posterior, L=left, S=superior\n \
+    C - View crosshairs that illustrate last user-click in the window\n \
+    I - View image values as the user clicks in the window\n \
+    T - Toggle display of clicked points\n \
+    P - Toggle coordinates display between index and physical units\n \
+    D - View image details as an overlay on the image\n \
+    O - View a color overlay (application dependent)\n \
+    \n \
+    p - Save the clicked points in a file \n \
+    \n \
+    l - Toggle how the data is the window is viewed:\n \
+          Modes cycle between the following views: \n \
+          Intensity\n \
+          Inverse\n \
+          Log\n \
+          Derivative wrt x\n \
+          Derivative wrt y\n \
+          Derivative wrt z\n \
+          Blend with previous and next slice\n \
+          MIP\n ");
+            a += b;
+            ifuShowText(a.c_str());
+            return 1;
+            }
+          default:
+            break;
+          }
+        }
+      }
+
+    default:
+      break;
+    }
+
   return GLSliceView<ImagePixelType, OverlayPixelType>::handle(event);
-  }
+}
+
+
+template <class ImagePixelType, class OverlayPixelType>
+void GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
+iw2Min(float newIWMin)
+{
+  cIW2Min = newIWMin;
+}
+ 
+template <class ImagePixelType, class OverlayPixelType>
+void GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
+iw2Max(float newIWMax)
+{
+  cIW2Max = newIWMax;
+}
+
+template <class ImagePixelType, class OverlayPixelType>
+float GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
+iw2Max(void)
+{
+  return cIW2Max;
+}
+
+template <class ImagePixelType, class OverlayPixelType>
+float GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
+iw2Min(void)
+{
+  return cIW2Min;
+}
+
+
 
 }; //namespace
 #endif
