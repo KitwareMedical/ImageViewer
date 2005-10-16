@@ -180,6 +180,11 @@ template <class ImagePixelType, class OverlayPixelType>
 void GLTwoImageSliceView<ImagePixelType, OverlayPixelType>::
 clickSelect(float newX, float newY, float newZ)
   {    
+  if(!this->cImData)
+     {
+     return;
+     }
+
   this->cClickSelect[0] = newX;
   if(this->cClickSelect[0]<0) 
     {
