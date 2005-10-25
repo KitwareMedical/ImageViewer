@@ -47,9 +47,8 @@ INCLUDE_DIRECTORIES(
 # them to the build process of the target
 FLTK_WRAP_UI(ITKFltkImageViewer ${FltkImageViewer_GUI_SRCS} )
 
-ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS}
-           ${ITKFltkImageViewer_FLTK_UI_SRCS}
-           )
+ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS} ${ITKFltkImageViewer_FLTK_UI_SRCS})
+INSTALL_TARGETS(/lib ITKFltkImageViewer)
 
 TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_glu_LIBRARY}
                       ${OPENGL_LIBRARIES})
