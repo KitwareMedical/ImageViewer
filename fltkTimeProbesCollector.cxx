@@ -26,7 +26,7 @@ namespace fltk
 TimeProbesCollector
 ::TimeProbesCollector()
 {
- timeResolution->value( 1.0f / CLOCKS_PER_SEC );
+ timeResolution->value( 1.0f );
 }
 
 
