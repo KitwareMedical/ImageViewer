@@ -785,7 +785,7 @@ update()
             }
           if( m > 0 ) {
             overlayColorIndex = m-1;
-            if( m > cOverlayColorIndex ) 
+            if( static_cast<unsigned int>(m) > cOverlayColorIndex )
               {
               overlayColorIndex = cOverlayColorIndex;
               }

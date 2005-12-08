@@ -142,7 +142,7 @@ void GlWindow::SaveImage(const char * filename)
 
   if( !image ) 
   {
-    fl_alert("Problem","Allocating memory for image grabbing buffer");
+    fl_alert("Problem Allocating memory for image grabbing buffer");
     of.close();
     return;
   }

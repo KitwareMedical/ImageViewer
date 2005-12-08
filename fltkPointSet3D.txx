@@ -153,16 +153,15 @@ PointSet3D<TPointSet>
       PointIteratorType p = meshPoints->Begin();
 
       DataIteratorType  d;
-      bool pointDataValuesExist = false;
+//      bool pointDataValuesExist = false;
       if( meshData )
         {
         d = meshData->Begin();
-        pointDataValuesExist = true;
+//        pointDataValuesExist = true;
         }
 
       while( p != meshPoints->End() )
       {
-        
         const PointType point = p.Value();
         glVertex3d( point[0], point[1], point[2] );
         ++p;
@@ -170,7 +169,7 @@ PointSet3D<TPointSet>
 
       glEnd();
     }
-    
+
 
 }
 
