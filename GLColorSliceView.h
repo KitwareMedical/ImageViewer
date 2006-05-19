@@ -682,6 +682,7 @@ draw()
     {
     glClearColor((float)0.0, (float)0.0, (float)0.0, (float)0.0);          
     glShadeModel(GL_FLAT);
+    glClear(GL_COLOR_BUFFER_BIT);    //this clears and paints to black
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);  //if you don't include this
     //image size differences distort
@@ -689,6 +690,8 @@ draw()
     }
   else
     {
+    glClearColor((float)0.0, (float)0.0, (float)0.0, (float)0.0);          
+    glShadeModel(GL_FLAT);
     glClear(GL_COLOR_BUFFER_BIT);    //this clears and paints to black
     
     glMatrixMode(GL_MODELVIEW);    //clear previous 3D draw params
