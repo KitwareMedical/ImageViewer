@@ -410,6 +410,7 @@ update()
         tfv[1] = 0;
         }
       tfv[2] = 0;
+      tf[2]  = 0.0;
       switch( this->cImageMode ) 
         {
         default:
