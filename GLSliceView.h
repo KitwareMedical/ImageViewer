@@ -1134,6 +1134,12 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       && static_cast<int>(this->cClickSelect[this->cWinOrder[2]]) == 
          static_cast<int>( this->sliceNum() ) )
       {
+      // Set the model view matrix first
+      glLoadIdentity();
+      glOrtho( 0.0, (double)w(), 0.0, (double)h(), 0.0, 1.0 );
+      glMatrixMode( GL_PROJECTION );
+      glViewport( 0,0 , w(), h() );
+
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
