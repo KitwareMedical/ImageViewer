@@ -25,7 +25,7 @@
 #include <itkImage.h>
 #include <fltkUtils.h>
 #include <list>
-#include <FL/fl_file_chooser.H>
+#include <FL/Fl_File_Chooser.H>
 #include <fstream>
 
 using namespace itk;

@@ -17,7 +17,7 @@
 #include "fltkTimeProbesCollector.h"
 #include "fltkTimeProbeGUI.h"
 
-#include "Fl/fl_ask.H"
+#include "FL/fl_ask.H"
 
 namespace fltk 
 {
