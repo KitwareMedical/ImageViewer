@@ -22,7 +22,7 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include <FL/fl_file_chooser.H>
+#include <FL/Fl_File_Chooser.H>
 #include <GLSliceView.h>
 
 #include "ImageViewerGUI.h"
