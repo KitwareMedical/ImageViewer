@@ -22,6 +22,7 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_Gl_Window.H>
 
+#include <cstring>
 #include "itkColorTable.h"
 
 #include "SliceView.h"

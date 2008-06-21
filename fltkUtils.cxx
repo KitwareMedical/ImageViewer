@@ -26,6 +26,7 @@
 
 #include "fltkUtils.h"
 #include <string>
+#include <cstring>
 #include <iostream>
 
 /*
