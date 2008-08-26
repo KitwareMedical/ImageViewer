@@ -131,8 +131,8 @@ public:
   
 template <class ImagePixelType, class OverlayPixelType>
 GLSliceView<ImagePixelType, OverlayPixelType>::
-GLSliceView(int x, int y, int w, int h, const char *l):
-SliceView<ImagePixelType>(x, y, w, h, l), Fl_Gl_Window(x, y, w, h, l)
+GLSliceView(int lx, int ly, int lw, int lh, const char *ll):
+SliceView<ImagePixelType>(lx, ly, lw, lh, ll), Fl_Gl_Window(lx, ly, lw, lh, ll)
   {
   when(FL_WHEN_NOT_CHANGED | FL_WHEN_ENTER_KEY);
   cValidOverlayData     = false;
@@ -208,15 +208,15 @@ SetInputImage(ImageType * newImData)
   ImagePixelType tf;
   
   
-  for( unsigned int i=0; i<this->cDimSize[0]; i++ )
+  for( unsigned int ii=0; ii<this->cDimSize[0]; ii++ )
     {
-    ind[0] = i;
-    for(unsigned int j=0; j<this->cDimSize[1]; j++ )
+    ind[0] = ii;
+    for(unsigned int jj=0; jj<this->cDimSize[1]; jj++ )
       {
-      ind[1] = j;
-      for( unsigned int k=0; k<this->cDimSize[2]; k++ )
+      ind[1] = jj;
+      for( unsigned int kk=0; kk<this->cDimSize[2]; kk++ )
         {
-        ind[2] = k;
+        ind[2] = kk;
         tf = this->cImData->GetPixel(ind);
         if(tf > this->cDataMax) 
           {
@@ -851,9 +851,9 @@ update()
 
 template <class ImagePixelType, class OverlayPixelType>
 void GLSliceView<ImagePixelType, OverlayPixelType>::
-clickSelect(float x, float y, float z)
+clickSelect(float lx, float ly, float lz)
   {
-  SliceView<ImagePixelType>::clickSelect(x, y, z);
+  SliceView<ImagePixelType>::clickSelect(lx, ly, lz);
   if(this->cViewValue || this->cViewCrosshairs)
     {
     this->redraw();
@@ -861,10 +861,10 @@ clickSelect(float x, float y, float z)
   }
 
 template <class ImagePixelType, class OverlayPixelType>
-void GLSliceView<ImagePixelType, OverlayPixelType>::size(int w, int h)
+void GLSliceView<ImagePixelType, OverlayPixelType>::size(int lw, int lh)
   {
-  SliceView<ImagePixelType>::size(w, h);
-  Fl_Gl_Window::size(w, h);
+  SliceView<ImagePixelType>::size(lw, lh);
+  Fl_Gl_Window::size(lw, lh);
   this->update();
   this->redraw();
   }
@@ -875,10 +875,10 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::size(int w, int h)
 template <class ImagePixelType, class OverlayPixelType>
 void 
 GLSliceView<ImagePixelType, OverlayPixelType>::
-resize(int x, int y, int w, int h)
+resize(int lx, int ly, int lw, int lh)
   {
-  SliceView<ImagePixelType>::resize(x, y, w, h);
-  Fl_Gl_Window::resize(x, y, w, h);
+  SliceView<ImagePixelType>::resize(lx, ly, lw, lh);
+  Fl_Gl_Window::resize(lx, ly, lw, lh);
   this->update();
   this->redraw();
   }
@@ -977,41 +977,41 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
         glPointSize( 3.0 );
         glBegin(GL_POINTS);
         {
-            for ( int i = 0; i < this->numClickedPointsStored(); i++ )
+            for ( int ii = 0; ii < this->numClickedPointsStored(); ii++ )
             {
                 ClickPoint p;
-                this->getClickedPoint( i, p );
+                this->getClickedPoint( ii, p );
                 float pts[3] = { p.x, p.y, p.z };
 
                 if ( static_cast<int>( pts[this->cWinOrder[2]] ) ==
                      (int)this->sliceNum() )
                 {
-                    float x;
+                    float xx;
                     if(this->cFlipX[this->cWinOrientation])
                     {
-                        x = this->cW - (pts[this->cWinOrder[0]] 
+                        xx = this->cW - (pts[this->cWinOrder[0]] 
                                         - this->cWinMinX) * scale0
                             - originX;
                     }
                     else
                     {
-                        x = (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
+                        xx = (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
                             + originX;
                     }
 
-                    float y;
+                    float yy;
                     if(this->cFlipY[this->cWinOrientation])
                     {
-                        y = this->cH - (pts[this->cWinOrder[1]] 
+                        yy = this->cH - (pts[this->cWinOrder[1]] 
                                         - this->cWinMinY) * scale1
                             - originY;
                     }
                     else
                     {
-                        y = (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
+                        yy = (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
                              + originY;
                     }
-                    glVertex2f( x, y );
+                    glVertex2f( xx, yy );
                 }
             }
         }
@@ -1027,32 +1027,32 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       
       if( !this->cFlipX[this->cWinOrientation] )
         {
-        const int y = static_cast<int>(  this->cH/2-gl_height()/2  );
+        const int yy = static_cast<int>(  this->cH/2-gl_height()/2  );
         gl_draw( this->cAxisLabelX[this->cWinOrientation],
           this->cW-(gl_width(this->cAxisLabelX[this->cWinOrientation])+10), 
-          static_cast<float>( y ) );
+          static_cast<float>( yy ) );
         }
       else
         {
-        const int y = static_cast<int>( this->cH/2-gl_height()/2  );
+        const int yy = static_cast<int>( this->cH/2-gl_height()/2  );
         gl_draw( this->cAxisLabelX[this->cWinOrientation],
           (gl_width(this->cAxisLabelX[this->cWinOrientation])+10),
-          static_cast<float>( y ));
+          static_cast<float>( yy ));
         }
       
       if(!this->cFlipY[this->cWinOrientation])
         {
-        const int y = static_cast<int>( this->cH-gl_height()-10 ) ;
+        const int yy = static_cast<int>( this->cH-gl_height()-10 ) ;
         gl_draw( this->cAxisLabelY[this->cWinOrientation],
           this->cW/2-(gl_width(this->cAxisLabelY[this->cWinOrientation])/2),
-          static_cast<float>(y) );
+          static_cast<float>(yy) );
         }
       else
         {
-        const int y = static_cast<int>( gl_height()+10 );
+        const int yy = static_cast<int>( gl_height()+10 );
         gl_draw( this->cAxisLabelY[this->cWinOrientation], 
           this->cW/2-(gl_width(this->cAxisLabelY[this->cWinOrientation])/2),
-          static_cast<float>(y));
+          static_cast<float>(yy));
         }
       
       glDisable(GL_BLEND);
@@ -1065,7 +1065,7 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       gl_font(FL_TIMES_BOLD, 12);
       char s[80];
       float px, py, pz, val = this->cClickSelectV;
-      char * suffix = "";
+      const char * suffix = "";
       if( this->cViewValuePhysicalUnits )
         {
         px = this->cOrigin[0]+this->cSpacing[0]*this->cClickSelect[0];
@@ -1144,37 +1144,37 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
-      int x;
+      int xx;
       if(this->cFlipX[this->cWinOrientation])
         {
-        x = (int)(this->cW - (this->cClickSelect[this->cWinOrder[0]] 
+        xx = (int)(this->cW - (this->cClickSelect[this->cWinOrder[0]] 
                            - this->cWinMinX) * scale0 - originX);
         }
       else
         {
-        x = (int)((this->cClickSelect[this->cWinOrder[0]] 
+        xx = (int)((this->cClickSelect[this->cWinOrder[0]] 
                    - this->cWinMinX) * scale0 + originX);
         }
-      int y;
+      int yy;
       if(this->cFlipY[this->cWinOrientation])
         {
-        y = (int)(this->cH - (this->cClickSelect[this->cWinOrder[1]] 
+        yy = (int)(this->cH - (this->cClickSelect[this->cWinOrder[1]] 
                            - this->cWinMinY) * scale1 - originY);
         }
       else
         {
-        y = (int)((this->cClickSelect[this->cWinOrder[1]] 
+        yy = (int)((this->cClickSelect[this->cWinOrder[1]] 
                    - this->cWinMinY) * scale1 + originY);
         }
       glBegin(GL_LINES);
-      glVertex2d(0, y);
-      glVertex2d(x-2, y);
-      glVertex2d(x+2, y);
-      glVertex2d(this->cW-1, y);
-      glVertex2d(x, 0);
-      glVertex2d(x, y-2);
-      glVertex2d(x, y+2);
-      glVertex2d(x, this->cH-1);
+      glVertex2d(0, yy);
+      glVertex2d(xx-2, yy);
+      glVertex2d(xx+2, yy);
+      glVertex2d(this->cW-1, yy);
+      glVertex2d(xx, 0);
+      glVertex2d(xx, yy-2);
+      glVertex2d(xx, yy+2);
+      glVertex2d(xx, this->cH-1);
       glEnd();
       glDisable(GL_BLEND);
       }
@@ -1190,8 +1190,8 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
 template <class ImagePixelType, class OverlayPixelType>
 int GLSliceView<ImagePixelType, OverlayPixelType>::handle(int event)
   {
-  int x = Fl::event_x();
-  int y = Fl::event_y();
+  int xx = Fl::event_x();
+  int yy = Fl::event_y();
   int button;
   
   static int boxX, boxY;
@@ -1208,8 +1208,8 @@ int GLSliceView<ImagePixelType, OverlayPixelType>::handle(int event)
           {
           if(event == FL_PUSH)
             {
-            boxX = x;
-            boxY = y;
+            boxX = xx;
+            boxY = yy;
             }
           else
             {
@@ -1217,7 +1217,7 @@ int GLSliceView<ImagePixelType, OverlayPixelType>::handle(int event)
               {
               make_current();
               fl_overlay_clear();
-              fl_overlay_rect(boxX, boxY, x-boxY, y-boxY);
+              fl_overlay_rect(boxX, boxY, xx-boxY, yy-boxY);
               }
             else
               {

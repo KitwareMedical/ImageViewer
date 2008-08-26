@@ -884,13 +884,11 @@ draw()
       char s[80];
       float px, py, pz;
       float val = this->cClickSelectV;
-      char * suffix = "";
       if( this->cViewValuePhysicalUnits )
         {
         px = this->cOrigin[0]+this->cSpacing[0]*this->cClickSelect[0];
         py = this->cOrigin[1]+this->cSpacing[1]*this->cClickSelect[1];
         pz = this->cOrigin[2]+this->cSpacing[2]*this->cClickSelect[2];
-        suffix = this->cPhysicalUnitsName;
         }
        else
         {
@@ -901,17 +899,17 @@ draw()
       if((ImagePixelType)1.5==1.5)
         {
         sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %0.3f", 
-                px, suffix,
-                py, suffix,
-                pz, suffix,
+                px, this->cViewValuePhysicalUnits ? this->cPhysicalUnitsName : "",
+                py, this->cViewValuePhysicalUnits ? this->cPhysicalUnitsName : "",
+                pz, this->cViewValuePhysicalUnits ? this->cPhysicalUnitsName : "",
                 val);
         }
       else
         {
         sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %d", 
-                px, suffix,
-                py, suffix,
-                pz, suffix,
+                px, this->cViewValuePhysicalUnits ? this->cPhysicalUnitsName : "",
+                py, this->cViewValuePhysicalUnits ? this->cPhysicalUnitsName : "",
+                pz, this->cViewValuePhysicalUnits ? this->cPhysicalUnitsName : "",
                 (int)val);
         }
       gl_draw( s,

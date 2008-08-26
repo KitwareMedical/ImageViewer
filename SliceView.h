@@ -182,7 +182,7 @@ template <class imType>
     bool        cViewCrosshairs;
     bool        cViewValue;
     bool        cViewValuePhysicalUnits;
-    char *      cPhysicalUnitsName;
+    const char * cPhysicalUnitsName;
     bool        cViewDetails;
     
     int   cWinMinX;
@@ -945,7 +945,9 @@ bool SliceView<imType>::getClickedPoint(unsigned int index, ClickPoint & point)
     }
   std::list<ClickPoint>::const_iterator j = cClickedPoints.begin();
   
-  for(int i=0;i<static_cast<int>(index);i++,j++);
+  for(int i=0;i<static_cast<int>(index);i++,j++)
+    {
+    }
     point = *j;
   return true;
   }
