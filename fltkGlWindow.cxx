@@ -34,8 +34,8 @@ namespace fltk {
 //    Creator
 //
 //--------------------------------------------------
-GlWindow::GlWindow(int x,int y,int w,int h, const char * label)
-  :Fl_Gl_Window(x,y,w,h,label) 
+GlWindow::GlWindow(int lx,int ly,int lw,int lh, const char * llabel)
+  :Fl_Gl_Window(lx,ly,lw,lh,llabel) 
 {
   m_RedrawCommand = RedrawCommandType::New();
   m_RedrawCommand->SetWidget( this );
@@ -138,9 +138,9 @@ void GlWindow::SaveImage(const char * filename)
     return;
   }
 
-  unsigned char *image = new unsigned char[ wnx * wny * 8 ];
+  unsigned char *limage = new unsigned char[ wnx * wny * 8 ];
 
-  if( !image ) 
+  if( !limage ) 
   {
     fl_alert("Problem Allocating memory for image grabbing buffer");
     of.close();
@@ -157,12 +157,12 @@ void GlWindow::SaveImage(const char * filename)
   draw();
 
   glReadBuffer(GL_FRONT);
-  glReadPixels(0,0,wnx,wny,GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid *)image);
+  glReadPixels(0,0,wnx,wny,GL_RGBA,GL_UNSIGNED_BYTE,(GLvoid *)limage);
 
-  for(int y=wny-1; y>=0; y--)  
+  for(int ly=wny-1; ly>=0; ly--)  
   {
-    unsigned char *p = image + 4*y*wnx;
-    for(int x=0; x<wnx; x++) 
+    unsigned char *p = limage + 4*ly*wnx;
+    for(int lx=0; lx<wnx; lx++) 
     {
       const unsigned char red   = *p++;
       const unsigned char green = *p++;
@@ -175,7 +175,7 @@ void GlWindow::SaveImage(const char * filename)
 
   of.close();
 
-  delete [] image;
+  delete [] limage;
   
   
 }

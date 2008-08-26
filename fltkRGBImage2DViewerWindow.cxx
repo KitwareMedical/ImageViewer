@@ -37,8 +37,8 @@ namespace fltk {
 //
 //------------------------------------------
 RGBImage2DViewerWindow::
-RGBImage2DViewerWindow(int x,int y,int w,int h, const char * label)
-:GlWindow(x,y,w,h,label) 
+RGBImage2DViewerWindow(int lx,int ly,int lw,int lh, const char * llabel)
+:GlWindow(lx,ly,lw,lh,llabel) 
 {
 
   m_Background.SetRed( 0.5 );
@@ -92,11 +92,11 @@ RGBImage2DViewerWindow
 //------------------------------------------
 void 
 RGBImage2DViewerWindow
-::SetBackground( GLfloat r, GLfloat g, GLfloat b ) 
+::SetBackground( GLfloat lr, GLfloat lg, GLfloat lb ) 
 {
-  m_Background.SetRed( r );
-  m_Background.SetGreen( g );
-  m_Background.SetBlue( b );
+  m_Background.SetRed( lr );
+  m_Background.SetGreen( lg );
+  m_Background.SetBlue( lb );
 }
 
 
@@ -397,9 +397,9 @@ void RGBImage2DViewerWindow::draw(void)
 //------------------------------------------
 void 
 RGBImage2DViewerWindow
-::SetIntensityWindow( Fl_Window * window )
+::SetIntensityWindow( Fl_Window * lwindow )
 {
-  m_IntensityWindow = window;
+  m_IntensityWindow = lwindow;
 }
 
 
@@ -411,9 +411,9 @@ RGBImage2DViewerWindow
 //------------------------------------------
 void 
 RGBImage2DViewerWindow
-::SetParentWindow( Fl_Window * window )
+::SetParentWindow( Fl_Window * lwindow )
 {
-  m_ParentWindow = window;
+  m_ParentWindow = lwindow;
 }
 
 

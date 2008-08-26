@@ -16,6 +16,8 @@ class fltkDisplayGlWindowGUI {open private
       }
     }
   }
+  Function {~fltkDisplayGlWindowGUI()} {return_type virtual
+  } {}
   Function {Show(void)} {return_type void
   } {
     code {parentWindow->show();

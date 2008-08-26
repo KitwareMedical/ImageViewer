@@ -36,8 +36,8 @@ namespace fltk {
 //
 //------------------------------------------
 GlWindowInteractive::
-GlWindowInteractive(int x,int y,int w,int h, const char * label)
-:GlWindow(x,y,w,h,label) 
+GlWindowInteractive(int lx,int ly,int lw,int lh, const char * llabel)
+:GlWindow(lx,ly,lw,lh,llabel) 
 {
   m_Altitude  = 0.0;
   m_Azimuth   = 0.0; 
@@ -256,11 +256,11 @@ GlWindowInteractive
 //------------------------------------------
 void 
 GlWindowInteractive
-::SetBackground( GLfloat r, GLfloat g, GLfloat b ) 
+::SetBackground( GLfloat lr, GLfloat lg, GLfloat lb ) 
 {
-  m_Background.SetRed( r );
-  m_Background.SetGreen( g );
-  m_Background.SetBlue( b );
+  m_Background.SetRed( lr );
+  m_Background.SetGreen( lg );
+  m_Background.SetBlue( lb );
 }
 
 

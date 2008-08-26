@@ -26,8 +26,8 @@ namespace fltk {
 
 /** Constructor */
 LightButton
-::LightButton(int x, int y, int w, int h, char * label):
-    Fl_Light_Button( x, y, w, h, label ) 
+::LightButton(int lx, int ly, int lw, int lh, char * llabel):
+    Fl_Light_Button( lx, ly, lw, lh, llabel ) 
 {
   m_RedrawCommand = RedrawCommandType::New();
   m_RedrawCommand->SetCallbackFunction( this, &LightButton::ProcessEvent );

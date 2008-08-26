@@ -32,8 +32,8 @@ namespace fltk {
 //
 //------------------------------------------
 WindowInteractive
-::WindowInteractive(int x,int y,int w,int h, const char * label)
-  :Fl_Window(x,y,w,h,label) 
+::WindowInteractive(int lx,int ly,int lw,int lh, const char * llabel)
+  :Fl_Window(lx,ly,lw,lh,llabel) 
 {
 
   m_Zoom     = 1.0f;

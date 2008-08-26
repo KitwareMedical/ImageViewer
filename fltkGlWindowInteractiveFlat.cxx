@@ -27,8 +27,8 @@ namespace fltk {
 //
 //------------------------------------------
 GlWindowInteractiveFlat
-::GlWindowInteractiveFlat(int x,int y,int w,int h, const char * label)
-  :GlWindowInteractive(x,y,w,h,label) 
+::GlWindowInteractiveFlat(int lx,int ly,int lw,int lh, const char * llabel)
+  :GlWindowInteractive(lx,ly,lw,lh,llabel) 
 {
 
 }

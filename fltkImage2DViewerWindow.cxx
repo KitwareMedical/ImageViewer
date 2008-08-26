@@ -37,8 +37,8 @@ namespace fltk {
 //
 //------------------------------------------
 Image2DViewerWindow::
-Image2DViewerWindow(int x,int y,int w,int h, const char * label)
-:GlWindow(x,y,w,h,label) 
+Image2DViewerWindow(int lx,int ly,int lw,int lh, const char * llabel)
+:GlWindow(lx,ly,lw,lh,llabel) 
 {
 
   m_Background.SetRed( 0.5 );
@@ -91,11 +91,11 @@ Image2DViewerWindow
 //------------------------------------------
 void 
 Image2DViewerWindow
-::SetBackground( GLfloat r, GLfloat g, GLfloat b ) 
+::SetBackground( GLfloat lr, GLfloat lg, GLfloat lb ) 
 {
-  m_Background.SetRed( r );
-  m_Background.SetGreen( g );
-  m_Background.SetBlue( b );
+  m_Background.SetRed( lr );
+  m_Background.SetGreen( lg );
+  m_Background.SetBlue( lb );
 }
 
 
@@ -387,9 +387,9 @@ void Image2DViewerWindow::draw(void)
 //------------------------------------------
 void 
 Image2DViewerWindow
-::SetIntensityWindow( Fl_Window * window )
+::SetIntensityWindow( Fl_Window * lwindow )
 {
-  m_IntensityWindow = window;
+  m_IntensityWindow = lwindow;
 }
 
 
@@ -401,9 +401,9 @@ Image2DViewerWindow
 //------------------------------------------
 void 
 Image2DViewerWindow
-::SetParentWindow( Fl_Window * window )
+::SetParentWindow( Fl_Window * lwindow )
 {
-  m_ParentWindow = window;
+  m_ParentWindow = lwindow;
 }
 
 
@@ -579,12 +579,12 @@ Image2DViewerWindow
 
 void 
 Image2DViewerWindow
-::SetSelectionBox(SelectionBoxType* box)
+::SetSelectionBox(SelectionBoxType* lbox)
 {
-  m_Box.X1 = box->X1 ;
-  m_Box.Y1 = box->Y1 ;
-  m_Box.X2 = box->X2 ;
-  m_Box.Y2 = box->Y2 ;
+  m_Box.X1 = lbox->X1 ;
+  m_Box.Y1 = lbox->Y1 ;
+  m_Box.X2 = lbox->X2 ;
+  m_Box.Y2 = lbox->Y2 ;
   redraw();
   Fl::check();
 }
@@ -603,11 +603,11 @@ Image2DViewerWindow
 void 
 Image2DViewerWindow
 ::SetClickCallBack(void* ptrObject,
-                   void (*clickCallBack)(void* ptrObject,
+                   void (*lclickCallBack)(void* ptrObject,
                                       int & px, int & py ))
 {
   m_ClickCallBackTargetObject = ptrObject ;
-  m_ClickCallBack = clickCallBack ;
+  m_ClickCallBack = lclickCallBack ;
 }
 
 
@@ -706,9 +706,9 @@ Image2DViewerWindow
 //------------------------------------------
 void 
 Image2DViewerWindow
-::SetInteractionMode( InteractionModeType mode )
+::SetInteractionMode( InteractionModeType lmode )
 {
-  m_InteractionMode = mode;
+  m_InteractionMode = lmode;
 }
 
 
