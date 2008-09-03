@@ -135,8 +135,8 @@ VectorImage3D<TVectorImage>
     it.GoToBegin();
     while( !it.IsAtEnd() )
       {
-      IndexType index = it.GetIndex();
-      m_VectorImage->TransformIndexToPhysicalPoint( index, point );
+      IndexType lindex = it.GetIndex();
+      m_VectorImage->TransformIndexToPhysicalPoint( lindex, point );
       glVertex3d( point[0], point[1], point[2] );
       gradient = it.Get();
       gradient *= m_VectorLengthScale;
