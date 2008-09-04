@@ -21,23 +21,21 @@ INCLUDE_DIRECTORIES (
   ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
 )
 
-LINK_LIBRARIES (
-  ITKBasicFilters
-  ITKIO
-  ITKFltkImageViewer
-)
-
-
 SET(ImageViewer_GUI_SRCS
   ImageViewerGUI.fl
   )
 
 FLTK_WRAP_UI( ImageViewer ${ImageViewer_GUI_SRCS} )
-ITK_DISABLE_FLTK_GENERATED_WARNINGS("${ImageViewer_GUI_SRCS}")
 
 SET ( ImageViewer_SRCS
   ImageViewer.cxx
   ${ImageViewer_FLTK_UI_SRCS}
   )
+ITK_DISABLE_FLTK_GENERATED_WARNINGS("${ImageViewer_SRCS}")
 
 ADD_GUI_EXECUTABLE( ImageViewer "${ImageViewer_SRCS}" )
+TARGET_LINK_LIBRARIES (ImageViewer
+  ITKBasicFilters
+  ITKIO
+  ITKFltkImageViewer
+)
