@@ -47,6 +47,7 @@ class GLTwoImageSliceView
     typedef typename Superclass::RegionType RegionType;
     typedef typename Superclass::SizeType SizeType;
     typedef typename Superclass::IndexType IndexType;
+    typedef typename ImageType::PointType  PointType;
 
     /*! FLTK required constructor - must use imData() to complete 
      *  definition */
@@ -886,9 +887,15 @@ draw()
       float val = this->cClickSelectV;
       if( this->cViewValuePhysicalUnits )
         {
-        px = this->cOrigin[0]+this->cSpacing[0]*this->cClickSelect[0];
-        py = this->cOrigin[1]+this->cSpacing[1]*this->cClickSelect[1];
-        pz = this->cOrigin[2]+this->cSpacing[2]*this->cClickSelect[2];
+        IndexType index;
+        index[0] = this->cClickSelect[0];
+        index[1] = this->cClickSelect[1];
+        index[2] = this->cClickSelect[2];
+        PointType point;
+        this->cImData->TransformIndexToPhysicalPoint( index, point );
+        px = point[0];
+        py = point[1];
+        pz = point[2];
         }
        else
         {

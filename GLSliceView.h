@@ -48,6 +48,7 @@ public:
   typedef typename ImageType::RegionType   RegionType;
   typedef typename ImageType::SizeType     SizeType;
   typedef typename ImageType::IndexType    IndexType;
+  typedef typename ImageType::PointType    PointType;
   
   typedef itk::ColorTable<float>                ColorTableType;
   typedef typename ColorTableType::Pointer      ColorTablePointer;
@@ -1068,9 +1069,15 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       const char * suffix = "";
       if( this->cViewValuePhysicalUnits )
         {
-        px = this->cOrigin[0]+this->cSpacing[0]*this->cClickSelect[0];
-        py = this->cOrigin[1]+this->cSpacing[1]*this->cClickSelect[1];
-        pz = this->cOrigin[2]+this->cSpacing[2]*this->cClickSelect[2];
+        IndexType index;
+        index[0] = this->cClickSelect[0];
+        index[1] = this->cClickSelect[1];
+        index[2] = this->cClickSelect[2];
+        PointType point;
+        this->cImData->TransformIndexToPhysicalPoint( index, point );
+        px = point[0];
+        py = point[1];
+        pz = point[2];
         suffix = this->cPhysicalUnitsName;
         }
        else
