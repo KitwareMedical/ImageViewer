@@ -39,8 +39,8 @@ IF(WIN32)
 ENDIF(WIN32)
 
 INCLUDE_DIRECTORIES(
-  ${InsightApplications_SOURCE_DIR}/Auxiliary/FltkImageViewer
-  ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer
+  ${ITKApps_SOURCE_DIR}/Auxiliary/FltkImageViewer
+  ${ITKApps_BINARY_DIR}/Auxiliary/FltkImageViewer
 )
 
 # Take the list of GUI files, generate .cxx and .h from them and add
@@ -59,14 +59,14 @@ IF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 1.6)
   IF(CMAKE_COMPILER_IS_GNUCXX)
     FOREACH(f ${FltkImageViewer_GUI_SRCS})
       STRING(REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}")
-      SET(SRC ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
+      SET(SRC ${ITKApps_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
       SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS -w)
     ENDFOREACH(f)
   ENDIF(CMAKE_COMPILER_IS_GNUCXX)
   IF(MSVC)
     FOREACH(f ${FltkImageViewer_GUI_SRCS})
       STRING(REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}")
-      SET(SRC ${InsightApplications_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
+      SET(SRC ${ITKApps_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
       SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS /w)
     ENDFOREACH(f)
     FOREACH(f ${FltkImageViewer_SRCS})

@@ -33,7 +33,7 @@ these steps
        http://www.fltk.org
 
 2) Run CMake (CMakeSetup on windows or
-   ccmake on unix) on the InsightApplications
+   ccmake on unix) on the ITKApps
    project.
 
 3) Set the CMake variable "USE_FLTK" to ON
@@ -51,7 +51,7 @@ these steps
    Hit the "Configure" button in CMake
    and then "Generate"
 
-5) Build InsightApplications
+5) Build ITKApps
 
    The FltkImageViewer library will be 
    generated as part of the build  
