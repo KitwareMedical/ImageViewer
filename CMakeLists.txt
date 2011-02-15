@@ -34,8 +34,4 @@ SET ( ImageViewer_SRCS
 ITK_DISABLE_FLTK_GENERATED_WARNINGS("${ImageViewer_SRCS}")
 
 ADD_GUI_EXECUTABLE( ImageViewer "${ImageViewer_SRCS}" )
-TARGET_LINK_LIBRARIES (ImageViewer
-  ITKBasicFilters
-  ITKIO
-  ITKFltkImageViewer
-)
+TARGET_LINK_LIBRARIES (ImageViewer ${ITK_LIBRARIES} ITKFltkImageViewer)
