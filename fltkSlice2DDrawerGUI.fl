@@ -21,13 +21,22 @@ class fltkSlice2DDrawerGUI {open : {public itk::Object}
       }
     }
   }
-  Function {~fltkSlice2DDrawerGUI()} {} {}
+  Function {~fltkSlice2DDrawerGUI()} {return_type virtual
+  } {
+    code {} {}
+  }
   Function {Show(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Hide(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetEnabled(bool)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetLabel( const char * label )} {return_type {virtual void}
   } {
     code {VolumeWindow->label( label );} {}

@@ -82,8 +82,6 @@ class fltkFrustumFunctionControlGUI {open
       }
     }
   }
-  Function {~fltkFrustumFunctionControlGUI()} {return_type virtual
-  } {}
   Function {SetAngleZ( double radius )} {return_type {virtual void}
   } {
     code {angleZRoller->value( radius );

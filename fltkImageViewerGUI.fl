@@ -4,9 +4,6 @@ header_name {.h}
 code_name {.cxx}
 class fltkImageViewerGUI {open
 } {
-  Function {fltkImageViewerGUI()} {} {}
-  Function {~fltkImageViewerGUI()} {return_type virtual
-  } {}
   Function {CreateGUI()} {open
   } {
     Fl_Window iviewWindow {
@@ -166,55 +163,107 @@ class fltkImageViewerGUI {open
     }
   }
   Function {CreateGLSliceView( Fl_Group *,Fl_Gl_Window * w )} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {AddMenuBarOptions(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {AddFilterMenuOptions()} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {AddFileMenuOptions()} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetImage( itk::ImageBase<3> * img )} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Show(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Hide(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Update(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Synchronize(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ImageMode(itk::ImageModeType mode)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SelectSlice(unsigned int)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetIntensityWindowingMin(float)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetIntensityWindowingMax(float)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {CenterWindow(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ZoomIn(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ZoomOut(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ShiftUp(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ShiftDown(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ShiftLeft(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ShiftRight(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetOrientation(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ShowClickedPointsWindow(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ClearClickedPoints(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ShowOverlayOpacityControl(void)} {selected return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetOverlayOpacity(float)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {UpdateClickedPoints()} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
 } 

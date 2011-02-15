@@ -143,7 +143,7 @@ SliceView<ImagePixelType>(lx, ly, lw, lh, ll), Fl_Gl_Window(lx, ly, lw, lh, ll)
   cWinOverlayData       = NULL;
   cColorTable = ColorTableType::New();
   //cColorTable.useGray();
-  cColorTable->useDiscrete();
+  cColorTable->UseDiscreteColors();
   cOverlayColorIndex = 7;  //default white
   }
   
@@ -295,7 +295,7 @@ SetInputImage(ImageType * newImData)
 //
 //
 template <class ImagePixelType, class OverlayPixelType>
-const typename Image<ImagePixelType,3>::Pointer &
+const typename GLSliceView<ImagePixelType,OverlayPixelType>::ImagePointer &
 GLSliceView<ImagePixelType, OverlayPixelType>
 ::GetInputImage(void) const
   {

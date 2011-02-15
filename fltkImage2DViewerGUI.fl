@@ -31,8 +31,6 @@ class fltkImage2DViewerGUI {open
       }
     }
   }
-  Function {~fltkImage2DViewerGUI()} {return_type virtual
-  } {}
   Function {SetLabel(const char *label)} {return_type void
   } {
     code {externalWindow->label( label );} {}
@@ -54,7 +52,11 @@ intensityWindow->hide();} {selected
 Fl::check();} {}
   }
   Function {Update(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {RenderImage( double min, double max )} {open return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
 } 

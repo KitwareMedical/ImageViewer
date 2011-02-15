@@ -164,7 +164,7 @@ RGBImage2DViewer<ImagePixelType>
 {
   m_Overlay = overlay;
   m_ColorTable = ColorTableType::New();
-  m_ColorTable->useDiscrete();
+  m_ColorTable->UseDiscreteColors();
   UpdateOverlay();
 }
 
@@ -385,9 +385,9 @@ RGBImage2DViewer<ImagePixelType>
           {
             value = (unsigned char) (value - min)/(max-min);
           }
-        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetRed()*255);
-        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetGreen()*255);
-        *dest++ = static_cast<unsigned char>(m_ColorTable->color(value-1)->GetBlue()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->GetColor(value-1).GetRed()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->GetColor(value-1).GetGreen()*255);
+        *dest++ = static_cast<unsigned char>(m_ColorTable->GetColor(value-1).GetBlue()*255);
         *dest++ = static_cast<unsigned char>(255*m_OverlayOpacity);
         ++it;
         }

@@ -55,21 +55,37 @@ class RegularStepGradientDescentGUI {open
     }
   }
   Function {~RegularStepGradientDescentGUI()} {return_type virtual
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetMaximumStepLength( double )} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetMinimumStepLength( double )} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetGradientMagnitudeTolerance( double )} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetMaximumNumberOfIterations( double )} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {StartOptimization(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {StopOptimization(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {ResumeOptimization(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Hide(void)} {return_type {virtual void}
   } {
     code {controlPanel->hide();} {}

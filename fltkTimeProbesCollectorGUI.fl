@@ -67,7 +67,9 @@ class TimeProbesCollectorGUI {open : {public ::itk::TimeProbesCollectorBase}
     }
   }
   Function {~TimeProbesCollectorGUI()} {return_type virtual
-  } {}
+  } {
+    code {} {}
+  }
   Function {Show(void)} {return_type {virtual void}
   } {
     code {controlPanel->show();} {}

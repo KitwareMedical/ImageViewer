@@ -54,17 +54,30 @@ SelectSliceZ();}
       }
     }
   }
-  Function {~fltkSlice3DDrawerGUI()} {} {}
+  Function {~fltkSlice3DDrawerGUI()} {return_type {virtual void}
+  } {
+    code {} {}
+  }
   Function {Show(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {Hide(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SelectSliceX(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SelectSliceY(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SelectSliceZ(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetLabel( const char * label )} {return_type {virtual void}
   } {
     code {VolumeWindow->label( label );} {}

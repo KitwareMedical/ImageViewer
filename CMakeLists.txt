@@ -50,8 +50,11 @@ FLTK_WRAP_UI(ITKFltkImageViewer ${FltkImageViewer_GUI_SRCS} )
 ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS} ${ITKFltkImageViewer_FLTK_UI_SRCS})
 INSTALL_TARGETS(/lib ITKFltkImageViewer)
 
-TARGET_LINK_LIBRARIES(ITKFltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_glu_LIBRARY}
-                      ${OPENGL_LIBRARIES})
+TARGET_LINK_LIBRARIES(ITKFltkImageViewer
+         ${FLTK_LIBRARIES}
+         ${OPENGL_glu_LIBRARY}
+         ${OPENGL_gl_LIBRARY}
+)
 
 # The fluid-generated fltk sources have many warnings.  Disable
 # warnings for the generated files on some compilers.

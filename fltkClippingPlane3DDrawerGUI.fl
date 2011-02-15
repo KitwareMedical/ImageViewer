@@ -43,7 +43,6 @@ UpdateFromGUI();} selected
       }
     }
   }
-  Function {~fltkClippingPlane3DDrawerGUI()} {} {}
   Function {Show(void)} {return_type {virtual void}
   } {
     code {clippingWindow->show();} {}
@@ -53,7 +52,9 @@ UpdateFromGUI();} selected
     code {clippingWindow->hide();} {}
   }
   Function {UpdateFromGUI(void)} {return_type {virtual void}
-  } {}
+  } {
+    code {} {}
+  }
   Function {SetLabel( const char * label )} {return_type {virtual void}
   } {
     code {clippingWindow->label( label );} {}
