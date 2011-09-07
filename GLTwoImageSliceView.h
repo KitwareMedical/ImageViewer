@@ -146,9 +146,9 @@ SetSecondInputImage(ImageType * newImData)
   this->cIW2Max     = this->cIm2DataMax;
   ImagePixelType tf;
   
-  for( unsigned int i=0; i<this->cIm2DimSize[0]; i++ )
+  for( unsigned int ii=0; ii<this->cIm2DimSize[0]; ii++ )
     {
-    ind[0] = i;
+    ind[0] = ii;
     for(unsigned int j=0; j<this->cIm2DimSize[1]; j++ )
       {
       ind[1] = j;
