@@ -1,0 +1,13 @@
+Index: src/CMakeLists.txt
+===================================================================
+--- src/CMakeLists.txt	(revision 9232)
++++ src/CMakeLists.txt	(working copy)
+@@ -220,7 +220,7 @@
+ endif(MSVC)
+ 
+ if(USE_THREADS)
+-   target_link_libraries(fltk ${CMAKE_THREAD_LIBS_INIT})
++   target_link_libraries(fltk ${CMAKE_THREAD_LIBS_INIT} -ldl)
+ endif(USE_THREADS)
+ 
+ if(USE_X11)
