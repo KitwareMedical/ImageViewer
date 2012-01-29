@@ -12,7 +12,7 @@ Function {make_window()} {open
       label label
       xywh {5 5 512 512} box ENGRAVED_FRAME resizable
       code0 {\#include <GLSliceView.h>}
-      class {GLSliceView<float, unsigned char>}
+      class {itk::GLSliceView<float, unsigned char>}
     }
   }
 } 
