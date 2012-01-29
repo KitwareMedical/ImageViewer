@@ -28,8 +28,6 @@
 #include <FL/Fl_File_Chooser.H>
 #include <fstream>
 
-using namespace itk;
-
 namespace itk {
   
 /*! Clicking in a window will cause different events

@@ -43,7 +43,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::SetImage(ImageBase<3> * img)
+::SetImage(itk::ImageBase<3> * img)
 {
   ImageType * image = dynamic_cast<ImageType *>( img );
   glSliceView->SetInputImage( image );
@@ -54,7 +54,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void
 ImageViewer<ImagePixelType,OverlayPixelType>
-::SetOverlay(ImageBase<3> * img)
+::SetOverlay(itk::ImageBase<3> * img)
 {
   OverlayType * overlay = dynamic_cast<OverlayType *>( img );
   glSliceView->SetInputOverlay( overlay );
@@ -155,7 +155,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 template <class ImagePixelType, class OverlayPixelType>
 void 
 ImageViewer<ImagePixelType,OverlayPixelType>
-::ImageMode(ImageModeType mode)
+::ImageMode(itk::ImageModeType mode)
 {
   glSliceView->imageMode(mode);
   glSliceView->update();
@@ -441,7 +441,7 @@ ImageViewer<ImagePixelType,OverlayPixelType>
 
   for(int i=numPoints-1; i>=0; i--)
     {
-    ClickPoint point;
+    itk::ClickPoint point;
     if( glSliceView->getClickedPoint(i,point) )
       {
       const int x = (int)(point.x);

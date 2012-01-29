@@ -34,26 +34,26 @@ public:
   /** 
    * Smart pointer typedef support.
    */
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  typedef itk::SmartPointer<Self>        Pointer;
+  typedef itk::SmartPointer<const Self>  ConstPointer;
 
  
   typedef itk::Image< ImagePixelType, 3 >   ImageType;
   typedef itk::Image< OverlayPixelType, 3 > OverlayType;
-  typedef GLSliceView< ImagePixelType, OverlayPixelType > GLSliceViewType;
+  typedef itk::GLSliceView< ImagePixelType, OverlayPixelType > GLSliceViewType;
   typedef typename GLSliceViewType::ColorTablePointer ColorTablePointer;
 
 
     
   ImageViewer();
   virtual ~ImageViewer();
-  virtual void SetImage(ImageBase<3> * img);
-  virtual void SetOverlay(ImageBase<3> * img);
+  virtual void SetImage(itk::ImageBase<3> * img);
+  virtual void SetOverlay(itk::ImageBase<3> * img);
   virtual void Show(void);
   virtual void Hide(void);
   virtual void Update(void);
   virtual void Synchronize(void);
-  virtual void ImageMode(ImageModeType mode);
+  virtual void ImageMode(itk::ImageModeType mode);
   virtual void SelectSlice(unsigned int num);
   virtual void SetIntensityWindowingMin(float val);
   virtual void SetIntensityWindowingMax(float val);
