@@ -28,5 +28,10 @@ ExternalProject_Add(FLTK
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/FLTK-install
 )
 
-set(FLTK_DIR ${CMAKE_BINARY_DIR}/FLTK-install/lib/FLTK-1.3)
+if (WIN32)
+  set(FLTK_DIR ${CMAKE_BINARY_DIR}/FLTK-install/CMake)
+else()
+  set(FLTK_DIR ${CMAKE_BINARY_DIR}/FLTK-install/lib/FLTK-1.3)
+endif()
+
 set(FLUID_COMMAND ${CMAKE_BINARY_DIR}/FLTK-install/bin/fluid)
