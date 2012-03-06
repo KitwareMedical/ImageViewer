@@ -17,7 +17,7 @@ set(FLTK_INSTALL_COMMAND ${CMAKE_MAKE_COMMAND} install)
 
 ExternalProject_Add(FLTK
   SVN_REPOSITORY "http://svn.easysw.com/public/fltk/fltk/branches/branch-1.3"
-  SVN_REVISION ""
+  SVN_REVISION -r "9266"
   UPDATE_COMMAND ""
   PATCH_COMMAND ${FLTK_PATCH_COMMAND}
   SOURCE_DIR FLTK
@@ -30,6 +30,8 @@ ExternalProject_Add(FLTK
 
 if (WIN32)
   set(FLTK_DIR ${CMAKE_BINARY_DIR}/FLTK-install/CMake)
+elseif(APPLE)
+  set(FLTK_DIR ${CMAKE_BINARY_DIR}/FLTK-install/FLTK/.framework/Resources/CMake)
 else()
   set(FLTK_DIR ${CMAKE_BINARY_DIR}/FLTK-install/lib/FLTK-1.3)
 endif()
