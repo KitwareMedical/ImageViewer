@@ -101,7 +101,7 @@ TimeProbesCollector
     gui->SetName( probe->first );
     gui->SetNumberOfStarts( probe->second.GetNumberOfStarts() );
     gui->SetNumberOfStops( probe->second.GetNumberOfStops() );
-    gui->SetMeanTime( probe->second.GetMeanTime() );
+    gui->SetMeanTime( probe->second.GetMean() );
     ++probe;
 
     }
