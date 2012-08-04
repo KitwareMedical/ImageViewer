@@ -57,5 +57,6 @@ ExternalProject_Add( ITKApps
     # FLTK
     -DUSE_FLTK:BOOL=ON
     -DFLTK_DIR:PATH=${FLTK_DIR}
+    -DITK_FLTK_RESOURCE:FILEPATH=Carbon.r
   INSTALL_COMMAND ""
 )
