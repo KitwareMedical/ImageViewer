@@ -23,37 +23,29 @@ else()
   set(gen "${CMAKE_GENERATOR}" )
 endif()
 
-set( ITKApps_DEPENDENCIES )
-
-if(NOT VTK_DIR)
-  include( ${CMAKE_SOURCE_DIR}/External-VTK.cmake )
-  list( APPEND ITKApps_DEPENDENCIES VTK )
-endif()
+set( ImageViewer_DEPENDENCIES )
 
 if(NOT ITK_DIR)
   include( ${CMAKE_SOURCE_DIR}/External-ITK.cmake )
-  list( APPEND ITKApps_DEPENDENCIES ITK )
+  list( APPEND ImageViewer_DEPENDENCIES ITK )
 endif()
 
 if(NOT FLTK_DIR)
   include( ${CMAKE_SOURCE_DIR}/External-FLTK.cmake )
-  list( APPEND ITKApps_DEPENDENCIES FLTK )
+  list( APPEND ImageViewer_DEPENDENCIES FLTK )
 endif()
 
-ExternalProject_Add( ITKApps
-  DEPENDS ${ITKApps_DEPENDENCIES}
+ExternalProject_Add( ImageViewer
+  DEPENDS ${ImageViewer_DEPENDENCIES}
   DOWNLOAD_COMMAND ""
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..
-  BINARY_DIR ITKApps-build
+  BINARY_DIR ImageViewer-build
   CMAKE_GENERATOR ${gen}
   CMAKE_ARGS
     ${ep_common_args}
     -DBUILD_SHARED_LIBS:BOOL=FALSE
      # ITK
     -DITK_DIR:PATH=${ITK_DIR}
-    # VTK
-    -DUSE_VTK:BOOL=ON
-    -DVTK_DIR:PATH=${VTK_DIR}
     # FLTK
     -DUSE_FLTK:BOOL=ON
     -DFLTK_DIR:PATH=${FLTK_DIR}
