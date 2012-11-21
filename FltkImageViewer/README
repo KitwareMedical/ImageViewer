@@ -1,0 +1,64 @@
+
+
+     FltkImageViewer
+
+
+WHAT IS THIS ?
+
+This is a set of classes that perform
+image visualization using the FLTK toolkit
+as GUI.
+
+
+WHAT DO I NEED TO RUN IT ?
+
+Given that GUI and visualization are not part of
+the functionalities offered by the Insight Toolkit,
+external libraries are required for building full
+applications. The GUI is implemented using FLTK 
+(the Fast Light Toolkit) that can be freely downloaded 
+from http://www.fltk.org.
+
+
+HOW TO BUILD IT ?
+
+
+To build this library you should follow
+these steps 
+
+
+1) Download and install FLTK following
+   the instructions in
+ 
+       http://www.fltk.org
+
+2) Run CMake (CMakeSetup on windows or
+   ccmake on unix) on the ITKApps
+   project.
+
+3) Set the CMake variable "USE_FLTK" to ON
+
+4) Verify that CMake find all the FLTK
+   elements:
+
+   a- Fluid
+   b- The header files
+   c- The basic library     "fltk"
+   d- The forms library     "fltk_forms"
+   e- The images library    "fltk_images"
+   f- The OpenGL library    "fltk_gl"
+
+   Hit the "Configure" button in CMake
+   and then "Generate"
+
+5) Build ITKApps
+
+   The FltkImageViewer library will be 
+   generated as part of the build  
+   process. You will find the library
+   in the Binary directory you provided
+   to CMake. 
+
+
+
+
