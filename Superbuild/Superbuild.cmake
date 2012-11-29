@@ -26,19 +26,23 @@ endif()
 set( ImageViewer_DEPENDENCIES )
 
 if(NOT ITK_DIR)
-  include( ${CMAKE_SOURCE_DIR}/External-ITK.cmake )
+  include( ${CMAKE_CURRENT_SOURCE_DIR}/Superbuild/External-ITK.cmake )
   list( APPEND ImageViewer_DEPENDENCIES ITK )
 endif()
 
 if(NOT FLTK_DIR)
-  include( ${CMAKE_SOURCE_DIR}/External-FLTK.cmake )
+  include( ${CMAKE_CURRENT_SOURCE_DIR}/Superbuild/External-FLTK.cmake )
   list( APPEND ImageViewer_DEPENDENCIES FLTK )
 endif()
 
+set( _fltk_use_resource )
+if(APPLE AND NOT FLTK_USE_X)
+  set( _fltk_use_resource "-DITK_FLTK_RESOURCE:FILEPATH=Carbon.r" )
+endif()
 ExternalProject_Add( ImageViewer
   DEPENDS ${ImageViewer_DEPENDENCIES}
   DOWNLOAD_COMMAND ""
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
   BINARY_DIR ImageViewer-build
   CMAKE_GENERATOR ${gen}
   CMAKE_ARGS
@@ -47,8 +51,8 @@ ExternalProject_Add( ImageViewer
      # ITK
     -DITK_DIR:PATH=${ITK_DIR}
     # FLTK
-    -DUSE_FLTK:BOOL=ON
     -DFLTK_DIR:PATH=${FLTK_DIR}
-    -DITK_FLTK_RESOURCE:FILEPATH=Carbon.r
+    ${_fltk_use_resource}
+    -DImageViewer_USE_SUPERBUILD:BOOL=OFF
   INSTALL_COMMAND ""
 )

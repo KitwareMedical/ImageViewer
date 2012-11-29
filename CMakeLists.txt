@@ -2,16 +2,29 @@ cmake_minimum_required( VERSION 2.8 )
 
 project( ImageViewer )
 
-find_package( ITK REQUIRED )
-include( ${ITK_USE_FILE} )
+option( ImageViewer_USE_SUPERBUILD
+  "Build ImageViewer and the projects it depends on via Superbuild.cmake" ON )
+mark_as_advanced( ImageViewer_USE_SUPERBUILD )
 
-find_package( FLTK REQUIRED NO_MODULE )
-set(FLTK_EXE_LINKER_FLAGS "")
-include( ${FLTK_USE_FILE} )
-link_directories( ${FLTK_LIB_DIR} )
-set(FLTK_LIBRARIES "fltk;fltk_images;fltk_forms;fltk_gl")
-if(APPLE)
-  list(APPEND FLTK_LIBRARIES "-framework Cocoa")
+if( ImageViewer_USE_SUPERBUILD )
+
+  include( "${CMAKE_CURRENT_SOURCE_DIR}/Superbuild/Superbuild.cmake" )
+  return()
+
+else()
+
+  find_package( ITK REQUIRED )
+  include( ${ITK_USE_FILE} )
+
+  find_package( FLTK REQUIRED NO_MODULE )
+  set(FLTK_EXE_LINKER_FLAGS "")
+  include( ${FLTK_USE_FILE} )
+  link_directories( ${FLTK_LIB_DIR} )
+  set(FLTK_LIBRARIES "fltk;fltk_images;fltk_forms;fltk_gl")
+  if(APPLE)
+    list(APPEND FLTK_LIBRARIES "-framework Cocoa")
+  endif()
+
 endif()
 
 # The fluid-generated fltk sources have many warnings.  This macro

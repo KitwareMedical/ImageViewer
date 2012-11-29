@@ -4,11 +4,11 @@
 #-----------------------------------------------------------------------------
 if( NOT WIN32)
   configure_file(
-    ${CMAKE_SOURCE_DIR}/patch-FLTK.sh.in
-    ${CMAKE_BINARY_DIR}/patch-FLTK.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/Superbuild/patch-FLTK.sh.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Superbuild/patch-FLTK.sh
     @only
   )
-  set(FLTK_PATCH_COMMAND "${CMAKE_BINARY_DIR}/patch-FLTK.sh")
+  set(FLTK_PATCH_COMMAND "${CMAKE_CURRENT_BINARY_DIR}/Superbuild/patch-FLTK.sh")
 else ()
   set(FLTK_PATCH_COMMAND "")
 endif()
