@@ -25,6 +25,7 @@ ExternalProject_Add(FLTK
   CMAKE_GENERATOR ${gen}
   CMAKE_ARGS
     ${ep_common_args}
+    -DOPTION_BUILD_EXAMPLES:BOOL=OFF
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/FLTK-install
 )
 
