@@ -40,6 +40,10 @@ if(NOT FLTK_DIR)
   list( APPEND ITKApps_DEPENDENCIES FLTK )
 endif()
 
+set( _fltk_use_resource )
+if(APPLE AND NOT FLTK_USE_X)
+  set( _fltk_use_resource "-DITK_FLTK_RESOURCE:FILEPATH=Carbon.r" )
+endif()
 ExternalProject_Add( ITKApps
   DEPENDS ${ITKApps_DEPENDENCIES}
   DOWNLOAD_COMMAND ""
@@ -57,6 +61,6 @@ ExternalProject_Add( ITKApps
     # FLTK
     -DUSE_FLTK:BOOL=ON
     -DFLTK_DIR:PATH=${FLTK_DIR}
-    -DITK_FLTK_RESOURCE:FILEPATH=Carbon.r
+    ${_fltk_use_resource}
   INSTALL_COMMAND ""
 )
