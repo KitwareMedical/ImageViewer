@@ -49,8 +49,8 @@ Index: CMakeLists.txt
  if(NOT APPLE OR OPTION_APPLE_X11)
 Index: filename_list.cxx
 ===================================================================
---- filename_list.cxx	(revision 9266)
-+++ filename_list.cxx	(working copy)
+--- src/filename_list.cxx	(revision 9266)
++++ src/filename_list.cxx	(working copy)
 @@ -110,7 +110,7 @@
    // The vast majority of UNIX systems want the sort function to have this
    // prototype, most likely so that it can be passed to qsort without any
