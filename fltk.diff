@@ -1,0 +1,49 @@
+Index: src/scandir.c
+===================================================================
+--- src/scandir.c	(revision 9266)
++++ src/scandir.c	(working copy)
+@@ -52,7 +52,6 @@
+ #    if defined(__GNUC__)
+ #      warning Attempting to use the deprecated scandir() replacement function
+ #    endif /*__GNUC__*/
+-#    error No compatible scandir implementation found (STR 2687 applies!)
+
+ #  endif /* !HAVE_SCANDIR */
+ #endif
+Index: src/CMakeLists.txt
+===================================================================
+--- src/CMakeLists.txt	(revision 9266)
++++ src/CMakeLists.txt	(working copy)
+@@ -220,7 +220,7 @@
+ endif(MSVC)
+
+ if(USE_THREADS)
+-   target_link_libraries(fltk ${CMAKE_THREAD_LIBS_INIT})
++   target_link_libraries(fltk ${CMAKE_THREAD_LIBS_INIT} -ldl)
+ endif(USE_THREADS)
+
+ if(USE_X11)
+Index: CMakeLists.txt
+===================================================================
+--- CMakeLists.txt	(revision 9266)
++++ CMakeLists.txt	(working copy)
+@@ -168,7 +168,10 @@
+ CHECK_FUNCTION_EXISTS(png_get_valid          HAVE_PNG_GET_VALID)
+ CHECK_FUNCTION_EXISTS(png_set_tRNS_to_alpha  HAVE_PNG_SET_TRNS_TO_ALPHA)
+
+-CHECK_FUNCTION_EXISTS(scandir                HAVE_SCANDIR)
++if(NOT APPLE)
++  CHECK_FUNCTION_EXISTS(scandir                HAVE_SCANDIR)
++endif()
++
+ CHECK_FUNCTION_EXISTS(snprintf               HAVE_SNPRINTF)
+
+ # not really true but we convert strcasecmp calls to _stricmp calls in flstring.h
+@@ -316,6 +319,7 @@
+ #######################################################################
+ if(APPLE)
+    option(OPTION_APPLE_X11 "use X11" OFF)
++   set(HAVE_SCANDIR 1 CACHE INTERNAL "")
+ endif(APPLE)
+
+ if(NOT APPLE OR OPTION_APPLE_X11)
