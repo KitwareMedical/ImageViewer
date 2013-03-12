@@ -1,6 +1,11 @@
 #---------------------------------------------------------------------------
 # Get and build itk
 
+set( itk_depends )
+if( NOT VTK_DIR )
+  set( itk_depends VTK )
+endif()
+
 set( ITK_TAG "v4.3.0" )
 ExternalProject_Add( ITK
   GIT_REPOSITORY "${git_protocol}://itk.org/ITK.git"
@@ -19,7 +24,7 @@ ExternalProject_Add( ITK
     -DVTK_DIR:PATH=${VTK_DIR}
     -DModule_ITKVtkGlue:BOOL=ON
   INSTALL_COMMAND ""
-  DEPENDS VTK
+  DEPENDS ${itk_depends}
 )
 
 set(ITK_DIR ${CMAKE_BINARY_DIR}/ITK-build)
