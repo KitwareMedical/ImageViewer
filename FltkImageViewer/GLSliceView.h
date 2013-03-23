@@ -973,54 +973,55 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       }
 
     if( this->cViewClickedPoints )
-    {
-        glColor3f( 0.8, 0.4, 0.4 );
-        glPointSize( 3.0 );
-        glBegin(GL_POINTS);
+      {
+      glColor3f( 0.8, 0.4, 0.4 );
+      glPointSize( 3.0 );
+      glBegin(GL_POINTS);
+      for( int ii = 0; ii < this->numClickedPointsStored(); ii++ )
         {
-            for ( int ii = 0; ii < this->numClickedPointsStored(); ii++ )
+        ClickPoint p;
+        this->getClickedPoint( ii, p );
+        float pts[3] = { p.x, p.y, p.z };
+
+        if( static_cast<int>( pts[this->cWinOrder[2]] ) ==
+            (int)this->sliceNum() )
+          {
+          float xx;
+          if(this->cFlipX[this->cWinOrientation])
             {
-                ClickPoint p;
-                this->getClickedPoint( ii, p );
-                float pts[3] = { p.x, p.y, p.z };
-
-                if ( static_cast<int>( pts[this->cWinOrder[2]] ) ==
-                     (int)this->sliceNum() )
-                {
-                    float xx;
-                    if(this->cFlipX[this->cWinOrientation])
-                    {
-                        xx = this->cW - (pts[this->cWinOrder[0]] 
-                                        - this->cWinMinX) * scale0
-                            - originX;
-                    }
-                    else
-                    {
-                        xx = (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
-                            + originX;
-                    }
-
-                    float yy;
-                    if(this->cFlipY[this->cWinOrientation])
-                    {
-                        yy = this->cH - (pts[this->cWinOrder[1]] 
-                                        - this->cWinMinY) * scale1
-                            - originY;
-                    }
-                    else
-                    {
-                        yy = (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
-                             + originY;
-                    }
-                    glVertex2f( xx, yy );
-                }
+            xx = this->cW - (pts[this->cWinOrder[0]] 
+              - this->cWinMinX) * scale0 - originX;
             }
+          else
+            {
+            xx = (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
+              + originX;
+            }
+
+          float yy;
+          if(this->cFlipY[this->cWinOrientation])
+            {
+            yy = this->cH - (pts[this->cWinOrder[1]] 
+                 - this->cWinMinY) * scale1 - originY;
+            }
+          else
+            {
+            yy = (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
+                 + originY;
+            }
+          glVertex2f( xx, yy );
+          }
         }
-        glEnd();
-    }
+      glEnd();
+      }
 
     if( this->cViewAxisLabel ) 
       {
+      glLoadIdentity();
+      glOrtho( 0.0, (double)w(), 0.0, (double)h(), 0.0, 1.0 );
+      glMatrixMode( GL_PROJECTION );
+      glViewport( 0,0 , w(), h() );
+
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.2, 0.2, 0.78, (float)0.75);
@@ -1060,6 +1061,11 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       }
     if( this->cViewValue ) 
       {
+      glLoadIdentity();
+      glOrtho( 0.0, (double)w(), 0.0, (double)h(), 0.0, 1.0 );
+      glMatrixMode( GL_PROJECTION );
+      glViewport( 0,0 , w(), h() );
+
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
@@ -1110,9 +1116,15 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       }
     if( this->cViewDetails )
       {
+      glLoadIdentity();
+      glOrtho( 0.0, (double)w(), 0.0, (double)h(), 0.0, 1.0 );
+      glMatrixMode( GL_PROJECTION );
+      glViewport( 0,0 , w(), h() );
+
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.9, 0.4, 0.1, (float)0.75);
+
       gl_font(FL_TIMES_BOLD, 12);
       char s[80];
       if(this->cWinOrientation == 0)
@@ -1152,6 +1164,7 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (float)0.75);
+
       int xx;
       if(this->cFlipX[this->cWinOrientation])
         {
