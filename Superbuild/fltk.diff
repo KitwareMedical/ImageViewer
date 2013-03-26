@@ -58,5 +58,5 @@ Index: filename_list.cxx
 -  int n = scandir(dirloc, list, 0, (int(*)(const void*,const void*))sort);
 +  int n = scandir(dirloc, list, 0, (int(*)(const dirent**,const dirent**))sort);
  #endif
- 
+
  #ifndef __APPLE__

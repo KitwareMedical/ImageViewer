@@ -17,7 +17,7 @@ set(FLTK_INSTALL_COMMAND ${CMAKE_MAKE_COMMAND} install)
 
 ExternalProject_Add(FLTK
   SVN_REPOSITORY "http://svn.easysw.com/public/fltk/fltk/branches/branch-1.3"
-  SVN_REVISION -r "9266"
+  SVN_REVISION -r "9815"
   UPDATE_COMMAND ""
   PATCH_COMMAND ${FLTK_PATCH_COMMAND}
   SOURCE_DIR FLTK
