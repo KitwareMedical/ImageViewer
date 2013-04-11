@@ -1076,10 +1076,9 @@ void GLSliceView<ImagePixelType, OverlayPixelType>::draw(void)
       if( this->cViewValuePhysicalUnits )
         {
         IndexType index;
-        typedef typename IndexType::IndexValueType    IndexValueType;
-        index[0] = static_cast< IndexValueType >( this->cClickSelect[0] );
-        index[1] = static_cast< IndexValueType >( this->cClickSelect[1] );
-        index[2] = static_cast< IndexValueType >( this->cClickSelect[2] );
+        index[0] = static_cast< itk::IndexValueType >( this->cClickSelect[0] );
+        index[1] = static_cast< itk::IndexValueType >( this->cClickSelect[1] );
+        index[2] = static_cast< itk::IndexValueType >( this->cClickSelect[2] );
         PointType point;
         this->cImData->TransformIndexToPhysicalPoint( index, point );
         px = point[0];
