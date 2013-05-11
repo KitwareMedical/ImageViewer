@@ -15,9 +15,16 @@ endif()
 
 set(FLTK_INSTALL_COMMAND ${CMAKE_MAKE_COMMAND} install)
 
+find_package(Subversion)
+if(NOT Subversion_SVN_EXECUTABLE)
+  message(FATAL_ERROR "error: could not find svn for checkout of ${name}")
+endif()
 ExternalProject_Add(FLTK
-  SVN_REPOSITORY "http://svn.easysw.com/public/fltk/fltk/branches/branch-1.3"
-  SVN_REVISION -r "9815"
+  # Need to create our own version of svn checkout command because CMake <
+  # 2.8.12 does not support passing an empty string for the username and
+  # password.
+  DOWNLOAD_COMMAND ${Subversion_SVN_EXECUTABLE} co "http://seriss.com/public/fltk/fltk/branches/branch-1.3" -r "9815"
+    --non-interactive --username= --password= ${CMAKE_BINARY_DIR}/FLTK
   UPDATE_COMMAND ""
   PATCH_COMMAND ${FLTK_PATCH_COMMAND}
   SOURCE_DIR FLTK
