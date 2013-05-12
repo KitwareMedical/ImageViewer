@@ -38,3 +38,4 @@ else()
 endif()
 
 set(FLUID_COMMAND ${CMAKE_BINARY_DIR}/FLTK-install/bin/fluid)
+set(FLTK_EXTERNAL_PROJECT "TRUE")

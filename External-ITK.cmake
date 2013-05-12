@@ -1,9 +1,10 @@
 #---------------------------------------------------------------------------
 # Get and build itk
 
-set( itk_depends )
-if( NOT VTK_DIR )
-  set( itk_depends VTK )
+set (itk_depends)
+
+if (VTK_EXTERNAL_PROJECT)
+  set( itk_depends VTK ) # because of ITKVtkGlue
 endif()
 
 set( ITK_TAG "v4.3.0" )
@@ -28,3 +29,4 @@ ExternalProject_Add( ITK
 )
 
 set(ITK_DIR ${CMAKE_BINARY_DIR}/ITK-build)
+set(ITK_EXTERNAL_PROJECT "TRUE")
