@@ -7,7 +7,7 @@ if (VTK_EXTERNAL_PROJECT)
   set( itk_depends VTK ) # because of ITKVtkGlue
 endif()
 
-set( ITK_TAG "v4.3.0" )
+set( ITK_TAG "v4.4.0" )
 ExternalProject_Add( ITK
   GIT_REPOSITORY "${git_protocol}://itk.org/ITK.git"
   GIT_TAG "${ITK_TAG}"
