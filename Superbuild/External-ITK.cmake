@@ -1,7 +1,7 @@
 #---------------------------------------------------------------------------
 # Get and build itk
 
-set( ITK_TAG "v4.3.0" )
+set( ITK_TAG "v4.4.0" )
 ExternalProject_Add( ITK
   GIT_REPOSITORY "${git_protocol}://itk.org/ITK.git"
   GIT_TAG "${ITK_TAG}"
@@ -20,3 +20,4 @@ ExternalProject_Add( ITK
 )
 
 set(ITK_DIR ${CMAKE_BINARY_DIR}/ITK-build)
+set(ITK_EXTERNAL_PROJECT "TRUE")
