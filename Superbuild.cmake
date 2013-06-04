@@ -44,21 +44,35 @@ set(ep_common_args
   ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
   )
 
+option(ENABLE_TCL_WRAPPED_APPS "Enable applications that use TCL-Wrapped VTK classes. This requires tcl/tk." OFF)
+if( ENABLE_TCL_WRAPPED_APPS )
+  find_package( TCL )
+endif()
+
 set( ITKApps_DEPENDENCIES )
 
 if(NOT VTK_DIR)
   include( ${CMAKE_SOURCE_DIR}/External-VTK.cmake )
   list( APPEND ITKApps_DEPENDENCIES VTK )
+  message(STATUS "Using External Project for VTK")
+else()
+  message(STATUS "Using specified VTK_DIR: ${VTK_DIR}")
 endif()
 
 if(NOT ITK_DIR)
   include( ${CMAKE_SOURCE_DIR}/External-ITK.cmake )
   list( APPEND ITKApps_DEPENDENCIES ITK )
+  message(STATUS "Using External Project for ITK")
+else()
+  message(STATUS "Using specified ITK_DIR: ${ITK_DIR}")
 endif()
 
 if(NOT FLTK_DIR)
   include( ${CMAKE_SOURCE_DIR}/External-FLTK.cmake )
   list( APPEND ITKApps_DEPENDENCIES FLTK )
+  message(STATUS "Using External Project for FLTK")
+else()
+  message(STATUS "Using specified FLTK_DIR: ${FLTK_DIR}")
 endif()
 
 set( _fltk_use_resource )
