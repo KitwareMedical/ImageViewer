@@ -83,10 +83,10 @@ int main(int argc, char **argv)
     {
     reader->Update();
     }
-  catch( ... )
+ catch (itk::ExceptionObject &e)
     {
-    std::cout << "Problems reading file format" << std::endl;
-    return 1;
+     std::cerr << e << std::endl;
+     return EXIT_FAILURE;
     }
   std::cout << "...Done Loading File" << std::endl;
 
