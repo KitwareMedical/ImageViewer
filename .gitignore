@@ -13,3 +13,9 @@
 *.slo
 *.so
 *.so.*
+*~
+.AppleDouble
+.DS_Store
+.LSOverride
+._*
+_build
