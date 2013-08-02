@@ -34,43 +34,23 @@
 #
 ##############################################################################
 
-cmake_minimum_required( VERSION 2.8.7 )
-project( ImageViewer )
+# The Fluid-generated FLTK sources have many warnings. This macro will disable
+# warnings for the generated files on some compilers.
 
-set( CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH} )
+macro( DisableFLTKWarnings files )
+  if( CMAKE_COMPILER_IS_GNUCXX )
+    foreach( f ${files} )
+      string( REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}" )
+      string( REGEX REPLACE ".*/([^/]*)$" "\\1" SRC "${SRC}" )
+      set_source_files_properties( ${SRC} PROPERTIES COMPILE_FLAGS -w )
+    endforeach( f )
+  endif( CMAKE_COMPILER_IS_GNUCXX )
 
-option( ImageViewer_USE_SUPERBUILD
-  "Build ImageViewer and projects it depends on using superbuild." ON )
-mark_as_advanced( ImageViewer_USE_SUPERBUILD )
-
-option( USE_SYSTEM_FLTK "Exclude FLTK from superbuild and use an existing build."
-  OFF )
-mark_as_advanced( USE_SYSTEM_FLTK )
-
-option( USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
-  OFF )
-mark_as_advanced( USE_SYSTEM_ITK )
-
-if( ImageViewer_USE_SUPERBUILD )
-  add_subdirectory( ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
-else( ImageViewer_USE_SUPERBUILD )
-  find_package( ITK REQUIRED )
-  include( ${ITK_USE_FILE} )
-
-  find_package( FLTK REQUIRED NO_MODULE )
-  set( FLTK_EXE_LINKER_FLAGS "" )
-  include( ${FLTK_USE_FILE} )
-  link_directories( ${FLTK_LIB_DIR} )
-  set( FLTK_LIBRARIES "fltk;fltk_images;fltk_forms;fltk_gl" )
-
-  if( APPLE )
-    list( APPEND FLTK_LIBRARIES "-framework Cocoa" )
-  endif( APPLE )
-
-  include( DisableFLTKWarnings )
-
-  include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/FltkImageViewer )
-
-  add_subdirectory( FltkImageViewer )
-  add_subdirectory( ImageViewer )
-endif( ImageViewer_USE_SUPERBUILD )
+  if( MSVC )
+    foreach( f ${files} )
+      string( REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}" )
+      string( REGEX REPLACE ".*/([^/]*)$" "\\1" SRC "${SRC}" )
+      set_source_files_properties( ${SRC} PROPERTIES COMPILE_FLAGS /w )
+    endforeach( f )
+  endif( MSVC )
+endmacro( DisableFLTKWarnings )

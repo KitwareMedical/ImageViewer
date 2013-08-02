@@ -1,87 +1,97 @@
-SET(FltkImageViewer_SRCS
+##############################################################################
+#
+# Library:   TubeTK
+#
+# Copyright 2010 Kitware Inc. 28 Corporate Drive,
+# Clifton Park, NY, 12065, USA.
+#
+# All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+##############################################################################
+
+##############################################################################
+#
+# Program:   Insight Segmentation & Registration Toolkit
+#
+# Copyright (c) 2002 Insight Consortium. All rights reserved.
+# See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+#
+#    This software is distributed WITHOUT ANY WARRANTY; without even
+#    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+#    PURPOSE.  See the above copyright notices for more information.
+#
+##############################################################################
+
+include_directories(  ${ImageViewer_SOURCE_DIR}/FltkImageViewer
+  ${ImageViewer_BINARY_DIR}/FltkImageViewer )
+
+set( FltkImageViewer_GUI_SRCS
+  fltkClippingPlane3DDrawerGUI.fl
+  fltkDisplayGlWindowFlatGUI.fl
+  fltkDisplayGlWindowGUI.fl
+  fltkFrustumFunctionControlGUI.fl
+  fltkImage2DViewerGUI.fl
+  fltkImageViewerGUI.fl
+  fltkRegularStepGradientDescentGUI.fl
+  fltkRGBImage2DViewerGUI.fl
+  fltkSlice2DDrawerGUI.fl
+  fltkSlice3DDrawerGUI.fl
+  fltkSphereFunctionControlGUI.fl
+  fltkTimeProbesCollectorGUI.fl )
+  
+fltk_wrap_ui( FltkImageViewer ${FltkImageViewer_GUI_SRCS} )
+
+set( FltkImageViewer_SRCS
   fltkBox3D.cxx
-  fltkCone3D.cxx
   fltkClippingPlane3DDrawer.cxx
+  fltkCone3D.cxx
   fltkCylinder3D.cxx
   fltkFrustum3D.cxx
   fltkGlWindow.cxx
   fltkGlWindowInteractive.cxx
   fltkGlWindowInteractiveFlat.cxx
   fltkImage2DViewerWindow.cxx
-  fltkRGBImage2DViewerWindow.cxx
   fltkLightButton.cxx
   fltkProgressBar.cxx
+  fltkRGBImage2DViewerWindow.cxx
   fltkShape3D.cxx
   fltkSphere3D.cxx
-  fltkWindowInteractive.cxx
   fltkTimeProbeGUI.cxx
   fltkTimeProbesCollector.cxx
   fltkUtils.cxx
-)
+  fltkWindowInteractive.cxx
+  ${FltkImageViewer_FLTK_UI_SRCS} )
+  
+DisableFLTKWarnings( "${FltkImageViewer_SRCS}" )
 
-SET(FltkImageViewer_GUI_SRCS
-  fltkClippingPlane3DDrawerGUI.fl
-  fltkDisplayGlWindowGUI.fl
-  fltkDisplayGlWindowFlatGUI.fl
-  fltkFrustumFunctionControlGUI.fl
-  fltkImageViewerGUI.fl
-  fltkImage2DViewerGUI.fl
-  fltkRGBImage2DViewerGUI.fl
-  fltkRegularStepGradientDescentGUI.fl
-  fltkSlice2DDrawerGUI.fl
-  fltkSlice3DDrawerGUI.fl
-  fltkSphereFunctionControlGUI.fl
-  fltkTimeProbesCollectorGUI.fl
-)
+if( CMAKE_COMPILER_IS_GNUCXX )
+  set_source_files_properties( fltkGlWindow.cxx
+    PROPERTIES COMPILE_FLAGS -Wno-cast-qual )
+  set_source_files_properties( fltkImage2DViewerWindow.cxx
+    PROPERTIES COMPILE_FLAGS -Wno-cast-qual )
+  set_source_files_properties( fltkRGBImage2DViewerWindow.cxx
+    PROPERTIES COMPILE_FLAGS -Wno-cast-qual )
+endif( CMAKE_COMPILER_IS_GNUCXX )
 
-IF(WIN32)
-  ADD_DEFINITIONS(-DWIN32)
-ENDIF(WIN32)
+if( WIN32 )
+  add_definitions( -DWIN32 )
+endif( WIN32 )
 
-INCLUDE_DIRECTORIES(
-  ${ITKApps_SOURCE_DIR}/Auxiliary/FltkImageViewer
-  ${ITKApps_BINARY_DIR}/Auxiliary/FltkImageViewer
-)
+add_library( FltkImageViewer ${FltkImageViewer_SRCS}
+  ${FltkImageViewer_FLTK_UI_SRCS} )
+target_link_libraries( FltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_gl_LIBRARY}
+  ${OPENGL_glu_LIBRARY} )
 
-# Take the list of GUI files, generate .cxx and .h from them and add
-# them to the build process of the target
-FLTK_WRAP_UI(ITKFltkImageViewer ${FltkImageViewer_GUI_SRCS} )
-
-ADD_LIBRARY(ITKFltkImageViewer ${FltkImageViewer_SRCS} ${ITKFltkImageViewer_FLTK_UI_SRCS})
-INSTALL_TARGETS(/lib ITKFltkImageViewer)
-
-TARGET_LINK_LIBRARIES(ITKFltkImageViewer
-         ${FLTK_LIBRARIES}
-         ${OPENGL_glu_LIBRARY}
-         ${OPENGL_gl_LIBRARY}
-)
-
-# The fluid-generated fltk sources have many warnings.  Disable
-# warnings for the generated files on some compilers.
-IF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 1.6)
-  IF(CMAKE_COMPILER_IS_GNUCXX)
-    FOREACH(f ${FltkImageViewer_GUI_SRCS})
-      STRING(REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}")
-      SET(SRC ${ITKApps_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
-      SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS -w)
-    ENDFOREACH(f)
-  ENDIF(CMAKE_COMPILER_IS_GNUCXX)
-  IF(MSVC)
-    FOREACH(f ${FltkImageViewer_GUI_SRCS})
-      STRING(REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}")
-      SET(SRC ${ITKApps_BINARY_DIR}/Auxiliary/FltkImageViewer/${SRC})
-      SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS /w)
-    ENDFOREACH(f)
-    FOREACH(f ${FltkImageViewer_SRCS})
-      STRING(REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}")
-      STRING(REGEX REPLACE ".*/([^/]*)$" "\\1" SRC "${SRC}")
-      SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS /w)
-    ENDFOREACH(f)
-  ENDIF(MSVC)
-ENDIF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} GREATER 1.6)
-
-IF(CMAKE_COMPILER_IS_GNUCXX)
-  SET_SOURCE_FILES_PROPERTIES (fltkGlWindow.cxx PROPERTIES COMPILE_FLAGS -Wno-cast-qual)
-  SET_SOURCE_FILES_PROPERTIES (fltkImage2DViewerWindow.cxx PROPERTIES COMPILE_FLAGS -Wno-cast-qual)
-  SET_SOURCE_FILES_PROPERTIES (fltkRGBImage2DViewerWindow.cxx PROPERTIES COMPILE_FLAGS -Wno-cast-qual)
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+install( TARGETS FltkImageViewer DESTINATION lib )

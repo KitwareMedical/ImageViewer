@@ -8,7 +8,7 @@ Description
 
 ImageViewer is a cross-platform [ITK](http://www.itk.org) and [FLTK](http://www.fltk.org)-based medical image viewer. This simple-yet-effective slice-based viewer works on 2D and 3D images and supports the probing of data values.
 
-This application was extracted for [TubeTK](http://www.tubetk.org) from the [ITKApps](http://itk.org/ITKApps.git) repository with ```git subtree```.
+This application was originally extracted for [TubeTK](http://www.tubetk.org) from the [ITKApps](http://itk.org/ITKApps.git) repository.
 
 Building
 --------
