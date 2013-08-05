@@ -1,37 +1,54 @@
-PROJECT(ImageViewer)
+##############################################################################
+#
+# Library:   TubeTK
+#
+# Copyright 2010 Kitware Inc. 28 Corporate Drive,
+# Clifton Park, NY, 12065, USA.
+#
+# All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+##############################################################################
 
-IF( BUILD_OUTSIDE_INSIGHT_APPLICATIONS )
+##############################################################################
+#
+# Program:   Insight Segmentation & Registration Toolkit
+#
+# Copyright (c) 2002 Insight Consortium. All rights reserved.
+# See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+#
+#    This software is distributed WITHOUT ANY WARRANTY; without even
+#    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+#    PURPOSE.  See the above copyright notices for more information.
+#
+##############################################################################
 
-  FIND_PACKAGE(ITK)
-  IF(ITK_FOUND)
-    INCLUDE(${ITK_USE_FILE})
-  ELSE(ITK_FOUND)
-    MESSAGE(FATAL_ERROR
-            "Cannot build ITKApps without ITK.  Please set ITK_DIR.")
-  ENDIF(ITK_FOUND)
+include_directories( ${ImageViewer_SOURCE_DIR}/FltkImageViewer )
 
-  FIND_PACKAGE(FLTK)
-  IF(FLTK_FOUND)
-    INCLUDE_DIRECTORIES(${FLTK_INCLUDE_DIR})
-  ENDIF(FLTK_FOUND)
+set( ImageViewer_GUI_SRCS
+  ImageViewerGUI.fl )
 
-ENDIF( BUILD_OUTSIDE_INSIGHT_APPLICATIONS )
+fltk_wrap_ui( ImageViewer ${ImageViewer_GUI_SRCS} )
 
-INCLUDE_DIRECTORIES (
-  ${ITKApps_SOURCE_DIR}/Auxiliary/FltkImageViewer
-)
-
-SET(ImageViewer_GUI_SRCS
-  ImageViewerGUI.fl
-  )
-
-FLTK_WRAP_UI( ImageViewer ${ImageViewer_GUI_SRCS} )
-
-SET ( ImageViewer_SRCS
+set( ImageViewer_SRCS
   ImageViewer.cxx
-  ${ImageViewer_FLTK_UI_SRCS}
-  )
-ITK_DISABLE_FLTK_GENERATED_WARNINGS("${ImageViewer_SRCS}")
+  ${ImageViewer_FLTK_UI_SRCS} )
 
-ADD_GUI_EXECUTABLE( ImageViewer "${ImageViewer_SRCS}" )
-TARGET_LINK_LIBRARIES (ImageViewer ${ITK_LIBRARIES} ITKFltkImageViewer)
+DisableFLTKWarnings( "${ImageViewer_SRCS}" )
+
+add_executable( ImageViewer ${ImageViewer_SRCS} )
+install( TARGETS ImageViewer DESTINATION bin )
+
+#add_gui_executable( ImageViewer "${ImageViewer_SRCS}" )
+target_link_libraries( ImageViewer ${ITK_LIBRARIES} FltkImageViewer )

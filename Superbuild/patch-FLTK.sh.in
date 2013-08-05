@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-echo "Patching FLTK"
-cd @CMAKE_BINARY_DIR@/FLTK
-patch -p0 -i @CMAKE_CURRENT_SOURCE_DIR@/Superbuild/fltk.diff
