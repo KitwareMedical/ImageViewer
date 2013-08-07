@@ -2,8 +2,13 @@ language: cpp
 
 compiler: clang
 
+before_install:
+  - sudo add-apt-repository --yes ppa:jamie-snape/tubetk
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libgdcm2-dev libinsighttoolkit-dev
+
 script:
   - mkdir _build
   - cd _build
-  - cmake ..
+  - cmake -DUSE_SYSTEM_ITK:BOOL=ON ..
   - cmake --build .
