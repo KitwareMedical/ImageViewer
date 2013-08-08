@@ -1,14 +1,16 @@
 language: cpp
 
-compiler: clang
+compiler:
+  - clang
+  - gcc
 
 before_install:
   - sudo add-apt-repository --yes ppa:jamie-snape/tubetk
   - sudo apt-get update -qq
-  - sudo apt-get install -qq libgdcm2-dev libinsighttoolkit-dev
+  - sudo apt-get install -qq libfltk1.3-dev libinsighttoolkit-dev
 
 script:
   - mkdir _build
   - cd _build
-  - cmake -DUSE_SYSTEM_ITK:BOOL=ON ..
+  - cmake -DUSE_SYSTEM_FLTK:BOOL=ON -DUSE_SYSTEM_ITK:BOOL=ON ..
   - cmake --build .

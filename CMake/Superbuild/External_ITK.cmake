@@ -29,11 +29,6 @@ if( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED )
 endif( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED )
 set( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED 1 )
 
-# Sanity checks.
-if( DEFINED ITK_DIR AND NOT EXISTS ${ITK_DIR} )
-  message( FATAL_ERROR "ITK_DIR variable is defined but corresponds to a nonexistent directory" )
-endif( DEFINED ITK_DIR AND NOT EXISTS ${ITK_DIR} )
-
 set( ITK_DEPENDENCIES "" )
 
 # Include dependent projects, if any.
