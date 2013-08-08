@@ -57,15 +57,15 @@ else( ImageViewer_USE_SUPERBUILD )
   find_package( ITK REQUIRED )
   include( ${ITK_USE_FILE} )
 
-  find_package( FLTK REQUIRED NO_MODULE )
-  set( FLTK_EXE_LINKER_FLAGS "" )
-  include( ${FLTK_USE_FILE} )
-  link_directories( ${FLTK_LIB_DIR} )
-  set( FLTK_LIBRARIES "fltk;fltk_images;fltk_forms;fltk_gl" )
+  find_package( FLTK REQUIRED )
 
-  if( APPLE )
-    list( APPEND FLTK_LIBRARIES "-framework Cocoa" )
-  endif( APPLE )
+  if( DEFINED FLTK_USE_FILE AND EXISTS ${FLTK_USE_FILE} )
+    set( FLTK_EXE_LINKER_FLAGS "" )
+    include( ${FLTK_USE_FILE} )
+    if( APPLE )
+      list( APPEND FLTK_LIBRARIES "-framework Cocoa" )
+    endif( APPLE )
+  endif( DEFINED FLTK_USE_FILE AND  EXISTS ${FLTK_USE_FILE} )
 
   include( DisableFLTKWarnings )
 

@@ -89,7 +89,7 @@ if( WIN32 )
   add_definitions( -DWIN32 )
 endif( WIN32 )
 
-add_library( FltkImageViewer ${FltkImageViewer_SRCS}
+add_library( FltkImageViewer STATIC ${FltkImageViewer_SRCS}
   ${FltkImageViewer_FLTK_UI_SRCS} )
 target_link_libraries( FltkImageViewer ${FLTK_LIBRARIES} ${OPENGL_gl_LIBRARY}
   ${OPENGL_glu_LIBRARY} )

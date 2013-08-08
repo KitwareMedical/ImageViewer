@@ -50,5 +50,5 @@ DisableFLTKWarnings( "${ImageViewer_SRCS}" )
 add_executable( ImageViewer ${ImageViewer_SRCS} )
 install( TARGETS ImageViewer DESTINATION bin )
 
-#add_gui_executable( ImageViewer "${ImageViewer_SRCS}" )
-target_link_libraries( ImageViewer ${ITK_LIBRARIES} FltkImageViewer )
+target_link_libraries( ImageViewer ${FLTK_LIBRARIES} ${ITK_LIBRARIES}
+ FltkImageViewer )
