@@ -21,8 +21,8 @@
 #
 ##############################################################################
 
-set( FLTK_URL http://midas3.kitware.com/midas/download/bitstream/324025/FLTK-1.3-r9815-patched.zip )
-set( FLTK_URL_MD5 10a8b66894f5dac4e4b9c08b7e5387ed )
+set( FLTK_URL http://midas3.kitware.com/midas/download/item/208771/fltk-1.3.2.20130812084657.source.tar.gz )
+set( FLTK_URL_MD5 f8b2e249701cf77520546e3c37130f0b )
 
 set( ITK_GIT_REPOSITORY ${git_protocol}://github.com/Kitware/ITK.git )
-set( ITK_GIT_TAG 949f14eb4d34d3a9e58427e67b5a7ccd5ea77d0f ) # Slicer v4.2.2-1
+set( ITK_GIT_TAG 35b90133a793ffd884820e499175db19366fe627 )
