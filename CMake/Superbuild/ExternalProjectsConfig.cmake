@@ -21,8 +21,9 @@
 #
 ##############################################################################
 
-set( FLTK_URL http://midas3.kitware.com/midas/download/item/208771/fltk-1.3.2.20130812084657.source.tar.gz )
-set( FLTK_URL_MD5 f8b2e249701cf77520546e3c37130f0b )
+set( FLTK_URL
+  http://midas3.kitware.com/midas/download/item/208771/fltk-1.3.2.20130812084657.source.tar.gz )
+set( FLTK_URL_MD5_TAG f8b2e249701cf77520546e3c37130f0b )
 
-set( ITK_GIT_REPOSITORY ${git_protocol}://github.com/Kitware/ITK.git )
-set( ITK_GIT_TAG 35b90133a793ffd884820e499175db19366fe627 )
+set( ITK_URL https://github.com/Kitware/ITK/archive/v4.4.2.tar.gz )
+set( ITK_URL_MD5_TAG aa9006b3dcf05d615988c67aef241f4b )
