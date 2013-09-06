@@ -43,18 +43,6 @@ endif( CMAKE_BUILD_TYPE )
 
 set( gen "${CMAKE_GENERATOR}" )
 
-if( NOT GITCOMMAND )
-  find_package( Git REQUIRED )
-endif( NOT GITCOMMAND )
-
-option( GIT_PROTOCOL_HTTP "Use HTTP protocol for Git access." OFF )
-mark_as_advanced( GIT_PROTOCOL_HTTP )
-
-set( git_protocol "git" )
-if( GIT_PROTOCOL_HTTP )
-  set( git_protocol "http" )
-endif( GIT_PROTOCOL_HTTP )
-
 include( ExternalProjectsConfig )
 include( SetOSXVariables )
 
