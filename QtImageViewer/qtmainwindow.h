@@ -9,9 +9,12 @@
 #include <itkImage.h>
 #include <itkImageFileReader.h>
 #include <itkImageFileWriter.h>
+//#include "itkImageToVTKImageFilter.h"
 #include "itkRecursiveGaussianImageFilter.h"
 
-// CTK include
+// VTK include
+#include "vtkImageData.h"
+#include "ctkVTKSliceView.h"
 
 namespace Ui {
 class MainWindow;
@@ -41,6 +44,7 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+  void display();
 public slots:
   /// Load the fileName file.
   /// \sa on_LoadButton_clicked()
@@ -66,6 +70,8 @@ private:
   FilterType::Pointer m_FilterX;
   FilterType::Pointer m_FilterY;
   WriterType::Pointer m_Writer;
+
+  ctkVTKSliceView *m_SliceView;
 };
 
 #endif // QTMAINWINDOW_H

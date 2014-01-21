@@ -114,3 +114,10 @@ void MainWindow::saveFile(const QString& fileName)
     return;
     }
 }
+
+void MainWindow::display()
+{
+  //m_SliceView->setImageData(m_ImageData);
+  m_SliceView->show();
+  m_SliceView->update();
+}
