@@ -39,7 +39,7 @@ project( ImageViewer )
 
 option( USE_FLTK "Build FLTK, turn it False to use Qt instead." ON )
 
-set( CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH} ${CTK_CMAKE_DIR} ${CTK_CMAKE_UTILITIES_DIR} )
+set( CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH} )#${CTK_CMAKE_DIR} $#{CTK_CMAKE_UTILITIES_DIR} )
 
 option( ImageViewer_USE_SUPERBUILD
   "Build ImageViewer and projects it depends on using superbuild." ON )
@@ -76,28 +76,31 @@ else( ImageViewer_USE_SUPERBUILD )
     include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/FltkImageViewer )
 
     add_subdirectory( FltkImageViewer )
+    add_subdirectory( ImageViewer )
 
   else( USE_FLTK )
 
-    option( USE_SYSTEM_CTK "Exclude CTK from superbuild and use an existing build."
-     OFF )
-    mark_as_advanced( USE_SYSTEM_CTK )
-    find_package( Qt4 REQUIRED )
+    #option( USE_SYSTEM_CTK "Exclude CTK from superbuild and use an existing build."
+     #OFF )
+    #mark_as_advanced( USE_SYSTEM_CTK )
+    
+    find_package( Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL REQUIRED )
     include( ${QT_USE_FILE} )
 
-    set( VTK_DIR "/Users/kitware/Work/TubeTK-ImageViewer-CTKBuild/CTK-build/VTK-build" )
-    find_package( VTK REQUIRED )
-    include( ${VTK_USE_FILE} )
+    #set( VTK_DIR "/Users/kitware/Work/TubeTK-ImageViewer-CTKBuild/CTK-build/VTK-build" )
+    #find_package( VTK REQUIRED )
+    #include( ${VTK_USE_FILE} )
 
 
-    find_package( CTK REQUIRED )
-    include( ${CTK_USE_FILE} )
+    #find_package( CTK REQUIRED )
+    #include( ${CTK_USE_FILE} )
 
-    include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/QtImageViewer )
+    include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Auxiliary ) #QtImageViewer
 
-    add_subdirectory( QtImageViewer )
+    add_subdirectory( Auxiliary ) #QtImageViewer
 
   endif( USE_FLTK )
 
-  add_subdirectory( ImageViewer )
+  #add_subdirectory( ImageViewer )
+
 endif( ImageViewer_USE_SUPERBUILD )

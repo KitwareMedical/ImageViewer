@@ -1,18 +1,20 @@
-#include <qapplication.h>
+#include <QApplication>
 #include "QtGlSliceView.h"
 #include "QtSlicer.h"
-#include <qfiledialog.h>
-#include <qslider.h>
+#include <QFileDialog>
+//#include <qslider.h>
 
 #include "itkImageFileReader.h"
 #include "itkImage.h"
 #include "itkMetaImageIOFactory.h"
 #include "itkImageRegionIteratorWithIndex.h"
 
+#include <QDebug>
+#include <QPlastiqueStyle>
 #include <qwindowsstyle.h>
-#include <qplatinumstyle.h>
+//#include <qplatinumstyle.h>
 #include <qmotifstyle.h>
-#include <qmotifplusstyle.h>
+//#include <qmotifplusstyle.h>
 #include <qcdestyle.h>
 
 int main( int argc, char* argv[] ) 
@@ -21,12 +23,12 @@ int main( int argc, char* argv[] )
   QApplication myApp( argc, argv );
 
   QtSlicer m_GUI( 0, 0, TRUE );
-  myApp.setMainWidget(&m_GUI);
+  //myApp.setMainWidget(&m_GUI);
 
-  m_GUI.setCaption( "Insight Qt Slicer" );
-  myApp.setStyle( new QPlatinumStyle );
+  m_GUI.setWindowTitle("Insight Qt Slicer" );
+  myApp.setStyle(new QPlastiqueStyle );
   QPalette p( QColor( 239, 239, 239 ) );
-  myApp.setPalette( p, TRUE );
+  myApp.setPalette( p );
 
   typedef double                            PixelType;
   typedef itk::Image<PixelType, 3>          ImageType;
@@ -34,11 +36,16 @@ int main( int argc, char* argv[] )
 
   ReaderType::Pointer reader = ReaderType::New();
   
-  QString s = QFileDialog::getOpenFileName(".","Images (*.mha)", 0, "open file dialog","Chose an image filename" );
+  QString filePathToLoad = QFileDialog::getOpenFileName(&m_GUI,"", QDir::currentPath());
+  //"Images (*.mha)", 0, "open file dialog","Chose an image filename" );
 
-  reader->SetFileName( s.latin1() );
+  if(filePathToLoad.isEmpty())
+    {
+    return 0;
+    }
+  reader->SetFileName( filePathToLoad.toLatin1().data() );
   
-  std::cout << "loading image " << s.latin1() << " ... ";
+  qDebug() << "loading image " << filePathToLoad << " ... ";
   try
     {
     reader->Update();
@@ -52,10 +59,12 @@ int main( int argc, char* argv[] )
  
   std::cout << "Done!" << std::endl;
   m_GUI.SetInputImage( reader->GetOutput() );
+
+  m_GUI.show();
   
   try
     {
-    m_GUI.exec();
+    myApp.exec();
     }
   catch (itk::ExceptionObject & e)
     {

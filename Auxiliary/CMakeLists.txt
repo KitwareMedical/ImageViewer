@@ -1,8 +1,12 @@
 # Add an option to build or not build the FltkImageViewer Library
-IF(HAS_FLTK)
+IF(USE_FLTK)
   SET(HAS_FLTKIMAGEVIEWER 1 CACHE INTERNAL "FLTK image support")
   SUBDIRS(FltkImageViewer)
-ENDIF(HAS_FLTK)
+else() 
+  include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/QtImageViewer ) #QtImageViewer
+
+  add_subdirectory( QtImageViewer ) 
+ENDIF(USE_FLTK)
 
 # Add an option to build or not build the vtk interface Library
 IF(HAS_VTK)

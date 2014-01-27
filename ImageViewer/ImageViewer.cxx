@@ -30,7 +30,6 @@ Fl_Window *form;
 #else
 # include <QApplication>
 # include "qtmainwindow.h"
-#include "ctkVTKSliceView.h"
 #endif
 
 int usage(void)

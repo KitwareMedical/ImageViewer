@@ -22,7 +22,7 @@
 
 
 #include <math.h>
-#include <qgl.h>
+#include <QtOpenGL/qgl.h>
   
 
 using namespace itk;
