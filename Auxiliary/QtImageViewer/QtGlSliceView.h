@@ -23,6 +23,8 @@
 
 #include <math.h>
 #include <QtOpenGL/qgl.h>
+#include <QFileDialog>
+#include "ui_QtSlicerHelpGUI.h"
   
 
 using namespace itk;
@@ -82,7 +84,8 @@ struct ClickPoint
 * See SliceView.h for details...
   **/
 //  
-    class QtGlSliceView : 
+
+class QtGlSliceView :
     public QGLWidget
 {
   Q_OBJECT
@@ -117,6 +120,7 @@ protected:
   void initializeGL();
   void resizeGL( int w, int h);
   void paintGL();
+  void keyPressEvent(QKeyEvent* event);
 
 public:
 /*! FLTK required constructor - must use imData() to complete 
@@ -159,6 +163,8 @@ public:
   
   virtual void update();
 
+  //virtual int handle(QObject* obj, QKeyEvent* event);
+
   /*! Specify the slice to view */
   void      sliceNum(unsigned int newSliceNum);
   /*! What slice is being viewed */
@@ -172,6 +178,39 @@ public:
   float GetIntensityMin() { return cIWMin;}
   float GetIntensityMax() { return cIWMax;}
 
+  void winZoom(float newWinZoom);
+  float winZoom();
+  void winCenter();
+  void winCenter(int newWinCenterX, int newWinCenterY, int newWinCenterZ);
+  unsigned int winCenterX();
+  unsigned int winCenterY();
+  unsigned int winCenterZ();
+  void boxMin(float minX, float minY, float minZ);
+  void boxMax(float x, float y, float z);
+
+  void orientation(unsigned int newOrientation);
+  unsigned int orientation();
+
+  void iwMin(float newIWMin);
+  float iwMin();
+  void iwMax(float newIWMax);
+  float iwMax();
+  void imageMode(ImageModeType newImageMode);
+  ImageModeType imageMode();
+  void flipX(bool newFlipX);
+  bool flipX();
+  void flipY(bool newFlipY);
+  bool flipY();
+  void flipZ(bool newFlipZ);
+  bool flipZ();
+  void Transpose(bool newTranspose);
+  bool Transpose();
+  void iwModeMin(IWModeType newIWModeMin);
+  IWModeType iwModeMin();
+  void iwModeMax(IWModeType newIWModeMax);
+  IWModeType iwModeMax();
+
+  void saveClickedPointsStored();
 public slots:
   
   void ChangeSlice(int value);
@@ -179,7 +218,7 @@ public slots:
   void IntensityMin(int value);
   void ZoomIn();
   void ZoomOut();
-  
+  void Help();
 signals:
 
   void Position(int, int, int, float);
@@ -190,8 +229,10 @@ protected:
   void    * cSliceNumArg;
   void   (* cSliceNumArgCallBack)(void * sliceNumArg);
     
+  Ui::HelpWindow *helpWindow;
   bool                     cValidImData;
     bool                     cViewImData;
+    bool                     cViewClickedPoints;
     ImagePointer             cImData;
     unsigned long            cDimSize[3];
     float                    cSpacing[3];
@@ -252,6 +293,7 @@ protected:
     bool        cViewOverlayData;
     bool        cViewCrosshairs;
     bool        cViewValue;
+    bool        cViewValuePhysicalUnits;
     bool        cViewDetails;
     
     int   cWinMinX;
@@ -273,6 +315,8 @@ protected:
     std::list< ClickPoint * > cClickedPoints;
     unsigned int maxClickPoints;
     int cX, cY, cW, cH;
+    int fastMovVal; //fast moving pace
+    int fastMovThresh;
     
     void clickSelect(float newX, float newY, float newZ);
 };

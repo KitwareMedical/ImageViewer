@@ -21,14 +21,14 @@ public:
 public slots:
 
   void DisplayPosition(int x,int y ,int z,float value);
-  void Help();
+//  void Help();
   void SetInputImage(ImageType * newImData);
   void DisplaySliceNumber(int number);
   void DisplayIMin(int value);
   void DisplayIMax(int value);
 
 private:
-  Ui::HelpWindow *helpWindow;
+//  Ui::HelpWindow *helpWindow;
 
 };
 

@@ -84,7 +84,7 @@ else( ImageViewer_USE_SUPERBUILD )
      #OFF )
     #mark_as_advanced( USE_SYSTEM_CTK )
     
-    find_package( Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL REQUIRED )
+    find_package( Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED )
     include( ${QT_USE_FILE} )
 
     #set( VTK_DIR "/Users/kitware/Work/TubeTK-ImageViewer-CTKBuild/CTK-build/VTK-build" )

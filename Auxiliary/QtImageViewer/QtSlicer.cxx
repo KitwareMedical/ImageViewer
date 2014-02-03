@@ -13,7 +13,7 @@ QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFl
 {
   this->setupUi(this);
   QObject::connect(buttonOk, SIGNAL(clicked()), this, SLOT(accept()));
-  QObject::connect(buttonHelp, SIGNAL(clicked()), this, SLOT(Help()));//
+  QObject::connect(buttonHelp, SIGNAL(clicked()), OpenGlWindow, SLOT(Help()));//
   QObject::connect(Slider1, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(ChangeSlice(int)));
   QObject::connect(OpenGlWindow, SIGNAL(Position(int,int,int,float)), this, SLOT(DisplayPosition(int,int,int,float)));//
   QObject::connect(IntensityMax, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(IntensityMax(int)));
@@ -47,13 +47,13 @@ void QtSlicer::DisplayPosition(int x,int y ,int z,float value)
   delete tempchar;
 }
 
-void QtSlicer::Help()
-{
-  QDialog* helpDialog = new QDialog(this);
-  helpWindow = new Ui::HelpWindow;
-  helpWindow->setupUi(helpDialog);
-  helpDialog->show();
-}
+//void QtSlicer::Help()
+//{
+//  QDialog* helpDialog = new QDialog(this);
+//  helpWindow = new Ui::HelpWindow;
+//  helpWindow->setupUi(helpDialog);
+//  helpDialog->show();
+//}
 
 void QtSlicer::SetInputImage(ImageType * newImData)
 {
