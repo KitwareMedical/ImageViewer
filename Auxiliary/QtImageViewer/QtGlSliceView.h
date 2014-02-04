@@ -191,10 +191,7 @@ public:
   void orientation(unsigned int newOrientation);
   unsigned int orientation();
 
-  void iwMin(float newIWMin);
-  float iwMin();
-  void iwMax(float newIWMax);
-  float iwMax();
+
   void imageMode(ImageModeType newImageMode);
   ImageModeType imageMode();
   void flipX(bool newFlipX);
@@ -212,7 +209,10 @@ public:
 
   void saveClickedPointsStored();
 public slots:
-  
+  void iwMin(float newIWMin);
+  float iwMin();
+  void iwMax(float newIWMax);
+  float iwMax();
   void ChangeSlice(int value);
   void IntensityMax(int value);
   void IntensityMin(int value);
@@ -222,6 +222,9 @@ public slots:
 signals:
 
   void Position(int, int, int, float);
+  void IntensityMaxChanged(int);
+  void IntensityMinChanged(int);
+  void SliceChanged(int);
 
 protected:
     
@@ -315,10 +318,12 @@ protected:
     std::list< ClickPoint * > cClickedPoints;
     unsigned int maxClickPoints;
     int cX, cY, cW, cH;
-    int fastMovVal; //fast moving pace
-    int fastMovThresh;
+    int cfastMovVal; //fast moving pace
+    int cfastMovThresh;
     
     void clickSelect(float newX, float newY, float newZ);
+
+
 };
   
 

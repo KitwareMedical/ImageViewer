@@ -46,15 +46,21 @@ QtGlSliceView.h
 QtSlicer.h
 )
 
+set(QtSlicer_RESOURCES
+Resources/qtImageViewerResources.qrc
+)
+
 QT4_WRAP_UI( QtSlicer_UI_CXX ${QtSlicer_GUI_SRCS} )
 QT4_WRAP_CPP( QtSlicer_SRCS ${QtSlicer_MOC_SRCS} )
+QT4_ADD_RESOURCES(QtSlicer_QRC_SRCS ${QtSlicer_RESOURCES})
 
 ADD_DEFINITIONS(-DQT_DLL)
 
 ADD_DEFINITIONS(-DQT_THREAD_SUPPORT)
 
 
-ADD_EXECUTABLE(QtSlicer ${QtSlicer_SRCS} ${QtSlicer_GUI_SRCS} ${QtSlicer_UI_CXX} )
+ADD_EXECUTABLE(QtSlicer ${QtSlicer_SRCS} ${QtSlicer_GUI_SRCS} ${QtSlicer_UI_CXX}
+${QtSlicer_QRC_SRCS} )
 
 install( TARGETS QtSlicer DESTINATION bin )
 set( QtSlicer_LIBS  ${ITK_LIBRARIES} ) # ${VTK_LIBRARIES} )

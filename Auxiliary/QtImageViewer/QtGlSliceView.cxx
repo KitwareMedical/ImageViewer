@@ -27,11 +27,10 @@
 #include <list>
 using namespace std;
 
-#include <QMouseEvent>
-#include <QKeyEvent>
+// Qt include
 #include <QDebug>
-
- 
+#include <QKeyEvent>
+#include <QMouseEvent>
 
 QtGlSliceView::QtGlSliceView( QWidget *parent, const char *name)
 : QGLWidget(parent)
@@ -62,9 +61,9 @@ QtGlSliceView::QtGlSliceView( QWidget *parent, const char *name)
   }
   cWinImData = NULL;
   cWinZBuffer = NULL;
-  fastMovVal = 1; //fast moving pace: 1 by defaut
-  fastMovThresh = 10; //how many single step moves before fast moving
-  this->setFocus();
+  cfastMovVal = 1; //fast moving pace: 1 by defaut
+  cfastMovThresh = 10; //how many single step moves before fast moving
+  update();
 }
   
   
@@ -81,9 +80,9 @@ QtGlSliceView( QGLFormat glf, QWidget *parent, const char *name)
   cWinOverlayData       = NULL;
   cColorTable = ColorTableType::New();
   cColorTable->UseDiscreteColors();
-  fastMovVal = 1; //fast moving pace: 1 by defaut
-  fastMovThresh = 10; //how many single step moves before fast moving
-  this->setFocus();
+  cfastMovVal = 1; //fast moving pace: 1 by defaut
+  cfastMovThresh = 10; //how many single step moves before fast moving
+  update();
 }
   
 
@@ -603,47 +602,6 @@ QtGlSliceView::Help()
   QDialog* helpDialog = new QDialog(this);
   helpWindow = new Ui::HelpWindow;
   helpWindow->setupUi(helpDialog);
-  QString text = "<html><body><p>SliceViewer</p>"
-      " <p>This is a multi-dimensional image viewer.  It displays one 2D slice or "
-      "a MIP view of that data. A variety of viewing options exist...</p>"
-      "<p> Options: (press a key in the window)</p>"
-      "  <p>0 - View slices along the x-axis</br>"
-      "  1 - View slices along the y-axis</br>"
-      "  2 - View slices along the z-axis (default)</br></br>"
-      "  > , - View the next slice</br>"
-      "  < , - View the previous slice</br></br>"
-      "  r -reset all options</br> "
-      "  h - help (this document)</br></br>"
-      "  x - Flip the x-axis</br>"
-      "  y - Flip the y-axis</br>"
-      "  z - Flip the z-axis</br></br>"
-      "  q w - Decrease, Increase the upper limit of the intensity windowing</br>"
-      "  e - Toggle between clipping and setting-to-black values above IW upper limit</br></br>"
-      "  a s - Decrease, Increase the lower limit of the intensity windowing</br>"
-      "  d - Toggle between clipping and setting-to-white values below IW lower limit</br></br>"
-      "  + = - Zoom-in by a factor of 2</br>"
-      "  - _ - Zoom-out by a factor of 2</br></br>"
-      "  i j k m - Shift the image in the corresponding direction</br>"
-      "  t - Transpose the axis of the slice being viewed</br></br>"
-      "  A - View axis labels: P=posterior, L=left, S=superior</br>"
-      "  C - View crosshairs that illustrate last user-click in the window</br>"
-      "  I - View image values as the user clicks in the window</br>"
-      "  T - Toggle display of clicked points</br>"
-      "  P - Toggle coordinates display between index and physical units</br>"
-      "  D - View image details as an overlay on the image</br>"
-      "  O - View a color overlay (application dependent)</br>"
-      "  p - Save the clicked points in a file</br>"
-      "  l - Toggle how the data is the window is viewed:</br>"
-      "        Modes cycle between the following views:</br>"
-      "        <ul><li>Intensity</li>"
-      "        <li>Inverse</li>"
-      "        <li>Log</li>"
-      "        <li>Derivative wrt x</li>"
-      "        <li>Derivative wrt y</li>"
-      "        <li>Derivative wrt z</li>"
-      "        <li>Blend with previous and next slice</li>"
-      "        <li>MIP</li></ul></p></body></html>";
-  helpWindow->webView->setHtml(text);
   helpDialog->show();
 }
 
@@ -981,14 +939,14 @@ void QtGlSliceView::keyPressEvent( QKeyEvent *event)
     case Qt::Key_Less: // <
     case Qt::Key_Comma:
       //when pressing down ">" or "<" key, scrolling will go faster
-      if( fastMov < fastMovThresh)
+      if( fastMov < cfastMovThresh)
         {
         fastMov ++;
         pace = 1;
       }
         else
         {
-        pace = fastMovVal;
+        pace = cfastMovVal;
         }
       if((int)cWinCenter[cWinOrder[2]]-pace<0)
         {
@@ -999,25 +957,28 @@ void QtGlSliceView::keyPressEvent( QKeyEvent *event)
         else
           {
           sliceNum(0);
+          emit SliceChanged(0);
           }
         }
       else
         {
         sliceNum((int)cWinCenter[cWinOrder[2]]-pace);
+        emit SliceChanged((int)cWinCenter[cWinOrder[2]]-pace);
         }
+
       this->update();
       break;
     case Qt::Key_Greater: // >
     case Qt::Key_Period:
       //when pressing down ">" or "<" key, scrolling will go faster
-      if( fastMov < fastMovThresh)
+      if( fastMov < cfastMovThresh)
         {
         fastMov ++;
         pace = 1;
         }
       else
         {
-        pace = fastMovVal;
+        pace = cfastMovVal;
         }
       if((int)cWinCenter[cWinOrder[2]]+pace>(int)cDimSize[cWinOrder[2]]-1)
         {
@@ -1028,11 +989,13 @@ void QtGlSliceView::keyPressEvent( QKeyEvent *event)
         else
           {
           sliceNum((int)cDimSize[cWinOrder[2]]-1);
+          emit SliceChanged((int)cDimSize[cWinOrder[2]]-1);
           }
         }
       else
         {
         sliceNum(cWinCenter[cWinOrder[2]]+pace);
+        emit SliceChanged(cWinCenter[cWinOrder[2]]+pace);
         }
       this->update();
       break;
@@ -1046,12 +1009,12 @@ void QtGlSliceView::keyPressEvent( QKeyEvent *event)
       break;
     case Qt::Key_Plus:
     case Qt::Key_Equal:
-      winZoom(cWinZoom*2);
+      ZoomIn();
       this->update();
       break;
     case Qt::Key_Minus:
     case Qt::Key_Underscore:
-      winZoom(cWinZoom/2);
+      ZoomOut();
       this->update();
       break;
     case Qt::Key_X:
@@ -1117,12 +1080,11 @@ void QtGlSliceView::keyPressEvent( QKeyEvent *event)
         }
       break;
     case Qt::Key_Q:
-      iwMax(cIWMax-(float)0.02*(cDataMax-cDataMin));
+      IntensityMax(cIWMax-(float)0.02*(cDataMax-cDataMin));
       this->update();
-      return;
       break;
     case Qt::Key_W:
-      iwMax(cIWMax+(float)0.02*(cDataMax-cDataMin));
+      IntensityMax(cIWMax+(float)0.02*(cDataMax-cDataMin));
       this->update();
       break;
     case (Qt::Key_A):
@@ -1132,12 +1094,12 @@ void QtGlSliceView::keyPressEvent( QKeyEvent *event)
         }
       else
         {
-        iwMin(cIWMin-(float)0.02*(cDataMax-cDataMin));
+        IntensityMin(cIWMin-(float)0.02*(cDataMax-cDataMin));
         }
       this->update();
       break;
     case Qt::Key_S:
-      iwMin(cIWMin+(float)0.02*(cDataMax-cDataMin));
+      IntensityMin(cIWMin+(float)0.02*(cDataMax-cDataMin));
       this->update();
       break;
     case (Qt::Key_I):
@@ -1605,7 +1567,8 @@ void QtGlSliceView::ChangeSlice(int value)
   sliceNum(value);
   update();
   paintGL();
-  this->updateGL();
+  emit SliceChanged(value);
+  emit
 }
 
 
@@ -1662,14 +1625,14 @@ void QtGlSliceView::IntensityMax(int value)
 {
   cIWMax = value;
   update();
-  this->updateGL();
+  emit IntensityMaxChanged(cIWMax);
 }
 
 void QtGlSliceView::IntensityMin(int value)
 {
   cIWMin = value;
   update();
-  this->updateGL();
+  emit IntensityMinChanged(cIWMin);
 }
  
 void QtGlSliceView::ZoomIn()

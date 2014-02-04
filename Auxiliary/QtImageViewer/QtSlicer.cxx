@@ -13,16 +13,17 @@ QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFl
 {
   this->setupUi(this);
   QObject::connect(buttonOk, SIGNAL(clicked()), this, SLOT(accept()));
-  QObject::connect(buttonHelp, SIGNAL(clicked()), OpenGlWindow, SLOT(Help()));//
+  QObject::connect(buttonHelp, SIGNAL(clicked()), OpenGlWindow, SLOT(Help()));
   QObject::connect(Slider1, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(ChangeSlice(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(Position(int,int,int,float)), this, SLOT(DisplayPosition(int,int,int,float)));//
+  QObject::connect(OpenGlWindow, SIGNAL(Position(int,int,int,float)), this, SLOT(DisplayPosition(int,int,int,float)));
   QObject::connect(IntensityMax, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(IntensityMax(int)));
   QObject::connect(IntensityMin, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(IntensityMin(int)));
   QObject::connect(ZoomIn, SIGNAL(clicked()), OpenGlWindow, SLOT(ZoomIn()));
   QObject::connect(ZoomOut, SIGNAL(clicked()), OpenGlWindow, SLOT(ZoomOut()));
-  QObject::connect(Slider1, SIGNAL(sliderMoved(int)), this, SLOT(DisplaySliceNumber(int)));//
-  QObject::connect(IntensityMin, SIGNAL(sliderMoved(int)), this, SLOT(DisplayIMin(int)));//
-  QObject::connect(IntensityMax, SIGNAL(sliderMoved(int)), this, SLOT(DisplayIMax(int)));//
+  QObject::connect(Slider1, SIGNAL(sliderMoved(int)), this, SLOT(DisplaySliceNumber(int)));
+  QObject::connect(OpenGlWindow, SIGNAL(SliceChanged(int)), this, SLOT(DisplaySliceNumber(int)));
+  QObject::connect(OpenGlWindow, SIGNAL(IntensityMaxChanged(int)), this, SLOT(DisplayIMax(int)));
+  QObject::connect(OpenGlWindow, SIGNAL(IntensityMinChanged(int)), this, SLOT(DisplayIMin(int)));
 }
 
 /**  
