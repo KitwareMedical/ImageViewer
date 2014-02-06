@@ -23,7 +23,6 @@
 
 #include <math.h>
 #include <QtOpenGL/qgl.h>
-#include <QFileDialog>
 #include "ui_QtSlicerHelpGUI.h"
   
 
@@ -66,15 +65,21 @@ const char IWModeTypeName[3][5] =
   {'M', 'a', 'x', '\0', ' '},
   {'F', 'l', 'i', 'p', '\0'}};
 
+const int NUM_cWinOrientation = 3;
+enum {
+  X_AXIS=0,
+  Y_AXIS,
+  Z_AXIS} OrientationType;
+
   /*! Structure clickPoint to store the x,y,z and intensity value of a
   * point in the image
 */
 struct ClickPoint 
   {
-  float x, y, z;
+  double x, y, z;
   double value;
   
-  ClickPoint(float _x,float _y,float _z,double v)
+  ClickPoint(double _x,double _y,double _z,double v)
     : x(_x),y(_y),z(_z),value(v){}
   };
 
@@ -90,6 +95,28 @@ class QtGlSliceView :
 {
   Q_OBJECT
 
+  Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged);
+  Q_PROPERTY(IWModeType iwModeMin READ iwModeMin WRITE setIWModeMin);
+  Q_PROPERTY(IWModeType iwModeMax READ iwModeMax WRITE setIWModeMax);
+  Q_PROPERTY(bool transpose READ isTransposed WRITE transpose);
+  Q_PROPERTY(bool zFlipped READ isZFlipped WRITE flipZ);
+  Q_PROPERTY(bool yFlipped READ isYFlipped WRITE flipY);
+  Q_PROPERTY(bool xFlipped READ isXFlipped WRITE flipX);
+  Q_PROPERTY(ImageModeType imageMode READ imageMode WRITE setImageMode);
+  Q_PROPERTY(int orientation READ orientation WRITE setOrientation);
+  Q_PROPERTY(double maxIntensity READ maxIntensity WRITE setMaxIntensity NOTIFY maxIntensityChanged);
+  Q_PROPERTY(double minIntensity READ minIntensity WRITE setMinIntensity NOTIFY minIntensityChanged);
+  Q_PROPERTY(double overlayOpacity READ overlayOpacity WRITE setOverlayOpacity);
+  Q_PROPERTY(int sliceNum READ sliceNum WRITE setSliceNum NOTIFY sliceNumChanged);
+  Q_PROPERTY(bool viewCrosshairs READ viewCrosshairs WRITE setViewCrosshairs);
+  Q_PROPERTY(bool viewValue READ viewValue WRITE setViewValue);
+  Q_PROPERTY(bool viewDetails READ viewDetails WRITE setViewDetails);
+  Q_PROPERTY(bool viewOverlayData READ viewOverlayData WRITE setViewOverlayData);
+  Q_PROPERTY(bool viewAxisLabel READ viewAxisLabel WRITE setViewAxisLabel);
+  Q_PROPERTY(bool viewClickedPoints READ viewClickedPoints WRITE setViewClickedPoints);
+  Q_PROPERTY(bool viewValuePhysicalUnits READ viewValuePhysicalUnits WRITE setViewValuePhysicalUnits);
+  Q_PROPERTY(int fastMovVal READ fastMovVal WRITE setFastMovVal);
+  Q_PROPERTY(int fastMovThresh READ fastMovThresh WRITE setFastMovThresh);
 public:
   
   typedef double                           ImagePixelType;
@@ -101,231 +128,312 @@ public:
   typedef ImageType::RegionType   RegionType;
   typedef ImageType::SizeType     SizeType;
   typedef ImageType::IndexType    IndexType;
-  
-  
-protected:
-  bool        cValidOverlayData;
-  float       cOverlayOpacity;
-  
-  OverlayPointer cOverlayData;
-  void     (* cViewOverlayCallBack)(void);
-  
-  unsigned char * cWinOverlayData;
-  
-  typedef itk::ColorTable<float>        ColorTableType;
+  typedef itk::ColorTable<double>        ColorTableType;
   typedef ColorTableType::Pointer       ColorTablePointer;
-  
-  ColorTablePointer      cColorTable;
-  
-  void initializeGL();
-  void resizeGL( int w, int h);
-  void paintGL();
-  void keyPressEvent(QKeyEvent* event);
 
 public:
 /*! FLTK required constructor - must use imData() to complete 
   definition */
   //QtGlSliceView(int x, int y, int w, int h, const char *l);
   
+  QtGlSliceView(QWidget *parent = 0, const char *name = 0);
+  QtGlSliceView(QGLFormat glf, QWidget *parent = 0, const char *name = 0);
 
-  QtGlSliceView( QWidget *parent = 0, const char *name = 0 );
-  QtGlSliceView( QGLFormat glf, QWidget *parent = 0, const char *name = 0 );
-
-
-  /*! Specify the 3D image to view slice by slice */
-  virtual void SetInputImage(ImageType * newImData);
-  virtual const ImagePointer & GetInputImage(void) const;
-  
-  /*! Specify the 3D image to view as an overlay */
-  void SetInputOverlay(OverlayType * newOverlayData);
+  virtual const ImagePointer & inputImage(void) const;
   
   /*! Return a pointer to the overlay data */
-  const OverlayPointer & GetInputOverlay(void) const;
-  
-  /*! Turn on/off the viewing of the overlay */
-  void  ViewOverlayData(bool newViewOverlayData);
-  
-  /*! Status of the overlay - viewed /not viewed */
-  bool  ViewOverlayData(void);
-  
-  /*! Specify the opacity of the overlay */
-  void  OverlayOpacity(float newOverlayOpacity);
+  const OverlayPointer &inputOverlay(void) const;
   
   /*! Get the opacity of the overlay */
-  float OverlayOpacity(void);
+  double overlayOpacity(void) const;
   
   /*! Called when overlay is toggled or opacity is changed */
-  void  ViewOverlayCallBack(void (* newOverlayCallBack)(void));
+  void  viewOverlayCallBack(void (*newOverlayCallBack)(void));
   
-  ColorTableType * GetColorTable(void);
+  ColorTableType *colorTable(void) const;
   
   virtual void size(int w, int h);
   
   virtual void update();
 
-  //virtual int handle(QObject* obj, QKeyEvent* event);
-
-  /*! Specify the slice to view */
-  void      sliceNum(unsigned int newSliceNum);
   /*! What slice is being viewed */
-  unsigned int    sliceNum(void);
+  int sliceNum(void) const;
 
-  void mousePressEvent( QMouseEvent *event ); 
+  virtual void mousePressEvent(QMouseEvent *event);
   
-  void mouseMoveEvent( QMouseEvent *event ) ;
+  virtual void mouseMoveEvent(QMouseEvent *event) ;
+
+  virtual void keyPressEvent(QKeyEvent* event);
 
 
-  float GetIntensityMin() { return cIWMin;}
-  float GetIntensityMax() { return cIWMax;}
+  double minIntensity() const;
+  double maxIntensity() const;
 
-  void winZoom(float newWinZoom);
-  float winZoom();
-  void winCenter();
-  void winCenter(int newWinCenterX, int newWinCenterY, int newWinCenterZ);
-  unsigned int winCenterX();
-  unsigned int winCenterY();
-  unsigned int winCenterZ();
-  void boxMin(float minX, float minY, float minZ);
-  void boxMax(float x, float y, float z);
+  double zoom() const;
 
-  void orientation(unsigned int newOrientation);
-  unsigned int orientation();
+  ///Get the coordinates of the center of the region of interest being viewed
+  ///\sa windowCenterY() windowCenterZ() centerWindow()
+  int windowCenterX() const;
 
+  ///Get the coordinates of the center of the region of interest being viewed
+  ///\sa windowCenterX() windowCenterZ() centerWindow()
+  int windowCenterY() const;
 
-  void imageMode(ImageModeType newImageMode);
-  ImageModeType imageMode();
-  void flipX(bool newFlipX);
-  bool flipX();
-  void flipY(bool newFlipY);
-  bool flipY();
-  void flipZ(bool newFlipZ);
-  bool flipZ();
-  void Transpose(bool newTranspose);
-  bool Transpose();
-  void iwModeMin(IWModeType newIWModeMin);
-  IWModeType iwModeMin();
-  void iwModeMax(IWModeType newIWModeMax);
-  IWModeType iwModeMax();
+  ///Get the coordinates of the center of the region of interest being viewed
+  ///\sa windowCenterX() windowCenterY() centerWindow()
+  int windowCenterZ() const;
+
+  int orientation() const;
+
+  ///Returns the ImageModeType
+  ImageModeType imageMode() const;
+
+  ///Return if the image is flipped about the x-axis
+  ///\sa flipX(bool newFlipX), flipY(bool newFlipY), yFlipped(), flipZ(bool newFlipZ), zFlipped()
+  bool isXFlipped() const;
+
+  ///Return if the image is flipped about the y-axis
+  ///\sa flipX(bool newFlipX), flipY(bool newFlipY), xFlipped(), flipZ(bool newFlipZ), zFlipped()
+  bool isYFlipped() const;
+
+  ///Return if the image is flipped about the z-axis
+  ///\sa flipX(bool newFlipX), flipY(bool newFlipY), yFlipped(), flipZ(bool newFlipZ), xFlipped()
+  bool isZFlipped() const;
+
+  ///Is the image Transpose?
+  bool isTransposed() const;
+
+  IWModeType iwModeMin() const;
+
+  IWModeType iwModeMax() const;
 
   void saveClickedPointsStored();
+  /*! Status of the overlay - viewed /not viewed */
+  bool viewOverlayData(void) const;
+
+  bool viewCrosshairs() const;
+
+  bool viewDetails() const;
+
+  bool viewValue() const;
+
+  int fastMovThresh() const;
+
+  int fastMovVal() const;
+
+  bool viewAxisLabel() const;
+
+  bool viewClickedPoints() const;
+
+  bool viewValuePhysicalUnits() const;
+
+  double intensityRange() const;
+
 public slots:
-  void iwMin(float newIWMin);
-  float iwMin();
-  void iwMax(float newIWMax);
-  float iwMax();
-  void ChangeSlice(int value);
-  void IntensityMax(int value);
-  void IntensityMin(int value);
-  void ZoomIn();
-  void ZoomOut();
-  void Help();
+  void setViewValuePhysicalUnits(bool physicalValueUnits);
+
+  void setViewClickedPoints(bool pointsClicked);
+  /*! Turn on/off the viewing of the overlay */
+  void setViewOverlayData(bool newViewOverlayData);
+
+  void setViewValue(bool value);
+  void setViewDetails(bool detail);
+
+  void setViewCrosshairs(bool crosshairs);
+  /*! Specify the slice to view */
+  void setSliceNum(int newSliceNum);
+
+  /*! Specify the opacity of the overlay */
+  void  setOverlayOpacity(double newOverlayOpacity);
+
+  /*! Specify the 3D image to view slice by slice */
+  virtual void setInputImage(ImageType * newImData);
+
+  /*! Specify the 3D image to view as an overlay */
+  void setInputOverlay(OverlayType * newOverlayData);
+
+  void setOverlay(bool newOverlay);
+  void setIWModeMin(IWModeType newIWModeMin);
+  void setIWModeMax(IWModeType newIWModeMax);
+
+  ///Transpose the image in the xy-plane
+  void transpose(bool newTranspose);
+
+  ///Flip the image about the z-axis
+  ///\sa zFlipped(), flipY(bool newFlipY), yFlipped(), flipX(bool newFlipX), xFlipped()
+  void flipZ(bool newFlipZ);
+
+  ///Flip the image about the y-axis
+  ///\sa xFlipped(), flipX(bool newFlipX), yFlipped(), flipZ(bool newFlipZ), zFlipped()
+  void flipY(bool newFlipY);
+
+  ///Flip the image about the x-axis
+  ///\sa xFlipped(), flipY(bool newFlipY), yFlipped(), flipZ(bool newFlipZ), zFlipped()
+  void flipX(bool newFlipX);
+
+  ///Set the ImageModeType
+  void setImageMode(ImageModeType newImageMode);
+
+  void setViewAxisLabel(bool axisLabel);
+
+  ///This method fixes cBoxMin[].
+  ///\sa setBoxMax(double x, double y, double z)
+  void setBoxMin(double minX, double minY, double minZ);
+
+  ///This method fixes cBoxMax[].
+  ///\sa setBoxMin(double minX, double minY, double minZ)
+  void setBoxMax(double x, double y, double z);
+
+  ///Set the orientation
+  void setOrientation(int newOrientation);
+
+  ///Default centering, center at the middle of the image
+  ///\sa centerWindow(int newWinCenterX, int newWinCenterY, int newwindowCenterZ)
+  void centerWindow();
+
+  ///Specify the coordinates of the center of the region of interest to view
+  ///\sa centerWindow()
+  void centerWindow(int newWinCenterX, int newWinCenterY, int newWinCenterZ);
+
+  /// This method allows to zoom in or zoom out.
+  /// \sa zoom()
+  void setZoom(double newWinZoom);
+
+  ///Fix the new Slice
+  void changeSlice(int value);
+
+  ///Fix the upper limit of the intensity widowing
+  void setMaxIntensity(int value);
+
+  void setFastMovThresh(int movThresh);
+
+  void setFastMovVal(int movVal);
+
+  ///Fix the lower limit of the intensity widowing
+  void setMinIntensity(int value);
+
+  void zoomIn();
+  void zoomOut();
+  void showHelp();
+
+  void selectPoint(double newX, double newY, double newZ);
+
 signals:
 
-  void Position(int, int, int, float);
-  void IntensityMaxChanged(int);
-  void IntensityMinChanged(int);
-  void SliceChanged(int);
+  void positionChanged(int newX, int newY, int newZ, double click);
+  void maxIntensityChanged(int maximum);
+  void minIntensityChanged(int minimum);
+  void sliceNumChanged(int value);
+  void zoomChanged(double zoom);
 
 protected:
-    
-  void   (* cSliceNumCallBack)(void);
-  void    * cSliceNumArg;
-  void   (* cSliceNumArgCallBack)(void * sliceNumArg);
-    
-  Ui::HelpWindow *helpWindow;
-  bool                     cValidImData;
-    bool                     cViewImData;
-    bool                     cViewClickedPoints;
-    ImagePointer             cImData;
-    unsigned long            cDimSize[3];
-    float                    cSpacing[3];
-    void                    (* cViewImDataCallBack)(void);
-    void                     * cViewImDataArg;
-    void                    (* cViewImDataArgCallBack)(void *viewImDataArg);
-    
-    ClickModeType cClickMode;
-    float         cClickSelect[3];
-    float         cClickSelectV;
-    void          (* cClickSelectCallBack)(float x,float y,float z,
-                                           float v);
-    void           * cClickSelectArg;
-    void          (* cClickSelectArgCallBack)(float x, float y, float z, 
-                                              float v, void *clickSelectArg);
-    
-    float       cBoxMin[3];
-    float       cBoxMax[3];
-    void        (* cClickBoxCallBack)(float minX, float minY, float minZ, 
-                                      float maxX, float maxY, float maxZ);
-    void         * cClickBoxArg;
-    void        (* cClickBoxArgCallBack)(float minX, float minY, float minZ,
-                                         float maxX, float maxY, float maxZ,
-                                         void * clickBoxArg);
-    
-    float       cIWMin;
-    float       cIWMax;
-    IWModeType  cIWModeMin;
-    IWModeType  cIWModeMax;
-    void        (* cIWCallBack)(void);
-    void         * cIWArg;
-    void        (* cIWArgCallBack)(void * iwArg);
-    
-    ImageModeType cImageMode;
-    
-    bool        cFlipX[3];
-    bool        cFlipY[3];
-    bool        cFlipZ[3];
-    bool        cTranspose[3];
-    
-    float               cWinZoom;
-    unsigned int        cWinOrder[3];
-    unsigned int        cWinOrientation;
-    void                (* cWinOrientationCallBack)(void);
-    void                 * cWinOrientationArg;
-    void                (* cWinOrientationArgCallBack)(void * 
-                                                       winOrientationArg);
-    
-    int         cWinCenter[3];
-    void        (* cWinCenterCallBack)(void);
-    void        * cWinCenterArg;
-    void        (* cWinCenterArgCallBack)(void * winCenterArg);
-    
-    bool        cViewAxisLabel;
-    char        cAxisLabelX[3][80];
-    char        cAxisLabelY[3][80];
-    
-    bool        cViewOverlayData;
-    bool        cViewCrosshairs;
-    bool        cViewValue;
-    bool        cViewValuePhysicalUnits;
-    bool        cViewDetails;
-    
-    int   cWinMinX;
-    int   cWinMaxX;
-    unsigned int   cWinSizeX;
-    int   cWinMinY;
-    int   cWinMaxY;
-    unsigned int   cWinSizeY;
-    int   cWinDataSizeX;
-    int   cWinDataSizeY;
-    unsigned int   inDataSizeX;
-    unsigned int   inDataSizeY;
-    unsigned char  *cWinImData;
-    unsigned short *cWinZBuffer;
-    
-    double cDataMax, cDataMin;
-    
-    /* list of points clicked and maximum no. of points to be stored*/
-    std::list< ClickPoint * > cClickedPoints;
-    unsigned int maxClickPoints;
-    int cX, cY, cW, cH;
-    int cfastMovVal; //fast moving pace
-    int cfastMovThresh;
-    
-    void clickSelect(float newX, float newY, float newZ);
 
+  void initializeGL();
+  void resizeGL(int w, int h);
+  void paintGL();
 
+  bool cValidOverlayData;
+  double cOverlayOpacity;
+
+  OverlayPointer cOverlayData;
+  void (*cViewOverlayCallBack)(void);
+
+  unsigned char *cWinOverlayData;
+
+  ColorTablePointer cColorTable;
+    
+  void (*cSliceNumCallBack)(void);
+  void *cSliceNumArg;
+  void (*cSliceNumArgCallBack)(void *sliceNumArg);
+    
+  Ui::HelpWindow *cHelpUi;
+  bool cValidImData;
+  bool cViewImData;
+  bool cViewClickedPoints;
+  ImagePointer cImData;
+  unsigned long cDimSize[3];
+  double cSpacing[3];
+  void (*cViewImDataCallBack)(void);
+  void *cViewImDataArg;
+  void (*cViewImDataArgCallBack)(void *viewImDataArg);
+
+  ClickModeType cClickMode;
+  double cClickSelect[3];
+  double cClickSelectV;
+  void (*cClickSelectCallBack)(double x,double y,double z,
+                               double v);
+  void *cClickSelectArg;
+  void (*cClickSelectArgCallBack)(double x, double y, double z,
+                                  double v, void *clickSelectArg);
+
+  double cBoxMin[3];
+  double cBoxMax[3];
+  void (*cClickBoxCallBack)(double minX, double minY, double minZ,
+                            double maxX, double maxY, double maxZ);
+  void *cClickBoxArg;
+  void (*cClickBoxArgCallBack)(double minX, double minY, double minZ,
+                               double maxX, double maxY, double maxZ,
+                               void * clickBoxArg);
+
+  double cIWMin;
+  double cIWMax;
+  IWModeType cIWModeMin;
+  IWModeType cIWModeMax;
+  void (*cIWCallBack)(void);
+  void *cIWArg;
+  void (*cIWArgCallBack)(void *iwArg);
+
+  ImageModeType cImageMode;
+
+  bool cFlipX[3];
+  bool cFlipY[3];
+  bool cFlipZ[3];
+  bool cTranspose[3];
+
+  double cWinZoom;
+  int cWinOrder[3];
+  int cWinOrientation;
+  void (*cWinOrientationCallBack)(void);
+  void *cWinOrientationArg;
+  void (*cWinOrientationArgCallBack)(void *winOrientationArg);
+
+  int cWinCenter[3];
+  void (*cWinCenterCallBack)(void);
+  void *cWinCenterArg;
+  void (*cWinCenterArgCallBack)(void *winCenterArg);
+
+  bool cViewAxisLabel;
+  char cAxisLabelX[3][80];
+  char cAxisLabelY[3][80];
+
+  bool cViewOverlayData;
+  bool cViewCrosshairs;
+  bool cViewValue;
+  bool cViewValuePhysicalUnits;
+  bool cViewDetails;
+
+  int cWinMinX;
+  int cWinMaxX;
+  int cWinSizeX;
+  int cWinMinY;
+  int cWinMaxY;
+  int cWinSizeY;
+  int cWinDataSizeX;
+  int cWinDataSizeY;
+  int inDataSizeX;
+  int inDataSizeY;
+  unsigned char *cWinImData;
+  unsigned short *cWinZBuffer;
+
+  double cDataMax;
+  double cDataMin;
+
+  /* list of points clicked and maximum no. of points to be stored*/
+  std::list< ClickPoint * > cClickedPoints;
+  int maxClickPoints;
+  int cX, cY, cW, cH;
+  int cfastMovVal; //fast moving pace
+  int cfastMovThresh;
 };
   
-
 #endif
-

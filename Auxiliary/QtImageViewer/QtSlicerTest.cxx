@@ -58,7 +58,7 @@ int main( int argc, char* argv[] )
     }
  
   std::cout << "Done!" << std::endl;
-  m_GUI.SetInputImage( reader->GetOutput() );
+  m_GUI.setInputImage( reader->GetOutput() );
 
   m_GUI.show();
   

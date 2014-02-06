@@ -105,7 +105,7 @@
    </property>
    <layout class="QHBoxLayout">
     <item>
-     <widget class="QPushButton" name="buttonHelp">
+     <widget class="QPushButton" name="ButtonHelp">
       <property name="font">
        <font>
         <family>Arial</family>
@@ -138,7 +138,7 @@
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="buttonOk">
+     <widget class="QPushButton" name="ButtonOk">
       <property name="font">
        <font>
         <family>Arial</family>
@@ -3888,8 +3888,8 @@
  </customwidgets>
  <tabstops>
   <tabstop>Slider1</tabstop>
-  <tabstop>buttonHelp</tabstop>
-  <tabstop>buttonOk</tabstop>
+  <tabstop>ButtonHelp</tabstop>
+  <tabstop>ButtonOk</tabstop>
  </tabstops>
  <resources/>
  <connections/>

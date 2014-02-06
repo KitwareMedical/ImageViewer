@@ -20,16 +20,11 @@ public:
   typedef itk::Image<double,3> ImageType;
 public slots:
 
-  void DisplayPosition(int x,int y ,int z,float value);
-//  void Help();
-  void SetInputImage(ImageType * newImData);
-  void DisplaySliceNumber(int number);
-  void DisplayIMin(int value);
-  void DisplayIMax(int value);
-
-private:
-//  Ui::HelpWindow *helpWindow;
-
+  void setDisplayPosition(int x, int y , int z, double value);
+  void setInputImage(ImageType * newImData);
+  void setDisplaySliceNumber(int number);
+  void setDisplayIMin(int value);
+  void setDisplayIMax(int value);
 };
 
 #endif
