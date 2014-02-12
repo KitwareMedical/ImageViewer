@@ -26,6 +26,7 @@
 #include <fstream>
 #include <list>
 using namespace std;
+using namespace itk;
 
 // Qt include
 #include <QDebug>
@@ -34,7 +35,7 @@ using namespace std;
 #include <QKeyEvent>
 #include <QMouseEvent>
 
-QtGlSliceView::QtGlSliceView(QWidget *parent, const char *name)
+QtGlSliceView::QtGlSliceView(QWidget *parent)
 : QGLWidget(parent)
 {
   cValidOverlayData     = false;
@@ -42,14 +43,34 @@ QtGlSliceView::QtGlSliceView(QWidget *parent, const char *name)
   cViewOverlayCallBack  = NULL;
   cOverlayOpacity       = 0.0;
   cWinOverlayData       = NULL;
-  cViewAxisLabel = true;
   cViewOverlayData = true;
   cViewValuePhysicalUnits = false;
+  cPhysicalUnitsName = "mm";
   cViewDetails = true;
   cViewClickedPoints = false;
   cViewCrosshairs = true;
   cViewValue = true;
   cClickMode = CM_SELECT;
+
+  cWinOrientationCallBack = NULL;
+  cWinOrientationArg = NULL;
+  cWinOrientationArgCallBack = NULL;
+
+  cWinCenterCallBack = NULL;
+  cWinCenterArg = NULL;
+  cWinCenterArgCallBack = NULL;
+
+  cSliceNumCallBack = NULL;
+  cSliceNumArg = NULL;
+  cSliceNumArgCallBack = NULL;
+
+  cViewAxisLabel = false;
+  sprintf(cAxisLabelX[0], "S");
+  sprintf(cAxisLabelX[1], "L");
+  sprintf(cAxisLabelX[2], "L");
+  sprintf(cAxisLabelY[0], "P");
+  sprintf(cAxisLabelY[1], "S");
+  sprintf(cAxisLabelY[2], "P");
   
   cColorTable = ColorTableType::New();
   cColorTable->UseDiscreteColors();
@@ -58,7 +79,7 @@ QtGlSliceView::QtGlSliceView(QWidget *parent, const char *name)
   for(int i=0;i<3;i++)
   {
     cFlipX[i]=false;
-    cFlipY[i]=false;
+    cFlipY[i]=true;
     cFlipZ[i]=false;
   }
   cWinImData = NULL;
@@ -67,26 +88,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent, const char *name)
   cfastMovThresh = 10; //how many single step moves before fast moving
   update();
 }
-  
-  
-QtGlSliceView::
-QtGlSliceView(QGLFormat glf, QWidget *parent, const char *name)
-: QGLWidget(glf,parent)
-{    
-  cValidOverlayData     = false;
-  cViewOverlayData      = false;
-  cViewClickedPoints = false;
-  cViewValuePhysicalUnits = false;
-  cViewOverlayCallBack  = NULL;
-  cOverlayOpacity       = 0.0;
-  cWinOverlayData       = NULL;
-  cColorTable = ColorTableType::New();
-  cColorTable->UseDiscreteColors();
-  cfastMovVal = 1; //fast moving pace: 1 by defaut
-  cfastMovThresh = 10; //how many single step moves before fast moving
-  update();
-}
-  
 
   
 void 
@@ -117,7 +118,7 @@ setInputImage(ImageType * newImData)
         return;
       }
     }
-  } 
+  }
 
   cImData = newImData;
   cDimSize[0]=size[0];
@@ -136,6 +137,8 @@ setInputImage(ImageType * newImData)
         
   cIWMin      = calculator->GetMinimum();
   cIWMax      = calculator->GetMaximum();
+  cDataMax = cIWMax;
+  cDataMin = cIWMin;
 
   cIWModeMin  = IW_MIN;
   cIWModeMax  = IW_MAX;
@@ -178,7 +181,7 @@ setInputImage(ImageType * newImData)
     
   cWinImData = new unsigned char[ cWinDataSizeX * cWinDataSizeY ];
     
-  if(cWinZBuffer != NULL) 
+  if(cWinZBuffer != NULL)
   {
     delete [] cWinZBuffer;
   }
@@ -296,17 +299,20 @@ QtGlSliceView::ColorTableType* QtGlSliceView::colorTable(void) const
 void  QtGlSliceView::saveClickedPointsStored()
 {
   QString fileName = QFileDialog::getSaveFileName(this,"Please select a file name","*.*","");
-  if(fileName.isEmpty() || fileName.isNull())
+  if(fileName.isNull())
     {
     return;
     }
   QFile fpoints(fileName);
-  fpoints.open(QIODevice::ReadWrite);
-  std::list< ClickPoint* >::iterator point;
+  if(!fpoints.open(QIODevice::ReadWrite))
+    {
+    return;
+    }
+  ClickPointListType::const_iterator point;
   QTextStream text(&fpoints);
   for(point = cClickedPoints.begin(); point != cClickedPoints.end(); point++)
     {
-    text << *point <<endl;
+    text << (*point).x<<" "<<(*point).y<<" "<<(*point).z<<" "<< (*point).value<<endl;
     }
   fpoints.close();
 }
@@ -316,51 +322,51 @@ QtGlSliceView::update()
 {
   setFocus();
   if(!cValidImData)
-  {
+    {
     return;
-  }
+    }
   
   int winWidth = (int)(cDimSize[ cWinOrder[0] ] / cWinZoom);
   cWinSizeX = ((int) winWidth);
   int ti = (int)((int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
   if(ti <= - (int) cDimSize[ cWinOrder[0] ])
-  {
+    {
     ti = -cDimSize[ cWinOrder[0] ] + 1;
-  }
+    }
   else if(ti >= (int)cDimSize[ cWinOrder[0] ])
-  {
+    {
     ti = cDimSize[ cWinOrder[0] ] - 1;
-  }
+    }
   cWinMinX = ti;
   cWinMaxX = cDimSize[ cWinOrder[0] ] - 1; // here
   if(cWinMaxX >= static_cast<int>(cDimSize[ cWinOrder[0] ]))
-  {
+    {
     cWinMaxX = cDimSize[ cWinOrder[0] ] - 1;
-  }
+    }
   
   winWidth = static_cast<int>(cDimSize[ cWinOrder[1] ] / cWinZoom);
   cWinSizeY = (static_cast<int>(winWidth));
   ti = static_cast<int>(static_cast<int>(cWinCenter[ cWinOrder[1] ]) - winWidth/2);
   if(ti <= - static_cast<int>(cDimSize[ cWinOrder[1] ]))
-  {
+    {
     ti = -cDimSize[ cWinOrder[1] ] + 1;
-  }
+    }
   else if(ti >= static_cast<int>(cDimSize[ cWinOrder[1] ]))
-  {
+    {
     ti = cDimSize[ cWinOrder[1] ] - 1;
-  } 
+    }
   cWinMinY = ti;
   cWinMaxY = cDimSize[ cWinOrder[1] ] - 1; // here
   if(cWinMaxY >= static_cast<int>(cDimSize[ cWinOrder[1] ]))
-  {
+    {
     cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
-  }
+    }
   
   memset(cWinImData, 0, cWinDataSizeX*cWinDataSizeY);
   if(cValidOverlayData)
-  {
+    {
     memset(cWinOverlayData, 0, cWinDataSizeX*cWinDataSizeY*4);
-  }
+    }
   
   IndexType ind;
   
@@ -376,21 +382,21 @@ QtGlSliceView::update()
   if(startJ<0)
     startJ = 0;
   for(int k=startK; k <= cWinMaxY; k++)
-  {
+    {
     ind[cWinOrder[1]] = k;
     
     if(k-cWinMinY >= (int)cWinDataSizeY)
       continue;
 
     for(int j=startJ; j <= cWinMaxX; j++) 
-    {
+      {
       ind[cWinOrder[0]] = j;
       
       if(j-cWinMinX >= (int)cWinDataSizeX)
          continue;
 
       switch(cImageMode)
-      {
+        {
         default:
         case IMG_VAL:
           tf = (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
@@ -404,48 +410,48 @@ QtGlSliceView::update()
           break;
         case IMG_DX:
           if(ind[0]>0) 
-          {
+            {
             tf = (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[0]--;
             tf -= (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[0]++;
             tf += 128;
-          } 
+            }
           else
-          {
+            {
             tf = 128;
-          }
+            }
           break;
         case IMG_DY:
           if(ind[1]>0) 
-          {
+            {
             tf = (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[1]--;
             tf -= (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[1]++;
             tf += 128;
-          }
+            }
           else
-          {
+            {
             tf = 128;
-          }
+            }
           break;
         case IMG_DZ:
           if(ind[2]>0) 
-          {
+            {
             tf = (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[2]--;
             tf -= (double)((cImData->GetPixel(ind)-cIWMin)/(cIWMax-cIWMin)*255);
             ind[2]++;
             tf += 128;
-          }
+            }
           else
-          {
+            {
             tf = 128;
-          }
+            }
           break;
         case IMG_BLEND:
-        {
+          {
           const int tempval = (int)cWinCenter[cWinOrder[2]]-1;
           int tmpI = ind[cWinOrder[2]];
           ind[cWinOrder[2]] = (tempval < 0) ? 0 : tempval;
@@ -462,30 +468,30 @@ QtGlSliceView::update()
           tf = (double)((tf/4-cIWMin)/(cIWMax-cIWMin)*255);
           ind[cWinOrder[2]] = tmpI;
           break;
-        }
+          }
         case IMG_MIP:
           tf = cIWMin;
           m = (j-cWinMinX) + (k-cWinMinY)*cWinDataSizeX;
           cWinZBuffer[m] = 0;
           int tmpI = ind[cWinOrder[2]];
           for(l=0; l<(int)cDimSize[cWinOrder[2]]; l++) 
-          {
+            {
             ind[cWinOrder[2]] = l;        
             if(cImData->GetPixel(ind) > tf) 
-            {
+              {
               tf = (double)(cImData->GetPixel(ind));
               cWinZBuffer[m] = (unsigned short)l;
+              }
             }
-          }
           tf = (double)((tf-cIWMin)/(cIWMax-cIWMin)*255);
           ind[cWinOrder[2]] = tmpI;
           break;
-        }
+          }
       
       if(tf > 255)
         {
         switch(cIWModeMax) 
-        {
+          {
           case IW_MIN:
             tf = 0;
             break;
@@ -496,18 +502,18 @@ QtGlSliceView::update()
           case IW_FLIP:
             tf = 512-tf;
             if(tf<0) 
-            {
+              {
               tf = 0;
-            }
+              }
             break;
+          }
         }
-      }
       else 
-      {
-        if(tf < 0)
         {
-          switch(cIWModeMin) 
+        if(tf < 0)
           {
+          switch(cIWModeMin) 
+            {
             default:
             case IW_MIN:
               tf = 0;
@@ -518,31 +524,31 @@ QtGlSliceView::update()
             case IW_FLIP:
               tf = -tf;
               if(tf>255)
-              {
+                {
                 tf = 255;
-              }
+                }
               break;
+            }
           }
         }
-      }
       
       l = (j-cWinMinX) + (k-cWinMinY)*cWinDataSizeX;
       cWinImData[l] = (unsigned char)tf;
       
       if(cValidOverlayData)
-      {
+        {
         l = l * 4;
         if(cImageMode == IMG_MIP)
-        {
+          {
           ind[cWinOrder[2]] = cWinZBuffer[(j-cWinMinX) + 
             (k-cWinMinY)*cWinDataSizeX];
-        }
+          }
         
         if(sizeof(OverlayPixelType) == 1)
-        {
+          {
           m = (int)*((unsigned char *)&(cOverlayData->GetPixel(ind)));
           if(m > 0)
-          {
+            {
             m = m - 1;
             cWinOverlayData[l+0] = 
               (unsigned char)(cColorTable->GetColor(m).GetRed()*255);
@@ -552,14 +558,14 @@ QtGlSliceView::update()
               (unsigned char)(cColorTable->GetColor(m).GetBlue()*255);
             cWinOverlayData[l+3] = 
               (unsigned char)(cOverlayOpacity*255);
+            }
           }
-        }
         else 
-        {
+          {
           if(((unsigned char *)&(cOverlayData->GetPixel(ind)))[0]
             + ((unsigned char *)&(cOverlayData->GetPixel(ind)))[1]
             + ((unsigned char *)&(cOverlayData->GetPixel(ind)))[2] > 0)
-            {
+              {
             if(sizeof(OverlayPixelType) == 3)
               {
               cWinOverlayData[l+0] = 
@@ -572,9 +578,9 @@ QtGlSliceView::update()
                 (unsigned char)(cOverlayOpacity*255);
               }
             else 
-            {
-              if(sizeof(OverlayPixelType) == 4)
               {
+              if(sizeof(OverlayPixelType) == 4)
+                {
                 cWinOverlayData[l+0] = 
                   ((unsigned char *)&(cOverlayData->GetPixel(ind)))[0];
                 cWinOverlayData[l+1] = 
@@ -584,12 +590,12 @@ QtGlSliceView::update()
                 cWinOverlayData[l+3] = 
                   (unsigned char)(((unsigned char *)
                   &(cOverlayData->GetPixel(ind)))[3]*cOverlayOpacity);
+                }
               }
             }
           }
         }
       }
-    }
     }
   resizeGL(this->width(), this->height());
   paintGL();
@@ -788,7 +794,8 @@ int QtGlSliceView::orientation(void) const
 void QtGlSliceView::setOrientation(int newOrientation)
 {
   cWinOrientation = newOrientation;
-  switch(cWinOrientation) {
+  switch(cWinOrientation)
+    {
     case X_AXIS :
       cWinOrder[0] = Z_AXIS;
       cWinOrder[1] = Y_AXIS;
@@ -883,7 +890,7 @@ bool QtGlSliceView::isZFlipped() const
 
 void QtGlSliceView::transpose(bool newTranspose)
 {
-  if(cTranspose[cWinOrientation] != newTranspose)
+  if(isTransposed() != newTranspose)
     {
     int t;
     t = cWinOrder[0];
@@ -1110,19 +1117,16 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         }
       else
         {
-        setMinIntensity(minIntensity()-0.02*intensityRange());
+        setMinIntensity(minIntensity()-(0.02*intensityRange()));
         }
       update();
       break;
     case Qt::Key_S:
-      setMinIntensity(minIntensity()+0.02*intensityRange());
+      setMinIntensity(minIntensity()+(0.02*intensityRange()));
       update();
       break;
     case (Qt::Key_I):
-      if(event->modifiers() & Qt::ShiftModifier)
-        {
-        }
-      else
+      if(!(event->modifiers() & Qt::ShiftModifier))
         {
         int newY;
         if(isYFlipped())
@@ -1196,9 +1200,6 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         {
         setViewCrosshairs(!viewCrosshairs());
         }
-      else
-        {
-        }
       update();
       break;
     case (Qt::Key_V):
@@ -1252,7 +1253,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
     default:
       QWidget::keyPressEvent(event);
       break;
-  }
+    }
+}
+
+
+void QtGlSliceView::resizeEvent(QResizeEvent* event)
+{
+  cW = event->size().width();
+  cH = event->size().height();
 }
 
 
@@ -1297,6 +1305,8 @@ void QtGlSliceView::paintGL(void)
   glViewport(this->width()-v[0], this->height()-v[1], v[0], v[1]);
   glOrtho(this->width()-v[0], this->width(), this->height()-v[1], this->height(), -1, 1);
 
+  int h = 10;
+  QFont font("Times", h);
   if(!cImData)
   {
     std::cout << "no cImData !!!" << std::endl;
@@ -1308,8 +1318,19 @@ void QtGlSliceView::paintGL(void)
     * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
   double scale1 = this->height()/(double)cDimSize[1] * zoom()
      * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
-    
-   
+  int originX = 0;
+  int originY = 0;
+  if(this->cWinZoom<=1)
+    {
+    if(this->cW-scale0*this->cDimSize[this->cWinOrder[0]]>0)
+      {
+      originX = (int)((this->cW-scale0*this->cDimSize[this->cWinOrder[0]])/2.0);
+      }
+    if(this->cH-scale1*this->cDimSize[this->cWinOrder[1]]>0)
+      {
+      originY = (int)((this->cH-scale1*this->cDimSize[this->cWinOrder[1]])/2.0);
+      }
+    }
   glRasterPos2i((isXFlipped())?cW:0,
      (isYFlipped())?cH:0);
     
@@ -1317,155 +1338,222 @@ void QtGlSliceView::paintGL(void)
      (isYFlipped())?-scale1:scale1);
     
   if(cValidImData && cViewImData)
-  {
+    {
     glDrawPixels(cWinDataSizeX, cWinDataSizeY,
                   GL_LUMINANCE, GL_UNSIGNED_BYTE, 
                   cWinImData);
-  }
+    }
     
   if(cValidOverlayData && viewOverlayData())
-  {
+    {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDrawPixels(cWinDataSizeX, cWinDataSizeY, GL_RGBA, 
        GL_UNSIGNED_BYTE, cWinOverlayData);
     glDisable(GL_BLEND);
-  }
+    }
+
+  if(viewClickedPoints())
+    {
+    glColor3f( 0.8, 0.4, 0.4 );
+    glPointSize( 3.0 );
+    glBegin(GL_POINTS);
+    for( int ii = 0; ii < clickedPointsStored(); ii++ )
+      {
+      ClickPoint pointClicked(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
+      clickedPoint( ii, pointClicked );
+      double pts[3] = { pointClicked.x, pointClicked.y, pointClicked.z };
+
+      if( static_cast<int>( pts[this->cWinOrder[2]] ) ==
+          sliceNum() )
+        {
+        float xx;
+        if(isXFlipped())
+          {
+          xx = this->cW - (pts[this->cWinOrder[0]]
+            - this->cWinMinX) * scale0 - originX;
+          }
+        else
+          {
+          xx = (pts[this->cWinOrder[0]] - this->cWinMinX) * scale0
+            + originX;
+          }
+
+        float yy;
+        if(isYFlipped())
+          {
+          yy = this->cH - (pts[this->cWinOrder[1]]
+               - this->cWinMinY) * scale1 - originY;
+          }
+        else
+          {
+          yy = (pts[this->cWinOrder[1]] - this->cWinMinY) * scale1
+               + originY;
+          }
+        glVertex2f( xx, yy );
+        }
+      }
+    glEnd();
+    }
     
   if(viewAxisLabel())
-  {
+    {
+    glLoadIdentity();
+    glOrtho( 0.0, (double)width(), 0.0, (double)height(), 0.0, 1.0 );
+    glMatrixMode( GL_PROJECTION );
+    glViewport( 0,0 , width(), height() );
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.2, 0.2, 0.78, 0.75);
 
     if(isXFlipped() == false)
-    {
-      const int y = static_cast<int>(this->height()/2-this->height()/2 );
-      glRasterPos2i(this->width(), -y);
+      {
+      int y = static_cast<int>(this->cH/2 - h/2 );
+      glRasterPos2i(width(), -y);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      // gl_draw(cAxisLabelX[cWinOrientation],
-      //   cW-(gl_width(cAxisLabelX[cWinOrientation])+10), 
-      //   static_cast<double>(y));
-    }
+      renderText( this->cW - font.weight()/20 - 10, y, cAxisLabelX[cWinOrientation]);
+      }
     else
-    {
-      const int y = static_cast<int>(this->height()/2-this->height()/2 );
-      glRasterPos2i(10, -y);
+      {
+      int y = static_cast<int>(this->cH/2 - h/2 );
+      glRasterPos2i(width(), -y);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-
-      //gl_draw(cAxisLabelX[cWinOrientation],
-      // (gl_width(cAxisLabelX[cWinOrientation])+10),
-      //  static_cast<double>(y));
-    }
+      renderText(font.weight()/20 +10, y, cAxisLabelX[cWinOrientation]);
+      }
       
     if(isYFlipped() == false)
-    {
-      const int y = static_cast<int>(this->height()-this->height()-10) ;
+      {
+      int y = static_cast<int>(h +10) ;
       glRasterPos2i(this->width()/2, -y);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-
-      //gl_draw(cAxisLabelY[cWinOrientation],
-      //  cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
-      //  static_cast<double>(y));
-    }
+      renderText(this->cW/2 - font.weight()/10, y, cAxisLabelY[cWinOrientation]);
+      }
     else
-    {
-      const int y = static_cast<int>(this->height()+10);
+      {
+      int y = static_cast<int>(this->cH - h -10);
       glRasterPos2i(this->width()/2, -y);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-
-      //gl_draw(cAxisLabelY[cWinOrientation],
-      //  cW/2-(gl_width(cAxisLabelY[cWinOrientation])/2),
-      //  static_cast<double>(y));
-    }
+      renderText(this->cW/2 + font.weight()/10, y, cAxisLabelY[cWinOrientation]);
+      }
     
     glDisable(GL_BLEND);
-  }
+    }
     
   if(viewValue())
-  {
+    {
+    glLoadIdentity();
+    glOrtho( 0.0, (double)width(), 0.0, (double)height(), 0.0, 1.0 );
+    glMatrixMode( GL_PROJECTION );
+    glViewport( 0,0 , width(), height() );
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.1, 0.64, 0.2, (double)0.75);
-    //gl_font(FL_TIMES_BOLD, 12);
     char s[80];
-    if((ImagePixelType)1.1==1.1)
-    {
-      sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %0.3f", 
-      cClickSelect[0],
-      cClickSelect[1], 
-      cClickSelect[2], 
-      (double)cClickSelectV);
-    }
+    double px, py, pz, val = this->cClickSelectV;
+    ClickPoint point(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
+    px = point.x;
+    py = point.y;
+    pz = point.z;
+    const char * suffix = "";
+    if(viewValuePhysicalUnits())
+      {
+      IndexType index;
+      index[0] = static_cast< itk::IndexValueType >( this->cClickSelect[0] );
+      index[1] = static_cast< itk::IndexValueType >( this->cClickSelect[1] );
+      index[2] = static_cast< itk::IndexValueType >( this->cClickSelect[2] );
+
+      suffix = this->cPhysicalUnitsName;
+      }
+    if((ImagePixelType)1.5==1.5)
+      {
+      sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %0.3f",
+              px, suffix,
+              py, suffix,
+              pz, suffix,
+              val);
+      }
     else
-    {
-      sprintf(s, "(%0.1f,  %0.1f,  %0.1f) = %d", 
-      cClickSelect[0],
-      cClickSelect[1], 
-      cClickSelect[2], 
-      (int)cClickSelectV);
-    }
-    //gl_draw(s,(int)(cW-(gl_width(s)+2)), 2);
+      {
+      sprintf(s, "(%0.1f%s,  %0.1f%s,  %0.1f%s) = %d",
+              px, suffix,
+              py, suffix,
+              pz, suffix,
+              (int)val);
+      }
+    renderText(this->cW +scale0*scale1 - ((font.weight()*strlen(s))/10),
+                this->cH - h + 10  , s, font);
     glDisable(GL_BLEND);    
-  }
+    }
 
   if(viewDetails())
-  {
+    {
+    glLoadIdentity();
+    glOrtho(0.0, (double)width(), 0.0, (double)height(), 0.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    glViewport(0,0 , width(), height());
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.9, 0.4, 0.1, (double)0.75);
-    //gl_font(FL_TIMES_BOLD, 12);
     char s[80];
     if(orientation() == 0)
-        sprintf(s, "X - Slice: %3d", cWinCenter[0]);
+      {
+      sprintf(s, "X - Slice: %3d", cWinCenter[0]);
+      }
       else if(orientation() == 1)
+        {
         sprintf(s, "Y - Slice: %3d", cWinCenter[1]);
+        }
       else
+        {
         sprintf(s, "Z - Slice: %3d", cWinCenter[2]);
-//      gl_draw(s, 2, 2+5*(gl_height()+2));
-//      sprintf(s, "Dims: %3d x %3d x %3d",
-//        (int)cDimSize[0], (int)cDimSize[1], (int)cDimSize[2]);
-//      gl_draw(s, 2, 2+4*(gl_height()+2));
-//      sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f",
-//        cSpacing[0], cSpacing[1], cSpacing[2]);
-//      gl_draw(s, 2, 2+3*(gl_height()+2));
-//      sprintf(s, "Int. Range: %0.3f - %0.3f", (double)cDataMin,
-//              (double)cDataMax);
-//      gl_draw(s, 2, 2+2*(gl_height()+2));
-//      sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)",
-//        (double)cIWMin, IWModeTypeName[cIWModeMin],
-//        (double)cIWMax, IWModeTypeName[cIWModeMax]);
-//      gl_draw(s, 2, 2+1*(gl_height()+2));
-//      sprintf(s, "View Mode: %s", ImageModeTypeName[cImageMode]);
-//      gl_draw(s, 2, 2+0*(gl_height()+2));
-      glDisable(GL_BLEND);
-  }
+        }
+    renderText(2, this->cH + 10 - 5*(h + 2) , s, font);
+    sprintf(s, "Dims: %3d x %3d x %3d",
+      (int)this->cDimSize[0], (int)this->cDimSize[1], (int)this->cDimSize[2]);
+    renderText(2, this->cH +10 - 4*(h + 2) , s, font);
+    sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f",
+       this->cSpacing[0], this->cSpacing[1], this->cSpacing[2]);
+    renderText(2, this->cH + 10 - 3*(h + 2) , s, font);
+    sprintf(s, "Int. Range: %0.3f - %0.3f", (double)this->cDataMin,
+              (double)this->cDataMax);
+    renderText(2, this->cH + 10 - 2*(h + 2) , s, font);
+    sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)",
+        (double)this->cIWMin, IWModeTypeName[cIWModeMin],
+        (double)this->cIWMax, IWModeTypeName[cIWModeMax]);
+    renderText(2, this->cH +10 - 1*(h + 2) , s, font);
+    sprintf(s, "View Mode: %s", ImageModeTypeName[cImageMode]);
+    renderText(2, this->cH +10 - 0*(h + 2) , s, font);
+    glDisable(GL_BLEND);
+    }
     
   if(viewCrosshairs()
     && static_cast<int>(cClickSelect[cWinOrder[2]]) == 
        static_cast<int>(sliceNum()))
-  {
+    {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.1, 0.64, 0.2, 0.75);
     int x;
     if(isXFlipped())
-    {
+      {
       x = (int)(cW - (cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
-    }
+      }
     else
-    {
+      {
       x = (int)((cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
-    }
+      }
     int y;
     if(isYFlipped())
-    {
+      {
       y = (int)(cH - (cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
-    }
+      }
     else
-    {
+      {
       y = (int)((cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
-    }
+      }
     glBegin(GL_LINES);
     glVertex2d(0, y);
     glVertex2d(x-2, y);
@@ -1477,7 +1565,7 @@ void QtGlSliceView::paintGL(void)
     glVertex2d(x, this->height()-1);
     glEnd();
     glDisable(GL_BLEND);
-  }
+    }
 }
 
 
@@ -1489,48 +1577,48 @@ void QtGlSliceView::mouseMoveEvent(QMouseEvent *event)
     * fabs(cSpacing[cWinOrder[1]])/fabs(cSpacing[0]);
 
   if(cClickMode == CM_SELECT || cClickMode == CM_BOX) 
-  {
+    {
     double p[3];
     p[cWinOrder[0]] = cWinMinX + ((1-isXFlipped())*(event->x())
                      + (isXFlipped())*(this->width()-event->x()))
                      / scale0;
     if(p[cWinOrder[0]]<cWinMinX) 
-    {
+      {
       p[cWinOrder[0]] = cWinMinX;
-    }
+      }
     if(p[cWinOrder[0]]>cWinMaxX) 
-    {
+      {
       p[cWinOrder[0]] = cWinMaxX;
-    }
+      }
     p[cWinOrder[1]] = cWinMinY + (isYFlipped()*event->y()
                      + (1-isYFlipped())*(this->height()-event->y()))
                      / scale1;
     if(p[cWinOrder[1]]<cWinMinY) 
-    {
+      {
       p[cWinOrder[1]] = cWinMinY;
-    }
+      }
     if(p[cWinOrder[1]]>cWinMaxY) 
-    {
+      {
       p[cWinOrder[1]] = cWinMaxY;
-    }
+      }
     if(imageMode() != IMG_MIP)
-    {
+      {
       p[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
-    }
+      }
     else
-    {
+      {
       p[cWinOrder[2]] = cWinZBuffer[(int)p[cWinOrder[0]]
                         - cWinMinX 
                        + ((int)p[cWinOrder[1]]
                       - cWinMinY)
                       * cWinDataSizeX];
-    }
+      }
     if(cClickMode == CM_SELECT)
-    {
+      {
       selectPoint(p[0], p[1], p[2]);
+      }
     }
-   }
-   updateGL();
+  updateGL();
 }
 
 /** catches the mouse press to react appropriate
@@ -1630,8 +1718,29 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
   ind[1] = (unsigned long)cClickSelect[1];
   ind[2] = (unsigned long)cClickSelect[2];
   cClickSelectV = cImData->GetPixel(ind);
+
+  /*if length of list is equal to max, remove the earliest point stored */
+  if((maxClickPoints>0)&&(cClickedPoints.size() == maxClickPoints))
+    {
+    cClickedPoints.pop_back();
+    }
+  ClickPoint pointClicked(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
+  cClickedPoints.push_front(pointClicked);
+
+  if(cClickSelectCallBack != NULL)
+    {
+    cClickSelectCallBack(cClickSelect[0], cClickSelect[1],
+    cClickSelect[2], cClickSelectV);
+    }
+  if(cClickSelectArgCallBack != NULL)
+    {
+    cClickSelectArgCallBack(cClickSelect[0], cClickSelect[1],
+    cClickSelect[2], cClickSelectV,
+    cClickSelectArg);
+    }
  
-  emit positionChanged(ind[0],ind[1],ind[2],cClickSelectV);
+//  emit positionChanged(ind[0],ind[1],ind[2],cClickSelectV);
+  emit positionChanged(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
 
 }
 
@@ -1688,6 +1797,46 @@ double QtGlSliceView::intensityRange() const
   return cDataMax - cDataMin;
 }
 
+bool QtGlSliceView::clickedPoint(int index, ClickPoint& point)
+{
+  if(index >= cClickedPoints.size())
+    {
+    return false;
+    }
+  ClickPointListType::const_iterator j = cClickedPoints.begin();
+
+  for(int i=0;i<static_cast<int>(index);i++,j++)
+    {
+    }
+    point = *j;
+  return true;
+
+}
+
+
+int QtGlSliceView::clickedPointsStored() const
+{
+  return cClickedPoints.size();
+}
+
+
+int QtGlSliceView::maxClickedPointsStored() const
+{
+  return maxClickPoints;
+}
+
+
+void QtGlSliceView::clearClickedPointsStored()
+{
+  cClickedPoints.clear();
+}
+
+
+void QtGlSliceView::deleteLastClickedPointsStored()
+{
+  cClickedPoints.pop_front();
+}
+
 
 void QtGlSliceView::setViewValuePhysicalUnits(bool physicalValueUnits)
 {
@@ -1719,5 +1868,11 @@ void QtGlSliceView::zoomOut()
   setZoom(zoom()-1);
   update();
 }
- 
+
+
+void QtGlSliceView::setMaxClickedPointsStored(int i)
+{
+  maxClickPoints = i;
+}
+
 #endif

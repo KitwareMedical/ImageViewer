@@ -22,7 +22,9 @@
 
 
 #include <math.h>
+#include <QGLWidget>
 #include <QtOpenGL/qgl.h>
+#include <GLUT/glut.h>
 #include "ui_QtSlicerHelpGUI.h"
   
 
@@ -81,6 +83,7 @@ struct ClickPoint
   
   ClickPoint(double _x,double _y,double _z,double v)
     : x(_x),y(_y),z(_z),value(v){}
+  //double operator[](int index){return }
   };
 
 
@@ -136,8 +139,7 @@ public:
   definition */
   //QtGlSliceView(int x, int y, int w, int h, const char *l);
   
-  QtGlSliceView(QWidget *parent = 0, const char *name = 0);
-  QtGlSliceView(QGLFormat glf, QWidget *parent = 0, const char *name = 0);
+  QtGlSliceView(QWidget *parent = 0);
 
   virtual const ImagePointer & inputImage(void) const;
   
@@ -165,6 +167,7 @@ public:
 
   virtual void keyPressEvent(QKeyEvent* event);
 
+  virtual void resizeEvent(QResizeEvent *event);
 
   double minIntensity() const;
   double maxIntensity() const;
@@ -229,7 +232,19 @@ public:
 
   double intensityRange() const;
 
+  bool clickedPoint(int index, ClickPoint & point);
+
+  int clickedPointsStored()const;
+
+  int maxClickedPointsStored() const;
+
 public slots:
+  void clearClickedPointsStored();
+
+  void deleteLastClickedPointsStored();
+
+  void setMaxClickedPointsStored(int i);
+
   void setViewValuePhysicalUnits(bool physicalValueUnits);
 
   void setViewClickedPoints(bool pointsClicked);
@@ -411,6 +426,7 @@ protected:
   bool cViewValue;
   bool cViewValuePhysicalUnits;
   bool cViewDetails;
+  const char * cPhysicalUnitsName;
 
   int cWinMinX;
   int cWinMaxX;
@@ -429,7 +445,8 @@ protected:
   double cDataMin;
 
   /* list of points clicked and maximum no. of points to be stored*/
-  std::list< ClickPoint * > cClickedPoints;
+  typedef QList<ClickPoint> ClickPointListType;
+  ClickPointListType cClickedPoints;
   int maxClickPoints;
   int cX, cY, cW, cH;
   int cfastMovVal; //fast moving pace
