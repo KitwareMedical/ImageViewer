@@ -14,19 +14,20 @@ QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFl
   this->setupUi(this);
   QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
   QObject::connect(ButtonHelp, SIGNAL(clicked()), OpenGlWindow, SLOT(showHelp()));
-  QObject::connect(Slider1, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(changeSlice(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), Slider1, SLOT(setValue(int)));
+  QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(changeSlice(int)));
+  QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceNumSlider, SLOT(setValue(int)));
   QObject::connect(OpenGlWindow, SIGNAL(positionChanged(int,int,int,double)), this, SLOT(setDisplayPosition(int,int,int,double)));
   QObject::connect(IntensityMax, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(setMaxIntensity(int)));
   QObject::connect(IntensityMin, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(setMinIntensity(int)));
   QObject::connect(ZoomIn, SIGNAL(clicked()), OpenGlWindow, SLOT(zoomIn()));
   QObject::connect(ZoomOut, SIGNAL(clicked()), OpenGlWindow, SLOT(zoomOut()));
-  QObject::connect(Slider1, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
+  QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(maxIntensityChanged(int)), this, SLOT(setDisplayIMax(int)));
   QObject::connect(OpenGlWindow, SIGNAL(minIntensityChanged(int)), this, SLOT(setDisplayIMin(int)));
   QObject::connect(OpenGlWindow, SIGNAL(maxIntensityChanged(int)), IntensityMax, SLOT(setValue(int)));
   QObject::connect(OpenGlWindow, SIGNAL(minIntensityChanged(int)), IntensityMin, SLOT(setValue(int)));
+  QObject::connect(OpenGlWindow, SIGNAL(updateDetails(QString)), Details, SLOT(setText(QString)));
 }
 
 /**  
@@ -55,10 +56,10 @@ void QtSlicer::setDisplayPosition(int x,int y ,int z,double value)
 void QtSlicer::setInputImage(ImageType * newImData)
 {
   this->OpenGlWindow->setInputImage(newImData);
-  this->Slider1->setMaximum(newImData->GetLargestPossibleRegion().GetSize()[2]-1);
+  this->SliceNumSlider->setMaximum(newImData->GetLargestPossibleRegion().GetSize()[2]-1);
 
   // Set the slice slider at z/2
-  this->Slider1->setValue(newImData->GetLargestPossibleRegion().GetSize()[2]/2);
+  this->SliceNumSlider->setValue(newImData->GetLargestPossibleRegion().GetSize()[2]/2);
   this->setDisplaySliceNumber(newImData->GetLargestPossibleRegion().GetSize()[2]/2);
 
   this->IntensityMin->setMinimum( static_cast<int>( this->OpenGlWindow->minIntensity() ));
@@ -83,7 +84,7 @@ void QtSlicer::setDisplaySliceNumber(int number)
 {
   char* tempchar = new char[20];
   sprintf(tempchar,"%d",number);
-  number = this->Slider1->value();
+  number = this->SliceNumSlider->value();
   this->SliceValue->setText(tempchar);
   delete tempchar;
 }

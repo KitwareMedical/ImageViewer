@@ -76,6 +76,11 @@ enum {
   /*! Structure clickPoint to store the x,y,z and intensity value of a
   * point in the image
 */
+enum {
+  VD_OFF = 0,
+  VD_SLICEVIEW,
+  VD_TEXTBOX
+} cViewDetails;
 struct ClickPoint 
   {
   double x, y, z;
@@ -216,7 +221,7 @@ public:
 
   bool viewCrosshairs() const;
 
-  bool viewDetails() const;
+  int viewDetails() const;
 
   bool viewValue() const;
 
@@ -252,7 +257,7 @@ public slots:
   void setViewOverlayData(bool newViewOverlayData);
 
   void setViewValue(bool value);
-  void setViewDetails(bool detail);
+  void setViewDetails(int detail);
 
   void setViewCrosshairs(bool crosshairs);
   /*! Specify the slice to view */
@@ -340,6 +345,7 @@ signals:
   void minIntensityChanged(int minimum);
   void sliceNumChanged(int value);
   void zoomChanged(double zoom);
+  void updateDetails(QString s);
 
 protected:
 
@@ -425,7 +431,6 @@ protected:
   bool cViewCrosshairs;
   bool cViewValue;
   bool cViewValuePhysicalUnits;
-  bool cViewDetails;
   const char * cPhysicalUnitsName;
 
   int cWinMinX;
