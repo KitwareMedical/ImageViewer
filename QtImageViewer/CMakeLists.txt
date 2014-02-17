@@ -34,33 +34,26 @@
 #
 ##############################################################################
 
-set( ImageViewer_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR} )
-if( USE_FLTK )
-  list( APPEND ImageViewer_INCLUDE_DIRS ${ImageViewer_SOURCE_DIR}/FltkImageViewer )
-else()
-  list( APPEND ImageViewer_INCLUDE_DIRS ${ImageViewer_SOURCE_DIR}/QtImageViewer )
-endif()
-include_directories( ${ImageViewer_INCLUDE_DIRS} )
+include_directories( ${ImageViewer_SOURCE_DIR}/QtImageViewer
+  ${ImageViewer_BINARY_DIR}/QtImageViewer )
 
-set( ImageViewer_SRCS ImageViewer.cxx )
+set( QtImageViewer_UI_SRCS
+  qtmainwindow.ui
+)
 
-if( USE_FLTK )
-  set( ImageViewer_GUI_SRCS ImageViewerGUI.fl )
-  fltk_wrap_ui( ImageViewer ${ImageViewer_GUI_SRCS} )
-  list( APPEND ImageViewer_SRCS ${ImageViewer_FLTK_UI_SRCS} )
-  DisableFLTKWarnings( "${ImageViewer_SRCS}" )
-endif()
+set( QtImageViewer_MOC_SRCS
+  qtmainwindow.h
+)
 
-add_executable( ImageViewer ${ImageViewer_SRCS} ${ImageViewer_UI_CXX} )
+set( QtImageViewer_SRCS
+  qtmainwindow.cpp
+)
 
-install( TARGETS ImageViewer DESTINATION bin )
+QT4_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
+QT4_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_UI_SRCS} )
 
-set( ImageViewer_LIBS  ${ITK_LIBRARIES} ) # ${VTK_LIBRARIES} )
-if( USE_FLTK )
-  list( APPEND ImageViewer_LIBS ${FLTK_LIBRARIES} FltkImageViewer )
-else()
-  list( APPEND ImageViewer_LIBS ${QT_LIBRARIES} QtImageViewer )
-  #list( APPEND ImageViewer_LIBS ${CTK_LIBRARIES} QtImageViewer )
-  #list( APPEND ImageViewer_LIBS ${VTK_LIBRARIES} QtImageViewer )
-endif()
-target_link_libraries( ImageViewer ${ImageViewer_LIBS} )
+add_library( QtImageViewer STATIC ${QtImageViewer_SRCS}
+  ${QtImageViewer_UI_SRCS} ${QtImageViewer_UI_CXX} )
+
+install( TARGETS QtImageViewer DESTINATION lib )
+target_link_libraries( QtImageViewer ${QT_LIBRARIES} )

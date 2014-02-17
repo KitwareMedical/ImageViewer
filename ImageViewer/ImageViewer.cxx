@@ -19,16 +19,18 @@
 #include <itkImage.h>
 #include <itkImageFileReader.h>
 
-
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_File_Chooser.H>
-#include <GLSliceView.h>
-
-#include "ImageViewerGUI.h"
-
-
+#define USE_FLTK 1
+#if USE_FLTK
+# include <FL/Fl.H>
+# include <FL/Fl_Window.H>
+# include <FL/Fl_File_Chooser.H>
+# include <GLSliceView.h>
+# include "ImageViewerGUI.h"
 Fl_Window *form;
+#else
+# include <QApplication>
+# include "qtmainwindow.h"
+#endif
 
 int usage(void)
    {
@@ -41,16 +43,23 @@ int usage(void)
    }
 
 int main(int argc, char **argv)
-  {
+{
   typedef itk::Image< float, 3 > ImageType;
 
+#if !USE_FLTK
+  QApplication a(argc, argv);
+  MainWindow form;
+#else
   char *fName;
+#endif
   
   if(argc > 2)
     {
     return usage();
     }
-   else
+#if USE_FLTK
+  else
+    {
     if(argc == 1)
       {
       fName = fl_file_chooser("Pick an image file", "*.*", ".");
@@ -60,6 +69,7 @@ int main(int argc, char **argv)
         }
       }
     else
+      {
       if(argv[1][0] != '-')
         {
         fName = argv[argc-1];
@@ -68,6 +78,8 @@ int main(int argc, char **argv)
         {
         return usage();
         }
+      }
+    }
 
   std::cout << "Loading File: " << fName << std::endl;
   typedef itk::ImageFileReader< ImageType > VolumeReaderType;
@@ -85,8 +97,8 @@ int main(int argc, char **argv)
     }
  catch (itk::ExceptionObject &e)
     {
-     std::cerr << e << std::endl;
-     return EXIT_FAILURE;
+    std::cerr << e << std::endl;
+    return EXIT_FAILURE;
     }
   std::cout << "...Done Loading File" << std::endl;
 
@@ -96,14 +108,14 @@ int main(int argc, char **argv)
   std::cout << std::endl;
   std::cout << "For directions on interacting with the window," << std::endl;
   std::cout << "   type 'h' within the window" << std::endl;
-  
+
   form = make_window();
 
   tkMain->label(mainName);
-  
+
   tkWin->SetInputImage(imP);
   tkWin->flipY(true);
-  
+
   form->show();
   tkWin->show();
   tkWin->update();
@@ -113,6 +125,10 @@ int main(int argc, char **argv)
   tkWin->update();
 
   Fl::run();
-  
+
   return 1;
-  }
+#else
+  form.show();
+  return a.exec();
+#endif
+}
