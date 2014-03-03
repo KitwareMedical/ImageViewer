@@ -1,8 +1,12 @@
+//Qt includes
+#include <QLineEdit>
+#include <QSlider>
+
+//QtImageViewer includes
 #include "QtSlicer.h"
-#include <iostream>
 #include "QtGlSliceView.h"
-#include <qlineedit.h>
-#include <qslider.h>
+
+#include <iostream>
 
 
 /**

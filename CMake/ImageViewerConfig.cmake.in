@@ -34,23 +34,14 @@
 #
 ##############################################################################
 
-# The Fluid-generated FLTK sources have many warnings. This macro will disable
-# warnings for the generated files on some compilers.
 
-macro( DisableFLTKWarnings files )
-  if( CMAKE_COMPILER_IS_GNUCXX )
-    foreach( f ${files} )
-      string( REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}" )
-      string( REGEX REPLACE ".*/([^/]*)$" "\\1" SRC "${SRC}" )
-      set_source_files_properties( ${SRC} PROPERTIES COMPILE_FLAGS -w )
-    endforeach( f )
-  endif( CMAKE_COMPILER_IS_GNUCXX )
+# This file is configured by ImageViewer
 
-  if( MSVC )
-    foreach( f ${files} )
-      string( REGEX REPLACE "\\.fl$" ".cxx" SRC "${f}" )
-      string( REGEX REPLACE ".*/([^/]*)$" "\\1" SRC "${SRC}" )
-      set_source_files_properties( ${SRC} PROPERTIES COMPILE_FLAGS /w )
-    endforeach( f )
-  endif( MSVC )
-endmacro( DisableFLTKWarnings )
+# The ImageViewer include file directories.
+set( ImageViewer_INCLUDE_DIRS "@ImageViewer_INCLUDE_DIRS@" )
+
+# The ImageViewer library directories.
+set( ImageViewer_LIBRARY_DIRS "@ImageViewer_LIBRARY_DIRS@" )
+
+# The build settings file.
+

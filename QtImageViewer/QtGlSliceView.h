@@ -24,7 +24,7 @@
 #include <math.h>
 #include <QGLWidget>
 #include <QtOpenGL/qgl.h>
-#include <GLUT/glut.h>
+//#include <GLUT/glut.h>
 #include "ui_QtSlicerHelpGUI.h"
   
 
@@ -68,19 +68,20 @@ const char IWModeTypeName[3][5] =
   {'F', 'l', 'i', 'p', '\0'}};
 
 const int NUM_cWinOrientation = 3;
-enum {
+enum OrientationType{
   X_AXIS=0,
   Y_AXIS,
-  Z_AXIS} OrientationType;
+  Z_AXIS};
 
   /*! Structure clickPoint to store the x,y,z and intensity value of a
   * point in the image
 */
-enum {
+enum cViewDetailsInformation{
   VD_OFF = 0,
   VD_SLICEVIEW,
   VD_TEXTBOX
-} cViewDetails;
+};
+
 struct ClickPoint 
   {
   double x, y, z;
@@ -118,7 +119,7 @@ class QtGlSliceView :
   Q_PROPERTY(int sliceNum READ sliceNum WRITE setSliceNum NOTIFY sliceNumChanged);
   Q_PROPERTY(bool viewCrosshairs READ viewCrosshairs WRITE setViewCrosshairs);
   Q_PROPERTY(bool viewValue READ viewValue WRITE setViewValue);
-  Q_PROPERTY(bool viewDetails READ viewDetails WRITE setViewDetails);
+  Q_PROPERTY(int viewDetails READ viewDetails WRITE setViewDetails);
   Q_PROPERTY(bool viewOverlayData READ viewOverlayData WRITE setViewOverlayData);
   Q_PROPERTY(bool viewAxisLabel READ viewAxisLabel WRITE setViewAxisLabel);
   Q_PROPERTY(bool viewClickedPoints READ viewClickedPoints WRITE setViewClickedPoints);
@@ -430,6 +431,7 @@ protected:
   bool cViewOverlayData;
   bool cViewCrosshairs;
   bool cViewValue;
+  int cViewDetails;
   bool cViewValuePhysicalUnits;
   const char * cPhysicalUnitsName;
 

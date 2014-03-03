@@ -1,10 +1,13 @@
 #ifndef QtSlicer_h
 #define QtSlicer_h
 
-//#include <QtGui>
+//Qt include
 #include <QDialog>
 
-#include <itkImage.h>
+//itk include
+#include "itkImage.h"
+
+//QtImageViewer includes
 #include "ui_QtSlicerGUI.h"
 #include "ui_QtSlicerHelpGUI.h"
 

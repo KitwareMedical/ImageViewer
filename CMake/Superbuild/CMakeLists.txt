@@ -47,11 +47,6 @@ include( ExternalProjectsConfig )
 include( SetOSXVariables )
 
 set( ImageViewer_DEPENDENCIES "ITK" )
-if( USE_FLTK )
-  list( APPEND ImageViewer_DEPENDENCIES "FLTK" )
-else( USE_FLTK )
-  #list( APPEND ImageViewer_DEPENDENCIES "CTK" )
-endif( USE_FLTK )
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )

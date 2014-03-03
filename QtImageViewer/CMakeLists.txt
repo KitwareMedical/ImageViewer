@@ -34,26 +34,50 @@
 #
 ##############################################################################
 
-include_directories( ${ImageViewer_SOURCE_DIR}/QtImageViewer
-  ${ImageViewer_BINARY_DIR}/QtImageViewer )
+if(USE_ITK_FILE)
+   include(${USE_ITK_FILE})
+endif(USE_ITK_FILE)
 
-set( QtImageViewer_UI_SRCS
-  qtmainwindow.ui
-)
+include_directories(${QT_INCLUDE_PATH}
+  ${QT_INCLUDE_DIR}
+  ${ImageViewer_BINARY_DIR}/QtImageViewer
+  ${ImageViewer_SOURCE_DIR}/QtImageViewer
+  )
 
-set( QtImageViewer_MOC_SRCS
-  qtmainwindow.h
-)
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})#${GLUT_INCLUDE_DIRS}
 
-set( QtImageViewer_SRCS
-  qtmainwindow.cpp
-)
+set(QtSlicer_SRCS
+  QtGlSliceView.cxx
+  QtSlicer.cxx
+  )
 
-QT4_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
-QT4_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_UI_SRCS} )
+set(QtSlicer_GUI_SRCS
+  Resources/UI/QtSlicerGUI.ui
+  Resources/UI/QtSlicerHelpGUI.ui
+  )
 
-add_library( QtImageViewer STATIC ${QtImageViewer_SRCS}
-  ${QtImageViewer_UI_SRCS} ${QtImageViewer_UI_CXX} )
+set(QtSlicer_MOC_SRCS
+  QtGlSliceView.h
+  QtSlicer.h
+  )
 
-install( TARGETS QtImageViewer DESTINATION lib )
-target_link_libraries( QtImageViewer ${QT_LIBRARIES} )
+set(QtSlicer_RESOURCES
+  Resources/qtImageViewerResources.qrc
+  )
+
+QT4_WRAP_UI(QtSlicer_UI_CXX ${QtSlicer_GUI_SRCS})
+QT4_WRAP_CPP(QtSlicer_SRCS ${QtSlicer_MOC_SRCS})
+QT4_ADD_RESOURCES(QtSlicer_QRC_SRCS ${QtSlicer_RESOURCES})
+
+add_definitions(-DQT_DLL)
+add_definitions(-DQT_THREAD_SUPPORT)
+
+add_library(QtImageViewer STATIC ${QtSlicer_SRCS}
+  ${QtSlicer_GUI_SRCS}
+  ${QtSlicer_UI_CXX}
+  ${QtSlicer_QRC_SRCS}
+  )
+
+install(TARGETS QtImageViewer DESTINATION lib)
+target_link_libraries(QtImageViewer ${QT_LIBRARIES})

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>HTML/Help.html</file>
+        <file>UI/QtSlicerGUI.ui</file>
+        <file>UI/QtSlicerHelpGUI.ui</file>
+    </qresource>
+</RCC>

@@ -34,33 +34,24 @@
 #
 ##############################################################################
 
-set( ImageViewer_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR} )
-if( USE_FLTK )
-  list( APPEND ImageViewer_INCLUDE_DIRS ${ImageViewer_SOURCE_DIR}/FltkImageViewer )
-else()
-  list( APPEND ImageViewer_INCLUDE_DIRS ${ImageViewer_SOURCE_DIR}/QtImageViewer )
-endif()
-include_directories( ${ImageViewer_INCLUDE_DIRS} )
+set(ImageViewer_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
 
-set( ImageViewer_SRCS ImageViewer.cxx )
+list(APPEND ImageViewer_INCLUDE_DIRS
+    ${ImageViewer_SOURCE_DIR}/QtImageViewer
+    ${ImageViewer_BINARY_DIR}/QtImageViewer
+    )
+include_directories(${ImageViewer_INCLUDE_DIRS})
 
-if( USE_FLTK )
-  set( ImageViewer_GUI_SRCS ImageViewerGUI.fl )
-  fltk_wrap_ui( ImageViewer ${ImageViewer_GUI_SRCS} )
-  list( APPEND ImageViewer_SRCS ${ImageViewer_FLTK_UI_SRCS} )
-  DisableFLTKWarnings( "${ImageViewer_SRCS}" )
-endif()
+set(ImageViewer_SRCS ImageViewer.cxx)
 
-add_executable( ImageViewer ${ImageViewer_SRCS} ${ImageViewer_UI_CXX} )
+add_executable(ImageViewer ${ImageViewer_SRCS} ${ImageViewer_UI_CXX})
 
-install( TARGETS ImageViewer DESTINATION bin )
+install(TARGETS ImageViewer DESTINATION bin)
 
-set( ImageViewer_LIBS  ${ITK_LIBRARIES} ) # ${VTK_LIBRARIES} )
-if( USE_FLTK )
-  list( APPEND ImageViewer_LIBS ${FLTK_LIBRARIES} FltkImageViewer )
-else()
-  list( APPEND ImageViewer_LIBS ${QT_LIBRARIES} QtImageViewer )
-  #list( APPEND ImageViewer_LIBS ${CTK_LIBRARIES} QtImageViewer )
-  #list( APPEND ImageViewer_LIBS ${VTK_LIBRARIES} QtImageViewer )
-endif()
-target_link_libraries( ImageViewer ${ImageViewer_LIBS} )
+target_link_libraries(ImageViewer
+  ${ITK_LIBRARIES}
+  ${QT_LIBRARIES} QtImageViewer
+  #${GLU_LIBRARY}
+  ${OPENGL_gl_LIBRARY}
+  ${OPENGL_glu_LIBRARY}
+  )

@@ -17,21 +17,19 @@
 #ifndef QtGlSliceView_cxx
 #define QtGlSliceView_cxx
 
-#include <QScrollArea>
-
+//QtImageViewer include
 #include "QtGlSliceView.h"
+
+//itk include
 #include "itkMinimumMaximumImageCalculator.h"
 
-#include <iostream>
-#include <fstream>
-#include <list>
-
-// Qt include
+// Qt includes
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QScrollArea>
 
 QtGlSliceView::QtGlSliceView(QWidget *parent)
 : QGLWidget(parent)
@@ -74,7 +72,9 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   cClickBoxArg = NULL;
   cClickBoxArgCallBack = NULL;
 
-
+  cIWCallBack = NULL;
+  cIWArg = NULL;
+  cIWArgCallBack = NULL;
 
   cViewAxisLabel = false;
   sprintf(cAxisLabelX[0], "S");
@@ -736,19 +736,7 @@ void QtGlSliceView::setViewCrosshairs(bool crosshairs)
 
 void QtGlSliceView::setViewDetails(int detail)
 {
-  switch(detail)
-    {
-    case VD_OFF :
-      cViewDetails = VD_OFF;
-      break;
-    case VD_SLICEVIEW :
-      cViewDetails = VD_SLICEVIEW;
-      break;
-    default:
-    case VD_TEXTBOX :
-      cViewDetails = VD_TEXTBOX;
-      break;
-    }
+  cViewDetails = detail;
 }
 
 
