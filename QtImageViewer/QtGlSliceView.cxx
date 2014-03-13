@@ -9,10 +9,10 @@
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
   
-   This software is distributed WITHOUT ANY WARRANTY; without even 
-   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+   This software is distributed WITHOUT ANY WARRANTY; without even
+   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
    PURPOSE.  See the above copyright notices for more information.
-   
+
 =========================================================================*/
 #ifndef QtGlSliceView_cxx
 #define QtGlSliceView_cxx
@@ -839,6 +839,7 @@ void QtGlSliceView::setOrientation(int newOrientation)
     cWinOrientationCallBack();
   if(cWinOrientationArgCallBack != NULL)
     cWinOrientationArgCallBack(cWinOrientationArg);
+  emit orientationChanged(cDimSize[cWinOrder[2]]);
 }
 
 
@@ -1038,7 +1039,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         }
       else
         {
-        setSliceNum(cWinCenter[cWinOrder[2]]+pace);
+        setSliceNum((int)cWinCenter[cWinOrder[2]]+pace);
         }
       update();
       break;
@@ -1746,16 +1747,22 @@ void QtGlSliceView::changeSlice(int value)
 
 void QtGlSliceView::setSliceNum(int newSliceNum)
 {
-  if(newSliceNum>=cDimSize[cWinOrder[2]])
-    newSliceNum = cDimSize[cWinOrder[2]]-1;
+  if(newSliceNum>cDimSize[cWinOrder[2]])
+    {
+    newSliceNum = cDimSize[cWinOrder[2]] -1;
+    }
   cWinCenter[cWinOrder[2]] = newSliceNum;
-
-  emit sliceNumChanged(newSliceNum);
   
   if(cSliceNumCallBack != NULL)
     cSliceNumCallBack();
   if(cSliceNumArgCallBack != NULL)
     cSliceNumArgCallBack(cSliceNumArg);
+  emit sliceNumChanged(newSliceNum);
+}
+
+int QtGlSliceView::maxSliceNum() const
+{
+  return cDimSize[cWinOrder[2]];
 }
 
 int QtGlSliceView::sliceNum() const
@@ -1817,9 +1824,13 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
 
 void QtGlSliceView::setMaxIntensity(int value)
 {
-  if(value < cDataMin -1 || value > cDataMax +1)
+  if(value < cDataMin)
     {
-    return;
+    value = cDataMin;
+    }
+  if(value > cDataMax)
+    {
+    value = cDataMax;
     }
   cIWMax = value;
   update();
@@ -1925,9 +1936,13 @@ void QtGlSliceView::setViewClickedPoints(bool pointsClicked)
 
 void QtGlSliceView::setMinIntensity(int value)
 {
-  if(value < cDataMin - 1 || value > cDataMax +1)
+  if(value < cDataMin)
     {
-    return;
+    value = cDataMin;
+    }
+  if(value > cDataMax)
+    {
+    value = cDataMax;
     }
   cIWMin = value;
   update();

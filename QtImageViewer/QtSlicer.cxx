@@ -1,4 +1,5 @@
 //Qt includes
+#include <QDebug>
 #include <QLineEdit>
 #include <QSlider>
 
@@ -32,6 +33,7 @@ QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFl
   QObject::connect(OpenGlWindow, SIGNAL(maxIntensityChanged(int)), IntensityMax, SLOT(setValue(int)));
   QObject::connect(OpenGlWindow, SIGNAL(minIntensityChanged(int)), IntensityMin, SLOT(setValue(int)));
   QObject::connect(OpenGlWindow, SIGNAL(updateDetails(QString)), Details, SLOT(setText(QString)));
+  QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(setMaximumSlice()));
 }
 
 /**  
@@ -60,11 +62,11 @@ void QtSlicer::setDisplayPosition(int x,int y ,int z,double value)
 void QtSlicer::setInputImage(ImageType * newImData)
 {
   this->OpenGlWindow->setInputImage(newImData);
-  this->SliceNumSlider->setMaximum(newImData->GetLargestPossibleRegion().GetSize()[2]-1);
+  this->SliceNumSlider->setMaximum( static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));
 
-  // Set the slice slider at z/2
-  this->SliceNumSlider->setValue(newImData->GetLargestPossibleRegion().GetSize()[2]/2);
-  this->setDisplaySliceNumber(newImData->GetLargestPossibleRegion().GetSize()[2]/2);
+  this->OpenGlWindow->changeSlice(((this->OpenGlWindow->maxSliceNum() -1)/2));
+  this->SliceNumSlider->setValue(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
+  this->setDisplaySliceNumber(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
 
   this->IntensityMin->setMinimum( static_cast<int>( this->OpenGlWindow->minIntensity() ));
   this->IntensityMin->setMaximum( static_cast<int>( this->OpenGlWindow->maxIntensity() ));
@@ -82,6 +84,13 @@ void QtSlicer::setInputImage(ImageType * newImData)
 
   this->OpenGlWindow->show();
   this->OpenGlWindow->update();
+}
+
+
+void QtSlicer::setMaximumSlice()
+{
+  this->SliceNumSlider->setMaximum(static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));
+  this->SliceNumSlider->setValue(static_cast<int>(this->SliceValue->text().toInt()));
 }
 
 void QtSlicer::setDisplaySliceNumber(int number)

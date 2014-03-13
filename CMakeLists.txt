@@ -47,8 +47,13 @@ option(USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
   OFF)
 mark_as_advanced(USE_SYSTEM_ITK)
 
+set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
+set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
+set_property(GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
+
 if(ImageViewer_USE_SUPERBUILD)
   add_subdirectory(CMake/Superbuild)
+  return()
 else(ImageViewer_USE_SUPERBUILD)
 
   find_package(ITK REQUIRED)
@@ -62,5 +67,17 @@ else(ImageViewer_USE_SUPERBUILD)
 
 endif(ImageViewer_USE_SUPERBUILD)
 
+get_property(ImageViewer_LIBRARIES GLOBAL PROPERTY ImageViewer_LIBRARIES)
+get_property(ImageViewer_INCLUDE_DIRS GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
+get_property(ImageViewer_LIBRARY_DIRS GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
+
+set( ImageViewer_CONFIG_BINARY_DIR ${CMAKE_BINARY_DIR} )
+set( ImageViewer_USE_FILE
+  ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake )
+
 configure_file( ${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfig.cmake.in
-  ${ImageViewer_BINARY_DIR}/ImageViewerConfig.cmake @ONLY )
+  ${ImageViewer_CONFIG_BINARY_DIR}/ImageViewerConfig.cmake @ONLY )
+
+# Configure UseTubeTK.cmake.
+configure_file( ${ImageViewer_SOURCE_DIR}/CMake/UseImageViewer.cmake.in
+  ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake @ONLY )
