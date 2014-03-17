@@ -38,14 +38,14 @@ if(USE_ITK_FILE)
    include(${USE_ITK_FILE})
 endif(USE_ITK_FILE)
 
-include_directories(${QT_INCLUDE_PATH}
+include_directories(
   ${QT_INCLUDE_DIR}
   ${ImageViewer_BINARY_DIR}/QtImageViewer
   ${ImageViewer_SOURCE_DIR}/QtImageViewer
   )
 
 find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})#${GLUT_INCLUDE_DIRS}
+include_directories(${OPENGL_INCLUDE_DIRS})
 
 set(QtSlicer_SRCS
   QtGlSliceView.cxx
@@ -73,11 +73,25 @@ QT4_ADD_RESOURCES(QtSlicer_QRC_SRCS ${QtSlicer_RESOURCES})
 add_definitions(-DQT_DLL)
 add_definitions(-DQT_THREAD_SUPPORT)
 
-add_library(QtImageViewer STATIC ${QtSlicer_SRCS}
+add_library(QtImageViewer SHARED ${QtSlicer_SRCS}
   ${QtSlicer_GUI_SRCS}
   ${QtSlicer_UI_CXX}
   ${QtSlicer_QRC_SRCS}
   )
 
 install(TARGETS QtImageViewer DESTINATION lib)
-target_link_libraries(QtImageViewer ${QT_LIBRARIES})
+target_link_libraries(QtImageViewer
+  ${ITK_LIBRARIES}
+  ${QT_LIBRARIES}
+  ${OPENGL_LIBRARIES}
+  )
+
+get_target_property(location QtImageViewer LOCATION)
+get_filename_component(output_directory ${location} PATH)
+
+set_property(GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR})
+set_property(GLOBAL APPEND PROPERTY ImageViewer_LIBRARIES QtImageViewer)
+set_property(GLOBAL APPEND PROPERTY ImageViewer_LIBRARY_DIRS
+  ${output_directory})

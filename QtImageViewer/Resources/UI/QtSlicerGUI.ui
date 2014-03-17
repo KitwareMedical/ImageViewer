@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>517</width>
+    <width>525</width>
     <height>683</height>
    </rect>
   </property>
@@ -31,14 +31,8 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="4" rowspan="3">
-      <widget class="QWidget" name="widget" native="true">
-       <property name="maximumSize">
-        <size>
-         <width>120</width>
-         <height>16777215</height>
-        </size>
-       </property>
+     <item row="0" column="1">
+      <widget class="QWidget" name="Slider" native="true">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLineEdit" name="SliceValue">
@@ -479,7 +473,7 @@
        </layout>
       </widget>
      </item>
-     <item row="3" column="0" rowspan="4" colspan="4">
+     <item row="1" column="0">
       <widget class="QWidget" name="Controls" native="true">
        <property name="maximumSize">
         <size>
@@ -3816,7 +3810,7 @@
        </layout>
       </widget>
      </item>
-     <item row="0" column="0" rowspan="3" colspan="4">
+     <item row="0" column="0">
       <widget class="QtGlSliceView" name="OpenGlWindow" native="true">
        <property name="minimumSize">
         <size>
@@ -3826,11 +3820,11 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="4" rowspan="4">
+     <item row="1" column="1">
       <widget class="QWidget" name="Buttons" native="true">
        <property name="maximumSize">
         <size>
-         <width>120</width>
+         <width>100</width>
          <height>300</height>
         </size>
        </property>
