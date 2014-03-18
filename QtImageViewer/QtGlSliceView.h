@@ -351,6 +351,7 @@ signals:
   void updateDetails(QString s);
   void orientationChanged(int maximum);
   void viewDetailsChanged(int details);
+  void overlayOpacityChanged(double opacity);
 
 protected:
 

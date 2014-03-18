@@ -295,6 +295,7 @@ QtGlSliceView::setOverlayOpacity(double newOverlayOpacity)
   {
     cViewOverlayCallBack();
   }
+  emit overlayOpacityChanged(cOverlayOpacity);
 }
 
 double
@@ -1275,6 +1276,16 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         {
         setOverlay(!viewOverlayData());
         }
+      update();
+      break;
+    case Qt::Key_B:
+    //decrease opacity overlay
+      setOverlayOpacity(overlayOpacity() - 0.05);
+      update();
+      break;
+    case Qt::Key_N:
+    //increase opacity overlay
+      setOverlayOpacity(overlayOpacity() + 0.05);
       update();
       break;
     case Qt::Key_H:
