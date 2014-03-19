@@ -39,7 +39,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   cViewOverlayCallBack  = NULL;
   cOverlayOpacity       = 0.0;
   cWinOverlayData       = NULL;
-  cViewOverlayData = true;
   cViewValuePhysicalUnits = false;
   cPhysicalUnitsName = "mm";
   cViewDetails = VD_SLICEVIEW;
@@ -83,7 +82,26 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   sprintf(cAxisLabelY[0], "P");
   sprintf(cAxisLabelY[1], "S");
   sprintf(cAxisLabelY[2], "P");
-  
+  cOverlayData = NULL;
+  cHelpUi = new Ui::HelpWindow();
+  cImData = NULL;
+  cClickSelectV = 0;
+  cViewImData  = true;
+  cValidImData = true;
+
+  cIWMax = 0;
+  cIWMin = 0;
+
+  cIWModeMax = IW_MAX;
+  cIWModeMin = IW_MIN;
+
+  cImageMode = IMG_VAL;
+
+  cWinZoom = 0;
+  cWinOrientation = 0;
+
+  cViewAxisLabel = 0;
+
   cColorTable = ColorTableType::New();
   cColorTable->UseDiscreteColors();
   cW = 0;
@@ -93,7 +111,29 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
     cFlipX[i]=false;
     cFlipY[i]=true;
     cFlipZ[i]=false;
+    cBoxMax[i] = 0;
+    cBoxMin[i] = 0;
+    cTranspose[i] = 0;
+    cDimSize[i] = 0;
+    cSpacing[i] = 0;
+    cWinOrder[i] = 0;
+    for(int j=0; j<80; j++)
+      {
+      cAxisLabelX[i][j] = 0;
+      cAxisLabelY[i][j] = 0;
+      }
   }
+
+  cWinMinX = 0;
+  cWinMaxX = 0;
+  cWinSizeX = 0;
+  cWinMinY = 0;
+  cWinMaxY = 0;
+  cWinSizeY = 0;
+  cWinDataSizeX = 0;
+  cWinDataSizeY = 0;
+  inDataSizeX = 0;
+  inDataSizeY = 0;
   cWinImData = NULL;
   cWinZBuffer = NULL;
   cfastMovVal = 1; //fast moving pace: 1 by defaut
@@ -200,8 +240,6 @@ setInputImage(ImageType * newImData)
     
   cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
     
-  cViewImData  = true;
-  cValidImData = true;
   changeSlice(((maxSliceNum() -1)/2));
   update();
 }
@@ -236,6 +274,8 @@ QtGlSliceView
     cViewOverlayData  = true;
     cValidOverlayData = true;
     cOverlayOpacity   = 1.0;
+
+    emit validOverlayDataChanged(cValidOverlayData);
     
     if(cWinOverlayData != NULL) 
     {
@@ -290,6 +330,14 @@ void (* newViewOverlayCallBack)(void)
 void 
 QtGlSliceView::setOverlayOpacity(double newOverlayOpacity)
 {
+  if(newOverlayOpacity < 0)
+    {
+    newOverlayOpacity = 0;
+    }
+  if(newOverlayOpacity > 1)
+    {
+    newOverlayOpacity = 1;
+    }
   cOverlayOpacity = newOverlayOpacity; 
   if(cViewOverlayCallBack != NULL) 
   {
@@ -617,6 +665,16 @@ QtGlSliceView::update()
 }
 
 
+void QtGlSliceView::setValidOverlayData(bool validOverlayData)
+{
+  this->cValidOverlayData = validOverlayData;
+}
+
+
+bool QtGlSliceView::validOverlayData() const
+{
+  return this->cValidOverlayData;
+}
 
 void
 QtGlSliceView::showHelp()

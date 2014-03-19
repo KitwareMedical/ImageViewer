@@ -50,16 +50,20 @@ include_directories(${OPENGL_INCLUDE_DIRS})
 set(QtSlicer_SRCS
   QtGlSliceView.cxx
   QtSlicer.cxx
+  QtSliceControlsWidget.cpp
   )
 
 set(QtSlicer_GUI_SRCS
   Resources/UI/QtSlicerGUI.ui
   Resources/UI/QtSlicerHelpGUI.ui
+  Resources/UI/QtSliceControlsWidgetGUI.ui
   )
 
 set(QtSlicer_MOC_SRCS
   QtGlSliceView.h
   QtSlicer.h
+  QtSliceControlsWidget.h
+
   )
 
 set(QtSlicer_RESOURCES

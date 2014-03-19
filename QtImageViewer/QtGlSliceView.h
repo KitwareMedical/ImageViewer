@@ -245,7 +245,10 @@ public:
   int maxClickedPointsStored() const;
 
   int maxSliceNum() const;
+
+  bool validOverlayData() const;
 public slots:
+  void setValidOverlayData(bool validOverlayData);
 
   void clearClickedPointsStored();
 
@@ -352,6 +355,7 @@ signals:
   void orientationChanged(int maximum);
   void viewDetailsChanged(int details);
   void overlayOpacityChanged(double opacity);
+  void validOverlayDataChanged(bool valid);
 
 protected:
 
