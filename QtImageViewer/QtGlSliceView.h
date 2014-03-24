@@ -17,14 +17,18 @@
 #ifndef QtGlSliceView_H
 #define QtGlSliceView_H
 
+//itk includes
 #include "itkImage.h"
 #include "itkColorTable.h"
 
-
+//std includes
 #include <math.h>
+
+//Qt includes
 #include <QGLWidget>
 #include <QtOpenGL/qgl.h>
-//#include <GLUT/glut.h>
+
+//ImageViewer includes
 #include "ui_QtSlicerHelpGUI.h"
   
 
@@ -112,20 +116,21 @@ class QtGlSliceView :
   Q_PROPERTY(bool yFlipped READ isYFlipped WRITE flipY);
   Q_PROPERTY(bool xFlipped READ isXFlipped WRITE flipX);
   Q_PROPERTY(ImageModeType imageMode READ imageMode WRITE setImageMode);
-  Q_PROPERTY(int orientation READ orientation WRITE setOrientation);
+  Q_PROPERTY(int orientation READ orientation WRITE setOrientation NOTIFY orientationChanged);
   Q_PROPERTY(double maxIntensity READ maxIntensity WRITE setMaxIntensity NOTIFY maxIntensityChanged);
   Q_PROPERTY(double minIntensity READ minIntensity WRITE setMinIntensity NOTIFY minIntensityChanged);
-  Q_PROPERTY(double overlayOpacity READ overlayOpacity WRITE setOverlayOpacity);
+  Q_PROPERTY(double overlayOpacity READ overlayOpacity WRITE setOverlayOpacity NOTIFY overlayOpacityChanged);
   Q_PROPERTY(int sliceNum READ sliceNum WRITE setSliceNum NOTIFY sliceNumChanged);
   Q_PROPERTY(bool viewCrosshairs READ viewCrosshairs WRITE setViewCrosshairs);
   Q_PROPERTY(bool viewValue READ viewValue WRITE setViewValue);
-  Q_PROPERTY(int viewDetails READ viewDetails WRITE setViewDetails);
+  Q_PROPERTY(int viewDetails READ viewDetails WRITE setViewDetails NOTIFY viewDetailsChanged);
   Q_PROPERTY(bool viewOverlayData READ viewOverlayData WRITE setViewOverlayData);
   Q_PROPERTY(bool viewAxisLabel READ viewAxisLabel WRITE setViewAxisLabel);
   Q_PROPERTY(bool viewClickedPoints READ viewClickedPoints WRITE setViewClickedPoints);
   Q_PROPERTY(bool viewValuePhysicalUnits READ viewValuePhysicalUnits WRITE setViewValuePhysicalUnits);
   Q_PROPERTY(int fastMovVal READ fastMovVal WRITE setFastMovVal);
   Q_PROPERTY(int fastMovThresh READ fastMovThresh WRITE setFastMovThresh);
+  Q_PROPERTY(bool validOverlayData READ validOverlayData WRITE setValidOverlayData NOTIFY validOverlayDataChanged);
 public:
   
   typedef double                           ImagePixelType;

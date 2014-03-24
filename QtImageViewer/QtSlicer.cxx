@@ -23,6 +23,7 @@ QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFl
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(setMaximumSlice()));
+  this->OpenGlWindow->setFocus();
 }
 
 QtSlicer::~QtSlicer()
@@ -33,10 +34,7 @@ QtSlicer::~QtSlicer()
 void QtSlicer::setInputImage(ImageType * newImData)
 {
   this->OpenGlWindow->setInputImage(newImData);
-  this->SliceNumSlider->setMaximum( static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));
-
-  this->OpenGlWindow->changeSlice(((this->OpenGlWindow->maxSliceNum() -1)/2));
-  this->SliceNumSlider->setValue(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
+  setMaximumSlice();
   this->setDisplaySliceNumber(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
 
   this->Controls->setInputImage();

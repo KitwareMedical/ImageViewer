@@ -1,8 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file>HTML/Help.html</file>
-        <file>UI/QtSlicerGUI.ui</file>
-        <file>UI/QtSlicerHelpGUI.ui</file>
-        <file>UI/QtSliceControlsWidgetGUI.ui</file>
     </qresource>
 </RCC>

@@ -117,13 +117,15 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
     cDimSize[i] = 0;
     cSpacing[i] = 0;
     cWinOrder[i] = 0;
+    cWinCenter[i] = 0;
+    cClickSelect[i] = 0;
     for(int j=0; j<80; j++)
       {
       cAxisLabelX[i][j] = 0;
       cAxisLabelY[i][j] = 0;
       }
   }
-
+  cClickSelectV = 0;
   cWinMinX = 0;
   cWinMaxX = 0;
   cWinSizeX = 0;
@@ -894,12 +896,20 @@ void QtGlSliceView::setOrientation(int newOrientation)
     cWinOrder[1] = t;
     }
 
-  setSliceNum((int)cClickSelect[cWinOrder[2]]);
+  if(clickedPointsStored() == 0)
+    {
+    setSliceNum(cWinCenter[cWinOrder[2]]);
+    }
+  else
+    {
+    setSliceNum((int)cClickSelect[cWinOrder[2]]);
+    }
 
   if(cWinOrientationCallBack != NULL)
     cWinOrientationCallBack();
   if(cWinOrientationArgCallBack != NULL)
     cWinOrientationArgCallBack(cWinOrientationArg);
+  centerWindow();
   emit orientationChanged(cDimSize[cWinOrder[2]]);
 }
 
@@ -1338,12 +1348,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       break;
     case Qt::Key_B:
     //decrease opacity overlay
-      setOverlayOpacity(overlayOpacity() - 0.05);
+      setOverlayOpacity(overlayOpacity() - 0.025);
       update();
       break;
     case Qt::Key_N:
     //increase opacity overlay
-      setOverlayOpacity(overlayOpacity() + 0.05);
+      setOverlayOpacity(overlayOpacity() + 0.025);
       update();
       break;
     case Qt::Key_H:
@@ -1888,7 +1898,6 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
     cClickSelectArg);
     }
 
-//  emit positionChanged(ind[0],ind[1],ind[2],cClickSelectV);
   emit positionChanged(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
 
 }
