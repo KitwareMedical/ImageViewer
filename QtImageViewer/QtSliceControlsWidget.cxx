@@ -33,38 +33,26 @@ QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parent)
 
 QtSliceControlsWidget::~QtSliceControlsWidget()
 {
-
 }
 
 void QtSliceControlsWidget::setDisplayPosition(int x,int y ,int z,double value)
 {
-  char* tempchar = new char[20];
-  sprintf(tempchar,"%d",x);
-  UI->PositionX->setText(tr(tempchar));
-  sprintf(tempchar,"%d",y);
-  UI->PositionY->setText(tr(tempchar));
-  sprintf(tempchar,"%d",z);
-  UI->PositionZ->setText(tr(tempchar));
-  sprintf(tempchar,"%3.1f",value);
-  UI->PixelValue->setText(tr(tempchar));
-  this->SliceView->update();
-  delete tempchar;
+  UI->PositionX->setText(QString::number(x));
+  UI->PositionY->setText(QString::number(y));
+  UI->PositionZ->setText(QString::number(z));
+  UI->PixelValue->setText(QString::number(value, 'f', 1));
 }
 
 void QtSliceControlsWidget::setDisplayIMin(int value)
 {
-  char* tempchar = new char[20];
-  sprintf(tempchar,"%d",value);
+  QString tempchar = QString::number(value);
   UI->IntensityMinDisplay->setText(tempchar);
-  delete tempchar;
 }
 
 void QtSliceControlsWidget::setDisplayIMax(int value)
 {
-  char* tempchar = new char[20];
-  sprintf(tempchar,"%d",value);
+  QString tempchar = QString::number(value);
   UI->IntensityMaxDisplay->setText(tempchar);
-  delete tempchar;
 }
 
 
@@ -102,15 +90,12 @@ void QtSliceControlsWidget::setInputImage()
   UI->IntensityMax->setValue( static_cast<int>
                                 ( this->SliceView->maxIntensity() ));
 
-  char* tempchar = new char[20];
-  sprintf(tempchar,"%.0f",this->SliceView->minIntensity());
-  UI->IntensityMinDisplay->setText(tempchar);
-  sprintf(tempchar,"%.0f",this->SliceView->maxIntensity());
-  UI->IntensityMaxDisplay->setText(tempchar);
-  delete tempchar;
+  UI->IntensityMinDisplay->setText(QString::number(this->SliceView->minIntensity()));
+  UI->IntensityMaxDisplay->setText(QString::number(this->SliceView->maxIntensity()));
 }
 
 void QtSliceControlsWidget::setSliceView(QtGlSliceView* sliceView)
 {
   this->SliceView = sliceView;
 }
+

@@ -895,15 +895,8 @@ void QtGlSliceView::setOrientation(int newOrientation)
     cWinOrder[0] = cWinOrder[1];
     cWinOrder[1] = t;
     }
-
-  if(clickedPointsStored() == 0)
-    {
-    setSliceNum(cWinCenter[cWinOrder[2]]);
-    }
-  else
-    {
-    setSliceNum((int)cClickSelect[cWinOrder[2]]);
-    }
+  const int newSliceNum = clickedPointsStored() ?(int)cClickSelect[cWinOrder[2]] : cWinCenter[cWinOrder[2]];
+  setSliceNum(newSliceNum);
 
   if(cWinOrientationCallBack != NULL)
     cWinOrientationCallBack();

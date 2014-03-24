@@ -22,7 +22,7 @@ QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFl
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceNumSlider, SLOT(setValue(int)));
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), this, SLOT(setDisplaySliceNumber(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(setMaximumSlice()));
+  QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(updateSliceMaximum()));
   this->OpenGlWindow->setFocus();
 }
 
@@ -34,7 +34,7 @@ QtSlicer::~QtSlicer()
 void QtSlicer::setInputImage(ImageType * newImData)
 {
   this->OpenGlWindow->setInputImage(newImData);
-  setMaximumSlice();
+  updateSliceMaximum();
   this->setDisplaySliceNumber(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
 
   this->Controls->setInputImage();
@@ -44,7 +44,7 @@ void QtSlicer::setInputImage(ImageType * newImData)
 }
 
 
-void QtSlicer::setMaximumSlice()
+void QtSlicer::updateSliceMaximum()
 {
   this->SliceNumSlider->setMaximum(static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));
   this->SliceNumSlider->setValue(static_cast<int>(this->SliceValue->text().toInt()));
@@ -52,9 +52,6 @@ void QtSlicer::setMaximumSlice()
 
 void QtSlicer::setDisplaySliceNumber(int number)
 {
-  char* tempchar = new char[20];
-  sprintf(tempchar,"%d",number);
-  number = this->SliceNumSlider->value();
+  QString tempchar = QString::number(number);
   this->SliceValue->setText(tempchar);
-  delete tempchar;
 }
