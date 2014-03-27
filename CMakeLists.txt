@@ -47,6 +47,21 @@ option(USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
   OFF)
 mark_as_advanced(USE_SYSTEM_ITK)
 
+# Slicer Execution model Setup
+option( USE_SYSTEM_SLICER_EXECUTION_MODEL
+  "Exclude SlicerExecutionModel from superbuild and use an existing build."
+  OFF )
+mark_as_advanced( USE_SYSTEM_SLICER_EXECUTION_MODEL )
+
+option( USE_SYSTEM_JSONCPP
+  "Exclude JsonCpp from superbuild and use an existing build." OFF )
+mark_as_advanced( USE_SYSTEM_JSONCPP )
+
+option( USE_SYSTEM_PARAMETER_SERIALIZER
+  "Exclude parameter serializer from superbuild and use an existing build."
+  OFF )
+mark_as_advanced( USE_SYSTEM_PARAMETER_SERIALIZER )
+
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
 set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
@@ -61,6 +76,18 @@ else(ImageViewer_USE_SUPERBUILD)
 
   find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
   include(${QT_USE_FILE})
+
+  find_package( JsonCpp REQUIRED )
+  include_directories( ${JsonCpp_INCLUDE_DIRS} )
+
+  find_package( ParameterSerializer REQUIRED )
+  include_directories( ${ParameterSerializer_INCLUDE_DIRS} )
+
+  find_package(SlicerExecutionModel REQUIRED)
+  include(${SlicerExecutionModel_USE_FILE})
+
+  find_package( SlicerExecutionModel REQUIRED GenerateCLP )
+  include( ${GenerateCLP_USE_FILE} )
 
   add_subdirectory(QtImageViewer)
   add_subdirectory(ImageViewer)

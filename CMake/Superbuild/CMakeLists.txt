@@ -43,10 +43,27 @@ endif( CMAKE_BUILD_TYPE )
 
 set( gen "${CMAKE_GENERATOR}" )
 
+# Find Git and determine proper protocol for accessing Git repositories. Users
+# may need to choose HTTP is they are behind a firewall.
+if( NOT GIT_EXECUTABLE )
+  find_package( Git REQUIRED )
+endif( NOT GIT_EXECUTABLE )
+
+option( GIT_PROTOCOL_HTTP
+  "Use HTTP for git access (useful if behind a firewall)" OFF )
+mark_as_advanced( GIT_PROTOCOL_HTTP )
+
+set( git_protocol "git" )
+set( github_protocol "git" )
+if( GIT_PROTOCOL_HTTP )
+  set( git_protocol "http" )
+  set( github_protocol "https" )
+endif( GIT_PROTOCOL_HTTP )
+
 include( ExternalProjectsConfig )
 include( SetOSXVariables )
 
-set( ImageViewer_DEPENDENCIES "ITK" )
+set( ImageViewer_DEPENDENCIES "ITK" "JsonCpp" "ParameterSerializer" "SlicerExecutionModel" )
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )
@@ -73,10 +90,13 @@ ExternalProject_Add( ImageViewer
     -DImageViewer_EXECUTABLE_DIRS:STRING=${ImageViewer_EXECUTABLE_DIRS}
     -DImageViewer_CONFIG_BINARY_DIR:PATH=${ImageViewer_CONFIG_BINARY_DIR}
     -DITK_DIR:PATH=${ITK_DIR}
+    -DSlicerExecutionModel_DIR:PATH=${SlicerExecutionModel_DIR}
+    -DJsonCpp_DIR:PATH=${JsonCpp_DIR}
+    -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
+    -DGenerateCLP_DIR:PATH=${GenerateCLP_DIR}
     #-DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     #-DCTK_DIR:PATH=${CTK_DIR}
     #-DVTK_DIR:PATH=${VTK_DIR}
     -DImageViewer_USE_SUPERBUILD:BOOL=OFF
-    -DUSE_FLTK:BOOL=${USE_FLTK}
   INSTALL_COMMAND ""
   DEPENDS ${ImageViewer_DEPENDENCIES} )
