@@ -1,3 +1,5 @@
+#include "ImageViewerCLP.h"
+
 //Qt includes
 #include <QApplication>
 #include <QDebug>
@@ -14,9 +16,9 @@
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkMetaImageIOFactory.h"
 
-
 int main( int argc, char* argv[] ) 
 {
+  PARSE_ARGS;
 
   QApplication myApp( argc, argv );
 
@@ -33,16 +35,22 @@ int main( int argc, char* argv[] )
   typedef itk::ImageFileReader<ImageType>   ReaderType;
 
   ReaderType::Pointer reader = ReaderType::New();
-  
-  QString filePathToLoad = QFileDialog::getOpenFileName(&qtSlicerWindow,"", QDir::currentPath());
-  //"Images (*.mha)", 0, "open file dialog","Chose an image filename" );
-
+  QString filePathToLoad;
+  if(inputImage.empty())
+    {
+    filePathToLoad = QFileDialog::getOpenFileName(&qtSlicerWindow,"", QDir::currentPath());
+    //"Images (*.mha)", 0, "open file dialog","Chose an image filename" );
+    }
+  else
+    {
+    filePathToLoad = QString::fromStdString(inputImage);
+    }
   if(filePathToLoad.isEmpty())
     {
     return 0;
     }
   reader->SetFileName( filePathToLoad.toLatin1().data() );
-  
+
   qDebug() << "loading image " << filePathToLoad << " ... ";
   try
     {
@@ -54,9 +62,31 @@ int main( int argc, char* argv[] )
     std::cerr << e << std::endl;
     return EXIT_FAILURE;
     }
- 
+
   std::cout << "Done!" << std::endl;
   qtSlicerWindow.setInputImage( reader->GetOutput() );
+  qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
+  qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
+  qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
+  qtSlicerWindow.OpenGlWindow->setMinIntensity(minIntensity);
+  qtSlicerWindow.OpenGlWindow->setZoom(zoom);
+  qtSlicerWindow.OpenGlWindow->transpose(transpose);
+  qtSlicerWindow.OpenGlWindow->flipZ(zFlipped);
+  qtSlicerWindow.OpenGlWindow->flipY(yFlipped);
+  qtSlicerWindow.OpenGlWindow->flipX(xFlipped);
+  qtSlicerWindow.OpenGlWindow->setOverlayOpacity(overlayOpacity);
+  qtSlicerWindow.OpenGlWindow->setViewCrosshairs(crosshairs);
+  qtSlicerWindow.OpenGlWindow->setViewDetails(details);
+  qtSlicerWindow.OpenGlWindow->setViewValuePhysicalUnits(physicalUnits);
+  qtSlicerWindow.OpenGlWindow->setViewValue(value);
+  qtSlicerWindow.OpenGlWindow->setViewAxisLabel(axisLabel);
+  qtSlicerWindow.OpenGlWindow->setViewClickedPoints(clickedPoints);
+  qtSlicerWindow.OpenGlWindow->setImageMode(imageMode.c_str());
+  qtSlicerWindow.OpenGlWindow->setIWModeMax(iwModeMax.c_str());
+  qtSlicerWindow.OpenGlWindow->setIWModeMin(iwModeMin.c_str());
+
+  qtSlicerWindow.OpenGlWindow->update();
+
 
   qtSlicerWindow.show();
   int execReturn;
@@ -74,4 +104,3 @@ int main( int argc, char* argv[] )
   return execReturn;
 
 }
-

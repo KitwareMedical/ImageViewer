@@ -34,24 +34,29 @@
 #
 ##############################################################################
 
-set(ImageViewer_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
+set(MODULE_NAME ImageViewer)
+set(${MODULE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
 
-list(APPEND ImageViewer_INCLUDE_DIRS
-    ${ImageViewer_SOURCE_DIR}/QtImageViewer
-    ${ImageViewer_BINARY_DIR}/QtImageViewer
-    )
-include_directories(${ImageViewer_INCLUDE_DIRS})
+list(APPEND ${MODULE_NAME}_INCLUDE_DIRS
+    ${${MODULE_NAME}_SOURCE_DIR}/QtImageViewer
+    ${${MODULE_NAME}_BINARY_DIR}/QtImageViewer)
+include_directories(${${MODULE_NAME}_INCLUDE_DIRS})
 
-set(ImageViewer_SRCS ImageViewer.cxx)
+set(${MODULE_NAME}_SRCS ImageViewer.cxx)
 
-add_executable(ImageViewer ${ImageViewer_SRCS} ${ImageViewer_UI_CXX})
+set(${MODULE_NAME}_LIBRARIES
+    ${ITK_LIBRARIES}
+    ${QT_LIBRARIES} QtImageViewer
+    ${OPENGL_LIBRARIES})
 
-install(TARGETS ImageViewer DESTINATION bin)
-
-target_link_libraries(ImageViewer
-  ${ITK_LIBRARIES}
-  ${QT_LIBRARIES} QtImageViewer
-  #${GLU_LIBRARY}
-  ${OPENGL_gl_LIBRARY}
-  ${OPENGL_glu_LIBRARY}
-  )
+SEMMacroBuildCLI(
+  NAME ${MODULE_NAME}
+  ADDITIONAL_SRCS
+    ${${MODULE_NAME}_SRCS}
+    ${${MODULE_NAME}_GUI_SRCS}
+    ${${MODULE_NAME}_QRC_SRCS}
+    ${${MODULE_NAME}_UI_CXX}
+  TARGET_LIBRARIES
+    ${${MODULE_NAME}_LIBRARIES}
+  INCLUDE_DIRECTORIES
+    ${${MODULE_NAME}_INCLUDE_DIRS})

@@ -131,6 +131,9 @@ class QtGlSliceView :
   Q_PROPERTY(int fastMovVal READ fastMovVal WRITE setFastMovVal);
   Q_PROPERTY(int fastMovThresh READ fastMovThresh WRITE setFastMovThresh);
   Q_PROPERTY(bool validOverlayData READ validOverlayData WRITE setValidOverlayData NOTIFY validOverlayDataChanged);
+  Q_PROPERTY(int maxClickedPointsStored READ maxClickedPointsStored WRITE setMaxClickedPointsStored
+             NOTIFY maxClickedPointsStoredChanged);
+
 public:
   
   typedef double                           ImagePixelType;
@@ -252,6 +255,8 @@ public:
   int maxSliceNum() const;
 
   bool validOverlayData() const;
+
+
 public slots:
   void setValidOverlayData(bool validOverlayData);
 
@@ -285,7 +290,9 @@ public slots:
 
   void setOverlay(bool newOverlay);
   void setIWModeMin(IWModeType newIWModeMin);
+  void setIWModeMin(const char* mode);
   void setIWModeMax(IWModeType newIWModeMax);
+  void setIWModeMax(const char* mode);
 
   ///Transpose the image in the xy-plane
   void transpose(bool newTranspose);
@@ -304,6 +311,7 @@ public slots:
 
   ///Set the ImageModeType
   void setImageMode(ImageModeType newImageMode);
+  void setImageMode(const char* newImageMode);
 
   void setViewAxisLabel(bool axisLabel);
 
@@ -361,6 +369,7 @@ signals:
   void viewDetailsChanged(int details);
   void overlayOpacityChanged(double opacity);
   void validOverlayDataChanged(bool valid);
+  void maxClickedPointsStoredChanged(int max);
 
 protected:
 

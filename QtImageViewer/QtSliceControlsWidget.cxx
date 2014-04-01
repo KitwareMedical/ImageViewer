@@ -90,8 +90,10 @@ void QtSliceControlsWidget::setInputImage()
   UI->IntensityMax->setValue( static_cast<int>
                                 ( this->SliceView->maxIntensity() ));
 
-  UI->IntensityMinDisplay->setText(QString::number(this->SliceView->minIntensity()));
-  UI->IntensityMaxDisplay->setText(QString::number(this->SliceView->maxIntensity()));
+  UI->IntensityMinDisplay->setText( QString::number( static_cast<int>
+                               ( this->SliceView->minIntensity() )));
+  UI->IntensityMaxDisplay->setText(QString::number( static_cast<int>
+                               ( this->SliceView->maxIntensity() )));
 }
 
 void QtSliceControlsWidget::setSliceView(QtGlSliceView* sliceView)
