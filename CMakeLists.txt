@@ -47,24 +47,38 @@ option(USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
   OFF)
 mark_as_advanced(USE_SYSTEM_ITK)
 
-# Slicer Execution model Setup
-option( USE_SYSTEM_SLICER_EXECUTION_MODEL
-  "Exclude SlicerExecutionModel from superbuild and use an existing build."
-  OFF )
-mark_as_advanced( USE_SYSTEM_SLICER_EXECUTION_MODEL )
+option(USE_CLI "Exclude command line use." OFF)
+mark_as_advanced(USE_CLI)
 
-option( USE_SYSTEM_JSONCPP
-  "Exclude JsonCpp from superbuild and use an existing build." OFF )
-mark_as_advanced( USE_SYSTEM_JSONCPP )
+if(USE_CLI)
+  # Slicer Execution model Setup
+  option(USE_SYSTEM_SLICER_EXECUTION_MODEL
+    "Exclude SlicerExecutionModel from superbuild and use an existing build."
+    OFF)
+  mark_as_advanced(USE_SYSTEM_SLICER_EXECUTION_MODEL)
 
-option( USE_SYSTEM_PARAMETER_SERIALIZER
-  "Exclude parameter serializer from superbuild and use an existing build."
-  OFF )
-mark_as_advanced( USE_SYSTEM_PARAMETER_SERIALIZER )
+  option(USE_SYSTEM_JSONCPP
+    "Exclude JsonCpp from superbuild and use an existing build." OFF)
+  mark_as_advanced(USE_SYSTEM_JSONCPP)
+
+  option(USE_SYSTEM_PARAMETER_SERIALIZER
+    "Exclude parameter serializer from superbuild and use an existing build."
+    OFF)
+  mark_as_advanced(USE_SYSTEM_PARAMETER_SERIALIZER)
+endif(USE_CLI)
 
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
 set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
+
+if(UNIX)
+  if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC"
+         CACHE STRING "Flags used by all build types." FORCE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC"
+         CACHE STRING "Flags used by all build types." FORCE)
+  endif(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+endif(UNIX)
 
 if(ImageViewer_USE_SUPERBUILD)
   add_subdirectory(CMake/Superbuild)
@@ -77,17 +91,20 @@ else(ImageViewer_USE_SUPERBUILD)
   find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
   include(${QT_USE_FILE})
 
-  find_package( JsonCpp REQUIRED )
-  include_directories( ${JsonCpp_INCLUDE_DIRS} )
+  if(USE_CLI)
 
-  find_package( ParameterSerializer REQUIRED )
-  include_directories( ${ParameterSerializer_INCLUDE_DIRS} )
+    find_package(JsonCpp REQUIRED)
+    include_directories(${JsonCpp_INCLUDE_DIRS})
 
-  find_package(SlicerExecutionModel REQUIRED)
-  include(${SlicerExecutionModel_USE_FILE})
+    find_package(ParameterSerializer REQUIRED)
+    include_directories(${ParameterSerializer_INCLUDE_DIRS})
 
-  find_package( SlicerExecutionModel REQUIRED GenerateCLP )
-  include( ${GenerateCLP_USE_FILE} )
+    find_package(SlicerExecutionModel REQUIRED)
+    include(${SlicerExecutionModel_USE_FILE})
+
+    find_package(SlicerExecutionModel REQUIRED GenerateCLP)
+    include(${GenerateCLP_USE_FILE})
+  endif(USE_CLI)
 
   add_subdirectory(QtImageViewer)
   add_subdirectory(ImageViewer)
@@ -98,13 +115,16 @@ get_property(ImageViewer_LIBRARIES GLOBAL PROPERTY ImageViewer_LIBRARIES)
 get_property(ImageViewer_INCLUDE_DIRS GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
 get_property(ImageViewer_LIBRARY_DIRS GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
 
-set( ImageViewer_CONFIG_BINARY_DIR ${CMAKE_BINARY_DIR} )
-set( ImageViewer_USE_FILE
+set(ImageViewer_CONFIG_BINARY_DIR ${CMAKE_BINARY_DIR})
+set(ImageViewer_USE_FILE
   ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake )
 
-configure_file( ${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfig.cmake.in
-  ${ImageViewer_CONFIG_BINARY_DIR}/ImageViewerConfig.cmake @ONLY )
+configure_file(${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfig.cmake.in
+  ${ImageViewer_USE_FILE} @ONLY)
 
 # Configure UseTubeTK.cmake.
-configure_file( ${ImageViewer_SOURCE_DIR}/CMake/UseImageViewer.cmake.in
-  ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake @ONLY )
+configure_file(${ImageViewer_SOURCE_DIR}/CMake/UseImageViewer.cmake.in
+  ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake @ONLY)
+
+configure_file(${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfigure.h.in
+  ${ImageViewer_CONFIG_BINARY_DIR}/ImageViewer/ImageViewerConfigure.h @ONLY)

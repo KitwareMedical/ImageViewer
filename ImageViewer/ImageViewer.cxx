@@ -1,5 +1,7 @@
+#include "ImageViewerConfigure.h"
+#ifdef USE_CLI
 #include "ImageViewerCLP.h"
-
+#endif
 //Qt includes
 #include <QApplication>
 #include <QDebug>
@@ -18,7 +20,10 @@
 
 int main( int argc, char* argv[] ) 
 {
+#ifdef USE_CLI
   PARSE_ARGS;
+#endif
+
 
   QApplication myApp( argc, argv );
 
@@ -36,19 +41,16 @@ int main( int argc, char* argv[] )
 
   ReaderType::Pointer reader = ReaderType::New();
   QString filePathToLoad;
-  if(inputImage.empty())
-    {
-    filePathToLoad = QFileDialog::getOpenFileName(&qtSlicerWindow,"", QDir::currentPath());
-    //"Images (*.mha)", 0, "open file dialog","Chose an image filename" );
-    }
-  else
-    {
-    filePathToLoad = QString::fromStdString(inputImage);
-    }
+
+#ifdef USE_CLI
+  filePathToLoad = QString::fromStdString(inputImage);
+#endif
+
   if(filePathToLoad.isEmpty())
     {
-    return 0;
+    filePathToLoad = QFileDialog::getOpenFileName(&qtSlicerWindow,"", QDir::currentPath());
     }
+
   reader->SetFileName( filePathToLoad.toLatin1().data() );
 
   qDebug() << "loading image " << filePathToLoad << " ... ";
@@ -65,6 +67,7 @@ int main( int argc, char* argv[] )
 
   std::cout << "Done!" << std::endl;
   qtSlicerWindow.setInputImage( reader->GetOutput() );
+#ifdef USE_CLI
   qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
   qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
   qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
@@ -86,7 +89,7 @@ int main( int argc, char* argv[] )
   qtSlicerWindow.OpenGlWindow->setIWModeMin(iwModeMin.c_str());
 
   qtSlicerWindow.OpenGlWindow->update();
-
+#endif
 
   qtSlicerWindow.show();
   int execReturn;
