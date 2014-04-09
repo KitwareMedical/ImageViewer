@@ -97,8 +97,8 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
 
   cImageMode = IMG_VAL;
 
-  cWinZoom = 0;
-  cWinOrientation = 0;
+  cWinZoom = 1;
+  cWinOrientation = 2;
 
   cViewAxisLabel = 0;
 
@@ -117,13 +117,18 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
     cDimSize[i] = 0;
     cSpacing[i] = 0;
     cWinOrder[i] = 0;
+    cWinCenter[i] = 0;
+    cClickSelect[i] = 0;
     for(int j=0; j<80; j++)
       {
       cAxisLabelX[i][j] = 0;
       cAxisLabelY[i][j] = 0;
       }
   }
-
+  cWinOrder[0] = 0;
+  cWinOrder[1] = 1;
+  cWinOrder[2] = 2;
+  cClickSelectV = 0;
   cWinMinX = 0;
   cWinMaxX = 0;
   cWinSizeX = 0;
@@ -192,17 +197,6 @@ setInputImage(ImageType * newImData)
   cDataMax = cIWMax;
   cDataMin = cIWMin;
 
-  cIWModeMin  = IW_MIN;
-  cIWModeMax  = IW_MAX;
-    
-  cImageMode = IMG_VAL;
-    
-  cWinZoom = 1;
-  cWinOrientation = 2;
-  cWinOrder[0] = 0;
-  cWinOrder[1] = 1;
-  cWinOrder[2] = 2;
-    
   cWinCenter[0] = cDimSize[0]/2;
   cWinCenter[1] = cDimSize[1]/2;
   cWinCenter[2] = 0;
@@ -346,6 +340,7 @@ QtGlSliceView::setOverlayOpacity(double newOverlayOpacity)
   emit overlayOpacityChanged(cOverlayOpacity);
 }
 
+
 double
 QtGlSliceView::overlayOpacity(void) const
 {
@@ -357,6 +352,7 @@ QtGlSliceView::ColorTableType* QtGlSliceView::colorTable(void) const
 {
   return cColorTable.GetPointer();
 }
+
 
 void  QtGlSliceView::saveClickedPointsStored()
 {
@@ -378,6 +374,7 @@ void  QtGlSliceView::saveClickedPointsStored()
     }
   fpoints.close();
 }
+
 
 void 
 QtGlSliceView::update()
@@ -676,6 +673,7 @@ bool QtGlSliceView::validOverlayData() const
   return this->cValidOverlayData;
 }
 
+
 void
 QtGlSliceView::showHelp()
 {
@@ -893,13 +891,14 @@ void QtGlSliceView::setOrientation(int newOrientation)
     cWinOrder[0] = cWinOrder[1];
     cWinOrder[1] = t;
     }
-
-  setSliceNum((int)cClickSelect[cWinOrder[2]]);
+  const int newSliceNum = clickedPointsStored() ?(int)cClickSelect[cWinOrder[2]] : cWinCenter[cWinOrder[2]];
+  setSliceNum(newSliceNum);
 
   if(cWinOrientationCallBack != NULL)
     cWinOrientationCallBack();
   if(cWinOrientationArgCallBack != NULL)
     cWinOrientationArgCallBack(cWinOrientationArg);
+  centerWindow();
   emit orientationChanged(cDimSize[cWinOrder[2]]);
 }
 
@@ -911,6 +910,60 @@ void QtGlSliceView::setImageMode(ImageModeType newImageMode)
     cIWCallBack();
   if(cIWArgCallBack != NULL)
     cIWArgCallBack(cIWArg);
+}
+
+
+void QtGlSliceView::setImageMode(const char* imageMode)
+{
+  int newImageMode = -1;
+  for (int i = 0; i < NUM_ImageModeTypes; ++i)
+    {
+    if (QString(imageMode) == QString(ImageModeTypeName[i]))
+      {
+      newImageMode = i;
+      break;
+      }
+    }
+  if (newImageMode >= 0)
+    {
+    this->setImageMode(static_cast<ImageModeType>(newImageMode));
+    }
+}
+
+
+void QtGlSliceView::setIWModeMax(const char* mode)
+{
+  int newmode = -1;
+  for (int i = 0; i < NUM_IWModeTypes; ++i)
+    {
+    if (QString(mode) == QString(IWModeTypeName[i]))
+      {
+      newmode = i;
+      break;
+      }
+    }
+  if (newmode >= 0)
+    {
+    this->setIWModeMax(static_cast<IWModeType>(newmode));
+    }
+}
+
+
+void QtGlSliceView::setIWModeMin(const char* mode)
+{
+  int newmode = -1;
+  for (int i = 0; i < NUM_IWModeTypes; ++i)
+    {
+    if (QString(mode) == QString(IWModeTypeName[i]))
+      {
+      newmode = i;
+      break;
+      }
+    }
+  if (newmode >= 0)
+    {
+    this->setIWModeMin(static_cast<IWModeType>(newmode));
+    }
 }
 
 
@@ -1135,7 +1188,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case Qt::Key_E:
-      iwModeMax() == IW_FLIP ? setIWModeMax(IW_MAX) : setIWModeMax(IW_FLIP);
+      setIWModeMax(iwModeMax() == IW_FLIP ? IW_MAX : IW_FLIP);
       update();
       break;
     case Qt::Key_L:
@@ -1302,30 +1355,18 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
           default:
           case VD_SLICEVIEW:
             setViewDetails(VD_TEXTBOX);
-            update();
             break;
           case VD_TEXTBOX:
             setViewDetails(VD_OFF);
-            update();
             break;
           case VD_OFF:
             setViewDetails(VD_SLICEVIEW);
-            update();
             break;
           }
         }
       else
         {
-        if(iwModeMin() == IW_FLIP)
-          {
-          setIWModeMin(IW_MIN);
-          update();
-          }
-        else
-          {
-          setIWModeMin(IW_FLIP);
-          update();
-          }
+        setIWModeMin(iwModeMin() == IW_FLIP ? IW_MIN : IW_FLIP);
         }
       update();
       break;
@@ -1338,12 +1379,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       break;
     case Qt::Key_B:
     //decrease opacity overlay
-      setOverlayOpacity(overlayOpacity() - 0.05);
+      setOverlayOpacity(overlayOpacity() - 0.025);
       update();
       break;
     case Qt::Key_N:
     //increase opacity overlay
-      setOverlayOpacity(overlayOpacity() + 0.05);
+      setOverlayOpacity(overlayOpacity() + 0.025);
       update();
       break;
     case Qt::Key_H:
@@ -1888,7 +1929,6 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
     cClickSelectArg);
     }
 
-//  emit positionChanged(ind[0],ind[1],ind[2],cClickSelectV);
   emit positionChanged(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
 
 }

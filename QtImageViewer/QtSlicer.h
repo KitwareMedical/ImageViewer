@@ -22,7 +22,7 @@ public:
   
   typedef itk::Image<double,3> ImageType;
 public slots:
-  void setMaximumSlice();
+  void updateSliceMaximum();
   void setInputImage(ImageType * newImData);
   void setDisplaySliceNumber(int number);
 };
