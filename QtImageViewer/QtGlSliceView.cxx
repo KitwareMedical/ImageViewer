@@ -119,11 +119,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
     cWinOrder[i] = 0;
     cWinCenter[i] = 0;
     cClickSelect[i] = 0;
-    for(int j=0; j<80; j++)
-      {
-      cAxisLabelX[i][j] = 0;
-      cAxisLabelY[i][j] = 0;
-      }
   }
   cWinOrder[0] = 0;
   cWinOrder[1] = 1;
