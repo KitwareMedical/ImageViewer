@@ -95,7 +95,7 @@ ExternalProject_Add( ImageViewer
     -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
     -DGenerateCLP_DIR:PATH=${GenerateCLP_DIR}
     -DUSE_CLI:BOOL=${USE_CLI}
-    #-DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
+    -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     #-DCTK_DIR:PATH=${CTK_DIR}
     #-DVTK_DIR:PATH=${VTK_DIR}
     -DImageViewer_USE_SUPERBUILD:BOOL=OFF
