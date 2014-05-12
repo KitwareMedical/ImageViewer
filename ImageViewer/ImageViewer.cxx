@@ -65,6 +65,10 @@ int parseAndExecImageViewer(int argc, char* argv[])
   qtSlicerWindow.loadInputImage(filePathToLoad);
 
 #ifdef USE_CLI
+  if(!overlayImage.empty())
+    {
+    qtSlicerWindow.loadOverlayImage(QString::fromStdString(overlayImage));
+    }
   qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
   qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
   qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
@@ -100,8 +104,8 @@ int parseAndExecImageViewer(int argc, char* argv[])
     std::cerr << e << std::endl;
     return EXIT_FAILURE;
     }
- 
   return execReturn;
+}
 
 int main( int argc, char* argv[] ) 
 {
