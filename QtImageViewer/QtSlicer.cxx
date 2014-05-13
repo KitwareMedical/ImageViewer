@@ -58,7 +58,7 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
 {
   typedef itk::ImageFileReader<ImageType> ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
-  if( filePathToLoad.isNull() )
+  if( filePathToLoad.isEmpty() )
     {
     filePathToLoad = QFileDialog::getOpenFileName(
         0,"", QDir::currentPath());
@@ -66,10 +66,12 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
 
   if(filePathToLoad.isEmpty())
     {
-    return 0;
+    return false;
     }
   reader->SetFileName( filePathToLoad.toLatin1().data() );
 
+  QFileInfo filePath(filePathToLoad);
+  setWindowTitle(filePath.fileName());
   qDebug() << "loading image " << filePathToLoad << " ... ";
   try
     {
@@ -77,10 +79,11 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
     }
   catch (itk::ExceptionObject & e)
     {
-    qWarning()<< "Exception during GUI execution"<< e.GetNameOfClass();
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
     return EXIT_FAILURE;
     }
-  this->OpenGlWindow->setInputImage( reader->GetOutput() );
+  this->setInputImage( reader->GetOutput() );
   show();
   return true;
 }
@@ -109,10 +112,11 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
     }
   catch (itk::ExceptionObject & e)
     {
-    qWarning()<< "Exception during GUI execution"<< e.GetNameOfClass();
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
     return EXIT_FAILURE;
     }
-  this->OpenGlWindow->setInputOverlay(overlayReader->GetOutput());
+  this->setOverlayImage(overlayReader->GetOutput());
 
   show();
   return true;

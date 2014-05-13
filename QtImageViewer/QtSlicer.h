@@ -26,7 +26,7 @@ public:
   typedef itk::Image<OverlayPixelType,3>      OverlayType;
 
   bool loadOverlayImage(QString overlayImagePath = QString());
-  bool loadInputImage(QString filePathToLoad = QString());
+  bool loadInputImage(QString filePathTLoad = QString());
 public slots:
   void updateSliceMaximum();
   void setInputImage(ImageType * newImData);

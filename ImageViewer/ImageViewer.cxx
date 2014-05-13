@@ -5,31 +5,19 @@
 //Qt includes
 #include <QApplication>
 #include <QDebug>
-#include <QFileDialog>
-#include <QPlastiqueStyle>
+#include <QFileInfo>
 
 //QtImageViewer includes
 #include "QtGlSliceView.h"
 #include "QtSlicer.h"
-
-// itk includes
-#include "itkImage.h"
-#include "itkImageFileReader.h"
-#include "itkImageRegionIteratorWithIndex.h"
-#include "itkMetaImageIOFactory.h"
-
 
 int execImageViewer(int argc, char* argv[])
 {
   QApplication myApp( argc, argv );
 
   QtSlicer qtSlicerWindow( 0 );
-
-  typedef double                            PixelType;
-  typedef itk::Image<PixelType, 3>          ImageType;
-  typedef itk::ImageFileReader<ImageType>   ReaderType;
-  QString filePathToLoad;
-  qtSlicerWindow.loadInputImage(filePathToLoad);
+  qtSlicerWindow.setWindowTitle("ImageViewer");
+  qtSlicerWindow.loadInputImage();
 
   int execReturn;
   try
@@ -53,9 +41,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   QApplication myApp(argc, argv);
 
   QtSlicer qtSlicerWindow( 0 );
-
-  typedef double                            PixelType;
-  typedef itk::Image<PixelType, 3>          ImageType;
+  qtSlicerWindow.setWindowTitle("ImageViewer");
 
   QString filePathToLoad;
 #ifdef USE_CLI
