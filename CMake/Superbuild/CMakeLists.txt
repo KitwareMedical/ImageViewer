@@ -31,7 +31,7 @@ include( CheckExternalProjectDependency )
 set( base ${CMAKE_BINARY_DIR} )
 set_property( DIRECTORY PROPERTY EP_BASE ${base} )
 
-set( shared ON )
+set( shared OFF )
 if( DEFINED BUILD_SHARED_LIBS )
   set( shared ${BUILD_SHARED_LIBS} )
 endif( DEFINED BUILD_SHARED_LIBS )
@@ -63,12 +63,15 @@ endif( GIT_PROTOCOL_HTTP )
 include( ExternalProjectsConfig )
 include( SetOSXVariables )
 
+find_package (Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED )
+include( ${QT_USE_FILE} )
+
 set( ImageViewer_DEPENDENCIES "ITK" "JsonCpp" "ParameterSerializer" "SlicerExecutionModel" )
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )
 
-set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/ImageViewer-build )
+set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/TubeTK-ImageViewer-build )
 
 ExternalProject_Add( ImageViewer
   DOWNLOAD_COMMAND ""
@@ -86,7 +89,7 @@ ExternalProject_Add( ImageViewer
     -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
     -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
     ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
-    -DBUILD_SHARED_LIBS:BOOL=OFF
+    -DBUILD_SHARED_LIBS:BOOL=${shared}
     -DImageViewer_EXECUTABLE_DIRS:STRING=${ImageViewer_EXECUTABLE_DIRS}
     -DImageViewer_CONFIG_BINARY_DIR:PATH=${ImageViewer_CONFIG_BINARY_DIR}
     -DITK_DIR:PATH=${ITK_DIR}
@@ -95,9 +98,7 @@ ExternalProject_Add( ImageViewer
     -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
     -DGenerateCLP_DIR:PATH=${GenerateCLP_DIR}
     -DUSE_CLI:BOOL=${USE_CLI}
-    #-DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
-    #-DCTK_DIR:PATH=${CTK_DIR}
-    #-DVTK_DIR:PATH=${VTK_DIR}
+    -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     -DImageViewer_USE_SUPERBUILD:BOOL=OFF
   INSTALL_COMMAND ""
   DEPENDS ${ImageViewer_DEPENDENCIES} )

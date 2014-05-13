@@ -42,7 +42,6 @@ set( ${proj}_DEPENDENCIES "JsonCpp" "ParameterSerializer" )
 # Include dependent projects, if any.
 CheckExternalProjectDependency( ${proj} )
 
-message(">>>>>> ${${proj}_DIR}  ${${USE_SYSTEM_SLICER_EXECUTION_MODEL}}")
 if( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
   set( ${proj}_SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj} )
   set( ${proj}_DIR ${CMAKE_BINARY_DIR}/${proj}-build )

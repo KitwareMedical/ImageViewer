@@ -10,10 +10,15 @@
     <parameters>
         <file>
             <name>inputImage</name>
-            <flag>i</flag>
-            <longflag>inputImage</longflag>
             <label>Input Image</label>
             <description>Input Image.</description>
+        </file>
+        <file>
+            <name>overlayImage</name>
+            <flag>j</flag>
+            <longflag>overlayImage</longflag>
+            <label>Overlay Image</label>
+            <description>Overlay Image.</description>
         </file>
         <integer>
             <name>orientation</name>

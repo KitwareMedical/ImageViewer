@@ -5,69 +5,56 @@
 //Qt includes
 #include <QApplication>
 #include <QDebug>
-#include <QFileDialog>
-#include <QPlastiqueStyle>
+#include <QFileInfo>
 
 //QtImageViewer includes
 #include "QtGlSliceView.h"
 #include "QtSlicer.h"
 
-// itk includes
-#include "itkImage.h"
-#include "itkImageFileReader.h"
-#include "itkImageRegionIteratorWithIndex.h"
-#include "itkMetaImageIOFactory.h"
+int execImageViewer(int argc, char* argv[])
+{
+  QApplication myApp( argc, argv );
 
-int main( int argc, char* argv[] ) 
+  QtSlicer qtSlicerWindow( 0 );
+  qtSlicerWindow.setWindowTitle("ImageViewer");
+  qtSlicerWindow.loadInputImage();
+
+  int execReturn;
+  try
+    {
+    execReturn = myApp.exec();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    qWarning()<< "Exception during GUI execution"<< e.GetNameOfClass();
+    return EXIT_FAILURE;
+    }
+  return execReturn;
+}
+
+int parseAndExecImageViewer(int argc, char* argv[])
 {
 #ifdef USE_CLI
   PARSE_ARGS;
 #endif
 
+  QApplication myApp(argc, argv);
 
-  QApplication myApp( argc, argv );
+  QtSlicer qtSlicerWindow( 0 );
+  qtSlicerWindow.setWindowTitle("ImageViewer");
 
-  QtSlicer qtSlicerWindow( 0, 0, TRUE );
-  //myApp.setMainWidget(&m_GUI);
-
-  qtSlicerWindow.setWindowTitle("Insight Qt Slicer" );
-  myApp.setStyle(new QPlastiqueStyle );
-  QPalette p( QColor( 239, 239, 239 ) );
-  myApp.setPalette( p );
-
-  typedef double                            PixelType;
-  typedef itk::Image<PixelType, 3>          ImageType;
-  typedef itk::ImageFileReader<ImageType>   ReaderType;
-
-  ReaderType::Pointer reader = ReaderType::New();
   QString filePathToLoad;
-
 #ifdef USE_CLI
   filePathToLoad = QString::fromStdString(inputImage);
 #endif
 
-  if(filePathToLoad.isEmpty())
-    {
-    filePathToLoad = QFileDialog::getOpenFileName(&qtSlicerWindow,"", QDir::currentPath());
-    }
+  qtSlicerWindow.loadInputImage(filePathToLoad);
 
-  reader->SetFileName( filePathToLoad.toLatin1().data() );
-
-  qDebug() << "loading image " << filePathToLoad << " ... ";
-  try
-    {
-    reader->Update();
-    }
-  catch (itk::ExceptionObject & e)
-    {
-    std::cerr << "Exception in file reader " << std::endl;
-    std::cerr << e << std::endl;
-    return EXIT_FAILURE;
-    }
-
-  std::cout << "Done!" << std::endl;
-  qtSlicerWindow.setInputImage( reader->GetOutput() );
 #ifdef USE_CLI
+  if(!overlayImage.empty())
+    {
+    qtSlicerWindow.loadOverlayImage(QString::fromStdString(overlayImage));
+    }
   qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
   qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
   qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
@@ -103,7 +90,19 @@ int main( int argc, char* argv[] )
     std::cerr << e << std::endl;
     return EXIT_FAILURE;
     }
- 
   return execReturn;
+}
 
+int main( int argc, char* argv[] ) 
+{
+  QFileInfo info(argv[0]);
+  if(argc == 1 || !info.isFile() )
+    {
+    return execImageViewer(argc, argv);
+    }
+  if(argc >1 && info.isFile())
+    {
+    return parseAndExecImageViewer(argc, argv);
+    }
+  return 0;
 }

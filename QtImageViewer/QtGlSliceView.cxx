@@ -119,11 +119,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
     cWinOrder[i] = 0;
     cWinCenter[i] = 0;
     cClickSelect[i] = 0;
-    for(int j=0; j<80; j++)
-      {
-      cAxisLabelX[i][j] = 0;
-      cAxisLabelY[i][j] = 0;
-      }
   }
   cWinOrder[0] = 0;
   cWinOrder[1] = 1;
@@ -1445,14 +1440,16 @@ void QtGlSliceView::paintGL(void)
   glViewport(this->width()-v[0], this->height()-v[1], v[0], v[1]);
   glOrtho(this->width()-v[0], this->width(), this->height()-v[1], this->height(), -1, 1);
 
-  int h = 12;
-  QFont font("Times", h);
+  int h=7;
+#ifdef Q_OS_DARWIN
+  h=8;
+#endif
+  QFont font = this->font();
+  font.setPointSize(h);
   if(!cImData)
   {
-    std::cout << "no cImData !!!" << std::endl;
     return;
   }
-
 
   double scale0 = this->width()/(double)cDimSize[0] * zoom()
     * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
@@ -1552,14 +1549,14 @@ void QtGlSliceView::paintGL(void)
       int y = static_cast<int>(this->cH/2 - h/2 );
       glRasterPos2i(width(), -y);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      renderText( this->cW - font.weight()/20 - 10, y, cAxisLabelX[cWinOrientation]);
+      renderText( this->cW - (font.pointSize())/2 -2 , y, cAxisLabelX[cWinOrientation], font);
       }
     else
       {
       int y = static_cast<int>(this->cH/2 - h/2 );
       glRasterPos2i(width(), -y);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      renderText(font.weight()/20 +10, y, cAxisLabelX[cWinOrientation]);
+      renderText((font.pointSize())/2, y, cAxisLabelX[cWinOrientation], font);
       }
       
     if(isYFlipped() == false)
@@ -1567,14 +1564,14 @@ void QtGlSliceView::paintGL(void)
       int y = static_cast<int>(h +10) ;
       glRasterPos2i(this->width()/2, -y);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-      renderText(this->cW/2 - font.weight()/10, y, cAxisLabelY[cWinOrientation]);
+      renderText(this->cW/2 - (font.pointSize())/2, y, cAxisLabelY[cWinOrientation], font);
       }
     else
       {
       int y = static_cast<int>(this->cH - h -10);
       glRasterPos2i(this->width()/2, -y);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-      renderText(this->cW/2 + font.weight()/10, y, cAxisLabelY[cWinOrientation]);
+      renderText(this->cW/2 + (font.pointSize())/2, y, cAxisLabelY[cWinOrientation], font);
       }
     
     glDisable(GL_BLEND);
@@ -1622,8 +1619,8 @@ void QtGlSliceView::paintGL(void)
               pz, suffix,
               (int)val);
       }
-    renderText(this->cW - ((font.weight()*strlen(s))/10),
-                this->cH - h + 10  , s, font);
+    renderText(this->cW /2 + h /*- ((font.pointSize()*strlen(s)))*/,
+                this->cH - 1, s, font);
     glDisable(GL_BLEND);    
     }
 
@@ -1655,22 +1652,22 @@ void QtGlSliceView::paintGL(void)
           {
           sprintf(s, "Z - Slice: %3d", cWinCenter[2]);
           }
-      renderText(2, this->cH + 10 - 5*(h + 2) , s, font);
+      renderText(2, this->cH + 10 - 5*(h + 2) , s);
       sprintf(s, "Dims: %3d x %3d x %3d",
         (int)this->cDimSize[0], (int)this->cDimSize[1], (int)this->cDimSize[2]);
-      renderText(2, this->cH +10 - 4*(h + 2) , s, font);
+      renderText(2, this->cH +10 - 4*(h + 2) , s);
       sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f",
          this->cSpacing[0], this->cSpacing[1], this->cSpacing[2]);
-      renderText(2, this->cH + 10 - 3*(h + 2) , s, font);
+      renderText(2, this->cH + 10 - 3*(h + 2) , s);
       sprintf(s, "Int. Range: %0.3f - %0.3f", (double)this->cDataMin,
                 (double)this->cDataMax);
-      renderText(2, this->cH + 10 - 2*(h + 2) , s, font);
+      renderText(2, this->cH + 10 - 2*(h + 2) , s);
       sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)",
           (double)this->cIWMin, IWModeTypeName[cIWModeMin],
           (double)this->cIWMax, IWModeTypeName[cIWModeMax]);
-      renderText(2, this->cH +10 - 1*(h + 2) , s, font);
+      renderText(2, this->cH +10 - 1*(h + 2) , s);
       sprintf(s, "View Mode: %s", ImageModeTypeName[cImageMode]);
-      renderText(2, this->cH +10 - 0*(h + 2) , s, font);
+      renderText(2, this->cH +10 - 0*(h + 2) , s);
       str = "";
       }
     else

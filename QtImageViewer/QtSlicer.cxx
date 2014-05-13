@@ -1,5 +1,7 @@
 //Qt includes
 #include <QDebug>
+#include <QDir>
+#include <QFileDialog>
 #include <QLineEdit>
 #include <QSlider>
 
@@ -11,7 +13,7 @@
 #include <iostream>
 
 
-QtSlicer::QtSlicer( QWidget* parent,  const char* name, bool modal, Qt::WindowFlags fl ) :
+QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
   QDialog( parent, fl )
 {
   this->setupUi(this);
@@ -44,6 +46,81 @@ void QtSlicer::setInputImage(ImageType * newImData)
 }
 
 
+void QtSlicer::setOverlayImage(OverlayType * newImData)
+{
+  this->OpenGlWindow->setInputOverlay(newImData);
+  this->OpenGlWindow->show();
+  this->OpenGlWindow->update();
+}
+
+
+bool QtSlicer::loadInputImage(QString filePathToLoad)
+{
+  typedef itk::ImageFileReader<ImageType> ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+  if( filePathToLoad.isEmpty() )
+    {
+    filePathToLoad = QFileDialog::getOpenFileName(
+        0,"", QDir::currentPath());
+    }
+
+  if(filePathToLoad.isEmpty())
+    {
+    return false;
+    }
+  reader->SetFileName( filePathToLoad.toLatin1().data() );
+
+  QFileInfo filePath(filePathToLoad);
+  setWindowTitle(filePath.fileName());
+  qDebug() << "loading image " << filePathToLoad << " ... ";
+  try
+    {
+    reader->Update();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
+    return EXIT_FAILURE;
+    }
+  this->setInputImage( reader->GetOutput() );
+  show();
+  return true;
+}
+
+bool QtSlicer::loadOverlayImage(QString overlayImagePath)
+{
+  typedef itk::ImageFileReader<OverlayType> OverlayReaderType;
+  OverlayReaderType::Pointer overlayReader = OverlayReaderType::New();
+
+  if(overlayImagePath.isEmpty())
+    {
+    overlayImagePath = QFileDialog::getOpenFileName(
+            0,"", QDir::currentPath());
+    }
+
+  if(overlayImagePath.isEmpty())
+    {
+    return false;
+    }
+  overlayReader->SetFileName( overlayImagePath.toLatin1().data() );
+
+  qDebug() << "loading image " << overlayImagePath << " ... ";
+  try
+    {
+    overlayReader->Update();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
+    return EXIT_FAILURE;
+    }
+  this->setOverlayImage(overlayReader->GetOutput());
+
+  show();
+  return true;
+}
 void QtSlicer::updateSliceMaximum()
 {
   this->SliceNumSlider->setMaximum(static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));
