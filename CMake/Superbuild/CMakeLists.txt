@@ -31,7 +31,7 @@ include( CheckExternalProjectDependency )
 set( base ${CMAKE_BINARY_DIR} )
 set_property( DIRECTORY PROPERTY EP_BASE ${base} )
 
-set( shared ON )
+set( shared OFF )
 if( DEFINED BUILD_SHARED_LIBS )
   set( shared ${BUILD_SHARED_LIBS} )
 endif( DEFINED BUILD_SHARED_LIBS )
@@ -89,7 +89,7 @@ ExternalProject_Add( ImageViewer
     -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
     -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
     ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
-    -DBUILD_SHARED_LIBS:BOOL=OFF
+    -DBUILD_SHARED_LIBS:BOOL=${shared}
     -DImageViewer_EXECUTABLE_DIRS:STRING=${ImageViewer_EXECUTABLE_DIRS}
     -DImageViewer_CONFIG_BINARY_DIR:PATH=${ImageViewer_CONFIG_BINARY_DIR}
     -DITK_DIR:PATH=${ITK_DIR}
