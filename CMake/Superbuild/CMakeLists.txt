@@ -63,12 +63,15 @@ endif( GIT_PROTOCOL_HTTP )
 include( ExternalProjectsConfig )
 include( SetOSXVariables )
 
+find_package (Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED )
+include( ${QT_USE_FILE} )
+
 set( ImageViewer_DEPENDENCIES "ITK" "JsonCpp" "ParameterSerializer" "SlicerExecutionModel" )
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )
 
-set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/ImageViewer-build )
+set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/TubeTK-ImageViewer-build )
 
 ExternalProject_Add( ImageViewer
   DOWNLOAD_COMMAND ""
