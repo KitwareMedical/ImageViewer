@@ -17,6 +17,7 @@
 #ifndef QtGlSliceView_H
 #define QtGlSliceView_H
 
+#include "QtImageViewer_Export.h"
 //itk includes
 #include "itkImage.h"
 #include "itkColorTable.h"
@@ -103,7 +104,7 @@ struct ClickPoint
   **/
 //  
 
-class QtGlSliceView :
+class QtImageViewer_EXPORT QtGlSliceView :
     public QGLWidget
 {
   Q_OBJECT
