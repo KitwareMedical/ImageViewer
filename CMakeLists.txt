@@ -47,8 +47,7 @@ option(USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
   OFF)
 mark_as_advanced(USE_SYSTEM_ITK)
 
-option(USE_CLI "Exclude command line use." OFF)
-mark_as_advanced(USE_CLI)
+option(USE_CLI "Exclude command line use." ON)
 
 if(USE_CLI)
   # Slicer Execution model Setup
