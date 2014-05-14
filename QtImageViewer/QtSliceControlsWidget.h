@@ -24,6 +24,7 @@ limitations under the License.
 #ifndef __QtSliceControlsWidget_h
 #define __QtSliceControlsWidget_h
 
+#include "QtImageViewer_Export.h"
 //Qt includes
 #include <QWidget>
 #include <QGridLayout>
@@ -33,7 +34,7 @@ limitations under the License.
 #include "ui_QtSliceControlsWidgetGUI.h"
 
 
-class QtSliceControlsWidget : public QWidget
+class QtImageViewer_EXPORT QtSliceControlsWidget : public QWidget
 {
   Q_OBJECT
 public:

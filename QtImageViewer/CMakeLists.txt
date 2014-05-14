@@ -38,6 +38,8 @@ if(USE_ITK_FILE)
    include(${USE_ITK_FILE})
 endif(USE_ITK_FILE)
 
+include(GenerateExportHeader)
+
 include_directories(
   ${QT_INCLUDE_DIR}
   ${ImageViewer_BINARY_DIR}/QtImageViewer
@@ -77,7 +79,7 @@ QT4_ADD_RESOURCES(QtSlicer_QRC_SRCS ${QtSlicer_RESOURCES})
 add_definitions(-DQT_DLL)
 add_definitions(-DQT_THREAD_SUPPORT)
 
-add_library(QtImageViewer SHARED ${QtSlicer_SRCS}
+add_library(QtImageViewer ${QtSlicer_SRCS}
   ${QtSlicer_GUI_SRCS}
   ${QtSlicer_UI_CXX}
   ${QtSlicer_QRC_SRCS}
@@ -99,3 +101,9 @@ set_property(GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
 set_property(GLOBAL APPEND PROPERTY ImageViewer_LIBRARIES QtImageViewer)
 set_property(GLOBAL APPEND PROPERTY ImageViewer_LIBRARY_DIRS
   ${output_directory})
+
+generate_export_header(QtImageViewer
+             BASE_NAME QtImageViewer
+             EXPORT_MACRO_NAME QtImageViewer_EXPORT
+             EXPORT_FILE_NAME QtImageViewer_Export.h
+)

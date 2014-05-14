@@ -66,10 +66,23 @@ include( SetOSXVariables )
 find_package (Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED )
 include( ${QT_USE_FILE} )
 
-set( ImageViewer_DEPENDENCIES "ITK" "JsonCpp" "ParameterSerializer" "SlicerExecutionModel" )
+set( ImageViewer_DEPENDENCIES "ITK" )
+if( USE_CLI )
+  list( APPEND ImageViewer_DEPENDENCIES "JsonCpp" "ParameterSerializer" "SlicerExecutionModel" )
+endif( USE_CLI )
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )
+
+set( CLI_PROJECT_ARGS )
+if( USE_CLI )
+  list( APPEND CLI_PROJECT_ARGS
+    -DSlicerExecutionModel_DIR:PATH=${SlicerExecutionModel_DIR}
+    -DJsonCpp_DIR:PATH=${JsonCpp_DIR}
+    -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
+    -DGenerateCLP_DIR:PATH=${GenerateCLP_DIR}
+  )
+endif( USE_CLI )
 
 set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/TubeTK-ImageViewer-build )
 
@@ -93,10 +106,7 @@ ExternalProject_Add( ImageViewer
     -DImageViewer_EXECUTABLE_DIRS:STRING=${ImageViewer_EXECUTABLE_DIRS}
     -DImageViewer_CONFIG_BINARY_DIR:PATH=${ImageViewer_CONFIG_BINARY_DIR}
     -DITK_DIR:PATH=${ITK_DIR}
-    -DSlicerExecutionModel_DIR:PATH=${SlicerExecutionModel_DIR}
-    -DJsonCpp_DIR:PATH=${JsonCpp_DIR}
-    -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
-    -DGenerateCLP_DIR:PATH=${GenerateCLP_DIR}
+    ${CLI_PROJECT_ARGS}
     -DUSE_CLI:BOOL=${USE_CLI}
     -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     -DImageViewer_USE_SUPERBUILD:BOOL=OFF

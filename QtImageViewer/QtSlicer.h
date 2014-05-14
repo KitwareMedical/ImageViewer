@@ -1,6 +1,8 @@
 #ifndef QtSlicer_h
 #define QtSlicer_h
 
+#include "QtImageViewer_Export.h"
+
 //Qt include
 #include <QDialog>
 
@@ -13,7 +15,7 @@
 #include "ui_QtSlicerHelpGUI.h"
 
 
-class QtSlicer : public QDialog, public Ui::GuiDialogBase
+class QtImageViewer_EXPORT QtSlicer : public QDialog, public Ui::GuiDialogBase
 {
   Q_OBJECT
 public:
