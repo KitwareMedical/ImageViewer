@@ -51,11 +51,16 @@ public:
 
   bool loadOverlayImage(QString overlayImagePath = QString());
   bool loadInputImage(QString filePathTLoad = QString());
+
 public slots:
+  void hideHelp();
+  void showHelp(bool checked = true);
   void updateSliceMaximum();
   void setInputImage(ImageType * newImData);
   void setOverlayImage(OverlayType * newImData);
   void setDisplaySliceNumber(int number);
+protected:
+  QDialog* HelpDialog;
 };
 
 #endif

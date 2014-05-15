@@ -19,6 +19,7 @@
 
 //QtImageViewer include
 #include "QtGlSliceView.h"
+#include "ui_QtSlicerHelpGUI.h"
 
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
@@ -39,6 +40,7 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   cViewOverlayCallBack  = NULL;
   cOverlayOpacity       = 0.0;
   cWinOverlayData       = NULL;
+  cHelpDialog = 0;
   cViewValuePhysicalUnits = false;
   cPhysicalUnitsName = "mm";
   cViewDetails = VD_SLICEVIEW;
@@ -83,7 +85,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   sprintf(cAxisLabelY[1], "S");
   sprintf(cAxisLabelY[2], "P");
   cOverlayData = NULL;
-  cHelpUi = new Ui::HelpWindow();
   cImData = NULL;
   cClickSelectV = 0;
   cViewImData  = true;
@@ -101,7 +102,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   cWinOrientation = 2;
 
   cViewAxisLabel = 0;
-
   cColorTable = ColorTableType::New();
   cColorTable->UseDiscreteColors();
   cW = 0;
@@ -669,13 +669,22 @@ bool QtGlSliceView::validOverlayData() const
 }
 
 
+QDialog* QtGlSliceView::helpWindow() const
+{
+  return this->cHelpDialog;
+}
+
+
 void
 QtGlSliceView::showHelp()
 {
-  QDialog* helpDialog = new QDialog(this);
-  cHelpUi = new Ui::HelpWindow;
-  cHelpUi->setupUi(helpDialog);
-  helpDialog->show();
+  if (this->cHelpDialog == 0)
+    {
+    this->cHelpDialog = new QDialog(this);
+    Ui::HelpWindow helpUi;
+    helpUi.setupUi(this->cHelpDialog);
+    }
+  this->cHelpDialog->show();
 }
 
 

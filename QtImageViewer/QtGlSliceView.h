@@ -29,10 +29,6 @@
 #include <QGLWidget>
 #include <QtOpenGL/qgl.h>
 
-//ImageViewer includes
-#include "ui_QtSlicerHelpGUI.h"
-  
-
 using namespace itk;
 
 /*! Clicking in a window will cause different events
@@ -256,7 +252,7 @@ public:
   int maxSliceNum() const;
 
   bool validOverlayData() const;
-
+  QDialog* helpWindow() const;
 
 public slots:
   void setValidOverlayData(bool validOverlayData);
@@ -385,6 +381,7 @@ protected:
   void (*cViewOverlayCallBack)(void);
 
   unsigned char *cWinOverlayData;
+  QDialog* cHelpDialog;
 
   ColorTablePointer cColorTable;
     
@@ -392,7 +389,6 @@ protected:
   void *cSliceNumArg;
   void (*cSliceNumArgCallBack)(void *sliceNumArg);
     
-  Ui::HelpWindow *cHelpUi;
   bool cValidImData;
   bool cViewImData;
   bool cViewClickedPoints;

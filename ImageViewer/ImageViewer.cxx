@@ -117,6 +117,9 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
 int main( int argc, char* argv[] ) 
 {
+#if !defined(BUILD_SHARED_LIBS)
+  Q_INIT_RESOURCE(qtImageViewerResources);
+#endif
   QFileInfo info(argv[0]);
   if(argc == 1 || !info.isFile() )
     {

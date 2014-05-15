@@ -40,8 +40,9 @@ QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
 {
   this->setupUi(this);
   this->Controls->setSliceView(this->OpenGlWindow);
+  this->HelpDialog = 0;
   QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
-  QObject::connect(ButtonHelp, SIGNAL(clicked()), OpenGlWindow, SLOT(showHelp()));
+  QObject::connect(ButtonHelp, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(changeSlice(int)));
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceNumSlider, SLOT(setValue(int)));
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
@@ -52,6 +53,30 @@ QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
 
 QtSlicer::~QtSlicer()
 {
+}
+
+void QtSlicer::showHelp(bool checked)
+{
+  if(!checked && this->HelpDialog != 0)
+    {
+    this->HelpDialog->reject();
+    }
+  else
+    {
+    this->OpenGlWindow->showHelp();
+    this->HelpDialog = this->OpenGlWindow->helpWindow();
+    if(this->HelpDialog != 0)
+      {
+      QObject::connect(HelpDialog, SIGNAL(rejected()), this,
+                       SLOT(hideHelp()),Qt::UniqueConnection);
+      }
+    }
+}
+
+
+void QtSlicer::hideHelp()
+{
+  this->ButtonHelp->setChecked(false);
 }
 
 

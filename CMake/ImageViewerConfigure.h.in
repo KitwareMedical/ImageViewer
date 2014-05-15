@@ -4,3 +4,4 @@
  */
 
 #cmakedefine USE_CLI
+#cmakedefine BUILD_SHARED_LIBS
