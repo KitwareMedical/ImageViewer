@@ -48,7 +48,8 @@ int execImageViewer(int argc, char* argv[])
     }
   catch (itk::ExceptionObject & e)
     {
-    qWarning()<< "Exception during GUI execution"<< e.GetNameOfClass();
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
     return EXIT_FAILURE;
     }
   return execReturn;
