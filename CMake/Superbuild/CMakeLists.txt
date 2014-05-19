@@ -84,7 +84,7 @@ if( USE_CLI )
   )
 endif( USE_CLI )
 
-set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/TubeTK-ImageViewer-build )
+set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/ImageViewer-build )
 
 ExternalProject_Add( ImageViewer
   DOWNLOAD_COMMAND ""

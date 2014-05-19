@@ -119,7 +119,7 @@ set(ImageViewer_USE_FILE
   ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake )
 
 configure_file(${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfig.cmake.in
-  ${ImageViewer_USE_FILE} @ONLY)
+  ${ImageViewer_CONFIG_BINARY_DIR}/ImageViewerConfig.cmake @ONLY)
 
 # Configure UseTubeTK.cmake.
 configure_file(${ImageViewer_SOURCE_DIR}/CMake/UseImageViewer.cmake.in
