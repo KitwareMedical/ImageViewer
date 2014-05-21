@@ -33,7 +33,7 @@
             <flag>s</flag>
             <longflag>sliceOffset</longflag>
             <label>Slice number</label>
-            <default>15</default>
+            <default>-1</default>
             <description>Set slices number.</description>
         </integer>
         <double>
@@ -41,14 +41,14 @@
             <flag>q</flag>
             <longflag>maxIntensity</longflag>
             <label>Maximum intensity</label>
-            <default>251</default>
+            <default>0</default>
             <description>Set the upper of the intensity widowing.</description>
         </double>
         <double>
             <name>minIntensity</name>
             <flag>a</flag>
             <longflag>minIntensity</longflag>
-            <default>-5</default>
+            <default>0</default>
             <label>Minimum intensity</label>
             <description>Set the lower of the intensity widowing.</description>
         </double>

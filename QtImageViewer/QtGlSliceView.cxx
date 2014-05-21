@@ -279,6 +279,10 @@ QtGlSliceView
     emit validOverlayDataChanged(cValidOverlayData);
     update();
   }
+  else
+    {
+    qWarning()<<"Overlay path invalid, make sure both images have the same size.";
+    }
 }
 
 
