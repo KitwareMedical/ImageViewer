@@ -263,16 +263,20 @@ QtGlSliceView
     cViewOverlayData  = true;
     cValidOverlayData = true;
     cOverlayOpacity   = 1.0;
-
-    emit validOverlayDataChanged(cValidOverlayData);
     
     if(cWinOverlayData != NULL) 
     {
       delete [] cWinOverlayData;
     }
     
-    const unsigned long bufferSize = cWinDataSizeX * cWinDataSizeY * 4;
-    cWinOverlayData = new unsigned char[ bufferSize ];
+    cWinOverlayData = new unsigned char[ cWinDataSizeX * cWinDataSizeY * 4 ];
+
+    if(cWinZBuffer != NULL)
+    {
+      delete [] cWinZBuffer;
+    }
+    cWinZBuffer = new unsigned short[cWinDataSizeX * cWinDataSizeY * 4];
+    emit validOverlayDataChanged(cValidOverlayData);
     update();
   }
 }
@@ -333,6 +337,7 @@ QtGlSliceView::setOverlayOpacity(double newOverlayOpacity)
     cViewOverlayCallBack();
   }
   emit overlayOpacityChanged(cOverlayOpacity);
+  update();
 }
 
 
@@ -1384,12 +1389,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
     case Qt::Key_B:
     //decrease opacity overlay
       setOverlayOpacity(overlayOpacity() - 0.025);
-      update();
+      //update();
       break;
     case Qt::Key_N:
     //increase opacity overlay
       setOverlayOpacity(overlayOpacity() + 0.025);
-      update();
+      //update();
       break;
     case Qt::Key_H:
       showHelp();
