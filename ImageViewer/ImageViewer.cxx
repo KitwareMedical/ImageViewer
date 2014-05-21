@@ -79,9 +79,19 @@ int parseAndExecImageViewer(int argc, char* argv[])
     qtSlicerWindow.loadOverlayImage(QString::fromStdString(overlayImage));
     }
   qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
-  qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
-  qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
-  qtSlicerWindow.OpenGlWindow->setMinIntensity(minIntensity);
+  if(sliceOffset != -1)
+    {
+    qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
+    }
+  if(minIntensityArg.isSet())
+    {
+    qtSlicerWindow.OpenGlWindow->setMinIntensity(minIntensity);
+    }
+  if(maxIntensityArg.isSet())
+    {
+    qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
+    }
+
   qtSlicerWindow.OpenGlWindow->setZoom(zoom);
   qtSlicerWindow.OpenGlWindow->transpose(transpose);
   qtSlicerWindow.OpenGlWindow->flipZ(zFlipped);
@@ -97,7 +107,6 @@ int parseAndExecImageViewer(int argc, char* argv[])
   qtSlicerWindow.OpenGlWindow->setImageMode(imageMode.c_str());
   qtSlicerWindow.OpenGlWindow->setIWModeMax(iwModeMax.c_str());
   qtSlicerWindow.OpenGlWindow->setIWModeMin(iwModeMin.c_str());
-
   qtSlicerWindow.OpenGlWindow->update();
 #endif
 
@@ -121,14 +130,14 @@ int main( int argc, char* argv[] )
 #if !defined(BUILD_SHARED_LIBS)
   Q_INIT_RESOURCE(qtImageViewerResources);
 #endif
-  QFileInfo info(argv[0]);
-  if(argc == 1 || !info.isFile() )
+  int res;
+  if(argc == 1)
     {
-    return execImageViewer(argc, argv);
+    res = execImageViewer(argc, argv);
     }
-  if(argc >1 && info.isFile())
+  else
     {
-    return parseAndExecImageViewer(argc, argv);
+    res = parseAndExecImageViewer(argc, argv);
     }
-  return 0;
+  return res;
 }
