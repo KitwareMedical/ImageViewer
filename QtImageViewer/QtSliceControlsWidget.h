@@ -47,7 +47,7 @@ public slots:
   void setDisplayPosition(int x, int y, int z, double value);
   void setSliceView(QtGlSliceView *sliceView);
 private:
-  Ui::Form *UI;
+  Ui::Controls *UI;
   QtGlSliceView *SliceView;
 
 };
