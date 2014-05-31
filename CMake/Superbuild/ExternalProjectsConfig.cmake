@@ -34,9 +34,9 @@ set( CTK_URL_MD5_TAG 0e21d85e7b9187c36c66d5934041323eff0685c2 )
 set( VTK_URL https://github.com/Slicer/VTK.git )
 set( VTK_URL_MD5_TAG 6da2c7235b8de9d8663a62f3246198d6865ecfae )
 
-# JsonCpp snapshot 2014-01-01 r287
-set( JsonCpp_URL http://midas3.kitware.com/midas/download/bitstream/337068/JsonCpp_r275.tar.gz )
-set( JsonCpp_HASH_OR_TAG 43301ad1118004fbdc69b6f7b14a4cd5 )
+# JsonCpp snapshot 2014-04-15 r276
+set( JsonCpp_URL http://midas3.kitware.com/midas/download/bitstream/366544/JsonCpp_r276.tar.gz )
+set( JsonCpp_HASH_OR_TAG 192f0cf2b00798d4f4fb29c99a3aa83c )
 
 # TubeTK Parameter Serializer snapshot 2014-02-05 )
 set( ParameterSerializer_URL
