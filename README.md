@@ -1,7 +1,7 @@
 TubeTK ImageViewer
 ==================
 
-[![Build Status](https://travis-ci.org/TubeTK/TubeTK-ImageViewer.png?branch=master)](https://travis-ci.org/TubeTK/TubeTK-ImageViewer)
+[![Build Status](https://travis-ci.org/TubeTK/ImageViewer.png?branch=master)](https://travis-ci.org/TubeTK/ImageViewer)
 
 Description
 -----------
@@ -16,7 +16,7 @@ Building
 Building requires [CMake](http://www.cmake.org) and a C++ compiler. To build:
 
 ```shell
-git clone https://github.com/TubeTK/TubeTK-ImageViewer.git ImageViewer
+git clone https://github.com/TubeTK/ImageViewer.git ImageViewer
 mkdir ImageViewer-build
 cd ImageViewer-build
 cmake ../ImageViewer
