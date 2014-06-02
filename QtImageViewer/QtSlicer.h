@@ -42,7 +42,8 @@ class QtImageViewer_EXPORT QtSlicer : public QDialog, public Ui::GuiDialogBase
   Q_OBJECT
 public:
     
-  QtSlicer( QWidget* parent = 0, Qt::WindowFlags fl = 0 );
+  QtSlicer( QWidget* parent = 0, Qt::WindowFlags fl = Qt::WindowTitleHint |
+      Qt::WindowCloseButtonHint );
   ~QtSlicer();
   
   typedef itk::Image<double,3>                ImageType;
