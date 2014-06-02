@@ -40,7 +40,7 @@ int execImageViewer(int argc, char* argv[])
   QtSlicer qtSlicerWindow( 0 );
   qtSlicerWindow.setWindowTitle("ImageViewer");
   qtSlicerWindow.loadInputImage();
-
+  qtSlicerWindow.show();
   int execReturn;
   try
     {

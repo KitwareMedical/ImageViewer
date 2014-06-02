@@ -131,7 +131,6 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
     return EXIT_FAILURE;
     }
   this->setInputImage( reader->GetOutput() );
-  show();
   return true;
 }
 
@@ -164,8 +163,6 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
     return EXIT_FAILURE;
     }
   this->setOverlayImage(overlayReader->GetOutput());
-
-  show();
   return true;
 }
 void QtSlicer::updateSliceMaximum()

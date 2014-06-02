@@ -1770,6 +1770,10 @@ void QtGlSliceView::paintGL(void)
 
 void QtGlSliceView::mouseMoveEvent(QMouseEvent *event)
 {
+  if(!cImData)
+    {
+    return;
+    }
   double scale0 = this->width()/(double)cDimSize[0] * zoom()
     * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
   double scale1 = this->height()/(double)cDimSize[1] * zoom()
