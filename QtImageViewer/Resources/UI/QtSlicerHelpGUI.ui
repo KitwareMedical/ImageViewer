@@ -15,6 +15,15 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QWebView" name="webView">
+     <property name="url">
+      <url>
+       <string>qrc:/HTML/Help.html</string>
+      </url>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="TextLabel1">
      <property name="lineWidth">
       <number>5</number>
@@ -43,15 +52,6 @@ The Insight Toolkit (ITK)</string>
      </property>
      <property name="wordWrap">
       <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWebView" name="webView">
-     <property name="url">
-      <url>
-       <string>qrc:/HTML/Help.html</string>
-      </url>
      </property>
     </widget>
    </item>

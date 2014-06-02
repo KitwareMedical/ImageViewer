@@ -440,6 +440,9 @@
             <bold>false</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>Display the slice number.</string>
+          </property>
           <property name="layoutDirection">
            <enum>Qt::RightToLeft</enum>
           </property>
@@ -458,6 +461,9 @@
             <width>40</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>Select a slice.</string>
           </property>
           <property name="layoutDirection">
            <enum>Qt::RightToLeft</enum>
@@ -506,6 +512,9 @@
             <weight>50</weight>
             <bold>false</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>Display help window.</string>
           </property>
           <property name="layoutDirection">
            <enum>Qt::RightToLeft</enum>

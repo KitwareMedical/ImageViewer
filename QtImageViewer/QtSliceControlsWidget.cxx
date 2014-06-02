@@ -27,7 +27,7 @@ limitations under the License.
 QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parent)
   : QWidget(parent)
 {
-  this->UI = new Ui::Form;
+  this->UI = new Ui::Controls;
   UI->setupUi(this);
 }
 

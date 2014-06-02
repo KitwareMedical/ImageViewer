@@ -25,6 +25,7 @@ limitations under the License.
 #include <QDir>
 #include <QFileDialog>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QSlider>
 
 //QtImageViewer includes
@@ -115,9 +116,16 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
     {
     return false;
     }
-  reader->SetFileName( filePathToLoad.toLatin1().data() );
-
   QFileInfo filePath(filePathToLoad);
+  if(!filePath.exists())
+    {
+    const QString title("Failed loading");
+    QString str;
+    str = QString("The file you have selected does not exist. %1").arg(filePathToLoad);
+    QMessageBox::warning(this, title, str);
+    return false;
+    }
+  reader->SetFileName( filePathToLoad.toLatin1().data() );
   setWindowTitle(filePath.fileName());
   qDebug() << "loading image " << filePathToLoad << " ... ";
   try
@@ -128,10 +136,13 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
     {
     std::cerr << "Exception during GUI execution" << std::endl;
     std::cerr << e << std::endl;
-    return EXIT_FAILURE;
+    const QString title("Failed to read image.");
+    QString str;
+    str = QString("%1").arg(filePathToLoad);
+    QMessageBox::warning(this, title, str);
+    return false;
     }
   this->setInputImage( reader->GetOutput() );
-  show();
   return true;
 }
 
@@ -145,9 +156,17 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
     overlayImagePath = QFileDialog::getOpenFileName(
             0,"", QDir::currentPath());
     }
-
   if(overlayImagePath.isEmpty())
     {
+    return false;
+    }
+  QFileInfo filePath(overlayImagePath);
+  if(!filePath.exists())
+    {
+    const QString title("Failed loading");
+    QString str;
+    str = QString("The file you have selected does not exist. %1").arg(overlayImagePath);
+    QMessageBox::warning(this, title, str);
     return false;
     }
   overlayReader->SetFileName( overlayImagePath.toLatin1().data() );
@@ -161,11 +180,13 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
     {
     std::cerr << "Exception during GUI execution" << std::endl;
     std::cerr << e << std::endl;
-    return EXIT_FAILURE;
+    const QString title("Failed to read image.");
+    QString str;
+    str = QString("%1").arg(overlayImagePath);
+    QMessageBox::warning(this, title, str);
+    return false;
     }
   this->setOverlayImage(overlayReader->GetOutput());
-
-  show();
   return true;
 }
 void QtSlicer::updateSliceMaximum()
