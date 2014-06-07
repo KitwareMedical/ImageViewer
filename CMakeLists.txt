@@ -34,43 +34,96 @@
 #
 ##############################################################################
 
-cmake_minimum_required( VERSION 2.8.7 )
-project( ImageViewer )
+cmake_minimum_required(VERSION 2.8.7)
+project(ImageViewer)
 
-set( CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH} )
+set(CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 
-option( ImageViewer_USE_SUPERBUILD
-  "Build ImageViewer and projects it depends on using superbuild." ON )
-mark_as_advanced( ImageViewer_USE_SUPERBUILD )
+option(ImageViewer_USE_SUPERBUILD
+  "Build ImageViewer and projects it depends on using superbuild." ON)
+mark_as_advanced(ImageViewer_USE_SUPERBUILD)
 
-option( USE_SYSTEM_FLTK "Exclude FLTK from superbuild and use an existing build."
-  OFF )
-mark_as_advanced( USE_SYSTEM_FLTK )
+option(USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
+  OFF)
+mark_as_advanced(USE_SYSTEM_ITK)
 
-option( USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
-  OFF )
-mark_as_advanced( USE_SYSTEM_ITK )
+option(USE_CLI "Exclude command line use." ON)
 
-if( ImageViewer_USE_SUPERBUILD )
-  add_subdirectory( ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
-else( ImageViewer_USE_SUPERBUILD )
-  find_package( ITK REQUIRED )
-  include( ${ITK_USE_FILE} )
+if(USE_CLI)
+  # Slicer Execution model Setup
+  option(USE_SYSTEM_SLICER_EXECUTION_MODEL
+    "Exclude SlicerExecutionModel from superbuild and use an existing build."
+    OFF)
+  mark_as_advanced(USE_SYSTEM_SLICER_EXECUTION_MODEL)
 
-  find_package( FLTK REQUIRED )
+  option(USE_SYSTEM_JSONCPP
+    "Exclude JsonCpp from superbuild and use an existing build." OFF)
+  mark_as_advanced(USE_SYSTEM_JSONCPP)
 
-  if( DEFINED FLTK_USE_FILE AND EXISTS ${FLTK_USE_FILE} )
-    set( FLTK_EXE_LINKER_FLAGS "" )
-    include( ${FLTK_USE_FILE} )
-    if( APPLE )
-      list( APPEND FLTK_LIBRARIES "-framework Cocoa" )
-    endif( APPLE )
-  endif( DEFINED FLTK_USE_FILE AND  EXISTS ${FLTK_USE_FILE} )
+  option(USE_SYSTEM_PARAMETER_SERIALIZER
+    "Exclude parameter serializer from superbuild and use an existing build."
+    OFF)
+  mark_as_advanced(USE_SYSTEM_PARAMETER_SERIALIZER)
+endif(USE_CLI)
 
-  include( DisableFLTKWarnings )
+set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
+set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
+set_property(GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
 
-  include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/FltkImageViewer )
+if(UNIX)
+  if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC"
+         CACHE STRING "Flags used by all build types." FORCE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC"
+         CACHE STRING "Flags used by all build types." FORCE)
+  endif(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+endif(UNIX)
 
-  add_subdirectory( FltkImageViewer )
-  add_subdirectory( ImageViewer )
-endif( ImageViewer_USE_SUPERBUILD )
+if(ImageViewer_USE_SUPERBUILD)
+  add_subdirectory(CMake/Superbuild)
+  return()
+else(ImageViewer_USE_SUPERBUILD)
+
+  find_package(ITK REQUIRED)
+  include(${ITK_USE_FILE})
+
+  find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
+  include(${QT_USE_FILE})
+
+  if(USE_CLI)
+
+    find_package(JsonCpp REQUIRED)
+    include_directories(${JsonCpp_INCLUDE_DIRS})
+
+    find_package(ParameterSerializer REQUIRED)
+    include_directories(${ParameterSerializer_INCLUDE_DIRS})
+
+    find_package(SlicerExecutionModel REQUIRED)
+    include(${SlicerExecutionModel_USE_FILE})
+
+    find_package(SlicerExecutionModel REQUIRED GenerateCLP)
+    include(${GenerateCLP_USE_FILE})
+  endif(USE_CLI)
+
+  add_subdirectory(QtImageViewer)
+  add_subdirectory(ImageViewer)
+
+endif(ImageViewer_USE_SUPERBUILD)
+
+get_property(ImageViewer_LIBRARIES GLOBAL PROPERTY ImageViewer_LIBRARIES)
+get_property(ImageViewer_INCLUDE_DIRS GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
+get_property(ImageViewer_LIBRARY_DIRS GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
+
+set(ImageViewer_CONFIG_BINARY_DIR ${CMAKE_BINARY_DIR})
+set(ImageViewer_USE_FILE
+  ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake )
+
+configure_file(${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfig.cmake.in
+  ${ImageViewer_CONFIG_BINARY_DIR}/ImageViewerConfig.cmake @ONLY)
+
+# Configure UseTubeTK.cmake.
+configure_file(${ImageViewer_SOURCE_DIR}/CMake/UseImageViewer.cmake.in
+  ${ImageViewer_CONFIG_BINARY_DIR}/UseImageViewer.cmake @ONLY)
+
+configure_file(${ImageViewer_SOURCE_DIR}/CMake/ImageViewerConfigure.h.in
+  ${ImageViewer_CONFIG_BINARY_DIR}/ImageViewer/ImageViewerConfigure.h @ONLY)

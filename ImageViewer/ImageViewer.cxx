@@ -1,118 +1,143 @@
 /*=========================================================================
 
-  Program:   Insight Segmentation & Registration Toolkit
-  Module:    ImageViewer.cxx
-  Language:  C++
-  Date:      $Date$
-  Version:   $Revision$
+Library:   TubeTK
 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
+Copyright 2010 Kitware Inc. 28 Corporate Drive,
+Clifton Park, NY, 12065, USA.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 =========================================================================*/
-#include <iostream>
+#include "ImageViewerConfigure.h"
+#ifdef USE_CLI
+#include "ImageViewerCLP.h"
+#endif
+//Qt includes
+#include <QApplication>
+#include <QDebug>
+#include <QFileInfo>
 
-#include <itkImage.h>
-#include <itkImageFileReader.h>
+//QtImageViewer includes
+#include "QtGlSliceView.h"
+#include "QtSlicer.h"
 
+int execImageViewer(int argc, char* argv[])
+{
+  QApplication myApp( argc, argv );
 
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_File_Chooser.H>
-#include <GLSliceView.h>
-
-#include "ImageViewerGUI.h"
-
-
-Fl_Window *form;
-
-int usage(void)
-   {
-   std::cout << "ImageViewer" << std::endl;
-   std::cout << std::endl;
-   std::cout << "ImageViewer <Filename>" << std::endl;
-   std::cout << std::endl;
-
-   return 1;
-   }
-
-int main(int argc, char **argv)
-  {
-  typedef itk::Image< float, 3 > ImageType;
-
-  char *fName;
-  
-  if(argc > 2)
-    {
-    return usage();
-    }
-   else
-    if(argc == 1)
-      {
-      fName = fl_file_chooser("Pick an image file", "*.*", ".");
-      if(fName == NULL || strlen(fName)<1)
-        {
-        return 0;
-        }
-      }
-    else
-      if(argv[1][0] != '-')
-        {
-        fName = argv[argc-1];
-        }
-      else
-        {
-        return usage();
-        }
-
-  std::cout << "Loading File: " << fName << std::endl;
-  typedef itk::ImageFileReader< ImageType > VolumeReaderType;
-  VolumeReaderType::Pointer reader = VolumeReaderType::New();
-
-
-  reader->SetFileName(fName);
-
-  ImageType::Pointer imP;
-  imP = reader->GetOutput();
-
+  QtSlicer qtSlicerWindow( 0 );
+  qtSlicerWindow.setWindowTitle("ImageViewer");
+  qtSlicerWindow.loadInputImage();
+  qtSlicerWindow.show();
+  int execReturn;
   try
     {
-    reader->Update();
+    execReturn = myApp.exec();
     }
- catch (itk::ExceptionObject &e)
+  catch (itk::ExceptionObject & e)
     {
-     std::cerr << e << std::endl;
-     return EXIT_FAILURE;
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
+    return EXIT_FAILURE;
     }
-  std::cout << "...Done Loading File" << std::endl;
+  return execReturn;
+}
 
-  char mainName[255];
-  sprintf(mainName, "metaView: %s", fName);
+int parseAndExecImageViewer(int argc, char* argv[])
+{
+#ifdef USE_CLI
+  PARSE_ARGS;
+#endif
 
-  std::cout << std::endl;
-  std::cout << "For directions on interacting with the window," << std::endl;
-  std::cout << "   type 'h' within the window" << std::endl;
-  
-  form = make_window();
+  QApplication myApp(argc, argv);
 
-  tkMain->label(mainName);
-  
-  tkWin->SetInputImage(imP);
-  tkWin->flipY(true);
-  
-  form->show();
-  tkWin->show();
-  tkWin->update();
+  QtSlicer qtSlicerWindow( 0 );
+  qtSlicerWindow.setWindowTitle("ImageViewer");
 
-  // force a first redraw
-  Fl::check();
-  tkWin->update();
+  QString filePathToLoad;
+#ifdef USE_CLI
+  filePathToLoad = QString::fromStdString(inputImage);
+#endif
 
-  Fl::run();
-  
-  return 1;
-  }
+  qtSlicerWindow.loadInputImage(filePathToLoad);
+
+#ifdef USE_CLI
+  if(!overlayImage.empty())
+    {
+    qtSlicerWindow.loadOverlayImage(QString::fromStdString(overlayImage));
+    }
+  qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
+  if(sliceOffset != -1)
+    {
+    qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
+    }
+  if(minIntensityArg.isSet())
+    {
+    qtSlicerWindow.OpenGlWindow->setMinIntensity(minIntensity);
+    }
+  if(maxIntensityArg.isSet())
+    {
+    qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
+    }
+
+  qtSlicerWindow.OpenGlWindow->setZoom(zoom);
+  qtSlicerWindow.OpenGlWindow->transpose(transpose);
+  qtSlicerWindow.OpenGlWindow->flipZ(zFlipped);
+  qtSlicerWindow.OpenGlWindow->flipY(yFlipped);
+  qtSlicerWindow.OpenGlWindow->flipX(xFlipped);
+  qtSlicerWindow.OpenGlWindow->setOverlayOpacity(overlayOpacity);
+  qtSlicerWindow.OpenGlWindow->setViewCrosshairs(crosshairs);
+  qtSlicerWindow.OpenGlWindow->setViewDetails(details);
+  qtSlicerWindow.OpenGlWindow->setViewValuePhysicalUnits(physicalUnits);
+  qtSlicerWindow.OpenGlWindow->setViewValue(value);
+  qtSlicerWindow.OpenGlWindow->setViewAxisLabel(axisLabel);
+  qtSlicerWindow.OpenGlWindow->setViewClickedPoints(clickedPoints);
+  qtSlicerWindow.OpenGlWindow->setImageMode(imageMode.c_str());
+  qtSlicerWindow.OpenGlWindow->setIWModeMax(iwModeMax.c_str());
+  qtSlicerWindow.OpenGlWindow->setIWModeMin(iwModeMin.c_str());
+  qtSlicerWindow.OpenGlWindow->update();
+#endif
+
+  qtSlicerWindow.show();
+  int execReturn;
+  try
+    {
+    execReturn = myApp.exec();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
+    return EXIT_FAILURE;
+    }
+  return execReturn;
+}
+
+int main( int argc, char* argv[] ) 
+{
+#if !defined(BUILD_SHARED_LIBS)
+  Q_INIT_RESOURCE(qtImageViewerResources);
+#endif
+  int res;
+  if(argc == 1)
+    {
+    res = execImageViewer(argc, argv);
+    }
+  else
+    {
+    res = parseAndExecImageViewer(argc, argv);
+    }
+  return res;
+}

@@ -29,22 +29,30 @@ if( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED )
 endif( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED )
 set( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED 1 )
 
-set( ITK_DEPENDENCIES "" )
+set( proj JsonCpp )
+
+# Sanity checks.
+if( DEFINED ${proj}_DIR AND NOT EXISTS ${${proj}_DIR} )
+  message( FATAL_ERROR
+    "${proj}_DIR variable is defined as ${${proj}_DIR} which corresponds to a nonexistent directory" )
+endif( DEFINED ${proj}_DIR AND NOT EXISTS ${${proj}_DIR} )
+
+set( ${proj}_DEPENDENCIES "" )
 
 # Include dependent projects, if any.
-CheckExternalProjectDependency( ITK )
+CheckExternalProjectDependency( ${proj} )
 
-if( NOT DEFINED ITK_DIR AND NOT ${USE_SYSTEM_ITK} )
-  set( ITK_SOURCE_DIR ${CMAKE_BINARY_DIR}/ITK )
-  set( ITK_DIR ${CMAKE_BINARY_DIR}/ITK-build )
+if( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_JSONCPP} )
+  set( ${proj}_SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj} )
+  set( ${proj}_DIR ${CMAKE_BINARY_DIR}/${proj}-build )
 
-  ExternalProject_Add( ITK
-    GIT_REPOSITORY ${ITK_URL}
-    GIT_TAG ${ITK_URL_OR_TAG}
-    DOWNLOAD_DIR ${ITK_SOURCE_DIR}
-    SOURCE_DIR ${ITK_SOURCE_DIR}
-    BINARY_DIR ${ITK_DIR}
-    INSTALL_DIR ${ITK_DIR}
+  ExternalProject_Add( ${proj}
+    URL ${${proj}_URL}
+    URL_MD5 ${${proj}_HASH_OR_TAG}
+    DOWNLOAD_DIR ${${proj}_SOURCE_DIR}
+    SOURCE_DIR ${${proj}_SOURCE_DIR}
+    BINARY_DIR ${${proj}_DIR}
+    INSTALL_DIR ${${proj}_DIR}
     LOG_DOWNLOAD 1
     LOG_UPDATE 0
     LOG_CONFIGURE 0
@@ -54,28 +62,20 @@ if( NOT DEFINED ITK_DIR AND NOT ${USE_SYSTEM_ITK} )
     UPDATE_COMMAND ""
     CMAKE_GENERATOR ${gen}
     CMAKE_ARGS
-      -DCMAKE_BUILD_TYPE:STRING=${build_type}
       -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-      -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
       -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
       -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-      -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-      -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+      -DCMAKE_BUILD_TYPE:STRING=${build_type}
       ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
-      -DBUILD_EXAMPLES:BOOL=OFF
-      -DBUILD_SHARED_LIBS:BOOL=${shared}
-      -DBUILD_TESTING:BOOL=OFF
-      -DITKV3_COMPATIBILITY:BOOL=ON
-      -DITK_BUILD_ALL_MODULES:BOOL=ON
-      -DITK_INSTALL_NO_DEVELOPMENT:BOOL=ON
-      -DITK_LEGACY_REMOVE:BOOL=OFF
-      -DKWSYS_USE_MD5:BOOL=ON
-      -DModule_ITKReview:BOOL=ON
+      -DBUILD_SHARED_LIBS:BOOL=OFF
+      -DJSONCPP_LIB_BUILD_SHARED:BOOL=OFF
+      -DJSONCPP_WITH_TESTS:BOOL=OFF
     INSTALL_COMMAND "" )
-else( NOT DEFINED ITK_DIR AND NOT ${USE_SYSTEM_ITK} )
-  if( ${USE_SYSTEM_ITK} )
-    find_package( ITK REQUIRED )
-  endif( ${USE_SYSTEM_ITK} )
 
-  AddEmptyExternalProject( ITK "${ITK_DEPENDENCIES}" )
-endif( NOT DEFINED ITK_DIR AND NOT ${USE_SYSTEM_ITK} )
+else( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_JSONCPP} )
+  if( ${USE_SYSTEM_JSONCPP} )
+    find_package( ${proj} REQUIRED )
+  endif( ${USE_SYSTEM_JSONCPP} )
+
+  AddEmptyExternalProject( ${proj} "${${proj}_DEPENDENCIES}" )
+endif( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_JSONCPP} )
