@@ -41,6 +41,7 @@ QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
 {
   this->setupUi(this);
   this->Controls->setSliceView(this->OpenGlWindow);
+  this->OpenGlWindow->setMaxDisplayStates(4);
   this->HelpDialog = 0;
   QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
   QObject::connect(ButtonHelp, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
@@ -49,12 +50,15 @@ QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(updateSliceMaximum()));
+  QObject::connect(OpenGlWindow, SIGNAL(displayStateChanged(int)), this, SLOT(setDisplayState(int)));
   this->OpenGlWindow->setFocus();
 }
+
 
 QtSlicer::~QtSlicer()
 {
 }
+
 
 void QtSlicer::showHelp(bool checked)
 {
@@ -78,6 +82,15 @@ void QtSlicer::showHelp(bool checked)
 void QtSlicer::hideHelp()
 {
   this->ButtonHelp->setChecked(false);
+}
+
+
+void QtSlicer::setDisplayState(int details)
+{
+  const bool visible = !(details & OFF_COLLAPSE);
+  this->Buttons->setVisible(visible);
+  this->Slider->setVisible(visible);
+  this->Controls->setVisible(visible);
 }
 
 
@@ -189,6 +202,8 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
   this->setOverlayImage(overlayReader->GetOutput());
   return true;
 }
+
+
 void QtSlicer::updateSliceMaximum()
 {
   this->SliceNumSlider->setMaximum(static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));

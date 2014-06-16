@@ -41,6 +41,7 @@ int execImageViewer(int argc, char* argv[])
   qtSlicerWindow.setWindowTitle("ImageViewer");
   qtSlicerWindow.loadInputImage();
   qtSlicerWindow.show();
+  qtSlicerWindow.OpenGlWindow->setFocus();
   int execReturn;
   try
     {
@@ -99,7 +100,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   qtSlicerWindow.OpenGlWindow->flipX(xFlipped);
   qtSlicerWindow.OpenGlWindow->setOverlayOpacity(overlayOpacity);
   qtSlicerWindow.OpenGlWindow->setViewCrosshairs(crosshairs);
-  qtSlicerWindow.OpenGlWindow->setViewDetails(details);
+  qtSlicerWindow.OpenGlWindow->setDisplayState(details);
   qtSlicerWindow.OpenGlWindow->setViewValuePhysicalUnits(physicalUnits);
   qtSlicerWindow.OpenGlWindow->setViewValue(value);
   qtSlicerWindow.OpenGlWindow->setViewAxisLabel(axisLabel);
@@ -111,6 +112,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
 #endif
 
   qtSlicerWindow.show();
+  qtSlicerWindow.OpenGlWindow->setFocus();
   int execReturn;
   try
     {
