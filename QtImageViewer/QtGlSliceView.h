@@ -77,12 +77,6 @@ enum OrientationType{
   /*! Structure clickPoint to store the x,y,z and intensity value of a
   * point in the image
 */
-enum cViewDetailsInformation{
-  VD_OFF = 0,
-  VD_SLICEVIEW,
-  VD_TEXTBOX
-};
-
 struct ClickPoint 
   {
   double x, y, z;
@@ -120,7 +114,6 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(int sliceNum READ sliceNum WRITE setSliceNum NOTIFY sliceNumChanged);
   Q_PROPERTY(bool viewCrosshairs READ viewCrosshairs WRITE setViewCrosshairs);
   Q_PROPERTY(bool viewValue READ viewValue WRITE setViewValue);
-  Q_PROPERTY(int viewDetails READ viewDetails WRITE setViewDetails NOTIFY viewDetailsChanged);
   Q_PROPERTY(bool viewOverlayData READ viewOverlayData WRITE setViewOverlayData);
   Q_PROPERTY(bool viewAxisLabel READ viewAxisLabel WRITE setViewAxisLabel);
   Q_PROPERTY(bool viewClickedPoints READ viewClickedPoints WRITE setViewClickedPoints);
@@ -130,6 +123,9 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(bool validOverlayData READ validOverlayData WRITE setValidOverlayData NOTIFY validOverlayDataChanged);
   Q_PROPERTY(int maxClickedPointsStored READ maxClickedPointsStored WRITE setMaxClickedPointsStored
              NOTIFY maxClickedPointsStoredChanged);
+  Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep);
+  Q_PROPERTY(int displayState READ displayState WRITE setDisplayState NOTIFY displayStateChanged);
+  Q_PROPERTY(int maxDisplayStates READ maxDisplayStates WRITE setMaxDisplayStates);
 
 public:
   
@@ -146,9 +142,6 @@ public:
   typedef ColorTableType::Pointer       ColorTablePointer;
 
 public:
-/*! FLTK required constructor - must use imData() to complete 
-  definition */
-  //QtGlSliceView(int x, int y, int w, int h, const char *l);
   
   QtGlSliceView(QWidget *parent = 0);
 
@@ -166,6 +159,9 @@ public:
   ColorTableType *colorTable(void) const;
 
   virtual void size(int w, int h);
+
+  virtual bool hasHeightForWidth()const;
+  virtual int heightForWidth(int width)const;
 
   virtual void update();
 
@@ -227,8 +223,6 @@ public:
 
   bool viewCrosshairs() const;
 
-  int viewDetails() const;
-
   bool viewValue() const;
 
   int fastMovThresh() const;
@@ -254,7 +248,22 @@ public:
   bool validOverlayData() const;
   QDialog* helpWindow() const;
 
+  double singleStep() const;
+
+  int imageSize(int axis) const;
+
+  int displayState() const;
+
+  int maxDisplayStates() const;
+
+  void setMaxDisplayStates(int stateNumber);
+
 public slots:
+
+  void setDisplayState(int state);
+
+  void setSingleStep(double step);
+
   void setValidOverlayData(bool validOverlayData);
 
   void clearClickedPointsStored();
@@ -270,7 +279,6 @@ public slots:
   void setViewOverlayData(bool newViewOverlayData);
 
   void setViewValue(bool value);
-  void setViewDetails(int detail);
 
   void setViewCrosshairs(bool crosshairs);
   /*! Specify the slice to view */
@@ -339,14 +347,14 @@ public slots:
   void changeSlice(int value);
 
   ///Fix the upper limit of the intensity widowing
-  void setMaxIntensity(int value);
+  void setMaxIntensity(double value);
 
   void setFastMovThresh(int movThresh);
 
   void setFastMovVal(int movVal);
 
   ///Fix the lower limit of the intensity widowing
-  void setMinIntensity(int value);
+  void setMinIntensity(double value);
 
   void zoomIn();
   void zoomOut();
@@ -356,17 +364,17 @@ public slots:
 
 signals:
 
-  void positionChanged(int newX, int newY, int newZ, double click);
-  void maxIntensityChanged(int maximum);
-  void minIntensityChanged(int minimum);
+  void positionChanged(double newX, double newY, double newZ, double click);
+  void maxIntensityChanged(double maximum);
+  void minIntensityChanged(double minimum);
   void sliceNumChanged(int value);
   void zoomChanged(double zoom);
   void updateDetails(QString s);
   void orientationChanged(int maximum);
-  void viewDetailsChanged(int details);
   void overlayOpacityChanged(double opacity);
   void validOverlayDataChanged(bool valid);
   void maxClickedPointsStoredChanged(int max);
+  void displayStateChanged(int state);
 
 protected:
 
@@ -374,7 +382,10 @@ protected:
   void resizeGL(int w, int h);
   void paintGL();
 
+  int cDisplayState;
+  int cMaxDisplayStates;
   bool cValidOverlayData;
+  double cSingleStep;
   double cOverlayOpacity;
 
   OverlayPointer cOverlayData;
@@ -451,7 +462,6 @@ protected:
   bool cViewOverlayData;
   bool cViewCrosshairs;
   bool cViewValue;
-  int cViewDetails;
   bool cViewValuePhysicalUnits;
   const char * cPhysicalUnitsName;
 

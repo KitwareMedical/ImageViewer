@@ -41,14 +41,30 @@ public:
   QtSliceControlsWidget(QWidget* parent);
   ~QtSliceControlsWidget();
   void setInputImage();
+  /// CTK methods, comes from ctkUtils.cxx class
+  static int significantDecimals(double value, int defaultDecimals);
 public slots:
-  void setDisplayIMax(int value);
-  void setDisplayIMin(int value);
-  void setDisplayPosition(int x, int y, int z, double value);
+  /// Calcul and set the Slider value
+  void setValueIntensityMin(double value);
+  /// Calcul and set the Slider value
+  void setValueIntensityMax(double value);
+  /// Show or hide the textEdit
+  void setTextEdit(QString s);
+  /// Display the maximum intensity in the doubleSpinBox
+  void setDisplayIMax(double value);
+  /// Display the minimum intensity in the doubleSpinBox
+  void setDisplayIMin(double value);
+  void setDisplayPosition(double x, double y, double z, double value);
   void setSliceView(QtGlSliceView *sliceView);
+protected slots:
+  /// Convert Slider value to double and set minimum intensity to th SliceView
+  void setMinIntensity(int intensity);
+  /// Convert Slider value to double and set maximum intensity to th SliceView
+  void setMaxIntensity(int intensity);
 private:
   Ui::Controls *UI;
   QtGlSliceView *SliceView;
+  int decimalsNumber;
 
 };
 
