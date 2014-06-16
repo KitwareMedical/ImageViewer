@@ -22,9 +22,6 @@
 #include "itkImage.h"
 #include "itkColorTable.h"
 
-//std includes
-#include <math.h>
-
 //Qt includes
 #include <QGLWidget>
 #include <QtOpenGL/qgl.h>

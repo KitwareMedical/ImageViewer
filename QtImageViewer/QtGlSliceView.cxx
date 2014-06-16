@@ -24,6 +24,9 @@
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
 
+//std includes
+#include <cmath>
+
 // Qt includes
 #include <QDebug>
 #include <QFile>
@@ -1406,7 +1409,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
           {
           newState = 1;
           }
-        else if(newState == pow(2,maxDisplayStates()-2))
+        else if(newState == std::pow(2,maxDisplayStates()-2))
           {
           newState = 0;
           }
