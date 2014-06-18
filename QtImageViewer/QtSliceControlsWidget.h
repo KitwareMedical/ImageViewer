@@ -48,8 +48,12 @@ public slots:
   void setValueIntensityMin(double value);
   /// Calcul and set the Slider value
   void setValueIntensityMax(double value);
-  /// Show or hide the textEdit
-  void setTextEdit(QString s);
+  /// Display text into a text box.
+  /// \sa setTextVisible()
+  void setText(const QString& newText);
+  /// Show/Hide the text box.
+  /// \sa setText()
+  void setTextVisible(bool visible);
   /// Display the maximum intensity in the doubleSpinBox
   void setDisplayIMax(double value);
   /// Display the minimum intensity in the doubleSpinBox

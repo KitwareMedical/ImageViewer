@@ -31,27 +31,25 @@ limitations under the License.
 //itk include
 #include "itkImage.h"
 #include "itkImageFileReader.h"
-
-//QtImageViewer includes
 #include "ui_QtSlicerGUI.h"
-#include "ui_QtSlicerHelpGUI.h"
 
 class QtImageViewer_EXPORT QtSlicer : public QDialog, public Ui::GuiDialogBase
 {
   Q_OBJECT
   Q_ENUMS(displayDetailsState)
 public:
-    
+
   QtSlicer( QWidget* parent = 0, Qt::WindowFlags fl = Qt::WindowTitleHint |
       Qt::WindowCloseButtonHint );
   ~QtSlicer();
 
-  enum displayDetailsState{
+  enum DisplayStates{
     OFF = 0x00,
     ON_SLICEVIEW = 0x01,
     ON_TEXTBOX = 0x02,
-    OFF_COLLAPSE = 0x04
-  };
+    OFF_COLLAPSE = 0x04,
+    ON_COLLAPSE = 0x08
+ };
 
   typedef itk::Image<double,3>                ImageType;
   typedef unsigned char                       OverlayPixelType;

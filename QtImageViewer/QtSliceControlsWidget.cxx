@@ -75,8 +75,6 @@ void QtSliceControlsWidget::setInputImage()
                    SLOT(setValueIntensityMax(double)));
   QObject::connect(this->SliceView, SIGNAL(minIntensityChanged(double)), this,
                    SLOT(setValueIntensityMin(double)));
-//  QObject::connect(this->SliceView, SIGNAL(updateDetails(QString)), UI->Details,
-//                   SLOT(setText(QString)));
 
   QObject::connect(UI->IntensityMinDisplay,SIGNAL(valueChanged(double)), this->SliceView,
                    SLOT(setMinIntensity(double)));
@@ -92,8 +90,8 @@ void QtSliceControlsWidget::setInputImage()
   QObject::connect(this->SliceView, SIGNAL(maxIntensityChanged(double)), UI->IntensityMaxDisplay,
                    SLOT(setValue(double)));
 
-  QObject::connect(this->SliceView, SIGNAL(updateDetails(QString)), this,
-                    SLOT(setTextEdit(QString)));
+  QObject::connect(this->SliceView, SIGNAL(detailsChanged(QString)), this,
+                    SLOT(setText(QString)));
 
   UI->IntensityMin->setMinimum(0);
   UI->IntensityMin->setMaximum( static_cast<int>
@@ -134,11 +132,14 @@ void QtSliceControlsWidget::setSliceView(QtGlSliceView* sliceView)
   this->SliceView = sliceView;
 }
 
-void QtSliceControlsWidget::setTextEdit(QString s)
+void QtSliceControlsWidget::setText(const QString& text)
 {
-  const bool visible = !s.isEmpty();
+  this->UI->Details->setText(text);
+}
+
+void QtSliceControlsWidget::setTextVisible(bool visible)
+{
   this->UI->Details->setVisible(visible);
-  this->UI->Details->setText(s);
 }
 
 void QtSliceControlsWidget::setValueIntensityMin(double value)
