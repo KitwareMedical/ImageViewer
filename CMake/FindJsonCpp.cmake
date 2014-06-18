@@ -32,14 +32,17 @@ if( JsonCpp_DIR )
     ${JsonCpp_DIR}/lib/MinSizeRel
     ${JsonCpp_DIR}/lib/RelWithDebInfo
     ${JsonCpp_DIR}/lib/Debug )
+  set( _jsoncpp_options NO_DEFAULT_PATH )
 endif( JsonCpp_DIR )
 
 find_path( JsonCpp_INCLUDE_DIR NAMES json/json.h
   HINTS ${_jsoncpp_include_dir}
-  PATH_SUFFIXES jsoncpp )
+  PATH_SUFFIXES jsoncpp
+  ${_jsoncpp_options} )
 
 find_library( JsonCpp_LIBRARY NAMES jsoncpp libjsoncpp
-  HINTS ${_jsoncpp_library} )
+  HINTS ${_jsoncpp_library}
+  ${_jsoncpp_options} )
 
 set( JsonCpp_INCLUDE_DIRS ${JsonCpp_INCLUDE_DIR} )
 set( JsonCpp_LIBRARIES ${JsonCpp_LIBRARY} )
