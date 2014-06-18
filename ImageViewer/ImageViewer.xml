@@ -108,17 +108,14 @@
             <label>Crosshairs displayed</label>
             <description>View image values as the user clicks in the window, it displays crosshairs.</description>
         </boolean>
-        <integer-enumeration>
+        <integer>
             <name>details</name>
             <flag>D</flag>
             <longflag>details</longflag>
             <label>Details displayed</label>
-            <element>0</element>
-            <element>1</element>
-            <element>2</element>
-            <default>0</default>
+            <default>1</default>
             <description>Display details as an overlay on the image, inside a Controls Widget or turn it off.</description>
-        </integer-enumeration>
+        </integer>
         <boolean>
             <name>physicalUnits</name>
             <flag>P</flag>
