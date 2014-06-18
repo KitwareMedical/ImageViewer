@@ -20,7 +20,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =========================================================================*/
-//Qt includes
+// Qt includes
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
@@ -28,20 +28,21 @@ limitations under the License.
 #include <QMessageBox>
 #include <QSlider>
 
-//QtImageViewer includes
+// QtImageViewer includes
 #include "QtSlicer.h"
 #include "QtSliceControlsWidget.h"
 #include "QtGlSliceView.h"
+#include "ui_QtSlicerHelpGUI.h"
 
+// STD includes
 #include <iostream>
-
 
 QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
   QDialog( parent, fl )
 {
   this->setupUi(this);
   this->Controls->setSliceView(this->OpenGlWindow);
-  this->OpenGlWindow->setMaxDisplayStates(4);
+  this->OpenGlWindow->setMaxDisplayStates(5);
   this->HelpDialog = 0;
   QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
   QObject::connect(ButtonHelp, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
@@ -51,6 +52,7 @@ QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), this, SLOT(setDisplaySliceNumber(int)));
   QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(updateSliceMaximum()));
   QObject::connect(OpenGlWindow, SIGNAL(displayStateChanged(int)), this, SLOT(setDisplayState(int)));
+  this->setDisplayState(this->OpenGlWindow->displayState());
   this->OpenGlWindow->setFocus();
 }
 
@@ -85,19 +87,25 @@ void QtSlicer::hideHelp()
 }
 
 
-void QtSlicer::setDisplayState(int details)
+void QtSlicer::setDisplayState(int state)
 {
-  const bool visible = !(details & OFF_COLLAPSE);
-  this->Buttons->setVisible(visible);
-  this->Slider->setVisible(visible);
-  this->Controls->setVisible(visible);
+  if (state & ON_COLLAPSE)
+    {
+    this->OpenGlWindow->setDisplayState(state | ON_SLICEVIEW);
+    return;
+    }
+  const bool controlsVisible = !(state & OFF_COLLAPSE) && !(state & ON_COLLAPSE);
+  this->Buttons->setVisible(controlsVisible);
+  this->Slider->setVisible(controlsVisible);
+  this->Controls->setVisible(controlsVisible);
+  this->Controls->setTextVisible(state & ON_TEXTBOX);
 }
 
 
 void QtSlicer::setInputImage(ImageType * newImData)
 {
   this->OpenGlWindow->setInputImage(newImData);
-  updateSliceMaximum();
+  this->updateSliceMaximum();
   this->setDisplaySliceNumber(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
 
   this->Controls->setInputImage();
