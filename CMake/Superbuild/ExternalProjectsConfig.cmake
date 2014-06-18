@@ -40,10 +40,10 @@ set( JsonCpp_HASH_OR_TAG 192f0cf2b00798d4f4fb29c99a3aa83c )
 
 # TubeTK Parameter Serializer snapshot 2014-02-05 )
 set( ParameterSerializer_URL
-  https://github.com/TubeTK/TubeTK-ParameterSerializer.git )
-set( ParameterSerializer_HASH_OR_TAG fe360ce153bfe4efc36b276750d4606bb1d7b156 )
+  https://github.com/Slicer/ParameterSerializer.git )
+set( ParameterSerializer_HASH_OR_TAG df985d8f7e7751a10852ca53b2b38c0fa1620a99 )
 
 # Slicer Execution Model snapshot 2014-02-18
 set( SlicerExecutionModel_URL
   ${github_protocol}://github.com/Slicer/SlicerExecutionModel.git )
-set( SlicerExecutionModel_HASH_OR_TAG 46f3d892fc6deb9be2ce929257a5411d02c1ae75 )
+set( SlicerExecutionModel_HASH_OR_TAG 865e2a771a47c2a3daa3bd8b9a6fc6bac7537255 )
