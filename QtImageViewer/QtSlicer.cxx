@@ -24,6 +24,7 @@ limitations under the License.
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
+#include <QKeyEvent>
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QSlider>
@@ -37,21 +38,29 @@ limitations under the License.
 // STD includes
 #include <iostream>
 
-QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl ) :
-  QDialog( parent, fl )
+QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl )
+  :QDialog( parent, fl )
 {
   this->setupUi(this);
   this->Controls->setSliceView(this->OpenGlWindow);
   this->OpenGlWindow->setMaxDisplayStates(5);
   this->HelpDialog = 0;
+  this->IsRedirectingEvent = false;
   QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
   QObject::connect(ButtonHelp, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(changeSlice(int)));
   QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceNumSlider, SLOT(setValue(int)));
-  QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), this, SLOT(setDisplaySliceNumber(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), this, SLOT(setDisplaySliceNumber(int)));
+  QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceValue, SLOT(setValue(int)));
   QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(updateSliceMaximum()));
   QObject::connect(OpenGlWindow, SIGNAL(displayStateChanged(int)), this, SLOT(setDisplayState(int)));
+
+  // Install event filter on all the double spinboxes. They eat letter key
+  // events for no reason
+  foreach(QDoubleSpinBox* spinBox, this->findChildren<QDoubleSpinBox*>())
+    {
+    spinBox->installEventFilter(this);
+    }
+
   this->setDisplayState(this->OpenGlWindow->displayState());
   this->OpenGlWindow->setFocus();
 }
@@ -106,7 +115,7 @@ void QtSlicer::setInputImage(ImageType * newImData)
 {
   this->OpenGlWindow->setInputImage(newImData);
   this->updateSliceMaximum();
-  this->setDisplaySliceNumber(static_cast<int>((this->OpenGlWindow->maxSliceNum() -1)/2));
+  this->OpenGlWindow->changeSlice((this->OpenGlWindow->maxSliceNum() - 1)/2);
 
   this->Controls->setInputImage();
 
@@ -214,12 +223,47 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
 
 void QtSlicer::updateSliceMaximum()
 {
-  this->SliceNumSlider->setMaximum(static_cast<int>(this->OpenGlWindow->maxSliceNum() -1));
-  this->SliceNumSlider->setValue(static_cast<int>(this->SliceValue->text().toInt()));
+  const int maximum = this->OpenGlWindow->maxSliceNum() - 1;
+  this->SliceNumSlider->setMaximum(maximum);
+  this->SliceValue->setMaximum(maximum);
+  this->SliceNumSlider->setValue(this->SliceValue->value());
 }
 
-void QtSlicer::setDisplaySliceNumber(int number)
+void QtSlicer::keyPressEvent(QKeyEvent* event)
 {
-  QString tempchar = QString::number(number);
-  this->SliceValue->setText(tempchar);
+  if (!this->IsRedirectingEvent)
+    {
+    this->IsRedirectingEvent = true;
+    this->OpenGlWindow->keyPressEvent(event);
+    this->IsRedirectingEvent = false;
+    return;
+    }
+  this->Superclass::keyPressEvent(event);
+}
+
+bool QtSlicer::eventFilter(QObject *obj, QEvent *event)
+{
+  if (qobject_cast<QDoubleSpinBox*>(obj) &&
+      event->type() == QEvent::KeyPress)
+    {
+    QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(event);
+    if ((keyEvent->key() < Qt::Key_0 ||
+         keyEvent->key() > Qt::Key_9) &&
+        keyEvent->key() != Qt::Key_Period &&
+        keyEvent->key() != Qt::Key_Comma &&
+        keyEvent->key() != Qt::Key_Minus &&
+        keyEvent->key() != Qt::Key_Left &&
+        keyEvent->key() != Qt::Key_Right &&
+        keyEvent->key() != Qt::Key_Up &&
+        keyEvent->key() != Qt::Key_Down &&
+        keyEvent->key() != Qt::Key_PageUp &&
+        keyEvent->key() != Qt::Key_PageDown &&
+        keyEvent->key() != Qt::Key_Home &&
+        keyEvent->key() != Qt::Key_End)
+      {
+      this->OpenGlWindow->keyPressEvent(keyEvent);
+      return true;
+      }
+    }
+  return this->Superclass::eventFilter(obj, event);
 }

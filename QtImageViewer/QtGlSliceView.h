@@ -138,7 +138,7 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(int maxDisplayStates READ maxDisplayStates WRITE setMaxDisplayStates);
 
 public:
-
+  typedef QGLWidget                        Superclass;
   typedef double                           ImagePixelType;
   typedef unsigned char                    OverlayPixelType;
   typedef itk::Image<ImagePixelType,3>     ImageType;
@@ -148,8 +148,8 @@ public:
   typedef ImageType::RegionType   RegionType;
   typedef ImageType::SizeType     SizeType;
   typedef ImageType::IndexType    IndexType;
-  typedef itk::ColorTable<double>        ColorTableType;
-  typedef ColorTableType::Pointer       ColorTablePointer;
+  typedef itk::ColorTable<double> ColorTableType;
+  typedef ColorTableType::Pointer ColorTablePointer;
 
 public:
 
