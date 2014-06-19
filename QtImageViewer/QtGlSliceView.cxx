@@ -36,7 +36,7 @@
 #include <QScrollArea>
 
 QtGlSliceView::QtGlSliceView(QWidget *parent)
-: QGLWidget(parent)
+  : QGLWidget(parent)
 {
   cDisplayState         = 0x01;
   cMaxDisplayStates     = 2; // Off and On.
@@ -395,7 +395,6 @@ QtGlSliceView::update()
     {
     return;
     }
-  //setFocus();
   int winWidth = (int)(cDimSize[ cWinOrder[0] ] / cWinZoom);
   cWinSizeX = ((int) winWidth);
   int ti = (int)((int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
@@ -1452,7 +1451,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       showHelp();
       break;
     default:
-      QWidget::keyPressEvent(event);
+      this->QWidget::keyPressEvent(event);
       break;
     }
 }
@@ -1462,6 +1461,7 @@ void QtGlSliceView::resizeEvent(QResizeEvent* event)
 {
   cW = event->size().width();
   cH = event->size().height();
+  this->Superclass::resizeEvent(event);
 }
 
 

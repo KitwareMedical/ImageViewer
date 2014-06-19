@@ -35,13 +35,14 @@ limitations under the License.
 
 class QtImageViewer_EXPORT QtSlicer : public QDialog, public Ui::GuiDialogBase
 {
-  Q_OBJECT
-  Q_ENUMS(displayDetailsState)
+  Q_OBJECT;
+  Q_ENUMS(displayDetailsState);
 public:
+  typedef QDialog Superclass;
 
-  QtSlicer( QWidget* parent = 0, Qt::WindowFlags fl = Qt::WindowTitleHint |
-      Qt::WindowCloseButtonHint );
-  ~QtSlicer();
+  QtSlicer( QWidget* parent = 0,
+            Qt::WindowFlags fl = Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
+  virtual ~QtSlicer();
 
   enum DisplayStates{
     OFF = 0x00,
@@ -49,7 +50,7 @@ public:
     ON_TEXTBOX = 0x02,
     OFF_COLLAPSE = 0x04,
     ON_COLLAPSE = 0x08
- };
+  };
 
   typedef itk::Image<double,3>                ImageType;
   typedef unsigned char                       OverlayPixelType;
@@ -65,9 +66,14 @@ public slots:
   void updateSliceMaximum();
   void setInputImage(ImageType * newImData);
   void setOverlayImage(OverlayType * newImData);
-  void setDisplaySliceNumber(int number);
+
 protected:
   QDialog* HelpDialog;
+  bool IsRedirectingEvent;
+
+  /// Reimplemented to propagate key events to QtGlSliceView.
+  virtual void keyPressEvent(QKeyEvent* event);
+  virtual bool eventFilter(QObject* obj, QEvent* event);
 };
 
 #endif
