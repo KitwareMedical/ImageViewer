@@ -20,8 +20,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =========================================================================*/
-#ifndef __QtSlicer_h
-#define __QtSlicer_h
+#ifndef __QtImageViewer_h
+#define __QtImageViewer_h
 
 // Qt includes
 #include <QDialog>
@@ -32,9 +32,9 @@ limitations under the License.
 // ImageViewer includes
 #include "QtImageViewer_Export.h"
 class QtGlSliceView;
-class QtSlicerPrivate;
+class QtImageViewerPrivate;
 
-class QtImageViewer_EXPORT QtSlicer : public QDialog
+class QtImageViewer_EXPORT QtImageViewer : public QDialog
 {
   Q_OBJECT;
 public:
@@ -44,9 +44,9 @@ public:
   typedef unsigned char                       OverlayPixelType;
   typedef itk::Image<OverlayPixelType,3>      OverlayImageType;
 
-  QtSlicer( QWidget* parent = 0,
+  QtImageViewer( QWidget* parent = 0,
             Qt::WindowFlags fl = Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
-  virtual ~QtSlicer();
+  virtual ~QtImageViewer();
 
   QtGlSliceView* sliceView()const;
 
@@ -74,15 +74,15 @@ protected slots:
   void updateSliceRange();
 
 protected:
-  QScopedPointer<QtSlicerPrivate> d_ptr;
+  QScopedPointer<QtImageViewerPrivate> d_ptr;
 
   /// Reimplemented to propagate key events to QtGlSliceView.
   virtual void keyPressEvent(QKeyEvent* event);
   virtual bool eventFilter(QObject* obj, QEvent* event);
 
 private:
-  Q_DECLARE_PRIVATE(QtSlicer);
-  Q_DISABLE_COPY(QtSlicer);
+  Q_DECLARE_PRIVATE(QtImageViewer);
+  Q_DISABLE_COPY(QtImageViewer);
 };
 
 #endif

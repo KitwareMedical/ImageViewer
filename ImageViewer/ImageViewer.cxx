@@ -31,16 +31,16 @@ limitations under the License.
 
 //QtImageViewer includes
 #include "QtGlSliceView.h"
-#include "QtSlicer.h"
+#include "QtImageViewer.h"
 
 int execImageViewer(int argc, char* argv[])
 {
   QApplication myApp( argc, argv );
 
-  QtSlicer qtSlicerWindow( 0 );
-  qtSlicerWindow.setWindowTitle("ImageViewer");
-  qtSlicerWindow.loadInputImage();
-  qtSlicerWindow.show();
+  QtImageViewer viewer( 0 );
+  viewer.setWindowTitle("ImageViewer");
+  viewer.loadInputImage();
+  viewer.show();
 
   int execReturn;
   try
@@ -64,54 +64,54 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
   QApplication myApp(argc, argv);
 
-  QtSlicer qtSlicerWindow( 0 );
-  qtSlicerWindow.setWindowTitle("ImageViewer");
+  QtImageViewer viewer( 0 );
+  viewer.setWindowTitle("ImageViewer");
 
   QString filePathToLoad;
 #ifdef USE_CLI
   filePathToLoad = QString::fromStdString(inputImage);
 #endif
 
-  qtSlicerWindow.loadInputImage(filePathToLoad);
+  viewer.loadInputImage(filePathToLoad);
 
 #ifdef USE_CLI
   if(!overlayImage.empty())
     {
-    qtSlicerWindow.loadOverlayImage(QString::fromStdString(overlayImage));
+    viewer.loadOverlayImage(QString::fromStdString(overlayImage));
     }
-  qtSlicerWindow.sliceView()->setOrientation(orientation);
+  viewer.sliceView()->setOrientation(orientation);
   if(sliceOffset != -1)
     {
-    qtSlicerWindow.sliceView()->setSliceNum(sliceOffset);
+    viewer.sliceView()->setSliceNum(sliceOffset);
     }
   if(minIntensityArg.isSet())
     {
-    qtSlicerWindow.sliceView()->setMinIntensity(minIntensity);
+    viewer.sliceView()->setMinIntensity(minIntensity);
     }
   if(maxIntensityArg.isSet())
     {
-    qtSlicerWindow.sliceView()->setMaxIntensity(maxIntensity);
+    viewer.sliceView()->setMaxIntensity(maxIntensity);
     }
 
-  qtSlicerWindow.sliceView()->setZoom(zoom);
-  qtSlicerWindow.sliceView()->transpose(transpose);
-  qtSlicerWindow.sliceView()->flipZ(zFlipped);
-  qtSlicerWindow.sliceView()->flipY(yFlipped);
-  qtSlicerWindow.sliceView()->flipX(xFlipped);
-  qtSlicerWindow.sliceView()->setOverlayOpacity(overlayOpacity);
-  qtSlicerWindow.sliceView()->setViewCrosshairs(crosshairs);
-  qtSlicerWindow.sliceView()->setDisplayState(details);
-  qtSlicerWindow.sliceView()->setViewValuePhysicalUnits(physicalUnits);
-  qtSlicerWindow.sliceView()->setViewValue(value);
-  qtSlicerWindow.sliceView()->setViewAxisLabel(axisLabel);
-  qtSlicerWindow.sliceView()->setViewClickedPoints(clickedPoints);
-  qtSlicerWindow.sliceView()->setImageMode(imageMode.c_str());
-  qtSlicerWindow.sliceView()->setIWModeMax(iwModeMax.c_str());
-  qtSlicerWindow.sliceView()->setIWModeMin(iwModeMin.c_str());
-  qtSlicerWindow.sliceView()->update();
+  viewer.sliceView()->setZoom(zoom);
+  viewer.sliceView()->transpose(transpose);
+  viewer.sliceView()->flipZ(zFlipped);
+  viewer.sliceView()->flipY(yFlipped);
+  viewer.sliceView()->flipX(xFlipped);
+  viewer.sliceView()->setOverlayOpacity(overlayOpacity);
+  viewer.sliceView()->setViewCrosshairs(crosshairs);
+  viewer.sliceView()->setDisplayState(details);
+  viewer.sliceView()->setViewValuePhysicalUnits(physicalUnits);
+  viewer.sliceView()->setViewValue(value);
+  viewer.sliceView()->setViewAxisLabel(axisLabel);
+  viewer.sliceView()->setViewClickedPoints(clickedPoints);
+  viewer.sliceView()->setImageMode(imageMode.c_str());
+  viewer.sliceView()->setIWModeMax(iwModeMax.c_str());
+  viewer.sliceView()->setIWModeMin(iwModeMin.c_str());
+  viewer.sliceView()->update();
 #endif
 
-  qtSlicerWindow.show();
+  viewer.show();
   int execReturn;
   try
     {
@@ -131,7 +131,7 @@ int main( int argc, char* argv[] )
 #if !defined(BUILD_SHARED_LIBS)
   Q_INIT_RESOURCE(qtImageViewerResources);
 #endif
-  int res;
+  int res = EXIT_FAILURE;
   if(argc == 1)
     {
     res = execImageViewer(argc, argv);

@@ -29,11 +29,10 @@ limitations under the License.
 #include <QSlider>
 
 // QtImageViewer includes
-#include "QtSlicer.h"
+#include "QtImageViewer.h"
 #include "QtSliceControlsWidget.h"
 #include "QtGlSliceView.h"
-#include "ui_QtSlicerGUI.h"
-#include "ui_QtSlicerHelpGUI.h"
+#include "ui_QtImageViewer.h"
 
 // ITK includes
 #include <itkImageFileReader.h>
@@ -41,11 +40,11 @@ limitations under the License.
 // STD includes
 #include <iostream>
 
-class QtSlicerPrivate: public Ui::QtSlicerGUI
+class QtImageViewerPrivate: public Ui_QtImageViewer
 {
-  Q_DECLARE_PUBLIC(QtSlicer);
+  Q_DECLARE_PUBLIC(QtImageViewer);
 public:
-  typedef Ui::QtSlicerGUI Superclass;
+  typedef Ui_QtImageViewer Superclass;
   enum DisplayStates{
     OFF = 0x00,
     ON_SLICEVIEW = 0x01,
@@ -54,7 +53,7 @@ public:
     ON_COLLAPSE = 0x08
   };
 
-  QtSlicerPrivate(QtSlicer& obj);
+  QtImageViewerPrivate(QtImageViewer& obj);
 
   virtual void setupUi(QDialog* widgetToSetup);
 
@@ -78,11 +77,11 @@ public:
   bool IsRedirectingEvent;
 
 protected:
-  QtSlicer* const q_ptr;
+  QtImageViewer* const q_ptr;
 };
 
 
-QtSlicerPrivate::QtSlicerPrivate(QtSlicer& obj)
+QtImageViewerPrivate::QtImageViewerPrivate(QtImageViewer& obj)
   : q_ptr(&obj)
   , HelpDialog(0)
   , IsRedirectingEvent(false)
@@ -90,9 +89,9 @@ QtSlicerPrivate::QtSlicerPrivate(QtSlicer& obj)
 }
 
 
-void QtSlicerPrivate::setupUi(QDialog* widgetToSetup)
+void QtImageViewerPrivate::setupUi(QDialog* widgetToSetup)
 {
-  Q_Q(QtSlicer);
+  Q_Q(QtImageViewer);
   this->Superclass::setupUi(widgetToSetup);
 
   this->Controls->setSliceView(this->OpenGlWindow);
@@ -124,10 +123,10 @@ void QtSlicerPrivate::setupUi(QDialog* widgetToSetup)
 }
 
 template <class PixelType>
-typename itk::Image<PixelType, 3>::Pointer QtSlicerPrivate
+typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate
 ::loadImage(QString& filePath, const QString& imageType)
 {
-  Q_Q(QtSlicer);
+  Q_Q(QtImageViewer);
   typename itk::Image<PixelType, 3>::Pointer res;
   // If the path is empty, prompt a dialog to give a chance to select the image
   // to load.
@@ -158,9 +157,9 @@ typename itk::Image<PixelType, 3>::Pointer QtSlicerPrivate
 }
 
 template <class PixelType>
-typename itk::Image<PixelType, 3>::Pointer QtSlicerPrivate::readImage(const QString& filePath)
+typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate::readImage(const QString& filePath)
 {
-  Q_Q(QtSlicer);
+  Q_Q(QtImageViewer);
   typedef itk::Image<PixelType, 3> ImageType;
   typedef itk::ImageFileReader<ImageType> ReaderType;
   typename ReaderType::Pointer reader = ReaderType::New();
@@ -189,9 +188,9 @@ typename itk::Image<PixelType, 3>::Pointer QtSlicerPrivate::readImage(const QStr
   return res;
 }
 
-void QtSlicerPrivate::updateSize()
+void QtImageViewerPrivate::updateSize()
 {
-  Q_Q(QtSlicer);
+  Q_Q(QtImageViewer);
   q->updateGeometry();
 
   QWidgetList childWidgets = this->layoutWidgets(q->layout(), 2);
@@ -226,7 +225,7 @@ void QtSlicerPrivate::updateSize()
 }
 
 
-QWidgetList QtSlicerPrivate::layoutWidgets(QLayout* layout, int level)
+QWidgetList QtImageViewerPrivate::layoutWidgets(QLayout* layout, int level)
 {
   QWidgetList res;
   if (level == 0)
@@ -249,11 +248,11 @@ QWidgetList QtSlicerPrivate::layoutWidgets(QLayout* layout, int level)
 }
 
 
-QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl )
+QtImageViewer::QtImageViewer(QWidget* parent, Qt::WindowFlags fl )
   : QDialog( parent, fl )
-  , d_ptr(new QtSlicerPrivate(*this))
+  , d_ptr(new QtImageViewerPrivate(*this))
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   d->setupUi(this);
 
   this->onDisplayStateChanged(d->OpenGlWindow->displayState());
@@ -261,21 +260,21 @@ QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl )
 }
 
 
-QtSlicer::~QtSlicer()
+QtImageViewer::~QtImageViewer()
 {
 }
 
 
-QtGlSliceView* QtSlicer::sliceView()const
+QtGlSliceView* QtImageViewer::sliceView()const
 {
-  Q_D(const QtSlicer);
+  Q_D(const QtImageViewer);
   return d->OpenGlWindow;
 }
 
 
-void QtSlicer::setInputImage(ImageType* newImData)
+void QtImageViewer::setInputImage(ImageType* newImData)
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   d->OpenGlWindow->setInputImage(newImData);
   /// \todo fire this signal from OpenGlWindow.
   this->updateSliceRange();
@@ -290,18 +289,18 @@ void QtSlicer::setInputImage(ImageType* newImData)
 }
 
 
-void QtSlicer::setOverlayImage(OverlayImageType* newImData)
+void QtImageViewer::setOverlayImage(OverlayImageType* newImData)
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   d->OpenGlWindow->setInputOverlay(newImData);
   //d->OpenGlWindow->update();
   d->updateSize();
 }
 
 
-bool QtSlicer::loadInputImage(QString filePathToLoad)
+bool QtImageViewer::loadInputImage(QString filePathToLoad)
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
 
   ImageType::Pointer image = d->loadImage<double>(filePathToLoad);
   if (image.IsNotNull())
@@ -313,9 +312,9 @@ bool QtSlicer::loadInputImage(QString filePathToLoad)
 }
 
 
-bool QtSlicer::loadOverlayImage(QString filePathToLoad)
+bool QtImageViewer::loadOverlayImage(QString filePathToLoad)
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
 
   OverlayImageType::Pointer image = d->loadImage<OverlayPixelType>(filePathToLoad);
   if (image.IsNotNull())
@@ -326,30 +325,30 @@ bool QtSlicer::loadOverlayImage(QString filePathToLoad)
 }
 
 
-void QtSlicer::showHelp()
+void QtImageViewer::showHelp()
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   /// \todo don't show help in OpenGlWindow
   d->OpenGlWindow->showHelp();
   d->HelpDialog = d->OpenGlWindow->helpWindow();
 }
 
 
-void QtSlicer::onDisplayStateChanged(int state)
+void QtImageViewer::onDisplayStateChanged(int state)
 {
-  Q_D(QtSlicer);
-  if (state & QtSlicerPrivate::ON_COLLAPSE)
+  Q_D(QtImageViewer);
+  if (state & QtImageViewerPrivate::ON_COLLAPSE)
     {
-    d->OpenGlWindow->setDisplayState(state | QtSlicerPrivate::ON_SLICEVIEW);
+    d->OpenGlWindow->setDisplayState(state | QtImageViewerPrivate::ON_SLICEVIEW);
     return;
     }
   // Keep the OpenGlWindow size in the following.
   d->OpenGlWindow->setFixedSize(d->OpenGlWindow->geometry().size());
   const bool controlsVisible =
-    !(state & QtSlicerPrivate::OFF_COLLAPSE) && !(state & QtSlicerPrivate::ON_COLLAPSE);
+    !(state & QtImageViewerPrivate::OFF_COLLAPSE) && !(state & QtImageViewerPrivate::ON_COLLAPSE);
   d->Slider->setVisible(controlsVisible);
   d->Controls->setVisible(controlsVisible);
-  d->Controls->setTextVisible(state & QtSlicerPrivate::ON_TEXTBOX);
+  d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
   d->ButtonBoxWidget->setVisible(controlsVisible);
   qobject_cast<QGridLayout*>(this->layout())->setHorizontalSpacing(
     controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
@@ -360,9 +359,9 @@ void QtSlicer::onDisplayStateChanged(int state)
 }
 
 
-void QtSlicer::updateSliceRange()
+void QtImageViewer::updateSliceRange()
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   const int maximum = d->OpenGlWindow->maxSliceNum() - 1;
   d->SliceNumSlider->setMaximum(maximum);
   d->SliceValue->setMaximum(maximum);
@@ -370,9 +369,9 @@ void QtSlicer::updateSliceRange()
 }
 
 
-void QtSlicer::keyPressEvent(QKeyEvent* event)
+void QtImageViewer::keyPressEvent(QKeyEvent* event)
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   if (!d->IsRedirectingEvent)
     {
     d->IsRedirectingEvent = true;
@@ -383,9 +382,9 @@ void QtSlicer::keyPressEvent(QKeyEvent* event)
   this->Superclass::keyPressEvent(event);
 }
 
-bool QtSlicer::eventFilter(QObject *obj, QEvent *event)
+bool QtImageViewer::eventFilter(QObject *obj, QEvent *event)
 {
-  Q_D(QtSlicer);
+  Q_D(QtImageViewer);
   if (qobject_cast<QDoubleSpinBox*>(obj) &&
       event->type() == QEvent::KeyPress)
     {

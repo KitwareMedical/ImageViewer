@@ -49,40 +49,39 @@ include_directories(
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
 
-set(QtSlicer_SRCS
+set(QtImageViewer_SRCS
   QtGlSliceView.cxx
-  QtSlicer.cxx
+  QtImageViewer.cxx
   QtSliceControlsWidget.cxx
   )
 
-set(QtSlicer_GUI_SRCS
-  Resources/UI/QtSlicerGUI.ui
-  Resources/UI/QtSlicerHelpGUI.ui
+set(QtImageViewer_GUI_SRCS
+  Resources/UI/QtImageViewer.ui
+  Resources/UI/QtImageViewerHelp.ui
   Resources/UI/QtSliceControlsWidgetGUI.ui
   )
 
-set(QtSlicer_MOC_SRCS
+set(QtImageViewer_MOC_SRCS
   QtGlSliceView.h
-  QtSlicer.h
+  QtImageViewer.h
   QtSliceControlsWidget.h
-
   )
 
-set(QtSlicer_RESOURCES
+set(QtImageViewer_RESOURCES
   Resources/qtImageViewerResources.qrc
   )
 
-QT4_WRAP_UI(QtSlicer_UI_CXX ${QtSlicer_GUI_SRCS})
-QT4_WRAP_CPP(QtSlicer_SRCS ${QtSlicer_MOC_SRCS})
-QT4_ADD_RESOURCES(QtSlicer_QRC_SRCS ${QtSlicer_RESOURCES})
+QT4_WRAP_UI(QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS})
+QT4_WRAP_CPP(QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS})
+QT4_ADD_RESOURCES(QtImageViewer_QRC_SRCS ${QtImageViewer_RESOURCES})
 
 add_definitions(-DQT_DLL)
 add_definitions(-DQT_THREAD_SUPPORT)
 
-add_library(QtImageViewer ${QtSlicer_SRCS}
-  ${QtSlicer_GUI_SRCS}
-  ${QtSlicer_UI_CXX}
-  ${QtSlicer_QRC_SRCS}
+add_library(QtImageViewer ${QtImageViewer_SRCS}
+  ${QtImageViewer_GUI_SRCS}
+  ${QtImageViewer_UI_CXX}
+  ${QtImageViewer_QRC_SRCS}
   )
 
 install(TARGETS QtImageViewer DESTINATION lib)

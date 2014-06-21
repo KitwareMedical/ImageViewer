@@ -26,7 +26,7 @@ limitations under the License.
 
 //QtImageViewer include
 #include "QtGlSliceView.h"
-#include "ui_QtSlicerHelpGUI.h"
+#include "ui_QtImageViewerHelp.h"
 
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
@@ -771,7 +771,7 @@ void QtGlSliceView::showHelp()
   if (this->cHelpDialog == 0)
     {
     this->cHelpDialog = new QDialog(this);
-    Ui::HelpWindow helpUi;
+    Ui_QtImageViewerHelp helpUi;
     helpUi.setupUi(this->cHelpDialog);
     }
   this->cHelpDialog->show();
