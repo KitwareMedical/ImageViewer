@@ -20,8 +20,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =========================================================================*/
-#ifndef QtSlicer_h
-#define QtSlicer_h
+#ifndef __QtSlicer_h
+#define __QtSlicer_h
 
 // Qt includes
 #include <QDialog>
@@ -39,9 +39,10 @@ class QtImageViewer_EXPORT QtSlicer : public QDialog
   Q_OBJECT;
 public:
   typedef QDialog Superclass;
+  typedef double                              ImagePixelType;
   typedef itk::Image<double,3>                ImageType;
   typedef unsigned char                       OverlayPixelType;
-  typedef itk::Image<OverlayPixelType,3>      OverlayType;
+  typedef itk::Image<OverlayPixelType,3>      OverlayImageType;
 
   QtSlicer( QWidget* parent = 0,
             Qt::WindowFlags fl = Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
@@ -50,14 +51,23 @@ public:
   QtGlSliceView* sliceView()const;
 
 public slots:
-  bool loadOverlayImage(QString overlayImagePath = QString());
-  bool loadInputImage(QString filePathTLoad = QString());
+  /// Load an image from a file path.
+  /// If the path is empty, a file dialog is prompted to the user.
+  /// \sa loadOverlayImage(), setInputImage()
+  bool loadInputImage(QString filePath = QString());
 
+  /// Load an image from a file path and apply as overlay in the viewer.
+  //// \sa loadInputImage(), setOverlayImage()
+  bool loadOverlayImage(QString filePath = QString());
+
+  /// Set the image to view.
+  /// \sa setOverlayImage(), loadInputImage()
   void setInputImage(ImageType * newImData);
-  void setOverlayImage(OverlayType * newImData);
+  /// Set an image as overlay.
+  /// \sa setInputImage(), loadOverlayImage()
+  void setOverlayImage(OverlayImageType * newImData);
 
-  void showHelp(bool checked = true);
-  void hideHelp();
+  void showHelp();
 
 protected slots:
   void onDisplayStateChanged(int details);

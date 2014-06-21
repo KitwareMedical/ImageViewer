@@ -41,11 +41,11 @@ limitations under the License.
 // STD includes
 #include <iostream>
 
-class QtSlicerPrivate: public Ui::GuiDialogBase
+class QtSlicerPrivate: public Ui::QtSlicerGUI
 {
   Q_DECLARE_PUBLIC(QtSlicer);
 public:
-  typedef Ui::GuiDialogBase Superclass;
+  typedef Ui::QtSlicerGUI Superclass;
   enum DisplayStates{
     OFF = 0x00,
     ON_SLICEVIEW = 0x01,
@@ -57,6 +57,13 @@ public:
   QtSlicerPrivate(QtSlicer& obj);
 
   virtual void setupUi(QDialog* widgetToSetup);
+
+  template <class PixelType>
+  typename itk::Image<PixelType,3>::Pointer loadImage(QString& filePath,
+                                                      const QString& imageType = QString());
+
+  template <class PixelType>
+  typename itk::Image<PixelType,3>::Pointer readImage(const QString& filePath);
 
   /// Resize the entire dialog based on the current size and to ensure it fits
   /// the contents.
@@ -91,10 +98,12 @@ void QtSlicerPrivate::setupUi(QDialog* widgetToSetup)
   this->Controls->setSliceView(this->OpenGlWindow);
   this->OpenGlWindow->setMaxDisplayStates(5);
 
-  QObject::connect(this->ButtonOk, SIGNAL(clicked()),
+  QObject::connect(this->ButtonBox, SIGNAL(accepted()),
                    q, SLOT(accept()));
-  QObject::connect(this->ButtonHelp, SIGNAL(toggled(bool)),
-                   q, SLOT(showHelp(bool)));
+  QObject::connect(this->ButtonBox, SIGNAL(rejected()),
+                   q, SLOT(reject()));
+  QObject::connect(this->ButtonBox, SIGNAL(helpRequested()),
+                   q, SLOT(showHelp()));
   QObject::connect(this->SliceNumSlider, SIGNAL(sliderMoved(int)),
                    this->OpenGlWindow, SLOT(changeSlice(int)));
   QObject::connect(this->OpenGlWindow, SIGNAL(sliceNumChanged(int)),
@@ -114,6 +123,71 @@ void QtSlicerPrivate::setupUi(QDialog* widgetToSetup)
     }
 }
 
+template <class PixelType>
+typename itk::Image<PixelType, 3>::Pointer QtSlicerPrivate
+::loadImage(QString& filePath, const QString& imageType)
+{
+  Q_Q(QtSlicer);
+  typename itk::Image<PixelType, 3>::Pointer res;
+  // If the path is empty, prompt a dialog to give a chance to select the image
+  // to load.
+  if (filePath.isEmpty())
+    {
+    filePath = QFileDialog::getOpenFileName(
+        q, imageType, QDir::currentPath());
+    }
+  // Empty if the user cancelled the dialog.
+  if (filePath.isEmpty())
+    {
+    return res;
+    }
+  // Might be a non existing path.
+  QFileInfo fileInfo(filePath);
+  if (!fileInfo.exists())
+    {
+    const QString messageTitle("Failed loading");
+    const QString message =
+      QString("The file you have selected does not exist. %1").arg(filePath);
+    QMessageBox::warning(q, messageTitle, message);
+    return res;
+    }
+
+  // Read the file.
+  res = this->readImage<PixelType>(filePath);
+  return res;
+}
+
+template <class PixelType>
+typename itk::Image<PixelType, 3>::Pointer QtSlicerPrivate::readImage(const QString& filePath)
+{
+  Q_Q(QtSlicer);
+  typedef itk::Image<PixelType, 3> ImageType;
+  typedef itk::ImageFileReader<ImageType> ReaderType;
+  typename ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName( filePath.toLatin1().data() );
+
+  std::cout << "Read image " << filePath.toStdString() << "...";
+  std::cout.flush();
+  typename itk::Image<PixelType, 3>::Pointer res;
+  try
+    {
+    reader->Update();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    std::cout << " failed" << std::endl;
+    std::cerr << "Exception when reading image" << std::endl;
+    std::cerr << e << std::endl;
+
+    const QString title("Failed to read image");
+    const QString message = QString("%1").arg(filePath);
+    QMessageBox::warning(q, title, message);
+    return res;
+    }
+  std::cout << " ok" << std::endl;
+  res = reader->GetOutput();
+  return res;
+}
 
 void QtSlicerPrivate::updateSize()
 {
@@ -131,6 +205,7 @@ void QtSlicerPrivate::updateSize()
       QPoint childPos = child->mapTo(q, QPoint(0,0));
       int width = child->width() ? child->width() : child->sizeHint().width();
       int height = child->height() ? child->height() : child->sizeHint().height();
+      //qDebug() << child << width << height;
       geom = geom.united(QRect(childPos, QSize(width, height)));
       }
     }
@@ -198,34 +273,65 @@ QtGlSliceView* QtSlicer::sliceView()const
 }
 
 
-void QtSlicer::showHelp(bool show)
+void QtSlicer::setInputImage(ImageType* newImData)
 {
   Q_D(QtSlicer);
-  if (!show)
-    {
-    if (d->HelpDialog)
-      {
-      d->HelpDialog->reject();
-      }
-    }
-  else
-    {
-    /// \todo don't show help in OpenGlWindow
-    d->OpenGlWindow->showHelp();
-    d->HelpDialog = d->OpenGlWindow->helpWindow();
-    if (d->HelpDialog != 0)
-      {
-      QObject::connect(d->HelpDialog, SIGNAL(rejected()),
-                       this, SLOT(hideHelp()), Qt::UniqueConnection);
-      }
-    }
+  d->OpenGlWindow->setInputImage(newImData);
+  /// \todo fire this signal from OpenGlWindow.
+  this->updateSliceRange();
+  d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
+
+  d->Controls->setInputImage();
+
+  // Use adjustSize() instead of updateSize() because there is no valid prior
+  // size.
+  this->layout()->activate();
+  this->adjustSize();
 }
 
 
-void QtSlicer::hideHelp()
+void QtSlicer::setOverlayImage(OverlayImageType* newImData)
 {
   Q_D(QtSlicer);
-  d->ButtonHelp->setChecked(false);
+  d->OpenGlWindow->setInputOverlay(newImData);
+  //d->OpenGlWindow->update();
+  d->updateSize();
+}
+
+
+bool QtSlicer::loadInputImage(QString filePathToLoad)
+{
+  Q_D(QtSlicer);
+
+  ImageType::Pointer image = d->loadImage<double>(filePathToLoad);
+  if (image.IsNotNull())
+    {
+    this->setInputImage( image );
+    this->setWindowTitle(filePathToLoad);
+    }
+  return image.IsNotNull();
+}
+
+
+bool QtSlicer::loadOverlayImage(QString filePathToLoad)
+{
+  Q_D(QtSlicer);
+
+  OverlayImageType::Pointer image = d->loadImage<OverlayPixelType>(filePathToLoad);
+  if (image.IsNotNull())
+    {
+    this->setOverlayImage( image );
+    }
+  return image.IsNotNull();
+}
+
+
+void QtSlicer::showHelp()
+{
+  Q_D(QtSlicer);
+  /// \todo don't show help in OpenGlWindow
+  d->OpenGlWindow->showHelp();
+  d->HelpDialog = d->OpenGlWindow->helpWindow();
 }
 
 
@@ -241,127 +347,16 @@ void QtSlicer::onDisplayStateChanged(int state)
   d->OpenGlWindow->setFixedSize(d->OpenGlWindow->geometry().size());
   const bool controlsVisible =
     !(state & QtSlicerPrivate::OFF_COLLAPSE) && !(state & QtSlicerPrivate::ON_COLLAPSE);
-  d->Buttons->setVisible(controlsVisible);
   d->Slider->setVisible(controlsVisible);
   d->Controls->setVisible(controlsVisible);
   d->Controls->setTextVisible(state & QtSlicerPrivate::ON_TEXTBOX);
+  d->ButtonBoxWidget->setVisible(controlsVisible);
+  qobject_cast<QGridLayout*>(this->layout())->setHorizontalSpacing(
+    controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
+  qobject_cast<QGridLayout*>(this->layout())->setVerticalSpacing(
+    controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
   d->updateSize();
   d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-}
-
-
-void QtSlicer::setInputImage(ImageType* newImData)
-{
-  Q_D(QtSlicer);
-  d->OpenGlWindow->setInputImage(newImData);
-  /// fire this signal from OpenGlWindow.
-  this->updateSliceRange();
-  d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
-
-  d->Controls->setInputImage();
-
-  d->OpenGlWindow->update();
-  // Use adjustSize() instead of updateSize() because there is no prior size
-  // that is valid.
-  this->adjustSize();
-}
-
-
-void QtSlicer::setOverlayImage(OverlayType * newImData)
-{
-  Q_D(QtSlicer);
-  d->OpenGlWindow->setInputOverlay(newImData);
-  d->OpenGlWindow->update();
-  d->updateSize();
-}
-
-
-bool QtSlicer::loadInputImage(QString filePathToLoad)
-{
-  Q_D(QtSlicer);
-
-  typedef itk::ImageFileReader<ImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
-  if (filePathToLoad.isEmpty())
-    {
-    filePathToLoad = QFileDialog::getOpenFileName(
-        0, "", QDir::currentPath());
-    }
-  // Empty if the user cancelled the dialog.
-  if (filePathToLoad.isEmpty())
-    {
-    return false;
-    }
-  QFileInfo filePath(filePathToLoad);
-  if (!filePath.exists())
-    {
-    const QString title("Failed loading");
-    const QString message =
-      QString("The file you have selected does not exist. %1").arg(filePathToLoad);
-    QMessageBox::warning(this, title, message);
-    return false;
-    }
-  reader->SetFileName( filePathToLoad.toLatin1().data() );
-  this->setWindowTitle(filePath.fileName());
-  qDebug() << "Loading image " << filePathToLoad << "...";
-  try
-    {
-    reader->Update();
-    }
-  catch (itk::ExceptionObject & e)
-    {
-    std::cerr << "Exception during GUI execution" << std::endl;
-    std::cerr << e << std::endl;
-    const QString title("Failed to read image.");
-    const QString message = QString("%1").arg(filePathToLoad);
-    QMessageBox::warning(this, title, message);
-    return false;
-    }
-  this->setInputImage( reader->GetOutput() );
-  return true;
-}
-
-bool QtSlicer::loadOverlayImage(QString overlayImagePath)
-{
-  typedef itk::ImageFileReader<OverlayType> OverlayReaderType;
-  OverlayReaderType::Pointer overlayReader = OverlayReaderType::New();
-
-  if (overlayImagePath.isEmpty())
-    {
-    overlayImagePath = QFileDialog::getOpenFileName(
-      0, "", QDir::currentPath());
-    }
-  if (overlayImagePath.isEmpty())
-    {
-    return false;
-    }
-  QFileInfo filePath(overlayImagePath);
-  if (!filePath.exists())
-    {
-    const QString title("Failed loading");
-    const QString message =
-      QString("The file you have selected does not exist. %1").arg(overlayImagePath);
-    QMessageBox::warning(this, title, message);
-    return false;
-    }
-  overlayReader->SetFileName( overlayImagePath.toLatin1().data() );
-
-  qDebug() << "Loading image " << overlayImagePath << " ... ";
-  try
-    {
-    overlayReader->Update();
-    }
-  catch (itk::ExceptionObject & e)
-    {
-    std::cerr << "Exception during GUI execution" << std::endl;
-    std::cerr << e << std::endl;
-    const QString title("Failed to read image.");
-    const QString message = QString("%1").arg(overlayImagePath);
-    QMessageBox::warning(this, title, message);
-    return false;
-    }
-  this->setOverlayImage(overlayReader->GetOutput());
-  return true;
 }
 
 

@@ -1475,12 +1475,14 @@ void QtGlSliceView::resizeEvent(QResizeEvent* event)
 
 QSize QtGlSliceView::minimumSizeHint()const
 {
-  return this->sizeHint();
+  const QSize sizeHint = this->sizeHint();
+  return sizeHint;
 }
 
 QSize QtGlSliceView::sizeHint()const
 {
-  return QSize(cWinSizeX, cWinSizeY);
+  const QSize sizeHint(cWinSizeX, cWinSizeY);
+  return sizeHint;
 }
 
 
@@ -1498,7 +1500,9 @@ bool QtGlSliceView::hasHeightForWidth() const
 
 int QtGlSliceView::heightForWidth(int width) const
 {
-  return cWinSizeY ? (width * cWinSizeX) / cWinSizeY : width;
+  // \todo Currently the view handles only square widgets.
+  //return cWinSizeY ? (width * cWinSizeY) / cWinSizeX : width;
+  return width;
 }
 
 
