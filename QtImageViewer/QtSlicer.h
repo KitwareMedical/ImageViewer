@@ -74,6 +74,11 @@ protected:
   /// Reimplemented to propagate key events to QtGlSliceView.
   virtual void keyPressEvent(QKeyEvent* event);
   virtual bool eventFilter(QObject* obj, QEvent* event);
+
+  /// Resize the entire dialog based on the current size and to ensure it fits
+  /// the contents.
+  /// \sa QWidget::resize(), QWidget::adjustSize()
+  void updateSize();
 };
 
 #endif

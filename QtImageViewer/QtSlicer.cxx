@@ -24,6 +24,7 @@ limitations under the License.
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
+#include <QGridLayout>
 #include <QKeyEvent>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -39,13 +40,14 @@ limitations under the License.
 #include <iostream>
 
 QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl )
-  :QDialog( parent, fl )
+  : QDialog( parent, fl )
 {
+  this->HelpDialog = 0;
+  this->IsRedirectingEvent = false;
+
   this->setupUi(this);
   this->Controls->setSliceView(this->OpenGlWindow);
   this->OpenGlWindow->setMaxDisplayStates(5);
-  this->HelpDialog = 0;
-  this->IsRedirectingEvent = false;
   QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
   QObject::connect(ButtonHelp, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
   QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(changeSlice(int)));
@@ -103,11 +105,15 @@ void QtSlicer::setDisplayState(int state)
     this->OpenGlWindow->setDisplayState(state | ON_SLICEVIEW);
     return;
     }
+  // Keep the OpenGlWindow size in the following.
+  this->OpenGlWindow->setFixedSize(this->OpenGlWindow->geometry().size());
   const bool controlsVisible = !(state & OFF_COLLAPSE) && !(state & ON_COLLAPSE);
   this->Buttons->setVisible(controlsVisible);
   this->Slider->setVisible(controlsVisible);
   this->Controls->setVisible(controlsVisible);
   this->Controls->setTextVisible(state & ON_TEXTBOX);
+  this->updateSize();
+  this->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }
 
 
@@ -119,16 +125,18 @@ void QtSlicer::setInputImage(ImageType * newImData)
 
   this->Controls->setInputImage();
 
-  this->OpenGlWindow->show();
   this->OpenGlWindow->update();
+  // Use adjustSize() instead of updateSize() because there is no prior size
+  // that is valid.
+  this->adjustSize();
 }
 
 
 void QtSlicer::setOverlayImage(OverlayType * newImData)
 {
   this->OpenGlWindow->setInputOverlay(newImData);
-  this->OpenGlWindow->show();
   this->OpenGlWindow->update();
+  this->updateSize();
 }
 
 
@@ -218,6 +226,63 @@ bool QtSlicer::loadOverlayImage(QString overlayImagePath)
     }
   this->setOverlayImage(overlayReader->GetOutput());
   return true;
+}
+
+QWidgetList layoutWidgets(QLayout* layout, int level = -1)
+{
+  QWidgetList res;
+  if (level == 0)
+    {
+    return res;
+    }
+  for (int i = 0; i < layout->count(); ++i)
+    {
+    QLayoutItem* item = layout->itemAt(i);
+    if (item->widget())
+      {
+      res << item->widget();
+      }
+    if (item->layout())
+      {
+      res << layoutWidgets(item->layout(), level - 1);
+      }
+    }
+  return res;
+}
+
+
+void QtSlicer::updateSize()
+{
+  this->updateGeometry();
+
+  QWidgetList childWidgets = layoutWidgets(this->layout(), 2);
+  // Find the true width of the widget. Discard the children that are hidden.
+  // We do not need the height information.
+  QRect geom;
+  foreach(QWidget* child, childWidgets)
+    {
+    if (child->isVisibleTo(this))
+      {
+      QPoint childPos = child->mapTo(this, QPoint(0,0));
+      int width = child->width() ? child->width() : child->sizeHint().width();
+      int height = child->height() ? child->height() : child->sizeHint().height();
+      geom = geom.united(QRect(pos, QSize(width, height)));
+      }
+    }
+  int width = geom.width();
+  int height = geom.height();
+  if (this->Controls->isVisibleTo(this))
+    {
+    height = this->heightForWidth(width);
+    }
+  else
+    {
+    height = this->OpenGlWindow->heightForWidth(width);
+    }
+  QSize newSize = QSize(width, height);
+  // Can't use QWidget::adjustSize() here because it resizes to the sizeHint of
+  // the widget. Instead we want to resize using the current size, just update the height.
+  this->resize(newSize);
 }
 
 

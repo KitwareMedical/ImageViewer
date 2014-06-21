@@ -169,6 +169,8 @@ public:
   ColorTableType *colorTable(void) const;
 
   virtual void size(int w, int h);
+  virtual QSize minimumSizeHint()const;
+  virtual QSize sizeHint()const;
 
   virtual bool hasHeightForWidth()const;
   virtual int heightForWidth(int width)const;
