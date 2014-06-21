@@ -24,9 +24,7 @@ limitations under the License.
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
-#include <QGridLayout>
 #include <QKeyEvent>
-#include <QLineEdit>
 #include <QMessageBox>
 #include <QSlider>
 
@@ -34,201 +32,126 @@ limitations under the License.
 #include "QtSlicer.h"
 #include "QtSliceControlsWidget.h"
 #include "QtGlSliceView.h"
+#include "ui_QtSlicerGUI.h"
 #include "ui_QtSlicerHelpGUI.h"
+
+// ITK includes
+#include <itkImageFileReader.h>
 
 // STD includes
 #include <iostream>
 
-QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl )
-  : QDialog( parent, fl )
+class QtSlicerPrivate: public Ui::GuiDialogBase
 {
-  this->HelpDialog = 0;
-  this->IsRedirectingEvent = false;
+  Q_DECLARE_PUBLIC(QtSlicer);
+public:
+  typedef Ui::GuiDialogBase Superclass;
+  enum DisplayStates{
+    OFF = 0x00,
+    ON_SLICEVIEW = 0x01,
+    ON_TEXTBOX = 0x02,
+    OFF_COLLAPSE = 0x04,
+    ON_COLLAPSE = 0x08
+  };
 
-  this->setupUi(this);
+  QtSlicerPrivate(QtSlicer& obj);
+
+  virtual void setupUi(QDialog* widgetToSetup);
+
+  /// Resize the entire dialog based on the current size and to ensure it fits
+  /// the contents.
+  /// \sa QWidget::resize(), QWidget::adjustSize()
+  void updateSize();
+
+  /// Utility method that returns all the widgets of a layout that belong to
+  /// n levels.
+  static QWidgetList layoutWidgets(QLayout* layout, int level = -1);
+
+  QDialog* HelpDialog;
+  bool IsRedirectingEvent;
+
+protected:
+  QtSlicer* const q_ptr;
+};
+
+
+QtSlicerPrivate::QtSlicerPrivate(QtSlicer& obj)
+  : q_ptr(&obj)
+  , HelpDialog(0)
+  , IsRedirectingEvent(false)
+{
+}
+
+
+void QtSlicerPrivate::setupUi(QDialog* widgetToSetup)
+{
+  Q_Q(QtSlicer);
+  this->Superclass::setupUi(widgetToSetup);
+
   this->Controls->setSliceView(this->OpenGlWindow);
   this->OpenGlWindow->setMaxDisplayStates(5);
-  QObject::connect(ButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
-  QObject::connect(ButtonHelp, SIGNAL(toggled(bool)), this, SLOT(showHelp(bool)));
-  QObject::connect(SliceNumSlider, SIGNAL(sliderMoved(int)), OpenGlWindow, SLOT(changeSlice(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceNumSlider, SLOT(setValue(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(sliceNumChanged(int)), SliceValue, SLOT(setValue(int)));
-  QObject::connect(OpenGlWindow, SIGNAL(orientationChanged(int)), this, SLOT(updateSliceMaximum()));
-  QObject::connect(OpenGlWindow, SIGNAL(displayStateChanged(int)), this, SLOT(setDisplayState(int)));
+
+  QObject::connect(this->ButtonOk, SIGNAL(clicked()),
+                   q, SLOT(accept()));
+  QObject::connect(this->ButtonHelp, SIGNAL(toggled(bool)),
+                   q, SLOT(showHelp(bool)));
+  QObject::connect(this->SliceNumSlider, SIGNAL(sliderMoved(int)),
+                   this->OpenGlWindow, SLOT(changeSlice(int)));
+  QObject::connect(this->OpenGlWindow, SIGNAL(sliceNumChanged(int)),
+                   this->SliceNumSlider, SLOT(setValue(int)));
+  QObject::connect(this->OpenGlWindow, SIGNAL(sliceNumChanged(int)),
+                   this->SliceValue, SLOT(setValue(int)));
+  QObject::connect(this->OpenGlWindow, SIGNAL(orientationChanged(int)),
+                   q, SLOT(updateSliceRange()));
+  QObject::connect(this->OpenGlWindow, SIGNAL(displayStateChanged(int)),
+                   q, SLOT(onDisplayStateChanged(int)));
 
   // Install event filter on all the double spinboxes. They eat letter key
   // events for no reason
-  foreach(QDoubleSpinBox* spinBox, this->findChildren<QDoubleSpinBox*>())
+  foreach(QDoubleSpinBox* spinBox, q->findChildren<QDoubleSpinBox*>())
     {
-    spinBox->installEventFilter(this);
+    spinBox->installEventFilter(q);
     }
-
-  this->setDisplayState(this->OpenGlWindow->displayState());
-  this->OpenGlWindow->setFocus();
 }
 
 
-QtSlicer::~QtSlicer()
+void QtSlicerPrivate::updateSize()
 {
-}
+  Q_Q(QtSlicer);
+  q->updateGeometry();
 
-
-void QtSlicer::showHelp(bool checked)
-{
-  if(!checked && this->HelpDialog != 0)
+  QWidgetList childWidgets = this->layoutWidgets(q->layout(), 2);
+  // Find the true width of the widget. Discard the children that are hidden.
+  // We do not need the height information.
+  QRect geom;
+  foreach(QWidget* child, childWidgets)
     {
-    this->HelpDialog->reject();
+    if (child->isVisibleTo(q))
+      {
+      QPoint childPos = child->mapTo(q, QPoint(0,0));
+      int width = child->width() ? child->width() : child->sizeHint().width();
+      int height = child->height() ? child->height() : child->sizeHint().height();
+      geom = geom.united(QRect(childPos, QSize(width, height)));
+      }
+    }
+  int width = geom.width();
+  int height = geom.height();
+  if (this->Controls->isVisibleTo(q))
+    {
+    height = q->heightForWidth(width);
     }
   else
     {
-    this->OpenGlWindow->showHelp();
-    this->HelpDialog = this->OpenGlWindow->helpWindow();
-    if(this->HelpDialog != 0)
-      {
-      QObject::connect(HelpDialog, SIGNAL(rejected()), this,
-                       SLOT(hideHelp()),Qt::UniqueConnection);
-      }
+    height = this->OpenGlWindow->heightForWidth(width);
     }
+  QSize newSize = QSize(width, height);
+  // Can't use QWidget::adjustSize() here because it resizes to the sizeHint of
+  // the widget. Instead we want to resize using the current size, just update the height.
+  q->resize(newSize);
 }
 
 
-void QtSlicer::hideHelp()
-{
-  this->ButtonHelp->setChecked(false);
-}
-
-
-void QtSlicer::setDisplayState(int state)
-{
-  if (state & ON_COLLAPSE)
-    {
-    this->OpenGlWindow->setDisplayState(state | ON_SLICEVIEW);
-    return;
-    }
-  // Keep the OpenGlWindow size in the following.
-  this->OpenGlWindow->setFixedSize(this->OpenGlWindow->geometry().size());
-  const bool controlsVisible = !(state & OFF_COLLAPSE) && !(state & ON_COLLAPSE);
-  this->Buttons->setVisible(controlsVisible);
-  this->Slider->setVisible(controlsVisible);
-  this->Controls->setVisible(controlsVisible);
-  this->Controls->setTextVisible(state & ON_TEXTBOX);
-  this->updateSize();
-  this->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-}
-
-
-void QtSlicer::setInputImage(ImageType * newImData)
-{
-  this->OpenGlWindow->setInputImage(newImData);
-  this->updateSliceMaximum();
-  this->OpenGlWindow->changeSlice((this->OpenGlWindow->maxSliceNum() - 1)/2);
-
-  this->Controls->setInputImage();
-
-  this->OpenGlWindow->update();
-  // Use adjustSize() instead of updateSize() because there is no prior size
-  // that is valid.
-  this->adjustSize();
-}
-
-
-void QtSlicer::setOverlayImage(OverlayType * newImData)
-{
-  this->OpenGlWindow->setInputOverlay(newImData);
-  this->OpenGlWindow->update();
-  this->updateSize();
-}
-
-
-bool QtSlicer::loadInputImage(QString filePathToLoad)
-{
-  typedef itk::ImageFileReader<ImageType> ReaderType;
-  ReaderType::Pointer reader = ReaderType::New();
-  if( filePathToLoad.isEmpty() )
-    {
-    filePathToLoad = QFileDialog::getOpenFileName(
-        0,"", QDir::currentPath());
-    }
-
-  if(filePathToLoad.isEmpty())
-    {
-    return false;
-    }
-  QFileInfo filePath(filePathToLoad);
-  if(!filePath.exists())
-    {
-    const QString title("Failed loading");
-    QString str;
-    str = QString("The file you have selected does not exist. %1").arg(filePathToLoad);
-    QMessageBox::warning(this, title, str);
-    return false;
-    }
-  reader->SetFileName( filePathToLoad.toLatin1().data() );
-  setWindowTitle(filePath.fileName());
-  qDebug() << "loading image " << filePathToLoad << " ... ";
-  try
-    {
-    reader->Update();
-    }
-  catch (itk::ExceptionObject & e)
-    {
-    std::cerr << "Exception during GUI execution" << std::endl;
-    std::cerr << e << std::endl;
-    const QString title("Failed to read image.");
-    QString str;
-    str = QString("%1").arg(filePathToLoad);
-    QMessageBox::warning(this, title, str);
-    return false;
-    }
-  this->setInputImage( reader->GetOutput() );
-  return true;
-}
-
-bool QtSlicer::loadOverlayImage(QString overlayImagePath)
-{
-  typedef itk::ImageFileReader<OverlayType> OverlayReaderType;
-  OverlayReaderType::Pointer overlayReader = OverlayReaderType::New();
-
-  if(overlayImagePath.isEmpty())
-    {
-    overlayImagePath = QFileDialog::getOpenFileName(
-            0,"", QDir::currentPath());
-    }
-  if(overlayImagePath.isEmpty())
-    {
-    return false;
-    }
-  QFileInfo filePath(overlayImagePath);
-  if(!filePath.exists())
-    {
-    const QString title("Failed loading");
-    QString str;
-    str = QString("The file you have selected does not exist. %1").arg(overlayImagePath);
-    QMessageBox::warning(this, title, str);
-    return false;
-    }
-  overlayReader->SetFileName( overlayImagePath.toLatin1().data() );
-
-  qDebug() << "loading image " << overlayImagePath << " ... ";
-  try
-    {
-    overlayReader->Update();
-    }
-  catch (itk::ExceptionObject & e)
-    {
-    std::cerr << "Exception during GUI execution" << std::endl;
-    std::cerr << e << std::endl;
-    const QString title("Failed to read image.");
-    QString str;
-    str = QString("%1").arg(overlayImagePath);
-    QMessageBox::warning(this, title, str);
-    return false;
-    }
-  this->setOverlayImage(overlayReader->GetOutput());
-  return true;
-}
-
-QWidgetList layoutWidgets(QLayout* layout, int level = -1)
+QWidgetList QtSlicerPrivate::layoutWidgets(QLayout* layout, int level)
 {
   QWidgetList res;
   if (level == 0)
@@ -251,56 +174,215 @@ QWidgetList layoutWidgets(QLayout* layout, int level = -1)
 }
 
 
-void QtSlicer::updateSize()
+QtSlicer::QtSlicer(QWidget* parent, Qt::WindowFlags fl )
+  : QDialog( parent, fl )
+  , d_ptr(new QtSlicerPrivate(*this))
 {
-  this->updateGeometry();
+  Q_D(QtSlicer);
+  d->setupUi(this);
 
-  QWidgetList childWidgets = layoutWidgets(this->layout(), 2);
-  // Find the true width of the widget. Discard the children that are hidden.
-  // We do not need the height information.
-  QRect geom;
-  foreach(QWidget* child, childWidgets)
+  this->onDisplayStateChanged(d->OpenGlWindow->displayState());
+  d->OpenGlWindow->setFocus();
+}
+
+
+QtSlicer::~QtSlicer()
+{
+}
+
+
+QtGlSliceView* QtSlicer::sliceView()const
+{
+  Q_D(const QtSlicer);
+  return d->OpenGlWindow;
+}
+
+
+void QtSlicer::showHelp(bool show)
+{
+  Q_D(QtSlicer);
+  if (!show)
     {
-    if (child->isVisibleTo(this))
+    if (d->HelpDialog)
       {
-      QPoint childPos = child->mapTo(this, QPoint(0,0));
-      int width = child->width() ? child->width() : child->sizeHint().width();
-      int height = child->height() ? child->height() : child->sizeHint().height();
-      geom = geom.united(QRect(pos, QSize(width, height)));
+      d->HelpDialog->reject();
       }
-    }
-  int width = geom.width();
-  int height = geom.height();
-  if (this->Controls->isVisibleTo(this))
-    {
-    height = this->heightForWidth(width);
     }
   else
     {
-    height = this->OpenGlWindow->heightForWidth(width);
+    /// \todo don't show help in OpenGlWindow
+    d->OpenGlWindow->showHelp();
+    d->HelpDialog = d->OpenGlWindow->helpWindow();
+    if (d->HelpDialog != 0)
+      {
+      QObject::connect(d->HelpDialog, SIGNAL(rejected()),
+                       this, SLOT(hideHelp()), Qt::UniqueConnection);
+      }
     }
-  QSize newSize = QSize(width, height);
-  // Can't use QWidget::adjustSize() here because it resizes to the sizeHint of
-  // the widget. Instead we want to resize using the current size, just update the height.
-  this->resize(newSize);
 }
 
 
-void QtSlicer::updateSliceMaximum()
+void QtSlicer::hideHelp()
 {
-  const int maximum = this->OpenGlWindow->maxSliceNum() - 1;
-  this->SliceNumSlider->setMaximum(maximum);
-  this->SliceValue->setMaximum(maximum);
-  this->SliceNumSlider->setValue(this->SliceValue->value());
+  Q_D(QtSlicer);
+  d->ButtonHelp->setChecked(false);
 }
+
+
+void QtSlicer::onDisplayStateChanged(int state)
+{
+  Q_D(QtSlicer);
+  if (state & QtSlicerPrivate::ON_COLLAPSE)
+    {
+    d->OpenGlWindow->setDisplayState(state | QtSlicerPrivate::ON_SLICEVIEW);
+    return;
+    }
+  // Keep the OpenGlWindow size in the following.
+  d->OpenGlWindow->setFixedSize(d->OpenGlWindow->geometry().size());
+  const bool controlsVisible =
+    !(state & QtSlicerPrivate::OFF_COLLAPSE) && !(state & QtSlicerPrivate::ON_COLLAPSE);
+  d->Buttons->setVisible(controlsVisible);
+  d->Slider->setVisible(controlsVisible);
+  d->Controls->setVisible(controlsVisible);
+  d->Controls->setTextVisible(state & QtSlicerPrivate::ON_TEXTBOX);
+  d->updateSize();
+  d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+}
+
+
+void QtSlicer::setInputImage(ImageType* newImData)
+{
+  Q_D(QtSlicer);
+  d->OpenGlWindow->setInputImage(newImData);
+  /// fire this signal from OpenGlWindow.
+  this->updateSliceRange();
+  d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
+
+  d->Controls->setInputImage();
+
+  d->OpenGlWindow->update();
+  // Use adjustSize() instead of updateSize() because there is no prior size
+  // that is valid.
+  this->adjustSize();
+}
+
+
+void QtSlicer::setOverlayImage(OverlayType * newImData)
+{
+  Q_D(QtSlicer);
+  d->OpenGlWindow->setInputOverlay(newImData);
+  d->OpenGlWindow->update();
+  d->updateSize();
+}
+
+
+bool QtSlicer::loadInputImage(QString filePathToLoad)
+{
+  Q_D(QtSlicer);
+
+  typedef itk::ImageFileReader<ImageType> ReaderType;
+  ReaderType::Pointer reader = ReaderType::New();
+  if (filePathToLoad.isEmpty())
+    {
+    filePathToLoad = QFileDialog::getOpenFileName(
+        0, "", QDir::currentPath());
+    }
+  // Empty if the user cancelled the dialog.
+  if (filePathToLoad.isEmpty())
+    {
+    return false;
+    }
+  QFileInfo filePath(filePathToLoad);
+  if (!filePath.exists())
+    {
+    const QString title("Failed loading");
+    const QString message =
+      QString("The file you have selected does not exist. %1").arg(filePathToLoad);
+    QMessageBox::warning(this, title, message);
+    return false;
+    }
+  reader->SetFileName( filePathToLoad.toLatin1().data() );
+  this->setWindowTitle(filePath.fileName());
+  qDebug() << "Loading image " << filePathToLoad << "...";
+  try
+    {
+    reader->Update();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
+    const QString title("Failed to read image.");
+    const QString message = QString("%1").arg(filePathToLoad);
+    QMessageBox::warning(this, title, message);
+    return false;
+    }
+  this->setInputImage( reader->GetOutput() );
+  return true;
+}
+
+bool QtSlicer::loadOverlayImage(QString overlayImagePath)
+{
+  typedef itk::ImageFileReader<OverlayType> OverlayReaderType;
+  OverlayReaderType::Pointer overlayReader = OverlayReaderType::New();
+
+  if (overlayImagePath.isEmpty())
+    {
+    overlayImagePath = QFileDialog::getOpenFileName(
+      0, "", QDir::currentPath());
+    }
+  if (overlayImagePath.isEmpty())
+    {
+    return false;
+    }
+  QFileInfo filePath(overlayImagePath);
+  if (!filePath.exists())
+    {
+    const QString title("Failed loading");
+    const QString message =
+      QString("The file you have selected does not exist. %1").arg(overlayImagePath);
+    QMessageBox::warning(this, title, message);
+    return false;
+    }
+  overlayReader->SetFileName( overlayImagePath.toLatin1().data() );
+
+  qDebug() << "Loading image " << overlayImagePath << " ... ";
+  try
+    {
+    overlayReader->Update();
+    }
+  catch (itk::ExceptionObject & e)
+    {
+    std::cerr << "Exception during GUI execution" << std::endl;
+    std::cerr << e << std::endl;
+    const QString title("Failed to read image.");
+    const QString message = QString("%1").arg(overlayImagePath);
+    QMessageBox::warning(this, title, message);
+    return false;
+    }
+  this->setOverlayImage(overlayReader->GetOutput());
+  return true;
+}
+
+
+void QtSlicer::updateSliceRange()
+{
+  Q_D(QtSlicer);
+  const int maximum = d->OpenGlWindow->maxSliceNum() - 1;
+  d->SliceNumSlider->setMaximum(maximum);
+  d->SliceValue->setMaximum(maximum);
+  d->SliceNumSlider->setValue(d->SliceValue->value());
+}
+
 
 void QtSlicer::keyPressEvent(QKeyEvent* event)
 {
-  if (!this->IsRedirectingEvent)
+  Q_D(QtSlicer);
+  if (!d->IsRedirectingEvent)
     {
-    this->IsRedirectingEvent = true;
-    this->OpenGlWindow->keyPressEvent(event);
-    this->IsRedirectingEvent = false;
+    d->IsRedirectingEvent = true;
+    d->OpenGlWindow->keyPressEvent(event);
+    d->IsRedirectingEvent = false;
     return;
     }
   this->Superclass::keyPressEvent(event);
@@ -308,6 +390,7 @@ void QtSlicer::keyPressEvent(QKeyEvent* event)
 
 bool QtSlicer::eventFilter(QObject *obj, QEvent *event)
 {
+  Q_D(QtSlicer);
   if (qobject_cast<QDoubleSpinBox*>(obj) &&
       event->type() == QEvent::KeyPress)
     {
@@ -326,7 +409,7 @@ bool QtSlicer::eventFilter(QObject *obj, QEvent *event)
         keyEvent->key() != Qt::Key_Home &&
         keyEvent->key() != Qt::Key_End)
       {
-      this->OpenGlWindow->keyPressEvent(keyEvent);
+      d->OpenGlWindow->keyPressEvent(keyEvent);
       return true;
       }
     }

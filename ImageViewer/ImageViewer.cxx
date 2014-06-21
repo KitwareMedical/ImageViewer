@@ -41,7 +41,7 @@ int execImageViewer(int argc, char* argv[])
   qtSlicerWindow.setWindowTitle("ImageViewer");
   qtSlicerWindow.loadInputImage();
   qtSlicerWindow.show();
-  qtSlicerWindow.OpenGlWindow->setFocus();
+
   int execReturn;
   try
     {
@@ -79,40 +79,39 @@ int parseAndExecImageViewer(int argc, char* argv[])
     {
     qtSlicerWindow.loadOverlayImage(QString::fromStdString(overlayImage));
     }
-  qtSlicerWindow.OpenGlWindow->setOrientation(orientation);
+  qtSlicerWindow.sliceView()->setOrientation(orientation);
   if(sliceOffset != -1)
     {
-    qtSlicerWindow.OpenGlWindow->setSliceNum(sliceOffset);
+    qtSlicerWindow.sliceView()->setSliceNum(sliceOffset);
     }
   if(minIntensityArg.isSet())
     {
-    qtSlicerWindow.OpenGlWindow->setMinIntensity(minIntensity);
+    qtSlicerWindow.sliceView()->setMinIntensity(minIntensity);
     }
   if(maxIntensityArg.isSet())
     {
-    qtSlicerWindow.OpenGlWindow->setMaxIntensity(maxIntensity);
+    qtSlicerWindow.sliceView()->setMaxIntensity(maxIntensity);
     }
 
-  qtSlicerWindow.OpenGlWindow->setZoom(zoom);
-  qtSlicerWindow.OpenGlWindow->transpose(transpose);
-  qtSlicerWindow.OpenGlWindow->flipZ(zFlipped);
-  qtSlicerWindow.OpenGlWindow->flipY(yFlipped);
-  qtSlicerWindow.OpenGlWindow->flipX(xFlipped);
-  qtSlicerWindow.OpenGlWindow->setOverlayOpacity(overlayOpacity);
-  qtSlicerWindow.OpenGlWindow->setViewCrosshairs(crosshairs);
-  qtSlicerWindow.OpenGlWindow->setDisplayState(details);
-  qtSlicerWindow.OpenGlWindow->setViewValuePhysicalUnits(physicalUnits);
-  qtSlicerWindow.OpenGlWindow->setViewValue(value);
-  qtSlicerWindow.OpenGlWindow->setViewAxisLabel(axisLabel);
-  qtSlicerWindow.OpenGlWindow->setViewClickedPoints(clickedPoints);
-  qtSlicerWindow.OpenGlWindow->setImageMode(imageMode.c_str());
-  qtSlicerWindow.OpenGlWindow->setIWModeMax(iwModeMax.c_str());
-  qtSlicerWindow.OpenGlWindow->setIWModeMin(iwModeMin.c_str());
-  qtSlicerWindow.OpenGlWindow->update();
+  qtSlicerWindow.sliceView()->setZoom(zoom);
+  qtSlicerWindow.sliceView()->transpose(transpose);
+  qtSlicerWindow.sliceView()->flipZ(zFlipped);
+  qtSlicerWindow.sliceView()->flipY(yFlipped);
+  qtSlicerWindow.sliceView()->flipX(xFlipped);
+  qtSlicerWindow.sliceView()->setOverlayOpacity(overlayOpacity);
+  qtSlicerWindow.sliceView()->setViewCrosshairs(crosshairs);
+  qtSlicerWindow.sliceView()->setDisplayState(details);
+  qtSlicerWindow.sliceView()->setViewValuePhysicalUnits(physicalUnits);
+  qtSlicerWindow.sliceView()->setViewValue(value);
+  qtSlicerWindow.sliceView()->setViewAxisLabel(axisLabel);
+  qtSlicerWindow.sliceView()->setViewClickedPoints(clickedPoints);
+  qtSlicerWindow.sliceView()->setImageMode(imageMode.c_str());
+  qtSlicerWindow.sliceView()->setIWModeMax(iwModeMax.c_str());
+  qtSlicerWindow.sliceView()->setIWModeMin(iwModeMin.c_str());
+  qtSlicerWindow.sliceView()->update();
 #endif
 
   qtSlicerWindow.show();
-  qtSlicerWindow.OpenGlWindow->setFocus();
   int execReturn;
   try
     {
@@ -127,7 +126,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   return execReturn;
 }
 
-int main( int argc, char* argv[] ) 
+int main( int argc, char* argv[] )
 {
 #if !defined(BUILD_SHARED_LIBS)
   Q_INIT_RESOURCE(qtImageViewerResources);

@@ -23,62 +23,56 @@ limitations under the License.
 #ifndef QtSlicer_h
 #define QtSlicer_h
 
-#include "QtImageViewer_Export.h"
-
-//Qt include
+// Qt includes
 #include <QDialog>
 
-//itk include
-#include "itkImage.h"
-#include "itkImageFileReader.h"
-#include "ui_QtSlicerGUI.h"
+// ITK includes
+#include <itkImage.h>
 
-class QtImageViewer_EXPORT QtSlicer : public QDialog, public Ui::GuiDialogBase
+// ImageViewer includes
+#include "QtImageViewer_Export.h"
+class QtGlSliceView;
+class QtSlicerPrivate;
+
+class QtImageViewer_EXPORT QtSlicer : public QDialog
 {
   Q_OBJECT;
-  Q_ENUMS(displayDetailsState);
 public:
   typedef QDialog Superclass;
+  typedef itk::Image<double,3>                ImageType;
+  typedef unsigned char                       OverlayPixelType;
+  typedef itk::Image<OverlayPixelType,3>      OverlayType;
 
   QtSlicer( QWidget* parent = 0,
             Qt::WindowFlags fl = Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
   virtual ~QtSlicer();
 
-  enum DisplayStates{
-    OFF = 0x00,
-    ON_SLICEVIEW = 0x01,
-    ON_TEXTBOX = 0x02,
-    OFF_COLLAPSE = 0x04,
-    ON_COLLAPSE = 0x08
-  };
+  QtGlSliceView* sliceView()const;
 
-  typedef itk::Image<double,3>                ImageType;
-  typedef unsigned char                       OverlayPixelType;
-  typedef itk::Image<OverlayPixelType,3>      OverlayType;
-
+public slots:
   bool loadOverlayImage(QString overlayImagePath = QString());
   bool loadInputImage(QString filePathTLoad = QString());
 
-public slots:
-  void setDisplayState(int details);
-  void hideHelp();
-  void showHelp(bool checked = true);
-  void updateSliceMaximum();
   void setInputImage(ImageType * newImData);
   void setOverlayImage(OverlayType * newImData);
 
+  void showHelp(bool checked = true);
+  void hideHelp();
+
+protected slots:
+  void onDisplayStateChanged(int details);
+  void updateSliceRange();
+
 protected:
-  QDialog* HelpDialog;
-  bool IsRedirectingEvent;
+  QScopedPointer<QtSlicerPrivate> d_ptr;
 
   /// Reimplemented to propagate key events to QtGlSliceView.
   virtual void keyPressEvent(QKeyEvent* event);
   virtual bool eventFilter(QObject* obj, QEvent* event);
 
-  /// Resize the entire dialog based on the current size and to ensure it fits
-  /// the contents.
-  /// \sa QWidget::resize(), QWidget::adjustSize()
-  void updateSize();
+private:
+  Q_DECLARE_PRIVATE(QtSlicer);
+  Q_DISABLE_COPY(QtSlicer);
 };
 
 #endif
