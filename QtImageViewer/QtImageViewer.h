@@ -45,7 +45,7 @@ public:
   typedef itk::Image<OverlayPixelType,3>      OverlayImageType;
 
   QtImageViewer( QWidget* parent = 0,
-            Qt::WindowFlags fl = Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
+                 Qt::WindowFlags fl = Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
   virtual ~QtImageViewer();
 
   QtGlSliceView* sliceView()const;
@@ -71,7 +71,6 @@ public slots:
 
 protected slots:
   void onDisplayStateChanged(int details);
-  void updateSliceRange();
 
 protected:
   QScopedPointer<QtImageViewerPrivate> d_ptr;

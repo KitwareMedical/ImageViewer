@@ -58,7 +58,7 @@ set(QtImageViewer_SRCS
 set(QtImageViewer_GUI_SRCS
   Resources/UI/QtImageViewer.ui
   Resources/UI/QtImageViewerHelp.ui
-  Resources/UI/QtSliceControlsWidgetGUI.ui
+  Resources/UI/QtSliceControlsWidget.ui
   )
 
 set(QtImageViewer_MOC_SRCS

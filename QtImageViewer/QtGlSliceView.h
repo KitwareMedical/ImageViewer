@@ -389,6 +389,7 @@ public slots:
 
 signals:
 
+  void imageChanged();
   void positionChanged(double newX, double newY, double newZ, double click);
   void maxIntensityChanged(double maximum);
   void minIntensityChanged(double minimum);

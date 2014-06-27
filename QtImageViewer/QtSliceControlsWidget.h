@@ -24,52 +24,81 @@ limitations under the License.
 #ifndef __QtSliceControlsWidget_h
 #define __QtSliceControlsWidget_h
 
-#include "QtImageViewer_Export.h"
-//Qt includes
+// Qt includes
 #include <QWidget>
-#include <QGridLayout>
+class QAbstractSlider;
+class QSpinBox;
 
-//QtImageViewer includes
-#include "QtGlSliceView.h"
-#include "ui_QtSliceControlsWidgetGUI.h"
-
+// QtImageViewer includes
+#include "QtImageViewer_Export.h"
+class QtGlSliceView;
+class QtSliceControlsWidgetPrivate;
 
 class QtImageViewer_EXPORT QtSliceControlsWidget : public QWidget
 {
   Q_OBJECT
 public:
   QtSliceControlsWidget(QWidget* parent);
-  ~QtSliceControlsWidget();
-  void setInputImage();
-  /// CTK methods, comes from ctkUtils.cxx class
-  static int significantDecimals(double value, int defaultDecimals);
+  virtual ~QtSliceControlsWidget();
+
+  /// Set the slice view to control.
+  void setSliceView(QtGlSliceView *sliceView);
+
+  /// Connect the slider to the slice view.
+  /// \sa setSliceSpinBox(), sliceSlider()
+  void setSliceSlider(QAbstractSlider* slider);
+  /// Return the connected slice slider.
+  /// \sa sliceSpinBox(), setSliceSlider()
+  QAbstractSlider* sliceSlider()const;
+
+  /// Connect the spinbox to the slice view.
+  /// \sa setSliceSlider(), sliceSpinBox()
+  void setSliceSpinBox(QSpinBox* spinBox);
+  /// Return the connected slice spinbox.
+  /// \sa sliceSlider(), setSliceSpinBox()
+  QSpinBox* sliceSpinBox()const;
+
 public slots:
-  /// Calcul and set the Slider value
-  void setValueIntensityMin(double value);
-  /// Calcul and set the Slider value
-  void setValueIntensityMax(double value);
   /// Display text into a text box.
   /// \sa setTextVisible()
   void setText(const QString& newText);
   /// Show/Hide the text box.
   /// \sa setText()
   void setTextVisible(bool visible);
-  /// Display the maximum intensity in the doubleSpinBox
-  void setDisplayIMax(double value);
-  /// Display the minimum intensity in the doubleSpinBox
-  void setDisplayIMin(double value);
-  void setDisplayPosition(double x, double y, double z, double value);
-  void setSliceView(QtGlSliceView *sliceView);
-protected slots:
-  /// Convert Slider value to double and set minimum intensity to th SliceView
-  void setMinIntensity(int intensity);
-  /// Convert Slider value to double and set maximum intensity to th SliceView
-  void setMaxIntensity(int intensity);
-private:
-  Ui::Controls *UI;
-  QtGlSliceView *SliceView;
-  int decimalsNumber;
 
+protected slots:
+
+  /// Update the widgets from the current input image.
+  void updateImage();
+
+  /// Update the slice range for the current orientation.
+  void updateSliceRange();
+
+  /// Update the position coordinate widgets.
+  void setDisplayPosition(double x, double y, double z, double value);
+
+  /// Set minimum intensity to the slice view when slider is moved.
+  /// \sa setMaxIntensity(), updateMinIntensity()
+  void setMinIntensity(int intensity);
+
+  /// Set maximum intensity to the slice view when slider is moved.
+  /// \sa setMinIntensity(), updateMaxIntensity()
+  void setMaxIntensity(int intensity);
+
+  /// Set the min intensity to the slider and spinbox.
+  /// \sa setMinIntensity(), updateMaxIntensity()
+  void updateMinIntensity(double value);
+
+  /// Set the max intensity to the slider and spinbox.
+  //// \sa setMaxIntensity(), updateMinIntensity()
+  void updateMaxIntensity(double value);
+
+protected:
+  QScopedPointer<QtSliceControlsWidgetPrivate> d_ptr;
+
+private:
+  Q_DECLARE_PRIVATE(QtSliceControlsWidget);
+  Q_DISABLE_COPY(QtSliceControlsWidget);
 };
 
 #endif

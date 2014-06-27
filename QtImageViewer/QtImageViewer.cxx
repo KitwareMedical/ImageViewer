@@ -95,6 +95,8 @@ void QtImageViewerPrivate::setupUi(QDialog* widgetToSetup)
   this->Superclass::setupUi(widgetToSetup);
 
   this->Controls->setSliceView(this->OpenGlWindow);
+  this->Controls->setSliceSlider(this->SliceSlider);
+  this->Controls->setSliceSpinBox(this->SliceSpinBox);
   this->OpenGlWindow->setMaxDisplayStates(5);
 
   QObject::connect(this->ButtonBox, SIGNAL(accepted()),
@@ -103,14 +105,6 @@ void QtImageViewerPrivate::setupUi(QDialog* widgetToSetup)
                    q, SLOT(reject()));
   QObject::connect(this->ButtonBox, SIGNAL(helpRequested()),
                    q, SLOT(showHelp()));
-  QObject::connect(this->SliceNumSlider, SIGNAL(sliderMoved(int)),
-                   this->OpenGlWindow, SLOT(changeSlice(int)));
-  QObject::connect(this->OpenGlWindow, SIGNAL(sliceNumChanged(int)),
-                   this->SliceNumSlider, SLOT(setValue(int)));
-  QObject::connect(this->OpenGlWindow, SIGNAL(sliceNumChanged(int)),
-                   this->SliceValue, SLOT(setValue(int)));
-  QObject::connect(this->OpenGlWindow, SIGNAL(orientationChanged(int)),
-                   q, SLOT(updateSliceRange()));
   QObject::connect(this->OpenGlWindow, SIGNAL(displayStateChanged(int)),
                    q, SLOT(onDisplayStateChanged(int)));
 
@@ -276,11 +270,7 @@ void QtImageViewer::setInputImage(ImageType* newImData)
 {
   Q_D(QtImageViewer);
   d->OpenGlWindow->setInputImage(newImData);
-  /// \todo fire this signal from OpenGlWindow.
-  this->updateSliceRange();
   d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
-
-  d->Controls->setInputImage();
 
   // Use adjustSize() instead of updateSize() because there is no valid prior
   // size.
@@ -293,7 +283,6 @@ void QtImageViewer::setOverlayImage(OverlayImageType* newImData)
 {
   Q_D(QtImageViewer);
   d->OpenGlWindow->setInputOverlay(newImData);
-  //d->OpenGlWindow->update();
   d->updateSize();
 }
 
@@ -356,16 +345,6 @@ void QtImageViewer::onDisplayStateChanged(int state)
     controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
   d->updateSize();
   d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-}
-
-
-void QtImageViewer::updateSliceRange()
-{
-  Q_D(QtImageViewer);
-  const int maximum = d->OpenGlWindow->maxSliceNum() - 1;
-  d->SliceNumSlider->setMaximum(maximum);
-  d->SliceValue->setMaximum(maximum);
-  d->SliceNumSlider->setValue(d->SliceValue->value());
 }
 
 

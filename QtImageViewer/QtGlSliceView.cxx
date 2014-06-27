@@ -157,28 +157,28 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   update();
 }
 
-  
-void 
+
+void
 QtGlSliceView::
 setInputImage(ImageType * newImData)
 {
-  if(!newImData)
-  {
+  if (!newImData)
+    {
     return;
-  }
+    }
 
   RegionType region = newImData->GetLargestPossibleRegion();
   if(region.GetNumberOfPixels() == 0)
-  {
+    {
     return;
-  }
+    }
 
-  SizeType   size   = region.GetSize();
+  SizeType size = region.GetSize();
   if(cValidOverlayData)
   {
     RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
     SizeType   overlay_size   = overlay_region.GetSize();
-      
+
     for(int i=0; i<3; i++)
     {
       if(size[i] != overlay_size[i])
@@ -247,6 +247,7 @@ setInputImage(ImageType * newImData)
   this->changeSlice(((this->maxSliceNum() -1)/2));
   this->updateGeometry();
   this->update();
+  emit imageChanged();
 }
 
 
@@ -1918,37 +1919,44 @@ void QtGlSliceView::mousePressEvent(QMouseEvent *event)
 
 void QtGlSliceView::changeSlice(int value)
 {
-  setSliceNum(value);
+  this->setSliceNum(value);
   update();
   paintGL();
 }
 
 
-
 void QtGlSliceView::setSliceNum(int newSliceNum)
 {
-  if(newSliceNum>cDimSize[cWinOrder[2]])
+  newSliceNum = qMin(newSliceNum, static_cast<int>(cDimSize[cWinOrder[2]]) - 1);
+  if (newSliceNum == cWinCenter[cWinOrder[2]])
     {
-    newSliceNum = cDimSize[cWinOrder[2]] -1;
+    return;
     }
   cWinCenter[cWinOrder[2]] = newSliceNum;
-  
-  if(cSliceNumCallBack != NULL)
+
+  if (cSliceNumCallBack != NULL)
+    {
     cSliceNumCallBack();
-  if(cSliceNumArgCallBack != NULL)
+    }
+  if (cSliceNumArgCallBack != NULL)
+    {
     cSliceNumArgCallBack(cSliceNumArg);
+    }
   emit sliceNumChanged(newSliceNum);
 }
+
+
+int QtGlSliceView::sliceNum() const
+{
+  return cWinCenter[cWinOrder[2]];
+}
+
 
 int QtGlSliceView::maxSliceNum() const
 {
   return cDimSize[cWinOrder[2]];
 }
 
-int QtGlSliceView::sliceNum() const
-{
-  return cWinCenter[cWinOrder[2]];
-}
 
 void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
   {    
@@ -1999,13 +2007,6 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
 
   emit positionChanged(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
 
-}
-
-void QtGlSliceView::setMaxIntensity(double value)
-{
-  cIWMax = qBound(cDataMin, value, cDataMax);
-  update();
-  emit maxIntensityChanged(cIWMax);
 }
 
 void QtGlSliceView::setFastMovThresh(int movThresh)
@@ -2105,13 +2106,32 @@ void QtGlSliceView::setViewClickedPoints(bool pointsClicked)
 }
 
 
+void QtGlSliceView::setMaxIntensity(double value)
+{
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMax))
+    {
+    return;
+    }
+  cIWMax = value;
+  update();
+  emit maxIntensityChanged(cIWMax);
+}
+
+
 void QtGlSliceView::setMinIntensity(double value)
 {
-  cIWMin = qBound(cDataMin, value, cDataMax);
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMin))
+    {
+    return;
+    }
+  cIWMin = value;
   update();
   emit minIntensityChanged(cIWMin);
 }
- 
+
+
 void QtGlSliceView::zoomIn()
 {
   setZoom(zoom()+1);
