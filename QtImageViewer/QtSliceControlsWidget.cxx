@@ -21,151 +21,106 @@ limitations under the License.
 
 =========================================================================*/
 
-#include "QtSliceControlsWidget.h"
+// Qt includes
+#include <QAbstractSlider>
 #include <QDebug>
+#include <QSpinBox>
+
+// QtImageViewer includes
+#include "QtGlSliceView.h"
+#include "QtSliceControlsWidget.h"
+#include "ui_QtSliceControlsWidget.h"
 
 
-QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parent)
-  : QWidget(parent)
+class QtSliceControlsWidgetPrivate: public Ui_QtSliceControlsWidget
 {
-  this->UI = new Ui::Controls;
-  UI->setupUi(this);
+  Q_DECLARE_PUBLIC(QtSliceControlsWidget);
+public:
+  typedef Ui_QtSliceControlsWidget Superclass;
+  QtSliceControlsWidgetPrivate(QtSliceControlsWidget& obj);
+
+  virtual void setupUi(QWidget* widgetToSetup);
+  virtual void connectOrDisconnectSlider(bool connect);
+  virtual void connectOrDisconnectSpinBox(bool connect);
+
+  /// Compute the ideal number of decimals for a given number.
+  static int significantDecimals(double value, int defaultDecimals = 0);
+
+  QtGlSliceView *SliceView;
+  int Decimals;
+  QAbstractSlider* SliceSlider;
+  QSpinBox* SliceSpinBox;
+protected:
+  QtSliceControlsWidget* const q_ptr;
+};
+
+
+QtSliceControlsWidgetPrivate::QtSliceControlsWidgetPrivate(QtSliceControlsWidget& obj)
+  : q_ptr(&obj)
+  , SliceView(0)
+  , Decimals(0)
+  , SliceSlider(0)
+  , SliceSpinBox(0)
+{
 }
 
-QtSliceControlsWidget::~QtSliceControlsWidget()
+void QtSliceControlsWidgetPrivate::setupUi(QWidget* widgetToSetup)
 {
+  Q_Q(QtSliceControlsWidget);
+  this->Superclass::setupUi(widgetToSetup);
+  QObject::connect(this->IntensityMax, SIGNAL(sliderMoved(int)),
+                   q, SLOT(setMaxIntensity(int)));
+  QObject::connect(this->IntensityMin, SIGNAL(sliderMoved(int)),
+                   q, SLOT(setMinIntensity(int)));
 }
 
-void QtSliceControlsWidget::setDisplayPosition(double x,double y ,double z,double value)
+void QtSliceControlsWidgetPrivate::connectOrDisconnectSlider(bool connect)
 {
-  UI->PositionX->setValue(x);
-  UI->PositionY->setValue(y);
-  UI->PositionZ->setValue(z);
-  UI->PixelValue->setValue(value);
+  if (!this->SliceView || !this->SliceSlider)
+    {
+    return;
+    }
+  if (connect)
+    {
+    QObject::connect(this->SliceSlider, SIGNAL(sliderMoved(int)),
+                     this->SliceView, SLOT(changeSlice(int)), Qt::UniqueConnection);
+    QObject::connect(this->SliceView, SIGNAL(sliceNumChanged(int)),
+                     this->SliceSlider, SLOT(setValue(int)), Qt::UniqueConnection);
+    }
+  else
+    {
+    QObject::disconnect(this->SliceSlider, SIGNAL(sliderMoved(int)),
+                        this->SliceView, SLOT(changeSlice(int)));
+    QObject::disconnect(this->SliceView, SIGNAL(sliceNumChanged(int)),
+                        this->SliceSlider, SLOT(setValue(int)));
+    }
 }
 
-void QtSliceControlsWidget::setDisplayIMin(double value)
+void QtSliceControlsWidgetPrivate::connectOrDisconnectSpinBox(bool connect)
 {
-  UI->IntensityMinDisplay->setValue(value);
+  if (!this->SliceView || !this->SliceSpinBox)
+    {
+    return;
+    }
+  if (connect)
+    {
+    QObject::connect(this->SliceSpinBox, SIGNAL(valueChanged(int)),
+                     this->SliceView, SLOT(changeSlice(int)), Qt::UniqueConnection);
+    QObject::connect(this->SliceView, SIGNAL(sliceNumChanged(int)),
+                     this->SliceSpinBox, SLOT(setValue(int)), Qt::UniqueConnection);
+    }
+  else
+    {
+    QObject::disconnect(this->SliceSpinBox, SIGNAL(valueChanged(int)),
+                        this->SliceView, SLOT(changeSlice(int)));
+    QObject::disconnect(this->SliceView, SIGNAL(sliceNumChanged(int)),
+                        this->SliceSpinBox, SLOT(setValue(int)));
+    }
 }
 
-void QtSliceControlsWidget::setDisplayIMax(double value)
-{
-  UI->IntensityMaxDisplay->setValue(value);
-}
-
-
-void QtSliceControlsWidget::setInputImage()
-{
-  this->SliceView->setSingleStep(0.02*this->SliceView->intensityRange());
-  this->decimalsNumber = significantDecimals(this->SliceView->singleStep(),-1);
-  QObject::connect(this->SliceView, SIGNAL(positionChanged(double,double,double,double)),
-                   this, SLOT(setDisplayPosition(double,double,double,double)));
-  QObject::connect(UI->IntensityMax, SIGNAL(sliderMoved(int)), this,
-                   SLOT(setMaxIntensity(int)));
-  QObject::connect(UI->IntensityMin, SIGNAL(sliderMoved(int)), this,
-                   SLOT(setMinIntensity(int)));
-  QObject::connect(UI->ZoomIn, SIGNAL(clicked()), this->SliceView, SLOT(zoomIn()));
-  QObject::connect(UI->ZoomOut, SIGNAL(clicked()), this->SliceView, SLOT(zoomOut()));
-  QObject::connect(this->SliceView, SIGNAL(maxIntensityChanged(double)), this,
-                   SLOT(setDisplayIMax(double)));
-  QObject::connect(this->SliceView, SIGNAL(minIntensityChanged(double)), this,
-                   SLOT(setDisplayIMin(double)));
-  QObject::connect(this->SliceView, SIGNAL(maxIntensityChanged(double)), this,
-                   SLOT(setValueIntensityMax(double)));
-  QObject::connect(this->SliceView, SIGNAL(minIntensityChanged(double)), this,
-                   SLOT(setValueIntensityMin(double)));
-
-  QObject::connect(UI->IntensityMinDisplay,SIGNAL(valueChanged(double)), this->SliceView,
-                   SLOT(setMinIntensity(double)));
-  QObject::connect(UI->IntensityMinDisplay,SIGNAL(valueChanged(double)), this,
-                   SLOT(setValueIntensityMin(double)));
-  QObject::connect(this->SliceView, SIGNAL(minIntensityChanged(double)), UI->IntensityMinDisplay,
-                   SLOT(setValue(double)));
-
-  QObject::connect(UI->IntensityMaxDisplay,SIGNAL(valueChanged(double)), this,
-                   SLOT(setValueIntensityMax(double)));
-  QObject::connect(UI->IntensityMaxDisplay,SIGNAL(valueChanged(double)), this->SliceView,
-                   SLOT(setMaxIntensity(double)));
-  QObject::connect(this->SliceView, SIGNAL(maxIntensityChanged(double)), UI->IntensityMaxDisplay,
-                   SLOT(setValue(double)));
-
-  QObject::connect(this->SliceView, SIGNAL(detailsChanged(QString)), this,
-                    SLOT(setText(QString)));
-
-  UI->IntensityMin->setMinimum(0);
-  UI->IntensityMin->setMaximum( static_cast<int>
-            ( this->SliceView->intensityRange()/this->SliceView->singleStep()));
-  UI->IntensityMin->setValue(0);
-  UI->IntensityMax->setMinimum(0);
-  UI->IntensityMax->setMaximum( static_cast<int>
-            ( this->SliceView->intensityRange()/this->SliceView->singleStep()));
-  UI->IntensityMax->setValue( static_cast<int>
-            ( this->SliceView->intensityRange()/this->SliceView->singleStep()));
-
-  UI->IntensityMinDisplay->setMinimum( this->SliceView->minIntensity() );
-  UI->IntensityMinDisplay->setMaximum( this->SliceView->maxIntensity() );
-
-  UI->IntensityMaxDisplay->setMinimum( this->SliceView->minIntensity() );
-  UI->IntensityMaxDisplay->setMaximum( this->SliceView->maxIntensity() );
-
-  UI->IntensityMinDisplay->setValue( this->SliceView->minIntensity() );
-  UI->IntensityMinDisplay->setDecimals(this->decimalsNumber);
-  UI->IntensityMaxDisplay->setValue( this->SliceView->maxIntensity() );
-  UI->IntensityMaxDisplay->setDecimals(this->decimalsNumber);
-  UI->IntensityMinDisplay->setSingleStep( this->SliceView->singleStep() );
-  UI->IntensityMaxDisplay->setSingleStep( this->SliceView->singleStep() );
-
-  UI->PositionX->setMaximum(this->SliceView->imageSize(0));
-  UI->PositionX->setDecimals(this->decimalsNumber);
-  UI->PositionY->setMaximum(this->SliceView->imageSize(1));
-  UI->PositionY->setDecimals(this->decimalsNumber);
-  UI->PositionZ->setMaximum(this->SliceView->imageSize(2));
-  UI->PositionZ->setDecimals(this->decimalsNumber);
-  UI->PixelValue->setMinimum(this->SliceView->minIntensity());
-  UI->PixelValue->setMaximum(this->SliceView->maxIntensity());
-  UI->PixelValue->setDecimals(this->decimalsNumber);
-}
-
-void QtSliceControlsWidget::setSliceView(QtGlSliceView* sliceView)
-{
-  this->SliceView = sliceView;
-}
-
-void QtSliceControlsWidget::setText(const QString& text)
-{
-  this->UI->Details->setText(text);
-}
-
-void QtSliceControlsWidget::setTextVisible(bool visible)
-{
-  this->UI->Details->setVisible(visible);
-}
-
-void QtSliceControlsWidget::setValueIntensityMin(double value)
-{
-  UI->IntensityMin->setValue(value/this->SliceView->singleStep());
-}
-
-void QtSliceControlsWidget::setValueIntensityMax(double value)
-{
-  UI->IntensityMax->setValue(value/this->SliceView->singleStep());
-}
-
-void QtSliceControlsWidget::setMinIntensity(int intensity)
-{
-  double newMinIntensity = intensity* this->SliceView->singleStep();
-  this->SliceView->setMinIntensity(newMinIntensity);
-}
-
-void QtSliceControlsWidget::setMaxIntensity(int intensity)
-{
-  double newMaxIntensity = intensity* this->SliceView->singleStep();
-  this->SliceView->setMaxIntensity(newMaxIntensity);
-}
 
 /// CTK methods, comes from ctkUtils.cxx class
-int QtSliceControlsWidget::significantDecimals(double value, int defaultDecimals)
+int QtSliceControlsWidgetPrivate::significantDecimals(double value, int defaultDecimals)
 {
   if (value == 0.
       || qAbs(value) == std::numeric_limits<double>::infinity())
@@ -230,3 +185,214 @@ int QtSliceControlsWidget::significantDecimals(double value, int defaultDecimals
   Q_ASSERT(false);
   return fractional.length();
 }
+
+
+QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parent)
+  : QWidget(parent)
+  , d_ptr(new QtSliceControlsWidgetPrivate(*this))
+{
+  Q_D(QtSliceControlsWidget);
+  d->setupUi(this);
+}
+
+
+QtSliceControlsWidget::~QtSliceControlsWidget()
+{
+}
+
+
+void QtSliceControlsWidget::setSliceView(QtGlSliceView* sliceView)
+{
+  Q_D(QtSliceControlsWidget);
+
+  if (d->SliceView)
+    {
+    QObject::disconnect(d->SliceView, 0, this, 0);
+    d->connectOrDisconnectSlider(false);
+    d->connectOrDisconnectSpinBox(false);
+    }
+
+  d->SliceView = sliceView;
+
+  // Image
+  QObject::connect(d->SliceView, SIGNAL(imageChanged()),
+                   this, SLOT(updateImage()));
+  // Position
+  QObject::connect(d->SliceView, SIGNAL(positionChanged(double,double,double,double)),
+                   this, SLOT(setDisplayPosition(double,double,double,double)));
+  // Zoom
+  QObject::connect(d->ZoomIn, SIGNAL(clicked()), d->SliceView, SLOT(zoomIn()));
+  QObject::connect(d->ZoomOut, SIGNAL(clicked()), d->SliceView, SLOT(zoomOut()));
+  // Window/Level
+  QObject::connect(d->SliceView, SIGNAL(minIntensityChanged(double)),
+                   this, SLOT(updateMinIntensity(double)));
+  QObject::connect(d->SliceView, SIGNAL(maxIntensityChanged(double)),
+                   this, SLOT(updateMaxIntensity(double)));
+  QObject::connect(d->IntensityMinDisplay, SIGNAL(valueChanged(double)),
+                   d->SliceView, SLOT(setMinIntensity(double)));
+  QObject::connect(d->IntensityMaxDisplay,SIGNAL(valueChanged(double)),
+                   d->SliceView, SLOT(setMaxIntensity(double)));
+  // Details
+  QObject::connect(d->SliceView, SIGNAL(detailsChanged(QString)),
+                   this, SLOT(setText(QString)));
+  // Slider
+  QObject::connect(d->SliceView, SIGNAL(orientationChanged(int)),
+                   this, SLOT(updateSliceRange()));
+  d->connectOrDisconnectSlider(true);
+  d->connectOrDisconnectSpinBox(true);
+
+  this->updateImage();
+}
+
+
+QAbstractSlider* QtSliceControlsWidget::sliceSlider()const
+{
+  Q_D(const QtSliceControlsWidget);
+  return d->SliceSlider;
+}
+
+
+void QtSliceControlsWidget::setSliceSlider(QAbstractSlider* slider)
+{
+  Q_D(QtSliceControlsWidget);
+  d->connectOrDisconnectSlider(false);
+  d->SliceSlider = slider;
+  d->connectOrDisconnectSlider(true);
+}
+
+
+QSpinBox* QtSliceControlsWidget::sliceSpinBox()const
+{
+  Q_D(const QtSliceControlsWidget);
+  return d->SliceSpinBox;
+}
+
+
+void QtSliceControlsWidget::setSliceSpinBox(QSpinBox* spinBox)
+{
+  Q_D(QtSliceControlsWidget);
+  d->connectOrDisconnectSpinBox(false);
+  d->SliceSpinBox = spinBox;
+  d->connectOrDisconnectSpinBox(true);
+}
+
+
+void QtSliceControlsWidget
+::setDisplayPosition(double x, double y, double z, double value)
+{
+  Q_D(QtSliceControlsWidget);
+  d->PositionX->setValue( x );
+  d->PositionY->setValue( y );
+  d->PositionZ->setValue( z );
+  d->PixelValue->setValue( value );
+}
+
+
+void QtSliceControlsWidget::updateMinIntensity(double minIntensity)
+{
+  Q_D(QtSliceControlsWidget);
+  d->IntensityMinDisplay->setValue( minIntensity );
+  d->IntensityMin->setValue( minIntensity / d->SliceView->singleStep() );
+}
+
+
+void QtSliceControlsWidget::updateMaxIntensity(double maxIntensity)
+{
+  Q_D(QtSliceControlsWidget);
+  d->IntensityMaxDisplay->setValue( maxIntensity );
+  d->IntensityMax->setValue( maxIntensity / d->SliceView->singleStep() );
+}
+
+
+void QtSliceControlsWidget::updateImage()
+{
+  Q_D(QtSliceControlsWidget);
+  d->SliceView->setSingleStep( 0.02 * d->SliceView->intensityRange());
+  d->Decimals = d->significantDecimals(d->SliceView->singleStep(),-1);
+
+  const int min = 0;
+  const int max = static_cast<int>(
+    d->SliceView->intensityRange() / d->SliceView->singleStep());
+  d->IntensityMin->setRange( min, max );
+  d->IntensityMin->setValue( min );
+  d->IntensityMax->setRange( min, max );
+  d->IntensityMax->setValue( max );
+
+  d->IntensityMinDisplay->setDecimals( d->Decimals );
+  d->IntensityMinDisplay->setSingleStep( d->SliceView->singleStep() );
+  d->IntensityMinDisplay->setRange( d->SliceView->minIntensity(),
+                                    d->SliceView->maxIntensity() );
+  d->IntensityMinDisplay->setValue( d->SliceView->minIntensity() );
+
+  d->IntensityMaxDisplay->setDecimals( d->Decimals );
+  d->IntensityMaxDisplay->setRange( d->SliceView->minIntensity(),
+                                    d->SliceView->maxIntensity() );
+  d->IntensityMaxDisplay->setValue( d->SliceView->maxIntensity() );
+  d->IntensityMaxDisplay->setSingleStep( d->SliceView->singleStep() );
+
+  d->PositionX->setDecimals( d->Decimals );
+  d->PositionX->setMaximum( d->SliceView->imageSize(0) );
+  d->PositionY->setDecimals( d->Decimals );
+  d->PositionY->setMaximum( d->SliceView->imageSize(1) );
+  d->PositionZ->setDecimals( d->Decimals );
+  d->PositionZ->setMaximum( d->SliceView->imageSize(2) );
+  d->PixelValue->setDecimals(d->Decimals);
+  d->PixelValue->setRange( d->SliceView->minIntensity(),
+                           d->SliceView->maxIntensity() );
+
+  this->updateSliceRange();
+}
+
+
+void QtSliceControlsWidget::updateSliceRange()
+{
+  Q_D(QtSliceControlsWidget);
+  if (!d->SliceView)
+    {
+    return;
+    }
+  const int minimum = 0;
+  const int maximum = d->SliceView->maxSliceNum() - 1;
+  const int slice = d->SliceView->sliceNum();
+  if (d->SliceSlider)
+    {
+    d->SliceSlider->setRange(minimum, maximum);
+    d->SliceSlider->setValue(slice);
+    }
+  if (d->SliceSpinBox)
+    {
+    d->SliceSpinBox->setRange(minimum, maximum);
+    d->SliceSpinBox->setValue(slice);
+    }
+}
+
+
+void QtSliceControlsWidget::setText(const QString& text)
+{
+  Q_D(QtSliceControlsWidget);
+  d->Details->setText(text);
+}
+
+
+void QtSliceControlsWidget::setTextVisible(bool visible)
+{
+  Q_D(QtSliceControlsWidget);
+  d->Details->setVisible(visible);
+}
+
+
+void QtSliceControlsWidget::setMinIntensity(int intensity)
+{
+  Q_D(QtSliceControlsWidget);
+  double newMinIntensity = intensity * d->SliceView->singleStep();
+  d->SliceView->setMinIntensity(newMinIntensity);
+}
+
+
+void QtSliceControlsWidget::setMaxIntensity(int intensity)
+{
+  Q_D(QtSliceControlsWidget);
+  double newMaxIntensity = intensity * d->SliceView->singleStep();
+  d->SliceView->setMaxIntensity(newMaxIntensity);
+}
+

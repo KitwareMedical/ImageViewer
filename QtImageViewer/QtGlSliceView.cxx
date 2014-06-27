@@ -1,25 +1,32 @@
 /*=========================================================================
 
- Program:   Insight Segmentation & Registration Toolkit
- Module:    QtGlSliceView.cxx
- Language:  C++
- Date:      $Date$
- Version:   $Revision$
- 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-  
-   This software is distributed WITHOUT ANY WARRANTY; without even
-   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-   PURPOSE.  See the above copyright notices for more information.
+Library:   TubeTK
+
+Copyright 2010 Kitware Inc. 28 Corporate Drive,
+Clifton Park, NY, 12065, USA.
+
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 =========================================================================*/
+
 #ifndef QtGlSliceView_cxx
 #define QtGlSliceView_cxx
 
 //QtImageViewer include
 #include "QtGlSliceView.h"
-#include "ui_QtSlicerHelpGUI.h"
+#include "ui_QtImageViewerHelp.h"
 
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
@@ -150,28 +157,28 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   update();
 }
 
-  
-void 
+
+void
 QtGlSliceView::
 setInputImage(ImageType * newImData)
 {
-  if(!newImData)
-  {
+  if (!newImData)
+    {
     return;
-  }
+    }
 
   RegionType region = newImData->GetLargestPossibleRegion();
   if(region.GetNumberOfPixels() == 0)
-  {
+    {
     return;
-  }
+    }
 
-  SizeType   size   = region.GetSize();
+  SizeType size = region.GetSize();
   if(cValidOverlayData)
   {
     RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
     SizeType   overlay_size   = overlay_region.GetSize();
-      
+
     for(int i=0; i<3; i++)
     {
       if(size[i] != overlay_size[i])
@@ -240,6 +247,7 @@ setInputImage(ImageType * newImData)
   this->changeSlice(((this->maxSliceNum() -1)/2));
   this->updateGeometry();
   this->update();
+  emit imageChanged();
 }
 
 
@@ -764,7 +772,7 @@ void QtGlSliceView::showHelp()
   if (this->cHelpDialog == 0)
     {
     this->cHelpDialog = new QDialog(this);
-    Ui::HelpWindow helpUi;
+    Ui_QtImageViewerHelp helpUi;
     helpUi.setupUi(this->cHelpDialog);
     }
   this->cHelpDialog->show();
@@ -1468,12 +1476,14 @@ void QtGlSliceView::resizeEvent(QResizeEvent* event)
 
 QSize QtGlSliceView::minimumSizeHint()const
 {
-  return this->sizeHint();
+  const QSize sizeHint = this->sizeHint();
+  return sizeHint;
 }
 
 QSize QtGlSliceView::sizeHint()const
 {
-  return QSize(cWinSizeX, cWinSizeY);
+  const QSize sizeHint(cWinSizeX, cWinSizeY);
+  return sizeHint;
 }
 
 
@@ -1491,7 +1501,9 @@ bool QtGlSliceView::hasHeightForWidth() const
 
 int QtGlSliceView::heightForWidth(int width) const
 {
-  return cWinSizeY ? (width * cWinSizeX) / cWinSizeY : width;
+  // \todo Currently the view handles only square widgets.
+  //return cWinSizeY ? (width * cWinSizeY) / cWinSizeX : width;
+  return width;
 }
 
 
@@ -1907,37 +1919,44 @@ void QtGlSliceView::mousePressEvent(QMouseEvent *event)
 
 void QtGlSliceView::changeSlice(int value)
 {
-  setSliceNum(value);
+  this->setSliceNum(value);
   update();
   paintGL();
 }
 
 
-
 void QtGlSliceView::setSliceNum(int newSliceNum)
 {
-  if(newSliceNum>cDimSize[cWinOrder[2]])
+  newSliceNum = qMin(newSliceNum, static_cast<int>(cDimSize[cWinOrder[2]]) - 1);
+  if (newSliceNum == cWinCenter[cWinOrder[2]])
     {
-    newSliceNum = cDimSize[cWinOrder[2]] -1;
+    return;
     }
   cWinCenter[cWinOrder[2]] = newSliceNum;
-  
-  if(cSliceNumCallBack != NULL)
+
+  if (cSliceNumCallBack != NULL)
+    {
     cSliceNumCallBack();
-  if(cSliceNumArgCallBack != NULL)
+    }
+  if (cSliceNumArgCallBack != NULL)
+    {
     cSliceNumArgCallBack(cSliceNumArg);
+    }
   emit sliceNumChanged(newSliceNum);
 }
+
+
+int QtGlSliceView::sliceNum() const
+{
+  return cWinCenter[cWinOrder[2]];
+}
+
 
 int QtGlSliceView::maxSliceNum() const
 {
   return cDimSize[cWinOrder[2]];
 }
 
-int QtGlSliceView::sliceNum() const
-{
-  return cWinCenter[cWinOrder[2]];
-}
 
 void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
   {    
@@ -1988,13 +2007,6 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
 
   emit positionChanged(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
 
-}
-
-void QtGlSliceView::setMaxIntensity(double value)
-{
-  cIWMax = qBound(cDataMin, value, cDataMax);
-  update();
-  emit maxIntensityChanged(cIWMax);
 }
 
 void QtGlSliceView::setFastMovThresh(int movThresh)
@@ -2094,13 +2106,32 @@ void QtGlSliceView::setViewClickedPoints(bool pointsClicked)
 }
 
 
+void QtGlSliceView::setMaxIntensity(double value)
+{
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMax))
+    {
+    return;
+    }
+  cIWMax = value;
+  update();
+  emit maxIntensityChanged(cIWMax);
+}
+
+
 void QtGlSliceView::setMinIntensity(double value)
 {
-  cIWMin = qBound(cDataMin, value, cDataMax);
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMin))
+    {
+    return;
+    }
+  cIWMin = value;
   update();
   emit minIntensityChanged(cIWMin);
 }
- 
+
+
 void QtGlSliceView::zoomIn()
 {
   setZoom(zoom()+1);
