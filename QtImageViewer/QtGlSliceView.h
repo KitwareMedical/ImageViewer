@@ -1,33 +1,38 @@
 /*=========================================================================
 
- Program:   Insight Segmentation & Registration Toolkit
- Module:    QtGlSliceView.h
- Language:  C++
- Date:      $Date$
- Version:   $Revision$
- 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-  
-   This software is distributed WITHOUT ANY WARRANTY; without even 
-   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-   PURPOSE.  See the above copyright notices for more information.
-   
+Library:   TubeTK
+
+Copyright 2010 Kitware Inc. 28 Corporate Drive,
+Clifton Park, NY, 12065, USA.
+
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
 =========================================================================*/
 #ifndef QtGlSliceView_H
 #define QtGlSliceView_H
 
-#include "QtImageViewer_Export.h"
-//itk includes
+// Qt includes
+#include <QGLWidget>
+#include <QtOpenGL/qgl.h>
+
+// ITK includes
 #include "itkImage.h"
 #include "itkColorTable.h"
 
-//std includes
-#include <math.h>
-
-//Qt includes
-#include <QGLWidget>
-#include <QtOpenGL/qgl.h>
+// ImageViewer includes
+#include "QtImageViewer_Export.h"
 
 using namespace itk;
 
@@ -72,17 +77,12 @@ const int NUM_cWinOrientation = 3;
 enum OrientationType{
   X_AXIS=0,
   Y_AXIS,
-  Z_AXIS};
+  Z_AXIS
+};
 
   /*! Structure clickPoint to store the x,y,z and intensity value of a
   * point in the image
 */
-enum cViewDetailsInformation{
-  VD_OFF = 0,
-  VD_SLICEVIEW,
-  VD_TEXTBOX
-};
-
 struct ClickPoint 
   {
   double x, y, z;
@@ -120,7 +120,6 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(int sliceNum READ sliceNum WRITE setSliceNum NOTIFY sliceNumChanged);
   Q_PROPERTY(bool viewCrosshairs READ viewCrosshairs WRITE setViewCrosshairs);
   Q_PROPERTY(bool viewValue READ viewValue WRITE setViewValue);
-  Q_PROPERTY(int viewDetails READ viewDetails WRITE setViewDetails NOTIFY viewDetailsChanged);
   Q_PROPERTY(bool viewOverlayData READ viewOverlayData WRITE setViewOverlayData);
   Q_PROPERTY(bool viewAxisLabel READ viewAxisLabel WRITE setViewAxisLabel);
   Q_PROPERTY(bool viewClickedPoints READ viewClickedPoints WRITE setViewClickedPoints);
@@ -130,9 +129,22 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(bool validOverlayData READ validOverlayData WRITE setValidOverlayData NOTIFY validOverlayDataChanged);
   Q_PROPERTY(int maxClickedPointsStored READ maxClickedPointsStored WRITE setMaxClickedPointsStored
              NOTIFY maxClickedPointsStoredChanged);
+  Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep);
+  /// This property controls how the image annotations are displayed. 0 means
+  /// OFF, 1 means ON, >1 can be used by the application. "D" switches between each power of 2 state.
+  /// The number of states is controlled by maxDisplayStates.
+  /// 0x01 by default.
+  /// \sa displayState(), setDisplayState(), displayStateChanged(),
+  /// maxDisplayStates, nextDisplayState()
+  Q_PROPERTY(int displayState READ displayState WRITE setDisplayState NOTIFY displayStateChanged);
+  /// This property controls how many annotation states are controlled by the view.
+  /// 2 by default: Off(0x00) and On(0x01).
+  /// \sa maxDisplayStates, setMaxDisplayStates(),
+  /// displayState
+  Q_PROPERTY(int maxDisplayStates READ maxDisplayStates WRITE setMaxDisplayStates);
 
 public:
-  
+  typedef QGLWidget                        Superclass;
   typedef double                           ImagePixelType;
   typedef unsigned char                    OverlayPixelType;
   typedef itk::Image<ImagePixelType,3>     ImageType;
@@ -142,30 +154,32 @@ public:
   typedef ImageType::RegionType   RegionType;
   typedef ImageType::SizeType     SizeType;
   typedef ImageType::IndexType    IndexType;
-  typedef itk::ColorTable<double>        ColorTableType;
-  typedef ColorTableType::Pointer       ColorTablePointer;
+  typedef itk::ColorTable<double> ColorTableType;
+  typedef ColorTableType::Pointer ColorTablePointer;
 
 public:
-/*! FLTK required constructor - must use imData() to complete 
-  definition */
-  //QtGlSliceView(int x, int y, int w, int h, const char *l);
-  
+
   QtGlSliceView(QWidget *parent = 0);
 
   virtual const ImagePointer & inputImage(void) const;
-  
+
   /*! Return a pointer to the overlay data */
   const OverlayPointer &inputOverlay(void) const;
-  
+
   /*! Get the opacity of the overlay */
   double overlayOpacity(void) const;
-  
+
   /*! Called when overlay is toggled or opacity is changed */
   void  viewOverlayCallBack(void (*newOverlayCallBack)(void));
-  
+
   ColorTableType *colorTable(void) const;
 
   virtual void size(int w, int h);
+  virtual QSize minimumSizeHint()const;
+  virtual QSize sizeHint()const;
+
+  virtual bool hasHeightForWidth()const;
+  virtual int heightForWidth(int width)const;
 
   virtual void update();
 
@@ -179,7 +193,7 @@ public:
   virtual void keyPressEvent(QKeyEvent* event);
 
   virtual void resizeEvent(QResizeEvent *event);
-  
+
   double minIntensity() const;
   double maxIntensity() const;
 
@@ -227,8 +241,6 @@ public:
 
   bool viewCrosshairs() const;
 
-  int viewDetails() const;
-
   bool viewValue() const;
 
   int fastMovThresh() const;
@@ -254,7 +266,29 @@ public:
   bool validOverlayData() const;
   QDialog* helpWindow() const;
 
+  double singleStep() const;
+
+  int imageSize(int axis) const;
+
+  /// Return the displayState property value.
+  /// \sa displayState, setDisplayState()
+  int displayState() const;
+
+  /// Return the maxDisplayStates property value.
+  /// \sa maxDisplayStates, setMaxDisplayStates()
+  int maxDisplayStates() const;
+
+  /// Set the maxDisplayStates property value.
+  /// \sa maxDisplayStates, maxDisplayStates()
+  void setMaxDisplayStates(int stateNumber);
+
 public slots:
+  /// Set the displayState property value.
+  /// \sa displayState, displayState()
+  void setDisplayState(int state);
+
+  void setSingleStep(double step);
+
   void setValidOverlayData(bool validOverlayData);
 
   void clearClickedPointsStored();
@@ -270,7 +304,6 @@ public slots:
   void setViewOverlayData(bool newViewOverlayData);
 
   void setViewValue(bool value);
-  void setViewDetails(int detail);
 
   void setViewCrosshairs(bool crosshairs);
   /*! Specify the slice to view */
@@ -339,14 +372,14 @@ public slots:
   void changeSlice(int value);
 
   ///Fix the upper limit of the intensity widowing
-  void setMaxIntensity(int value);
+  void setMaxIntensity(double value);
 
   void setFastMovThresh(int movThresh);
 
   void setFastMovVal(int movVal);
 
   ///Fix the lower limit of the intensity widowing
-  void setMinIntensity(int value);
+  void setMinIntensity(double value);
 
   void zoomIn();
   void zoomOut();
@@ -356,17 +389,18 @@ public slots:
 
 signals:
 
-  void positionChanged(int newX, int newY, int newZ, double click);
-  void maxIntensityChanged(int maximum);
-  void minIntensityChanged(int minimum);
+  void imageChanged();
+  void positionChanged(double newX, double newY, double newZ, double click);
+  void maxIntensityChanged(double maximum);
+  void minIntensityChanged(double minimum);
   void sliceNumChanged(int value);
   void zoomChanged(double zoom);
-  void updateDetails(QString s);
+  void detailsChanged(QString s);
   void orientationChanged(int maximum);
-  void viewDetailsChanged(int details);
   void overlayOpacityChanged(double opacity);
   void validOverlayDataChanged(bool valid);
   void maxClickedPointsStoredChanged(int max);
+  void displayStateChanged(int state);
 
 protected:
 
@@ -374,7 +408,14 @@ protected:
   void resizeGL(int w, int h);
   void paintGL();
 
+  /// Return the next display state.
+  /// \sa displayState
+  virtual int nextDisplayState(int state)const;
+
+  int cDisplayState;
+  int cMaxDisplayStates;
   bool cValidOverlayData;
+  double cSingleStep;
   double cOverlayOpacity;
 
   OverlayPointer cOverlayData;
@@ -451,7 +492,6 @@ protected:
   bool cViewOverlayData;
   bool cViewCrosshairs;
   bool cViewValue;
-  int cViewDetails;
   bool cViewValuePhysicalUnits;
   const char * cPhysicalUnitsName;
 

@@ -1,28 +1,38 @@
 /*=========================================================================
 
- Program:   Insight Segmentation & Registration Toolkit
- Module:    QtGlSliceView.cxx
- Language:  C++
- Date:      $Date$
- Version:   $Revision$
- 
-  Copyright (c) 2002 Insight Consortium. All rights reserved.
-  See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-  
-   This software is distributed WITHOUT ANY WARRANTY; without even
-   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-   PURPOSE.  See the above copyright notices for more information.
+Library:   TubeTK
+
+Copyright 2010 Kitware Inc. 28 Corporate Drive,
+Clifton Park, NY, 12065, USA.
+
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 =========================================================================*/
+
 #ifndef QtGlSliceView_cxx
 #define QtGlSliceView_cxx
 
 //QtImageViewer include
 #include "QtGlSliceView.h"
-#include "ui_QtSlicerHelpGUI.h"
+#include "ui_QtImageViewerHelp.h"
 
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
+
+//std includes
+#include <cmath>
 
 // Qt includes
 #include <QDebug>
@@ -33,9 +43,12 @@
 #include <QScrollArea>
 
 QtGlSliceView::QtGlSliceView(QWidget *parent)
-: QGLWidget(parent)
+  : QGLWidget(parent)
 {
+  cDisplayState         = 0x01;
+  cMaxDisplayStates     = 2; // Off and On.
   cValidOverlayData     = false;
+  cSingleStep           = 1.0;
   cViewOverlayData      = false;
   cViewOverlayCallBack  = NULL;
   cOverlayOpacity       = 0.0;
@@ -43,7 +56,6 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   cHelpDialog = 0;
   cViewValuePhysicalUnits = false;
   cPhysicalUnitsName = "mm";
-  cViewDetails = VD_SLICEVIEW;
   cViewClickedPoints = false;
   cViewCrosshairs = true;
   cViewValue = true;
@@ -138,31 +150,35 @@ QtGlSliceView::QtGlSliceView(QWidget *parent)
   cWinZBuffer = NULL;
   cfastMovVal = 1; //fast moving pace: 1 by defaut
   cfastMovThresh = 10; //how many single step moves before fast moving
+
+  QSizePolicy sP = this->sizePolicy();
+  sP.setHeightForWidth(true);
+  this->setSizePolicy(sP);
   update();
 }
 
-  
-void 
+
+void
 QtGlSliceView::
 setInputImage(ImageType * newImData)
 {
-  if(!newImData)
-  {
+  if (!newImData)
+    {
     return;
-  }
+    }
 
   RegionType region = newImData->GetLargestPossibleRegion();
   if(region.GetNumberOfPixels() == 0)
-  {
+    {
     return;
-  }
+    }
 
-  SizeType   size   = region.GetSize();
+  SizeType size = region.GetSize();
   if(cValidOverlayData)
   {
     RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
     SizeType   overlay_size   = overlay_region.GetSize();
-      
+
     for(int i=0; i<3; i++)
     {
       if(size[i] != overlay_size[i])
@@ -228,9 +244,10 @@ setInputImage(ImageType * newImData)
   }
     
   cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
-    
-  changeSlice(((maxSliceNum() -1)/2));
-  update();
+  this->changeSlice(((this->maxSliceNum() -1)/2));
+  this->updateGeometry();
+  this->update();
+  emit imageChanged();
 }
 
 
@@ -383,12 +400,10 @@ void  QtGlSliceView::saveClickedPointsStored()
 void 
 QtGlSliceView::update()
 {
-  setFocus();
   if(!cValidImData)
     {
     return;
     }
-  
   int winWidth = (int)(cDimSize[ cWinOrder[0] ] / cWinZoom);
   cWinSizeX = ((int) winWidth);
   int ti = (int)((int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
@@ -684,21 +699,87 @@ QDialog* QtGlSliceView::helpWindow() const
 }
 
 
-void
-QtGlSliceView::showHelp()
+void QtGlSliceView::setSingleStep(double step)
+{
+  this->cSingleStep = (step != 0. ? step : 1.);
+}
+
+
+double QtGlSliceView::singleStep() const
+{
+  return this->cSingleStep;
+}
+
+
+int QtGlSliceView::imageSize(int axis) const
+{
+  return this->cDimSize[axis];
+}
+
+
+int QtGlSliceView::displayState() const
+{
+  return this->cDisplayState;
+}
+
+
+int QtGlSliceView::maxDisplayStates() const
+{
+  return this->cMaxDisplayStates;
+}
+
+
+void QtGlSliceView::setMaxDisplayStates(int newNumberOfStates)
+{
+  this->setDisplayState(qMin(this->displayState(), static_cast<int>(
+                               std::pow(2., newNumberOfStates - 2))));
+  this->cMaxDisplayStates = newNumberOfStates;
+}
+
+
+void QtGlSliceView::setDisplayState(int state)
+{
+  if (state == this->cDisplayState)
+    {
+    return;
+    }
+  this->cDisplayState = state;
+  emit displayStateChanged(state);
+}
+
+
+int QtGlSliceView::nextDisplayState(int state)const
+{
+  if (state == 0)
+    {
+    return 0x01;
+    }
+  int power = 0;
+  while (state >>= 1)
+    {
+    ++power;
+    }
+  if (power >= this->maxDisplayStates() - 2)
+    {
+    return 0x00;
+    }
+  return std::pow(2., ++power);
+}
+
+
+void QtGlSliceView::showHelp()
 {
   if (this->cHelpDialog == 0)
     {
     this->cHelpDialog = new QDialog(this);
-    Ui::HelpWindow helpUi;
+    Ui_QtImageViewerHelp helpUi;
     helpUi.setupUi(this->cHelpDialog);
     }
   this->cHelpDialog->show();
 }
 
 
-void
-QtGlSliceView::setZoom(double newWinZoom)
+void QtGlSliceView::setZoom(double newWinZoom)
 {
   cWinZoom = newWinZoom;
 
@@ -721,8 +802,7 @@ double QtGlSliceView::zoom() const
 }
 
 
-void
-QtGlSliceView::centerWindow(void)
+void QtGlSliceView::centerWindow(void)
 {
   cWinCenter[cWinOrder[0]] = cDimSize[cWinOrder[0]]/2;
   cWinCenter[cWinOrder[1]] = cDimSize[cWinOrder[1]]/2;
@@ -735,8 +815,8 @@ QtGlSliceView::centerWindow(void)
 
 
 void QtGlSliceView::centerWindow(int newWinCenterX,
-                                  int newWinCenterY,
-                                  int newWinCenterZ)
+                                 int newWinCenterY,
+                                 int newWinCenterZ)
 {
   if(newWinCenterX < 0)
     newWinCenterX = 0;
@@ -805,22 +885,9 @@ void QtGlSliceView::setViewCrosshairs(bool crosshairs)
 }
 
 
-void QtGlSliceView::setViewDetails(int detail)
-{
-  cViewDetails = detail;
-  emit viewDetailsChanged(detail);
-}
-
-
 bool QtGlSliceView::viewCrosshairs() const
 {
   return cViewCrosshairs;
-}
-
-
-int QtGlSliceView::viewDetails() const
-{
-  return cViewDetails;
 }
 
 
@@ -1243,11 +1310,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         }
       break;
     case Qt::Key_Q:
-      setMaxIntensity(maxIntensity()-0.02*intensityRange());
+      setMaxIntensity(maxIntensity()-singleStep());
       update();
       break;
     case Qt::Key_W:
-      setMaxIntensity(maxIntensity()+0.02*intensityRange());
+      setMaxIntensity(maxIntensity()+singleStep());
       update();
       break;
     case (Qt::Key_A):
@@ -1257,12 +1324,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         }
       else
         {
-        setMinIntensity(minIntensity()-(0.02*intensityRange()));
+        setMinIntensity(minIntensity()-singleStep());
         }
       update();
       break;
     case Qt::Key_S:
-      setMinIntensity(minIntensity()+(0.02*intensityRange()));
+      setMinIntensity(minIntensity()+singleStep());
       update();
       break;
     case (Qt::Key_I):
@@ -1363,19 +1430,8 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
     case Qt::Key_D:
       if(event->modifiers() & Qt::ShiftModifier)
         {
-        switch(viewDetails())
-          {
-          default:
-          case VD_SLICEVIEW:
-            setViewDetails(VD_TEXTBOX);
-            break;
-          case VD_TEXTBOX:
-            setViewDetails(VD_OFF);
-            break;
-          case VD_OFF:
-            setViewDetails(VD_SLICEVIEW);
-            break;
-          }
+        int newState = this->nextDisplayState(this->displayState());
+        this->setDisplayState(newState);
         }
       else
         {
@@ -1404,7 +1460,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       showHelp();
       break;
     default:
-      QWidget::keyPressEvent(event);
+      this->QWidget::keyPressEvent(event);
       break;
     }
 }
@@ -1414,12 +1470,40 @@ void QtGlSliceView::resizeEvent(QResizeEvent* event)
 {
   cW = event->size().width();
   cH = event->size().height();
+  this->Superclass::resizeEvent(event);
+}
+
+
+QSize QtGlSliceView::minimumSizeHint()const
+{
+  const QSize sizeHint = this->sizeHint();
+  return sizeHint;
+}
+
+QSize QtGlSliceView::sizeHint()const
+{
+  const QSize sizeHint(cWinSizeX, cWinSizeY);
+  return sizeHint;
 }
 
 
 void QtGlSliceView::size(int w, int h)
 {
   update();
+}
+
+
+bool QtGlSliceView::hasHeightForWidth() const
+{
+  return cWinSizeX && cWinSizeY;
+}
+
+
+int QtGlSliceView::heightForWidth(int width) const
+{
+  // \todo Currently the view handles only square widgets.
+  //return cWinSizeY ? (width * cWinSizeY) / cWinSizeX : width;
+  return width;
 }
 
 
@@ -1637,99 +1721,65 @@ void QtGlSliceView::paintGL(void)
               pz, suffix,
               (int)val);
       }
-    renderText(this->cW /2 + h /*- ((font.pointSize()*strlen(s)))*/,
-                this->cH - 1, s, font);
+    renderText(this->cW /2, this->cH, s);
     glDisable(GL_BLEND);    
     }
 
-  if(viewDetails() != VD_OFF)
+  QStringList details;
+  if(this->orientation() == X_AXIS)
+    {
+    details << QString("X - Slice: %1").arg(this->windowCenterX());
+    }
+  else if(orientation() == Y_AXIS)
+    {
+    details << QString("Y - Slice: %1").arg(this->windowCenterY());
+    }
+  else if(orientation() == Z_AXIS)
+    {
+    details << QString("Z - Slice: %1").arg(this->windowCenterZ());
+    }
+  details << QString("Dims: %1 x %2 x %3")
+    .arg(this->cDimSize[0])
+    .arg(this->cDimSize[1])
+    .arg(this->cDimSize[2]);
+  details << QString("Voxel: %1 x %2 x %3")
+    .arg(this->cSpacing[0], 0, 'f')
+    .arg(this->cSpacing[1], 0, 'f')
+    .arg(this->cSpacing[2], 0, 'f');
+  details << QString("Int. Range: %1 - %2")
+    .arg(this->cDataMin, 0, 'f')
+    .arg(this->cDataMax, 0, 'f');
+  details << QString("Int. Window: %1(%2) - %3(%4)")
+    .arg(this->cIWMin, 0, 'f')
+    .arg(IWModeTypeName[this->cIWModeMin])
+    .arg(this->cIWMax, 0, 'f')
+    .arg(IWModeTypeName[this->cIWModeMax]);
+  details << QString("View Mode: %1").arg(ImageModeTypeName[this->cImageMode]);
+
+  if(this->cDisplayState & 0x01)
     {
     glLoadIdentity();
     glOrtho(0.0, (double)width(), 0.0, (double)height(), 0.0, 1.0);
     glMatrixMode(GL_PROJECTION);
     glViewport(0,0 , width(), height());
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.9, 0.4, 0.1, (double)0.75);
-    char  s[200];
-    QString str;
-    QString a,b,c,d,e,f;
 
-    if(viewDetails() == VD_SLICEVIEW)
+    int i = 5;
+    foreach(QString text, details)
       {
-      if(orientation() == 0)
-        {
-        sprintf(s, "X - Slice: %3d", cWinCenter[0]);
-        }
-        else if(orientation() == 1)
-          {
-          sprintf(s, "Y - Slice: %3d", cWinCenter[1]);
-          }
-        else
-          {
-          sprintf(s, "Z - Slice: %3d", cWinCenter[2]);
-          }
-      renderText(2, this->cH + 10 - 5*(h + 2) , s);
-      sprintf(s, "Dims: %3d x %3d x %3d",
-        (int)this->cDimSize[0], (int)this->cDimSize[1], (int)this->cDimSize[2]);
-      renderText(2, this->cH +10 - 4*(h + 2) , s);
-      sprintf(s, "Voxel: %0.3f x %0.3f x %0.3f",
-         this->cSpacing[0], this->cSpacing[1], this->cSpacing[2]);
-      renderText(2, this->cH + 10 - 3*(h + 2) , s);
-      sprintf(s, "Int. Range: %0.3f - %0.3f", (double)this->cDataMin,
-                (double)this->cDataMax);
-      renderText(2, this->cH + 10 - 2*(h + 2) , s);
-      sprintf(s, "Int. Window: %0.3f(%s) - %0.3f(%s)",
-          (double)this->cIWMin, IWModeTypeName[cIWModeMin],
-          (double)this->cIWMax, IWModeTypeName[cIWModeMax]);
-      renderText(2, this->cH +10 - 1*(h + 2) , s);
-      sprintf(s, "View Mode: %s", ImageModeTypeName[cImageMode]);
-      renderText(2, this->cH +10 - 0*(h + 2) , s);
-      str = "";
+      int x = 2;
+      int y = this->cH - (i--) * (h + 2);
+      this->renderText(x, y, text);
       }
-    else
-      {
-      if(orientation() == 0)
-        {
-        a = QString("X - Slice: %1 \n").arg(cWinCenter[0]);
-        }
-        else if(orientation() == 1)
-          {
-          a = QString("Y - Slice: %1 \n").arg(cWinCenter[1]);
-          }
-        else
-          {
-          a = QString("Z - Slice: %1 \n").arg(cWinCenter[2]);
-          }
-      str.append(a);
-      b = QString("Dims: %1 x %2 x %3 \n").arg((int)this->cDimSize[0]).arg((int)this->cDimSize[1]).arg((int)this->cDimSize[2]);
-      str.append(b);
-
-      c = QString("Voxel: %1 x %2 x %3 \n").arg(this->cSpacing[0]).arg(this->cSpacing[1]).arg(this->cSpacing[2]);
-      str.append(c);
-
-      d = QString("Int. Range: %1 - %2 \n").arg((double)this->cDataMin).arg((double)this->cDataMax);
-      str.append(d);
-
-      e = QString("Int. Window: %1%2 - %3%4 \n").arg((double)this->cIWMin).arg(IWModeTypeName[cIWModeMin])
-          .arg((double)this->cIWMax).arg(IWModeTypeName[cIWModeMax]);
-      str.append(e);
-
-      f = QString("View Mode: %1 \n").arg(ImageModeTypeName[cImageMode]);
-      str.append(f);
-      }
-    emit updateDetails(str);
     glDisable(GL_BLEND);
     }
-  else
-    {
-    QString str("");
-    emit updateDetails(str);
-    }
-    
+  QString str = details.join("\n");
+  emit detailsChanged(str);
+
   if(viewCrosshairs()
-    && static_cast<int>(cClickSelect[cWinOrder[2]]) == 
+    && static_cast<int>(cClickSelect[cWinOrder[2]]) ==
        static_cast<int>(sliceNum()))
     {
     glEnable(GL_BLEND);
@@ -1869,37 +1919,44 @@ void QtGlSliceView::mousePressEvent(QMouseEvent *event)
 
 void QtGlSliceView::changeSlice(int value)
 {
-  setSliceNum(value);
+  this->setSliceNum(value);
   update();
   paintGL();
 }
 
 
-
 void QtGlSliceView::setSliceNum(int newSliceNum)
 {
-  if(newSliceNum>cDimSize[cWinOrder[2]])
+  newSliceNum = qMin(newSliceNum, static_cast<int>(cDimSize[cWinOrder[2]]) - 1);
+  if (newSliceNum == cWinCenter[cWinOrder[2]])
     {
-    newSliceNum = cDimSize[cWinOrder[2]] -1;
+    return;
     }
   cWinCenter[cWinOrder[2]] = newSliceNum;
-  
-  if(cSliceNumCallBack != NULL)
+
+  if (cSliceNumCallBack != NULL)
+    {
     cSliceNumCallBack();
-  if(cSliceNumArgCallBack != NULL)
+    }
+  if (cSliceNumArgCallBack != NULL)
+    {
     cSliceNumArgCallBack(cSliceNumArg);
+    }
   emit sliceNumChanged(newSliceNum);
 }
+
+
+int QtGlSliceView::sliceNum() const
+{
+  return cWinCenter[cWinOrder[2]];
+}
+
 
 int QtGlSliceView::maxSliceNum() const
 {
   return cDimSize[cWinOrder[2]];
 }
 
-int QtGlSliceView::sliceNum() const
-{
-  return cWinCenter[cWinOrder[2]];
-}
 
 void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
   {    
@@ -1950,21 +2007,6 @@ void QtGlSliceView::selectPoint(double newX, double newY, double newZ)
 
   emit positionChanged(cClickSelect[0], cClickSelect[1], cClickSelect[2], cClickSelectV);
 
-}
-
-void QtGlSliceView::setMaxIntensity(int value)
-{
-  if(value < cDataMin)
-    {
-    value = cDataMin;
-    }
-  if(value > cDataMax)
-    {
-    value = cDataMax;
-    }
-  cIWMax = value;
-  update();
-  emit maxIntensityChanged(cIWMax);
 }
 
 void QtGlSliceView::setFastMovThresh(int movThresh)
@@ -2064,21 +2106,32 @@ void QtGlSliceView::setViewClickedPoints(bool pointsClicked)
 }
 
 
-void QtGlSliceView::setMinIntensity(int value)
+void QtGlSliceView::setMaxIntensity(double value)
 {
-  if(value < cDataMin)
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMax))
     {
-    value = cDataMin;
+    return;
     }
-  if(value > cDataMax)
+  cIWMax = value;
+  update();
+  emit maxIntensityChanged(cIWMax);
+}
+
+
+void QtGlSliceView::setMinIntensity(double value)
+{
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMin))
     {
-    value = cDataMax;
+    return;
     }
   cIWMin = value;
   update();
   emit minIntensityChanged(cIWMin);
 }
- 
+
+
 void QtGlSliceView::zoomIn()
 {
   setZoom(zoom()+1);
