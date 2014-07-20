@@ -56,11 +56,11 @@ protected:
 
 
 QtSliceControlsWidgetPrivate::QtSliceControlsWidgetPrivate(QtSliceControlsWidget& obj)
-  : q_ptr(&obj)
-  , SliceView(0)
+  : SliceView(0)
   , Decimals(0)
   , SliceSlider(0)
   , SliceSpinBox(0)
+  , q_ptr(&obj)
 {
 }
 
@@ -187,8 +187,8 @@ int QtSliceControlsWidgetPrivate::significantDecimals(double value, int defaultD
 }
 
 
-QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parent)
-  : QWidget(parent)
+QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parentWidget)
+  : QWidget(parentWidget)
   , d_ptr(new QtSliceControlsWidgetPrivate(*this))
 {
   Q_D(QtSliceControlsWidget);
@@ -278,12 +278,12 @@ void QtSliceControlsWidget::setSliceSpinBox(QSpinBox* spinBox)
 
 
 void QtSliceControlsWidget
-::setDisplayPosition(double x, double y, double z, double value)
+::setDisplayPosition(double posX, double posY, double posZ, double value)
 {
   Q_D(QtSliceControlsWidget);
-  d->PositionX->setValue( x );
-  d->PositionY->setValue( y );
-  d->PositionZ->setValue( z );
+  d->PositionX->setValue( posX );
+  d->PositionY->setValue( posY );
+  d->PositionZ->setValue( posZ );
   d->PixelValue->setValue( value );
 }
 

@@ -83,9 +83,9 @@ protected:
 
 
 QtImageViewerPrivate::QtImageViewerPrivate(QtImageViewer& obj)
-  : q_ptr(&obj)
-  , HelpDialog(0)
+  : HelpDialog(0)
   , IsRedirectingEvent(false)
+  , q_ptr(&obj)
 {
 }
 
@@ -243,8 +243,8 @@ QWidgetList QtImageViewerPrivate::layoutWidgets(QLayout* layout, int level)
 }
 
 
-QtImageViewer::QtImageViewer(QWidget* parent, Qt::WindowFlags fl )
-  : QDialog( parent, fl )
+QtImageViewer::QtImageViewer(QWidget* widgetParent, Qt::WindowFlags fl )
+  : QDialog( widgetParent, fl )
   , d_ptr(new QtImageViewerPrivate(*this))
 {
   Q_D(QtImageViewer);
@@ -358,31 +358,31 @@ void QtImageViewer::setControlsVisible(bool controlsVisible)
 }
 
 
-void QtImageViewer::keyPressEvent(QKeyEvent* event)
+void QtImageViewer::keyPressEvent(QKeyEvent* keyEvent)
 {
   Q_D(QtImageViewer);
-  if (event->key() != Qt::Key_Escape &&
-      event->key() != Qt::Key_Enter &&
-      event->key() != Qt::Key_Return)
+  if (keyEvent->key() != Qt::Key_Escape &&
+      keyEvent->key() != Qt::Key_Enter &&
+      keyEvent->key() != Qt::Key_Return)
     {
     if (!d->IsRedirectingEvent)
       {
       d->IsRedirectingEvent = true;
-      d->OpenGlWindow->keyPressEvent(event);
+      d->OpenGlWindow->keyPressEvent(keyEvent);
       d->IsRedirectingEvent = false;
       return;
       }
     }
-  this->Superclass::keyPressEvent(event);
+  this->Superclass::keyPressEvent(keyEvent);
 }
 
-bool QtImageViewer::eventFilter(QObject *obj, QEvent *event)
+bool QtImageViewer::eventFilter(QObject *obj, QEvent *filteredEvent)
 {
   Q_D(QtImageViewer);
   if (qobject_cast<QDoubleSpinBox*>(obj) &&
-      event->type() == QEvent::KeyPress)
+      filteredEvent->type() == QEvent::KeyPress)
     {
-    QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(event);
+    QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(filteredEvent);
     if ((keyEvent->key() < Qt::Key_0 ||
          keyEvent->key() > Qt::Key_9) &&
         keyEvent->key() != Qt::Key_Period &&
@@ -401,7 +401,7 @@ bool QtImageViewer::eventFilter(QObject *obj, QEvent *event)
       return true;
       }
     }
-  return this->Superclass::eventFilter(obj, event);
+  return this->Superclass::eventFilter(obj, filteredEvent);
 }
 
 void QtImageViewer::releaseFixedSize()

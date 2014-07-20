@@ -42,8 +42,8 @@ limitations under the License.
 #include <QMouseEvent>
 #include <QScrollArea>
 
-QtGlSliceView::QtGlSliceView(QWidget *parent)
-  : QGLWidget(parent)
+QtGlSliceView::QtGlSliceView(QWidget* widgetParent)
+  : QGLWidget(widgetParent)
 {
   cDisplayState         = 0x01;
   cMaxDisplayStates     = 2; // Off and On.
@@ -168,43 +168,42 @@ setInputImage(ImageType * newImData)
     }
 
   RegionType region = newImData->GetLargestPossibleRegion();
-  if(region.GetNumberOfPixels() == 0)
+  if (region.GetNumberOfPixels() == 0)
     {
     return;
     }
 
-  SizeType size = region.GetSize();
-  if(cValidOverlayData)
-  {
-    RegionType overlay_region = cOverlayData->GetLargestPossibleRegion();
-    SizeType   overlay_size   = overlay_region.GetSize();
-
-    for(int i=0; i<3; i++)
+  SizeType imageSize = region.GetSize();
+  if (cValidOverlayData)
     {
-      if(size[i] != overlay_size[i])
+    RegionType overlayRegion = cOverlayData->GetLargestPossibleRegion();
+    SizeType   overlaySize   = overlayRegion.GetSize();
+
+    for (int i=0; i<3; i++)
       {
+      if (imageSize[i] != overlaySize[i])
+        {
         return;
+        }
       }
     }
-  }
 
   cImData = newImData;
-  cDimSize[0]=size[0];
-  cDimSize[1]=size[1];
-  cDimSize[2]=size[2];
-  cSpacing[0]=cImData->GetSpacing()[0];
-  cSpacing[1]=cImData->GetSpacing()[1];
-  cSpacing[2]=cImData->GetSpacing()[2];
-      
-    
+  cDimSize[0] = imageSize[0];
+  cDimSize[1] = imageSize[1];
+  cDimSize[2] = imageSize[2];
+  cSpacing[0] = cImData->GetSpacing()[0];
+  cSpacing[1] = cImData->GetSpacing()[1];
+  cSpacing[2] = cImData->GetSpacing()[2];
+
   typedef MinimumMaximumImageCalculator<ImageType> CalculatorType;
   CalculatorType::Pointer calculator = CalculatorType::New();
 
   calculator->SetImage(cImData);
   calculator->Compute();
 
-  cDataMin      = calculator->GetMinimum();
-  cDataMax      = calculator->GetMaximum();
+  cDataMin = calculator->GetMinimum();
+  cDataMax = calculator->GetMaximum();
   cIWMin = cDataMin;
   cIWMax = cDataMax;
 
@@ -213,36 +212,28 @@ setInputImage(ImageType * newImData)
   cWinCenter[2] = 0;
 
   cWinMinX  = 0;
-  cWinSizeX = cDimSize[0];
-  if(cWinSizeX<cDimSize[1])
-  {
-    cWinSizeX = cDimSize[1];
-  }
-  if(cWinSizeX<cDimSize[2])
-  {
-    cWinSizeX = cDimSize[2];
-  }
-  cWinMaxX  = cWinSizeX - 1;
-    
-  cWinMinY  = 0;
+  cWinSizeX = qMax(cDimSize[0], qMax( cDimSize[1], cDimSize[2]) );
+  cWinMaxX = static_cast<int>(cWinSizeX) - 1;
+
+  cWinMinY = 0;
   cWinSizeY = cWinSizeX;
-  cWinMaxY  = cWinSizeY - 1;
-    
+  cWinMaxY = static_cast<int>(cWinSizeY) - 1;
+
   cWinDataSizeX = cDimSize[0];
   cWinDataSizeY = cDimSize[1];
-  
-  if(cWinImData != NULL)
-  {
+
+  if (cWinImData != NULL)
+    {
     delete [] cWinImData;
-  }
-    
+    }
+
   cWinImData = new unsigned char[ cWinDataSizeX * cWinDataSizeY ];
-    
-  if(cWinZBuffer != NULL)
-  {
+
+  if (cWinZBuffer != NULL)
+    {
     delete [] cWinZBuffer;
-  }
-    
+    }
+
   cWinZBuffer = new unsigned short[ cWinDataSizeX * cWinDataSizeY ];
   this->changeSlice(((this->maxSliceNum() -1)/2));
   this->updateGeometry();
@@ -681,9 +672,9 @@ QtGlSliceView::update()
 }
 
 
-void QtGlSliceView::setValidOverlayData(bool validOverlayData)
+void QtGlSliceView::setValidOverlayData(bool newValidOverlayData)
 {
-  this->cValidOverlayData = validOverlayData;
+  this->cValidOverlayData = newValidOverlayData;
 }
 
 
@@ -893,18 +884,15 @@ void QtGlSliceView::setBoxMin(double minX, double minY, double minZ)
 }
 
 
-void QtGlSliceView::setBoxMax(double x, double y, double z)
+void QtGlSliceView::setBoxMax(double boxX, double boxY, double boxZ)
 {
-  double x0, y0, z0;
-  double x1, y1, z1;
+  double x0 = qMin(cBoxMin[0], boxX);
+  double y0 = qMin(cBoxMin[1], boxY);
+  double z0 = qMin(cBoxMin[2], boxZ);
 
-  x0 = (cBoxMin[0]<x) ? cBoxMin[0] : x;
-  y0 = (cBoxMin[1]<y) ? cBoxMin[1] : y;
-  z0 = (cBoxMin[2]<z) ? cBoxMin[2] : z;
-
-  x1 = (cBoxMin[0]<x) ? x : cBoxMin[0];
-  y1 = (cBoxMin[1]<y) ? y : cBoxMin[1];
-  z1 = (cBoxMin[2]<z) ? z : cBoxMin[2];
+  double x1 = qMax(cBoxMin[0], boxX);
+  double y1 = qMax(cBoxMin[1], boxY);
+  double z1 = qMax(cBoxMin[2], boxZ);
 
   cBoxMin[0] = x0;
   cBoxMin[1] = y0;
@@ -914,13 +902,17 @@ void QtGlSliceView::setBoxMax(double x, double y, double z)
   cBoxMax[1] = y1;
   cBoxMax[2] = z1;
 
-  if(cClickBoxCallBack != NULL)
+  if (cClickBoxCallBack != NULL)
+    {
     cClickBoxCallBack(cBoxMin[0], cBoxMin[1], cBoxMin[2],
-    cBoxMax[0], cBoxMax[1], cBoxMax[2]);
-  if(cClickBoxArgCallBack != NULL)
+                      cBoxMax[0], cBoxMax[1], cBoxMax[2]);
+    }
+  if (cClickBoxArgCallBack != NULL)
+    {
     cClickBoxArgCallBack(cBoxMin[0], cBoxMin[1], cBoxMin[2],
-    cBoxMax[0], cBoxMax[1], cBoxMax[2],
-    cClickBoxArg);
+                         cBoxMax[0], cBoxMax[1], cBoxMax[2],
+                         cClickBoxArg);
+    }
 }
 
 
@@ -981,20 +973,20 @@ void QtGlSliceView::setImageMode(ImageModeType newImageMode)
 }
 
 
-void QtGlSliceView::setImageMode(const char* imageMode)
+void QtGlSliceView::setImageMode(const char* newImageMode)
 {
-  int newImageMode = -1;
+  int newImageModeIndex = -1;
   for (int i = 0; i < NUM_ImageModeTypes; ++i)
     {
-    if (QString(imageMode) == QString(ImageModeTypeName[i]))
+    if (QString(newImageMode) == QString(ImageModeTypeName[i]))
       {
-      newImageMode = i;
+      newImageModeIndex = i;
       break;
       }
     }
-  if (newImageMode >= 0)
+  if (newImageModeIndex >= 0)
     {
-    this->setImageMode(static_cast<ImageModeType>(newImageMode));
+    this->setImageMode(static_cast<ImageModeType>(newImageModeIndex));
     }
 }
 
@@ -1140,7 +1132,7 @@ IWModeType QtGlSliceView::iwModeMax(void) const
 }
 
 
-void QtGlSliceView::keyPressEvent(QKeyEvent *event)
+void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
 {
   static int fastMov = 0;
   int pace;
@@ -1150,7 +1142,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
     imgShiftSize = 1;
     }
 
-  switch(event->key())
+  switch (keyEvent->key())
     {
     case Qt::Key_0:
       setOrientation(X_AXIS);
@@ -1306,7 +1298,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case (Qt::Key_A):
-      if(event->modifiers() & Qt::ShiftModifier)
+      if (keyEvent->modifiers() & Qt::ShiftModifier)
         {
         setViewAxisLabel(!viewAxisLabel());
         }
@@ -1321,7 +1313,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case (Qt::Key_I):
-      if(!(event->modifiers() & Qt::ShiftModifier))
+      if(!(keyEvent->modifiers() & Qt::ShiftModifier))
         {
         int newY;
         if(isYFlipped())
@@ -1380,7 +1372,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case (Qt::Key_T):
-      if(event->modifiers() & Qt::ShiftModifier)
+      if(keyEvent->modifiers() & Qt::ShiftModifier)
         {
         setViewClickedPoints(!viewClickedPoints());
         }
@@ -1391,21 +1383,21 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case (Qt::Key_C):
-      if(event->modifiers() & Qt::ShiftModifier)
+      if(keyEvent->modifiers() & Qt::ShiftModifier)
         {
         setViewCrosshairs(!viewCrosshairs());
         }
       update();
       break;
     case (Qt::Key_V):
-      if(event->modifiers() & Qt::ShiftModifier)
+      if(keyEvent->modifiers() & Qt::ShiftModifier)
         {
         setViewValue(!viewValue());
         }
       update();
       break;
     case Qt::Key_P:
-      if(event->modifiers() & Qt::ShiftModifier)
+      if(keyEvent->modifiers() & Qt::ShiftModifier)
         {
         setViewValuePhysicalUnits(!viewValuePhysicalUnits());
         }
@@ -1416,7 +1408,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case Qt::Key_D:
-      if(event->modifiers() & Qt::ShiftModifier)
+      if(keyEvent->modifiers() & Qt::ShiftModifier)
         {
         int newState = this->nextDisplayState(this->displayState());
         this->setDisplayState(newState);
@@ -1428,7 +1420,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       update();
       break;
     case (Qt::Key_O):
-      if(event->modifiers() & Qt::ShiftModifier)
+      if(keyEvent->modifiers() & Qt::ShiftModifier)
         {
         setOverlay(!viewOverlayData());
         }
@@ -1448,30 +1440,30 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       showHelp();
       break;
     default:
-      this->QWidget::keyPressEvent(event);
+      this->QWidget::keyPressEvent(keyEvent);
       break;
     }
 }
 
 
-void QtGlSliceView::resizeEvent(QResizeEvent* event)
+void QtGlSliceView::resizeEvent(QResizeEvent* sizeEvent)
 {
-  cW = event->size().width();
-  cH = event->size().height();
-  this->Superclass::resizeEvent(event);
+  cW = sizeEvent->size().width();
+  cH = sizeEvent->size().height();
+  this->Superclass::resizeEvent(sizeEvent);
 }
 
 
 QSize QtGlSliceView::minimumSizeHint()const
 {
-  const QSize sizeHint = this->sizeHint();
-  return sizeHint;
+  const QSize minSizeHint = this->sizeHint();
+  return minSizeHint;
 }
 
 QSize QtGlSliceView::sizeHint()const
 {
-  const QSize sizeHint(cWinSizeX, cWinSizeY);
-  return sizeHint;
+  const QSize winSizeHint(cWinSizeX, cWinSizeY);
+  return winSizeHint;
 }
 
 
@@ -1481,11 +1473,11 @@ bool QtGlSliceView::hasHeightForWidth() const
 }
 
 
-int QtGlSliceView::heightForWidth(int width) const
+int QtGlSliceView::heightForWidth(int widgetWidth) const
 {
   // \todo Currently the view handles only square widgets.
   //return cWinSizeY ? (width * cWinSizeY) / cWinSizeX : width;
-  return width;
+  return widgetWidth;
 }
 
 
@@ -1528,12 +1520,12 @@ void QtGlSliceView::paintGL(void)
 #ifdef Q_OS_DARWIN
   h=8;
 #endif
-  QFont font = this->font();
-  font.setPointSize(h);
-  if(!cImData)
-  {
+  QFont widgetFont = this->font();
+  widgetFont.setPointSize(h);
+  if (!cImData)
+    {
     return;
-  }
+    }
 
   double scale0 = this->width()/(double)cDimSize[0] * zoom()
     * fabs(cSpacing[cWinOrder[0]])/fabs(cSpacing[0]);
@@ -1630,32 +1622,32 @@ void QtGlSliceView::paintGL(void)
 
     if(isXFlipped() == false)
       {
-      int y = static_cast<int>(this->cH/2 - h/2 );
-      glRasterPos2i(width(), -y);
+      int posY = static_cast<int>(this->cH/2 - h/2 );
+      glRasterPos2i(width(), -posY);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      renderText( this->cW - (font.pointSize())/2 -2 , y, cAxisLabelX[cWinOrientation], font);
+      renderText( this->cW - (widgetFont.pointSize())/2 -2 , posY, cAxisLabelX[cWinOrientation], widgetFont);
       }
     else
       {
-      int y = static_cast<int>(this->cH/2 - h/2 );
-      glRasterPos2i(width(), -y);
+      int posY = static_cast<int>(this->cH/2 - h/2 );
+      glRasterPos2i(width(), -posY);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      renderText((font.pointSize())/2, y, cAxisLabelX[cWinOrientation], font);
+      renderText((widgetFont.pointSize())/2, posY, cAxisLabelX[cWinOrientation], widgetFont);
       }
       
     if(isYFlipped() == false)
       {
-      int y = static_cast<int>(h +10) ;
-      glRasterPos2i(this->width()/2, -y);
+      int posY = static_cast<int>(h +10) ;
+      glRasterPos2i(this->width()/2, -posY);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-      renderText(this->cW/2 - (font.pointSize())/2, y, cAxisLabelY[cWinOrientation], font);
+      renderText(this->cW/2 - (widgetFont.pointSize())/2, posY, cAxisLabelY[cWinOrientation], widgetFont);
       }
     else
       {
-      int y = static_cast<int>(this->cH - h -10);
-      glRasterPos2i(this->width()/2, -y);
+      int posY = static_cast<int>(this->cH - h -10);
+      glRasterPos2i(this->width()/2, -posY);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-      renderText(this->cW/2 + (font.pointSize())/2, y, cAxisLabelY[cWinOrientation], font);
+      renderText(this->cW/2 + (widgetFont.pointSize())/2, posY, cAxisLabelY[cWinOrientation], widgetFont);
       }
     
     glDisable(GL_BLEND);
@@ -1751,9 +1743,9 @@ void QtGlSliceView::paintGL(void)
     int i = 5;
     foreach(QString text, details)
       {
-      int x = 2;
-      int y = this->cH - (i--) * (h + 2);
-      this->renderText(x, y, text);
+      int posX = 2;
+      int posY = this->cH - (i--) * (h + 2);
+      this->renderText(posX, posY, text);
       }
     glDisable(GL_BLEND);
     }
@@ -1767,40 +1759,40 @@ void QtGlSliceView::paintGL(void)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.1, 0.64, 0.2, 0.75);
-    int x;
+    int posX;
     if(isXFlipped())
       {
-      x = (int)(cW - (cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
+      posX = (int)(cW - (cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
       }
     else
       {
-      x = (int)((cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
+      posX = (int)((cClickSelect[cWinOrder[0]] - cWinMinX) * scale0);
       }
-    int y;
+    int posY;
     if(isYFlipped())
       {
-      y = (int)(cH - (cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
+      posY = (int)(cH - (cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
       }
     else
       {
-      y = (int)((cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
+      posY = (int)((cClickSelect[cWinOrder[1]] - cWinMinY) * scale1);
       }
     glBegin(GL_LINES);
-    glVertex2d(0, y);
-    glVertex2d(x-2, y);
-    glVertex2d(x+2, y);
-    glVertex2d(this->width()-1, y);
-    glVertex2d(x, 0);
-    glVertex2d(x, y-2);
-    glVertex2d(x, y+2);
-    glVertex2d(x, this->height()-1);
+    glVertex2d(0, posY);
+    glVertex2d(posX-2, posY);
+    glVertex2d(posX+2, posY);
+    glVertex2d(this->width()-1, posY);
+    glVertex2d(posX, 0);
+    glVertex2d(posX, posY-2);
+    glVertex2d(posX, posY+2);
+    glVertex2d(posX, this->height()-1);
     glEnd();
     glDisable(GL_BLEND);
     }
 }
 
 
-void QtGlSliceView::mouseMoveEvent(QMouseEvent *event)
+void QtGlSliceView::mouseMoveEvent(QMouseEvent* mouseEvent)
 {
   if(!cImData)
     {
@@ -1814,8 +1806,8 @@ void QtGlSliceView::mouseMoveEvent(QMouseEvent *event)
   if(cClickMode == CM_SELECT || cClickMode == CM_BOX) 
     {
     double p[3];
-    p[cWinOrder[0]] = cWinMinX + ((1-isXFlipped())*(event->x())
-                     + (isXFlipped())*(this->width()-event->x()))
+    p[cWinOrder[0]] = cWinMinX + ((1-isXFlipped())*(mouseEvent->x())
+                     + (isXFlipped())*(this->width()-mouseEvent->x()))
                      / scale0;
     if(p[cWinOrder[0]]<cWinMinX) 
       {
@@ -1825,8 +1817,8 @@ void QtGlSliceView::mouseMoveEvent(QMouseEvent *event)
       {
       p[cWinOrder[0]] = cWinMaxX;
       }
-    p[cWinOrder[1]] = cWinMinY + (isYFlipped()*event->y()
-                     + (1-isYFlipped())*(this->height()-event->y()))
+    p[cWinOrder[1]] = cWinMinY + (isYFlipped()*mouseEvent->y()
+                     + (1-isYFlipped())*(this->height()-mouseEvent->y()))
                      / scale1;
     if(p[cWinOrder[1]]<cWinMinY) 
       {
@@ -1859,32 +1851,32 @@ void QtGlSliceView::mouseMoveEvent(QMouseEvent *event)
 /** catches the mouse press to react appropriate
  *  Overriden to catch mousePressEvents and to start an internal
  *  timer, which calls the appropriate interaction routine */
-void QtGlSliceView::mousePressEvent(QMouseEvent *event)
+void QtGlSliceView::mousePressEvent(QMouseEvent* mouseEvent)
 {
-   if(event->button() & Qt::LeftButton)
-   {
-      if(event->button() & Qt::ShiftModifier)
-      {
+   if (mouseEvent->button() & Qt::LeftButton)
+     {
+      if (mouseEvent->button() & Qt::ShiftModifier)
+        {
          // left mouse mouse and shift button
          /*this->mouseEventActive = true;
          QObject::connect(this->stepTimer, SIGNAL(timeout()),
                            this->shiftLeftButtonFunction);*/
-      }
-   }
-   else if(event->button() & Qt::MidButton)
-   {
+        }
+     }
+   else if (mouseEvent->button() & Qt::MidButton)
+     {
       // middle mouse button
       //this->mouseEventActive = true;
       //QObject::connect(this->stepTimer, SIGNAL(timeout()),
       //                  this->middleButtonFunction);
-   }
-   else if(event->button() & Qt::RightButton)
-   {
+     }
+   else if (mouseEvent->button() & Qt::RightButton)
+     {
       // right mouse button
       //this->mouseEventActive = true;
       //QObject::connect(this->stepTimer, SIGNAL(timeout()),
       //                  this, this->rightButtonFunction);
-   }
+     }
 /*
    if(this->mouseEventActive) {
       this->currentMousePos[0] = event->x();
@@ -1895,15 +1887,15 @@ void QtGlSliceView::mousePressEvent(QMouseEvent *event)
       this->stepTimer->start(this->interactionTime);
    }*/
 
-   updateGL();
+   this->updateGL();
 }
 
 
 void QtGlSliceView::changeSlice(int value)
 {
   this->setSliceNum(value);
-  update();
-  paintGL();
+  this->update();
+  this->paintGL();
 }
 
 

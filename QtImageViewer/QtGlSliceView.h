@@ -513,10 +513,10 @@ protected:
 
   int cWinMinX;
   int cWinMaxX;
-  int cWinSizeX;
+  unsigned int cWinSizeX;
   int cWinMinY;
   int cWinMaxY;
-  int cWinSizeY;
+  unsigned int cWinSizeY;
   int cWinDataSizeX;
   int cWinDataSizeY;
   int inDataSizeX;
