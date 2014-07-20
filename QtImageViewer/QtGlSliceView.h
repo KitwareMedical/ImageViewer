@@ -20,8 +20,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =========================================================================*/
-#ifndef QtGlSliceView_H
-#define QtGlSliceView_H
+#ifndef __QtGlSliceView_h
+#define __QtGlSliceView_h
 
 // Qt includes
 #include <QGLWidget>
@@ -114,8 +114,8 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(bool xFlipped READ isXFlipped WRITE flipX);
   Q_PROPERTY(ImageModeType imageMode READ imageMode WRITE setImageMode);
   Q_PROPERTY(int orientation READ orientation WRITE setOrientation NOTIFY orientationChanged);
-  Q_PROPERTY(double maxIntensity READ maxIntensity WRITE setMaxIntensity NOTIFY maxIntensityChanged);
-  Q_PROPERTY(double minIntensity READ minIntensity WRITE setMinIntensity NOTIFY minIntensityChanged);
+  Q_PROPERTY(double iwMin READ iwMin WRITE setIWMin NOTIFY iwMinChanged);
+  Q_PROPERTY(double iwMax READ iwMax WRITE setIWMax NOTIFY iwMaxChanged);
   Q_PROPERTY(double overlayOpacity READ overlayOpacity WRITE setOverlayOpacity NOTIFY overlayOpacityChanged);
   Q_PROPERTY(int sliceNum READ sliceNum WRITE setSliceNum NOTIFY sliceNumChanged);
   Q_PROPERTY(bool viewCrosshairs READ viewCrosshairs WRITE setViewCrosshairs);
@@ -174,7 +174,6 @@ public:
 
   ColorTableType *colorTable(void) const;
 
-  virtual void size(int w, int h);
   virtual QSize minimumSizeHint()const;
   virtual QSize sizeHint()const;
 
@@ -194,8 +193,25 @@ public:
 
   virtual void resizeEvent(QResizeEvent *event);
 
+  /// Return the minimum intensity of the image
+  /// \sa maxIntensity(), intensityRange()
   double minIntensity() const;
+
+  /// Return the maximum intensity of the image
+  /// \sa minIntensity(), intensityRange()
   double maxIntensity() const;
+
+  /// Return teh range of intensity of the image.
+  /// \sa minIntensity(), maxIntensity()
+  double intensityRange() const;
+
+  /// Return the lower intensity of the window.
+  /// \sa iwMin
+  double iwMin() const;
+
+  /// Return the upper intensity of the window.
+  /// \sa iwMax
+  double iwMax() const;
 
   double zoom() const;
 
@@ -252,8 +268,6 @@ public:
   bool viewClickedPoints() const;
 
   bool viewValuePhysicalUnits() const;
-
-  double intensityRange() const;
 
   bool clickedPoint(int index, ClickPoint & point);
 
@@ -371,15 +385,17 @@ public slots:
   ///Fix the new Slice
   void changeSlice(int value);
 
-  ///Fix the upper limit of the intensity widowing
-  void setMaxIntensity(double value);
+  /// Fix the lower limit of the intensity widowing
+  /// \sa iwMin
+  void setIWMin(double value);
+
+  /// Fix the upper limit of the intensity widowing
+  /// \sa iwMax
+  void setIWMax(double value);
 
   void setFastMovThresh(int movThresh);
 
   void setFastMovVal(int movVal);
-
-  ///Fix the lower limit of the intensity widowing
-  void setMinIntensity(double value);
 
   void zoomIn();
   void zoomOut();
@@ -391,8 +407,8 @@ signals:
 
   void imageChanged();
   void positionChanged(double newX, double newY, double newZ, double click);
-  void maxIntensityChanged(double maximum);
-  void minIntensityChanged(double minimum);
+  void iwMinChanged(double minimum);
+  void iwMaxChanged(double maximum);
   void sliceNumChanged(int value);
   void zoomChanged(double zoom);
   void detailsChanged(QString s);
@@ -425,11 +441,11 @@ protected:
   QDialog* cHelpDialog;
 
   ColorTablePointer cColorTable;
-    
+
   void (*cSliceNumCallBack)(void);
   void *cSliceNumArg;
   void (*cSliceNumArgCallBack)(void *sliceNumArg);
-    
+
   bool cValidImData;
   bool cViewImData;
   bool cViewClickedPoints;

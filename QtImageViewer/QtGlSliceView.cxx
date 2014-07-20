@@ -202,16 +202,16 @@ setInputImage(ImageType * newImData)
 
   calculator->SetImage(cImData);
   calculator->Compute();
-        
-  cIWMin      = calculator->GetMinimum();
-  cIWMax      = calculator->GetMaximum();
-  cDataMax = cIWMax;
-  cDataMin = cIWMin;
+
+  cDataMin      = calculator->GetMinimum();
+  cDataMax      = calculator->GetMaximum();
+  cIWMin = cDataMin;
+  cIWMax = cDataMax;
 
   cWinCenter[0] = cDimSize[0]/2;
   cWinCenter[1] = cDimSize[1]/2;
   cWinCenter[2] = 0;
-    
+
   cWinMinX  = 0;
   cWinSizeX = cDimSize[0];
   if(cWinSizeX<cDimSize[1])
@@ -861,18 +861,6 @@ int QtGlSliceView::windowCenterZ(void) const
 }
 
 
-double QtGlSliceView::minIntensity() const
-{
-  return cIWMin;
-}
-
-
-double QtGlSliceView::maxIntensity() const
-{
-  return cIWMax;
-}
-
-
 void QtGlSliceView::setViewValue(bool value)
 {
   cViewValue = value;
@@ -1241,8 +1229,8 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
       setZoom(1.0);
       centerWindow();
       setImageMode(IMG_VAL);
-      setMaxIntensity(cDataMax);
-      setMinIntensity(cDataMin);
+      setIWMin(cDataMin);
+      setIWMax(cDataMax);
       update();
       break;
     case Qt::Key_Plus:
@@ -1310,11 +1298,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         }
       break;
     case Qt::Key_Q:
-      setMaxIntensity(maxIntensity()-singleStep());
+      setIWMax(iwMax()-singleStep());
       update();
       break;
     case Qt::Key_W:
-      setMaxIntensity(maxIntensity()+singleStep());
+      setIWMax(iwMax()+singleStep());
       update();
       break;
     case (Qt::Key_A):
@@ -1324,12 +1312,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent *event)
         }
       else
         {
-        setMinIntensity(minIntensity()-singleStep());
+        setIWMin(iwMin()-singleStep());
         }
       update();
       break;
     case Qt::Key_S:
-      setMinIntensity(minIntensity()+singleStep());
+      setIWMin(iwMin()+singleStep());
       update();
       break;
     case (Qt::Key_I):
@@ -1484,12 +1472,6 @@ QSize QtGlSliceView::sizeHint()const
 {
   const QSize sizeHint(cWinSizeX, cWinSizeY);
   return sizeHint;
-}
-
-
-void QtGlSliceView::size(int w, int h)
-{
-  update();
 }
 
 
@@ -2055,6 +2037,58 @@ double QtGlSliceView::intensityRange() const
   return cDataMax - cDataMin;
 }
 
+
+double QtGlSliceView::minIntensity() const
+{
+  return cDataMin;
+}
+
+
+double QtGlSliceView::maxIntensity() const
+{
+  return cDataMax;
+}
+
+
+double QtGlSliceView::iwMin() const
+{
+  return cIWMin;
+}
+
+
+double QtGlSliceView::iwMax() const
+{
+  return cIWMax;
+}
+
+
+void QtGlSliceView::setIWMin(double value)
+{
+  value = qBound(cDataMin, value, cDataMax);
+  qDebug() << "iwMin: " << value << cIWMin;
+  if (qFuzzyCompare(value, cIWMin))
+    {
+    return;
+    }
+  cIWMin = value;
+  update();
+  emit iwMinChanged(cIWMin);
+}
+
+
+void QtGlSliceView::setIWMax(double value)
+{
+  value = qBound(cDataMin, value, cDataMax);
+  if (qFuzzyCompare(value, cIWMax))
+    {
+    return;
+    }
+  cIWMax = value;
+  update();
+  emit iwMaxChanged(cIWMax);
+}
+
+
 bool QtGlSliceView::clickedPoint(int index, ClickPoint& point)
 {
   if(index >= cClickedPoints.size())
@@ -2106,38 +2140,13 @@ void QtGlSliceView::setViewClickedPoints(bool pointsClicked)
 }
 
 
-void QtGlSliceView::setMaxIntensity(double value)
-{
-  value = qBound(cDataMin, value, cDataMax);
-  if (qFuzzyCompare(value, cIWMax))
-    {
-    return;
-    }
-  cIWMax = value;
-  update();
-  emit maxIntensityChanged(cIWMax);
-}
-
-
-void QtGlSliceView::setMinIntensity(double value)
-{
-  value = qBound(cDataMin, value, cDataMax);
-  if (qFuzzyCompare(value, cIWMin))
-    {
-    return;
-    }
-  cIWMin = value;
-  update();
-  emit minIntensityChanged(cIWMin);
-}
-
-
 void QtGlSliceView::zoomIn()
 {
   setZoom(zoom()+1);
   update();
 }
- 
+
+
 void QtGlSliceView::zoomOut()
 {
   setZoom(zoom()-1);

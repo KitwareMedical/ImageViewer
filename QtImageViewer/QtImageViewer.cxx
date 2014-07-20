@@ -27,6 +27,7 @@ limitations under the License.
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QSlider>
+#include <QTimer>
 
 // QtImageViewer includes
 #include "QtImageViewer.h"
@@ -333,18 +334,27 @@ void QtImageViewer::onDisplayStateChanged(int state)
     }
   // Keep the OpenGlWindow size in the following.
   d->OpenGlWindow->setFixedSize(d->OpenGlWindow->geometry().size());
+  /// \todo call releaseFixedSize() at the right time
+  QTimer::singleShot(100, this, SLOT(releaseFixedSize()));
+
+  d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
   const bool controlsVisible =
     !(state & QtImageViewerPrivate::OFF_COLLAPSE) && !(state & QtImageViewerPrivate::ON_COLLAPSE);
+  this->setControlsVisible(controlsVisible);
+}
+
+void QtImageViewer::setControlsVisible(bool controlsVisible)
+{
+  Q_D(QtImageViewer);
+
   d->Slider->setVisible(controlsVisible);
   d->Controls->setVisible(controlsVisible);
-  d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
   d->ButtonBoxWidget->setVisible(controlsVisible);
   qobject_cast<QGridLayout*>(this->layout())->setHorizontalSpacing(
     controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
   qobject_cast<QGridLayout*>(this->layout())->setVerticalSpacing(
     controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
   d->updateSize();
-  d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }
 
 
@@ -387,4 +397,10 @@ bool QtImageViewer::eventFilter(QObject *obj, QEvent *event)
       }
     }
   return this->Superclass::eventFilter(obj, event);
+}
+
+void QtImageViewer::releaseFixedSize()
+{
+  Q_D(QtImageViewer);
+  d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }

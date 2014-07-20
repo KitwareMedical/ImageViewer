@@ -224,14 +224,14 @@ void QtSliceControlsWidget::setSliceView(QtGlSliceView* sliceView)
   QObject::connect(d->ZoomIn, SIGNAL(clicked()), d->SliceView, SLOT(zoomIn()));
   QObject::connect(d->ZoomOut, SIGNAL(clicked()), d->SliceView, SLOT(zoomOut()));
   // Window/Level
-  QObject::connect(d->SliceView, SIGNAL(minIntensityChanged(double)),
+  QObject::connect(d->SliceView, SIGNAL(iwMinChanged(double)),
                    this, SLOT(updateMinIntensity(double)));
-  QObject::connect(d->SliceView, SIGNAL(maxIntensityChanged(double)),
+  QObject::connect(d->SliceView, SIGNAL(iwMaxChanged(double)),
                    this, SLOT(updateMaxIntensity(double)));
   QObject::connect(d->IntensityMinDisplay, SIGNAL(valueChanged(double)),
-                   d->SliceView, SLOT(setMinIntensity(double)));
+                   d->SliceView, SLOT(setIWMin(double)));
   QObject::connect(d->IntensityMaxDisplay,SIGNAL(valueChanged(double)),
-                   d->SliceView, SLOT(setMaxIntensity(double)));
+                   d->SliceView, SLOT(setIWMax(double)));
   // Details
   QObject::connect(d->SliceView, SIGNAL(detailsChanged(QString)),
                    this, SLOT(setText(QString)));
@@ -291,16 +291,26 @@ void QtSliceControlsWidget
 void QtSliceControlsWidget::updateMinIntensity(double minIntensity)
 {
   Q_D(QtSliceControlsWidget);
+  double sliderIntensity = (minIntensity  - d->SliceView->minIntensity()) / d->SliceView->singleStep();
+  d->IntensityMin->blockSignals(true);
+  d->IntensityMinDisplay->blockSignals(true);
+  d->IntensityMin->setValue( sliderIntensity );
   d->IntensityMinDisplay->setValue( minIntensity );
-  d->IntensityMin->setValue( minIntensity / d->SliceView->singleStep() );
+  d->IntensityMin->blockSignals(false);
+  d->IntensityMinDisplay->blockSignals(false);
 }
 
 
 void QtSliceControlsWidget::updateMaxIntensity(double maxIntensity)
 {
   Q_D(QtSliceControlsWidget);
+  double sliderIntensity = (maxIntensity - d->SliceView->minIntensity()) / d->SliceView->singleStep();
+  d->IntensityMax->blockSignals(true);
+  d->IntensityMaxDisplay->blockSignals(true);
+  d->IntensityMax->setValue( sliderIntensity );
   d->IntensityMaxDisplay->setValue( maxIntensity );
-  d->IntensityMax->setValue( maxIntensity / d->SliceView->singleStep() );
+  d->IntensityMax->blockSignals(false);
+  d->IntensityMaxDisplay->blockSignals(false);
 }
 
 
@@ -308,7 +318,7 @@ void QtSliceControlsWidget::updateImage()
 {
   Q_D(QtSliceControlsWidget);
   d->SliceView->setSingleStep( 0.02 * d->SliceView->intensityRange());
-  d->Decimals = d->significantDecimals(d->SliceView->singleStep(),-1);
+  d->Decimals = d->significantDecimals(d->SliceView->singleStep(), 2);
 
   const int min = 0;
   const int max = static_cast<int>(
@@ -322,12 +332,12 @@ void QtSliceControlsWidget::updateImage()
   d->IntensityMinDisplay->setSingleStep( d->SliceView->singleStep() );
   d->IntensityMinDisplay->setRange( d->SliceView->minIntensity(),
                                     d->SliceView->maxIntensity() );
-  d->IntensityMinDisplay->setValue( d->SliceView->minIntensity() );
+  d->IntensityMinDisplay->setValue( d->SliceView->iwMin() );
 
   d->IntensityMaxDisplay->setDecimals( d->Decimals );
   d->IntensityMaxDisplay->setRange( d->SliceView->minIntensity(),
                                     d->SliceView->maxIntensity() );
-  d->IntensityMaxDisplay->setValue( d->SliceView->maxIntensity() );
+  d->IntensityMaxDisplay->setValue( d->SliceView->iwMax() );
   d->IntensityMaxDisplay->setSingleStep( d->SliceView->singleStep() );
 
   d->PositionX->setDecimals( d->Decimals );
@@ -384,15 +394,15 @@ void QtSliceControlsWidget::setTextVisible(bool visible)
 void QtSliceControlsWidget::setMinIntensity(int intensity)
 {
   Q_D(QtSliceControlsWidget);
-  double newMinIntensity = intensity * d->SliceView->singleStep();
-  d->SliceView->setMinIntensity(newMinIntensity);
+  double newMinIntensity = intensity * d->SliceView->singleStep() + d->SliceView->minIntensity();
+  d->IntensityMinDisplay->setValue(newMinIntensity);
 }
 
 
 void QtSliceControlsWidget::setMaxIntensity(int intensity)
 {
   Q_D(QtSliceControlsWidget);
-  double newMaxIntensity = intensity * d->SliceView->singleStep();
-  d->SliceView->setMaxIntensity(newMaxIntensity);
+  double newMaxIntensity = intensity * d->SliceView->singleStep() + d->SliceView->minIntensity();
+  d->IntensityMaxDisplay->setValue(newMaxIntensity);
 }
 
