@@ -361,12 +361,17 @@ void QtImageViewer::setControlsVisible(bool controlsVisible)
 void QtImageViewer::keyPressEvent(QKeyEvent* event)
 {
   Q_D(QtImageViewer);
-  if (!d->IsRedirectingEvent)
+  if (event->key() != Qt::Key_Escape &&
+      event->key() != Qt::Key_Enter &&
+      event->key() != Qt::Key_Return)
     {
-    d->IsRedirectingEvent = true;
-    d->OpenGlWindow->keyPressEvent(event);
-    d->IsRedirectingEvent = false;
-    return;
+    if (!d->IsRedirectingEvent)
+      {
+      d->IsRedirectingEvent = true;
+      d->OpenGlWindow->keyPressEvent(event);
+      d->IsRedirectingEvent = false;
+      return;
+      }
     }
   this->Superclass::keyPressEvent(event);
 }
