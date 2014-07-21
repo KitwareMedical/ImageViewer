@@ -62,15 +62,16 @@ public slots:
 
   /// Set the image to view.
   /// \sa setOverlayImage(), loadInputImage()
-  void setInputImage(ImageType * newImData);
+  virtual void setInputImage(ImageType * newImData);
   /// Set an image as overlay.
   /// \sa setInputImage(), loadOverlayImage()
-  void setOverlayImage(OverlayImageType * newImData);
+  virtual void setOverlayImage(OverlayImageType * newImData);
 
-  void showHelp();
+  virtual void showHelp();
 
 protected slots:
-  void onDisplayStateChanged(int details);
+  virtual void onDisplayStateChanged(int details);
+  void releaseFixedSize();
 
 protected:
   QScopedPointer<QtImageViewerPrivate> d_ptr;
@@ -78,6 +79,7 @@ protected:
   /// Reimplemented to propagate key events to QtGlSliceView.
   virtual void keyPressEvent(QKeyEvent* event);
   virtual bool eventFilter(QObject* obj, QEvent* event);
+  virtual void setControlsVisible(bool visible);
 
 private:
   Q_DECLARE_PRIVATE(QtImageViewer);

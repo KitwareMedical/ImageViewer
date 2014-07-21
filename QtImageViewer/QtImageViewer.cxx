@@ -27,6 +27,7 @@ limitations under the License.
 #include <QKeyEvent>
 #include <QMessageBox>
 #include <QSlider>
+#include <QTimer>
 
 // QtImageViewer includes
 #include "QtImageViewer.h"
@@ -82,9 +83,9 @@ protected:
 
 
 QtImageViewerPrivate::QtImageViewerPrivate(QtImageViewer& obj)
-  : q_ptr(&obj)
-  , HelpDialog(0)
+  : HelpDialog(0)
   , IsRedirectingEvent(false)
+  , q_ptr(&obj)
 {
 }
 
@@ -242,8 +243,8 @@ QWidgetList QtImageViewerPrivate::layoutWidgets(QLayout* layout, int level)
 }
 
 
-QtImageViewer::QtImageViewer(QWidget* parent, Qt::WindowFlags fl )
-  : QDialog( parent, fl )
+QtImageViewer::QtImageViewer(QWidget* widgetParent, Qt::WindowFlags fl )
+  : QDialog( widgetParent, fl )
   , d_ptr(new QtImageViewerPrivate(*this))
 {
   Q_D(QtImageViewer);
@@ -333,41 +334,55 @@ void QtImageViewer::onDisplayStateChanged(int state)
     }
   // Keep the OpenGlWindow size in the following.
   d->OpenGlWindow->setFixedSize(d->OpenGlWindow->geometry().size());
+  /// \todo call releaseFixedSize() at the right time
+  QTimer::singleShot(100, this, SLOT(releaseFixedSize()));
+
+  d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
   const bool controlsVisible =
     !(state & QtImageViewerPrivate::OFF_COLLAPSE) && !(state & QtImageViewerPrivate::ON_COLLAPSE);
+  this->setControlsVisible(controlsVisible);
+}
+
+void QtImageViewer::setControlsVisible(bool controlsVisible)
+{
+  Q_D(QtImageViewer);
+
   d->Slider->setVisible(controlsVisible);
   d->Controls->setVisible(controlsVisible);
-  d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
   d->ButtonBoxWidget->setVisible(controlsVisible);
   qobject_cast<QGridLayout*>(this->layout())->setHorizontalSpacing(
     controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
   qobject_cast<QGridLayout*>(this->layout())->setVerticalSpacing(
     controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
   d->updateSize();
-  d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }
 
 
-void QtImageViewer::keyPressEvent(QKeyEvent* event)
+void QtImageViewer::keyPressEvent(QKeyEvent* keyEvent)
 {
   Q_D(QtImageViewer);
-  if (!d->IsRedirectingEvent)
+  if (keyEvent->key() != Qt::Key_Escape &&
+      keyEvent->key() != Qt::Key_Enter &&
+      keyEvent->key() != Qt::Key_Return)
     {
-    d->IsRedirectingEvent = true;
-    d->OpenGlWindow->keyPressEvent(event);
-    d->IsRedirectingEvent = false;
-    return;
+    if (!d->IsRedirectingEvent)
+      {
+      d->IsRedirectingEvent = true;
+      d->OpenGlWindow->keyPressEvent(keyEvent);
+      d->IsRedirectingEvent = false;
+      return;
+      }
     }
-  this->Superclass::keyPressEvent(event);
+  this->Superclass::keyPressEvent(keyEvent);
 }
 
-bool QtImageViewer::eventFilter(QObject *obj, QEvent *event)
+bool QtImageViewer::eventFilter(QObject *obj, QEvent *filteredEvent)
 {
   Q_D(QtImageViewer);
   if (qobject_cast<QDoubleSpinBox*>(obj) &&
-      event->type() == QEvent::KeyPress)
+      filteredEvent->type() == QEvent::KeyPress)
     {
-    QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(event);
+    QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(filteredEvent);
     if ((keyEvent->key() < Qt::Key_0 ||
          keyEvent->key() > Qt::Key_9) &&
         keyEvent->key() != Qt::Key_Period &&
@@ -386,5 +401,11 @@ bool QtImageViewer::eventFilter(QObject *obj, QEvent *event)
       return true;
       }
     }
-  return this->Superclass::eventFilter(obj, event);
+  return this->Superclass::eventFilter(obj, filteredEvent);
+}
+
+void QtImageViewer::releaseFixedSize()
+{
+  Q_D(QtImageViewer);
+  d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }

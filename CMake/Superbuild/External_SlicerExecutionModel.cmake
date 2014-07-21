@@ -74,6 +74,7 @@ if( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
       -DBUILD_TESTING:BOOL=OFF
       -DITK_DIR:PATH=${ITK_DIR}
       -DSlicerExecutionModel_USE_SERIALIZER:BOOL=ON
+      -DSlicerExecutionModel_USE_JSONCPP:BOOL=ON
       -DJsonCpp_DIR:PATH=${JsonCpp_DIR}
       -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
       ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}

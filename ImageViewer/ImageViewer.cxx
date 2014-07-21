@@ -86,11 +86,11 @@ int parseAndExecImageViewer(int argc, char* argv[])
     }
   if(minIntensityArg.isSet())
     {
-    viewer.sliceView()->setMinIntensity(minIntensity);
+    viewer.sliceView()->setIWMin(minIntensity);
     }
   if(maxIntensityArg.isSet())
     {
-    viewer.sliceView()->setMaxIntensity(maxIntensity);
+    viewer.sliceView()->setIWMax(maxIntensity);
     }
 
   viewer.sliceView()->setZoom(zoom);
