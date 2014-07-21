@@ -169,9 +169,6 @@ public:
   /*! Get the opacity of the overlay */
   double overlayOpacity(void) const;
 
-  /*! Called when overlay is toggled or opacity is changed */
-  void  viewOverlayCallBack(void (*newOverlayCallBack)(void));
-
   ColorTableType *colorTable(void) const;
 
   virtual QSize minimumSizeHint()const;
@@ -435,7 +432,6 @@ protected:
   double cOverlayOpacity;
 
   OverlayPointer cOverlayData;
-  void (*cViewOverlayCallBack)(void);
 
   unsigned char *cWinOverlayData;
   QDialog* cHelpDialog;
@@ -452,9 +448,6 @@ protected:
   ImagePointer cImData;
   unsigned long cDimSize[3];
   double cSpacing[3];
-  void (*cViewImDataCallBack)(void);
-  void *cViewImDataArg;
-  void (*cViewImDataArgCallBack)(void *viewImDataArg);
 
   ClickModeType cClickMode;
   double cClickSelect[3];

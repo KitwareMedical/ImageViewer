@@ -50,7 +50,6 @@ QtGlSliceView::QtGlSliceView(QWidget* widgetParent)
   cValidOverlayData     = false;
   cSingleStep           = 1.0;
   cViewOverlayData      = false;
-  cViewOverlayCallBack  = NULL;
   cOverlayOpacity       = 0.0;
   cWinOverlayData       = NULL;
   cHelpDialog = 0;
@@ -72,10 +71,6 @@ QtGlSliceView::QtGlSliceView(QWidget* widgetParent)
   cSliceNumCallBack = NULL;
   cSliceNumArg = NULL;
   cSliceNumArgCallBack = NULL;
-
-  cViewImDataCallBack = NULL;
-  cViewImDataArg = NULL;
-  cViewImDataArgCallBack = NULL;
 
   cClickSelectCallBack = NULL;
   cClickSelectArg = NULL;
@@ -118,11 +113,11 @@ QtGlSliceView::QtGlSliceView(QWidget* widgetParent)
   cColorTable->UseDiscreteColors();
   cW = 0;
   cH = 0;
-  for(int i=0;i<3;i++)
-  {
-    cFlipX[i]=false;
-    cFlipY[i]=true;
-    cFlipZ[i]=false;
+  for (unsigned int i=0; i < 3; ++i)
+    {
+    cFlipX[i] = false;
+    cFlipY[i] = true;
+    cFlipZ[i] = false;
     cBoxMax[i] = 0;
     cBoxMin[i] = 0;
     cTranspose[i] = 0;
@@ -131,7 +126,7 @@ QtGlSliceView::QtGlSliceView(QWidget* widgetParent)
     cWinOrder[i] = 0;
     cWinCenter[i] = 0;
     cClickSelect[i] = 0;
-  }
+    }
   cWinOrder[0] = 0;
   cWinOrder[1] = 1;
   cWinOrder[2] = 2;
@@ -204,8 +199,8 @@ setInputImage(ImageType * newImData)
 
   cDataMin = calculator->GetMinimum();
   cDataMax = calculator->GetMaximum();
-  cIWMin = cDataMin;
-  cIWMax = cDataMax;
+  this->setIWMin(cDataMin);
+  this->setIWMax(cDataMax);
 
   cWinCenter[0] = cDimSize[0]/2;
   cWinCenter[1] = cDimSize[1]/2;
@@ -254,39 +249,37 @@ void
 QtGlSliceView
 ::setInputOverlay(OverlayType * newOverlayData)
 {
-  RegionType newoverlay_region = 
-            newOverlayData->GetLargestPossibleRegion();
-  
-  SizeType   newoverlay_size   = newoverlay_region.GetSize();
-  
-  RegionType cImData_region = 
-               cImData->GetLargestPossibleRegion();
-  
-  SizeType   cImData_size   = cImData_region.GetSize();
-  
-  if(!cValidImData || newoverlay_size[2]==cImData_size[2])
-  {
+  RegionType newoverlay_region = newOverlayData->GetLargestPossibleRegion();
+
+  SizeType newoverlay_size = newoverlay_region.GetSize();
+
+  RegionType cImData_region = cImData->GetLargestPossibleRegion();
+
+  SizeType cImData_size = cImData_region.GetSize();
+
+  if (!cValidImData || newoverlay_size[2]==cImData_size[2])
+    {
     cOverlayData = newOverlayData;
-    
+
     cViewOverlayData  = true;
     cValidOverlayData = true;
     cOverlayOpacity   = 1.0;
-    
+
     if(cWinOverlayData != NULL) 
-    {
+      {
       delete [] cWinOverlayData;
-    }
-    
+      }
+
     cWinOverlayData = new unsigned char[ cWinDataSizeX * cWinDataSizeY * 4 ];
 
-    if(cWinZBuffer != NULL)
-    {
+    if (cWinZBuffer != NULL)
+      {
       delete [] cWinZBuffer;
-    }
+      }
     cWinZBuffer = new unsigned short[cWinDataSizeX * cWinDataSizeY * 4];
     emit validOverlayDataChanged(cValidOverlayData);
     update();
-  }
+    }
   else
     {
     qWarning()<<"Overlay path invalid, make sure both images have the same size.";
@@ -304,14 +297,8 @@ QtGlSliceView::inputOverlay(void) const
 void 
 QtGlSliceView::
 setViewOverlayData(bool newViewOverlayData)
-{ 
+{
   cViewOverlayData = newViewOverlayData;
-  
-  if(cViewOverlayCallBack != NULL)
-  {
-    cViewOverlayCallBack();
-  }
-  
   paintGL();
 }
 
@@ -324,30 +311,9 @@ QtGlSliceView::viewOverlayData(void) const
 
 
 void 
-QtGlSliceView::viewOverlayCallBack(
-void (* newViewOverlayCallBack)(void) 
-)
-{
-  cViewOverlayCallBack = newViewOverlayCallBack;
-}
-
-
-void 
 QtGlSliceView::setOverlayOpacity(double newOverlayOpacity)
 {
-  if(newOverlayOpacity < 0)
-    {
-    newOverlayOpacity = 0;
-    }
-  if(newOverlayOpacity > 1)
-    {
-    newOverlayOpacity = 1;
-    }
-  cOverlayOpacity = newOverlayOpacity; 
-  if(cViewOverlayCallBack != NULL) 
-  {
-    cViewOverlayCallBack();
-  }
+  cOverlayOpacity = qBound(0., newOverlayOpacity, 1.);
   emit overlayOpacityChanged(cOverlayOpacity);
   update();
 }
@@ -366,7 +332,7 @@ QtGlSliceView::ColorTableType* QtGlSliceView::colorTable(void) const
 }
 
 
-void  QtGlSliceView::saveClickedPointsStored()
+void QtGlSliceView::saveClickedPointsStored()
 {
   QString fileName = QFileDialog::getSaveFileName(this,"Please select a file name","*.*","");
   if(fileName.isNull())
@@ -2057,7 +2023,6 @@ double QtGlSliceView::iwMax() const
 void QtGlSliceView::setIWMin(double value)
 {
   value = qBound(cDataMin, value, cDataMax);
-  qDebug() << "iwMin: " << value << cIWMin;
   if (qFuzzyCompare(value, cIWMin))
     {
     return;
