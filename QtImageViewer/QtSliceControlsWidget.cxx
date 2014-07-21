@@ -320,25 +320,34 @@ void QtSliceControlsWidget::updateImage()
   d->SliceView->setSingleStep( 0.02 * d->SliceView->intensityRange());
   d->Decimals = d->significantDecimals(d->SliceView->singleStep(), 2);
 
+  bool blocked = false;
   const int min = 0;
   const int max = static_cast<int>(
     d->SliceView->intensityRange() / d->SliceView->singleStep());
+  blocked = d->IntensityMin->blockSignals(true);
   d->IntensityMin->setRange( min, max );
   d->IntensityMin->setValue( min );
+  d->IntensityMin->blockSignals(blocked);
+  blocked = d->IntensityMax->blockSignals(true);
   d->IntensityMax->setRange( min, max );
   d->IntensityMax->setValue( max );
+  d->IntensityMax->blockSignals(blocked);
 
+  blocked = d->IntensityMinDisplay->blockSignals(true);
   d->IntensityMinDisplay->setDecimals( d->Decimals );
   d->IntensityMinDisplay->setSingleStep( d->SliceView->singleStep() );
   d->IntensityMinDisplay->setRange( d->SliceView->minIntensity(),
                                     d->SliceView->maxIntensity() );
   d->IntensityMinDisplay->setValue( d->SliceView->iwMin() );
+  d->IntensityMinDisplay->blockSignals(blocked);
 
+  blocked = d->IntensityMaxDisplay->blockSignals(true);
   d->IntensityMaxDisplay->setDecimals( d->Decimals );
+  d->IntensityMaxDisplay->setSingleStep( d->SliceView->singleStep() );
   d->IntensityMaxDisplay->setRange( d->SliceView->minIntensity(),
                                     d->SliceView->maxIntensity() );
   d->IntensityMaxDisplay->setValue( d->SliceView->iwMax() );
-  d->IntensityMaxDisplay->setSingleStep( d->SliceView->singleStep() );
+  d->IntensityMaxDisplay->blockSignals(blocked);
 
   d->PositionX->setDecimals( d->Decimals );
   d->PositionX->setMaximum( d->SliceView->imageSize(0) );
