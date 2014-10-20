@@ -187,8 +187,8 @@ int QtSliceControlsWidgetPrivate::significantDecimals(double value, int defaultD
 }
 
 
-QtSliceControlsWidget::QtSliceControlsWidget(QWidget* parentWidget)
-  : QWidget(parentWidget)
+QtSliceControlsWidget::QtSliceControlsWidget(QWidget* myParentWidget)
+  : QWidget(myParentWidget)
   , d_ptr(new QtSliceControlsWidgetPrivate(*this))
 {
   Q_D(QtSliceControlsWidget);

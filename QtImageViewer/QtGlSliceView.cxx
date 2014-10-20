@@ -168,7 +168,7 @@ setInputImage(ImageType * newImData)
     return;
     }
 
-  SizeType imageSize = region.GetSize();
+  SizeType myImageSize = region.GetSize();
   if (cValidOverlayData)
     {
     RegionType overlayRegion = cOverlayData->GetLargestPossibleRegion();
@@ -176,7 +176,7 @@ setInputImage(ImageType * newImData)
 
     for (int i=0; i<3; i++)
       {
-      if (imageSize[i] != overlaySize[i])
+      if (myImageSize[i] != overlaySize[i])
         {
         return;
         }
@@ -184,9 +184,9 @@ setInputImage(ImageType * newImData)
     }
 
   cImData = newImData;
-  cDimSize[0] = imageSize[0];
-  cDimSize[1] = imageSize[1];
-  cDimSize[2] = imageSize[2];
+  cDimSize[0] = myImageSize[0];
+  cDimSize[1] = myImageSize[1];
+  cDimSize[2] = myImageSize[2];
   cSpacing[0] = cImData->GetSpacing()[0];
   cSpacing[1] = cImData->GetSpacing()[1];
   cSpacing[2] = cImData->GetSpacing()[2];
