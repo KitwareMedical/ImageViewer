@@ -68,8 +68,9 @@ include( ${QT_USE_FILE} )
 
 set( ImageViewer_DEPENDENCIES "ITK" )
 if( USE_CLI )
-  list( APPEND ImageViewer_DEPENDENCIES "JsonCpp" "ParameterSerializer" "SlicerExecutionModel" )
+  list( APPEND ImageViewer_DEPENDENCIES "SlicerExecutionModel" )
 endif( USE_CLI )
+
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )
@@ -78,8 +79,6 @@ set( CLI_PROJECT_ARGS )
 if( USE_CLI )
   list( APPEND CLI_PROJECT_ARGS
     -DSlicerExecutionModel_DIR:PATH=${SlicerExecutionModel_DIR}
-    -DJsonCpp_DIR:PATH=${JsonCpp_DIR}
-    -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
     -DGenerateCLP_DIR:PATH=${GenerateCLP_DIR}
   )
 endif( USE_CLI )
