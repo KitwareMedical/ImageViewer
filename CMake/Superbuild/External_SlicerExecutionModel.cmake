@@ -37,7 +37,7 @@ if( DEFINED ${proj}_DIR AND NOT EXISTS ${${proj}_DIR} )
 endif( DEFINED ${proj}_DIR AND NOT EXISTS ${${proj}_DIR} )
 
 # Set dependency list
-set( ${proj}_DEPENDENCIES "JsonCpp" "ParameterSerializer" )
+set( ${proj}_DEPENDENCIES "ITK" )
 
 # Include dependent projects, if any.
 CheckExternalProjectDependency( ${proj} )
@@ -73,11 +73,6 @@ if( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
       -DBUILD_SHARED_LIBS:BOOL=${shared}
       -DBUILD_TESTING:BOOL=OFF
       -DITK_DIR:PATH=${ITK_DIR}
-      -DSlicerExecutionModel_USE_SERIALIZER:BOOL=ON
-      -DSlicerExecutionModel_USE_JSONCPP:BOOL=ON
-      -DJsonCpp_DIR:PATH=${JsonCpp_DIR}
-      -DParameterSerializer_DIR:PATH=${ParameterSerializer_DIR}
-      ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
     INSTALL_COMMAND ""
     DEPENDS
       ${${proj}_DEPENDENCIES} )

@@ -44,8 +44,9 @@ include_directories(${${MODULE_NAME}_INCLUDE_DIRS})
 
 set(${MODULE_NAME}_SRCS ImageViewer.cxx)
 set(${MODULE_NAME}_LIBRARIES
+    QtImageViewer
     ${ITK_LIBRARIES}
-    ${QT_LIBRARIES} QtImageViewer
+    ${QT_LIBRARIES}
     ${OPENGL_LIBRARIES}
     )
 

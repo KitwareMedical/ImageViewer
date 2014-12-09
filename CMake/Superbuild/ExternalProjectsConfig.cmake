@@ -26,24 +26,15 @@ set( FLTK_URL_MD5_TAG f8b2e249701cf77520546e3c37130f0b )
 
 # Insight Segmentation and Registration Toolkit
 set( ITK_URL ${github_protocol}://github.com/Slicer/ITK.git )
-set( ITK_URL_OR_TAG 3307a27de52d921ab40573e77097bfc72d70f5d6 )
+set( ITK_URL_OR_TAG 8012adeb0dadde767fc5a0b278dd142ab5e9a187 )
 
 set( CTK_URL https://github.com/commontk/CTK.git )
-set( CTK_URL_MD5_TAG 282abc745a7db700a822822375d0b8c170ec1a56 )
+set( CTK_URL_MD5_TAG f3415894f8a2971ee934de9e43296fbb43db5fae )
 
 set( VTK_URL https://github.com/Slicer/VTK.git )
-set( VTK_URL_MD5_TAG d8540e7ee356bbc025cb9917a41b7c7fa0548d4b )
-
-# JsonCpp snapshot 2014-04-15 r276
-set( JsonCpp_URL http://midas3.kitware.com/midas/download/bitstream/366544/JsonCpp_r276.tar.gz )
-set( JsonCpp_HASH_OR_TAG 192f0cf2b00798d4f4fb29c99a3aa83c )
-
-# TubeTK Parameter Serializer snapshot 2014-02-05 )
-set( ParameterSerializer_URL
-  https://github.com/Slicer/ParameterSerializer.git )
-set( ParameterSerializer_HASH_OR_TAG d7e94d3ff9de9a8782db6997f8e1bc45626cfa3b )
+set( VTK_URL_MD5_TAG b55dad7dbdf8bdbe25d814b411aa5f211b68c09f )
 
 # Slicer Execution Model snapshot 2014-02-18
 set( SlicerExecutionModel_URL
   ${github_protocol}://github.com/Slicer/SlicerExecutionModel.git )
-set( SlicerExecutionModel_HASH_OR_TAG ecb58ad73c5dcdebf8c4d46257c7e44a07a7cdd4 )
+set( SlicerExecutionModel_HASH_OR_TAG a6616b527dc0dced26256f6a303174a98f373f6f )
