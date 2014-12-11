@@ -75,21 +75,8 @@ if(ImageViewer_USE_SUPERBUILD)
   return()
 else(ImageViewer_USE_SUPERBUILD)
 
-  find_package(ITK REQUIRED)
-  set( ITK_NO_IO_FACTORY_REGISTER_MANAGER 1 )
-  include(${ITK_USE_FILE})
-
   find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
   include(${QT_USE_FILE})
-
-  if(USE_CLI)
-
-    find_package(SlicerExecutionModel REQUIRED)
-    include(${SlicerExecutionModel_USE_FILE})
-
-    find_package(SlicerExecutionModel REQUIRED GenerateCLP)
-    include(${GenerateCLP_USE_FILE})
-  endif(USE_CLI)
 
   add_subdirectory(QtImageViewer)
   add_subdirectory(ImageViewer)
