@@ -34,10 +34,6 @@
 #
 ##############################################################################
 
-if(USE_ITK_FILE)
-   include(${USE_ITK_FILE})
-endif(USE_ITK_FILE)
-
 include(GenerateExportHeader)
 
 include_directories(
@@ -48,6 +44,27 @@ include_directories(
 
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
+find_package(ITK REQUIRED COMPONENTS
+  ITKCommon
+  ITKIOImageBase
+  ITKIONIFTI
+  ITKIONRRD
+  ITKIOGIPL
+  ITKIOHDF5
+  ITKIOJPEG
+  ITKIOGDCM
+  ITKIOBMP
+  ITKIOLSM
+  ITKIOPNG
+  ITKIOTIFF
+  ITKIOVTK
+  ITKIOStimulate
+  ITKIOBioRad
+  ITKIOMeta
+  ITKIOMRC
+  ITKIOGE
+  )
+include(${ITK_USE_FILE})
 
 set(QtImageViewer_SRCS
   QtGlSliceView.cxx
