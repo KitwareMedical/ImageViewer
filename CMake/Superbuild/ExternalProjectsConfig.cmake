@@ -25,10 +25,10 @@ set( FLTK_URL http://midas3.kitware.com/midas/download/item/208771/fltk-1.3.2.20
 set( FLTK_URL_MD5_TAG f8b2e249701cf77520546e3c37130f0b )
 
 # Insight Segmentation and Registration Toolkit
-set( ITK_URL ${github_protocol}://github.com/Slicer/ITK.git )
-set( ITK_URL_OR_TAG 8012adeb0dadde767fc5a0b278dd142ab5e9a187 )
+set( ITK_URL ${github_protocol}://github.com/InsightSoftwareConsortium/ITK.git )
+set( ITK_URL_OR_TAG f401b3f8ff175702fefb060fe0d850f944029003 )
 
-set( CTK_URL https://github.com/commontk/CTK.git )
+  set( CTK_URL https://github.com/commontk/CTK.git )
 set( CTK_URL_MD5_TAG f3415894f8a2971ee934de9e43296fbb43db5fae )
 
 set( VTK_URL https://github.com/Slicer/VTK.git )
