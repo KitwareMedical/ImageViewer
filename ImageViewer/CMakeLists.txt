@@ -42,6 +42,9 @@ list(APPEND ${MODULE_NAME}_INCLUDE_DIRS
     ${${MODULE_NAME}_BINARY_DIR}/QtImageViewer)
 include_directories(${${MODULE_NAME}_INCLUDE_DIRS})
 
+find_package( ITK REQUIRED )
+include( ${ITK_USE_FILE} )
+
 set(${MODULE_NAME}_SRCS ImageViewer.cxx)
 set(${MODULE_NAME}_LIBRARIES
     QtImageViewer
@@ -57,6 +60,12 @@ endif(BUILD_SHARED_LIBS)
 
 if(USE_CLI)
 
+  find_package(SlicerExecutionModel REQUIRED)
+  include(${SlicerExecutionModel_USE_FILE})
+
+  find_package(SlicerExecutionModel REQUIRED GenerateCLP)
+  include(${GenerateCLP_USE_FILE})
+
   SEMMacroBuildCLI(
     ${BUILD_EXEC_ONLY}
     NAME ${MODULE_NAME}
@@ -69,6 +78,7 @@ if(USE_CLI)
       ${${MODULE_NAME}_LIBRARIES}
     INCLUDE_DIRECTORIES
       ${${MODULE_NAME}_INCLUDE_DIRS})
+
 else(USE_CLI)
   add_executable(${MODULE_NAME} ${${MODULE_NAME}_SRCS} ${${MODULE_NAME}_UI_CXX})
 
