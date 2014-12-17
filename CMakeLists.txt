@@ -76,7 +76,6 @@ if(ImageViewer_USE_SUPERBUILD)
 else(ImageViewer_USE_SUPERBUILD)
 
   find_package(ITK REQUIRED)
-  set( ITK_NO_IO_FACTORY_REGISTER_MANAGER 1 )
   include(${ITK_USE_FILE})
 
   find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
