@@ -26,13 +26,13 @@ set( FLTK_URL_MD5_TAG f8b2e249701cf77520546e3c37130f0b )
 
 # Insight Segmentation and Registration Toolkit
 set( ITK_URL ${github_protocol}://github.com/Slicer/ITK.git )
-set( ITK_URL_OR_TAG 8012adeb0dadde767fc5a0b278dd142ab5e9a187 )
+set( ITK_URL_OR_TAG f5e429abeba93b773ec52b8f012e16de338bcaaf )
 
 set( CTK_URL https://github.com/commontk/CTK.git )
-set( CTK_URL_MD5_TAG f3415894f8a2971ee934de9e43296fbb43db5fae )
+set( CTK_URL_MD5_TAG cb53ac3a1906e7a9535e8c7920a6436c5ad23b4b )
 
 set( VTK_URL https://github.com/Slicer/VTK.git )
-set( VTK_URL_MD5_TAG b55dad7dbdf8bdbe25d814b411aa5f211b68c09f )
+set( VTK_URL_MD5_TAG ea7cdc4e0b399be244e79392c67fed068c33e454 )
 
 # Slicer Execution Model snapshot 2014-02-18
 set( SlicerExecutionModel_URL

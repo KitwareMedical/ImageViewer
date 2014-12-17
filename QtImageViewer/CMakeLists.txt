@@ -34,11 +34,10 @@
 #
 ##############################################################################
 
-if(USE_ITK_FILE)
-   include(${USE_ITK_FILE})
-endif(USE_ITK_FILE)
-
 include(GenerateExportHeader)
+
+find_package( ITK REQUIRED )
+include( ${ITK_USE_FILE} )
 
 include_directories(
   ${QT_INCLUDE_DIR}
