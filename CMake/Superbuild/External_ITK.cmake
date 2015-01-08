@@ -72,6 +72,7 @@ if( NOT DEFINED ITK_DIR AND NOT ${USE_SYSTEM_ITK} )
 else( NOT DEFINED ITK_DIR AND NOT ${USE_SYSTEM_ITK} )
   if( ${USE_SYSTEM_ITK} )
     find_package( ITK REQUIRED )
+    include( ${ITK_USE_FILE} )
   endif( ${USE_SYSTEM_ITK} )
 
   AddEmptyExternalProject( ITK "${ITK_DEPENDENCIES}" )

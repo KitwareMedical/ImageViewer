@@ -35,6 +35,7 @@
 ##############################################################################
 
 cmake_minimum_required(VERSION 2.8.7)
+
 project(ImageViewer)
 
 set(CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
@@ -43,19 +44,9 @@ option(ImageViewer_USE_SUPERBUILD
   "Build ImageViewer and projects it depends on using superbuild." ON)
 mark_as_advanced(ImageViewer_USE_SUPERBUILD)
 
-option(USE_SYSTEM_ITK "Exclude ITK from superbuild and use an existing build."
-  OFF)
+option(USE_SYSTEM_ITK 
+  "Exclude ITK from superbuild and use an existing build." OFF)
 mark_as_advanced(USE_SYSTEM_ITK)
-
-option(USE_CLI "Use Slicer Execution Model for CLI arg parsing." OFF)
-
-if(USE_CLI)
-  # Slicer Execution model Setup
-  option(USE_SYSTEM_SLICER_EXECUTION_MODEL
-    "Exclude SlicerExecutionModel from superbuild and use an existing build."
-    OFF)
-  mark_as_advanced(USE_SYSTEM_SLICER_EXECUTION_MODEL)
-endif(USE_CLI)
 
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
 set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
@@ -71,8 +62,10 @@ if(UNIX)
 endif(UNIX)
 
 if(ImageViewer_USE_SUPERBUILD)
+
   add_subdirectory(CMake/Superbuild)
   return()
+
 else(ImageViewer_USE_SUPERBUILD)
 
   find_package(ITK REQUIRED)
@@ -81,14 +74,8 @@ else(ImageViewer_USE_SUPERBUILD)
   find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
   include(${QT_USE_FILE})
 
-  if(USE_CLI)
-
-    find_package(SlicerExecutionModel REQUIRED)
-    include(${SlicerExecutionModel_USE_FILE})
-
-    find_package(SlicerExecutionModel REQUIRED GenerateCLP)
-    include(${GenerateCLP_USE_FILE})
-  endif(USE_CLI)
+  find_package(SlicerExecutionModel REQUIRED)
+  include(${SlicerExecutionModel_USE_FILE})
 
   add_subdirectory(QtImageViewer)
   add_subdirectory(ImageViewer)
