@@ -32,55 +32,46 @@ set( ${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED 1 )
 set( proj SlicerExecutionModel )
 
 # Sanity checks.
-if( DEFINED ${proj}_DIR AND NOT EXISTS ${${proj}_DIR} )
-  message( FATAL_ERROR "${proj}_DIR variable is defined but corresponds to a nonexistent directory" )
-endif( DEFINED ${proj}_DIR AND NOT EXISTS ${${proj}_DIR} )
+if( DEFINED SlicerExecutionModel_DIR AND NOT EXISTS ${SlicerExecutionModel_DIR} )
+  message( FATAL_ERROR "SlicerExecutionModel_DIR variable is defined but corresponds to a nonexistent directory" )
+endif( DEFINED SlicerExecutionModel_DIR AND NOT EXISTS ${SlicerExecutionModel_DIR} )
 
 # Set dependency list
-set( ${proj}_DEPENDENCIES "ITK" )
+set( SlicerExecutionModel_DEPENDENCIES "ITK" )
 
 # Include dependent projects, if any.
-CheckExternalProjectDependency( ${proj} )
+CheckExternalProjectDependency( SlicerExecutionModel )
 
-if( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
-  set( ${proj}_SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj} )
-  set( ${proj}_DIR ${CMAKE_BINARY_DIR}/${proj}-build )
+set( SlicerExecutionModel_SOURCE_DIR ${CMAKE_BINARY_DIR}/SlicerExecutionModel )
+set( SlicerExecutionModel_DIR ${CMAKE_BINARY_DIR}/SlicerExecutionModel-build )
 
-  ExternalProject_Add( ${proj}
-    GIT_REPOSITORY ${${proj}_URL}
-    GIT_TAG ${${proj}_HASH_OR_TAG}
-    DOWNLOAD_DIR ${${proj}_SOURCE_DIR}
-    SOURCE_DIR ${${proj}_SOURCE_DIR}
-    BINARY_DIR ${${proj}_DIR}
-    INSTALL_DIR ${${proj}_DIR}
-    CMAKE_GENERATOR ${gen}
-    LOG_DOWNLOAD 1
-    LOG_UPDATE 0
-    LOG_CONFIGURE 0
-    LOG_BUILD 0
-    LOG_TEST 0
-    LOG_INSTALL 0
-    UPDATE_COMMAND ""
-    CMAKE_ARGS
-      -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-      -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
-      -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
-      -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-      -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-      -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-      -DCMAKE_BUILD_TYPE:STRING=${build_type}
-      ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
-      -DBUILD_SHARED_LIBS:BOOL=${shared}
-      -DBUILD_TESTING:BOOL=OFF
-      -DITK_DIR:PATH=${ITK_DIR}
-    INSTALL_COMMAND ""
-    DEPENDS
-      ${${proj}_DEPENDENCIES} )
-
-else( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
-  if( ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
-    find_package( ${proj} REQUIRED )
-  endif( ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
-
-  AddEmptyExternalProject( ${proj} "${${proj}_DEPENDENCIES}" )
-endif( NOT DEFINED ${proj}_DIR AND NOT ${USE_SYSTEM_SLICER_EXECUTION_MODEL} )
+ExternalProject_Add( SlicerExecutionModel
+  GIT_REPOSITORY ${SlicerExecutionModel_URL}
+  GIT_TAG ${SlicerExecutionModel_HASH_OR_TAG}
+  DOWNLOAD_DIR ${SlicerExecutionModel_SOURCE_DIR}
+  SOURCE_DIR ${SlicerExecutionModel_SOURCE_DIR}
+  BINARY_DIR ${SlicerExecutionModel_DIR}
+  INSTALL_DIR ${SlicerExecutionModel_DIR}
+  CMAKE_GENERATOR ${gen}
+  LOG_DOWNLOAD 1
+  LOG_UPDATE 0
+  LOG_CONFIGURE 0
+  LOG_BUILD 0
+  LOG_TEST 0
+  LOG_INSTALL 0
+  UPDATE_COMMAND ""
+  CMAKE_ARGS
+    -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
+    -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
+    -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+    -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+    -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+    -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+    -DCMAKE_BUILD_TYPE:STRING=${build_type}
+    ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
+    -DBUILD_SHARED_LIBS:BOOL=${shared}
+    -DBUILD_TESTING:BOOL=OFF
+    -DITK_DIR:PATH=${ITK_DIR}
+  INSTALL_COMMAND ""
+  DEPENDS
+    ${SlicerExecutionModel_DEPENDENCIES} )

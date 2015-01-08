@@ -21,9 +21,7 @@ limitations under the License.
 
 =========================================================================*/
 #include "ImageViewerConfigure.h"
-#ifdef USE_CLI
 #include "ImageViewerCLP.h"
-#endif
 //Qt includes
 #include <QApplication>
 #include <QDebug>
@@ -58,9 +56,7 @@ int execImageViewer(int argc, char* argv[])
 
 int parseAndExecImageViewer(int argc, char* argv[])
 {
-#ifdef USE_CLI
   PARSE_ARGS;
-#endif
 
   QApplication myApp(argc, argv);
 
@@ -68,13 +64,10 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.setWindowTitle("ImageViewer");
 
   QString filePathToLoad;
-#ifdef USE_CLI
   filePathToLoad = QString::fromStdString(inputImage);
-#endif
 
   viewer.loadInputImage(filePathToLoad);
 
-#ifdef USE_CLI
   if(!overlayImage.empty())
     {
     viewer.loadOverlayImage(QString::fromStdString(overlayImage));
@@ -109,7 +102,6 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setIWModeMax(iwModeMax.c_str());
   viewer.sliceView()->setIWModeMin(iwModeMin.c_str());
   viewer.sliceView()->update();
-#endif
 
   viewer.show();
   int execReturn;
@@ -128,9 +120,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
 int main( int argc, char* argv[] )
 {
-#if !defined(BUILD_SHARED_LIBS)
   Q_INIT_RESOURCE(qtImageViewerResources);
-#endif
   int res = EXIT_FAILURE;
   if(argc == 1)
     {
