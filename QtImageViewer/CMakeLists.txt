@@ -87,7 +87,7 @@ target_link_libraries(QtImageViewer
   ${OPENGL_LIBRARIES}
   )
 
-get_target_property(location $<TARGET_FILE:QtImageViewer> LOCATION)
+get_target_property(location QtImageViewer LOCATION)
 get_filename_component(output_directory ${location} PATH)
 
 set_property(GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
