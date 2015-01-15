@@ -87,6 +87,7 @@ target_link_libraries(QtImageViewer
   ${OPENGL_LIBRARIES}
   )
 
+cmake_policy(SET CMP0026 OLD)
 get_target_property(location QtImageViewer LOCATION)
 get_filename_component(output_directory ${location} PATH)
 
