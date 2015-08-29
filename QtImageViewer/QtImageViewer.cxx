@@ -213,9 +213,10 @@ void QtImageViewerPrivate::updateSize()
     {
     height = this->OpenGlWindow->heightForWidth(width);
     }
+  // Can't use QWidget::adjustSize() here because it resizes to the
+  // sizeHint of the widget. Instead we want to resize using the current
+  // size, just update the height.
   QSize newSize = QSize(width, height);
-  // Can't use QWidget::adjustSize() here because it resizes to the sizeHint of
-  // the widget. Instead we want to resize using the current size, just update the height.
   q->resize(newSize);
 }
 
@@ -273,10 +274,11 @@ void QtImageViewer::setInputImage(ImageType* newImData)
   d->OpenGlWindow->setInputImage(newImData);
   d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
 
-  // Use adjustSize() instead of updateSize() because there is no valid prior
-  // size.
+  // Use adjustSize() instead of updateSize() because there is no valid
+  // prior size.
   this->layout()->activate();
   this->adjustSize();
+  d->updateSize();
 }
 
 
