@@ -93,7 +93,9 @@ ExternalProject_Add( ImageViewer
     -DBUILD_SHARED_LIBS:BOOL=${shared}
     -DImageViewer_EXECUTABLE_DIRS:STRING=${ImageViewer_EXECUTABLE_DIRS}
     -DImageViewer_CONFIG_BINARY_DIR:PATH=${ImageViewer_CONFIG_BINARY_DIR}
+    -DUSE_SYSTEM_ITK:BOOL=ON
     -DITK_DIR:PATH=${ITK_DIR}
+    -DUSE_SYSTEM_SlicerExecutionModel:BOOL=ON
     -DSlicerExecutionModel_DIR:PATH=${SlicerExecutionModel_DIR}
     -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     -DImageViewer_USE_SUPERBUILD:BOOL=OFF

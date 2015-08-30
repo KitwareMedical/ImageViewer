@@ -34,19 +34,19 @@
 #
 ##############################################################################
 
-set(MODULE_NAME ImageViewer)
-set(${MODULE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR})
+set( MODULE_NAME ImageViewer )
+set( ${MODULE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR} )
 
-list(APPEND ${MODULE_NAME}_INCLUDE_DIRS
+list( APPEND ${MODULE_NAME}_INCLUDE_DIRS
   ${${MODULE_NAME}_SOURCE_DIR}/QtImageViewer
   ${${MODULE_NAME}_BINARY_DIR}/QtImageViewer
   )
-include_directories(${${MODULE_NAME}_INCLUDE_DIRS})
+include_directories( ${${MODULE_NAME}_INCLUDE_DIRS} )
 
-set(${MODULE_NAME}_SRCS ImageViewer.cxx)
-set(${MODULE_NAME}_LIBRARIES
-  QtImageViewer
+set( ${MODULE_NAME}_SRCS ImageViewer.cxx )
+set( ${MODULE_NAME}_LIBRARIES
   ${ITK_LIBRARIES}
+  QtImageViewer
   ${QT_LIBRARIES}
   ${OPENGL_LIBRARIES}
   )
