@@ -48,6 +48,10 @@ option(USE_SYSTEM_ITK
   "Exclude ITK from superbuild and use an existing build." OFF)
 mark_as_advanced(USE_SYSTEM_ITK)
 
+option(USE_SYSTEM_SlicerExecutionModel 
+  "Exclude SlicerExecutionModel from superbuild and use an existing build." OFF)
+mark_as_advanced(USE_SYSTEM_SlicerExecutionModel)
+
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
 set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
