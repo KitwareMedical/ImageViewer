@@ -34,7 +34,7 @@
 #
 ##############################################################################
 
-include(GenerateExportHeader)
+include( GenerateExportHeader )
 
 include_directories(
   ${QT_INCLUDE_DIR}
@@ -42,64 +42,65 @@ include_directories(
   ${ImageViewer_SOURCE_DIR}/QtImageViewer
   )
 
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
+find_package( OpenGL REQUIRED )
+include_directories( ${OPENGL_INCLUDE_DIRS} )
 
-set(QtImageViewer_SRCS
+set( QtImageViewer_SRCS
   QtGlSliceView.cxx
   QtImageViewer.cxx
   QtSliceControlsWidget.cxx
   )
 
-set(QtImageViewer_GUI_SRCS
+set( QtImageViewer_GUI_SRCS
   Resources/UI/QtImageViewer.ui
   Resources/UI/QtImageViewerHelp.ui
   Resources/UI/QtSliceControlsWidget.ui
   )
 
-set(QtImageViewer_MOC_SRCS
+set( QtImageViewer_MOC_SRCS
   QtGlSliceView.h
   QtImageViewer.h
   QtSliceControlsWidget.h
   )
 
-set(QtImageViewer_RESOURCES
+set( QtImageViewer_RESOURCES
   Resources/qtImageViewerResources.qrc
   )
 
-QT4_WRAP_UI(QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS})
-QT4_WRAP_CPP(QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS})
-QT4_ADD_RESOURCES(QtImageViewer_QRC_SRCS ${QtImageViewer_RESOURCES})
+QT4_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS} )
+QT4_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
+QT4_ADD_RESOURCES( QtImageViewer_QRC_SRCS ${QtImageViewer_RESOURCES} )
 
-add_definitions(-DQT_DLL)
-add_definitions(-DQT_THREAD_SUPPORT)
+add_definitions( -DQT_DLL )
+add_definitions( -DQT_THREAD_SUPPORT )
 
-add_library(QtImageViewer ${QtImageViewer_SRCS}
+add_library( QtImageViewer ${QtImageViewer_SRCS}
   ${QtImageViewer_GUI_SRCS}
   ${QtImageViewer_UI_CXX}
   ${QtImageViewer_QRC_SRCS}
   )
 
-install(TARGETS QtImageViewer DESTINATION lib)
-target_link_libraries(QtImageViewer
+install( TARGETS QtImageViewer DESTINATION lib )
+target_link_libraries( QtImageViewer
   ${ITK_LIBRARIES}
   ${QT_LIBRARIES}
   ${OPENGL_LIBRARIES}
   )
 
-cmake_policy(SET CMP0026 OLD)
-get_target_property(location QtImageViewer LOCATION)
-get_filename_component(output_directory ${location} PATH)
+cmake_policy( SET CMP0026 OLD )
+get_target_property( location QtImageViewer LOCATION )
+get_filename_component( output_directory ${location} PATH )
 
-set_property(GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
+set_property( GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-set_property(GLOBAL APPEND PROPERTY ImageViewer_LIBRARIES QtImageViewer)
-set_property(GLOBAL APPEND PROPERTY ImageViewer_LIBRARY_DIRS ${output_directory})
+set_property( GLOBAL APPEND PROPERTY ImageViewer_LIBRARIES QtImageViewer )
+set_property( GLOBAL APPEND PROPERTY ImageViewer_LIBRARY_DIRS
+  ${output_directory} )
 
-generate_export_header(QtImageViewer
+generate_export_header( QtImageViewer
   BASE_NAME QtImageViewer
   EXPORT_MACRO_NAME QtImageViewer_EXPORT
   EXPORT_FILE_NAME QtImageViewer_Export.h 
