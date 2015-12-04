@@ -25,9 +25,9 @@
 
 # Insight Segmentation and Registration Toolkit
 set( ITK_URL ${github_protocol}://github.com/Slicer/ITK.git )
-set( ITK_URL_OR_TAG 0905a43149320d8c2993e83ecf6c8a9d6b2b4232)
+set( ITK_URL_OR_TAG 03055046e2693349937339975df4e16b598609c1 )
 
 # Slicer Execution Model
 set( SlicerExecutionModel_URL
   ${github_protocol}://github.com/Slicer/SlicerExecutionModel.git )
-set( SlicerExecutionModel_HASH_OR_TAG 608c7b06f9402b35f0ec01550a3b9e313582f683 )
+set( SlicerExecutionModel_HASH_OR_TAG 311eff9038be165c1341dab90196fbd7466e715a )
