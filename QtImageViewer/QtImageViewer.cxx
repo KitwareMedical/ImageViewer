@@ -60,12 +60,14 @@ public:
 
   template <class PixelType>
   typename itk::Image<PixelType,3>::Pointer loadImage(QString& filePath,
-                                                      const QString& imageType = QString());
+    const QString& imageType = QString());
 
   template <class PixelType>
-  typename itk::Image<PixelType,3>::Pointer readImage(const QString& filePath);
+  typename itk::Image<PixelType,3>::Pointer readImage(const QString &
+    filePath);
 
-  /// Resize the entire dialog based on the current size and to ensure it fits
+  /// Resize the entire dialog based on the current size and to ensure it
+  /// fits
   /// the contents.
   /// \sa QWidget::resize(), QWidget::adjustSize()
   void updateSize();
@@ -123,12 +125,12 @@ typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate
 {
   Q_Q(QtImageViewer);
   typename itk::Image<PixelType, 3>::Pointer res;
-  // If the path is empty, prompt a dialog to give a chance to select the image
-  // to load.
+  // If the path is empty, prompt a dialog to give a chance to select the
+  // image to load.
   if (filePath.isEmpty())
     {
-    filePath = QFileDialog::getOpenFileName(
-        q, imageType, QDir::currentPath());
+    filePath = QFileDialog::getOpenFileName( q, imageType,
+      QDir::currentPath());
     }
   // Empty if the user cancelled the dialog.
   if (filePath.isEmpty())
@@ -140,8 +142,8 @@ typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate
   if (!fileInfo.exists())
     {
     const QString messageTitle("Failed loading");
-    const QString message =
-      QString("The file you have selected does not exist. %1").arg(filePath);
+    const QString message = QString(
+      "The file you have selected does not exist. %1").arg(filePath);
     QMessageBox::warning(q, messageTitle, message);
     return res;
     }
@@ -152,7 +154,8 @@ typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate
 }
 
 template <class PixelType>
-typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate::readImage(const QString& filePath)
+typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate::readImage(
+  const QString& filePath )
 {
   Q_Q(QtImageViewer);
   typedef itk::Image<PixelType, 3> ImageType;
@@ -178,7 +181,6 @@ typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate::readImage(const
     QMessageBox::warning(q, title, message);
     return res;
     }
-  std::cout << " ok" << std::endl;
   res = reader->GetOutput();
   return res;
 }
@@ -189,7 +191,8 @@ void QtImageViewerPrivate::updateSize()
   q->updateGeometry();
 
   QWidgetList childWidgets = this->layoutWidgets(q->layout(), 2);
-  // Find the true width of the widget. Discard the children that are hidden.
+  // Find the true width of the widget. Discard the children that are
+  // hidden.
   // We do not need the height information.
   QRect geom;
   foreach(QWidget* child, childWidgets)
@@ -197,8 +200,10 @@ void QtImageViewerPrivate::updateSize()
     if (child->isVisibleTo(q))
       {
       QPoint childPos = child->mapTo(q, QPoint(0,0));
-      int width = child->width() ? child->width() : child->sizeHint().width();
-      int height = child->height() ? child->height() : child->sizeHint().height();
+      int width = child->width() ? child->width() :
+        child->sizeHint().width();
+      int height = child->height() ? child->height() :
+        child->sizeHint().height();
       //qDebug() << child << width << height;
       geom = geom.united(QRect(childPos, QSize(width, height)));
       }
@@ -274,6 +279,22 @@ void QtImageViewer::setInputImage(ImageType* newImData)
   d->OpenGlWindow->setInputImage(newImData);
   d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
 
+  int width = newImData->GetLargestPossibleRegion().GetSize()[0];
+  int height = newImData->GetLargestPossibleRegion().GetSize()[1];
+  while( width > 500 || height > 500 )
+    {
+    width /= 2;
+    height /= 2;
+    }
+  QSize newSize = QSize( width, height );
+  d->OpenGlWindow->setMinimumSize( newSize );
+  while( width < 500 && height < 500 )
+    {
+    width *= 2;
+    height *= 2;
+    }
+  newSize = QSize( width, height );
+  d->OpenGlWindow->resize( newSize );
   // Use adjustSize() instead of updateSize() because there is no valid
   // prior size.
   this->layout()->activate();
@@ -331,7 +352,8 @@ void QtImageViewer::onDisplayStateChanged(int state)
   Q_D(QtImageViewer);
   if (state & QtImageViewerPrivate::ON_COLLAPSE)
     {
-    d->OpenGlWindow->setDisplayState(state | QtImageViewerPrivate::ON_SLICEVIEW);
+    d->OpenGlWindow->setDisplayState( state |
+      QtImageViewerPrivate::ON_SLICEVIEW );
     return;
     }
   // Keep the OpenGlWindow size in the following.
@@ -341,7 +363,8 @@ void QtImageViewer::onDisplayStateChanged(int state)
 
   d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
   const bool controlsVisible =
-    !(state & QtImageViewerPrivate::OFF_COLLAPSE) && !(state & QtImageViewerPrivate::ON_COLLAPSE);
+    !(state & QtImageViewerPrivate::OFF_COLLAPSE) &&
+    !(state & QtImageViewerPrivate::ON_COLLAPSE);
   this->setControlsVisible(controlsVisible);
 }
 
@@ -353,9 +376,11 @@ void QtImageViewer::setControlsVisible(bool controlsVisible)
   d->Controls->setVisible(controlsVisible);
   d->ButtonBoxWidget->setVisible(controlsVisible);
   qobject_cast<QGridLayout*>(this->layout())->setHorizontalSpacing(
-    controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
+    controlsVisible ?
+    this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
   qobject_cast<QGridLayout*>(this->layout())->setVerticalSpacing(
-    controlsVisible ? this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
+    controlsVisible ?
+    this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
   d->updateSize();
 }
 
