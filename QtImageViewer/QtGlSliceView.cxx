@@ -1420,15 +1420,44 @@ void QtGlSliceView::resizeEvent(QResizeEvent* sizeEvent)
 }
 
 
-QSize QtGlSliceView::minimumSizeHint()const
+QSize QtGlSliceView::minimumSizeHint() const
 {
-  const QSize minSizeHint = this->sizeHint();
+  int winWidth = cWinSizeX;
+  int winHeight = cWinSizeY;
+  if( winWidth == 0 || winHeight == 0 )
+    {
+    winWidth = 100;
+    winHeight = 100;
+    }
+  while( winWidth > 100 || winHeight > 100 )
+    {
+    winWidth /= 2;
+    winHeight /= 2;
+    }
+  const QSize minSizeHint( winWidth, winHeight );
   return minSizeHint;
 }
 
 QSize QtGlSliceView::sizeHint()const
 {
-  const QSize winSizeHint(cWinSizeX, cWinSizeY);
+  int winWidth = cWinSizeX;
+  int winHeight = cWinSizeY;
+  if( winWidth == 0 || winHeight == 0 )
+    {
+    winWidth = 100;
+    winHeight = 100;
+    }
+  while( winWidth > 1000 || winHeight > 1000 )
+    {
+    winWidth /= 2;
+    winHeight /= 2;
+    }
+  while( winWidth < 100 && winHeight < 100 )
+    {
+    winWidth *= 2;
+    winHeight *= 2;
+    }
+  const QSize winSizeHint( winWidth, winHeight );
   return winSizeHint;
 }
 
