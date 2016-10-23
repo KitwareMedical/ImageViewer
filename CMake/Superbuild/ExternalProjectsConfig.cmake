@@ -21,13 +21,13 @@
 #
 ##############################################################################
 
-# FILE UPDATED TO SLICER'S TAGS ON 2015.08.28
+# FILE UPDATED TO SLICER v4.6.0
 
 # Insight Segmentation and Registration Toolkit
 set( ITK_URL ${github_protocol}://github.com/Slicer/ITK.git )
-set( ITK_URL_OR_TAG 03055046e2693349937339975df4e16b598609c1 )
+set( ITK_URL_OR_TAG 16df9b689856cd4a8dd22a2cef92f5ee7222da0c )
 
 # Slicer Execution Model
 set( SlicerExecutionModel_URL
   ${github_protocol}://github.com/Slicer/SlicerExecutionModel.git )
-set( SlicerExecutionModel_HASH_OR_TAG 311eff9038be165c1341dab90196fbd7466e715a )
+set( SlicerExecutionModel_HASH_OR_TAG 983d2112ec431af20cafa49ca6cf7bd1a777869a )

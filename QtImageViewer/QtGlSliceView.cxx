@@ -364,11 +364,11 @@ QtGlSliceView::update()
   int winWidth = (int)(cDimSize[ cWinOrder[0] ] / cWinZoom);
   cWinSizeX = ((int) winWidth);
   int ti = (int)((int)cWinCenter[ cWinOrder[0] ] - winWidth/2);
-  if(ti <= - (int) cDimSize[ cWinOrder[0] ])
+  if( ti <= - static_cast<int>(cDimSize[ cWinOrder[0] ]) )
     {
-    ti = -cDimSize[ cWinOrder[0] ] + 1;
+    ti = - static_cast<int>(cDimSize[ cWinOrder[0] ]) + 1;
     }
-  else if(ti >= (int)cDimSize[ cWinOrder[0] ])
+  else if(ti >= static_cast<int>(cDimSize[ cWinOrder[0] ]) )
     {
     ti = cDimSize[ cWinOrder[0] ] - 1;
     }
@@ -381,10 +381,11 @@ QtGlSliceView::update()
   
   winWidth = static_cast<int>(cDimSize[ cWinOrder[1] ] / cWinZoom);
   cWinSizeY = (static_cast<int>(winWidth));
-  ti = static_cast<int>(static_cast<int>(cWinCenter[ cWinOrder[1] ]) - winWidth/2);
+  ti = static_cast<int>(static_cast<int>(cWinCenter[ cWinOrder[1] ])
+    - winWidth/2);
   if(ti <= - static_cast<int>(cDimSize[ cWinOrder[1] ]))
     {
-    ti = -cDimSize[ cWinOrder[1] ] + 1;
+    ti = - static_cast<int>(cDimSize[ cWinOrder[1] ]) + 1;
     }
   else if(ti >= static_cast<int>(cDimSize[ cWinOrder[1] ]))
     {
