@@ -163,8 +163,7 @@ typename itk::Image<PixelType, 3>::Pointer QtImageViewerPrivate::readImage(
   typename ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( filePath.toLatin1().data() );
 
-  std::cout << "Read image " << filePath.toStdString() << "...";
-  std::cout.flush();
+  std::cout << "Read image " << filePath.toStdString() << "..." << std::endl ;
   typename itk::Image<PixelType, 3>::Pointer res;
   try
     {
