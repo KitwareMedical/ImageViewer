@@ -125,7 +125,7 @@
             <description>Toggle coordinates display between index and physical units.</description>
         </boolean>
         <boolean>
-            <name>value</name>
+            <name>overlayValue</name>
             <flag>V</flag>
             <longflag>value</longflag>
             <default>true</default>
