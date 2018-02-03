@@ -47,7 +47,10 @@ set( ${MODULE_NAME}_SRCS ImageViewer.cxx )
 set( ${MODULE_NAME}_LIBRARIES
   ${ITK_LIBRARIES}
   QtImageViewer
-  ${QT_LIBRARIES}
+  Qt5::Core
+  Qt5::Gui
+  Qt5::OpenGL
+  Qt5::Widgets
   ${OPENGL_LIBRARIES}
   )
 

@@ -63,9 +63,6 @@ endif( GIT_PROTOCOL_HTTP )
 include( ExternalProjectsConfig )
 include( SetOSXVariables )
 
-find_package( Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED )
-include( ${QT_USE_FILE} )
-
 set( ImageViewer_DEPENDENCIES "ITK" "SlicerExecutionModel" )
 
 set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
@@ -73,6 +70,8 @@ set( EXTERNAL_PROJECT_DIR ${ImageViewer_SOURCE_DIR}/CMake/Superbuild )
 CheckExternalProjectDependency( ImageViewer )
 
 set( ImageViewer_DIR ${CMAKE_BINARY_DIR}/ImageViewer-build )
+
+find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 
 ExternalProject_Add( ImageViewer
   DOWNLOAD_COMMAND ""
@@ -97,7 +96,7 @@ ExternalProject_Add( ImageViewer
     -DITK_DIR:PATH=${ITK_DIR}
     -DUSE_SYSTEM_SlicerExecutionModel:BOOL=ON
     -DSlicerExecutionModel_DIR:PATH=${SlicerExecutionModel_DIR}
-    -DQT_QMAKE_EXECUTABLE:PATH=${QT_QMAKE_EXECUTABLE}
     -DImageViewer_USE_SUPERBUILD:BOOL=OFF
+    -DQt5_DIR:PATH=${Qt5_DIR}
   INSTALL_COMMAND ""
   DEPENDS ${ImageViewer_DEPENDENCIES} )

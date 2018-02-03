@@ -24,7 +24,7 @@ limitations under the License.
 #define __QtGlSliceView_h
 
 // Qt includes
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QtOpenGL/qgl.h>
 
 // ITK includes
@@ -101,7 +101,7 @@ struct ClickPoint
 //  
 
 class QtImageViewer_EXPORT QtGlSliceView :
-    public QGLWidget
+    public QOpenGLWidget
 {
   Q_OBJECT
 
@@ -144,7 +144,7 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(int maxDisplayStates READ maxDisplayStates WRITE setMaxDisplayStates);
 
 public:
-  typedef QGLWidget                        Superclass;
+  typedef QOpenGLWidget                        Superclass;
   typedef double                           ImagePixelType;
   typedef unsigned char                    OverlayPixelType;
   typedef itk::Image<ImagePixelType,3>     ImageType;
@@ -399,6 +399,18 @@ public slots:
   void showHelp();
 
   void selectPoint(double newX, double newY, double newZ);
+
+  void renderText(double x, double y, const QString & str,
+    const QFont & font = QFont(), int listBase = 2000);
+
+  GLint project(GLdouble objx, GLdouble objy, GLdouble objz,
+    const GLdouble model[16], const GLdouble proj[16],
+    const GLint viewport[4],
+    GLdouble * winx, GLdouble * winy, GLdouble * winz);
+
+  void transformPoint(GLdouble out[4], const GLdouble m[16],
+    const GLdouble in[4]);
+  
 
 signals:
 

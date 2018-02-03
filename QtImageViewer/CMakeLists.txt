@@ -67,9 +67,9 @@ set( QtImageViewer_RESOURCES
   Resources/qtImageViewerResources.qrc
   )
 
-QT4_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS} )
-QT4_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
-QT4_ADD_RESOURCES( QtImageViewer_QRC_SRCS ${QtImageViewer_RESOURCES} )
+QT5_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS} )
+QT5_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
+QT5_ADD_RESOURCES( QtImageViewer_QRC_SRCS ${QtImageViewer_RESOURCES} )
 
 add_definitions( -DQT_DLL )
 add_definitions( -DQT_THREAD_SUPPORT )
@@ -83,7 +83,10 @@ add_library( QtImageViewer ${QtImageViewer_SRCS}
 install( TARGETS QtImageViewer DESTINATION lib )
 target_link_libraries( QtImageViewer
   ${ITK_LIBRARIES}
-  ${QT_LIBRARIES}
+  Qt5::Core
+  Qt5::Gui
+  Qt5::OpenGL
+  Qt5::Widgets
   ${OPENGL_LIBRARIES}
   )
 

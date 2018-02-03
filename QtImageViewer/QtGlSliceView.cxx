@@ -26,7 +26,6 @@ limitations under the License.
 
 //QtImageViewer include
 #include "QtGlSliceView.h"
-#include "ui_QtImageViewerHelp.h"
 
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
@@ -43,7 +42,7 @@ limitations under the License.
 #include <QScrollArea>
 
 QtGlSliceView::QtGlSliceView(QWidget* widgetParent)
-  : QGLWidget(widgetParent)
+  : QOpenGLWidget(widgetParent)
 {
   cDisplayState         = 0x01;
   cMaxDisplayStates     = 2; // Off and On.
@@ -635,7 +634,6 @@ QtGlSliceView::update()
     }
   resizeGL(this->width(), this->height());
   paintGL();
-  updateGL();
 }
 
 
@@ -730,8 +728,8 @@ void QtGlSliceView::showHelp()
   if (this->cHelpDialog == 0)
     {
     this->cHelpDialog = new QDialog(this);
-    Ui_QtImageViewerHelp helpUi;
-    helpUi.setupUi(this->cHelpDialog);
+    //Ui_QtImageViewerHelp helpUi;
+    //helpUi.setupUi(this->cHelpDialog);
     }
   this->cHelpDialog->show();
 }
@@ -1512,10 +1510,7 @@ void QtGlSliceView::paintGL(void)
   glViewport(this->width()-v[0], this->height()-v[1], v[0], v[1]);
   glOrtho(this->width()-v[0], this->width(), this->height()-v[1], this->height(), -1, 1);
 
-  int h=7;
-#ifdef Q_OS_DARWIN
-  h=8;
-#endif
+  int h=10;
   QFont widgetFont = this->font();
   widgetFont.setPointSize(h);
   if (!cImData)
@@ -1621,14 +1616,14 @@ void QtGlSliceView::paintGL(void)
       int posY = static_cast<int>(this->cH/2 - h/2 );
       glRasterPos2i(width(), -posY);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      renderText( this->cW - (widgetFont.pointSize())/2 -2 , posY, cAxisLabelX[cWinOrientation], widgetFont);
+      this->renderText( this->cW - (widgetFont.pointSize())/2 -2 , posY, cAxisLabelX[cWinOrientation], widgetFont);
       }
     else
       {
       int posY = static_cast<int>(this->cH/2 - h/2 );
       glRasterPos2i(width(), -posY);
       glCallLists(strlen(cAxisLabelX[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation]);
-      renderText((widgetFont.pointSize())/2, posY, cAxisLabelX[cWinOrientation], widgetFont);
+      this->renderText((widgetFont.pointSize())/2, posY, cAxisLabelX[cWinOrientation], widgetFont);
       }
       
     if(isYFlipped() == false)
@@ -1636,14 +1631,14 @@ void QtGlSliceView::paintGL(void)
       int posY = static_cast<int>(h +10) ;
       glRasterPos2i(this->width()/2, -posY);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-      renderText(this->cW/2 - (widgetFont.pointSize())/2, posY, cAxisLabelY[cWinOrientation], widgetFont);
+      this->renderText(this->cW/2 - (widgetFont.pointSize())/2, posY, cAxisLabelY[cWinOrientation], widgetFont);
       }
     else
       {
       int posY = static_cast<int>(this->cH - h -10);
       glRasterPos2i(this->width()/2, -posY);
       glCallLists(strlen(cAxisLabelY[cWinOrientation]), GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation]);
-      renderText(this->cW/2 + (widgetFont.pointSize())/2, posY, cAxisLabelY[cWinOrientation], widgetFont);
+      this->renderText(this->cW/2 + (widgetFont.pointSize())/2, posY, cAxisLabelY[cWinOrientation], widgetFont);
       }
     
     glDisable(GL_BLEND);
@@ -1691,7 +1686,7 @@ void QtGlSliceView::paintGL(void)
               pz, suffix,
               (int)val);
       }
-    renderText(this->cW /2, this->cH, s);
+    this->renderText(this->cW /2, this->cH, s);
     glDisable(GL_BLEND);    
     }
 
@@ -1841,7 +1836,7 @@ void QtGlSliceView::mouseMoveEvent(QMouseEvent* mouseEvent)
       selectPoint(p[0], p[1], p[2]);
       }
     }
-  updateGL();
+  this->update();
 }
 
 /** catches the mouse press to react appropriate
@@ -1883,7 +1878,7 @@ void QtGlSliceView::mousePressEvent(QMouseEvent* mouseEvent)
       this->stepTimer->start(this->interactionTime);
    }*/
 
-   this->updateGL();
+   this->update();
 }
 
 
@@ -2145,5 +2140,74 @@ void QtGlSliceView::setMaxClickedPointsStored(int i)
 {
   maxClickPoints = i;
 }
+
+void QtGlSliceView::renderText(double x, double y, const QString & str, const QFont & font, int listBase)
+{
+    int width = this->width();
+    int height = this->height();
+
+    GLdouble model[4][4], proj[4][4];
+    GLint view[4];
+    glGetDoublev(GL_MODELVIEW_MATRIX, &model[0][0]);
+    glGetDoublev(GL_PROJECTION_MATRIX, &proj[0][0]);
+    glGetIntegerv(GL_VIEWPORT, &view[0]);
+    GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
+
+    project(x, y, 0, &model[0][0], &proj[0][0], &view[0],
+                &textPosX, &textPosY, &textPosZ);
+
+    textPosY = height - textPosY; // y is inverted
+
+    QPainter painter(this);
+    painter.setPen(Qt::yellow);
+    painter.setFont(QFont("Helvetica", 8));
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    painter.drawText(textPosX, textPosY, str); // z = pointT4.z + distOverOp / 4
+    painter.end();
+}
+
+GLint QtGlSliceView::project(GLdouble objx, GLdouble objy, GLdouble objz,
+    const GLdouble model[16], const GLdouble proj[16],
+    const GLint viewport[4],
+    GLdouble * winx, GLdouble * winy, GLdouble * winz)
+{
+    GLdouble in[4], out[4];
+
+    in[0] = objx;
+    in[1] = objy;
+    in[2] = objz;
+    in[3] = 1.0;
+    transformPoint(out, model, in);
+    transformPoint(in, proj, out);
+
+    if (in[3] == 0.0)
+        return GL_FALSE;
+
+    in[0] /= in[3];
+    in[1] /= in[3];
+    in[2] /= in[3];
+
+    *winx = viewport[0] + (1 + in[0]) * viewport[2] / 2;
+    *winy = viewport[1] + (1 + in[1]) * viewport[3] / 2;
+
+    *winz = (1 + in[2]) / 2;
+    return GL_TRUE;
+}
+
+void QtGlSliceView::transformPoint(GLdouble out[4], const GLdouble m[16], const GLdouble in[4])
+{
+#define M(row,col)  m[col*4+row]
+    out[0] =
+        M(0, 0) * in[0] + M(0, 1) * in[1] + M(0, 2) * in[2] + M(0, 3) * in[3];
+    out[1] =
+        M(1, 0) * in[0] + M(1, 1) * in[1] + M(1, 2) * in[2] + M(1, 3) * in[3];
+    out[2] =
+        M(2, 0) * in[0] + M(2, 1) * in[1] + M(2, 2) * in[2] + M(2, 3) * in[3];
+    out[3] =
+        M(3, 0) * in[0] + M(3, 1) * in[1] + M(3, 2) * in[2] + M(3, 3) * in[3];
+#undef M
+}
+
+
 
 #endif
