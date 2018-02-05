@@ -70,21 +70,18 @@ if(ImageViewer_USE_SUPERBUILD)
   add_subdirectory(CMake/Superbuild)
   return()
 
-else(ImageViewer_USE_SUPERBUILD)
-
-  find_package(ITK REQUIRED)
-  include(${ITK_USE_FILE})
-
-  find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtOpenGL QtWebkit REQUIRED)
-  include(${QT_USE_FILE})
-
-  find_package(SlicerExecutionModel REQUIRED)
-  include(${SlicerExecutionModel_USE_FILE})
-
-  add_subdirectory(QtImageViewer)
-  add_subdirectory(ImageViewer)
-
 endif(ImageViewer_USE_SUPERBUILD)
+
+find_package(ITK REQUIRED)
+include(${ITK_USE_FILE})
+
+find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+
+find_package(SlicerExecutionModel REQUIRED)
+include(${SlicerExecutionModel_USE_FILE})
+
+add_subdirectory(QtImageViewer)
+add_subdirectory(ImageViewer)
 
 get_property(ImageViewer_LIBRARIES GLOBAL PROPERTY ImageViewer_LIBRARIES)
 get_property(ImageViewer_INCLUDE_DIRS GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
