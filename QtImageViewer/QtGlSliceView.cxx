@@ -154,7 +154,6 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   sP.setHeightForWidth( true );
   this->setSizePolicy( sP );
   update();
-  this->paintGL();
 }
 
 
@@ -239,7 +238,6 @@ setInputImage( ImageType * newImData )
   this->changeSlice( ( ( this->maxSliceNum() -1 )/2 ) );
   this->updateGeometry();
   this->update();
-  this->paintGL();
   emit imageChanged();
 }
 
@@ -286,7 +284,6 @@ QtGlSliceView
     cWinZBuffer = new unsigned short[cWinDataSizeX * cWinDataSizeY * 4];
     emit validOverlayDataChanged( cValidOverlayData );
     update();
-    this->paintGL();
     }
   else
     {
@@ -324,7 +321,6 @@ QtGlSliceView::setOverlayOpacity( double newOverlayOpacity )
   cOverlayOpacity = qBound( 0., newOverlayOpacity, 1. );
   emit overlayOpacityChanged( cOverlayOpacity );
   update();
-  this->paintGL();
 }
 
 
@@ -369,7 +365,6 @@ void QtGlSliceView::saveClickedPointsStored()
 void 
 QtGlSliceView::update()
 {
-  std::cout << "Update" << std::endl;
   if( !cValidImData )
     {
     return;
@@ -397,7 +392,7 @@ QtGlSliceView::update()
   ti = ( int )( ( int )cWinCenter[ cWinOrder[1] ] - winHeight/2 );
   if( ti < -(int)cWinSizeY )
     {
-    ti = -cWinSizeY;
+    ti = -(int)cWinSizeY;
     }
   else if( ti >= static_cast<int>( cDimSize[ cWinOrder[1] ] ) )
     {
@@ -409,14 +404,7 @@ QtGlSliceView::update()
     {
     cWinMaxY = cDimSize[ cWinOrder[1] ] - 1;
     }
-  std::cout << "Width = " << winWidth << std::endl;
-  std::cout << "Height = " << winHeight << std::endl;
-  std::cout << "WinMin = " << cWinMinX << ", " << cWinMinY << std::endl;
-  std::cout << "WinMax = " << cWinMaxX << ", " << cWinMaxY << std::endl;
-  std::cout << "WinSize = " << cWinSizeX << ", " << cWinSizeY << std::endl;
-  std::cout << "WinDataSize = " << cWinDataSizeX << ", " << cWinDataSizeY << std::endl;
-  std::cout << "zoom = " << cWinZoom << std::endl;
-  
+
   memset( cWinImData, 0, cWinDataSizeX*cWinDataSizeY );
   if( cValidOverlayData )
     {
@@ -442,9 +430,6 @@ QtGlSliceView::update()
     
     if( k-startK >= ( int )cWinDataSizeY )
       {
-      std::cout << "Cont: k = " << k << std::endl;
-      std::cout << "   cWinMinY = " << cWinMinY << std::endl;
-      std::cout << "   cWinDataSizeY = " << cWinDataSizeY << std::endl;
       continue;
       }
 
@@ -670,6 +655,7 @@ QtGlSliceView::update()
     }
   resizeGL( this->width(), this->height() );
   paintGL();
+  Superclass::update();
 }
 
 
@@ -1567,19 +1553,20 @@ void QtGlSliceView::paintGL( void )
   int originY = 0;
   if( this->cWinZoom <= 1 )
     {
-    if( this->cW-scale0*this->cDimSize[this->cWinOrder[0]]>0 )
+    if( width() - scale0 * this->cDimSize[this->cWinOrder[0]] > 0 )
       {
-      originX = ( int )( ( this->cW -
-          scale0 * this->cDimSize[this->cWinOrder[0]] )/2.0 );
+      originX = ( int )( ( width() -
+          scale0 * this->cDimSize[this->cWinOrder[0]] ) / 2.0 );
       }
-    if( this->cH-scale1*this->cDimSize[this->cWinOrder[1]]>0 )
+    if( height() - scale1 * this->cDimSize[this->cWinOrder[1]] > 0 )
       {
-      originY = ( int )( ( this->cH -
-          scale1 * this->cDimSize[this->cWinOrder[1]] )/2.0 );
+      originY = ( int )( ( height() -
+          scale1 * this->cDimSize[this->cWinOrder[1]] ) / 2.0 );
       }
     }
-  glRasterPos2i( ( isXFlipped() )?cW:0,
-     ( isYFlipped() )?cH:0 );
+
+  glRasterPos2i( ( isXFlipped() )?cW-originX:originX,
+     ( isYFlipped() )?cH-originY:originY );
     
   glPixelZoom( ( isXFlipped() )?-scale0:scale0,
      ( isYFlipped() )?-scale1:scale1 );
@@ -1618,7 +1605,7 @@ void QtGlSliceView::paintGL( void )
         float xx;
         if( isXFlipped() )
           {
-          xx = this->cW - ( pts[this->cWinOrder[0]]
+          xx = width() - ( pts[this->cWinOrder[0]]
             - this->cWinMinX ) * scale0 - originX;
           }
         else
@@ -1630,7 +1617,7 @@ void QtGlSliceView::paintGL( void )
         float yy;
         if( isYFlipped() )
           {
-          yy = this->cH - ( pts[this->cWinOrder[1]]
+          yy = height() - ( pts[this->cWinOrder[1]]
                - this->cWinMinY ) * scale1 - originY;
           }
         else
@@ -1657,16 +1644,16 @@ void QtGlSliceView::paintGL( void )
 
     if( isXFlipped() == false )
       {
-      int posY = static_cast<int>( this->cH/2 - h/2 );
+      int posY = static_cast<int>( height()/2 - h/2 );
       glRasterPos2i( width(), -posY );
       glCallLists( strlen( cAxisLabelX[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation] );
-      this->renderText( this->cW - ( widgetFont.pointSize() )/2 -2, posY,
+      this->renderText( width() - ( widgetFont.pointSize() )/2 -2, posY,
         cAxisLabelX[cWinOrientation], widgetFont );
       }
     else
       {
-      int posY = static_cast<int>( this->cH/2 - h/2 );
+      int posY = static_cast<int>( height()/2 - h/2 );
       glRasterPos2i( width(), -posY );
       glCallLists( strlen( cAxisLabelX[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation] );
@@ -1680,16 +1667,16 @@ void QtGlSliceView::paintGL( void )
       glRasterPos2i( this->width()/2, -posY );
       glCallLists( strlen( cAxisLabelY[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation] );
-      this->renderText( this->cW/2 - ( widgetFont.pointSize() )/2, posY,
+      this->renderText( width()/2 - ( widgetFont.pointSize() )/2, posY,
         cAxisLabelY[cWinOrientation], widgetFont );
       }
     else
       {
-      int posY = static_cast<int>( this->cH - h -10 );
+      int posY = static_cast<int>( height() - h -10 );
       glRasterPos2i( this->width()/2, -posY );
       glCallLists( strlen( cAxisLabelY[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation] );
-      this->renderText( this->cW/2 + ( widgetFont.pointSize() )/2, posY,
+      this->renderText( width()/2 + ( widgetFont.pointSize() )/2, posY,
         cAxisLabelY[cWinOrientation], widgetFont );
       }
     
@@ -1742,7 +1729,7 @@ void QtGlSliceView::paintGL( void )
               pz, suffix,
               ( int )val );
       }
-    this->renderText( this->cW /2, this->cH, s );
+    this->renderText( width()/2, height(), s );
     glDisable( GL_BLEND );    
     }
 
@@ -1792,7 +1779,7 @@ void QtGlSliceView::paintGL( void )
     foreach( QString text, details )
       {
       int posX = 2;
-      int posY = this->cH - ( i-- ) * ( h + 2 );
+      int posY = height() - ( i-- ) * ( h + 2 );
       this->renderText( posX, posY, text );
       }
     glDisable( GL_BLEND );
@@ -1810,22 +1797,24 @@ void QtGlSliceView::paintGL( void )
     int posX;
     if( isXFlipped() )
       {
-      posX = ( int )( cW - ( cClickSelect[cWinOrder[0]] - cWinMinX )
-        * scale0 );
+      posX = ( int )( ( cClickSelect[cWinOrder[0]] - cWinMinX ) * scale0 )
+        + originX;
       }
     else
       {
-      posX = ( int )( ( cClickSelect[cWinOrder[0]] - cWinMinX ) * scale0 );
+      posX = ( int )( width() - ( cClickSelect[cWinOrder[0]] - cWinMinX )
+        * scale0 ) - originX;
       }
     int posY;
     if( isYFlipped() )
       {
-      posY = ( int )( cH - ( cClickSelect[cWinOrder[1]] - cWinMinY )
-        * scale1 );
+      posY = ( int )( height() - ( cClickSelect[cWinOrder[1]] - cWinMinY )
+        * scale1 ) - originY;
       }
     else
       {
-      posY = ( int )( ( cClickSelect[cWinOrder[1]] - cWinMinY ) * scale1 );
+      posY = ( int )( ( cClickSelect[cWinOrder[1]] - cWinMinY ) * scale1 )
+        + originY;
       }
     glBegin( GL_LINES );
     glVertex2d( 0, posY );
@@ -1848,17 +1837,43 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
     {
     return;
     }
-  double scale0 = this->width()/( double )cDimSize[0] * zoom()
+
+  double scale0 = this->width() / ( double )cDimSize[0]
+    * zoom()
     * fabs( cSpacing[cWinOrder[0]] )/fabs( cSpacing[0] );
-  double scale1 = this->height()/( double )cDimSize[1] * zoom()
+  double scale1 = this->height() / ( double )cDimSize[1]
+    * zoom()
     * fabs( cSpacing[cWinOrder[1]] )/fabs( cSpacing[0] );
+  int originX = 0;
+  int originY = 0;
+  if( this->cWinZoom <= 1 )
+    {
+    if( width() - scale0 * this->cDimSize[this->cWinOrder[0]] > 0 )
+      {
+      originX = ( int )( ( width() -
+          scale0 * this->cDimSize[this->cWinOrder[0]] ) / 2.0 );
+      }
+    if( height() - scale1 * this->cDimSize[this->cWinOrder[1]] > 0 )
+      {
+      originY = ( int )( ( height() -
+          scale1 * this->cDimSize[this->cWinOrder[1]] ) / 2.0 );
+      }
+    }
 
   if( cClickMode == CM_SELECT || cClickMode == CM_BOX ) 
     {
     double p[3];
-    p[cWinOrder[0]] = cWinMinX + ( ( 1-isXFlipped() )*( mouseEvent->x() )
-                     + ( isXFlipped() )*( this->width()-mouseEvent->x() ) )
-                     / scale0;
+
+    if( isXFlipped() )
+      {
+      p[cWinOrder[0]] =
+        ( width() - (mouseEvent->x() + originX) ) / scale0 + cWinMinX;
+      }
+    else
+      {
+      p[cWinOrder[0]] =
+        ( mouseEvent->x() + originX ) / scale0 + cWinMinX;
+      }
     if( p[cWinOrder[0]]<cWinMinX ) 
       {
       p[cWinOrder[0]] = cWinMinX;
@@ -1867,9 +1882,16 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
       {
       p[cWinOrder[0]] = cWinMaxX;
       }
-    p[cWinOrder[1]] = cWinMinY + ( isYFlipped()*mouseEvent->y()
-      + ( 1-isYFlipped() )*( this->height()-mouseEvent->y() ) )
-      / scale1;
+    if( isYFlipped() )
+      {
+      p[cWinOrder[1]] =
+        ( height() - (mouseEvent->y() + originY) ) / scale1 + cWinMinY;
+      }
+    else
+      {
+      p[cWinOrder[1]] =
+        ( mouseEvent->y() + originY ) / scale1 + cWinMinY;
+      }
     if( p[cWinOrder[1]]<cWinMinY ) 
       {
       p[cWinOrder[1]] = cWinMinY;
@@ -1896,7 +1918,6 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
       }
     }
   this->update();
-  this->paintGL();
 }
 
 /** catches the mouse press to react appropriate
@@ -1939,7 +1960,6 @@ void QtGlSliceView::mousePressEvent( QMouseEvent* mouseEvent )
    }*/
 
   this->update();
-  this->paintGL();
 }
 
 
@@ -1947,7 +1967,6 @@ void QtGlSliceView::changeSlice( int value )
 {
   this->setSliceNum( value );
   this->update();
-  this->paintGL();
 }
 
 
@@ -1987,6 +2006,7 @@ int QtGlSliceView::maxSliceNum() const
 void QtGlSliceView::selectPoint( double newX, double newY, double newZ )
   {    
   cClickSelect[0] = newX;
+    glDisable( GL_BLEND );
   if( cClickSelect[0]<0 )
     cClickSelect[0] = 0;
   if( cClickSelect[0] >= cDimSize[0] )
@@ -2116,7 +2136,6 @@ void QtGlSliceView::setIWMin( double value )
     }
   cIWMin = value;
   update();
-  this->paintGL();
   emit iwMinChanged( cIWMin );
 }
 
@@ -2130,7 +2149,6 @@ void QtGlSliceView::setIWMax( double value )
     }
   cIWMax = value;
   update();
-  this->paintGL();
   emit iwMaxChanged( cIWMax );
 }
 
@@ -2143,7 +2161,7 @@ bool QtGlSliceView::clickedPoint( int index, ClickPoint& point )
     }
   ClickPointListType::const_iterator j = cClickedPoints.begin();
 
-  std::advance ( j,static_cast<int>( index ) );
+  std::advance( j, static_cast<int>( index ) );
   point = *j;
   return true;
 
@@ -2197,7 +2215,6 @@ void QtGlSliceView::zoomIn()
     setZoom( static_cast<int>( zoom() + 1 ) );
     }
   update();
-  this->paintGL();
 }
 
 
@@ -2212,7 +2229,6 @@ void QtGlSliceView::zoomOut()
     setZoom( static_cast<int>( zoom() - 1 ) );
     }
   update();
-  this->paintGL();
 }
 
 
@@ -2221,7 +2237,8 @@ void QtGlSliceView::setMaxClickedPointsStored( int i )
   maxClickPoints = i;
 }
 
-void QtGlSliceView::renderText( double x, double y, const QString & str, const QFont & font, int listBase )
+void QtGlSliceView::renderText( double x, double y, const QString & str,
+  const QFont & font, int listBase )
 {
     int width = this->width();
     int height = this->height();
@@ -2231,18 +2248,23 @@ void QtGlSliceView::renderText( double x, double y, const QString & str, const Q
     glGetDoublev( GL_MODELVIEW_MATRIX, &model[0][0] );
     glGetDoublev( GL_PROJECTION_MATRIX, &proj[0][0] );
     glGetIntegerv( GL_VIEWPORT, &view[0] );
-    GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
+    GLdouble textPosX = 0;
+    GLdouble textPosY = 0;
+    GLdouble textPosZ = 0;
 
     project( x, y, 0, &model[0][0], &proj[0][0], &view[0],
                 &textPosX, &textPosY, &textPosZ );
 
-    textPosY = height - textPosY; // y is inverted
+    //textPosY = height - textPosY; // y is inverted
+    textPosY = textPosY;
 
     QPainter painter( this );
     painter.setPen( Qt::yellow );
-    painter.setFont( QFont( "Helvetica", 8 ) );
-    painter.setRenderHints( QPainter::Antialiasing | QPainter::TextAntialiasing );
-    painter.drawText( textPosX, textPosY, str ); // z = pointT4.z + distOverOp / 4
+    painter.setFont( font );
+    painter.setRenderHints( QPainter::Antialiasing |
+      QPainter::TextAntialiasing );
+    // z = pointT4.z + distOverOp / 4
+    painter.drawText( textPosX, textPosY, str );
     painter.end();
 }
 
@@ -2276,20 +2298,23 @@ GLint QtGlSliceView::project( GLdouble objx, GLdouble objy, GLdouble objz,
     return GL_TRUE;
 }
 
-void QtGlSliceView::transformPoint( GLdouble out[4], const GLdouble m[16], const GLdouble in[4] )
+void QtGlSliceView::transformPoint( GLdouble out[4], const GLdouble m[16],
+  const GLdouble in[4] )
 {
 #define M( row,col )  m[col*4+row]
     out[0] =
-        M( 0, 0 ) * in[0] + M( 0, 1 ) * in[1] + M( 0, 2 ) * in[2] + M( 0, 3 ) * in[3];
+        M( 0, 0 ) * in[0] + M( 0, 1 ) * in[1] + M( 0, 2 ) * in[2]
+        + M( 0, 3 ) * in[3];
     out[1] =
-        M( 1, 0 ) * in[0] + M( 1, 1 ) * in[1] + M( 1, 2 ) * in[2] + M( 1, 3 ) * in[3];
+        M( 1, 0 ) * in[0] + M( 1, 1 ) * in[1] + M( 1, 2 ) * in[2]
+        + M( 1, 3 ) * in[3];
     out[2] =
-        M( 2, 0 ) * in[0] + M( 2, 1 ) * in[1] + M( 2, 2 ) * in[2] + M( 2, 3 ) * in[3];
+        M( 2, 0 ) * in[0] + M( 2, 1 ) * in[1] + M( 2, 2 ) * in[2]
+        + M( 2, 3 ) * in[3];
     out[3] =
-        M( 3, 0 ) * in[0] + M( 3, 1 ) * in[1] + M( 3, 2 ) * in[2] + M( 3, 3 ) * in[3];
+        M( 3, 0 ) * in[0] + M( 3, 1 ) * in[1] + M( 3, 2 ) * in[2]
+        + M( 3, 3 ) * in[3];
 #undef M
 }
-
-
 
 #endif
