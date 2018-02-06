@@ -31,7 +31,6 @@ limitations under the License.
 
 // QtImageViewer includes
 #include "QtImageViewer.h"
-#include "QtSliceControlsWidget.h"
 #include "QtGlSliceView.h"
 #include "ui_QtImageViewer.h"
 
@@ -46,13 +45,6 @@ class QtImageViewerPrivate: public Ui_QtImageViewer
   Q_DECLARE_PUBLIC(QtImageViewer);
 public:
   typedef Ui_QtImageViewer Superclass;
-  enum DisplayStates{
-    OFF = 0x00,
-    ON_SLICEVIEW = 0x01,
-    ON_TEXTBOX = 0x02,
-    OFF_COLLAPSE = 0x04,
-    ON_COLLAPSE = 0x08
-  };
 
   QtImageViewerPrivate(QtImageViewer& obj);
 
@@ -96,27 +88,6 @@ void QtImageViewerPrivate::setupUi(QDialog* widgetToSetup)
 {
   Q_Q(QtImageViewer);
   this->Superclass::setupUi(widgetToSetup);
-
-  this->Controls->setSliceView(this->OpenGlWindow);
-  this->Controls->setSliceSlider(this->SliceSlider);
-  this->Controls->setSliceSpinBox(this->SliceSpinBox);
-  this->OpenGlWindow->setMaxDisplayStates(5);
-
-  QObject::connect(this->ButtonBox, SIGNAL(accepted()),
-                   q, SLOT(accept()));
-  QObject::connect(this->ButtonBox, SIGNAL(rejected()),
-                   q, SLOT(reject()));
-  QObject::connect(this->ButtonBox, SIGNAL(helpRequested()),
-                   q, SLOT(showHelp()));
-  QObject::connect(this->OpenGlWindow, SIGNAL(displayStateChanged(int)),
-                   q, SLOT(onDisplayStateChanged(int)));
-
-  // Install event filter on all the double spinboxes. They eat letter key
-  // events for no reason
-  foreach(QDoubleSpinBox* spinBox, q->findChildren<QDoubleSpinBox*>())
-    {
-    spinBox->installEventFilter(q);
-    }
 }
 
 template <class PixelType>
@@ -209,14 +180,7 @@ void QtImageViewerPrivate::updateSize()
     }
   int width = geom.width();
   int height = geom.height();
-  if (this->Controls->isVisibleTo(q))
-    {
-    height = q->heightForWidth(width);
-    }
-  else
-    {
-    height = this->OpenGlWindow->heightForWidth(width);
-    }
+  height = this->OpenGlWindow->heightForWidth(width);
   // Can't use QWidget::adjustSize() here because it resizes to the
   // sizeHint of the widget. Instead we want to resize using the current
   // size, just update the height.
@@ -255,7 +219,6 @@ QtImageViewer::QtImageViewer(QWidget* widgetParent, Qt::WindowFlags fl )
   Q_D(QtImageViewer);
   d->setupUi(this);
 
-  this->onDisplayStateChanged(d->OpenGlWindow->displayState());
   d->OpenGlWindow->setFocus();
 }
 
@@ -336,54 +299,6 @@ bool QtImageViewer::loadOverlayImage(QString filePathToLoad)
   return image.IsNotNull();
 }
 
-
-void QtImageViewer::showHelp()
-{
-  Q_D(QtImageViewer);
-  /// \todo don't show help in OpenGlWindow
-  d->OpenGlWindow->showHelp();
-  d->HelpDialog = d->OpenGlWindow->helpWindow();
-}
-
-
-void QtImageViewer::onDisplayStateChanged(int state)
-{
-  Q_D(QtImageViewer);
-  if (state & QtImageViewerPrivate::ON_COLLAPSE)
-    {
-    d->OpenGlWindow->setDisplayState( state |
-      QtImageViewerPrivate::ON_SLICEVIEW );
-    return;
-    }
-  // Keep the OpenGlWindow size in the following.
-  d->OpenGlWindow->setFixedSize(d->OpenGlWindow->geometry().size());
-  /// \todo call releaseFixedSize() at the right time
-  QTimer::singleShot(100, this, SLOT(releaseFixedSize()));
-
-  d->Controls->setTextVisible(state & QtImageViewerPrivate::ON_TEXTBOX);
-  const bool controlsVisible =
-    !(state & QtImageViewerPrivate::OFF_COLLAPSE) &&
-    !(state & QtImageViewerPrivate::ON_COLLAPSE);
-  this->setControlsVisible(controlsVisible);
-}
-
-void QtImageViewer::setControlsVisible(bool controlsVisible)
-{
-  Q_D(QtImageViewer);
-
-  d->Slider->setVisible(controlsVisible);
-  d->Controls->setVisible(controlsVisible);
-  d->ButtonBoxWidget->setVisible(controlsVisible);
-  qobject_cast<QGridLayout*>(this->layout())->setHorizontalSpacing(
-    controlsVisible ?
-    this->style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing) : 0);
-  qobject_cast<QGridLayout*>(this->layout())->setVerticalSpacing(
-    controlsVisible ?
-    this->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing) : 0);
-  d->updateSize();
-}
-
-
 void QtImageViewer::keyPressEvent(QKeyEvent* keyEvent)
 {
   Q_D(QtImageViewer);
@@ -400,34 +315,6 @@ void QtImageViewer::keyPressEvent(QKeyEvent* keyEvent)
       }
     }
   this->Superclass::keyPressEvent(keyEvent);
-}
-
-bool QtImageViewer::eventFilter(QObject *obj, QEvent *filteredEvent)
-{
-  Q_D(QtImageViewer);
-  if (qobject_cast<QDoubleSpinBox*>(obj) &&
-      filteredEvent->type() == QEvent::KeyPress)
-    {
-    QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(filteredEvent);
-    if ((keyEvent->key() < Qt::Key_0 ||
-         keyEvent->key() > Qt::Key_9) &&
-        keyEvent->key() != Qt::Key_Period &&
-        keyEvent->key() != Qt::Key_Comma &&
-        keyEvent->key() != Qt::Key_Minus &&
-        keyEvent->key() != Qt::Key_Left &&
-        keyEvent->key() != Qt::Key_Right &&
-        keyEvent->key() != Qt::Key_Up &&
-        keyEvent->key() != Qt::Key_Down &&
-        keyEvent->key() != Qt::Key_PageUp &&
-        keyEvent->key() != Qt::Key_PageDown &&
-        keyEvent->key() != Qt::Key_Home &&
-        keyEvent->key() != Qt::Key_End)
-      {
-      d->OpenGlWindow->keyPressEvent(keyEvent);
-      return true;
-      }
-    }
-  return this->Superclass::eventFilter(obj, filteredEvent);
 }
 
 void QtImageViewer::releaseFixedSize()

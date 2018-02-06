@@ -67,10 +67,7 @@ public slots:
   /// \sa setInputImage(), loadOverlayImage()
   virtual void setOverlayImage(OverlayImageType * newImData);
 
-  virtual void showHelp();
-
 protected slots:
-  virtual void onDisplayStateChanged(int details);
   void releaseFixedSize();
 
 protected:
@@ -78,8 +75,6 @@ protected:
 
   /// Reimplemented to propagate key events to QtGlSliceView.
   virtual void keyPressEvent(QKeyEvent* event);
-  virtual bool eventFilter(QObject* obj, QEvent* event);
-  virtual void setControlsVisible(bool visible);
 
 private:
   Q_DECLARE_PRIVATE(QtImageViewer);

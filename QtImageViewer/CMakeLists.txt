@@ -48,28 +48,19 @@ include_directories( ${OPENGL_INCLUDE_DIRS} )
 set( QtImageViewer_SRCS
   QtGlSliceView.cxx
   QtImageViewer.cxx
-  QtSliceControlsWidget.cxx
   )
 
 set( QtImageViewer_GUI_SRCS
   Resources/UI/QtImageViewer.ui
-  Resources/UI/QtImageViewerHelp.ui
-  Resources/UI/QtSliceControlsWidget.ui
   )
 
 set( QtImageViewer_MOC_SRCS
   QtGlSliceView.h
   QtImageViewer.h
-  QtSliceControlsWidget.h
-  )
-
-set( QtImageViewer_RESOURCES
-  Resources/qtImageViewerResources.qrc
   )
 
 QT5_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS} )
 QT5_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
-QT5_ADD_RESOURCES( QtImageViewer_QRC_SRCS ${QtImageViewer_RESOURCES} )
 
 add_definitions( -DQT_DLL )
 add_definitions( -DQT_THREAD_SUPPORT )

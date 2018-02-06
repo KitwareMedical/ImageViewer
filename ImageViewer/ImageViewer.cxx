@@ -120,7 +120,6 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
 int main( int argc, char* argv[] )
 {
-  Q_INIT_RESOURCE(qtImageViewerResources);
   int res = EXIT_FAILURE;
   if(argc == 1)
     {
