@@ -242,7 +242,7 @@ void QtImageViewer::setInputImage(ImageType* newImData)
   d->OpenGlWindow->changeSlice((d->OpenGlWindow->maxSliceNum() - 1)/2);
 
   int width = newImData->GetLargestPossibleRegion().GetSize()[0];
-  int height = newImData->GetLargestPossibleRegion().GetSize()[1];
+  int height = width; //newImData->GetLargestPossibleRegion().GetSize()[1];
   while( width > 500 || height > 500 )
     {
     width /= 2;

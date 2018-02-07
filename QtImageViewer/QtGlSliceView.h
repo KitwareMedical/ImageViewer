@@ -188,8 +188,6 @@ public:
 
   virtual void keyPressEvent(QKeyEvent* event);
 
-  virtual void resizeEvent(QResizeEvent *event);
-
   /// Return the minimum intensity of the image
   /// \sa maxIntensity(), intensityRange()
   double minIntensity() const;
@@ -401,16 +399,8 @@ public slots:
   void selectPoint(double newX, double newY, double newZ);
 
   void renderText(double x, double y, const QString & str,
-    const QFont & font = QFont(), int listBase = 2000);
+    const QFont & font = QFont() );
 
-  GLint project(GLdouble objx, GLdouble objy, GLdouble objz,
-    const GLdouble model[16], const GLdouble proj[16],
-    const GLint viewport[4],
-    GLdouble * winx, GLdouble * winy, GLdouble * winz);
-
-  void transformPoint(GLdouble out[4], const GLdouble m[16],
-    const GLdouble in[4]);
-  
 
 signals:
 
@@ -430,7 +420,6 @@ signals:
 protected:
 
   void initializeGL();
-  void resizeGL(int w, int h);
   void paintGL();
 
   /// Return the next display state.
@@ -459,6 +448,7 @@ protected:
   bool cViewClickedPoints;
   ImagePointer cImData;
   unsigned long cDimSize[3];
+  double cSpanMax;
   double cSpacing[3];
 
   ClickModeType cClickMode;
@@ -536,7 +526,6 @@ protected:
   typedef QList<ClickPoint> ClickPointListType;
   ClickPointListType cClickedPoints;
   int maxClickPoints;
-  int cX, cY, cW, cH;
   int cfastMovVal; //fast moving pace
   int cfastMovThresh;
 };
