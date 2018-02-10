@@ -2298,16 +2298,19 @@ void QtGlSliceView::setMaxClickedPointsStored( int i )
 void QtGlSliceView::renderText( double x, double y, const QString & str,
   const QFont & font )
 {
-  QPainterPath textPath;
-  textPath.addText( x, y, font, str );
-
-  QPainter painter( this );
-  painter.setRenderHints( QPainter::Antialiasing |
-    QPainter::TextAntialiasing );
-  painter.setBrush( Qt::yellow );
-  painter.setPen( Qt::NoPen );
-  painter.drawPath( textPath );
-  painter.end();
+  if( this->isVisible() )
+    {
+    QPainterPath textPath;
+    textPath.addText( x, y, font, str );
+  
+    QPainter painter( this );
+    painter.setRenderHints( QPainter::Antialiasing |
+      QPainter::TextAntialiasing );
+    painter.setBrush( Qt::yellow );
+    painter.setPen( Qt::NoPen );
+    painter.drawPath( textPath );
+    painter.end();
+    }
 }
 
 #endif
