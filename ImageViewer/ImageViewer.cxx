@@ -92,10 +92,10 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->flipY(yFlipped);
   viewer.sliceView()->flipX(xFlipped);
   viewer.sliceView()->setOverlayOpacity(overlayOpacity);
-  viewer.sliceView()->setViewCrosshairs(crosshairs);
+  viewer.sliceView()->setViewCrosshairs(!crosshairs);
   viewer.sliceView()->setDisplayState(details);
   viewer.sliceView()->setViewValuePhysicalUnits(physicalUnits);
-  viewer.sliceView()->setViewValue(overlayValue);
+  viewer.sliceView()->setViewValue(!overlayValue);
   viewer.sliceView()->setViewAxisLabel(axisLabel);
   viewer.sliceView()->setViewClickedPoints(clickedPoints);
   viewer.sliceView()->setImageMode(imageMode.c_str());
