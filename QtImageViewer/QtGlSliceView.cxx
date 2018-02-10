@@ -40,6 +40,8 @@ limitations under the License.
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QScrollArea>
+#include <QBoxLayout>
+#include <QTextEdit>
 
 QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   : QOpenGLWidget( widgetParent )
@@ -51,8 +53,6 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cViewOverlayData      = false;
   cOverlayOpacity       = 0.0;
   cWinOverlayData       = NULL;
-
-  cSingleStep           = 1.0;
 
   cHelpDialog             = 0;
 
@@ -146,8 +146,11 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   inDataSizeY = 0;
   cWinImData = NULL;
   cWinZBuffer = NULL;
-  cfastMovVal = 1; //fast moving pace: 1 by defaut
-  cfastMovThresh = 10; //how many single step moves before fast moving
+
+  cFastPace = false;
+  cFastMoveValue = 1; //fast moving pace: 1 by defaut
+  cFastIWValue = 1; //fast window and level pace: 1 by defaut
+  cNormalIWValue = 1;
 
   QSizePolicy sP = this->sizePolicy();
   sP.setHeightForWidth( true );
@@ -223,6 +226,16 @@ setInputImage( ImageType * newImData )
 
   cWinDataSizeX = cWinSizeX;
   cWinDataSizeY = cWinSizeX;
+
+  cNormalMoveValue = 1;
+  cFastMoveValue = (int)(cWinSizeX / 20);
+  if( cFastMoveValue < 5 )
+    {
+    cFastMoveValue = 5;
+    }
+
+  cFastIWValue = (double)((cDataMax-cDataMin) / 20);
+  cNormalIWValue = (double)((cDataMax-cDataMin) / 1024);
 
   if( cWinImData != NULL )
     {
@@ -693,18 +706,6 @@ QDialog* QtGlSliceView::helpWindow() const
 }
 
 
-void QtGlSliceView::setSingleStep( double step )
-{
-  this->cSingleStep = ( step != 0. ? step : 1. );
-}
-
-
-double QtGlSliceView::singleStep() const
-{
-  return this->cSingleStep;
-}
-
-
 int QtGlSliceView::imageSize( int axis ) const
 {
   return this->cDimSize[axis];
@@ -766,8 +767,70 @@ void QtGlSliceView::showHelp()
   if( this->cHelpDialog == 0 )
     {
     this->cHelpDialog = new QDialog( this );
-    //Ui_QtImageViewerHelp helpUi;
-    //helpUi.setupUi( this->cHelpDialog );
+    this->cHelpDialog->resize( 1000, 1500 );
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    this->cHelpDialog->setLayout( layout );
+    
+    QTextEdit *help = new QTextEdit();
+    QStringList str;
+    str << QString("Image Viewer");
+    str << QString("");
+    str << QString("This is a multi-dimensional image viewer. It displays one 2D slice or a MIP view of that data. A variety of viewing options exist...");
+    str << QString("");
+    str << QString("Options: (press a key in the window)");
+    str << QString("");
+    str << QString("   0 - View slices along the x-axis");
+    str << QString("   1 - View slices along the y-axis");
+    str << QString("   2 - View slices along the z-axis (default)");
+    str << QString("");
+    str << QString("   > , - View the next slice");
+    str << QString("   < , - View the previous slice");
+    str << QString("");
+    str << QString("   r -reset all options");
+    str << QString("   h - help (this document)");
+    str << QString("");
+    str << QString("   x - Flip the x-axis");
+    str << QString("   y - Flip the y-axis");
+    str << QString("   z - Flip the z-axis");
+    str << QString("");
+    str << QString("   f - Toggle fast-pace mode: quicker movement and intensity windowing");
+    str << QString("");
+    str << QString("   q w - Decrease, Increase the upper limit of the intensity windowing");
+    str << QString("   e - Toggle between clipping and setting-to-black values above IW upper limit");
+    str << QString("   ");
+    str << QString("   a s - Decrease, Increase the lower limit of the intensity windowing");
+    str << QString("   d - Toggle between clipping and setting-to-white values below IW lower limit");
+    str << QString("   ");
+    str << QString("   + = - Zoom-in by a factor of 2");
+    str << QString("   - _ - Zoom-out by a factor of 2");
+    str << QString("   ");
+    str << QString("   i j k m - Shift the image in the corresponding direction");
+    str << QString("   t - Transpose the axis of the slice being viewed");
+    str << QString("   ");
+    str << QString("   A - View axis labels: P=posterior, L=left, S=superior");
+    str << QString("   C - View crosshairs that illustrate last user-click in the window");
+    str << QString("   V - View image values as the user clicks in the window");
+    str << QString("   T - Toggle display of clicked points");
+    str << QString("   P - Toggle coordinates display between index and physical units");
+    str << QString("   D - View image details as an overlay on the image");
+    str << QString("   O - View a color overlay (application dependent)");
+    str << QString("   p - Save the clicked points in a file");
+    str << QString("   l - Toggle how the data is the window is viewed:");
+    str << QString("       Modes cycle between the following views:");
+    str << QString("         - Intensity");
+    str << QString("         - Inverse");
+    str << QString("         - Log");
+    str << QString("         - Derivative wrt x");
+    str << QString("         - Derivative wrt y");
+    str << QString("         - Derivative wrt z");
+    str << QString("         - Blend with previous and next slice");
+    str << QString("         - MIP");
+    for( auto &data : str )
+      {
+      help->append( data );
+      }
+    layout->addWidget(help);
     }
   this->cHelpDialog->show();
 }
@@ -1139,8 +1202,8 @@ IWModeType QtGlSliceView::iwModeMax( void ) const
 
 void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
 {
-  static int fastMov = 0;
-  int pace;
+  int movePace;
+  double iwPace;
   int imgShiftSize = static_cast< int >( (cWinSizeX/10)/zoom() );
   if( imgShiftSize < 1 )
     {
@@ -1166,17 +1229,15 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       break;
     case Qt::Key_Less: // <
     case Qt::Key_Comma:
-      //when pressing down ">" or "<" key, scrolling will go faster
-      if( fastMov < fastMovThresh() )
+      if( cFastPace )
         {
-        fastMov ++;
-        pace = 1;
+        movePace = cFastMoveValue;
         }
       else
         {
-        pace = fastMovVal();
+        movePace = cNormalMoveValue;
         }
-      if( ( int )cWinCenter[cWinOrder[2]]-pace<0 )
+      if( ( int )cWinCenter[cWinOrder[2]]-movePace<0 )
         {
         if( ( int )cWinCenter[cWinOrder[2]] == 0 )
           {
@@ -1189,38 +1250,29 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
         }
       else
         {
-        setSliceNum( ( int )cWinCenter[cWinOrder[2]]-pace );
+        setSliceNum( ( int )cWinCenter[cWinOrder[2]]-movePace );
         }
       update();
       break;
     case Qt::Key_Greater: // >
     case Qt::Key_Period:
       //when pressing down ">" or "<" key, scrolling will go faster
-      if( fastMov < fastMovThresh() )
+      if( cFastPace )
         {
-        fastMov ++;
-        pace = 1;
+        movePace = cFastMoveValue;
         }
       else
         {
-        pace = fastMovVal();
+        movePace = cNormalMoveValue;
         }
-      if( ( int )cWinCenter[cWinOrder[2]]+pace >
+      if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
         {
-        if( ( int )cWinCenter[cWinOrder[2]] ==
-            ( int )cDimSize[cWinOrder[2]]-1 )
-          {
-          return;
-          }
-        else
-          {
-          setSliceNum( ( int )cDimSize[cWinOrder[2]]-1 );
-          }
+        setSliceNum( ( int )cDimSize[cWinOrder[2]]-1 );
         }
       else
         {
-        setSliceNum( ( int )cWinCenter[cWinOrder[2]]+pace );
+        setSliceNum( ( int )cWinCenter[cWinOrder[2]]+movePace );
         }
       update();
       break;
@@ -1296,12 +1348,31 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
           break;
         }
       break;
+    case Qt::Key_F:
+      cFastPace = !cFastPace;
+      break;
     case Qt::Key_Q:
-      setIWMax( iwMax()-singleStep() );
+      if( cFastPace )
+        {
+        iwPace = cFastIWValue;
+        }
+      else
+        {
+        iwPace = cNormalIWValue;
+        }
+      setIWMax( iwMax()-iwPace );
       update();
       break;
     case Qt::Key_W:
-      setIWMax( iwMax()+singleStep() );
+      if( cFastPace )
+        {
+        iwPace = cFastIWValue;
+        }
+      else
+        {
+        iwPace = cNormalIWValue;
+        }
+      setIWMax( iwMax()+iwPace );
       update();
       break;
     case ( Qt::Key_A ):
@@ -1311,29 +1382,42 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
         }
       else
         {
-        setIWMin( iwMin()-singleStep() );
+        if( cFastPace )
+          {
+          iwPace = cFastIWValue;
+          }
+        else
+          {
+          iwPace = cNormalIWValue;
+          }
+        setIWMin( iwMin()-iwPace );
         }
       update();
       break;
     case Qt::Key_S:
-      setIWMin( iwMin()+singleStep() );
+      if( cFastPace )
+        {
+        iwPace = cFastIWValue;
+        }
+      else
+        {
+        iwPace = cNormalIWValue;
+        }
+      setIWMin( iwMin()+iwPace );
       update();
       break;
     case ( Qt::Key_I ):
-      if( !( keyEvent->modifiers() & Qt::ShiftModifier ) )
+      int newY;
+      if( isYFlipped() )
         {
-        int newY;
-        if( isYFlipped() )
-          {
-          newY = cWinCenter[cWinOrder[1]]-imgShiftSize;
-          }
-        else
-          {
-          newY = cWinCenter[cWinOrder[1]]+imgShiftSize;
-          }
-        cWinCenter[cWinOrder[1]] = newY;
-        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
+        newY = cWinCenter[cWinOrder[1]]-imgShiftSize;
         }
+      else
+        {
+        newY = cWinCenter[cWinOrder[1]]+imgShiftSize;
+        }
+      cWinCenter[cWinOrder[1]] = newY;
+      centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
       update();
       break;
     case Qt::Key_M:
@@ -1434,12 +1518,12 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       update();
       break;
     case Qt::Key_B:
-    //decrease opacity overlay
+      //decrease opacity overlay
       setOverlayOpacity( overlayOpacity() - 0.025 );
       //update();
       break;
     case Qt::Key_N:
-    //increase opacity overlay
+      //increase opacity overlay
       setOverlayOpacity( overlayOpacity() + 0.025 );
       //update();
       break;
@@ -1532,7 +1616,8 @@ void QtGlSliceView::paintGL( void )
 
   QFont widgetFont = this->font();
   widgetFont.setStyleHint(QFont::Times, QFont::PreferAntialias);
-  widgetFont.setPointSize(10);
+  widgetFont.setPointSize(9);
+  QFontMetrics widgetFontMetric( widgetFont );
 
   if( !cImData )
     {
@@ -1626,30 +1711,34 @@ void QtGlSliceView::paintGL( void )
 
     if( isXFlipped() == false )
       {
-      int posY = static_cast<int>( height()/2 - widgetFont.pointSize()/2 );
+      int posY = static_cast<int>( height()/2 - widgetFontMetric.height()/2 );
       glRasterPos2i( width(), -posY );
       glCallLists( strlen( cAxisLabelX[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation] );
-      this->renderText( width() - ( widgetFont.pointSize() )/2 -2, posY,
-        cAxisLabelX[cWinOrientation], widgetFont );
+      this->renderText(
+        (width()-widgetFontMetric.width(cAxisLabelX[cWinOrientation]))/2 - 2,
+        posY, cAxisLabelX[cWinOrientation], widgetFont );
       }
     else
       {
-      int posY = static_cast<int>( height()/2 - widgetFont.pointSize()/2 );
+      int posY = static_cast<int>( height()/2 - widgetFontMetric.height()/2 );
       glRasterPos2i( width(), -posY );
       glCallLists( strlen( cAxisLabelX[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation] );
-      this->renderText( ( widgetFont.pointSize() )/2, posY,
-        cAxisLabelX[cWinOrientation], widgetFont );
+      this->renderText( 
+        (widgetFontMetric.width(cAxisLabelX[cWinOrientation]))/2 - 2,
+        posY, cAxisLabelX[cWinOrientation], widgetFont );
       }
       
     if( isYFlipped() == false )
       {
-      int posY = static_cast<int>( widgetFont.pointSize() * 2 ) ;
+      int posY = static_cast<int>( widgetFontMetric.height() * 2 ) ;
       glRasterPos2i( this->width()/2, -posY );
       glCallLists( strlen( cAxisLabelY[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation] );
-      this->renderText( width()/2 - ( widgetFont.pointSize() )/2, posY,
+      this->renderText(
+        (width()-widgetFontMetric.width(cAxisLabelY[cWinOrientation]))/2 - 2,
+        posY,
         cAxisLabelY[cWinOrientation], widgetFont );
       }
     else
@@ -1658,7 +1747,9 @@ void QtGlSliceView::paintGL( void )
       glRasterPos2i( this->width()/2, -posY );
       glCallLists( strlen( cAxisLabelY[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation] );
-      this->renderText( width()/2 + ( widgetFont.pointSize() )/2, posY,
+      this->renderText(
+        width()/2  + widgetFontMetric.width(cAxisLabelY[cWinOrientation])/2,
+        posY,
         cAxisLabelY[cWinOrientation], widgetFont );
       }
     
@@ -1706,8 +1797,9 @@ void QtGlSliceView::paintGL( void )
               pz, suffix,
               ( int )val );
       }
-    int posX = width() - (strlen(s) - 2) * widgetFont.pointSize();
-    int posY = height() - ( widgetFont.pointSize() * 2 + 2 );
+    int posX = width() - widgetFontMetric.width(s)
+      - widgetFontMetric.width("00");
+    int posY = height() - ( widgetFontMetric.height() + 1 );
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );    
     }
@@ -1753,8 +1845,8 @@ void QtGlSliceView::paintGL( void )
     int i = 6;
     foreach( QString text, details )
       {
-      int posX = widgetFont.pointSize() * 2;
-      int posY = height() - ( i * ( widgetFont.pointSize() * 2 + 2 ) );
+      int posX = widgetFontMetric.width("00");
+      int posY = height() - ( i * ( widgetFontMetric.height() + 1 ) );
       this->renderText( posX, posY, text, widgetFont );
       --i;
       }
@@ -1996,7 +2088,7 @@ void QtGlSliceView::selectPoint( double newX, double newY, double newZ )
   cClickSelectV = cImData->GetPixel( ind );
 
   /*if length of list is equal to max, remove the earliest point stored */
-  if( ( maxClickPoints>0 )&&( cClickedPoints.size() == maxClickPoints ) )
+  if( ( cMaxClickPoints>0 )&&( cClickedPoints.size() == cMaxClickPoints ) )
     {
     cClickedPoints.pop_back();
     }
@@ -2021,26 +2113,27 @@ void QtGlSliceView::selectPoint( double newX, double newY, double newZ )
 
 }
 
-void QtGlSliceView::setFastMovThresh( int movThresh )
+void QtGlSliceView::setFastMoveValue( int movVal )
 {
-  cfastMovThresh = movThresh;
-}
-
-void QtGlSliceView::setFastMovVal( int movVal )
-{
-  cfastMovVal = movVal;
+  cFastMoveValue = movVal;
 }
 
 
-int QtGlSliceView::fastMovThresh() const
+int QtGlSliceView::fastMoveValue() const
 {
-  return cfastMovThresh;
+  return cFastMoveValue;
 }
 
 
-int QtGlSliceView::fastMovVal() const
+void QtGlSliceView::setFastIWValue( double movVal )
 {
-  return cfastMovVal;
+  cFastIWValue = movVal;
+}
+
+
+double QtGlSliceView::fastIWValue() const
+{
+  return cFastIWValue;
 }
 
 
@@ -2141,7 +2234,7 @@ int QtGlSliceView::clickedPointsStored() const
 
 int QtGlSliceView::maxClickedPointsStored() const
 {
-  return maxClickPoints;
+  return cMaxClickPoints;
 }
 
 
@@ -2199,7 +2292,7 @@ void QtGlSliceView::zoomOut()
 
 void QtGlSliceView::setMaxClickedPointsStored( int i )
 {
-  maxClickPoints = i;
+  cMaxClickPoints = i;
 }
 
 void QtGlSliceView::renderText( double x, double y, const QString & str,
@@ -2213,8 +2306,6 @@ void QtGlSliceView::renderText( double x, double y, const QString & str,
     QPainter::TextAntialiasing );
   painter.setBrush( Qt::yellow );
   painter.setPen( Qt::NoPen );
-  //painter.setFont( font );
-  //painter.drawText( x, y, str );
   painter.drawPath( textPath );
   painter.end();
 }

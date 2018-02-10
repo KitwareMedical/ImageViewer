@@ -105,8 +105,8 @@
             <flag>C</flag>
             <longflag>crosshairs</longflag>
             <default>false</default>
-            <label>Crosshairs displayed</label>
-            <description>View image values as the user clicks in the window, it displays crosshairs.</description>
+            <label>Disable crosshairs</label>
+            <description>Disable viewing location of last position clicked via crosshairs.</description>
         </boolean>
         <integer>
             <name>details</name>
@@ -128,9 +128,9 @@
             <name>overlayValue</name>
             <flag>V</flag>
             <longflag>value</longflag>
-            <default>true</default>
-            <label>Value displayed</label>
-            <description>View image values as an overlay on the image.</description>
+            <default>false</default>
+            <label>Disable viewing values</label>
+            <description>Disable Viewing of image values at last clicked point.</description>
         </boolean>
         <boolean>
             <name>axisLabel</name>
@@ -155,13 +155,11 @@
             <element>Value</element>
             <element>Inverse</element>
             <element>Log</element>
-            <element>Value</element>
             <element>Deriv-X</element>
             <element>Deriv-Y</element>
             <element>Deriv-Z</element>
             <element>Blend</element>
             <element>MIP</element>
-            <default>Value</default>
             <label>Mode</label>
             <description>Toggle the mode as the data is viewed.</description>
         </string-enumeration>

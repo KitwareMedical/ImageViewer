@@ -124,12 +124,11 @@ class QtImageViewer_EXPORT QtGlSliceView :
   Q_PROPERTY(bool viewAxisLabel READ viewAxisLabel WRITE setViewAxisLabel);
   Q_PROPERTY(bool viewClickedPoints READ viewClickedPoints WRITE setViewClickedPoints);
   Q_PROPERTY(bool viewValuePhysicalUnits READ viewValuePhysicalUnits WRITE setViewValuePhysicalUnits);
-  Q_PROPERTY(int fastMovVal READ fastMovVal WRITE setFastMovVal);
-  Q_PROPERTY(int fastMovThresh READ fastMovThresh WRITE setFastMovThresh);
+  Q_PROPERTY(int fastMoveValue READ fastMoveValue WRITE setFastMoveValue);
+  Q_PROPERTY(double fastIWValue READ fastIWValue WRITE setFastIWValue);
   Q_PROPERTY(bool validOverlayData READ validOverlayData WRITE setValidOverlayData NOTIFY validOverlayDataChanged);
   Q_PROPERTY(int maxClickedPointsStored READ maxClickedPointsStored WRITE setMaxClickedPointsStored
              NOTIFY maxClickedPointsStoredChanged);
-  Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep);
   /// This property controls how the image annotations are displayed. 0 means
   /// OFF, 1 means ON, >1 can be used by the application. "D" switches between each power of 2 state.
   /// The number of states is controlled by maxDisplayStates.
@@ -254,9 +253,9 @@ public:
 
   bool viewValue() const;
 
-  int fastMovThresh() const;
+  int fastMoveValue() const;
 
-  int fastMovVal() const;
+  double fastIWValue() const;
 
   bool viewAxisLabel() const;
 
@@ -274,8 +273,6 @@ public:
 
   bool validOverlayData() const;
   QDialog* helpWindow() const;
-
-  double singleStep() const;
 
   int imageSize(int axis) const;
 
@@ -295,8 +292,6 @@ public slots:
   /// Set the displayState property value.
   /// \sa displayState, displayState()
   void setDisplayState(int state);
-
-  void setSingleStep(double step);
 
   void setValidOverlayData(bool validOverlayData);
 
@@ -388,9 +383,9 @@ public slots:
   /// \sa iwMax
   void setIWMax(double value);
 
-  void setFastMovThresh(int movThresh);
+  void setFastMoveValue(int movVal);
 
-  void setFastMovVal(int movVal);
+  void setFastIWValue(double iwVal);
 
   void zoomIn();
   void zoomOut();
@@ -429,7 +424,6 @@ protected:
   int cDisplayState;
   int cMaxDisplayStates;
   bool cValidOverlayData;
-  double cSingleStep;
   double cOverlayOpacity;
 
   OverlayPointer cOverlayData;
@@ -525,9 +519,13 @@ protected:
   /* list of points clicked and maximum no. of points to be stored*/
   typedef QList<ClickPoint> ClickPointListType;
   ClickPointListType cClickedPoints;
-  int maxClickPoints;
-  int cfastMovVal; //fast moving pace
-  int cfastMovThresh;
+  int cMaxClickPoints;
+
+  bool cFastPace;
+  int cNormalMoveValue; //fast moving pace
+  int cFastMoveValue; //fast moving pace
+  double cNormalIWValue; 
+  double cFastIWValue; //fast IW pace
 };
   
 #endif
