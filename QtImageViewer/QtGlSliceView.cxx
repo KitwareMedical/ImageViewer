@@ -147,10 +147,13 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cWinImData = NULL;
   cWinZBuffer = NULL;
 
-  cFastPace = false;
-  cFastMoveValue = 1; //fast moving pace: 1 by defaut
-  cFastIWValue = 1; //fast window and level pace: 1 by defaut
-  cNormalIWValue = 1;
+  cFastPace = 1;
+  cFastMoveValue[0] = 0.5; //fast moving pace: 1 by defaut
+  cFastMoveValue[1] = 1; //fast moving pace: 1 by defaut
+  cFastMoveValue[2] = 2; //fast moving pace: 1 by defaut
+  cFastIWValue[0] = 0.5; //fast window and level pace: 1 by defaut
+  cFastIWValue[1] = 1; //fast window and level pace: 1 by defaut
+  cFastIWValue[2] = 2; //fast window and level pace: 1 by defaut
 
   QSizePolicy sP = this->sizePolicy();
   sP.setHeightForWidth( true );
@@ -227,15 +230,17 @@ setInputImage( ImageType * newImData )
   cWinDataSizeX = cWinSizeX;
   cWinDataSizeY = cWinSizeX;
 
-  cNormalMoveValue = 1;
-  cFastMoveValue = (int)(cWinSizeX / 20);
-  if( cFastMoveValue < 5 )
+  cFastMoveValue[0] = 1;
+  cFastMoveValue[2] = (int)(cWinSizeX / 10);
+  if( cFastMoveValue[2] < 5 )
     {
-    cFastMoveValue = 5;
+    cFastMoveValue[2] = 5;
     }
+  cFastMoveValue[1] = cFastMoveValue[2] / 2;
 
-  cFastIWValue = (double)((cDataMax-cDataMin) / 20);
-  cNormalIWValue = (double)((cDataMax-cDataMin) / 1024);
+  cFastIWValue[0] = (double)((cDataMax-cDataMin) / 10240);
+  cFastIWValue[1] = (double)((cDataMax-cDataMin) / 1024);
+  cFastIWValue[2] = (double)((cDataMax-cDataMin) / 20);
 
   if( cWinImData != NULL )
     {
@@ -1229,14 +1234,7 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       break;
     case Qt::Key_Less: // <
     case Qt::Key_Comma:
-      if( cFastPace )
-        {
-        movePace = cFastMoveValue;
-        }
-      else
-        {
-        movePace = cNormalMoveValue;
-        }
+      movePace = cFastMoveValue[ cFastPace ];
       if( ( int )cWinCenter[cWinOrder[2]]-movePace<0 )
         {
         if( ( int )cWinCenter[cWinOrder[2]] == 0 )
@@ -1257,14 +1255,7 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
     case Qt::Key_Greater: // >
     case Qt::Key_Period:
       //when pressing down ">" or "<" key, scrolling will go faster
-      if( cFastPace )
-        {
-        movePace = cFastMoveValue;
-        }
-      else
-        {
-        movePace = cNormalMoveValue;
-        }
+      movePace = cFastMoveValue[ cFastPace ];
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
         {
@@ -1349,29 +1340,18 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
         }
       break;
     case Qt::Key_F:
-      cFastPace = !cFastPace;
+      if( ++cFastPace > 2 )
+        {
+        cFastPace = 0;
+        }
       break;
     case Qt::Key_Q:
-      if( cFastPace )
-        {
-        iwPace = cFastIWValue;
-        }
-      else
-        {
-        iwPace = cNormalIWValue;
-        }
+      iwPace = cFastIWValue[ cFastPace ];
       setIWMax( iwMax()-iwPace );
       update();
       break;
     case Qt::Key_W:
-      if( cFastPace )
-        {
-        iwPace = cFastIWValue;
-        }
-      else
-        {
-        iwPace = cNormalIWValue;
-        }
+      iwPace = cFastIWValue[ cFastPace ];
       setIWMax( iwMax()+iwPace );
       update();
       break;
@@ -1382,27 +1362,13 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
         }
       else
         {
-        if( cFastPace )
-          {
-          iwPace = cFastIWValue;
-          }
-        else
-          {
-          iwPace = cNormalIWValue;
-          }
+        iwPace = cFastIWValue[ cFastPace ];
         setIWMin( iwMin()-iwPace );
         }
       update();
       break;
     case Qt::Key_S:
-      if( cFastPace )
-        {
-        iwPace = cFastIWValue;
-        }
-      else
-        {
-        iwPace = cNormalIWValue;
-        }
+      iwPace = cFastIWValue[ cFastPace ];
       setIWMin( iwMin()+iwPace );
       update();
       break;
@@ -2115,25 +2081,25 @@ void QtGlSliceView::selectPoint( double newX, double newY, double newZ )
 
 void QtGlSliceView::setFastMoveValue( int movVal )
 {
-  cFastMoveValue = movVal;
+  cFastMoveValue[ 2 ] = movVal;
 }
 
 
 int QtGlSliceView::fastMoveValue() const
 {
-  return cFastMoveValue;
+  return cFastMoveValue[ 2 ];
 }
 
 
 void QtGlSliceView::setFastIWValue( double movVal )
 {
-  cFastIWValue = movVal;
+  cFastIWValue[ 2 ] = movVal;
 }
 
 
 double QtGlSliceView::fastIWValue() const
 {
-  return cFastIWValue;
+  return cFastIWValue[ 2 ];
 }
 
 

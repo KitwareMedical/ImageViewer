@@ -521,11 +521,9 @@ protected:
   ClickPointListType cClickedPoints;
   int cMaxClickPoints;
 
-  bool cFastPace;
-  int cNormalMoveValue; //fast moving pace
-  int cFastMoveValue; //fast moving pace
-  double cNormalIWValue; 
-  double cFastIWValue; //fast IW pace
+  int cFastPace;
+  int cFastMoveValue[3]; //fast moving pace
+  double cFastIWValue[3]; //fast IW pace
 };
   
 #endif
