@@ -29,6 +29,7 @@ limitations under the License.
 
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
+#include "itkImageFileWriter.h"
 
 //std includes
 #include <cmath>
@@ -52,6 +53,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cValidOverlayData     = false;
   cViewOverlayData      = false;
   cOverlayOpacity       = 0.0;
+  cOverlayPaintRadius   = 1;
+  cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
 
   cHelpDialog             = 0;
@@ -831,6 +834,11 @@ void QtGlSliceView::showHelp()
     str << QString("         - Derivative wrt z");
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
+    str << QString("    ");
+    str << QString("   \\ - toggle between Select and Paint mode");
+    str << QString("   [ ] - increase / decrease paint sphere radius");
+    str << QString("   { } - increase / decrease paint color (0 erases)");
+    str << QString("   \" - save the overlay to a file");
     for( auto &data : str )
       {
       help->append( data );
@@ -1173,6 +1181,109 @@ void QtGlSliceView::setOverlay( bool newOverlay )
   cViewOverlayData = newOverlay;
 }
 
+void QtGlSliceView::createOverlay( void )
+{
+  cOverlayData = OverlayType::New();
+
+  cOverlayData->CopyInformation( cImData );
+  cOverlayData->SetRegions( cImData->GetLargestPossibleRegion() );
+  cOverlayData->Allocate();
+  cOverlayData->FillBuffer( 0 );
+
+  this->setInputOverlay( cOverlayData );
+}
+
+void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
+{
+  if( !cValidOverlayData )
+    {
+    return;
+    }
+
+  int r = cOverlayPaintRadius;
+  int c = cOverlayPaintColor;
+
+  int minX = x-r+1;
+  if( minX < 0 )
+    {
+    minX = 0;
+    }
+  int maxX = x+r-1;
+  if( maxX >= cDimSize[0] ) 
+    {
+    maxX = cDimSize[0]-1;
+    }
+
+  int minY = y-r+1;
+  if( minY < 0 )
+    {
+    minY = 0;
+    }
+  int maxY = y+r-1;
+  if( maxY >= cDimSize[1] ) 
+    {
+    maxY = cDimSize[1]-1;
+    }
+
+  int minZ = z-r+1;
+  if( minZ < 0 )
+    {
+    minZ = 0;
+    }
+  int maxZ = z+r-1;
+  if( maxZ >= cDimSize[2] ) 
+    {
+    maxZ = cDimSize[2]-1;
+    }
+
+  double r2 = r * r;
+  ImageType::IndexType idx;
+  for( int iz=minZ; iz<=maxZ; ++iz )
+    {
+    double z2 = iz - z;
+    z2 *= z2;
+    idx[2] = iz;
+    for( int iy=minY; iy<=maxY; ++iy )
+      {
+      double y2 = iy - y;
+      y2 *= y2;
+      idx[1] = iy;
+      for( int ix=minX; ix<=maxX; ++ix )
+        {
+        double x2 = ix - x;
+        x2 *= x2;
+        if( z2 + y2 + x2 <= r2 )
+          {
+          idx[0] = ix;
+          cOverlayData->SetPixel( idx, c );
+          }
+        }
+      }
+    }
+  update();
+}
+
+void QtGlSliceView::saveOverlay( void )
+{
+  if( !cValidOverlayData )
+    {
+    return;
+    }
+
+  QString fileName = QFileDialog::getSaveFileName( this,
+    "Please select a file name", "*.*", "" );
+  if( fileName.isNull() )
+    {
+    return;
+    }
+  typedef itk::ImageFileWriter< OverlayType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetFileName( fileName.toStdString() );
+  writer->SetInput( cOverlayData );
+  writer->SetUseCompression( true );
+  writer->Update();
+}
+
 void QtGlSliceView::setIWModeMin( IWModeType newIWModeMin )
 {
   cIWModeMin = newIWModeMin;
@@ -1251,6 +1362,50 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
         setSliceNum( ( int )cWinCenter[cWinOrder[2]]-movePace );
         }
       update();
+      break;
+    case Qt::Key_BracketRight:
+      ++cOverlayPaintRadius;
+      update();
+      break;
+    case Qt::Key_BracketLeft:
+      if( cOverlayPaintRadius > 1 )
+        {
+        --cOverlayPaintRadius;
+        update();
+        }
+      break;
+    case Qt::Key_BraceRight:
+      if( cOverlayPaintColor < 5 )
+        {
+        ++cOverlayPaintColor;
+        update();
+        }
+      break;
+    case Qt::Key_BraceLeft:
+      if( cOverlayPaintColor > 0 )
+        {
+        --cOverlayPaintColor;
+        update();
+        }
+      break;
+    case Qt::Key_QuoteDbl:
+      saveOverlay();
+      break;
+    case Qt::Key_Backslash:
+      if( cClickMode == CM_SELECT )
+        {
+        if( !cValidOverlayData )
+          {
+          createOverlay();
+          }
+        cClickMode = CM_PAINT;
+        update();
+        }
+      else
+        {
+        cClickMode = CM_SELECT;
+        update();
+        }
       break;
     case Qt::Key_Greater: // >
     case Qt::Key_Period:
@@ -1480,8 +1635,8 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       if( keyEvent->modifiers() & Qt::ShiftModifier )
         {
         setOverlay( !viewOverlayData() );
+        update();
         }
-      update();
       break;
     case Qt::Key_B:
       //decrease opacity overlay
@@ -1722,6 +1877,21 @@ void QtGlSliceView::paintGL( void )
     glDisable( GL_BLEND );
     }
     
+  if( cValidOverlayData && cClickMode == CM_PAINT )
+    {
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    char s[80];
+    sprintf( s, "PAINT: R = %d  C = %d", cOverlayPaintRadius,
+      cOverlayPaintColor );
+    int posX = width() - widgetFontMetric.width(s)
+      - widgetFontMetric.width("00");
+    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+    this->renderText( posX, posY, s, widgetFont );
+    glDisable( GL_BLEND );    
+    }
+
   if( viewValue() )
     {
     glEnable( GL_BLEND );
@@ -1883,7 +2053,7 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
     originY = 0;
     }
 
-  if( cClickMode == CM_SELECT || cClickMode == CM_BOX ) 
+  if( cClickMode == CM_SELECT || cClickMode == CM_PAINT ) 
     {
     double p[3];
 
@@ -1938,6 +2108,11 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
     if( cClickMode == CM_SELECT )
       {
       selectPoint( p[0], p[1], p[2] );
+      }
+    if( cClickMode == CM_PAINT )
+      {
+      selectPoint( p[0], p[1], p[2] );
+      paintOverlayPoint( p[0], p[1], p[2] );
       }
     }
   this->update();

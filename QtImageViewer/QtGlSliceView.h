@@ -41,7 +41,7 @@ using namespace itk;
 *  SELECT = report pixel info
 */
 const int NUM_ClickModeTypes = 3;
-typedef enum {CM_NOP, CM_SELECT, CM_BOX} ClickModeType;
+typedef enum {CM_NOP, CM_SELECT, CM_PAINT} ClickModeType;
 const char ClickModeTypeName[3][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
@@ -246,7 +246,7 @@ public:
   IWModeType iwModeMax() const;
 
   void saveClickedPointsStored();
-  /*! Status of the overlay - viewed /not viewed */
+
   bool viewOverlayData(void) const;
 
   bool viewCrosshairs() const;
@@ -323,6 +323,10 @@ public slots:
   void setInputOverlay(OverlayType * newOverlayData);
 
   void setOverlay(bool newOverlay);
+  void createOverlay( void );
+  void saveOverlay( void );
+  void paintOverlayPoint( double x, double y, double z );
+
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
   void setIWModeMax(IWModeType newIWModeMax);
@@ -425,6 +429,8 @@ protected:
   int cMaxDisplayStates;
   bool cValidOverlayData;
   double cOverlayOpacity;
+  int cOverlayPaintRadius;
+  int cOverlayPaintColor;
 
   OverlayPointer cOverlayData;
 
