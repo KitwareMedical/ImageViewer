@@ -1375,7 +1375,7 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
         }
       break;
     case Qt::Key_BraceRight:
-      if( cOverlayPaintColor < 5 )
+      if( cOverlayPaintColor < 10 )
         {
         ++cOverlayPaintColor;
         update();
