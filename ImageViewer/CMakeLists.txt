@@ -34,6 +34,8 @@
 #
 ##############################################################################
 
+cmake_policy(SET CMP0069 OLD)
+
 set( MODULE_NAME ImageViewer )
 set( ${MODULE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR} )
 

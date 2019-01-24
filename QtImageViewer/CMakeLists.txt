@@ -81,10 +81,6 @@ target_link_libraries( QtImageViewer
   ${OPENGL_LIBRARIES}
   )
 
-cmake_policy( SET CMP0026 OLD )
-get_target_property( location QtImageViewer LOCATION )
-get_filename_component( output_directory ${location} PATH )
-
 set_property( GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -92,7 +88,7 @@ set_property( GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
 
 set_property( GLOBAL APPEND PROPERTY ImageViewer_LIBRARIES QtImageViewer )
 set_property( GLOBAL APPEND PROPERTY ImageViewer_LIBRARY_DIRS
-  ${output_directory} )
+  $<TARGET_FILE:QtImageViewer> )
 
 generate_export_header( QtImageViewer
   BASE_NAME QtImageViewer

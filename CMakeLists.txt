@@ -38,19 +38,9 @@ cmake_minimum_required(VERSION 2.8.7)
 
 project(ImageViewer)
 
+cmake_policy(SET CMP0020 NEW)
+
 set(CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
-
-option(ImageViewer_USE_SUPERBUILD
-  "Build ImageViewer and projects it depends on using superbuild." ON)
-mark_as_advanced(ImageViewer_USE_SUPERBUILD)
-
-option(USE_SYSTEM_ITK 
-  "Exclude ITK from superbuild and use an existing build." OFF)
-mark_as_advanced(USE_SYSTEM_ITK)
-
-option(USE_SYSTEM_SlicerExecutionModel 
-  "Exclude SlicerExecutionModel from superbuild and use an existing build." OFF)
-mark_as_advanced(USE_SYSTEM_SlicerExecutionModel)
 
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
 set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
@@ -64,13 +54,6 @@ if(UNIX)
          CACHE STRING "Flags used by all build types." FORCE)
   endif(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 endif(UNIX)
-
-if(ImageViewer_USE_SUPERBUILD)
-
-  add_subdirectory(CMake/Superbuild)
-  return()
-
-endif(ImageViewer_USE_SUPERBUILD)
 
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
