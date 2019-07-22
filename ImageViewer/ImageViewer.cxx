@@ -27,6 +27,9 @@ limitations under the License.
 #include <QDebug>
 #include <QFileInfo>
 
+#include <itkConnectedThresholdImageFilter.h>
+#include <itkStatisticsImageFilter.h>
+
 //QtImageViewer includes
 #include "QtGlSliceView.h"
 #include "QtImageViewer.h"
@@ -54,8 +57,77 @@ int execImageViewer(int argc, char* argv[])
   return execReturn;
 }
 
+double IMAGE_MIN = 0;
+double IMAGE_MAX = 1;
+
+double V_MIN = 0;
+double V_MAX = 1;
+
+bool first = true;
+void myCallback(double x, double y, double z, double v, void *d)
+{
+  typedef itk::Image< double, 3 >        ImageType;
+  typedef itk::Image< unsigned char, 3 > OverlayType;
+
+  typedef itk::ConnectedThresholdImageFilter< ImageType, OverlayType >
+                                         ConnCompFilterType;
+
+  QtGlSliceView * sv = (QtGlSliceView *)(d);
+
+  if( sv->clickMode() == CM_SELECT )
+    {
+    if( first )
+      {
+      first = true;
+      itk::Index<3> seed;
+      seed[0] = int( x );
+      seed[1] = int( y );
+      seed[2] = int( z );
+  
+      ImageType::Pointer img = sv->inputImage();
+      double v = img->GetPixel( seed );
+  
+      V_MAX = v;
+      if( V_MIN > V_MAX )
+        {
+        double t = V_MAX;
+        V_MAX = V_MIN;
+        V_MIN = t;
+        }
+    
+      typename ConnCompFilterType::Pointer ccFilter = ConnCompFilterType::New();
+      ccFilter->SetInput( sv->inputImage() );
+      ccFilter->AddSeed( seed );
+      ccFilter->SetLower( V_MIN );
+      ccFilter->SetUpper( V_MAX );
+      ccFilter->SetReplaceValue(1);
+      ccFilter->Update();
+    
+      sv->setInputOverlay( ccFilter->GetOutput() );
+      sv->update();
+      }
+    else
+      {
+      first = false;
+      itk::Index<3> seed;
+      seed[0] = int( x );
+      seed[1] = int( y );
+      seed[2] = int( z );
+  
+      ImageType::Pointer img = sv->inputImage();
+      double v = img->GetPixel( seed );
+
+      V_MIN = v;
+      }
+    }
+
+}
+
 int parseAndExecImageViewer(int argc, char* argv[])
 {
+  typedef itk::Image< double, 3 >        ImageType;
+  typedef itk::Image< unsigned char, 3 > OverlayType;
+
   PARSE_ARGS;
 
   QApplication myApp(argc, argv);
@@ -101,6 +173,18 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setImageMode(imageMode.c_str());
   viewer.sliceView()->setIWModeMax(iwModeMax.c_str());
   viewer.sliceView()->setIWModeMin(iwModeMin.c_str());
+  viewer.sliceView()->setClickSelectArgCallBack( myCallback );
+  viewer.sliceView()->setClickSelectArg( (void*)(viewer.sliceView()) );
+
+  ImageType::Pointer img = viewer.sliceView()->inputImage();
+
+  typedef itk::StatisticsImageFilter<ImageType>  StatisticsFilterType;
+  StatisticsFilterType::Pointer statsFilter = StatisticsFilterType::New();
+  statsFilter->SetInput( img );
+  statsFilter->Update();
+  IMAGE_MIN = statsFilter->GetMinimum();
+  IMAGE_MAX = statsFilter->GetMaximum();
+
   viewer.sliceView()->update();
 
   viewer.show();
