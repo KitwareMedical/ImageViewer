@@ -165,6 +165,20 @@ public:
   /*! Return a pointer to the overlay data */
   const OverlayPointer &inputOverlay(void) const;
 
+  void setClickSelectCallBack( void(*cb)(double,double,double,double) )
+    { cClickSelectCallBack = cb; };
+
+  void setClickSelectArgCallBack( void(*cb)(double,double,double,double,void*) )
+    { cClickSelectArgCallBack = cb; };
+  void setClickSelectArg( void *v )
+    { cClickSelectArg = v; };
+
+  void setClickMode( ClickModeType m )
+    { cClickMode = m; };
+
+  ClickModeType clickMode( void )
+    { return cClickMode; };
+
   /*! Get the opacity of the overlay */
   double overlayOpacity(void) const;
 

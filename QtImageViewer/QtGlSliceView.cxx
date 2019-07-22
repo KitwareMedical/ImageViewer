@@ -57,8 +57,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cValidOverlayData     = false;
   cViewOverlayData      = false;
   cOverlayOpacity       = 0.0;
-  cOverlayPaintRadius   = 1;
-  cOverlayPaintColor    = 1;
+  cOverlayPaintRadius   = 10;
+  cOverlayPaintColor    = 0;
   cWinOverlayData       = NULL;
 
   cHelpDialog             = 0;
