@@ -39,19 +39,24 @@ using namespace itk;
 /*! Clicking in a window will cause different events
 *  NOP = nothing
 *  SELECT = report pixel info
+*  PAINT = Color the overlay
 */
 const int NUM_ClickModeTypes = 3;
 typedef enum {CM_NOP, CM_SELECT, CM_PAINT} ClickModeType;
 const char ClickModeTypeName[3][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
-  {'B', 'o', 'x', '\0', ' ', ' ', ' '}};
+  {'P', 'a', 'i', 'n', 't', '\0', ' '}};
 
-  /*! Handling of values outside intensity window range - values above 
-  *    and below can be handled separately
-  *  IW_MIN = set values outside range to min value
-  *  IW_MAX = set values outside range to max value
-  *  IW_FLIP = rescale values to be within range by flipping
+/*! SelectMovementType encodes the type of SELECT event */
+const int NUM_SelectMovementTypes = 3;
+typedef enum {SM_PRESS, SM_MOVE, SM_RELEASE} SelectMovementType;
+
+/*! Handling of values outside intensity window range - values above 
+*    and below can be handled separately
+*  IW_MIN = set values outside range to min value
+*  IW_MAX = set values outside range to max value
+*  IW_FLIP = rescale values to be within range by flipping
 */
 const int NUM_ImageModeTypes = 8;
 typedef enum {IMG_VAL, IMG_INV, IMG_LOG, IMG_DX, IMG_DY, IMG_DZ,
@@ -179,6 +184,10 @@ public:
   ClickModeType clickMode( void )
     { return cClickMode; };
 
+  SelectMovementType selectMovement( void )
+    { return cSelectMovement; };
+
+
   /*! Get the opacity of the overlay */
   double overlayOpacity(void) const;
 
@@ -195,9 +204,13 @@ public:
   /*! What slice is being viewed */
   int sliceNum(void) const;
 
+  virtual void mouseSelectEvent(QMouseEvent *event);
+
   virtual void mousePressEvent(QMouseEvent *event);
 
   virtual void mouseMoveEvent(QMouseEvent *event) ;
+
+  virtual void mouseReleaseEvent(QMouseEvent *event);
 
   virtual void keyPressEvent(QKeyEvent* event);
 
@@ -466,6 +479,7 @@ protected:
   double cSpacing[3];
 
   ClickModeType cClickMode;
+  SelectMovementType cSelectMovement;
   double cClickSelect[3];
   double cClickSelectV;
   void (*cClickSelectCallBack)(double x,double y,double z,

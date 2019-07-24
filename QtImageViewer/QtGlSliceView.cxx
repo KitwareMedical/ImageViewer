@@ -67,6 +67,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cPhysicalUnitsName      = "mm";
 
   cClickMode              = CM_SELECT;
+  cSelectMovement         = SM_PRESS;
   cViewClickedPoints      = false;
   cViewCrosshairs         = true;
   cViewValue              = true;
@@ -2036,7 +2037,7 @@ void QtGlSliceView::paintGL( void )
 }
 
 
-void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
+void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
 {
   if( !cImData )
     {
@@ -2126,43 +2127,27 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
  *  timer, which calls the appropriate interaction routine */
 void QtGlSliceView::mousePressEvent( QMouseEvent* mouseEvent )
 {
-   if( mouseEvent->button() & Qt::LeftButton )
-     {
-      if( mouseEvent->button() & Qt::ShiftModifier )
-        {
-         // left mouse mouse and shift button
-         /*this->mouseEventActive = true;
-         QObject::connect( this->stepTimer, SIGNAL( timeout() ),
-                           this->shiftLeftButtonFunction );*/
-        }
-     }
-   else if( mouseEvent->button() & Qt::MidButton )
-     {
-      // middle mouse button
-      //this->mouseEventActive = true;
-      //QObject::connect( this->stepTimer, SIGNAL( timeout() ),
-      //                  this->middleButtonFunction );
-     }
-   else if( mouseEvent->button() & Qt::RightButton )
-     {
-      // right mouse button
-      //this->mouseEventActive = true;
-      //QObject::connect( this->stepTimer, SIGNAL( timeout() ),
-      //                  this, this->rightButtonFunction );
-     }
-/*
-   if( this->mouseEventActive ) {
-      this->currentMousePos[0] = event->x();
-      this->currentMousePos[1] = event->y();
-      this->lastMousePos[0] = event->x();
-      this->lastMousePos[1] = event->y();
-      this->firstCall = true;
-      this->stepTimer->start( this->interactionTime );
-   }*/
-
-  this->update();
+  if( mouseEvent->button() & Qt::LeftButton )
+    {
+    cSelectMovement = SM_PRESS;
+    this->mouseSelectEvent( mouseEvent );
+    }
 }
 
+void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
+{
+  cSelectMovement = SM_MOVE;
+  this->mouseSelectEvent( mouseEvent );
+}
+
+void QtGlSliceView::mouseReleaseEvent( QMouseEvent* mouseEvent )
+{
+  if( mouseEvent->button() & Qt::LeftButton )
+    {
+    cSelectMovement = SM_RELEASE;
+    this->mouseSelectEvent( mouseEvent );
+    }
+}
 
 void QtGlSliceView::changeSlice( int value )
 {
