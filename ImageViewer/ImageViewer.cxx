@@ -60,12 +60,12 @@ int execImageViewer(int argc, char* argv[])
 double IMAGE_MIN = 0;
 double IMAGE_MAX = 1;
 
-double V_MIN = 0;
-double V_MAX = 1;
-
-bool first = true;
 void myCallback(double x, double y, double z, double v, void *d)
 {
+  static itk::Index<3> V_SEED;
+  static double V_MIN = 0;
+  static double V_MAX = 1;
+
   typedef itk::Image< double, 3 >        ImageType;
   typedef itk::Image< unsigned char, 3 > OverlayType;
 
@@ -76,9 +76,8 @@ void myCallback(double x, double y, double z, double v, void *d)
 
   if( sv->clickMode() == CM_SELECT )
     {
-    if( first )
+    if( sv->selectMovement() == SM_MOVE )
       {
-      first = true;
       itk::Index<3> seed;
       seed[0] = int( x );
       seed[1] = int( y );
@@ -94,28 +93,27 @@ void myCallback(double x, double y, double z, double v, void *d)
         V_MAX = V_MIN;
         V_MIN = t;
         }
-    
+
+      double eps = 0.01 * (V_MAX-V_MIN);
       typename ConnCompFilterType::Pointer ccFilter = ConnCompFilterType::New();
       ccFilter->SetInput( sv->inputImage() );
-      ccFilter->AddSeed( seed );
-      ccFilter->SetLower( V_MIN );
-      ccFilter->SetUpper( V_MAX );
+      ccFilter->AddSeed( V_SEED );
+      ccFilter->SetLower( V_MIN - eps );
+      ccFilter->SetUpper( V_MAX + eps );
       ccFilter->SetReplaceValue(1);
       ccFilter->Update();
     
       sv->setInputOverlay( ccFilter->GetOutput() );
       sv->update();
       }
-    else
+    else if( sv->selectMovement() == SM_PRESS )
       {
-      first = false;
-      itk::Index<3> seed;
-      seed[0] = int( x );
-      seed[1] = int( y );
-      seed[2] = int( z );
+      V_SEED[0] = int( x );
+      V_SEED[1] = int( y );
+      V_SEED[2] = int( z );
   
       ImageType::Pointer img = sv->inputImage();
-      double v = img->GetPixel( seed );
+      double v = img->GetPixel( V_SEED );
 
       V_MIN = v;
       }
