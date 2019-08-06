@@ -56,9 +56,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
   cValidOverlayData     = false;
   cViewOverlayData      = false;
-  cOverlayOpacity       = 0.0;
-  cOverlayPaintRadius   = 10;
-  cOverlayPaintColor    = 0;
+  cOverlayOpacity       = 0.75;
+  cOverlayPaintRadius   = 2;
+  cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
 
   cHelpDialog             = 0;
@@ -299,7 +299,7 @@ QtGlSliceView
 
     cViewOverlayData  = true;
     cValidOverlayData = true;
-    cOverlayOpacity   = 1.0;
+    cOverlayOpacity   = 0.75;
 
     if( cWinOverlayData != NULL )
       {
@@ -839,7 +839,8 @@ void QtGlSliceView::showHelp()
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
     str << QString("    ");
-    str << QString("   \\ - toggle between Select and Paint mode");
+    str << QString("   \\ - cycle between Select, Custom, and Paint mode");
+    str << QString("        - Default Custom is threshold connected components");
     str << QString("   [ ] - increase / decrease paint sphere radius");
     str << QString("   { } - increase / decrease paint color (0 erases)");
     str << QString("   \" - save the overlay to a file");
@@ -1402,6 +1403,15 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
           {
           createOverlay();
           }
+        cClickMode = CM_CUSTOM;
+        update();
+        }
+      else if( cClickMode == CM_CUSTOM )
+        {
+        if( !cValidOverlayData )
+          {
+          createOverlay();
+          }
         cClickMode = CM_PAINT;
         update();
         }
@@ -1881,7 +1891,40 @@ void QtGlSliceView::paintGL( void )
     glDisable( GL_BLEND );
     }
 
-  if( cValidOverlayData && cClickMode == CM_PAINT )
+  if( cClickMode == CM_SELECT )
+    {
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    char s[80];
+    if( viewValuePhysicalUnits() )
+      {
+      sprintf( s, "SELECT: Physical points" );
+      }
+    else
+      {
+      sprintf( s, "SELECT: Index points" );
+      }
+    int posX = width() - widgetFontMetric.width(s)
+      - widgetFontMetric.width("00");
+    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+    this->renderText( posX, posY, s, widgetFont );
+    glDisable( GL_BLEND );
+    }
+  else if( cClickMode == CM_CUSTOM )
+    {
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    char s[80];
+    sprintf( s, "CUSTOM: Thresh Conn. Comp." );
+    int posX = width() - widgetFontMetric.width(s)
+      - widgetFontMetric.width("00");
+    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+    this->renderText( posX, posY, s, widgetFont );
+    glDisable( GL_BLEND );
+    }
+  else if( cValidOverlayData && cClickMode == CM_PAINT )
     {
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -2057,7 +2100,8 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
     originY = 0;
     }
 
-  if( cClickMode == CM_SELECT || cClickMode == CM_PAINT )
+  if( cClickMode == CM_SELECT || cClickMode == CM_PAINT ||
+    cClickMode == CM_CUSTOM )
     {
     double p[3];
 
@@ -2109,7 +2153,7 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
                       - cWinMinY )
                       * cWinDataSizeX];
       }
-    if( cClickMode == CM_SELECT )
+    if( cClickMode == CM_SELECT || cClickMode == CM_CUSTOM )
       {
       selectPoint( p[0], p[1], p[2] );
       }
@@ -2225,16 +2269,15 @@ void QtGlSliceView::selectPoint( double newX, double newY, double newZ )
     cClickSelectV );
   cClickedPoints.push_front( pointClicked );
 
-  if( cClickSelectCallBack != NULL )
+  if( cClickMode == CM_CUSTOM && cClickSelectCallBack != NULL )
     {
     cClickSelectCallBack( cClickSelect[0], cClickSelect[1],
-    cClickSelect[2], cClickSelectV );
+      cClickSelect[2], cClickSelectV );
     }
-  if( cClickSelectArgCallBack != NULL )
+  if( cClickMode == CM_CUSTOM && cClickSelectArgCallBack != NULL )
     {
     cClickSelectArgCallBack( cClickSelect[0], cClickSelect[1],
-    cClickSelect[2], cClickSelectV,
-    cClickSelectArg );
+      cClickSelect[2], cClickSelectV, cClickSelectArg );
     }
 
   emit positionChanged( cClickSelect[0], cClickSelect[1], cClickSelect[2],
