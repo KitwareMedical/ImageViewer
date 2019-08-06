@@ -74,7 +74,7 @@ void myCallback(double x, double y, double z, double v, void *d)
 
   QtGlSliceView * sv = (QtGlSliceView *)(d);
 
-  if( sv->clickMode() == CM_SELECT )
+  if( sv->clickMode() == CM_CUSTOM )
     {
     if( sv->selectMovement() == SM_MOVE )
       {

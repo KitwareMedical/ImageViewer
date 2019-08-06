@@ -41,11 +41,12 @@ using namespace itk;
 *  SELECT = report pixel info
 *  PAINT = Color the overlay
 */
-const int NUM_ClickModeTypes = 3;
-typedef enum {CM_NOP, CM_SELECT, CM_PAINT} ClickModeType;
-const char ClickModeTypeName[3][7] =
+const int NUM_ClickModeTypes = 4;
+typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT} ClickModeType;
+const char ClickModeTypeName[4][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
+  {'C', 'u', 's', 't', 'o', 'm', '\0'},
   {'P', 'a', 'i', 'n', 't', '\0', ' '}};
 
 /*! SelectMovementType encodes the type of SELECT event */
