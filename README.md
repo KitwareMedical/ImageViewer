@@ -30,3 +30,13 @@ Usage
 
 Pass in images to view as command line arguments. Press **h** to see keyboard shortcuts.
 
+
+Extending Capabilities
+----------------------
+
+It is possible to quickly and easily extend the functionality of ImageViewer by writing a callback function that is called each
+time the user selects a point.   This callback is typically added to the application's top-level .cxx file.   For example, see the
+callback in ImageViewer/ImageViewer/ImageViewer.cxx
+
+
+
