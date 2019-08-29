@@ -88,6 +88,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cClickSelectArg = NULL;
   cClickSelectArgCallBack = NULL;
 
+  cKeyEventArg = NULL;
+  cKeyEventArgCallBack = NULL;
+
   cClickBoxCallBack = NULL;
   cClickBoxArg = NULL;
   cClickBoxArgCallBack = NULL;
@@ -154,6 +157,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   inDataSizeY = 0;
   cWinImData = NULL;
   cWinZBuffer = NULL;
+
+  cMessage = "";
 
   cFastPace = 1;
   cFastMoveValue[0] = 0.5; //fast moving pace: 1 by defaut
@@ -839,11 +844,16 @@ void QtGlSliceView::showHelp()
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
     str << QString("    ");
-    str << QString("   \\ - cycle between Select, Custom, and Paint mode");
+    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Paint");
     str << QString("        - Default Custom is threshold connected components");
+    str << QString("    ");
+    str << QString("   Paint mode: ");
     str << QString("   [ ] - increase / decrease paint sphere radius");
     str << QString("   { } - increase / decrease paint color (0 erases)");
     str << QString("   \" - save the overlay to a file");
+    str << QString("    ");
+    str << QString("   Image processing ");
+    str << QString("   \' - Perform median filtering with radius=1");
     for( auto &data : str )
       {
       help->append( data );
@@ -1541,7 +1551,7 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       setIWMin( iwMin()+iwPace );
       update();
       break;
-    case ( Qt::Key_I ):
+    case Qt::Key_I:
       int newY;
       if( isYFlipped() )
         {
@@ -1669,6 +1679,10 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       this->QWidget::keyPressEvent( keyEvent );
       break;
     }
+  if( cKeyEventArgCallBack != NULL )
+    {
+    cKeyEventArgCallBack( keyEvent, cKeyEventArg );
+    }
 }
 
 
@@ -1750,8 +1764,9 @@ void QtGlSliceView::paintGL( void )
   glViewport( 0, 0, width(), height() );
 
   QFont widgetFont = this->font();
-  widgetFont.setStyleHint(QFont::Times, QFont::PreferAntialias);
-  widgetFont.setPointSize(9);
+  widgetFont.setStyleHint(QFont::Helvetica, QFont::PreferAntialias);
+  widgetFont.setBold(true);
+  widgetFont.setPointSize(10);
   QFontMetrics widgetFontMetric( widgetFont );
 
   if( !cImData )
@@ -2037,6 +2052,13 @@ void QtGlSliceView::paintGL( void )
     }
   QString str = details.join( "\n" );
   emit detailsChanged( str );
+
+  if( cMessage.size() != 0 )
+    {
+    int posX = (width()/2) - (widgetFontMetric.width(cMessage)/2);
+    int posY = ( 2 * ( widgetFontMetric.height() + 1 ) );
+    this->renderText( posX, posY, cMessage, widgetFont );
+    }
 
   if( viewCrosshairs()
     && static_cast<int>( cClickSelect[cWinOrder[2]] ) ==
@@ -2467,6 +2489,11 @@ void QtGlSliceView::setMaxClickedPointsStored( int i )
   cMaxClickPoints = i;
 }
 
+void QtGlSliceView::setMessage( const std::string & str )
+{
+  cMessage = QString::fromUtf8(str.c_str());
+}
+
 void QtGlSliceView::renderText( double x, double y, const QString & str,
   const QFont & font )
 {
@@ -2478,7 +2505,7 @@ void QtGlSliceView::renderText( double x, double y, const QString & str,
     QPainter painter( this );
     painter.setRenderHints( QPainter::Antialiasing |
       QPainter::TextAntialiasing );
-    painter.setBrush( Qt::yellow );
+    painter.setBrush( Qt::red );
     painter.setPen( Qt::NoPen );
     painter.drawPath( textPath );
     painter.end();

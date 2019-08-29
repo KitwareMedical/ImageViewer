@@ -179,6 +179,11 @@ public:
   void setClickSelectArg( void *v )
     { cClickSelectArg = v; };
 
+  void setKeyEventArgCallBack( void(*cb)(QKeyEvent*,void*) )
+    { cKeyEventArgCallBack = cb; };
+  void setKeyEventArg( void *v )
+    { cKeyEventArg = v; };
+
   void setClickMode( ClickModeType m )
     { cClickMode = m; };
 
@@ -425,6 +430,8 @@ public slots:
 
   void selectPoint(double newX, double newY, double newZ);
 
+  void setMessage( const std::string & str );
+
   void renderText(double x, double y, const QString & str,
     const QFont & font = QFont() );
 
@@ -488,6 +495,9 @@ protected:
   void *cClickSelectArg;
   void (*cClickSelectArgCallBack)(double x, double y, double z,
                                   double v, void *clickSelectArg);
+
+  void *cKeyEventArg;
+  void (*cKeyEventArgCallBack)( QKeyEvent* event, void *keyEventArg);
 
   double cBoxMin[3];
   double cBoxMax[3];
@@ -555,6 +565,8 @@ protected:
   typedef QList<ClickPoint> ClickPointListType;
   ClickPointListType cClickedPoints;
   int cMaxClickPoints;
+
+  QString cMessage;
 
   int cFastPace;
   int cFastMoveValue[3]; //fast moving pace
