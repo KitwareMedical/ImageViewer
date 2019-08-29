@@ -2056,7 +2056,7 @@ void QtGlSliceView::paintGL( void )
   if( cMessage.size() != 0 )
     {
     int posX = (width()/2) - (widgetFontMetric.width(cMessage)/2);
-    int posY = height() - ( 2 * ( widgetFontMetric.height() + 1 ) );
+    int posY = height() - ( 1 * ( widgetFontMetric.height() + 1 ) );
     this->renderText( posX, posY, cMessage, widgetFont );
     }
 
