@@ -179,6 +179,11 @@ public:
   void setClickSelectArg( void *v )
     { cClickSelectArg = v; };
 
+  void setKeyEventArgCallBack( void(*cb)(QKeyEvent*,void*) )
+    { cKeyEventArgCallBack = cb; };
+  void setKeyEventArg( void *v )
+    { cKeyEventArg = v; };
+
   void setClickMode( ClickModeType m )
     { cClickMode = m; };
 
@@ -488,6 +493,9 @@ protected:
   void *cClickSelectArg;
   void (*cClickSelectArgCallBack)(double x, double y, double z,
                                   double v, void *clickSelectArg);
+
+  void *cKeyEventArg;
+  void (*cKeyEventArgCallBack)( QKeyEvent* event, void *keyEventArg);
 
   double cBoxMin[3];
   double cBoxMax[3];

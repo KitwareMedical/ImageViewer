@@ -26,8 +26,14 @@ limitations under the License.
 #include <QApplication>
 #include <QDebug>
 #include <QFileInfo>
+#include <QKeyEvent>
 
+#include <itkMedianImageFilter.h>
 #include <itkConnectedThresholdImageFilter.h>
+#include <itkExtractImageFilter.h>
+#include <itkInvertIntensityImageFilter.h>
+#include <itkSignedMaurerDistanceMapImageFilter.h>
+#include <itkMinimumMaximumImageCalculator.h>
 #include <itkStatisticsImageFilter.h>
 
 //QtImageViewer includes
@@ -60,7 +66,27 @@ int execImageViewer(int argc, char* argv[])
 double IMAGE_MIN = 0;
 double IMAGE_MAX = 1;
 
-void myCallback(double x, double y, double z, double v, void *d)
+void myKeyCallback(QKeyEvent *event, void *d)
+{
+  if( event->key() == Qt::Key_Apostrophe )
+    {
+    QtGlSliceView * sv = (QtGlSliceView *)(d);
+
+    typedef itk::Image< double, 3 >        ImageType;
+    ImageType::Pointer img = sv->inputImage();
+
+    typedef itk::MedianImageFilter< ImageType, ImageType >
+                                           FilterType;
+    FilterType::Pointer filter = FilterType::New();
+    filter->SetInput( img );
+    filter->SetRadius( 2 );
+    filter->Update();
+    sv->setInputImage( filter->GetOutput() );
+    sv->update();
+    }
+}
+
+void myMouseCallback(double x, double y, double z, double v, void *d)
 {
   static itk::Index<3> V_SEED;
   static double V_MIN = 0;
@@ -71,6 +97,14 @@ void myCallback(double x, double y, double z, double v, void *d)
 
   typedef itk::ConnectedThresholdImageFilter< ImageType, OverlayType >
                                          ConnCompFilterType;
+  typedef itk::ExtractImageFilter< OverlayType, OverlayType >
+                                         ExtractFilterType;
+  typedef itk::InvertIntensityImageFilter< OverlayType, OverlayType >
+                                         InvertFilterType;
+  typedef itk::SignedMaurerDistanceMapImageFilter< OverlayType, ImageType >
+                                         DistanceFilterType;
+  typedef itk::MinimumMaximumImageCalculator< ImageType >
+                                         MinMaxFilterType;
 
   QtGlSliceView * sv = (QtGlSliceView *)(d);
 
@@ -95,7 +129,7 @@ void myCallback(double x, double y, double z, double v, void *d)
         }
 
       double eps = 0.01 * (V_MAX-V_MIN);
-      typename ConnCompFilterType::Pointer ccFilter = ConnCompFilterType::New();
+      ConnCompFilterType::Pointer ccFilter = ConnCompFilterType::New();
       ccFilter->SetInput( sv->inputImage() );
       ccFilter->AddSeed( V_SEED );
       ccFilter->SetLower( V_MIN - eps );
@@ -103,7 +137,128 @@ void myCallback(double x, double y, double z, double v, void *d)
       ccFilter->SetReplaceValue(1);
       ccFilter->Update();
     
-      sv->setInputOverlay( ccFilter->GetOutput() );
+      OverlayType::Pointer overlay = ccFilter->GetOutput();
+
+      ImageType::RegionType croppedRegion = img->GetLargestPossibleRegion();
+      ImageType::IndexType croppedIndex = croppedRegion.GetIndex();
+      ImageType::SizeType croppedSize = croppedRegion.GetSize();
+      double cropMaxSize = 0;
+      for( unsigned int d=0; d<3; ++d )
+        {
+        double tf = std::fabs(seed[d] - V_SEED[d]) * 6 * img->GetSpacing()[d];
+        if( tf > cropMaxSize )
+          {
+          cropMaxSize = tf;
+          }
+        }
+      for( unsigned int d=0; d<3; ++d )
+        {
+        int sizeD = (int)( cropMaxSize / img->GetSpacing()[d] + 0.5 );
+        if( sizeD < 1 )
+          {
+          sizeD = 1;
+          }
+        int indxD = V_SEED[d] - (sizeD/2);
+        if( indxD < croppedIndex[d] )
+          {
+          sizeD -= (croppedIndex[d] - indxD);
+          indxD = croppedIndex[d];
+          }
+        if( indxD + sizeD > croppedIndex[d] + croppedSize[d] )
+          {
+          sizeD = ( croppedIndex[d] + croppedSize[d] ) - indxD;
+          }
+        croppedSize[d] = sizeD;
+        croppedIndex[d] = indxD;
+        }
+      croppedRegion.SetIndex( croppedIndex );
+      croppedRegion.SetSize( croppedSize );
+      ExtractFilterType::Pointer extractFilter = ExtractFilterType::New();
+      extractFilter->SetInput( overlay );
+      extractFilter->SetExtractionRegion( croppedRegion );
+      extractFilter->Update();
+      OverlayType::Pointer croppedImg = extractFilter->GetOutput();
+
+      InvertFilterType::Pointer invertFilter = InvertFilterType::New();
+      invertFilter->SetInput( croppedImg );
+      invertFilter->SetMaximum( 1 );
+      invertFilter->Update();
+      croppedImg = invertFilter->GetOutput();
+
+      DistanceFilterType::Pointer distanceFilter =
+        DistanceFilterType::New();
+      distanceFilter->SetInput( croppedImg );
+      distanceFilter->SetUseImageSpacing( true );
+      distanceFilter->SetSquaredDistance( false );
+      distanceFilter->Update();
+      
+      MinMaxFilterType::Pointer minmaxFilter = MinMaxFilterType::New();
+      minmaxFilter->SetImage( distanceFilter->GetOutput() );
+      minmaxFilter->Compute();
+
+      std::cout << "At x = " << minmaxFilter->GetIndexOfMaximum()
+        << "  Radius = " << minmaxFilter->GetMaximum()
+        << std::endl << std::endl;
+
+      ImageType::IndexType indx;
+      indx = minmaxFilter->GetIndexOfMaximum();
+
+      double radius = minmaxFilter->GetMaximum();
+      double zri = radius / img->GetSpacing()[2];
+      int zMin = indx[2] - zri;
+      if( zMin < croppedIndex[2] )
+        {
+        zMin = croppedIndex[2];
+        }
+      int zMax = indx[2] + zri;
+      if( zMax >= croppedIndex[2] + croppedSize[2] )
+        {
+        zMax = croppedIndex[2] + croppedSize[2] - 1;
+        }
+      double yri = radius / img->GetSpacing()[1];
+      int yMin = indx[1] - yri;
+      if( yMin < croppedIndex[1] )
+        {
+        yMin = croppedIndex[1];
+        }
+      int yMax = indx[1] + yri;
+      if( yMax >= croppedIndex[1] + croppedSize[1] )
+        {
+        yMax = croppedIndex[1] + croppedSize[1] - 1;
+        }
+      double xri = radius / img->GetSpacing()[0];
+      int xMin = indx[0] - xri;
+      if( xMin < croppedIndex[0] )
+        {
+        xMin = croppedIndex[0];
+        }
+      int xMax = indx[0] + xri;
+      if( xMax >= croppedIndex[0] + croppedSize[0] )
+        {
+        xMax = croppedIndex[0] + croppedSize[0] - 1;
+        }
+      ImageType::IndexType indxR;
+      for( indxR[2]=zMin; indxR[2]<=zMax; ++indxR[2] )
+        {
+        double tf = (indxR[2]-indx[2])*img->GetSpacing()[2];
+        double dz = (tf * tf);
+        for( indxR[1]=yMin; indxR[1]<=yMax; ++indxR[1] )
+          {
+          tf = (indxR[1]-indx[1])*img->GetSpacing()[1];
+          double dy = (tf * tf);
+          for( indxR[0]=xMin; indxR[0]<=xMax; ++indxR[0] )
+            {
+            tf = (indxR[0]-indx[0])*img->GetSpacing()[0];
+            double dx = (tf * tf);
+            if( dz + dy + dx <= radius * radius )
+              {
+              overlay->SetPixel( indxR, 3 );
+              }
+            }
+          }
+        }
+
+      sv->setInputOverlay( overlay );
       sv->update();
       }
     else if( sv->selectMovement() == SM_PRESS )
@@ -171,8 +326,10 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setImageMode(imageMode.c_str());
   viewer.sliceView()->setIWModeMax(iwModeMax.c_str());
   viewer.sliceView()->setIWModeMin(iwModeMin.c_str());
-  viewer.sliceView()->setClickSelectArgCallBack( myCallback );
+  viewer.sliceView()->setClickSelectArgCallBack( myMouseCallback );
   viewer.sliceView()->setClickSelectArg( (void*)(viewer.sliceView()) );
+  viewer.sliceView()->setKeyEventArgCallBack( myKeyCallback );
+  viewer.sliceView()->setKeyEventArg( (void*)(viewer.sliceView()) );
 
   ImageType::Pointer img = viewer.sliceView()->inputImage();
 

@@ -88,6 +88,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cClickSelectArg = NULL;
   cClickSelectArgCallBack = NULL;
 
+  cKeyEventArg = NULL;
+  cKeyEventArgCallBack = NULL;
+
   cClickBoxCallBack = NULL;
   cClickBoxArg = NULL;
   cClickBoxArgCallBack = NULL;
@@ -1541,7 +1544,7 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       setIWMin( iwMin()+iwPace );
       update();
       break;
-    case ( Qt::Key_I ):
+    case Qt::Key_I:
       int newY;
       if( isYFlipped() )
         {
@@ -1668,6 +1671,10 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
     default:
       this->QWidget::keyPressEvent( keyEvent );
       break;
+    }
+  if( cKeyEventArgCallBack != NULL )
+    {
+    cKeyEventArgCallBack( keyEvent, cKeyEventArg );
     }
 }
 
@@ -2478,7 +2485,7 @@ void QtGlSliceView::renderText( double x, double y, const QString & str,
     QPainter painter( this );
     painter.setRenderHints( QPainter::Antialiasing |
       QPainter::TextAntialiasing );
-    painter.setBrush( Qt::yellow );
+    painter.setBrush( Qt::red );
     painter.setPen( Qt::NoPen );
     painter.drawPath( textPath );
     painter.end();
