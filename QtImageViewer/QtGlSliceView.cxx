@@ -844,11 +844,16 @@ void QtGlSliceView::showHelp()
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
     str << QString("    ");
-    str << QString("   \\ - cycle between Select, Custom, and Paint mode");
+    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Paint");
     str << QString("        - Default Custom is threshold connected components");
+    str << QString("    ");
+    str << QString("   Paint mode: ");
     str << QString("   [ ] - increase / decrease paint sphere radius");
     str << QString("   { } - increase / decrease paint color (0 erases)");
     str << QString("   \" - save the overlay to a file");
+    str << QString("    ");
+    str << QString("   Image processing ");
+    str << QString("   \' - Perform median filtering with radius=1");
     for( auto &data : str )
       {
       help->append( data );
