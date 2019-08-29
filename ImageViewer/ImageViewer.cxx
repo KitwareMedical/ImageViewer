@@ -34,6 +34,7 @@ limitations under the License.
 #include <itkInvertIntensityImageFilter.h>
 #include <itkSignedMaurerDistanceMapImageFilter.h>
 #include <itkMinimumMaximumImageCalculator.h>
+#include <itkNeighborhoodIterator.h>
 #include <itkStatisticsImageFilter.h>
 
 //QtImageViewer includes
@@ -88,9 +89,8 @@ void myKeyCallback(QKeyEvent *event, void *d)
 
 void myMouseCallback(double x, double y, double z, double v, void *d)
 {
-  static itk::Index<3> V_SEED;
-  static double V_MIN = 0;
-  static double V_MAX = 1;
+  static itk::Index<3> PRESS_SEED;
+  static double PRESS_SEED_V = 0;
 
   typedef itk::Image< double, 3 >        ImageType;
   typedef itk::Image< unsigned char, 3 > OverlayType;
@@ -118,22 +118,64 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       seed[2] = int( z );
   
       ImageType::Pointer img = sv->inputImage();
-      double v = img->GetPixel( seed );
-  
-      V_MAX = v;
-      if( V_MIN > V_MAX )
+
+      double seedDistance = 0;
+      for(unsigned int d=0; d<3; ++d)
         {
-        double t = V_MAX;
-        V_MAX = V_MIN;
-        V_MIN = t;
+        double tf = seed[d] - PRESS_SEED[d];
+        seedDistance += tf * tf;
+        }
+      seedDistance = std::sqrt(seedDistance);
+
+      itk::NeighborhoodIterator<ImageType>::RadiusType seedRadius;
+      for(unsigned int d=0; d<3; ++d)
+        {
+        seedRadius[d] = seedDistance/2;
+        int limit = img->GetLargestPossibleRegion().GetSize()[d]/2-1;
+        if( limit < 0 )
+          {
+          limit = 0;
+          }
+        if( seedRadius[d] > limit )
+          {
+          seedRadius[d] = limit;
+          }
+        }
+      ImageType::IndexType indx = PRESS_SEED;
+
+      double threshMin = PRESS_SEED_V;
+      double threshMax = PRESS_SEED_V;
+      itk::NeighborhoodIterator<ImageType> it( seedRadius, img,
+        img->GetLargestPossibleRegion() );
+      it.SetLocation( indx );
+      for( unsigned int i=0; i<it.Size(); ++i )
+        {
+        double tf = it.GetPixel(i);
+        if( tf < threshMin )
+          {
+          threshMin = tf;
+          }
+        else if( tf > threshMax )
+          {
+          threshMax = tf;
+          }
         }
 
-      double eps = 0.01 * (V_MAX-V_MIN);
+      double v = img->GetPixel(seed);
+      if( v < threshMin )
+        {
+        threshMin = v;
+        }
+      else if( v > threshMax )
+        {
+        threshMax = v;
+        }
+
       ConnCompFilterType::Pointer ccFilter = ConnCompFilterType::New();
       ccFilter->SetInput( sv->inputImage() );
-      ccFilter->AddSeed( V_SEED );
-      ccFilter->SetLower( V_MIN - eps );
-      ccFilter->SetUpper( V_MAX + eps );
+      ccFilter->AddSeed( PRESS_SEED );
+      ccFilter->SetLower( threshMin );
+      ccFilter->SetUpper( threshMax );
       ccFilter->SetReplaceValue(1);
       ccFilter->Update();
     
@@ -145,12 +187,10 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       double cropMaxSize = 0;
       for( unsigned int d=0; d<3; ++d )
         {
-        double tf = std::fabs(seed[d] - V_SEED[d]) * 6 * img->GetSpacing()[d];
-        if( tf > cropMaxSize )
-          {
-          cropMaxSize = tf;
-          }
+        double tf = seed[d] - PRESS_SEED[d];
+        cropMaxSize += tf * tf;
         }
+      cropMaxSize = std::sqrt(cropMaxSize) * 6;
       for( unsigned int d=0; d<3; ++d )
         {
         int sizeD = (int)( cropMaxSize / img->GetSpacing()[d] + 0.5 );
@@ -158,7 +198,7 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
           {
           sizeD = 1;
           }
-        int indxD = V_SEED[d] - (sizeD/2);
+        int indxD = PRESS_SEED[d] - (sizeD/2);
         if( indxD < croppedIndex[d] )
           {
           sizeD -= (croppedIndex[d] - indxD);
@@ -191,86 +231,93 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       distanceFilter->SetUseImageSpacing( true );
       distanceFilter->SetSquaredDistance( false );
       distanceFilter->Update();
-      
-      MinMaxFilterType::Pointer minmaxFilter = MinMaxFilterType::New();
-      minmaxFilter->SetImage( distanceFilter->GetOutput() );
-      minmaxFilter->Compute();
+      img = distanceFilter->GetOutput();
 
-      std::cout << "At x = " << minmaxFilter->GetIndexOfMaximum()
-        << "  Radius = " << minmaxFilter->GetMaximum()
-        << std::endl << std::endl;
+      double dMax = img->GetPixel(indx);
+      ImageType::IndexType dMaxIndx = PRESS_SEED;
+      itk::NeighborhoodIterator<ImageType> itD( seedRadius, img,
+        img->GetLargestPossibleRegion() );
+      itD.SetLocation( dMaxIndx );
+      for( unsigned int i=0; i<itD.Size(); ++i )
+        {
+        double tf = itD.GetPixel(i);
+        if( tf > dMax )
+          {
+          dMax = tf;
+          dMaxIndx = itD.GetIndex(i);
+          }
+        }
 
-      ImageType::IndexType indx;
-      indx = minmaxFilter->GetIndexOfMaximum();
-
-      double radius = minmaxFilter->GetMaximum();
-      double zri = radius / img->GetSpacing()[2];
-      int zMin = indx[2] - zri;
+      double zri = dMax / img->GetSpacing()[2];
+      int zMin = dMaxIndx[2] - zri;
       if( zMin < croppedIndex[2] )
         {
         zMin = croppedIndex[2];
         }
-      int zMax = indx[2] + zri;
+      int zMax = dMaxIndx[2] + zri;
       if( zMax >= croppedIndex[2] + croppedSize[2] )
         {
         zMax = croppedIndex[2] + croppedSize[2] - 1;
         }
-      double yri = radius / img->GetSpacing()[1];
-      int yMin = indx[1] - yri;
+      double yri = dMax / img->GetSpacing()[1];
+      int yMin = dMaxIndx[1] - yri;
       if( yMin < croppedIndex[1] )
         {
         yMin = croppedIndex[1];
         }
-      int yMax = indx[1] + yri;
+      int yMax = dMaxIndx[1] + yri;
       if( yMax >= croppedIndex[1] + croppedSize[1] )
         {
         yMax = croppedIndex[1] + croppedSize[1] - 1;
         }
-      double xri = radius / img->GetSpacing()[0];
-      int xMin = indx[0] - xri;
+      double xri = dMax / img->GetSpacing()[0];
+      int xMin = dMaxIndx[0] - xri;
       if( xMin < croppedIndex[0] )
         {
         xMin = croppedIndex[0];
         }
-      int xMax = indx[0] + xri;
+      int xMax = dMaxIndx[0] + xri;
       if( xMax >= croppedIndex[0] + croppedSize[0] )
         {
         xMax = croppedIndex[0] + croppedSize[0] - 1;
         }
-      ImageType::IndexType indxR;
-      for( indxR[2]=zMin; indxR[2]<=zMax; ++indxR[2] )
+      for( indx[2]=zMin; indx[2]<=zMax; ++indx[2] )
         {
-        double tf = (indxR[2]-indx[2])*img->GetSpacing()[2];
+        double tf = (indx[2]-dMaxIndx[2])*img->GetSpacing()[2];
         double dz = (tf * tf);
-        for( indxR[1]=yMin; indxR[1]<=yMax; ++indxR[1] )
+        for( indx[1]=yMin; indx[1]<=yMax; ++indx[1] )
           {
-          tf = (indxR[1]-indx[1])*img->GetSpacing()[1];
+          tf = (indx[1]-dMaxIndx[1])*img->GetSpacing()[1];
           double dy = (tf * tf);
-          for( indxR[0]=xMin; indxR[0]<=xMax; ++indxR[0] )
+          for( indx[0]=xMin; indx[0]<=xMax; ++indx[0] )
             {
-            tf = (indxR[0]-indx[0])*img->GetSpacing()[0];
+            tf = (indx[0]-dMaxIndx[0])*img->GetSpacing()[0];
             double dx = (tf * tf);
-            if( dz + dy + dx <= radius * radius )
+            if( dz + dy + dx <= dMax * dMax )
               {
-              overlay->SetPixel( indxR, 3 );
+              overlay->SetPixel( indx, 3 );
               }
             }
           }
         }
 
+      std::ostringstream sstr;
+      sstr << "R = " << dMax;
+      sv->setMessage( sstr.str() );
       sv->setInputOverlay( overlay );
       sv->update();
       }
     else if( sv->selectMovement() == SM_PRESS )
       {
-      V_SEED[0] = int( x );
-      V_SEED[1] = int( y );
-      V_SEED[2] = int( z );
+      PRESS_SEED[0] = int( x );
+      PRESS_SEED[1] = int( y );
+      PRESS_SEED[2] = int( z );
   
       ImageType::Pointer img = sv->inputImage();
-      double v = img->GetPixel( V_SEED );
 
-      V_MIN = v;
+      double v = img->GetPixel( PRESS_SEED );
+
+      PRESS_SEED_V = v;
       }
     }
 
@@ -314,7 +361,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setZoom(zoom);
   viewer.sliceView()->transpose(transpose);
   viewer.sliceView()->flipZ(zFlipped);
-  viewer.sliceView()->flipY(yFlipped);
+  viewer.sliceView()->flipY(!yFlipped);
   viewer.sliceView()->flipX(xFlipped);
   viewer.sliceView()->setOverlayOpacity(overlayOpacity);
   viewer.sliceView()->setViewCrosshairs(!crosshairs);

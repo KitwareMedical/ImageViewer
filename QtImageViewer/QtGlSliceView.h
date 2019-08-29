@@ -430,6 +430,8 @@ public slots:
 
   void selectPoint(double newX, double newY, double newZ);
 
+  void setMessage( const std::string & str );
+
   void renderText(double x, double y, const QString & str,
     const QFont & font = QFont() );
 
@@ -563,6 +565,8 @@ protected:
   typedef QList<ClickPoint> ClickPointListType;
   ClickPointListType cClickedPoints;
   int cMaxClickPoints;
+
+  QString cMessage;
 
   int cFastPace;
   int cFastMoveValue[3]; //fast moving pace

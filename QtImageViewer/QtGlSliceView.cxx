@@ -158,6 +158,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cWinImData = NULL;
   cWinZBuffer = NULL;
 
+  cMessage = "";
+
   cFastPace = 1;
   cFastMoveValue[0] = 0.5; //fast moving pace: 1 by defaut
   cFastMoveValue[1] = 1; //fast moving pace: 1 by defaut
@@ -1757,8 +1759,9 @@ void QtGlSliceView::paintGL( void )
   glViewport( 0, 0, width(), height() );
 
   QFont widgetFont = this->font();
-  widgetFont.setStyleHint(QFont::Times, QFont::PreferAntialias);
-  widgetFont.setPointSize(9);
+  widgetFont.setStyleHint(QFont::Helvetica, QFont::PreferAntialias);
+  widgetFont.setBold(true);
+  widgetFont.setPointSize(10);
   QFontMetrics widgetFontMetric( widgetFont );
 
   if( !cImData )
@@ -2044,6 +2047,13 @@ void QtGlSliceView::paintGL( void )
     }
   QString str = details.join( "\n" );
   emit detailsChanged( str );
+
+  if( cMessage.size() != 0 )
+    {
+    int posX = (width()/2) - (widgetFontMetric.width(cMessage)/2);
+    int posY = height() - ( 2 * ( widgetFontMetric.height() + 1 ) );
+    this->renderText( posX, posY, cMessage, widgetFont );
+    }
 
   if( viewCrosshairs()
     && static_cast<int>( cClickSelect[cWinOrder[2]] ) ==
@@ -2472,6 +2482,11 @@ void QtGlSliceView::zoomOut()
 void QtGlSliceView::setMaxClickedPointsStored( int i )
 {
   cMaxClickPoints = i;
+}
+
+void QtGlSliceView::setMessage( const std::string & str )
+{
+  cMessage = QString::fromUtf8(str.c_str());
 }
 
 void QtGlSliceView::renderText( double x, double y, const QString & str,
