@@ -1977,6 +1977,12 @@ void QtGlSliceView::paintGL( void )
       index[2] = static_cast< itk::IndexValueType >(
         this->cClickSelect[2] );
 
+      ImageType::PointType pnt;
+      cImData->TransformIndexToPhysicalPoint( index, pnt );
+      px = pnt[0];
+      py = pnt[1];
+      pz = pnt[2];
+
       suffix = this->cPhysicalUnitsName;
       }
     if( ( ImagePixelType )1.5==1.5 )
