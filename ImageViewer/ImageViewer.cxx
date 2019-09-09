@@ -201,14 +201,10 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
         double tf = seed[d] - PRESS_SEED[d];
         cropMaxSize += tf * tf;
         }
-      int morphRadius = cropMaxSize / 4;
-      if( morphRadius < 1 )
+      int morphRadius = cropMaxSize / 5;
+      if( morphRadius > 8 )
         {
-        morphRadius = 1;
-        }
-      else if( morphRadius > 10 )
-        {
-        morphRadius = 10;
+        morphRadius = 8;
         }
       cropMaxSize = std::sqrt(cropMaxSize) * 6;
       for( unsigned int d=0; d<3; ++d )
@@ -234,30 +230,33 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       croppedRegion.SetIndex( croppedIndex );
       croppedRegion.SetSize( croppedSize );
 
-      StructuringElementType dilateKernel;
-      dilateKernel.SetRadius(morphRadius/2);
-      dilateKernel.CreateStructuringElement();
-      DilateFilterType::Pointer dilateFilter = DilateFilterType::New();
-      dilateFilter->SetInput( overlay );
-      dilateFilter->SetKernel( dilateKernel );
-      dilateFilter->SetForegroundValue( 1 );
-      dilateFilter->Update();
-
-      StructuringElementType erodeKernel;
-      erodeKernel.SetRadius(morphRadius);
-      erodeKernel.CreateStructuringElement();
-      ErodeFilterType::Pointer erodeFilter = ErodeFilterType::New();
-      erodeFilter->SetInput( dilateFilter->GetOutput() );
-      erodeFilter->SetKernel( erodeKernel );
-      erodeFilter->SetForegroundValue( 1 );
-      erodeFilter->Update();
-
-      dilateFilter->SetInput( erodeFilter->GetOutput() );
-      dilateFilter->SetKernel( dilateKernel );
-      dilateFilter->SetForegroundValue( 1 );
-      dilateFilter->Update();
-
-      overlay = dilateFilter->GetOutput();
+      if( morphRadius > 2 )
+        {
+        StructuringElementType dilateKernel;
+        dilateKernel.SetRadius(morphRadius/2);
+        dilateKernel.CreateStructuringElement();
+        DilateFilterType::Pointer dilateFilter = DilateFilterType::New();
+        dilateFilter->SetInput( overlay );
+        dilateFilter->SetKernel( dilateKernel );
+        dilateFilter->SetForegroundValue( 1 );
+        dilateFilter->Update();
+  
+        StructuringElementType erodeKernel;
+        erodeKernel.SetRadius(morphRadius);
+        erodeKernel.CreateStructuringElement();
+        ErodeFilterType::Pointer erodeFilter = ErodeFilterType::New();
+        erodeFilter->SetInput( dilateFilter->GetOutput() );
+        erodeFilter->SetKernel( erodeKernel );
+        erodeFilter->SetForegroundValue( 1 );
+        erodeFilter->Update();
+  
+        dilateFilter->SetInput( erodeFilter->GetOutput() );
+        dilateFilter->SetKernel( dilateKernel );
+        dilateFilter->SetForegroundValue( 1 );
+        dilateFilter->Update();
+  
+        overlay = dilateFilter->GetOutput();
+        }
 
       ExtractFilterType::Pointer extractFilter = ExtractFilterType::New();
       extractFilter->SetInput( overlay );
