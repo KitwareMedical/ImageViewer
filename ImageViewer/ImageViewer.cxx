@@ -33,6 +33,9 @@ limitations under the License.
 #include <itkExtractImageFilter.h>
 #include <itkInvertIntensityImageFilter.h>
 #include <itkSignedMaurerDistanceMapImageFilter.h>
+#include <itkBinaryErodeImageFilter.h>
+#include <itkBinaryDilateImageFilter.h>
+#include <itkBinaryBallStructuringElement.h>
 #include <itkMinimumMaximumImageCalculator.h>
 #include <itkNeighborhoodIterator.h>
 #include <itkStatisticsImageFilter.h>
@@ -80,7 +83,7 @@ void myKeyCallback(QKeyEvent *event, void *d)
                                            FilterType;
     FilterType::Pointer filter = FilterType::New();
     filter->SetInput( img );
-    filter->SetRadius( 2 );
+    filter->SetRadius( 1 );
     filter->Update();
     sv->setInputImage( filter->GetOutput() );
     sv->update();
@@ -97,6 +100,14 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
 
   typedef itk::ConnectedThresholdImageFilter< ImageType, OverlayType >
                                          ConnCompFilterType;
+  typedef itk::BinaryBallStructuringElement< unsigned char, 3 >
+                                         StructuringElementType;
+  typedef itk::BinaryErodeImageFilter< OverlayType, OverlayType,
+                                         StructuringElementType >
+                                         ErodeFilterType;
+  typedef itk::BinaryDilateImageFilter< OverlayType, OverlayType,
+                                         StructuringElementType >
+                                         DilateFilterType;
   typedef itk::ExtractImageFilter< OverlayType, OverlayType >
                                          ExtractFilterType;
   typedef itk::InvertIntensityImageFilter< OverlayType, OverlayType >
@@ -110,13 +121,13 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
 
   if( sv->clickMode() == CM_CUSTOM )
     {
-    if( sv->selectMovement() == SM_MOVE )
+    if( sv->selectMovement() == SM_MOVE || sv->selectMovement() == SM_RELEASE )
       {
       itk::Index<3> seed;
       seed[0] = int( x );
       seed[1] = int( y );
       seed[2] = int( z );
-  
+
       ImageType::Pointer img = sv->inputImage();
 
       double seedDistance = 0;
@@ -178,7 +189,7 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       ccFilter->SetUpper( threshMax );
       ccFilter->SetReplaceValue(1);
       ccFilter->Update();
-    
+
       OverlayType::Pointer overlay = ccFilter->GetOutput();
 
       ImageType::RegionType croppedRegion = img->GetLargestPossibleRegion();
@@ -189,6 +200,11 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
         {
         double tf = seed[d] - PRESS_SEED[d];
         cropMaxSize += tf * tf;
+        }
+      int morphRadius = cropMaxSize / 5;
+      if( morphRadius > 8 )
+        {
+        morphRadius = 8;
         }
       cropMaxSize = std::sqrt(cropMaxSize) * 6;
       for( unsigned int d=0; d<3; ++d )
@@ -213,6 +229,35 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
         }
       croppedRegion.SetIndex( croppedIndex );
       croppedRegion.SetSize( croppedSize );
+
+      if( morphRadius > 2 )
+        {
+        StructuringElementType dilateKernel;
+        dilateKernel.SetRadius(morphRadius/2);
+        dilateKernel.CreateStructuringElement();
+        DilateFilterType::Pointer dilateFilter = DilateFilterType::New();
+        dilateFilter->SetInput( overlay );
+        dilateFilter->SetKernel( dilateKernel );
+        dilateFilter->SetForegroundValue( 1 );
+        dilateFilter->Update();
+  
+        StructuringElementType erodeKernel;
+        erodeKernel.SetRadius(morphRadius);
+        erodeKernel.CreateStructuringElement();
+        ErodeFilterType::Pointer erodeFilter = ErodeFilterType::New();
+        erodeFilter->SetInput( dilateFilter->GetOutput() );
+        erodeFilter->SetKernel( erodeKernel );
+        erodeFilter->SetForegroundValue( 1 );
+        erodeFilter->Update();
+  
+        dilateFilter->SetInput( erodeFilter->GetOutput() );
+        dilateFilter->SetKernel( dilateKernel );
+        dilateFilter->SetForegroundValue( 1 );
+        dilateFilter->Update();
+  
+        overlay = dilateFilter->GetOutput();
+        }
+
       ExtractFilterType::Pointer extractFilter = ExtractFilterType::New();
       extractFilter->SetInput( overlay );
       extractFilter->SetExtractionRegion( croppedRegion );
@@ -304,6 +349,7 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       std::ostringstream sstr;
       sstr << "R = " << dMax;
       sv->setMessage( sstr.str() );
+
       sv->setInputOverlay( overlay );
       sv->update();
       }
@@ -312,7 +358,7 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       PRESS_SEED[0] = int( x );
       PRESS_SEED[1] = int( y );
       PRESS_SEED[2] = int( z );
-  
+
       ImageType::Pointer img = sv->inputImage();
 
       double v = img->GetPixel( PRESS_SEED );
@@ -320,7 +366,6 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
       PRESS_SEED_V = v;
       }
     }
-
 }
 
 int parseAndExecImageViewer(int argc, char* argv[])
@@ -377,6 +422,11 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setClickSelectArg( (void*)(viewer.sliceView()) );
   viewer.sliceView()->setKeyEventArgCallBack( myKeyCallback );
   viewer.sliceView()->setKeyEventArg( (void*)(viewer.sliceView()) );
+
+  viewer.sliceView()->setPaintRadius( 10 );
+  //viewer.sliceView()->setPaintColor( 0 );
+  //viewer.sliceView()->setClickMode( CM_CUSTOM );
+
 
   ImageType::Pointer img = viewer.sliceView()->inputImage();
 
