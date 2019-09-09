@@ -359,6 +359,10 @@ public slots:
   void createOverlay( void );
   void saveOverlay( void );
   void paintOverlayPoint( double x, double y, double z );
+  void setPaintRadius( int r )
+    { cOverlayPaintRadius = r; };
+  void setPaintColor( int c )
+    { cOverlayPaintColor = c; };
 
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
