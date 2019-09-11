@@ -201,7 +201,7 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
         double tf = seed[d] - PRESS_SEED[d];
         cropMaxSize += tf * tf;
         }
-      int morphRadius = cropMaxSize / 5;
+      int morphRadius = 2; //cropMaxSize / 5;
       if( morphRadius > 8 )
         {
         morphRadius = 8;
