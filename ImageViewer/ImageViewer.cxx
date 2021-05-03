@@ -424,6 +424,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setKeyEventArg( (void*)(viewer.sliceView()) );
 
   viewer.sliceView()->setPaintRadius( 10 );
+  viewer.sliceView()->setIsONSDMetaData(ONSDRuler);
   //viewer.sliceView()->setPaintColor( 0 );
   //viewer.sliceView()->setClickMode( CM_CUSTOM );
 

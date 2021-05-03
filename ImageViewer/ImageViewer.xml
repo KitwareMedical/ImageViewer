@@ -185,6 +185,14 @@
             <label>Clipping or setting</label>
             <description>Toggle between clipping and setting to black values above IW lower limit.</description>
         </string-enumeration>
+        <boolean>
+          <name>ONSDRuler</name>
+          <flag>R</flag>
+          <longflag>ONSDRuler</longflag>
+          <default>false</default>
+          <label>ONSD Ruler</label>
+          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD)</description>
+        </boolean>
     </parameters>
 </executable>
 
