@@ -122,6 +122,7 @@ void RulerTool::paint() {
     painter.drawLine(QLine(screen0[0] - crossStart, screen0[1] + crossStart, screen0[0] - crossEnd, screen0[1] + crossEnd));
     painter.drawLine(QLine(screen0[0] + crossStart, screen0[1] - crossStart, screen0[0] + crossEnd, screen0[1] - crossEnd));
 
+
     // crosshair2
     painter.drawLine(QLine(screen1[0] - crossStart, screen1[1] - crossStart, screen1[0] - crossEnd, screen1[1] - crossEnd));
     painter.drawLine(QLine(screen1[0] + crossStart, screen1[1] + crossStart, screen1[0] + crossEnd, screen1[1] + crossEnd));
@@ -136,6 +137,7 @@ void RulerTool::paint() {
 
     //line
     painter.drawLine(QLine(screen0[0], screen0[1], screen1[0], screen1[1]));
+
 }
 
 std::string RulerTool::toJson() {

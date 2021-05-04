@@ -465,6 +465,7 @@ public slots:
   */
   void setIsONSDRuler(bool flag);
 
+
 signals:
 
   void imageChanged();
@@ -609,6 +610,7 @@ protected:
   QString inputImageFilepath = "";
   
   bool isONSDRuler = false;
+
   std::shared_ptr< RulerToolMetaDataFactory > cONSDMetaFactory;
   std::shared_ptr< RulerToolMetaDataFactory > cRainbowMetaFactory;
   std::shared_ptr< RulerToolMetaDataFactory > cCurrentRulerMetaFactory;

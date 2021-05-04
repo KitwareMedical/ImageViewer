@@ -178,7 +178,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
  
   cONSDMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< ONSDMetaDataGenerator >(new ONSDMetaDataGenerator())));
   cRainbowMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< RainbowMetaDataGenerator >(new RainbowMetaDataGenerator())));
+
   isONSDRuler = false;
+
   cCurrentRulerMetaFactory = cRainbowMetaFactory;
   update();
 }
@@ -2675,6 +2677,7 @@ RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
 void QtGlSliceView::setIsONSDRuler(bool flag) {
     isONSDRuler = !isONSDRuler;
     cCurrentRulerMetaFactory = isONSDRuler ? cONSDMetaFactory : cRainbowMetaFactory;
+
     this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
 }
 
