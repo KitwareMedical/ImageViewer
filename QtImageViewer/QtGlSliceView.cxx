@@ -47,6 +47,7 @@ limitations under the License.
 #include <QScrollArea>
 #include <QBoxLayout>
 #include <QTextEdit>
+#include <memory>
 
 QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   : QOpenGLWidget( widgetParent )
@@ -171,6 +172,16 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   QSizePolicy sP = this->sizePolicy();
   sP.setHeightForWidth( true );
   this->setSizePolicy( sP );
+  
+  // this->setMouseTracking(true); // removed, set in the .ui file
+
+ 
+  cONSDMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< ONSDMetaDataGenerator >(new ONSDMetaDataGenerator())));
+  cRainbowMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< RainbowMetaDataGenerator >(new RainbowMetaDataGenerator())));
+
+  isONSDRuler = false;
+
+  cCurrentRulerMetaFactory = cRainbowMetaFactory;
   update();
 }
 
@@ -396,6 +407,36 @@ void QtGlSliceView::saveClickedPointsStored()
   fpoints.close();
 }
 
+void QtGlSliceView::saveRulers()
+{
+    QFileInfo fileInfo(this->inputImageFilepath);
+    QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".json";    
+    QString fileName = QFileDialog::getSaveFileName(this,
+        "Save ruler measurements", newFilepath, "*.*");
+    if (fileName.isNull())
+    {
+        return;
+    }
+    QFile fpoints(fileName);
+    if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
+    {
+        return;
+    }
+    QTextStream text(&fpoints);
+    text << "{ \"rulers\" : [";
+    bool isFirst = true;
+    for (auto& node : cRulerCollections) 
+    {
+            auto& rc = node.second;
+            std::string sep = isFirst ? "" : ",";
+            if (node.second->rulers.size() > 0) {
+                text << sep.c_str() << rc->toJson().c_str();
+                isFirst = false;
+            }
+    }
+    text << "]}";
+    fpoints.close();
+}
 
 void
 QtGlSliceView::update()
@@ -844,7 +885,7 @@ void QtGlSliceView::showHelp()
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
     str << QString("    ");
-    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Paint");
+    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Ruler, Paint");
     str << QString("        - Default Custom is threshold connected components");
     str << QString("    ");
     str << QString("   Paint mode: ");
@@ -854,6 +895,11 @@ void QtGlSliceView::showHelp()
     str << QString("    ");
     str << QString("   Image processing ");
     str << QString("   \' - Perform median filtering with radius=1");
+    str << QString("    ");
+    str << QString("   Ruler Measurements ");
+    str << QString("   Left click to set ruler.  Right-click over X to move or delete");
+    str << QString("   u - Toggle between rainbow ruler and ONSD measurements");
+    str << QString("   ctrl-U - Save measurements to JSON");
     for( auto &data : str )
       {
       help->append( data );
@@ -1325,105 +1371,113 @@ void QtGlSliceView::setIWModeMax( IWModeType newIWModeMax )
 }
 
 
-IWModeType QtGlSliceView::iwModeMax( void ) const
+IWModeType QtGlSliceView::iwModeMax(void) const
 {
-  return cIWModeMax;
+    return cIWModeMax;
 }
 
 
-void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
+void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
 {
-  int movePace;
-  double iwPace;
-  int imgShiftSize = static_cast< int >( (cWinSizeX/10)/zoom() );
-  if( imgShiftSize < 1 )
+    int movePace;
+    double iwPace;
+    int imgShiftSize = static_cast<int>((cWinSizeX / 10) / zoom());
+    if (imgShiftSize < 1)
     {
-    imgShiftSize = 1;
+        imgShiftSize = 1;
     }
 
-  switch ( keyEvent->key() )
+    switch (keyEvent->key())
     {
     case Qt::Key_0:
-      setOrientation( X_AXIS );
-      transpose( true );
-      update();
-      break;
+        setOrientation(X_AXIS);
+        transpose(true);
+        update();
+        break;
     case Qt::Key_1:
-      setOrientation( Y_AXIS );
-      transpose( false );
-      update();
-      break;
+        setOrientation(Y_AXIS);
+        transpose(false);
+        update();
+        break;
     case Qt::Key_2:
-      setOrientation( Z_AXIS );
-      transpose( false );
-      update();
-      break;
+        setOrientation(Z_AXIS);
+        transpose(false);
+        update();
+        break;
     case Qt::Key_Less: // <
     case Qt::Key_Comma:
-      movePace = cFastMoveValue[ cFastPace ];
-      if( ( int )cWinCenter[cWinOrder[2]]-movePace<0 )
+        movePace = cFastMoveValue[cFastPace];
+        if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
-        if( ( int )cWinCenter[cWinOrder[2]] == 0 )
-          {
-          return;
-          }
+            if ((int)cWinCenter[cWinOrder[2]] == 0)
+            {
+                return;
+            }
+            else
+            {
+                setSliceNum(0);
+            }
+        }
         else
-          {
-          setSliceNum( 0 );
-          }
-        }
-      else
         {
-        setSliceNum( ( int )cWinCenter[cWinOrder[2]]-movePace );
+            setSliceNum((int)cWinCenter[cWinOrder[2]] - movePace);
         }
-      update();
-      break;
+        update();
+        break;
     case Qt::Key_BracketRight:
-      ++cOverlayPaintRadius;
-      update();
-      break;
+        ++cOverlayPaintRadius;
+        update();
+        break;
     case Qt::Key_BracketLeft:
-      if( cOverlayPaintRadius > 1 )
+        if (cOverlayPaintRadius > 1)
         {
-        --cOverlayPaintRadius;
-        update();
+            --cOverlayPaintRadius;
+            update();
         }
-      break;
+        break;
     case Qt::Key_BraceRight:
-      if( cOverlayPaintColor < 10 )
+        if (cOverlayPaintColor < 10)
         {
-        ++cOverlayPaintColor;
-        update();
+            ++cOverlayPaintColor;
+            update();
         }
-      break;
+        break;
     case Qt::Key_BraceLeft:
-      if( cOverlayPaintColor > 0 )
+        if (cOverlayPaintColor > 0)
         {
-        --cOverlayPaintColor;
-        update();
+            --cOverlayPaintColor;
+            update();
         }
-      break;
+        break;
     case Qt::Key_QuoteDbl:
-      saveOverlay();
-      break;
+        saveOverlay();
+        break;
     case Qt::Key_Backslash:
-      if( cClickMode == CM_SELECT )
+        if (cClickMode == CM_SELECT)
         {
-        if( !cValidOverlayData )
-          {
-          createOverlay();
-          }
-        cClickMode = CM_CUSTOM;
-        update();
+            if (!cValidOverlayData)
+            {
+                createOverlay();
+            }
+            cClickMode = CM_CUSTOM;
+            update();
         }
-      else if( cClickMode == CM_CUSTOM )
+        else if (cClickMode == CM_CUSTOM)
         {
-        if( !cValidOverlayData )
-          {
-          createOverlay();
-          }
-        cClickMode = CM_PAINT;
-        update();
+            if (!cValidOverlayData)
+            {
+                createOverlay();
+            }
+            cClickMode = CM_RULER;
+            update();
+        }
+        else if ( cClickMode == CM_RULER ) {
+            if (!cValidOverlayData)
+            {
+                createOverlay();
+            }
+            cClickMode = CM_PAINT;
+            update();
         }
       else
         {
@@ -1476,6 +1530,16 @@ void QtGlSliceView::keyPressEvent( QKeyEvent* keyEvent )
       flipZ( !isZFlipped() );
       update();
       break;
+    case Qt::Key_U:
+        if (cClickMode == CM_RULER) {
+            if (keyEvent->modifiers() & Qt::CTRL) {
+                saveRulers();
+            }
+            else {
+                setIsONSDRuler(!isONSDRuler);
+            }
+        }
+        break;
     case Qt::Key_E:
       setIWModeMax( iwModeMax() == IW_FLIP ? IW_MAX : IW_FLIP );
       update();
@@ -1939,6 +2003,36 @@ void QtGlSliceView::paintGL( void )
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
     }
+  else if (cClickMode == CM_RULER)
+  {
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glColor4f(0.1, 0.64, 0.2, (double)0.75);
+      char s[80];
+      sprintf(s, "RULER: Ruler Widget");
+      int posX = width() - widgetFontMetric.width(s)
+          - widgetFontMetric.width("00");
+      int posY = height() - 2 * (widgetFontMetric.height() + 1);
+      this->renderText(posX, posY, s, widgetFont);
+
+      RulerTool* r = getRulerToolCollection()->getActive();
+      if (r != nullptr) {
+          auto d = r->length();
+          sprintf(s, "%s: Length (mm) : %7.2f", r->metaData->name.c_str(), d);
+          posX = width() - widgetFontMetric.width(s)
+              - widgetFontMetric.width("00");
+          posY = height() - 4 * (widgetFontMetric.height() + 1);
+          this->renderText(posX, posY, s, widgetFont);
+      }
+      //QPainter painter(this);
+      //painter.setPen(Qt::blue);
+      //painter.drawLine(QLine(0, 0, 100, 100));
+      // if there is a selected/active ruler, then displace its length
+
+
+      getRulerToolCollection()->paint();
+      glDisable(GL_BLEND);
+  }
   else if( cValidOverlayData && cClickMode == CM_PAINT )
     {
     glEnable( GL_BLEND );
@@ -2107,6 +2201,108 @@ void QtGlSliceView::paintGL( void )
     }
 }
 
+QtGlSliceView::PointType2D QtGlSliceView::indexToScreenPoint(const PointType3D& index) {
+    double scale0 = this->width() / (double)cWinSizeX;
+    double scale1 = this->height() / (double)cWinSizeY;
+
+    double x, y;
+    if (isXFlipped()) {
+        x = -((index[cWinOrder[0]] - cWinMinX) * scale0 - width() + 1);
+    }
+    else {
+        x = (index[cWinOrder[0]] - cWinMinX) * scale0;
+    }
+
+
+    if (isYFlipped())
+    {
+        y = (index[cWinOrder[1]] - cWinMinY) * scale1;
+    }
+    else
+    {
+        y = -((index[cWinOrder[1]] - cWinMinY) * scale1 - height() + 1);
+    }
+
+    double p[2] = { x, y };
+    return PointType2D(p);
+}
+
+QtGlSliceView::PointType3D QtGlSliceView::screenPointToIndex(double x, double y) {
+    double scale0 = this->width() / (double)cWinSizeX;
+    double scale1 = this->height() / (double)cWinSizeY;
+    int originX = (int)(-cWinMinX * scale0);
+    if (originX < 0)
+    {
+        originX = 0;
+    }
+    int originY = (int)(-cWinMinY * scale1);
+    if (originY < 0)
+    {
+        originY = 0;
+    }
+ 
+    double p[3];
+    if (isXFlipped())
+    {
+        p[cWinOrder[0]] =
+            ((width() - 1 - x)) / scale0 + cWinMinX;
+    }
+    else
+    {
+        p[cWinOrder[0]] =
+            (x) / scale0 + cWinMinX;
+    }
+    if (p[cWinOrder[0]] < cWinMinX)
+    {
+        p[cWinOrder[0]] = cWinMinX;
+    }
+    if (p[cWinOrder[0]] > cWinMaxX)
+    {
+        p[cWinOrder[0]] = cWinMaxX;
+    }
+    if (isYFlipped())
+    {
+        p[cWinOrder[1]] =
+            (y) / scale1 + cWinMinY;
+    }
+    else
+    {
+        p[cWinOrder[1]] =
+            ((height() - 1 - y)) / scale1 + cWinMinY;
+    }
+    if (p[cWinOrder[1]] < cWinMinY)
+    {
+        p[cWinOrder[1]] = cWinMinY;
+    }
+    if (p[cWinOrder[1]] > cWinMaxY)
+    {
+        p[cWinOrder[1]] = cWinMaxY;
+    }
+    if (imageMode() != IMG_MIP)
+    {
+        p[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
+    }
+    else
+    {
+        p[cWinOrder[2]] = cWinZBuffer[(int)p[cWinOrder[0]]
+            - cWinMinX
+            + ((int)p[cWinOrder[1]]
+                - cWinMinY)
+            * cWinDataSizeX];
+    }
+
+    return PointType3D(p);
+}
+
+QtGlSliceView::PointType3D QtGlSliceView::indexToPhysicalPoint(const PointType3D& indexPoint) {
+    itk::ContinuousIndex<double, 3> idx{ };
+    idx.SetElement(0, indexPoint[0]);
+    idx.SetElement(1, indexPoint[1]);
+    idx.SetElement(2, indexPoint[2]);
+    PointType3D ans{ };
+    this->cImData->TransformContinuousIndexToPhysicalPoint(idx, ans);
+    return ans;
+}
 
 void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
 {
@@ -2115,82 +2311,24 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
     return;
     }
 
-  double scale0 = this->width() / (double) cWinSizeX;
-  double scale1 = this->height() / (double) cWinSizeY;
-  int originX = (int)( -cWinMinX * scale0 );
-  if( originX < 0 )
-    {
-    originX = 0;
-    }
-  int originY = (int)( -cWinMinY * scale1 );
-  if( originY < 0 )
-    {
-    originY = 0;
-    }
+  if (cClickMode == CM_SELECT || cClickMode == CM_PAINT ||
+      cClickMode == CM_CUSTOM || cClickMode == CM_RULER)
+  {
+      auto p = screenPointToIndex(mouseEvent->x(), mouseEvent->y()).GetDataPointer();
 
-  if( cClickMode == CM_SELECT || cClickMode == CM_PAINT ||
-    cClickMode == CM_CUSTOM )
-    {
-    double p[3];
-
-    if( isXFlipped() )
+      if (cClickMode == CM_SELECT || cClickMode == CM_CUSTOM)
       {
-      p[cWinOrder[0]] =
-        ( (width()-1 - mouseEvent->x()) ) / scale0 + cWinMinX;
+          selectPoint(p[0], p[1], p[2]);
       }
-    else
+      if (cClickMode == CM_PAINT)
       {
-      p[cWinOrder[0]] =
-        ( mouseEvent->x() ) / scale0 + cWinMinX;
+          selectPoint(p[0], p[1], p[2]);
+          paintOverlayPoint(p[0], p[1], p[2]);
       }
-    if( p[cWinOrder[0]]<cWinMinX )
-      {
-      p[cWinOrder[0]] = cWinMinX;
+      if (cClickMode == CM_RULER) {
+          getRulerToolCollection()->handleMouseEvent(mouseEvent, p);
       }
-    if( p[cWinOrder[0]]>cWinMaxX )
-      {
-      p[cWinOrder[0]] = cWinMaxX;
-      }
-    if( isYFlipped() )
-      {
-      p[cWinOrder[1]] =
-        ( mouseEvent->y() ) / scale1 + cWinMinY;
-      }
-    else
-      {
-      p[cWinOrder[1]] =
-        ( (height()-1 - mouseEvent->y()) ) / scale1 + cWinMinY;
-      }
-    if( p[cWinOrder[1]]<cWinMinY )
-      {
-      p[cWinOrder[1]] = cWinMinY;
-      }
-    if( p[cWinOrder[1]]>cWinMaxY )
-      {
-      p[cWinOrder[1]] = cWinMaxY;
-      }
-    if( imageMode() != IMG_MIP )
-      {
-      p[cWinOrder[2]] = cWinCenter[cWinOrder[2]];
-      }
-    else
-      {
-      p[cWinOrder[2]] = cWinZBuffer[( int )p[cWinOrder[0]]
-                        - cWinMinX
-                       + ( ( int )p[cWinOrder[1]]
-                      - cWinMinY )
-                      * cWinDataSizeX];
-      }
-    if( cClickMode == CM_SELECT || cClickMode == CM_CUSTOM )
-      {
-      selectPoint( p[0], p[1], p[2] );
-      }
-    if( cClickMode == CM_PAINT )
-      {
-      selectPoint( p[0], p[1], p[2] );
-      paintOverlayPoint( p[0], p[1], p[2] );
-      }
-    }
+  }
   this->update();
 }
 
@@ -2209,12 +2347,18 @@ void QtGlSliceView::mousePressEvent( QMouseEvent* mouseEvent )
 void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
 {
   cSelectMovement = SM_MOVE;
-  this->mouseSelectEvent( mouseEvent );
+  //printf("mouseMoveEvent");
+
+  // previous code didn't have mouse tracking enabled, but could handle mouse move events (i.e. when a button was held down)
+  if (cClickMode == CM_RULER || (mouseEvent->buttons() != Qt::NoButton) ) { // other modes don't handle moveEvents well
+      this->mouseSelectEvent(mouseEvent);
+  }
 }
 
 void QtGlSliceView::mouseReleaseEvent( QMouseEvent* mouseEvent )
 {
-  if( mouseEvent->button() & Qt::LeftButton )
+  // pass all ReleaseEvents if CM_RULER enabled
+  if( mouseEvent->button() & Qt::LeftButton || cClickMode == CM_RULER )
     {
     cSelectMovement = SM_RELEASE;
     this->mouseSelectEvent( mouseEvent );
@@ -2475,6 +2619,9 @@ void QtGlSliceView::zoomIn()
   update();
 }
 
+void QtGlSliceView::setInputImageFilepath(QString filepath) {
+    this->inputImageFilepath = filepath;
+}
 
 void QtGlSliceView::zoomOut()
 {
@@ -2516,6 +2663,22 @@ void QtGlSliceView::renderText( double x, double y, const QString & str,
     painter.drawPath( textPath );
     painter.end();
     }
+}
+
+RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
+    auto axis_slice = std::pair<int, int>(cWinOrder[2], this->sliceNum());
+    if (cRulerCollections.find(axis_slice) == cRulerCollections.end()) {
+        std::unique_ptr< RulerToolCollection > rc(new RulerToolCollection(this, cCurrentRulerMetaFactory, cWinOrder[2], this->sliceNum())); // TODO: figure out which axis we're talking about (remove 2)
+        cRulerCollections[axis_slice] = std::move(rc);
+    }
+    return cRulerCollections[axis_slice].get();
+}
+
+void QtGlSliceView::setIsONSDRuler(bool flag) {
+    isONSDRuler = !isONSDRuler;
+    cCurrentRulerMetaFactory = isONSDRuler ? cONSDMetaFactory : cRainbowMetaFactory;
+
+    this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
 }
 
 #endif

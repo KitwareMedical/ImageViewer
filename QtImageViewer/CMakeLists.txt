@@ -48,6 +48,7 @@ include_directories( ${OPENGL_INCLUDE_DIRS} )
 set( QtImageViewer_SRCS
   QtGlSliceView.cxx
   QtImageViewer.cxx
+  RulerWidget.cxx
   )
 
 set( QtImageViewer_GUI_SRCS

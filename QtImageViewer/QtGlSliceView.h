@@ -33,6 +33,14 @@ limitations under the License.
 
 // ImageViewer includes
 #include "QtImageViewer_Export.h"
+#include "RulerWidget.h"
+
+#include <memory>
+
+class RulerToolCollection;
+class ONSDMetaDataGenerator;
+class RainbowMetaDataGenerator;
+class RulerToolMetaDataFactory;
 
 using namespace itk;
 
@@ -42,7 +50,7 @@ using namespace itk;
 *  PAINT = Color the overlay
 */
 const int NUM_ClickModeTypes = 4;
-typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT} ClickModeType;
+typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER} ClickModeType;
 const char ClickModeTypeName[4][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
@@ -161,7 +169,8 @@ public:
   typedef ImageType::IndexType    IndexType;
   typedef itk::ColorTable<double> ColorTableType;
   typedef ColorTableType::Pointer ColorTablePointer;
-
+  using PointType3D = itk::Point< double, 3 >;
+  using PointType2D = itk::Point< double, 2 >;
 public:
 
   QtGlSliceView(QWidget *parent = 0);
@@ -193,6 +202,11 @@ public:
   SelectMovementType selectMovement( void )
     { return cSelectMovement; };
 
+  PointType3D screenPointToIndex(double x, double y);
+
+  PointType2D indexToScreenPoint(const PointType3D& indexPoint);
+
+  PointType3D indexToPhysicalPoint(const PointType3D& indexPoint);
 
   /*! Get the opacity of the overlay */
   double overlayOpacity(void) const;
@@ -321,6 +335,8 @@ public:
   /// \sa maxDisplayStates, maxDisplayStates()
   void setMaxDisplayStates(int stateNumber);
 
+  void setInputImageFilepath(QString filepath);
+
 public slots:
   /// Set the displayState property value.
   /// \sa displayState, displayState()
@@ -363,6 +379,8 @@ public slots:
     { cOverlayPaintRadius = r; };
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
+
+  void saveRulers( void );
 
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
@@ -439,6 +457,14 @@ public slots:
   void renderText(double x, double y, const QString & str,
     const QFont & font = QFont() );
 
+  /**
+  * Sets whether we are using the ONSD meta data for rulers or Rainbow (false).  Modifies the current
+  * RulerToolCollection if necessary.
+  * 
+  * \param flag
+  */
+  void setIsONSDRuler(bool flag);
+
 
 signals:
 
@@ -454,7 +480,7 @@ signals:
   void validOverlayDataChanged(bool valid);
   void maxClickedPointsStoredChanged(int max);
   void displayStateChanged(int state);
-
+  
 protected:
 
   void initializeGL();
@@ -511,6 +537,7 @@ protected:
   void (*cClickBoxArgCallBack)(double minX, double minY, double minZ,
                                double maxX, double maxY, double maxZ,
                                void * clickBoxArg);
+  RulerToolCollection* getRulerToolCollection();
 
   double cIWMin;
   double cIWMax;
@@ -575,6 +602,19 @@ protected:
   int cFastPace;
   int cFastMoveValue[3]; //fast moving pace
   double cFastIWValue[3]; //fast IW pace
+
+  
+  /**
+  * The file path of the currently viewed image
+  */
+  QString inputImageFilepath = "";
+  
+  bool isONSDRuler = false;
+
+  std::shared_ptr< RulerToolMetaDataFactory > cONSDMetaFactory;
+  std::shared_ptr< RulerToolMetaDataFactory > cRainbowMetaFactory;
+  std::shared_ptr< RulerToolMetaDataFactory > cCurrentRulerMetaFactory;
+  std::map< std::pair<int, int>, std::unique_ptr< RulerToolCollection > > cRulerCollections;
 };
   
 #endif

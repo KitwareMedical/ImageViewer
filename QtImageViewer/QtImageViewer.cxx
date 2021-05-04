@@ -275,11 +275,12 @@ void QtImageViewer::setOverlayImage(OverlayImageType* newImData)
 bool QtImageViewer::loadInputImage(QString filePathToLoad)
 {
   Q_D(QtImageViewer);
-
+  
   ImageType::Pointer image = d->loadImage<double>(filePathToLoad);
   if (image.IsNotNull())
     {
     this->setInputImage( image );
+    this->sliceView()->setInputImageFilepath(filePathToLoad);
     this->setWindowTitle(filePathToLoad);
     }
   return image.IsNotNull();
