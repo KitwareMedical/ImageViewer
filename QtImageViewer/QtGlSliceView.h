@@ -2,8 +2,7 @@
 
 Library:   TubeTK
 
-Copyright 2010 Kitware Inc. 28 Corporate Drive,
-Clifton Park, NY, 12065, USA.
+Copyright Kitware Inc.
 
 All rights reserved.
 
@@ -49,13 +48,14 @@ using namespace itk;
 *  SELECT = report pixel info
 *  PAINT = Color the overlay
 */
-const int NUM_ClickModeTypes = 4;
+const int NUM_ClickModeTypes = 5;
 typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER} ClickModeType;
-const char ClickModeTypeName[4][7] =
+const char ClickModeTypeName[5][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
   {'C', 'u', 's', 't', 'o', 'm', '\0'},
-  {'P', 'a', 'i', 'n', 't', '\0', ' '}};
+  {'P', 'a', 'i', 'n', 't', '\0', ' '},
+  {'R', 'u', 'l', 'e', 'r', '\0', ' '}};
 
 /*! SelectMovementType encodes the type of SELECT event */
 const int NUM_SelectMovementTypes = 3;
@@ -174,6 +174,7 @@ public:
 public:
 
   QtGlSliceView(QWidget *parent = 0);
+  ~QtGlSliceView();
 
   virtual const ImagePointer & inputImage(void) const;
 
@@ -194,7 +195,13 @@ public:
     { cKeyEventArg = v; };
 
   void setClickMode( ClickModeType m )
-    { cClickMode = m; };
+    {
+    if (m != CM_SELECT && m != CM_NOP && !cValidOverlayData)
+      {
+      createOverlay();
+      }
+    cClickMode = m;
+    };
 
   ClickModeType clickMode( void )
     { return cClickMode; };
@@ -379,6 +386,8 @@ public slots:
     { cOverlayPaintRadius = r; };
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
+
+  void setSaveOverlayOnExit( const char* saveOverlayOnExitFileName );
 
   void saveRulers( void );
 
@@ -598,6 +607,8 @@ protected:
   int cMaxClickPoints;
 
   QString cMessage;
+
+  QString cSaveOverlayOnExitFileName;
 
   int cFastPace;
   int cFastMoveValue[3]; //fast moving pace

@@ -34,7 +34,7 @@
 #
 ##############################################################################
 
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 3.10)
 
 project(ImageViewer)
 
@@ -57,6 +57,8 @@ endif(UNIX)
 
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
+
+find_package(VTK REQUIRED)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 

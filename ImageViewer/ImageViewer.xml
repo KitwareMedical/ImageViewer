@@ -116,6 +116,22 @@
             <default>1</default>
             <description>Display details as an overlay on the image, inside a Controls Widget or turn it off.</description>
         </integer>
+        <integer>
+            <name>paintColor</name>
+            <flag>c</flag>
+            <longflag>paintColor</longflag>
+            <label>Paint Color</label>
+            <default>1</default>
+            <description>Initial paint color.</description>
+        </integer>
+        <integer>
+            <name>paintRadius</name>
+            <flag>r</flag>
+            <longflag>paintRadius</longflag>
+            <label>Paint Radius</label>
+            <default>10</default>
+            <description>Initial paint brush radius.</description>
+        </integer>
         <boolean>
             <name>physicalUnits</name>
             <flag>P</flag>
@@ -164,6 +180,17 @@
             <description>Toggle the mode as the data is viewed.</description>
         </string-enumeration>
         <string-enumeration>
+            <name>mouseMode</name>
+            <flag>M</flag>
+            <longflag>mouseMode</longflag>
+            <element>Select</element>
+            <element>ConnComp</element>
+            <element>Paint</element>
+            <element>Ruler</element>
+            <label>Mouse mode</label>
+            <description>Set the mouse click mode.</description>
+        </string-enumeration>
+        <string-enumeration>
             <name>iwModeMax</name>
             <flag>e</flag>
             <longflag>iwMax</longflag>
@@ -193,6 +220,14 @@
           <label>ONSD Ruler</label>
           <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD)</description>
         </boolean>
+        <file>
+            <name>saveOverlayOnExit</name>
+            <flag>S</flag>
+            <longflag>saveOverlayOnExit</longflag>
+            <label>Save Overlay Image</label>
+            <default></default>
+            <description>Save Overlay Image to this file when program exits</description>
+        </file>
     </parameters>
 </executable>
 

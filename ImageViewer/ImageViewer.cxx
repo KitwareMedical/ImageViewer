@@ -416,6 +416,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setViewAxisLabel(axisLabel);
   viewer.sliceView()->setViewClickedPoints(clickedPoints);
   viewer.sliceView()->setImageMode(imageMode.c_str());
+  viewer.sliceView()->setSaveOverlayOnExit(saveOverlayOnExit.c_str());
   viewer.sliceView()->setIWModeMax(iwModeMax.c_str());
   viewer.sliceView()->setIWModeMin(iwModeMin.c_str());
   viewer.sliceView()->setClickSelectArgCallBack( myMouseCallback );
@@ -423,12 +424,27 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setKeyEventArgCallBack( myKeyCallback );
   viewer.sliceView()->setKeyEventArg( (void*)(viewer.sliceView()) );
 
-  viewer.sliceView()->setPaintRadius( 10 );
-
   viewer.sliceView()->setIsONSDRuler(ONSDRuler);
 
-  //viewer.sliceView()->setPaintColor( 0 );
-  //viewer.sliceView()->setClickMode( CM_CUSTOM );
+  viewer.sliceView()->setPaintColor( paintColor );
+  viewer.sliceView()->setPaintRadius( paintRadius );
+
+  if( !strcmp(mouseMode.c_str(),"ConnComp") )
+    {
+    viewer.sliceView()->setClickMode( CM_CUSTOM );
+    }
+  else if( !strcmp(mouseMode.c_str(),"Paint") )
+    {
+    viewer.sliceView()->setClickMode( CM_PAINT );
+    }
+  else if( !strcmp(mouseMode.c_str(),"Ruler") )
+    {
+    viewer.sliceView()->setClickMode( CM_RULER );
+    }
+  else // if( !strcmp(mouseMode.c_str(),"Select") )
+    {
+    viewer.sliceView()->setClickMode( CM_SELECT );
+    }
 
 
   ImageType::Pointer img = viewer.sliceView()->inputImage();
