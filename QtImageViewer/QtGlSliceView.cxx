@@ -2,8 +2,7 @@
 
 Library:   TubeTK
 
-Copyright 2010 Kitware Inc. 28 Corporate Drive,
-Clifton Park, NY, 12065, USA.
+Copyright Kitware Inc.
 
 All rights reserved.
 
@@ -161,6 +160,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
   cMessage = "";
 
+  cSaveOverlayOnExitFileName = "";
+
   cFastPace = 1;
   cFastMoveValue[0] = 0.5; //fast moving pace: 1 by defaut
   cFastMoveValue[1] = 1; //fast moving pace: 1 by defaut
@@ -173,9 +174,6 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   sP.setHeightForWidth( true );
   this->setSizePolicy( sP );
   
-  // this->setMouseTracking(true); // removed, set in the .ui file
-
- 
   cONSDMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< ONSDMetaDataGenerator >(new ONSDMetaDataGenerator())));
   cRainbowMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< RainbowMetaDataGenerator >(new RainbowMetaDataGenerator())));
 
@@ -183,6 +181,19 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
   cCurrentRulerMetaFactory = cRainbowMetaFactory;
   update();
+}
+
+QtGlSliceView::~QtGlSliceView()
+{
+  if( cSaveOverlayOnExitFileName.size() > 0 )
+    {
+    typedef itk::ImageFileWriter< OverlayType > WriterType;
+    WriterType::Pointer writer = WriterType::New();
+    writer->SetFileName( cSaveOverlayOnExitFileName.toStdString() );
+    writer->SetInput( cOverlayData );
+    writer->SetUseCompression( true );
+    writer->Update();
+    }
 }
 
 
@@ -405,6 +416,11 @@ void QtGlSliceView::saveClickedPointsStored()
       << " : " << ( *point ).value << endl;
     }
   fpoints.close();
+}
+
+void QtGlSliceView::setSaveOverlayOnExit(const char * saveOverlayOnExitFileName )
+{
+  cSaveOverlayOnExitFileName = saveOverlayOnExitFileName;
 }
 
 void QtGlSliceView::saveRulers()
