@@ -149,7 +149,7 @@ public:
     * \param index The image index location of first point of the ruler
     * \param metaData metaData for the ruler
     */
-    RulerTool(QtGlSliceView* parent, PointType3D& index, std::unique_ptr< RulerToolMetaData > metaData);
+    RulerTool(QtGlSliceView* parent, PointType3D index, std::unique_ptr< RulerToolMetaData > metaData);
     virtual ~RulerTool();
 
     /**
