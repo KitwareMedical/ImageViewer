@@ -68,7 +68,7 @@ This build should be relatively quick.
 
 *4) Qt5*
 
-Install Qt5 developer packages via qt.com or via apt-get.
+Install Qt5 developer packages via [qt.io](qt.io) or via apt-get.
 
 *5) ImageViewer*
 

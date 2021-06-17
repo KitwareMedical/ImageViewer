@@ -61,7 +61,7 @@ void RulerToolMetaDataFactory::refund(std::unique_ptr< RulerToolMetaData > ruler
     std::sort(refunds.begin(), refunds.end());
 }
 
-RulerTool::RulerTool(QtGlSliceView* parent0, PointType3D &index0, std::unique_ptr< RulerToolMetaData > metaData) :
+RulerTool::RulerTool(QtGlSliceView* parent0, PointType3D index0, std::unique_ptr< RulerToolMetaData > metaData) :
     parent{ parent0 }, indices{ index0, index0 }, points{ parent0->indexToPhysicalPoint(index0), parent0->indexToPhysicalPoint(index0) }, metaData{ std::move(metaData) }, clickRadius{ 10.0 }, state{ RulerToolState::drawing }, floatingIndex{ 1 }, crossStart{ 18 }, crossEnd{ 3 }, lineWidth{ 4 }
 {
 
