@@ -23,6 +23,7 @@ limitations under the License.
 #define __QtGlSliceView_h
 
 // Qt includes
+#include <QString>
 #include <QOpenGLWidget>
 #include <QtOpenGL/qgl.h>
 
