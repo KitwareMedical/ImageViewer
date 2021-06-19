@@ -2,8 +2,7 @@
 #
 # Library:   TubeTK
 #
-# Copyright 2010 Kitware Inc. 28 Corporate Drive,
-# Clifton Park, NY, 12065, USA.
+# Copyright Kitware Inc.
 #
 # All rights reserved.
 #
@@ -18,19 +17,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-##############################################################################
-
-##############################################################################
-#
-# Program:   Insight Segmentation & Registration Toolkit
-#
-# Copyright (c) 2002 Insight Consortium. All rights reserved.
-# See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-#
-#    This software is distributed WITHOUT ANY WARRANTY; without even
-#    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#    PURPOSE.  See the above copyright notices for more information.
 #
 ##############################################################################
 
@@ -60,7 +46,11 @@ include(${ITK_USE_FILE})
 
 find_package(VTK REQUIRED)
 
-find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#add_definitions( -DQT_STATIC )
+add_definitions( -DQT_THREAD_SUPPORT )
+find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
 
 find_package(SlicerExecutionModel REQUIRED)
 include(${SlicerExecutionModel_USE_FILE})

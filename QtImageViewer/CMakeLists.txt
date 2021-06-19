@@ -2,8 +2,7 @@
 #
 # Library:   TubeTK
 #
-# Copyright 2010 Kitware Inc. 28 Corporate Drive,
-# Clifton Park, NY, 12065, USA.
+# Copyright Kitware Inc.
 #
 # All rights reserved.
 #
@@ -20,30 +19,21 @@
 # limitations under the License.
 #
 ##############################################################################
-
-##############################################################################
-#
-# Program:   Insight Segmentation & Registration Toolkit
-#
-# Copyright (c) 2002 Insight Consortium. All rights reserved.
-# See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
-#
-#    This software is distributed WITHOUT ANY WARRANTY; without even
-#    the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-#    PURPOSE.  See the above copyright notices for more information.
-#
-##############################################################################
+project( QtImageViewer )
 
 include( GenerateExportHeader )
 
 include_directories(
-  ${QT_INCLUDE_DIR}
   ${ImageViewer_BINARY_DIR}/QtImageViewer
   ${ImageViewer_SOURCE_DIR}/QtImageViewer
   )
 
 find_package( OpenGL REQUIRED )
 include_directories( ${OPENGL_INCLUDE_DIRS} )
+
+set( CMAKE_AUTOMOC ON )
+set( CMAKE_AUTORCC ON )
+set( CMAKE_AUTOUIC ON )
 
 set( QtImageViewer_SRCS
   QtGlSliceView.cxx
@@ -52,44 +42,28 @@ set( QtImageViewer_SRCS
   )
 
 set( QtImageViewer_GUI_SRCS
-  Resources/UI/QtImageViewer.ui
+  QtImageViewer.ui
   )
 
 set( QtImageViewer_MOC_SRCS
   QtGlSliceView.h
   QtImageViewer.h
+  RulerWidget.h
   )
 
-QT5_WRAP_UI( QtImageViewer_UI_CXX ${QtImageViewer_GUI_SRCS} )
-QT5_WRAP_CPP( QtImageViewer_SRCS ${QtImageViewer_MOC_SRCS} )
-
-add_definitions( -DQT_DLL )
-add_definitions( -DQT_THREAD_SUPPORT )
-
-add_library( QtImageViewer ${QtImageViewer_SRCS}
+add_library( QtImageViewer STATIC ${QtImageViewer_SRCS}
   ${QtImageViewer_GUI_SRCS}
   ${QtImageViewer_UI_CXX}
   ${QtImageViewer_QRC_SRCS}
   )
 
 install( TARGETS QtImageViewer DESTINATION lib )
-target_link_libraries( QtImageViewer
+
+target_link_libraries( QtImageViewer PUBLIC
   ${ITK_LIBRARIES}
-  Qt5::Core
-  Qt5::Gui
-  Qt5::OpenGL
   Qt5::Widgets
   ${OPENGL_LIBRARIES}
   )
-
-set_property( GLOBAL APPEND PROPERTY ImageViewer_INCLUDE_DIRS
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  )
-
-set_property( GLOBAL APPEND PROPERTY ImageViewer_LIBRARIES QtImageViewer )
-set_property( GLOBAL APPEND PROPERTY ImageViewer_LIBRARY_DIRS
-  $<TARGET_FILE:QtImageViewer> )
 
 generate_export_header( QtImageViewer
   BASE_NAME QtImageViewer
