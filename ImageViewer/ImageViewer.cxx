@@ -425,8 +425,24 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
   viewer.sliceView()->setIsONSDRuler(ONSDRuler);
 
-  viewer.sliceView()->setPaintColor( paintColor );
-  viewer.sliceView()->setPaintRadius( paintRadius );
+  if (paintPalette.size() == 0) {
+    viewer.sliceView()->setPaintColor( paintColor );
+    viewer.sliceView()->setPaintRadius( paintRadius );
+  }
+
+  else if (paintPalette.size() % 3 == 0) {
+    viewer.sliceView()->setPaintPalette( paintPalette );
+    // palette[0].color
+    // viewer.sliceView()->setPaintColor( color );
+    // viewer.sliceView()->setPaintRadius( radius );
+  }
+
+  else {
+    std::cerr << "paintPalette option is invalid. Check help." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+
 
   if( !strcmp(mouseMode.c_str(),"ConnComp") )
     {

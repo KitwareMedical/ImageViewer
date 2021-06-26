@@ -109,6 +109,13 @@ struct ClickPoint
   };
 
 
+struct PaletteItem
+{
+  std::string label;
+  int color;
+  int radius;
+};
+
 /**
 * QtGlSliceView : Derived from abstract class SliceView and Fl_Gl_Window
 * See SliceView.h for details...
@@ -388,6 +395,8 @@ public slots:
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
 
+  void setPaintPalette ( std::vector<std::__cxx11::basic_string<char> > &paintPaletteVec );
+
   void setSaveOverlayOnExit( const char* saveOverlayOnExitFileName );
 
   void saveRulers( void );
@@ -475,6 +484,8 @@ public slots:
   */
   void setIsONSDRuler(bool flag);
 
+  // void setPaintPalette ( std::vector<std::string> paintPaletteVec );
+
 
 signals:
 
@@ -506,6 +517,8 @@ protected:
   double cOverlayOpacity;
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
+  std::vector<struct PaletteItem> cOverlayPaintPalette;
+  int cOverlayPaintPaletteIndex;
 
   OverlayPointer cOverlayData;
 
