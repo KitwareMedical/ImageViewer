@@ -61,7 +61,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
   cOverlayPaintPalette  = {};
-  cOverlayPaintPaletteIndex = 0;
+  cOverlayPaintPaletteIndex = 1;
 
   cHelpDialog             = 0;
 
@@ -1484,6 +1484,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         break;
     case Qt::Key_Right:
         if ( cOverlayPaintPalette.size() != 0 ) {
+          std::cout << "key right detected\n";
           if( cOverlayPaintPaletteIndex = cOverlayPaintPalette.size()-1 ) {
             cOverlayPaintPaletteIndex = 0;
           }
@@ -2101,7 +2102,7 @@ void QtGlSliceView::paintGL( void )
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
     char s[80];
-    sprintf( s, "LABEL: %s", cOverlayPaintPalette[cOverlayPaintPaletteIndex].label );
+    sprintf( s, "LABEL: %s", cOverlayPaintPalette[cOverlayPaintPaletteIndex].label.c_str());
     int posX = width() - widgetFontMetric.width(s)
       - widgetFontMetric.width("00");
     int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
