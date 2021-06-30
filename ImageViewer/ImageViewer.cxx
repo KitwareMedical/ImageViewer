@@ -369,6 +369,7 @@ void myMouseCallback(double x, double y, double z, double v, void *d)
 
 int parseAndExecImageViewer(int argc, char* argv[])
 {
+  std::cout << "reached parseAndExecImageViewer\n";
   typedef itk::Image< double, 3 >        ImageType;
   typedef itk::Image< unsigned char, 3 > OverlayType;
 
@@ -431,6 +432,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   }
 
   else if (paintPalette.size() % 3 == 0) {
+    std::cout << "parseing paintPalette\n";
     viewer.sliceView()->setPaintPalette( paintPalette );
     // palette[0].color
     // viewer.sliceView()->setPaintColor( color );
@@ -474,6 +476,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->update();
 
   viewer.show();
+  std::cout << "now trying to exec\n";
   int execReturn;
   try
     {
@@ -490,6 +493,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
 int main( int argc, char* argv[] )
 {
+  std::cout << "reached main\n";
   int res = EXIT_FAILURE;
   if(argc == 1)
     {

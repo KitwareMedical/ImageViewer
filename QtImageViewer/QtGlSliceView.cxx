@@ -1469,12 +1469,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         break;
     case Qt::Key_Left:
         if( cOverlayPaintPalette.size() != 0 ) {
-          if( cOverlayPaintPaletteIndex = 0 ) {
+          if( cOverlayPaintPaletteIndex == 0 ) {
             cOverlayPaintPaletteIndex = cOverlayPaintPalette.size()-1;
+
           }
           else {
             cOverlayPaintPaletteIndex--;
           }
+          std::cout << cOverlayPaintPaletteIndex << "\n";
     
           cOverlayPaintColor = cOverlayPaintPalette[cOverlayPaintPaletteIndex].color ;
           cOverlayPaintRadius = cOverlayPaintPalette[cOverlayPaintPaletteIndex].radius ;
@@ -1485,12 +1487,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
     case Qt::Key_Right:
         if ( cOverlayPaintPalette.size() != 0 ) {
           std::cout << "key right detected\n";
-          if( cOverlayPaintPaletteIndex = cOverlayPaintPalette.size()-1 ) {
+          if( cOverlayPaintPaletteIndex == cOverlayPaintPalette.size()-1 ) {
+            std::cout << "wrapping back to first paintPalette item\n";
             cOverlayPaintPaletteIndex = 0;
           }
           else {
             cOverlayPaintPaletteIndex++;
           }
+          std::cout << cOverlayPaintPaletteIndex << "\n";
   
           cOverlayPaintColor = cOverlayPaintPalette[cOverlayPaintPaletteIndex].color ;
           cOverlayPaintRadius = cOverlayPaintPalette[cOverlayPaintPaletteIndex].radius ;
@@ -2745,21 +2749,23 @@ void QtGlSliceView::setIsONSDRuler(bool flag) {
 
 void QtGlSliceView::setPaintPalette ( std::vector<std::string> &paintPaletteVec ) {
 
+  std::cout << "reached setPaintPalette\n";
   struct PaletteItem thisPaletteItem;
   thisPaletteItem.label = "Background";
-  thisPaletteItem.color = -1;
-  thisPaletteItem.radius = 9;
+  thisPaletteItem.color = 0;
+  thisPaletteItem.radius = 10;
   cOverlayPaintPalette.push_back(thisPaletteItem);
 
-  for (int i = -1; i < paintPaletteVec.size(); i += 3) {
+  for (int i = 0; i < paintPaletteVec.size(); i += 3) {
     thisPaletteItem.label = paintPaletteVec[i];
-    thisPaletteItem.color = std::stoi(paintPaletteVec[i+0]);
-    thisPaletteItem.radius = std::stoi(paintPaletteVec[i+1]);
+    thisPaletteItem.color = std::stoi(paintPaletteVec[i+1]);
+    thisPaletteItem.radius = std::stoi(paintPaletteVec[i+2]);
     cOverlayPaintPalette.push_back(thisPaletteItem);
   }
 
-  cOverlayPaintColor = cOverlayPaintPalette[0].color;
-  cOverlayPaintRadius = cOverlayPaintPalette[0].radius;
+  cOverlayPaintColor = cOverlayPaintPalette[1].color;
+  cOverlayPaintRadius = cOverlayPaintPalette[1].radius;
+  std::cout << "reached end of setPaintPalette\n";
 }
 
 #endif
