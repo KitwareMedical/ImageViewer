@@ -395,7 +395,7 @@ public slots:
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
 
-  void setPaintPalette ( std::vector<std::__cxx11::basic_string<char> > &paintPaletteVec );
+  void setPaintPalette ( std::vector<std::string > &paintPaletteVec );
 
   void setSaveOverlayOnExit( const char* saveOverlayOnExitFileName );
 
