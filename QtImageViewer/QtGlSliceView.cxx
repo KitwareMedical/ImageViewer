@@ -180,6 +180,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   isONSDRuler = false;
 
   cCurrentRulerMetaFactory = cRainbowMetaFactory;
+
+  cCurrentBoxMetaFactory = std::shared_ptr< BoxToolMetaDataFactory >(new BoxToolMetaDataFactory(std::unique_ptr< ConstantBoxMetaDataGenerator >(new ConstantBoxMetaDataGenerator())));
+
   update();
 }
 
@@ -446,6 +449,37 @@ void QtGlSliceView::saveRulers()
             auto& rc = node.second;
             std::string sep = isFirst ? "" : ",";
             if (node.second->rulers.size() > 0) {
+                text << sep.c_str() << rc->toJson().c_str();
+                isFirst = false;
+            }
+    }
+    text << "]}";
+    fpoints.close();
+}
+
+void QtGlSliceView::saveBoxes()
+{
+    QFileInfo fileInfo(this->inputImageFilepath);
+    QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".boxes.json";
+    QString fileName = QFileDialog::getSaveFileName(this,
+        "Save box measurements", newFilepath, "*.*");
+    if (fileName.isNull())
+    {
+        return;
+    }
+    QFile fpoints(fileName);
+    if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
+    {
+        return;
+    }
+    QTextStream text(&fpoints);
+    text << "{ \"boxes\" : [";
+    bool isFirst = true;
+    for (auto& node : cBoxCollections)
+    {
+            auto& rc = node.second;
+            std::string sep = isFirst ? "" : ",";
+            if (node.second->boxes.size() > 0) {
                 text << sep.c_str() << rc->toJson().c_str();
                 isFirst = false;
             }
@@ -901,7 +935,7 @@ void QtGlSliceView::showHelp()
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
     str << QString("    ");
-    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Ruler, Paint");
+    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Ruler, Box, Paint");
     str << QString("        - Default Custom is threshold connected components");
     str << QString("    ");
     str << QString("   Paint mode: ");
@@ -912,7 +946,7 @@ void QtGlSliceView::showHelp()
     str << QString("   Image processing ");
     str << QString("   \' - Perform median filtering with radius=1");
     str << QString("    ");
-    str << QString("   Ruler Measurements ");
+    str << QString("   Ruler/Box Measurements ");
     str << QString("   Left click to set ruler.  Right-click over X to move or delete");
     str << QString("   u - Toggle between rainbow ruler and ONSD measurements");
     str << QString("   ctrl-U - Save measurements to JSON");
@@ -1492,6 +1526,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
             {
                 createOverlay();
             }
+            cClickMode = CM_BOX;
+            update();
+        }
+        else if ( cClickMode == CM_BOX ) {
+            if (!cValidOverlayData)
+            {
+                createOverlay();
+            }
             cClickMode = CM_PAINT;
             update();
         }
@@ -1554,6 +1596,9 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
             else {
                 setIsONSDRuler(!isONSDRuler);
             }
+        }
+        else if (cClickMode == CM_BOX && keyEvent->modifiers() & Qt::CTRL) {
+          saveBoxes();
         }
         break;
     case Qt::Key_E:
@@ -2049,6 +2094,30 @@ void QtGlSliceView::paintGL( void )
       getRulerToolCollection()->paint();
       glDisable(GL_BLEND);
   }
+  else if (cClickMode == CM_BOX)
+  {
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glColor4f(0.1, 0.64, 0.2, (double)0.75);
+      char s[80];
+      sprintf(s, "BOX: Box Widget");
+      int posX = width() - widgetFontMetric.width(s)
+          - widgetFontMetric.width("00");
+      int posY = height() - 2 * (widgetFontMetric.height() + 1);
+      this->renderText(posX, posY, s, widgetFont);
+
+      BoxTool* b = getBoxToolCollection()->getActive();
+      if (b != nullptr) {
+          auto a = b->area(cWinOrder[2]);
+          sprintf(s, "%s: Area (mm^3) : %7.2f", b->metaData->name.c_str(), a);
+          posX = width() - widgetFontMetric.width(s)
+              - widgetFontMetric.width("00");
+          posY = height() - 4 * (widgetFontMetric.height() + 1);
+          this->renderText(posX, posY, s, widgetFont);
+      }
+      getBoxToolCollection()->paint();
+      glDisable(GL_BLEND);
+  }
   else if( cValidOverlayData && cClickMode == CM_PAINT )
     {
     glEnable( GL_BLEND );
@@ -2328,7 +2397,8 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
     }
 
   if (cClickMode == CM_SELECT || cClickMode == CM_PAINT ||
-      cClickMode == CM_CUSTOM || cClickMode == CM_RULER)
+      cClickMode == CM_CUSTOM || cClickMode == CM_RULER ||
+      cClickMode == CM_BOX)
   {
       auto p = screenPointToIndex(mouseEvent->x(), mouseEvent->y()).GetDataPointer();
 
@@ -2343,6 +2413,9 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
       }
       if (cClickMode == CM_RULER) {
           getRulerToolCollection()->handleMouseEvent(mouseEvent, p);
+      }
+      if (cClickMode == CM_BOX) {
+          getBoxToolCollection()->handleMouseEvent(mouseEvent, p);
       }
   }
   this->update();
@@ -2366,7 +2439,11 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
   //printf("mouseMoveEvent");
 
   // previous code didn't have mouse tracking enabled, but could handle mouse move events (i.e. when a button was held down)
-  if (cClickMode == CM_RULER || (mouseEvent->buttons() != Qt::NoButton) ) { // other modes don't handle moveEvents well
+  if (
+    cClickMode == CM_RULER ||
+    cClickMode == CM_BOX ||
+    (mouseEvent->buttons() != Qt::NoButton)
+  ) { // other modes don't handle moveEvents well
       this->mouseSelectEvent(mouseEvent);
   }
 }
@@ -2374,7 +2451,7 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
 void QtGlSliceView::mouseReleaseEvent( QMouseEvent* mouseEvent )
 {
   // pass all ReleaseEvents if CM_RULER enabled
-  if( mouseEvent->button() & Qt::LeftButton || cClickMode == CM_RULER )
+  if( mouseEvent->button() & Qt::LeftButton || cClickMode == CM_RULER || cClickMode == CM_BOX)
     {
     cSelectMovement = SM_RELEASE;
     this->mouseSelectEvent( mouseEvent );
@@ -2688,6 +2765,15 @@ RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
         cRulerCollections[axis_slice] = std::move(rc);
     }
     return cRulerCollections[axis_slice].get();
+}
+
+BoxToolCollection* QtGlSliceView::getBoxToolCollection() {
+    auto axis_slice = std::pair<int, int>(cWinOrder[2], this->sliceNum());
+    if (cBoxCollections.find(axis_slice) == cBoxCollections.end()) {
+        std::unique_ptr< BoxToolCollection > rc(new BoxToolCollection(this, cCurrentBoxMetaFactory, cWinOrder[2], this->sliceNum())); // TODO: figure out which axis we're talking about (remove 2)
+        cBoxCollections[axis_slice] = std::move(rc);
+    }
+    return cBoxCollections[axis_slice].get();
 }
 
 void QtGlSliceView::setIsONSDRuler(bool flag) {
