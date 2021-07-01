@@ -34,13 +34,16 @@ limitations under the License.
 // ImageViewer includes
 #include "QtImageViewer_Export.h"
 #include "RulerWidget.h"
+#include "BoxWidget.h"
 
 #include <memory>
 
 class RulerToolCollection;
+class BoxToolCollection;
 class ONSDMetaDataGenerator;
 class RainbowMetaDataGenerator;
 class RulerToolMetaDataFactory;
+class BoxToolMetaDataFactory;
 
 using namespace itk;
 
@@ -50,13 +53,14 @@ using namespace itk;
 *  PAINT = Color the overlay
 */
 const int NUM_ClickModeTypes = 5;
-typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER} ClickModeType;
-const char ClickModeTypeName[5][7] =
+typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER, CM_BOX} ClickModeType;
+const char ClickModeTypeName[6][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
   {'C', 'u', 's', 't', 'o', 'm', '\0'},
   {'P', 'a', 'i', 'n', 't', '\0', ' '},
-  {'R', 'u', 'l', 'e', 'r', '\0', ' '}};
+  {'R', 'u', 'l', 'e', 'r', '\0', ' '},
+  {'B', 'o', 'x', '\0', ' ', ' ', ' '}};
 
 /*! SelectMovementType encodes the type of SELECT event */
 const int NUM_SelectMovementTypes = 3;
@@ -391,6 +395,7 @@ public slots:
   void setSaveOverlayOnExit( const char* saveOverlayOnExitFileName );
 
   void saveRulers( void );
+  void saveBoxes( void );
 
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
@@ -548,6 +553,7 @@ protected:
                                double maxX, double maxY, double maxZ,
                                void * clickBoxArg);
   RulerToolCollection* getRulerToolCollection();
+  BoxToolCollection* getBoxToolCollection();
 
   double cIWMin;
   double cIWMax;
@@ -626,7 +632,9 @@ protected:
   std::shared_ptr< RulerToolMetaDataFactory > cONSDMetaFactory;
   std::shared_ptr< RulerToolMetaDataFactory > cRainbowMetaFactory;
   std::shared_ptr< RulerToolMetaDataFactory > cCurrentRulerMetaFactory;
+  std::shared_ptr< BoxToolMetaDataFactory > cCurrentBoxMetaFactory;
   std::map< std::pair<int, int>, std::unique_ptr< RulerToolCollection > > cRulerCollections;
+  std::map< std::pair<int, int>, std::unique_ptr< BoxToolCollection > > cBoxCollections;
 };
   
 #endif
