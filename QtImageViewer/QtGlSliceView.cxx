@@ -33,6 +33,7 @@ limitations under the License.
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
 #include "itkImageFileWriter.h"
+#include "itkExtractImageFilter.h"
 
 //std includes
 #include <cmath>
@@ -187,12 +188,36 @@ QtGlSliceView::~QtGlSliceView()
 {
   if( cSaveOverlayOnExitFileName.size() > 0 )
     {
-    typedef itk::ImageFileWriter< OverlayType > WriterType;
-    WriterType::Pointer writer = WriterType::New();
-    writer->SetFileName( cSaveOverlayOnExitFileName.toStdString() );
-    writer->SetInput( cOverlayData );
-    writer->SetUseCompression( true );
-    writer->Update();
+    if( cOverlayData->GetLargestPossibleRegion().GetSize()[2] == 1 )
+      {
+      typedef itk::Image<unsigned char, 2> Overlay2DType;
+
+      typedef itk::ExtractImageFilter< OverlayType, Overlay2DType > FilterType;
+      FilterType::Pointer filter = FilterType::New();
+      filter->SetInput(cOverlayData);
+      filter->SetDirectionCollapseToSubmatrix();
+      OverlayType::RegionType region = cOverlayData->GetLargestPossibleRegion();
+      OverlayType::RegionType::SizeType size = region.GetSize();
+      size[2] = 0;
+      region.SetSize(size);
+      filter->SetExtractionRegion(region);
+      filter->Update();
+      typedef itk::ImageFileWriter< Overlay2DType > WriterType;
+      WriterType::Pointer writer = WriterType::New();
+      writer->SetFileName( cSaveOverlayOnExitFileName.toStdString() );
+      writer->SetInput( filter->GetOutput() );
+      writer->SetUseCompression( true );
+      writer->Update();
+      }
+    else
+      {
+      typedef itk::ImageFileWriter< OverlayType > WriterType;
+      WriterType::Pointer writer = WriterType::New();
+      writer->SetFileName( cSaveOverlayOnExitFileName.toStdString() );
+      writer->SetInput( cOverlayData );
+      writer->SetUseCompression( true );
+      writer->Update();
+      }
     }
 }
 
