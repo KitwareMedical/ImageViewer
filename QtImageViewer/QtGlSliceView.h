@@ -385,17 +385,21 @@ public slots:
 
   void setOverlay(bool newOverlay);
   void createOverlay( void );
-  void saveOverlay( void );
+  void saveOverlayWithPrompt( void );
+  void saveOverlay( std::string fileName );
   void paintOverlayPoint( double x, double y, double z );
   void setPaintRadius( int r )
     { cOverlayPaintRadius = r; };
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
+  void setOverlayImageExtension( const char* ext );
 
-  void setSaveOverlayOnExit( const char* saveOverlayOnExitFileName );
+  void setSaveOnExitPrefix( const char* prefix );
 
-  void saveRulers( void );
-  void saveBoxes( void );
+  void saveRulersWithPrompt( void );
+  void saveRulers( std::string fileName );
+  void saveBoxesWithPrompt( void );
+  void saveBoxes( std::string fileName );
 
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
@@ -511,6 +515,7 @@ protected:
   double cOverlayOpacity;
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
+  QString cOverlayImageExtension;
 
   OverlayPointer cOverlayData;
 
@@ -615,7 +620,7 @@ protected:
 
   QString cMessage;
 
-  QString cSaveOverlayOnExitFileName;
+  QString cSaveOnExitPrefix;
 
   int cFastPace;
   int cFastMoveValue[3]; //fast moving pace
