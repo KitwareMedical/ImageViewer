@@ -60,6 +60,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cOverlayPaintRadius   = 2;
   cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
+  cOverlayPaintPalette  = {};
+  cOverlayPaintPaletteIndex = 1;
 
   cHelpDialog             = 0;
 
@@ -1465,6 +1467,41 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
             update();
         }
         break;
+    case Qt::Key_Left:
+        if( cOverlayPaintPalette.size() != 0 ) {
+          if( cOverlayPaintPaletteIndex == 0 ) {
+            cOverlayPaintPaletteIndex = cOverlayPaintPalette.size()-1;
+
+          }
+          else {
+            cOverlayPaintPaletteIndex--;
+          }
+          std::cout << cOverlayPaintPaletteIndex << "\n";
+    
+          cOverlayPaintColor = cOverlayPaintPalette[cOverlayPaintPaletteIndex].color ;
+          cOverlayPaintRadius = cOverlayPaintPalette[cOverlayPaintPaletteIndex].radius ;
+    
+          update();
+        }
+        break;
+    case Qt::Key_Right:
+        if ( cOverlayPaintPalette.size() != 0 ) {
+          std::cout << "key right detected\n";
+          if( cOverlayPaintPaletteIndex == cOverlayPaintPalette.size()-1 ) {
+            std::cout << "wrapping back to first paintPalette item\n";
+            cOverlayPaintPaletteIndex = 0;
+          }
+          else {
+            cOverlayPaintPaletteIndex++;
+          }
+          std::cout << cOverlayPaintPaletteIndex << "\n";
+  
+          cOverlayPaintColor = cOverlayPaintPalette[cOverlayPaintPaletteIndex].color ;
+          cOverlayPaintRadius = cOverlayPaintPalette[cOverlayPaintPaletteIndex].radius ;
+  
+          update();
+        }
+        break;
     case Qt::Key_QuoteDbl:
         saveOverlay();
         break;
@@ -2063,6 +2100,19 @@ void QtGlSliceView::paintGL( void )
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
     }
+
+  if( cOverlayPaintPalette.size() != 0 ) {
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    char s[80];
+    sprintf( s, "LABEL: %s", cOverlayPaintPalette[cOverlayPaintPaletteIndex].label.c_str());
+    int posX = width() - widgetFontMetric.width(s)
+      - widgetFontMetric.width("00");
+    int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
+    this->renderText( posX, posY, s, widgetFont );
+    glDisable( GL_BLEND );
+  }
 
   if( viewValue() )
     {
@@ -2695,6 +2745,27 @@ void QtGlSliceView::setIsONSDRuler(bool flag) {
     cCurrentRulerMetaFactory = isONSDRuler ? cONSDMetaFactory : cRainbowMetaFactory;
 
     this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
+}
+
+void QtGlSliceView::setPaintPalette ( std::vector<std::string> &paintPaletteVec ) {
+
+  std::cout << "reached setPaintPalette\n";
+  struct PaletteItem thisPaletteItem;
+  thisPaletteItem.label = "Background";
+  thisPaletteItem.color = 0;
+  thisPaletteItem.radius = 10;
+  cOverlayPaintPalette.push_back(thisPaletteItem);
+
+  for (int i = 0; i < paintPaletteVec.size(); i += 3) {
+    thisPaletteItem.label = paintPaletteVec[i];
+    thisPaletteItem.color = std::stoi(paintPaletteVec[i+1]);
+    thisPaletteItem.radius = std::stoi(paintPaletteVec[i+2]);
+    cOverlayPaintPalette.push_back(thisPaletteItem);
+  }
+
+  cOverlayPaintColor = cOverlayPaintPalette[1].color;
+  cOverlayPaintRadius = cOverlayPaintPalette[1].radius;
+  std::cout << "reached end of setPaintPalette\n";
 }
 
 #endif

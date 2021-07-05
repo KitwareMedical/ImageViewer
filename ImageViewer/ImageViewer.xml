@@ -218,7 +218,7 @@
           <longflag>ONSDRuler</longflag>
           <default>false</default>
           <label>ONSD Ruler</label>
-          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD)</description>
+          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD).</description>
         </boolean>
         <file>
             <name>saveOverlayOnExit</name>
@@ -226,8 +226,16 @@
             <longflag>saveOverlayOnExit</longflag>
             <label>Save Overlay Image</label>
             <default></default>
-            <description>Save Overlay Image to this file when program exits</description>
+            <description>Save Overlay Image to this file when program exits.</description>
         </file>
+        <string-vector>
+          <name>paintPalette</name>
+          <flag>p</flag>
+          <longflag>paintPalette</longflag>
+          <description>Specify a list of segmentation paints like "name,label,radius,..."</description>
+          <label>Specify Paint Palette</label>
+          <default>label1,1,10</default>
+        </string-vector>
     </parameters>
 </executable>
 
