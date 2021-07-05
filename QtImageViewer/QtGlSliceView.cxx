@@ -60,6 +60,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cOverlayPaintRadius   = 2;
   cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
+  cOverlayImageExtension = "mha";
 
   cHelpDialog             = 0;
 
@@ -160,7 +161,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
   cMessage = "";
 
-  cSaveOverlayOnExitFileName = "";
+  cSaveOnExitPrefix = "";
 
   cFastPace = 1;
   cFastMoveValue[0] = 0.5; //fast moving pace: 1 by defaut
@@ -188,15 +189,14 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
 QtGlSliceView::~QtGlSliceView()
 {
-  if( cSaveOverlayOnExitFileName.size() > 0 )
-    {
-    typedef itk::ImageFileWriter< OverlayType > WriterType;
-    WriterType::Pointer writer = WriterType::New();
-    writer->SetFileName( cSaveOverlayOnExitFileName.toStdString() );
-    writer->SetInput( cOverlayData );
-    writer->SetUseCompression( true );
-    writer->Update();
-    }
+  if( cSaveOnExitPrefix.size() > 0 ) {
+    auto overlayFileName = cSaveOnExitPrefix + ".overlay." + cOverlayImageExtension;
+    saveOverlay( overlayFileName.toStdString() );
+    auto rulersFileName = cSaveOnExitPrefix + ".rulers.json";
+    saveRulers( rulersFileName.toStdString() );
+    auto boxesFileName = cSaveOnExitPrefix + ".boxes.json";
+    saveBoxes( boxesFileName.toStdString() );
+  }
 }
 
 
@@ -390,6 +390,11 @@ QtGlSliceView::overlayOpacity( void ) const
   return cOverlayOpacity;
 }
 
+void QtGlSliceView::setOverlayImageExtension(const char * ext )
+{
+  cOverlayImageExtension = ext;
+}
+
 
 QtGlSliceView::ColorTableType* QtGlSliceView::colorTable( void ) const
 {
@@ -421,12 +426,12 @@ void QtGlSliceView::saveClickedPointsStored()
   fpoints.close();
 }
 
-void QtGlSliceView::setSaveOverlayOnExit(const char * saveOverlayOnExitFileName )
+void QtGlSliceView::setSaveOnExitPrefix(const char * prefix )
 {
-  cSaveOverlayOnExitFileName = saveOverlayOnExitFileName;
+  cSaveOnExitPrefix = prefix;
 }
 
-void QtGlSliceView::saveRulers()
+void QtGlSliceView::saveRulersWithPrompt()
 {
     QFileInfo fileInfo(this->inputImageFilepath);
     QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".json";    
@@ -436,7 +441,28 @@ void QtGlSliceView::saveRulers()
     {
         return;
     }
-    QFile fpoints(fileName);
+
+    saveRulers(fileName.toStdString());
+}
+
+void QtGlSliceView::saveRulers( std::string fileName )
+{
+    auto hasRulers = false;
+    for (auto& node : cRulerCollections)
+    {
+      if (node.second->rulers.size() > 0)
+      {
+        hasRulers = true;
+        break;
+      }
+    }
+
+    if (!hasRulers)
+    {
+      return;
+    }
+
+    QFile fpoints(QString::fromStdString(fileName));
     if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
     {
         return;
@@ -457,7 +483,7 @@ void QtGlSliceView::saveRulers()
     fpoints.close();
 }
 
-void QtGlSliceView::saveBoxes()
+void QtGlSliceView::saveBoxesWithPrompt()
 {
     QFileInfo fileInfo(this->inputImageFilepath);
     QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".boxes.json";
@@ -467,7 +493,28 @@ void QtGlSliceView::saveBoxes()
     {
         return;
     }
-    QFile fpoints(fileName);
+
+    saveBoxes(fileName.toStdString());
+}
+
+void QtGlSliceView::saveBoxes( std::string fileName )
+{
+    auto hasBoxes = false;
+    for (auto& node : cBoxCollections)
+    {
+      if (node.second->boxes.size() > 0)
+      {
+        hasBoxes = true;
+        break;
+      }
+    }
+
+    if (!hasBoxes)
+    {
+      return;
+    }
+
+    QFile fpoints(QString::fromStdString(fileName));
     if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
     {
         return;
@@ -1374,7 +1421,7 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
   update();
 }
 
-void QtGlSliceView::saveOverlay( void )
+void QtGlSliceView::saveOverlayWithPrompt( void )
 {
   if( !cValidOverlayData )
     {
@@ -1387,9 +1434,20 @@ void QtGlSliceView::saveOverlay( void )
     {
     return;
     }
+
+  saveOverlay( fileName.toStdString() );
+}
+
+void QtGlSliceView::saveOverlay( std::string fileName )
+{
+  if( !cValidOverlayData )
+    {
+    return;
+    }
+
   typedef itk::ImageFileWriter< OverlayType > WriterType;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName( fileName.toStdString() );
+  writer->SetFileName( fileName );
   writer->SetInput( cOverlayData );
   writer->SetUseCompression( true );
   writer->Update();
@@ -1500,7 +1558,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         }
         break;
     case Qt::Key_QuoteDbl:
-        saveOverlay();
+        saveOverlayWithPrompt();
         break;
     case Qt::Key_Backslash:
         if (cClickMode == CM_SELECT)
@@ -1591,14 +1649,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
     case Qt::Key_U:
         if (cClickMode == CM_RULER) {
             if (keyEvent->modifiers() & Qt::CTRL) {
-                saveRulers();
+                saveRulersWithPrompt();
             }
             else {
                 setIsONSDRuler(!isONSDRuler);
             }
         }
         else if (cClickMode == CM_BOX && keyEvent->modifiers() & Qt::CTRL) {
-          saveBoxes();
+          saveBoxesWithPrompt();
         }
         break;
     case Qt::Key_E:
