@@ -63,6 +63,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cWinOverlayData       = NULL;
   cOverlayImageExtension = "mha";
 
+  cWorkflowIndex        = 0;
+
   cHelpDialog             = 0;
 
   cViewValuePhysicalUnits = false;
@@ -1352,6 +1354,22 @@ void QtGlSliceView::createOverlay( void )
   this->setInputOverlay( cOverlayData );
 }
 
+
+void QtGlSliceView::switchWorkflowStep( int index ) 
+{
+  auto step = cWorkflowSteps[index];
+
+  if (step->type == CM_PAINT) {
+    setClickMode(CM_PAINT);
+    auto paintStep = static_cast<PaintStep*>(step);
+    cOverlayPaintColor = paintStep->label;
+    cOverlayPaintRadius = paintStep->radius;
+    std::cout << paintStep->label << " " << paintStep->radius << std::endl;
+  } else if (step->type == CM_BOX) {
+    setClickMode(CM_BOX);
+  }
+}
+
 void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
 {
   if( !cValidOverlayData )
@@ -1580,6 +1598,27 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         {
             --cOverlayPaintColor;
             update();
+        }
+        break;
+    case Qt::Key_Space:
+        if (cWorkflowSteps.size() > 0)
+        {
+          cWorkflowIndex = (cWorkflowIndex + 1) % cWorkflowSteps.size();
+          switchWorkflowStep(cWorkflowIndex);
+          update();
+        }
+        break;
+    case Qt::Key_Backspace:
+        if (cWorkflowSteps.size() > 0)
+        {
+          if (cWorkflowIndex == 0) {
+            cWorkflowIndex = cWorkflowSteps.size() - 1;
+          }
+          else {
+            cWorkflowIndex--;
+          }
+          switchWorkflowStep(cWorkflowIndex);
+          update();
         }
         break;
     case Qt::Key_QuoteDbl:
@@ -2215,6 +2254,19 @@ void QtGlSliceView::paintGL( void )
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
     }
+
+  // if( cOverlayPaintPalette.size() != 0 ) {
+  //   glEnable( GL_BLEND );
+  //   glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+  //   glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+  //   char s[80];
+  //   sprintf( s, "LABEL: %s", cOverlayPaintPalette[cOverlayPaintPaletteIndex].label.c_str());
+  //   int posX = width() - widgetFontMetric.width(s)
+  //     - widgetFontMetric.width("00");
+  //   int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
+  //   this->renderText( posX, posY, s, widgetFont );
+  //   glDisable( GL_BLEND );
+  // }
 
   if( viewValue() )
     {
