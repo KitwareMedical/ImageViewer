@@ -33,6 +33,7 @@ limitations under the License.
 //itk include
 #include "itkMinimumMaximumImageCalculator.h"
 #include "itkImageFileWriter.h"
+#include "itkExtractImageFilter.h"
 
 //std includes
 #include <cmath>
@@ -60,6 +61,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cOverlayPaintRadius   = 2;
   cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
+  cOverlayImageExtension = "mha";
   cOverlayPaintPalette  = {};
   cOverlayPaintPaletteIndex = 1;
 
@@ -162,7 +164,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
   cMessage = "";
 
-  cSaveOverlayOnExitFileName = "";
+  cSaveOnExitPrefix = "";
 
   cFastPace = 1;
   cFastMoveValue[0] = 0.5; //fast moving pace: 1 by defaut
@@ -182,20 +184,22 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   isONSDRuler = false;
 
   cCurrentRulerMetaFactory = cRainbowMetaFactory;
+
+  cCurrentBoxMetaFactory = std::shared_ptr< BoxToolMetaDataFactory >(new BoxToolMetaDataFactory(std::unique_ptr< ConstantBoxMetaDataGenerator >(new ConstantBoxMetaDataGenerator())));
+
   update();
 }
 
 QtGlSliceView::~QtGlSliceView()
 {
-  if( cSaveOverlayOnExitFileName.size() > 0 )
-    {
-    typedef itk::ImageFileWriter< OverlayType > WriterType;
-    WriterType::Pointer writer = WriterType::New();
-    writer->SetFileName( cSaveOverlayOnExitFileName.toStdString() );
-    writer->SetInput( cOverlayData );
-    writer->SetUseCompression( true );
-    writer->Update();
-    }
+  if( cSaveOnExitPrefix.size() > 0 ) {
+    auto overlayFileName = cSaveOnExitPrefix + ".overlay." + cOverlayImageExtension;
+    saveOverlay( overlayFileName.toStdString() );
+    auto rulersFileName = cSaveOnExitPrefix + ".rulers.json";
+    saveRulers( rulersFileName.toStdString() );
+    auto boxesFileName = cSaveOnExitPrefix + ".boxes.json";
+    saveBoxes( boxesFileName.toStdString() );
+  }
 }
 
 
@@ -389,6 +393,11 @@ QtGlSliceView::overlayOpacity( void ) const
   return cOverlayOpacity;
 }
 
+void QtGlSliceView::setOverlayImageExtension(const char * ext )
+{
+  cOverlayImageExtension = ext;
+}
+
 
 QtGlSliceView::ColorTableType* QtGlSliceView::colorTable( void ) const
 {
@@ -420,12 +429,12 @@ void QtGlSliceView::saveClickedPointsStored()
   fpoints.close();
 }
 
-void QtGlSliceView::setSaveOverlayOnExit(const char * saveOverlayOnExitFileName )
+void QtGlSliceView::setSaveOnExitPrefix(const char * prefix )
 {
-  cSaveOverlayOnExitFileName = saveOverlayOnExitFileName;
+  cSaveOnExitPrefix = prefix;
 }
 
-void QtGlSliceView::saveRulers()
+void QtGlSliceView::saveRulersWithPrompt()
 {
     QFileInfo fileInfo(this->inputImageFilepath);
     QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".json";    
@@ -435,7 +444,28 @@ void QtGlSliceView::saveRulers()
     {
         return;
     }
-    QFile fpoints(fileName);
+
+    saveRulers(fileName.toStdString());
+}
+
+void QtGlSliceView::saveRulers( std::string fileName )
+{
+    auto hasRulers = false;
+    for (auto& node : cRulerCollections)
+    {
+      if (node.second->rulers.size() > 0)
+      {
+        hasRulers = true;
+        break;
+      }
+    }
+
+    if (!hasRulers)
+    {
+      return;
+    }
+
+    QFile fpoints(QString::fromStdString(fileName));
     if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
     {
         return;
@@ -448,6 +478,58 @@ void QtGlSliceView::saveRulers()
             auto& rc = node.second;
             std::string sep = isFirst ? "" : ",";
             if (node.second->rulers.size() > 0) {
+                text << sep.c_str() << rc->toJson().c_str();
+                isFirst = false;
+            }
+    }
+    text << "]}";
+    fpoints.close();
+}
+
+void QtGlSliceView::saveBoxesWithPrompt()
+{
+    QFileInfo fileInfo(this->inputImageFilepath);
+    QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".boxes.json";
+    QString fileName = QFileDialog::getSaveFileName(this,
+        "Save box measurements", newFilepath, "*.*");
+    if (fileName.isNull())
+    {
+        return;
+    }
+
+    saveBoxes(fileName.toStdString());
+}
+
+void QtGlSliceView::saveBoxes( std::string fileName )
+{
+    auto hasBoxes = false;
+    for (auto& node : cBoxCollections)
+    {
+      if (node.second->boxes.size() > 0)
+      {
+        hasBoxes = true;
+        break;
+      }
+    }
+
+    if (!hasBoxes)
+    {
+      return;
+    }
+
+    QFile fpoints(QString::fromStdString(fileName));
+    if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
+    {
+        return;
+    }
+    QTextStream text(&fpoints);
+    text << "{ \"boxes\" : [";
+    bool isFirst = true;
+    for (auto& node : cBoxCollections)
+    {
+            auto& rc = node.second;
+            std::string sep = isFirst ? "" : ",";
+            if (node.second->boxes.size() > 0) {
                 text << sep.c_str() << rc->toJson().c_str();
                 isFirst = false;
             }
@@ -903,7 +985,7 @@ void QtGlSliceView::showHelp()
     str << QString("         - Blend with previous and next slice");
     str << QString("         - MIP");
     str << QString("    ");
-    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Ruler, Paint");
+    str << QString("   \\ - cycle between mouse Modes: Select Points, Custom, Ruler, Box, Paint");
     str << QString("        - Default Custom is threshold connected components");
     str << QString("    ");
     str << QString("   Paint mode: ");
@@ -914,7 +996,7 @@ void QtGlSliceView::showHelp()
     str << QString("   Image processing ");
     str << QString("   \' - Perform median filtering with radius=1");
     str << QString("    ");
-    str << QString("   Ruler Measurements ");
+    str << QString("   Ruler/Box Measurements ");
     str << QString("   Left click to set ruler.  Right-click over X to move or delete");
     str << QString("   u - Toggle between rainbow ruler and ONSD measurements");
     str << QString("   ctrl-U - Save measurements to JSON");
@@ -1342,7 +1424,7 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
   update();
 }
 
-void QtGlSliceView::saveOverlay( void )
+void QtGlSliceView::saveOverlayWithPrompt( void )
 {
   if( !cValidOverlayData )
     {
@@ -1355,12 +1437,47 @@ void QtGlSliceView::saveOverlay( void )
     {
     return;
     }
-  typedef itk::ImageFileWriter< OverlayType > WriterType;
-  WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName( fileName.toStdString() );
-  writer->SetInput( cOverlayData );
-  writer->SetUseCompression( true );
-  writer->Update();
+
+  saveOverlay( fileName.toStdString() );
+}
+
+void QtGlSliceView::saveOverlay( std::string fileName )
+{
+  if( !cValidOverlayData )
+    {
+    return;
+    }
+
+  if( cOverlayData->GetLargestPossibleRegion().GetSize()[2] == 1 )
+    {
+    typedef itk::Image<unsigned char, 2> Overlay2DType;
+
+    typedef itk::ExtractImageFilter< OverlayType, Overlay2DType > FilterType;
+    FilterType::Pointer filter = FilterType::New();
+    filter->SetInput(cOverlayData);
+    filter->SetDirectionCollapseToSubmatrix();
+    OverlayType::RegionType region = cOverlayData->GetLargestPossibleRegion();
+    OverlayType::RegionType::SizeType size = region.GetSize();
+    size[2] = 0;
+    region.SetSize(size);
+    filter->SetExtractionRegion(region);
+    filter->Update();
+    typedef itk::ImageFileWriter< Overlay2DType > WriterType;
+    WriterType::Pointer writer = WriterType::New();
+    writer->SetFileName( fileName );
+    writer->SetInput( filter->GetOutput() );
+    writer->SetUseCompression( true );
+    writer->Update();
+    }
+  else
+    {
+    typedef itk::ImageFileWriter< OverlayType > WriterType;
+    WriterType::Pointer writer = WriterType::New();
+    writer->SetFileName( fileName );
+    writer->SetInput( cOverlayData );
+    writer->SetUseCompression( true );
+    writer->Update();
+    }
 }
 
 void QtGlSliceView::setIWModeMin( IWModeType newIWModeMin )
@@ -1503,7 +1620,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         }
         break;
     case Qt::Key_QuoteDbl:
-        saveOverlay();
+        saveOverlayWithPrompt();
         break;
     case Qt::Key_Backslash:
         if (cClickMode == CM_SELECT)
@@ -1525,6 +1642,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
             update();
         }
         else if ( cClickMode == CM_RULER ) {
+            if (!cValidOverlayData)
+            {
+                createOverlay();
+            }
+            cClickMode = CM_BOX;
+            update();
+        }
+        else if ( cClickMode == CM_BOX ) {
             if (!cValidOverlayData)
             {
                 createOverlay();
@@ -1586,11 +1711,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
     case Qt::Key_U:
         if (cClickMode == CM_RULER) {
             if (keyEvent->modifiers() & Qt::CTRL) {
-                saveRulers();
+                saveRulersWithPrompt();
             }
             else {
                 setIsONSDRuler(!isONSDRuler);
             }
+        }
+        else if (cClickMode == CM_BOX && keyEvent->modifiers() & Qt::CTRL) {
+          saveBoxesWithPrompt();
         }
         break;
     case Qt::Key_E:
@@ -2086,6 +2214,30 @@ void QtGlSliceView::paintGL( void )
       getRulerToolCollection()->paint();
       glDisable(GL_BLEND);
   }
+  else if (cClickMode == CM_BOX)
+  {
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glColor4f(0.1, 0.64, 0.2, (double)0.75);
+      char s[80];
+      sprintf(s, "BOX: Box Widget");
+      int posX = width() - widgetFontMetric.width(s)
+          - widgetFontMetric.width("00");
+      int posY = height() - 2 * (widgetFontMetric.height() + 1);
+      this->renderText(posX, posY, s, widgetFont);
+
+      BoxTool* b = getBoxToolCollection()->getActive();
+      if (b != nullptr) {
+          auto a = b->area(cWinOrder[2]);
+          sprintf(s, "%s: Area (mm^3) : %7.2f", b->metaData->name.c_str(), a);
+          posX = width() - widgetFontMetric.width(s)
+              - widgetFontMetric.width("00");
+          posY = height() - 4 * (widgetFontMetric.height() + 1);
+          this->renderText(posX, posY, s, widgetFont);
+      }
+      getBoxToolCollection()->paint();
+      glDisable(GL_BLEND);
+  }
   else if( cValidOverlayData && cClickMode == CM_PAINT )
     {
     glEnable( GL_BLEND );
@@ -2378,7 +2530,8 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
     }
 
   if (cClickMode == CM_SELECT || cClickMode == CM_PAINT ||
-      cClickMode == CM_CUSTOM || cClickMode == CM_RULER)
+      cClickMode == CM_CUSTOM || cClickMode == CM_RULER ||
+      cClickMode == CM_BOX)
   {
       auto p = screenPointToIndex(mouseEvent->x(), mouseEvent->y()).GetDataPointer();
 
@@ -2393,6 +2546,9 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
       }
       if (cClickMode == CM_RULER) {
           getRulerToolCollection()->handleMouseEvent(mouseEvent, p);
+      }
+      if (cClickMode == CM_BOX) {
+          getBoxToolCollection()->handleMouseEvent(mouseEvent, p);
       }
   }
   this->update();
@@ -2416,7 +2572,11 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
   //printf("mouseMoveEvent");
 
   // previous code didn't have mouse tracking enabled, but could handle mouse move events (i.e. when a button was held down)
-  if (cClickMode == CM_RULER || (mouseEvent->buttons() != Qt::NoButton) ) { // other modes don't handle moveEvents well
+  if (
+    cClickMode == CM_RULER ||
+    cClickMode == CM_BOX ||
+    (mouseEvent->buttons() != Qt::NoButton)
+  ) { // other modes don't handle moveEvents well
       this->mouseSelectEvent(mouseEvent);
   }
 }
@@ -2424,7 +2584,7 @@ void QtGlSliceView::mouseMoveEvent( QMouseEvent* mouseEvent )
 void QtGlSliceView::mouseReleaseEvent( QMouseEvent* mouseEvent )
 {
   // pass all ReleaseEvents if CM_RULER enabled
-  if( mouseEvent->button() & Qt::LeftButton || cClickMode == CM_RULER )
+  if( mouseEvent->button() & Qt::LeftButton || cClickMode == CM_RULER || cClickMode == CM_BOX)
     {
     cSelectMovement = SM_RELEASE;
     this->mouseSelectEvent( mouseEvent );
@@ -2738,6 +2898,15 @@ RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
         cRulerCollections[axis_slice] = std::move(rc);
     }
     return cRulerCollections[axis_slice].get();
+}
+
+BoxToolCollection* QtGlSliceView::getBoxToolCollection() {
+    auto axis_slice = std::pair<int, int>(cWinOrder[2], this->sliceNum());
+    if (cBoxCollections.find(axis_slice) == cBoxCollections.end()) {
+        std::unique_ptr< BoxToolCollection > rc(new BoxToolCollection(this, cCurrentBoxMetaFactory, cWinOrder[2], this->sliceNum())); // TODO: figure out which axis we're talking about (remove 2)
+        cBoxCollections[axis_slice] = std::move(rc);
+    }
+    return cBoxCollections[axis_slice].get();
 }
 
 void QtGlSliceView::setIsONSDRuler(bool flag) {

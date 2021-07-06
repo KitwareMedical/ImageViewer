@@ -221,12 +221,19 @@
           <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD).</description>
         </boolean>
         <file>
-            <name>saveOverlayOnExit</name>
+            <name>saveOnExit</name>
             <flag>S</flag>
-            <longflag>saveOverlayOnExit</longflag>
-            <label>Save Overlay Image</label>
+            <longflag>saveOnExit</longflag>
+            <label>Save Annotation</label>
             <default></default>
-            <description>Save Overlay Image to this file when program exits.</description>
+            <description>Saves annotations (overlay, rulers, boxes) on exit with the specified file prefix.</description>
+        </file>
+        <file>
+            <name>overlayImageExtension</name>
+            <longflag>overlayImageExtension</longflag>
+            <label>Overlay Image Extension</label>
+            <default>mha</default>
+            <description>When saving the overlay image, use this image extension.</description>
         </file>
         <string-vector>
           <name>paintPalette</name>
