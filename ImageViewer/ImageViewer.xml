@@ -236,12 +236,12 @@
             <description>When saving the overlay image, use this image extension.</description>
         </file>
         <string-vector>
-          <name>paintPalette</name>
-          <flag>p</flag>
-          <longflag>paintPalette</longflag>
-          <description>Specify a list of segmentation paints like "name,label,radius,..."</description>
-          <label>Specify Paint Palette</label>
-          <default>label1,1,10</default>
+          <name>workflow</name>
+          <flag>w</flag>
+          <longflag>workflow</longflag>
+          <description>Specify a list of workflow steps</description>
+          <label>Specify Workflow Steps</label>
+          <default></default>
         </string-vector>
     </parameters>
 </executable>

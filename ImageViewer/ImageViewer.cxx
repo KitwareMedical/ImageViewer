@@ -427,6 +427,10 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
   viewer.sliceView()->setIsONSDRuler(ONSDRuler);
 
+  viewer.sliceView()->setPaintColor( paintColor );
+  viewer.sliceView()->setPaintRadius( paintRadius );
+
+/*
   if (paintPalette.size() == 0) {
     viewer.sliceView()->setPaintColor( paintColor );
     viewer.sliceView()->setPaintRadius( paintRadius );
@@ -444,8 +448,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
     std::cerr << "paintPalette option is invalid. Check help." << std::endl;
     return EXIT_FAILURE;
   }
-
-
+  */
 
   if( !strcmp(mouseMode.c_str(),"ConnComp") )
     {
@@ -464,6 +467,29 @@ int parseAndExecImageViewer(int argc, char* argv[])
     viewer.sliceView()->setClickMode( CM_SELECT );
     }
 
+  if (workflow.size() >= 1) {
+    std::vector<struct Step*> steps;
+    for (int i = 0; i < workflow.size();) {
+      auto type = workflow[i++];
+      if (type == "p" || type == "P") {
+        auto name = workflow[i++];
+        auto radiusStr = workflow[i++];
+        auto labelStr = workflow[i++];
+
+        PaintStep* step = new PaintStep();
+        step->radius = std::atoi(radiusStr.c_str());
+        step->label = std::atoi(labelStr.c_str());
+        step->name = name;
+
+        steps.push_back(step);
+      } else {
+        throw "Use p, P, b, B for this switch";
+      }
+    }
+
+    viewer.sliceView()->setWorkflowSteps(steps);
+    viewer.sliceView()->switchWorkflowStep(0);
+  }
 
   ImageType::Pointer img = viewer.sliceView()->inputImage();
 

@@ -112,12 +112,34 @@ struct ClickPoint
   //double operator[](int index){return }
   };
 
+/*! Parent struct defining a Step (with a type)
+* The type is a ClickModeType.
+*/
+struct Step {
+  ClickModeType type;
+  Step(ClickModeType cmType) : type(cmType) {}
+};
 
-struct PaletteItem
-{
-  std::string label;
-  int color;
+/*! Paint step.
+* label: the label value
+* radius: the radius of the paintbrush.
+* name: the name of this label
+*/
+
+struct PaintStep : Step {
+  PaintStep() : Step(CM_PAINT) {}
+  int label;
   int radius;
+  std::string name;
+};
+
+/*! ROI box step.
+* name: name of the box
+*/
+
+struct BoxStep : Step {
+  BoxStep() : Step(CM_BOX) {}
+  std::string name;
 };
 
 /**
@@ -214,6 +236,10 @@ public:
       }
     cClickMode = m;
     };
+  
+  void setWorkflowSteps(const std::vector<struct Step*> &steps) {
+    cWorkflowSteps = steps;
+  }
 
   ClickModeType clickMode( void )
     { return cClickMode; };
@@ -252,6 +278,8 @@ public:
   virtual void mouseReleaseEvent(QMouseEvent *event);
 
   virtual void keyPressEvent(QKeyEvent* event);
+
+  void switchWorkflowStep(int index);
 
   /// Return the minimum intensity of the image
   /// \sa maxIntensity(), intensityRange()
@@ -402,7 +430,6 @@ public slots:
   void setOverlayImageExtension( const char* ext );
 
   void setSaveOnExitPrefix( const char* prefix );
-  void setPaintPalette ( std::vector<std::string > &paintPaletteVec );
 
   void saveRulersWithPrompt( void );
   void saveRulers( std::string fileName );
@@ -492,8 +519,6 @@ public slots:
   */
   void setIsONSDRuler(bool flag);
 
-  // void setPaintPalette ( std::vector<std::string> paintPaletteVec );
-
 
 signals:
 
@@ -526,8 +551,9 @@ protected:
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
-  std::vector<struct PaletteItem> cOverlayPaintPalette;
-  int cOverlayPaintPaletteIndex;
+
+  std::vector<struct Step*> cWorkflowSteps;
+  int cWorkflowIndex;
 
   OverlayPointer cOverlayData;
 

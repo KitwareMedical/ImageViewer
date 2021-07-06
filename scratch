@@ -1,0 +1,52 @@
+
+
+
+
+-p State1,State2,State3,....
+
+State: paint, box, ruler
+- "p,1,10"
+- "b,roi1"
+
+-p P,1,10,name,B,roi1,....
+
+
+Notes
+- need a lookup table for colors to labels (if they exist for that color)
+- maybe add eraser key
+- no more paintpalette object
+- calling each thing a "step"
+- switch between steps with space and backspace 
+- We need an object which describes a step, and get a list of those
+- index for that list
+- Object for the lookup table for the paints (query for a label value, get a name)
+
+TODO
+- Nick add box--switch between box
+- Add info on current State
+- add paint index lookup
+
+struct Step {
+    enum StepType/ToolType/whatever type
+}
+
+struct PaintStep : Step {
+    labelValue
+    radius
+    labelName
+}
+
+struct BoxStep : Step {
+    color
+    name
+}
+
+on space or something{
+    Step step = workflowSteps[++currentWorkflowIndex]
+    if (step.type == PAINT) {
+        auto paintStep = static_cast<PaintStep>(step)
+        // fill in paint params here and switch to paint
+    }
+
+    update()
+}
