@@ -34,13 +34,16 @@ limitations under the License.
 // ImageViewer includes
 #include "QtImageViewer_Export.h"
 #include "RulerWidget.h"
+#include "BoxWidget.h"
 
 #include <memory>
 
 class RulerToolCollection;
+class BoxToolCollection;
 class ONSDMetaDataGenerator;
 class RainbowMetaDataGenerator;
 class RulerToolMetaDataFactory;
+class BoxToolMetaDataFactory;
 
 using namespace itk;
 
@@ -50,13 +53,14 @@ using namespace itk;
 *  PAINT = Color the overlay
 */
 const int NUM_ClickModeTypes = 5;
-typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER} ClickModeType;
-const char ClickModeTypeName[5][7] =
+typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER, CM_BOX} ClickModeType;
+const char ClickModeTypeName[6][7] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
   {'S', 'e', 'l', 'e', 'c', 't', '\0'},
   {'C', 'u', 's', 't', 'o', 'm', '\0'},
   {'P', 'a', 'i', 'n', 't', '\0', ' '},
-  {'R', 'u', 'l', 'e', 'r', '\0', ' '}};
+  {'R', 'u', 'l', 'e', 'r', '\0', ' '},
+  {'B', 'o', 'x', '\0', ' ', ' ', ' '}};
 
 /*! SelectMovementType encodes the type of SELECT event */
 const int NUM_SelectMovementTypes = 3;
@@ -381,16 +385,21 @@ public slots:
 
   void setOverlay(bool newOverlay);
   void createOverlay( void );
-  void saveOverlay( void );
+  void saveOverlayWithPrompt( void );
+  void saveOverlay( std::string fileName );
   void paintOverlayPoint( double x, double y, double z );
   void setPaintRadius( int r )
     { cOverlayPaintRadius = r; };
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
+  void setOverlayImageExtension( const char* ext );
 
-  void setSaveOverlayOnExit( const char* saveOverlayOnExitFileName );
+  void setSaveOnExitPrefix( const char* prefix );
 
-  void saveRulers( void );
+  void saveRulersWithPrompt( void );
+  void saveRulers( std::string fileName );
+  void saveBoxesWithPrompt( void );
+  void saveBoxes( std::string fileName );
 
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
@@ -506,6 +515,7 @@ protected:
   double cOverlayOpacity;
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
+  QString cOverlayImageExtension;
 
   OverlayPointer cOverlayData;
 
@@ -548,6 +558,7 @@ protected:
                                double maxX, double maxY, double maxZ,
                                void * clickBoxArg);
   RulerToolCollection* getRulerToolCollection();
+  BoxToolCollection* getBoxToolCollection();
 
   double cIWMin;
   double cIWMax;
@@ -609,7 +620,7 @@ protected:
 
   QString cMessage;
 
-  QString cSaveOverlayOnExitFileName;
+  QString cSaveOnExitPrefix;
 
   int cFastPace;
   int cFastMoveValue[3]; //fast moving pace
@@ -626,7 +637,9 @@ protected:
   std::shared_ptr< RulerToolMetaDataFactory > cONSDMetaFactory;
   std::shared_ptr< RulerToolMetaDataFactory > cRainbowMetaFactory;
   std::shared_ptr< RulerToolMetaDataFactory > cCurrentRulerMetaFactory;
+  std::shared_ptr< BoxToolMetaDataFactory > cCurrentBoxMetaFactory;
   std::map< std::pair<int, int>, std::unique_ptr< RulerToolCollection > > cRulerCollections;
+  std::map< std::pair<int, int>, std::unique_ptr< BoxToolCollection > > cBoxCollections;
 };
   
 #endif

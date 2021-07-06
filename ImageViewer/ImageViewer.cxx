@@ -415,7 +415,8 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setViewAxisLabel(axisLabel);
   viewer.sliceView()->setViewClickedPoints(clickedPoints);
   viewer.sliceView()->setImageMode(imageMode.c_str());
-  viewer.sliceView()->setSaveOverlayOnExit(saveOverlayOnExit.c_str());
+  viewer.sliceView()->setSaveOnExitPrefix(saveOnExit.c_str());
+  viewer.sliceView()->setOverlayImageExtension(overlayImageExtension.c_str());
   viewer.sliceView()->setIWModeMax(iwModeMax.c_str());
   viewer.sliceView()->setIWModeMin(iwModeMin.c_str());
   viewer.sliceView()->setClickSelectArgCallBack( myMouseCallback );
