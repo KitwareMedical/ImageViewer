@@ -218,7 +218,7 @@
           <longflag>ONSDRuler</longflag>
           <default>false</default>
           <label>ONSD Ruler</label>
-          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD)</description>
+          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD).</description>
         </boolean>
         <file>
             <name>saveOnExit</name>
@@ -235,6 +235,14 @@
             <default>mha</default>
             <description>When saving the overlay image, use this image extension.</description>
         </file>
+        <string-vector>
+          <name>paintPalette</name>
+          <flag>p</flag>
+          <longflag>paintPalette</longflag>
+          <description>Specify a list of segmentation paints like "name,label,radius,..."</description>
+          <label>Specify Paint Palette</label>
+          <default>label1,1,10</default>
+        </string-vector>
     </parameters>
 </executable>
 
