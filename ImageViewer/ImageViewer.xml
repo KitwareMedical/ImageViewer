@@ -187,6 +187,7 @@
             <element>ConnComp</element>
             <element>Paint</element>
             <element>Ruler</element>
+            <element>Box</element>
             <label>Mouse mode</label>
             <description>Set the mouse click mode.</description>
         </string-enumeration>
@@ -240,7 +241,7 @@
           <flag>w</flag>
           <longflag>workflow</longflag>
           <description>Specify a list of workflow steps</description>
-          <label>Specify Workflow Steps</label>
+          <label>Specify Workflow Steps like "p,Pleura,10,1,b,ROI,1,p,Bone,10,1"</label>
           <default></default>
         </string-vector>
     </parameters>

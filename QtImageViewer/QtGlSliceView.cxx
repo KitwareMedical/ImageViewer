@@ -1357,17 +1357,21 @@ void QtGlSliceView::createOverlay( void )
 
 void QtGlSliceView::switchWorkflowStep( int index ) 
 {
-  auto step = cWorkflowSteps[index];
+
+  auto& step = cWorkflowSteps[index];
 
   if (step->type == CM_PAINT) {
     setClickMode(CM_PAINT);
-    auto paintStep = static_cast<PaintStep*>(step);
+    auto paintStep = static_cast<PaintStep*>(step.get());
     cOverlayPaintColor = paintStep->label;
     cOverlayPaintRadius = paintStep->radius;
-    std::cout << paintStep->label << " " << paintStep->radius << std::endl;
   } else if (step->type == CM_BOX) {
     setClickMode(CM_BOX);
+    auto boxStep = static_cast<BoxStep*>(step.get());
+    auto collection = getBoxToolCollection();
+    collection->setMetaDataFactory(boxStep->factory);
   }
+
 }
 
 void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
@@ -2267,6 +2271,37 @@ void QtGlSliceView::paintGL( void )
   //   this->renderText( posX, posY, s, widgetFont );
   //   glDisable( GL_BLEND );
   // }
+
+  if( cWorkflowSteps.size() != 0 ) {
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    char s[80];
+
+    auto& step = cWorkflowSteps[cWorkflowIndex];
+
+      if (step->type == CM_PAINT) {
+
+        auto paintStep = static_cast<PaintStep*>(step.get());
+        cOverlayPaintColor = paintStep->label;
+        cOverlayPaintRadius = paintStep->radius;
+
+        sprintf( s, "STEP: %d (PAINT), R: %d, L: %s", cWorkflowIndex, cOverlayPaintRadius, paintStep->name.c_str());
+
+      } else if (step->type == CM_BOX) {
+
+        auto boxStep = static_cast<BoxStep*>(step.get());
+
+        sprintf( s, "STEP: %d (BOX), L: %s", cWorkflowIndex, boxStep->name.c_str());
+      }
+
+
+    int posX = width() - widgetFontMetric.width(s)
+      - widgetFontMetric.width("00");
+    int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
+    this->renderText( posX, posY, s, widgetFont );
+    glDisable( GL_BLEND );
+  }
 
   if( viewValue() )
     {

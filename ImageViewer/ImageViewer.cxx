@@ -19,6 +19,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 =========================================================================*/
+#include <stdexcept>
+
 #include "ImageViewerConfigure.h"
 #include "ImageViewerCLP.h"
 //Qt includes
@@ -42,6 +44,7 @@ limitations under the License.
 //QtImageViewer includes
 #include "QtGlSliceView.h"
 #include "QtImageViewer.h"
+#include "BoxWidget.h"
 
 int execImageViewer(int argc, char* argv[])
 {
@@ -462,32 +465,56 @@ int parseAndExecImageViewer(int argc, char* argv[])
     {
     viewer.sliceView()->setClickMode( CM_RULER );
     }
+  else if( !strcmp(mouseMode.c_str(),"Box") )
+    {
+    viewer.sliceView()->setClickMode( CM_BOX );
+    }
   else // if( !strcmp(mouseMode.c_str(),"Select") )
     {
     viewer.sliceView()->setClickMode( CM_SELECT );
     }
 
   if (workflow.size() >= 1) {
-    std::vector<struct Step*> steps;
+
+    std::vector<std::unique_ptr<struct Step>> steps;
+
     for (int i = 0; i < workflow.size();) {
       auto type = workflow[i++];
+
       if (type == "p" || type == "P") {
+
         auto name = workflow[i++];
         auto radiusStr = workflow[i++];
         auto labelStr = workflow[i++];
 
-        PaintStep* step = new PaintStep();
+        std::unique_ptr<PaintStep> step(new PaintStep());
         step->radius = std::atoi(radiusStr.c_str());
         step->label = std::atoi(labelStr.c_str());
         step->name = name;
 
-        steps.push_back(step);
-      } else {
-        throw "Use p, P, b, B for this switch";
+        steps.push_back(std::move(step));
+      } 
+      else if (type == "b" || type == "B") {
+        
+        auto name = workflow[i++];
+        auto color = workflow[i++];
+
+        std::unique_ptr< ConstantBoxMetaDataGenerator > generator(new ConstantBoxMetaDataGenerator(name, color));
+        std::shared_ptr< BoxToolMetaDataFactory > factory(new BoxToolMetaDataFactory(std::move(generator)));
+
+        std::unique_ptr<BoxStep> step(new BoxStep());
+        step->name = name;
+        step->color = color;
+        step->factory = factory;
+
+        steps.push_back(std::move(step));
+        
+      }else {
+        throw std::runtime_error("Use p, P, b, B for this switch");
       }
     }
 
-    viewer.sliceView()->setWorkflowSteps(steps);
+    viewer.sliceView()->setWorkflowSteps(std::move(steps));
     viewer.sliceView()->switchWorkflowStep(0);
   }
 

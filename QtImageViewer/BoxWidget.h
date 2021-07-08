@@ -80,9 +80,12 @@ public:
 */
 class ConstantBoxMetaDataGenerator : public BoxMetaDataGenerator {
 public:
+    ConstantBoxMetaDataGenerator() : ConstantBoxMetaDataGenerator("", "#BB9D00") {}
+    ConstantBoxMetaDataGenerator(std::string name, std::string color) : mName(name), mColor(color) {}
     std::unique_ptr< BoxToolMetaData > operator()(void);
 protected:
-    const std::string constantColor = "#BB9D00";
+    std::string mColor;
+    std::string mName;
     int curId = 0;
 };
 
@@ -91,7 +94,7 @@ protected:
 * the next box they draw has the deleted meta data.
 *
 * Suppose a user has drawn ONSD measurements (4 boxes) on two slices.  Now they have deleted 3 of the 4.  We want the next box they place
-* to be an ONSD from the still existing R1 measurement.  This isn't full-proof, but it works.
+* to be an ONSD from the still existing R1 measurement.  This isn't fool-proof, but it works.
 */
 class BoxToolMetaDataFactory {
 public:

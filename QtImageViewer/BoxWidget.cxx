@@ -12,8 +12,14 @@ bool operator< (std::unique_ptr< BoxToolMetaData > const& lhs, std::unique_ptr< 
 }
 
 std::unique_ptr< BoxToolMetaData > ConstantBoxMetaDataGenerator::operator()(void) {
-    std::string name = std::to_string(curId);
-    QColor color = QColor(QString(constantColor.c_str()));
+    std::string name;
+    if (mName.size() > 0) {
+        name = mName;
+    } else {
+        std::string name = std::to_string(curId);
+    }
+    QColor color = QColor(QString(mColor.c_str()));
+
     int id = curId;
     ++curId;
     return std::unique_ptr< BoxToolMetaData >(new BoxToolMetaData{ id, name, color });

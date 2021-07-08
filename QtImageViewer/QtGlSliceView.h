@@ -37,6 +37,7 @@ limitations under the License.
 #include "BoxWidget.h"
 
 #include <memory>
+#include <unordered_map>
 
 class RulerToolCollection;
 class BoxToolCollection;
@@ -140,6 +141,8 @@ struct PaintStep : Step {
 struct BoxStep : Step {
   BoxStep() : Step(CM_BOX) {}
   std::string name;
+  std::string color;
+  std::shared_ptr< BoxToolMetaDataFactory > factory;
 };
 
 /**
@@ -237,8 +240,8 @@ public:
     cClickMode = m;
     };
   
-  void setWorkflowSteps(const std::vector<struct Step*> &steps) {
-    cWorkflowSteps = steps;
+  void setWorkflowSteps(std::vector<std::unique_ptr<struct Step>> steps) {
+    cWorkflowSteps = std::move(steps);
   }
 
   ClickModeType clickMode( void )
@@ -552,7 +555,7 @@ protected:
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
 
-  std::vector<struct Step*> cWorkflowSteps;
+  std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
   int cWorkflowIndex;
 
   OverlayPointer cOverlayData;
