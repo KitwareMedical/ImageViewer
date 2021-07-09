@@ -141,7 +141,7 @@ struct PaintStep : Step {
 struct BoxStep : Step {
   BoxStep() : Step(CM_BOX) {}
   std::string name;
-  std::string color;
+  QColor color;
   std::shared_ptr< BoxToolMetaDataFactory > factory;
 };
 

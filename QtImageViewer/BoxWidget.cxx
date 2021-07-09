@@ -18,7 +18,9 @@ std::unique_ptr< BoxToolMetaData > ConstantBoxMetaDataGenerator::operator()(void
     } else {
         std::string name = std::to_string(curId);
     }
-    QColor color = QColor(QString(mColor.c_str()));
+
+    QColor color = mColor;
+    // QColor color = QColor(QString(mColor.c_str()));
 
     int id = curId;
     ++curId;

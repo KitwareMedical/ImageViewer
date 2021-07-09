@@ -80,12 +80,12 @@ public:
 */
 class ConstantBoxMetaDataGenerator : public BoxMetaDataGenerator {
 public:
-    ConstantBoxMetaDataGenerator() : ConstantBoxMetaDataGenerator("", "#BB9D00") {}
-    ConstantBoxMetaDataGenerator(std::string name, std::string color) : mName(name), mColor(color) {}
+    ConstantBoxMetaDataGenerator() : ConstantBoxMetaDataGenerator("", 1) {}
+    ConstantBoxMetaDataGenerator(std::string name, QColor color) : mName(name), mColor(color) {}
     std::unique_ptr< BoxToolMetaData > operator()(void);
 protected:
-    std::string mColor;
     std::string mName;
+    QColor mColor;
     int curId = 0;
 };
 
