@@ -240,8 +240,8 @@
           <name>workflow</name>
           <flag>w</flag>
           <longflag>workflow</longflag>
-          <description>Specify a list of workflow steps</description>
-          <label>Specify Workflow Steps like "p,Pleura,10,1,b,ROI,1,p,Bone,10,1"</label>
+          <description>Specify Workflow Steps like "p,Pleura,10,1,b,ROI,1,p,Bone,10,1"</description>
+          <label>Workflow Steps</label>
           <default></default>
         </string-vector>
     </parameters>
