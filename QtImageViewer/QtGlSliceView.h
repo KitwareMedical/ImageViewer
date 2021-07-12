@@ -37,6 +37,7 @@ limitations under the License.
 #include "BoxWidget.h"
 
 #include <memory>
+#include <unordered_map>
 
 class RulerToolCollection;
 class BoxToolCollection;
@@ -112,6 +113,37 @@ struct ClickPoint
   //double operator[](int index){return }
   };
 
+/*! Parent struct defining a Step (with a type)
+* The type is a ClickModeType.
+*/
+struct Step {
+  ClickModeType type;
+  Step(ClickModeType cmType) : type(cmType) {}
+};
+
+/*! Paint step.
+* label: the label value
+* radius: the radius of the paintbrush.
+* name: the name of this label
+*/
+
+struct PaintStep : Step {
+  PaintStep() : Step(CM_PAINT) {}
+  int label;
+  int radius;
+  std::string name;
+};
+
+/*! ROI box step.
+* name: name of the box
+*/
+
+struct BoxStep : Step {
+  BoxStep() : Step(CM_BOX) {}
+  std::string name;
+  QColor color;
+  std::shared_ptr< BoxToolMetaDataFactory > factory;
+};
 
 /**
 * QtGlSliceView : Derived from abstract class SliceView and Fl_Gl_Window
@@ -207,6 +239,10 @@ public:
       }
     cClickMode = m;
     };
+  
+  void setWorkflowSteps(std::vector<std::unique_ptr<struct Step>> steps) {
+    cWorkflowSteps = std::move(steps);
+  }
 
   ClickModeType clickMode( void )
     { return cClickMode; };
@@ -245,6 +281,8 @@ public:
   virtual void mouseReleaseEvent(QMouseEvent *event);
 
   virtual void keyPressEvent(QKeyEvent* event);
+
+  void switchWorkflowStep(int index);
 
   /// Return the minimum intensity of the image
   /// \sa maxIntensity(), intensityRange()
@@ -516,6 +554,9 @@ protected:
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
+
+  std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
+  int cWorkflowIndex;
 
   OverlayPointer cOverlayData;
 

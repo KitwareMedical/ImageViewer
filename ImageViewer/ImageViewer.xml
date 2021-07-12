@@ -187,6 +187,7 @@
             <element>ConnComp</element>
             <element>Paint</element>
             <element>Ruler</element>
+            <element>Box</element>
             <label>Mouse mode</label>
             <description>Set the mouse click mode.</description>
         </string-enumeration>
@@ -218,7 +219,7 @@
           <longflag>ONSDRuler</longflag>
           <default>false</default>
           <label>ONSD Ruler</label>
-          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD)</description>
+          <description>Set the default ruler (rainbow) to optic nerve sheathe diamter (ONSD).</description>
         </boolean>
         <file>
             <name>saveOnExit</name>
@@ -235,6 +236,14 @@
             <default>mha</default>
             <description>When saving the overlay image, use this image extension.</description>
         </file>
+        <string-vector>
+          <name>workflow</name>
+          <flag>w</flag>
+          <longflag>workflow</longflag>
+          <description>Specify Workflow Steps like "p,Pleura,10,1,b,ROI,1,p,Bone,10,1"</description>
+          <label>Workflow Steps</label>
+          <default></default>
+        </string-vector>
     </parameters>
 </executable>
 
