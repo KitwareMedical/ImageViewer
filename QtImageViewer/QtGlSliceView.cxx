@@ -1605,22 +1605,17 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         }
         break;
     case Qt::Key_Space:
-        if (cWorkflowSteps.size() > 0)
+        if (cWorkflowSteps.size() > 0 && cWorkflowIndex < cWorkflowSteps.size() - 1)
         {
-          cWorkflowIndex = (cWorkflowIndex + 1) % cWorkflowSteps.size();
+          cWorkflowIndex++;
           switchWorkflowStep(cWorkflowIndex);
           update();
         }
         break;
     case Qt::Key_Backspace:
-        if (cWorkflowSteps.size() > 0)
+        if (cWorkflowSteps.size() > 0 && cWorkflowIndex > 0)
         {
-          if (cWorkflowIndex == 0) {
-            cWorkflowIndex = cWorkflowSteps.size() - 1;
-          }
-          else {
-            cWorkflowIndex--;
-          }
+          cWorkflowIndex--;
           switchWorkflowStep(cWorkflowIndex);
           update();
         }
