@@ -2259,19 +2259,6 @@ void QtGlSliceView::paintGL( void )
     glDisable( GL_BLEND );
     }
 
-  // if( cOverlayPaintPalette.size() != 0 ) {
-  //   glEnable( GL_BLEND );
-  //   glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-  //   glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
-  //   char s[80];
-  //   sprintf( s, "LABEL: %s", cOverlayPaintPalette[cOverlayPaintPaletteIndex].label.c_str());
-  //   int posX = width() - widgetFontMetric.width(s)
-  //     - widgetFontMetric.width("00");
-  //   int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
-  //   this->renderText( posX, posY, s, widgetFont );
-  //   glDisable( GL_BLEND );
-  // }
-
   if( cWorkflowSteps.size() != 0 ) {
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -2283,10 +2270,8 @@ void QtGlSliceView::paintGL( void )
       if (step->type == CM_PAINT) {
 
         auto paintStep = static_cast<PaintStep*>(step.get());
-        cOverlayPaintColor = paintStep->label;
-        cOverlayPaintRadius = paintStep->radius;
 
-        sprintf( s, "STEP: %d (PAINT), R: %d, L: %s", cWorkflowIndex, cOverlayPaintRadius, paintStep->name.c_str());
+        sprintf( s, "STEP: %d (PAINT), L: %s", cWorkflowIndex, paintStep->name.c_str());
 
       } else if (step->type == CM_BOX) {
 
