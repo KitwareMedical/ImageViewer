@@ -48,6 +48,7 @@ limitations under the License.
 #include <QBoxLayout>
 #include <QTextEdit>
 #include <memory>
+#include <QGuiApplication>
 
 QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   : QOpenGLWidget( widgetParent )
@@ -1383,6 +1384,10 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
 
   int r = cOverlayPaintRadius;
   int c = cOverlayPaintColor;
+
+  if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)) {
+    c = 0;
+  }
 
   int minX = x-r+1;
   if( minX < 0 )
