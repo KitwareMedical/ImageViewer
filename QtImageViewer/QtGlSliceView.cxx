@@ -2236,7 +2236,6 @@ void QtGlSliceView::paintGL( void )
           posY = height() - 4 * (widgetFontMetric.height() + 1);
           this->renderText(posX, posY, s, widgetFont);
       }
-      getBoxToolCollection()->paint();
       glDisable(GL_BLEND);
   }
   else if( cValidOverlayData && cClickMode == CM_PAINT )
@@ -2253,6 +2252,11 @@ void QtGlSliceView::paintGL( void )
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
     }
+
+  // always paint boxes
+  glEnable(GL_BLEND);
+  getBoxToolCollection()->paint();
+  glDisable(GL_BLEND);
 
   if( cWorkflowSteps.size() != 0 ) {
     glEnable( GL_BLEND );
@@ -2918,9 +2922,13 @@ RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
 }
 
 BoxToolCollection* QtGlSliceView::getBoxToolCollection() {
-    auto axis_slice = std::pair<int, int>(cWinOrder[2], this->sliceNum());
+    return this->getBoxToolCollection(cWinOrder[2], this->sliceNum());
+}
+
+BoxToolCollection* QtGlSliceView::getBoxToolCollection(int axis, int sliceNum) {
+    auto axis_slice = std::pair<int, int>(axis, sliceNum);
     if (cBoxCollections.find(axis_slice) == cBoxCollections.end()) {
-        std::unique_ptr< BoxToolCollection > rc(new BoxToolCollection(this, cCurrentBoxMetaFactory, cWinOrder[2], this->sliceNum())); // TODO: figure out which axis we're talking about (remove 2)
+        std::unique_ptr< BoxToolCollection > rc(new BoxToolCollection(this, cCurrentBoxMetaFactory, axis, sliceNum)); // TODO: figure out which axis we're talking about (remove 2)
         cBoxCollections[axis_slice] = std::move(rc);
     }
     return cBoxCollections[axis_slice].get();
@@ -2933,4 +2941,15 @@ void QtGlSliceView::setIsONSDRuler(bool flag) {
     this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
 }
 
+void QtGlSliceView::addBox(
+    std::string name,
+    int axis,
+    int slice,
+    double point1[],
+    double point2[]
+) {
+  auto collection = this->getBoxToolCollection(axis, slice);
+  BoxTool* box = collection->createBox(point1, point2);
+  box->metaData.get()->name = name;
+}
 #endif

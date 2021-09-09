@@ -72,7 +72,6 @@ void BoxTool::updateFloatingIndex(double index[]) {
     this->points[this->floatingIndex] = this->parent->indexToPhysicalPoint(index);
 }
 
-
 void BoxTool::setFloatingIndex(int id) {
     this->floatingIndex = id;
 }
@@ -193,8 +192,7 @@ void BoxToolCollection::handleMouseEvent(QMouseEvent* event, double index[]) {
         if (event->type() == QEvent::MouseButtonRelease && event->button() == Qt::LeftButton) {
             // blank click on screen, make a box
 
-            std::unique_ptr< BoxTool > r(new BoxTool(this->parent, BoxTool::PointType3D(index), metaDataFactory->getNext()));
-            this->boxes.push_back(std::move(r));
+            this->createBox(index);
             this->currentId = this->boxes.size() - 1;
             this->state = BoxToolState::drawing;
             this->paint();
@@ -224,6 +222,20 @@ void BoxToolCollection::handleMouseEvent(QMouseEvent* event, double index[]) {
         break;
     }
 
+}
+
+BoxTool* BoxToolCollection::createBox(double point1[]) {
+  std::unique_ptr< BoxTool > b(new BoxTool(this->parent, BoxTool::PointType3D(point1), metaDataFactory->getNext()));
+  auto boxTool = b.get();
+  this->boxes.push_back(std::move(b));
+  return boxTool;
+}
+
+BoxTool* BoxToolCollection::createBox(double point1[], double point2[]) {
+  auto b = this->createBox(point1);
+  b->setFloatingIndex(1);
+  b->updateFloatingIndex(point2);
+  return b;
 }
 
 void BoxToolCollection::setMetaDataFactory(std::shared_ptr< BoxToolMetaDataFactory > factory) {

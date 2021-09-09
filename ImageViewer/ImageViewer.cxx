@@ -507,6 +507,12 @@ int parseAndExecImageViewer(int argc, char* argv[])
     viewer.sliceView()->switchWorkflowStep(0);
   }
 
+  for (auto fileName : jsonAnnotationFiles) {
+    if (!viewer.loadJSONAnnotations(QString::fromStdString(fileName))) {
+      std::cerr << "Could not load annotations from " << fileName << std::endl;
+    }
+  }
+
   ImageType::Pointer img = viewer.sliceView()->inputImage();
 
   typedef itk::StatisticsImageFilter<ImageType>  StatisticsFilterType;

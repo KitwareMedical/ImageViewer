@@ -522,6 +522,16 @@ public slots:
   */
   void setIsONSDRuler(bool flag);
 
+  /**
+  * Adds a box.
+  * \param name name of the box
+  * \param axis placed axis
+  * \param slice the slice number
+  * \param point1 top left of box
+  * \param point2 bottom right of box
+  */
+  void addBox(std::string name, int axis, int slice, double point1[], double point2[]);
+
 
 signals:
 
@@ -600,6 +610,7 @@ protected:
                                void * clickBoxArg);
   RulerToolCollection* getRulerToolCollection();
   BoxToolCollection* getBoxToolCollection();
+  BoxToolCollection* getBoxToolCollection(int axis, int sliceNum);
 
   double cIWMin;
   double cIWMax;
