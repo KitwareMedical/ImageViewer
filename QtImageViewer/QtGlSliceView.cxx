@@ -2253,10 +2253,11 @@ void QtGlSliceView::paintGL( void )
     glDisable( GL_BLEND );
     }
 
-  // always paint boxes
-  glEnable(GL_BLEND);
-  getBoxToolCollection()->paint();
-  glDisable(GL_BLEND);
+  if (this->viewOverlayData()) {
+    glEnable(GL_BLEND);
+    getBoxToolCollection()->paint();
+    glDisable(GL_BLEND);
+  }
 
   if( cWorkflowSteps.size() != 0 ) {
     glEnable( GL_BLEND );
