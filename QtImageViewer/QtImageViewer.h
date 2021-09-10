@@ -59,6 +59,9 @@ public slots:
   //// \sa loadInputImage(), setOverlayImage()
   bool loadOverlayImage(QString filePath = QString());
 
+  /// Load a JSON annotation file.
+  bool loadJSONAnnotations(QString filePath = QString());
+
   /// Set the image to view.
   /// \sa setOverlayImage(), loadInputImage()
   virtual void setInputImage(ImageType * newImData);

@@ -80,7 +80,8 @@ public:
 */
 class ConstantBoxMetaDataGenerator : public BoxMetaDataGenerator {
 public:
-    ConstantBoxMetaDataGenerator() : ConstantBoxMetaDataGenerator("", 1) {}
+    // default color to yellow
+    ConstantBoxMetaDataGenerator() : ConstantBoxMetaDataGenerator("", 0xffffff00) {}
     ConstantBoxMetaDataGenerator(std::string name, QColor color) : mName(name), mColor(color) {}
     std::unique_ptr< BoxToolMetaData > operator()(void);
 protected:
@@ -210,6 +211,18 @@ public:
     BoxToolCollection(QtGlSliceView* parent, std::shared_ptr< BoxToolMetaDataFactory > metaDataFactory, unsigned short axis, unsigned int slice);
     virtual ~BoxToolCollection();
 
+    /**
+    * Creates a box. Only sets one corner.
+    * \param point1 the top left 3d point (in image index space)
+    * \param point2 the bottom right 3d point (in image index space)
+    */
+    BoxTool* createBox(double point1[]);
+    /**
+    * Creates a box.
+    * \param point1 the top left 3d point (in image index space)
+    * \param point2 the bottom right 3d point (in image index space)
+    */
+    BoxTool* createBox(double point1[], double point2[]);
     /**
     * Note, QtGlSliceView does all the computation to determine screen coordinate to image index space.  So we do a lot of image index space back
     * to screen coordinates.

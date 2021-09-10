@@ -236,6 +236,13 @@
             <default>mha</default>
             <description>When saving the overlay image, use this image extension.</description>
         </file>
+        <file multiple="true">
+            <name>jsonAnnotationFiles</name>
+            <flag>n</flag>
+            <longflag>jsonAnnotation</longflag>
+            <label>Load JSON Annotation</label>
+            <description>Loads annotations from a JSON file.</description>
+        </file>
         <string-vector>
           <name>workflow</name>
           <flag>w</flag>
