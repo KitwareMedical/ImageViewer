@@ -179,8 +179,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   sP.setHeightForWidth( true );
   this->setSizePolicy( sP );
   
-  cONSDMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< ONSDMetaDataGenerator >(new ONSDMetaDataGenerator())));
-  cRainbowMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< RainbowMetaDataGenerator >(new RainbowMetaDataGenerator())));
+  cONSDMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< ONSDRulerMetaDataGenerator >(new ONSDRulerMetaDataGenerator())));
+  cRainbowMetaFactory = std::shared_ptr< RulerToolMetaDataFactory >(new RulerToolMetaDataFactory(std::unique_ptr< RainbowRulerMetaDataGenerator >(new RainbowRulerMetaDataGenerator())));
 
   isONSDRuler = false;
 

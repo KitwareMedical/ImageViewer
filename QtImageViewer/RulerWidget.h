@@ -70,7 +70,7 @@ bool operator< (std::unique_ptr< RulerToolMetaData > const& lhs, std::unique_ptr
 /**
 * Functor for generating new meta data for newly created rulers.  Allows for rudimentary workflow.
 */
-class MetaDataGenerator {
+class RulerMetaDataGenerator {
 public:
     virtual std::unique_ptr< RulerToolMetaData > operator()(void) = 0;
 };
@@ -78,9 +78,9 @@ public:
 /**
 * A looping set of 7 colors (ggplot color scheme) and increasing integer names.  Good default for generic workflows.
 */
-class RainbowMetaDataGenerator : public MetaDataGenerator {
+class RainbowRulerMetaDataGenerator : public RulerMetaDataGenerator {
 public:
-    RainbowMetaDataGenerator();
+    RainbowRulerMetaDataGenerator();
 
     std::unique_ptr< RulerToolMetaData > operator()(void);
 protected:
@@ -93,9 +93,9 @@ protected:
 * Two colors.  First ruler, "R1" should be the 3mm from ocular orb.  Second ruler, "ONSD" is the ONSD (optic nerve sheathe) measurment.  Names
 * are not unique, so rely on the positions and slices of the ruler to distinguish.
 */
-class ONSDMetaDataGenerator : public MetaDataGenerator {
+class ONSDRulerMetaDataGenerator : public RulerMetaDataGenerator {
 public:
-    ONSDMetaDataGenerator() { };
+    ONSDRulerMetaDataGenerator() { };
 
     std::unique_ptr< RulerToolMetaData > operator()(void);
 protected:
@@ -106,7 +106,7 @@ protected:
 
 
 /**
-* Factory class for meta data for new rulers.  Uses MetaDataGenerators.  Used to "refund" deleted rulers, i.e. if a user deletes a ruler
+* Factory class for meta data for new rulers.  Uses RulerMetaDataGenerators.  Used to "refund" deleted rulers, i.e. if a user deletes a ruler
 * the next ruler they draw has the deleted meta data.
 * 
 * Suppose a user has drawn ONSD measurements (4 rulers) on two slices.  Now they have deleted 3 of the 4.  We want the next ruler they place
@@ -114,7 +114,7 @@ protected:
 */
 class RulerToolMetaDataFactory {
 public:
-    RulerToolMetaDataFactory(std::unique_ptr< MetaDataGenerator > generator);
+    RulerToolMetaDataFactory(std::unique_ptr< RulerMetaDataGenerator > generator);
 
     /**
     * Get a the appropriate meta data for the next ruler.  Recycles deleted meta data.
@@ -127,7 +127,7 @@ public:
     void refund(std::unique_ptr< RulerToolMetaData > ruler_meta);
 
 protected:
-    std::unique_ptr< MetaDataGenerator > generator;
+    std::unique_ptr< RulerMetaDataGenerator > generator;
     std::vector< std::unique_ptr< RulerToolMetaData > > refunds;
 };
 
