@@ -497,9 +497,29 @@ int parseAndExecImageViewer(int argc, char* argv[])
         step->factory = factory;
 
         steps.push_back(std::move(step));
-        
-      }else {
-        throw std::runtime_error("Use p, P, b, B for this switch");
+
+      }
+      else if (type == "r" || type == "R")
+      {
+        auto generator = std::unique_ptr<RulerMetaDataGenerator>();
+        if (i < workflow.size() && workflow[i] == "o")
+        {
+          i++;
+          generator = std::unique_ptr<RulerMetaDataGenerator>(new ONSDRulerMetaDataGenerator());
+        }else
+        {
+          generator = std::unique_ptr<RulerMetaDataGenerator>(new RainbowRulerMetaDataGenerator());
+        }
+
+        std::shared_ptr<RulerToolMetaDataFactory> factory(new RulerToolMetaDataFactory(std::move(generator)));
+
+        std::unique_ptr<RulerStep> step(new RulerStep());
+        step->factory = factory;
+
+        steps.push_back(std::move(step));
+      }else
+      {
+        throw std::runtime_error("Use p, P, b, B, r, R for this switch");
       }
     }
 

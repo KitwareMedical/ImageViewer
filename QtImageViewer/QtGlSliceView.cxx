@@ -1371,8 +1371,12 @@ void QtGlSliceView::switchWorkflowStep( int index )
     auto boxStep = static_cast<BoxStep*>(step.get());
     auto collection = getBoxToolCollection();
     collection->setMetaDataFactory(boxStep->factory);
+  } else if (step->type == CM_RULER) {
+    setClickMode(CM_RULER);
+    auto rulerStep = static_cast<RulerStep *>(step.get());
+    auto collection = getRulerToolCollection();
+    collection->setMetaDataFactory(rulerStep->factory);
   }
-
 }
 
 void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
@@ -2283,8 +2287,13 @@ void QtGlSliceView::paintGL( void )
         auto boxStep = static_cast<BoxStep*>(step.get());
 
         sprintf( s, "STEP: %d (BOX), L: %s", cWorkflowIndex, boxStep->name.c_str());
-      }
+      } else if (step->type == CM_RULER)
+      {
 
+        auto rulerStep = static_cast<RulerStep*>(step.get());
+
+        sprintf(s, "STEP: %d (RULER)", cWorkflowIndex);
+      }
 
     int posX = width() - widgetFontMetric.width(s)
       - widgetFontMetric.width("00");
