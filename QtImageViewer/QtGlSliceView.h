@@ -145,6 +145,16 @@ struct BoxStep : Step {
   std::shared_ptr< BoxToolMetaDataFactory > factory;
 };
 
+/*! Ruler box step.
+* name: name of the box
+*/
+
+struct RulerStep : Step
+{
+  RulerStep() : Step(CM_RULER) {}
+  std::shared_ptr<RulerToolMetaDataFactory> factory;
+};
+
 /**
 * QtGlSliceView : Derived from abstract class SliceView and Fl_Gl_Window
 * See SliceView.h for details...

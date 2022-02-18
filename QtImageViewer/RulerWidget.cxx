@@ -11,11 +11,11 @@ bool operator< (std::unique_ptr< RulerToolMetaData > const& lhs, std::unique_ptr
     return lhs->sortId < rhs->sortId;
 }
 
-RainbowMetaDataGenerator::RainbowMetaDataGenerator() { 
+RainbowRulerMetaDataGenerator::RainbowRulerMetaDataGenerator() { 
     curColor = colors.begin(); 
 }
 
-std::unique_ptr< RulerToolMetaData > RainbowMetaDataGenerator::operator()(void) {
+std::unique_ptr< RulerToolMetaData > RainbowRulerMetaDataGenerator::operator()(void) {
     std::string name = std::to_string(curId);
     QColor color = QColor(QString(curColor->c_str()));
     int id = curId;
@@ -30,7 +30,7 @@ std::unique_ptr< RulerToolMetaData > RainbowMetaDataGenerator::operator()(void) 
     return std::unique_ptr< RulerToolMetaData >(new RulerToolMetaData{ id, name, color });
 }
 
-std::unique_ptr< RulerToolMetaData > ONSDMetaDataGenerator::operator()(void) {
+std::unique_ptr< RulerToolMetaData > ONSDRulerMetaDataGenerator::operator()(void) {
     std::string name = flipper ? "R1" : "ONSD";
     QColor color = QColor(colors[(int)flipper].c_str());
     int id = curId;
@@ -42,7 +42,7 @@ std::unique_ptr< RulerToolMetaData > ONSDMetaDataGenerator::operator()(void) {
 }
 
 
-RulerToolMetaDataFactory::RulerToolMetaDataFactory(std::unique_ptr< MetaDataGenerator > generator) : generator{ std::move(generator) } { }
+RulerToolMetaDataFactory::RulerToolMetaDataFactory(std::unique_ptr< RulerMetaDataGenerator > generator) : generator{ std::move(generator) } { }
 
 std::unique_ptr< RulerToolMetaData > RulerToolMetaDataFactory::getNext() {
     std::unique_ptr< RulerToolMetaData > ans;
