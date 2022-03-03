@@ -116,6 +116,13 @@
             <default>1</default>
             <description>Display details as an overlay on the image, inside a Controls Widget or turn it off.</description>
         </integer>
+        <boolean>
+            <name>preserveOverlayPaint</name>
+            <longflag>preserveOverlayPaint</longflag>
+            <default>false</default>
+            <label>Preserve overlay paint</label>
+            <description>When enabled, new paint will never overwrite existing paint.</description>
+        </boolean>
         <integer>
             <name>paintColor</name>
             <flag>c</flag>

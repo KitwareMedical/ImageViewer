@@ -59,6 +59,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cValidOverlayData     = false;
   cViewOverlayData      = false;
   cOverlayOpacity       = 0.75;
+  cPreserveOverlayPaint = false;
   cOverlayPaintRadius   = 2;
   cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
@@ -1445,7 +1446,14 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
         if( z2 + y2 + x2 <= r2 )
           {
           idx[0] = ix;
-          cOverlayData->SetPixel( idx, c );
+          if(
+            c == 0 || // allow eraser
+            !cPreserveOverlayPaint || // no preserve
+            cOverlayData->GetPixel( idx ) == 0 // preserve labeled pixels
+          )
+            {
+            cOverlayData->SetPixel( idx, c );
+            }
           }
         }
       }

@@ -436,6 +436,8 @@ public slots:
   void saveOverlayWithPrompt( void );
   void saveOverlay( std::string fileName );
   void paintOverlayPoint( double x, double y, double z );
+  void setPreserveOverlayPaint( bool preserve )
+    { cPreserveOverlayPaint = preserve; };
   void setPaintRadius( int r )
     { cOverlayPaintRadius = r; };
   void setPaintColor( int c )
@@ -570,6 +572,7 @@ protected:
   int cDisplayState;
   int cMaxDisplayStates;
   bool cValidOverlayData;
+  bool cPreserveOverlayPaint;
   double cOverlayOpacity;
   int cOverlayPaintRadius;
   int cOverlayPaintColor;

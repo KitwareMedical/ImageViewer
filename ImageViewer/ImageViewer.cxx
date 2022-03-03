@@ -429,6 +429,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
   viewer.sliceView()->setIsONSDRuler(ONSDRuler);
 
+  viewer.sliceView()->setPreserveOverlayPaint( preserveOverlayPaint );
   viewer.sliceView()->setPaintColor( paintColor );
   viewer.sliceView()->setPaintRadius( paintRadius );
 
