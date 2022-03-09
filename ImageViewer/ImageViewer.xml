@@ -258,6 +258,13 @@
           <label>Workflow Steps</label>
           <default></default>
         </string-vector>
+        <integer>
+          <name>fixedSliceDelta</name>
+          <longflag>fixedSliceDelta</longflag>
+          <description>A positive integer that fixes the number of slices to jump by when scrolling slices. Disables the "f" key functionality.</description>
+          <label>Fixed Slice Delta</label>
+          <default>0</default>
+        </integer>
     </parameters>
 </executable>
 

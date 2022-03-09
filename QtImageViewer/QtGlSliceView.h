@@ -443,6 +443,8 @@ public slots:
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
   void setOverlayImageExtension( const char* ext );
+  void setFixedSliceMoveValue( int delta )
+    { cFixedSliceMoveValue = delta; }
 
   void setSaveOnExitPrefix( const char* prefix );
 
@@ -577,6 +579,7 @@ protected:
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
+  int cFixedSliceMoveValue;
 
   std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
   int cWorkflowIndex;
