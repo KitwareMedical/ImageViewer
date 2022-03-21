@@ -161,7 +161,7 @@ jobs:
     - name: Package with Qt - Mac
       if: matrix.os == 'macos-10.15'
       run: |
-        macdeployqt ImageViewer/bin/ImageViewer.app
+        ${QTDIR}/bin/macdeployqt ImageViewer/bin/ImageViewer.app
       shell: cmd
 
     - name: Publish ImageViewer as GitHub Artifact
