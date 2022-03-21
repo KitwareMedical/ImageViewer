@@ -66,7 +66,7 @@ jobs:
         export MACOSX_DEPLOYMENT_TARGET=10.9
         cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_EXAMPLES:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja ../VTK
         ninja
-    - name: Build VTK
+    - name: Build VTK-Windows
       if: matrix.os == 'windows-2019'
       run: |
         cd ..
@@ -94,7 +94,7 @@ jobs:
         cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_EXAMPLES:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK
         ninja
 
-    - name: Build ITK
+    - name: Build ITK-Windows
       if: matrix.os == 'windows-2019'
       run: |
         cd ..
@@ -120,7 +120,7 @@ jobs:
         pushd SlicerExecutionModel-build
         cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja ../SlicerExecutionModel
         ninja
-    - name: Build SlicerExecutionModel
+    - name: Build SlicerExecutionModel-Windows
       if: matrix.os == 'windows-2019'
       run: |
         cd ..
@@ -150,6 +150,18 @@ jobs:
               -DBUILD_SHARED_LIBS:BOOL=OFF \
         cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja .
         ninja
+      shell: cmd
+
+    - name: Package with Qt - Windows
+      if: matrix.os == 'windows-2019'
+      run: |
+        windeployqt --release ImageViewer/bin
+      shell: cmd
+
+    - name: Package with Qt - Mac
+      if: matrix.os == 'macos-10.15'
+      run: |
+        macdeployqt ImageViewer/bin/ImageViewer.app
       shell: cmd
 
     - name: Publish ImageViewer as GitHub Artifact

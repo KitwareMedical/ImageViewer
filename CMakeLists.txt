@@ -46,9 +46,10 @@ include(${ITK_USE_FILE})
 
 find_package(VTK REQUIRED)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #add_definitions( -DQT_STATIC )
+#add_definitions( -DQT_DESIGNER_STATIC )
 add_definitions( -DQT_THREAD_SUPPORT )
 find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
 
