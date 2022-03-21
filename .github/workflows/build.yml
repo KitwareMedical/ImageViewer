@@ -120,6 +120,7 @@ jobs:
         pushd SlicerExecutionModel-build
         cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja ../SlicerExecutionModel
         ninja
+
     - name: Build SlicerExecutionModel-Windows
       if: matrix.os == 'windows-2019'
       run: |
@@ -140,6 +141,7 @@ jobs:
         export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
         cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja .
         ninja
+
     - name: Build ImageViewer-Windows
       if: matrix.os == 'windows-2019'
       run: |
@@ -161,9 +163,7 @@ jobs:
     - name: Package with Qt - Mac
       if: matrix.os == 'macos-10.15'
       run: |
-        ls -R /Users/runner/work/ImageViewer/Qt
-        ls -R .
-      shell: cmd
+        /Users/runner/work/ImageViewer/Qt/5.15.2/clang_64/bin/macdeployqt ImageViewer/bin/ImageViewer.app
 
     - name: Publish ImageViewer as GitHub Artifact
       uses: actions/upload-artifact@v1
