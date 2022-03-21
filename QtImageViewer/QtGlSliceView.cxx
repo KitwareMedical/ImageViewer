@@ -49,6 +49,7 @@ limitations under the License.
 #include <QTextEdit>
 #include <memory>
 #include <QGuiApplication>
+#include <QPainterPath>
 
 QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   : QOpenGLWidget( widgetParent )
@@ -2121,7 +2122,7 @@ void QtGlSliceView::paintGL( void )
       glCallLists( strlen( cAxisLabelX[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation] );
       this->renderText(
-        (width()-widgetFontMetric.width(cAxisLabelX[cWinOrientation]))/2 - 2,
+        (width()-widgetFontMetric.horizontalAdvance(cAxisLabelX[cWinOrientation]))/2 - 2,
         posY, cAxisLabelX[cWinOrientation], widgetFont );
       }
     else
@@ -2131,7 +2132,7 @@ void QtGlSliceView::paintGL( void )
       glCallLists( strlen( cAxisLabelX[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelX[cWinOrientation] );
       this->renderText(
-        (widgetFontMetric.width(cAxisLabelX[cWinOrientation]))/2 - 2,
+        (widgetFontMetric.horizontalAdvance(cAxisLabelX[cWinOrientation]))/2 - 2,
         posY, cAxisLabelX[cWinOrientation], widgetFont );
       }
 
@@ -2142,7 +2143,7 @@ void QtGlSliceView::paintGL( void )
       glCallLists( strlen( cAxisLabelY[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation] );
       this->renderText(
-        (width()-widgetFontMetric.width(cAxisLabelY[cWinOrientation]))/2 - 2,
+        (width()-widgetFontMetric.horizontalAdvance(cAxisLabelY[cWinOrientation]))/2 - 2,
         posY,
         cAxisLabelY[cWinOrientation], widgetFont );
       }
@@ -2153,7 +2154,7 @@ void QtGlSliceView::paintGL( void )
       glCallLists( strlen( cAxisLabelY[cWinOrientation] ),
         GL_UNSIGNED_BYTE, cAxisLabelY[cWinOrientation] );
       this->renderText(
-        width()/2  + widgetFontMetric.width(cAxisLabelY[cWinOrientation])/2,
+        width()/2  + widgetFontMetric.horizontalAdvance(cAxisLabelY[cWinOrientation])/2,
         posY,
         cAxisLabelY[cWinOrientation], widgetFont );
       }
@@ -2175,8 +2176,8 @@ void QtGlSliceView::paintGL( void )
       {
       sprintf( s, "SELECT: Index points" );
       }
-    int posX = width() - widgetFontMetric.width(s)
-      - widgetFontMetric.width("00");
+    int posX = width() - widgetFontMetric.horizontalAdvance(s)
+      - widgetFontMetric.horizontalAdvance("00");
     int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
@@ -2188,8 +2189,8 @@ void QtGlSliceView::paintGL( void )
     glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
     char s[80];
     sprintf( s, "CUSTOM: Thresh Conn. Comp." );
-    int posX = width() - widgetFontMetric.width(s)
-      - widgetFontMetric.width("00");
+    int posX = width() - widgetFontMetric.horizontalAdvance(s)
+      - widgetFontMetric.horizontalAdvance("00");
     int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
@@ -2201,8 +2202,8 @@ void QtGlSliceView::paintGL( void )
       glColor4f(0.1, 0.64, 0.2, (double)0.75);
       char s[80];
       sprintf(s, "RULER: Ruler Widget");
-      int posX = width() - widgetFontMetric.width(s)
-          - widgetFontMetric.width("00");
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+          - widgetFontMetric.horizontalAdvance("00");
       int posY = height() - 2 * (widgetFontMetric.height() + 1);
       this->renderText(posX, posY, s, widgetFont);
 
@@ -2210,8 +2211,8 @@ void QtGlSliceView::paintGL( void )
       if (r != nullptr) {
           auto d = r->length();
           sprintf(s, "%s: Length (mm) : %7.2f", r->metaData->name.c_str(), d);
-          posX = width() - widgetFontMetric.width(s)
-              - widgetFontMetric.width("00");
+          posX = width() - widgetFontMetric.horizontalAdvance(s)
+              - widgetFontMetric.horizontalAdvance("00");
           posY = height() - 4 * (widgetFontMetric.height() + 1);
           this->renderText(posX, posY, s, widgetFont);
       }
@@ -2231,8 +2232,8 @@ void QtGlSliceView::paintGL( void )
       glColor4f(0.1, 0.64, 0.2, (double)0.75);
       char s[80];
       sprintf(s, "BOX: Box Widget");
-      int posX = width() - widgetFontMetric.width(s)
-          - widgetFontMetric.width("00");
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+          - widgetFontMetric.horizontalAdvance("00");
       int posY = height() - 2 * (widgetFontMetric.height() + 1);
       this->renderText(posX, posY, s, widgetFont);
 
@@ -2240,8 +2241,8 @@ void QtGlSliceView::paintGL( void )
       if (b != nullptr) {
           auto a = b->area(cWinOrder[2]);
           sprintf(s, "%s: Area (mm^3) : %7.2f", b->metaData->name.c_str(), a);
-          posX = width() - widgetFontMetric.width(s)
-              - widgetFontMetric.width("00");
+          posX = width() - widgetFontMetric.horizontalAdvance(s)
+              - widgetFontMetric.horizontalAdvance("00");
           posY = height() - 4 * (widgetFontMetric.height() + 1);
           this->renderText(posX, posY, s, widgetFont);
       }
@@ -2255,8 +2256,8 @@ void QtGlSliceView::paintGL( void )
     char s[80];
     sprintf( s, "PAINT: R = %d  C = %d", cOverlayPaintRadius,
       cOverlayPaintColor );
-    int posX = width() - widgetFontMetric.width(s)
-      - widgetFontMetric.width("00");
+    int posX = width() - widgetFontMetric.horizontalAdvance(s)
+      - widgetFontMetric.horizontalAdvance("00");
     int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
@@ -2295,8 +2296,8 @@ void QtGlSliceView::paintGL( void )
         sprintf(s, "STEP: %d (RULER)", cWorkflowIndex);
       }
 
-    int posX = width() - widgetFontMetric.width(s)
-      - widgetFontMetric.width("00");
+    int posX = width() - widgetFontMetric.horizontalAdvance(s)
+      - widgetFontMetric.horizontalAdvance("00");
     int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
@@ -2349,8 +2350,8 @@ void QtGlSliceView::paintGL( void )
               pz, suffix,
               ( int )val );
       }
-    int posX = width() - widgetFontMetric.width(s)
-      - widgetFontMetric.width("00");
+    int posX = width() - widgetFontMetric.horizontalAdvance(s)
+      - widgetFontMetric.horizontalAdvance("00");
     int posY = height() - ( widgetFontMetric.height() + 1 );
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
@@ -2397,7 +2398,7 @@ void QtGlSliceView::paintGL( void )
     int i = 6;
     foreach( QString text, details )
       {
-      int posX = widgetFontMetric.width("00");
+      int posX = widgetFontMetric.horizontalAdvance("00");
       int posY = height() - ( i * ( widgetFontMetric.height() + 1 ) );
       this->renderText( posX, posY, text, widgetFont );
       --i;
@@ -2409,7 +2410,7 @@ void QtGlSliceView::paintGL( void )
 
   if( cMessage.size() != 0 )
     {
-    int posX = (width()/2) - (widgetFontMetric.width(cMessage)/2);
+    int posX = (width()/2) - (widgetFontMetric.horizontalAdvance(cMessage)/2);
     int posY = ( 2 * ( widgetFontMetric.height() + 1 ) );
     this->renderText( posX, posY, cMessage, widgetFont );
     }
