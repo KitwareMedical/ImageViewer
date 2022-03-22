@@ -59,6 +59,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cValidOverlayData     = false;
   cViewOverlayData      = false;
   cOverlayOpacity       = 0.75;
+  cPreserveOverlayPaint = false;
+  cFixedSliceMoveValue  = 0;
   cOverlayPaintRadius   = 2;
   cOverlayPaintColor    = 1;
   cWinOverlayData       = NULL;
@@ -1445,7 +1447,14 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
         if( z2 + y2 + x2 <= r2 )
           {
           idx[0] = ix;
-          cOverlayData->SetPixel( idx, c );
+          if(
+            c == 0 || // allow eraser
+            !cPreserveOverlayPaint || // no preserve
+            cOverlayData->GetPixel( idx ) == 0 // preserve labeled pixels
+          )
+            {
+            cOverlayData->SetPixel( idx, c );
+            }
           }
         }
       }
@@ -1571,6 +1580,10 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
     case Qt::Key_Less: // <
     case Qt::Key_Comma:
         movePace = cFastMoveValue[cFastPace];
+        if( cFixedSliceMoveValue > 0 )
+        {
+          movePace = cFixedSliceMoveValue;
+        }
         if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
             if ((int)cWinCenter[cWinOrder[2]] == 0)
@@ -1677,6 +1690,10 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
     case Qt::Key_Period:
       //when pressing down ">" or "<" key, scrolling will go faster
       movePace = cFastMoveValue[ cFastPace ];
+      if( cFixedSliceMoveValue > 0 )
+      {
+        movePace = cFixedSliceMoveValue;
+      }
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
         {
