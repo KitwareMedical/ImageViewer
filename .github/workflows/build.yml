@@ -133,13 +133,23 @@ jobs:
         ninja
       shell: cmd
 
-    - name: Build ImageViewer
-      if: matrix.os != 'windows-2019'
+    - name: Build ImageViewer-Linux
+      if: matrix.os == 'ubuntu-18.04'
       run: |
         export ITK_DIR="${PWD}/../ITK-build"
         export VTK_DIR="${PWD}/../VTK-build"
         export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
         cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja .
+        ninja
+
+    - name: Build ImageViewer-Mac
+      if: matrix.os == 'macos-10.15'
+      run: |
+        export ITK_DIR="${PWD}/../ITK-build"
+        export VTK_DIR="${PWD}/../VTK-build"
+        export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
+        export MACOSX_DEPLOYMENT_TARGET=10.9
+        cmake -DCMAKE_MACOSX_BUNDLE:BOOL=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja .
         ninja
 
     - name: Build ImageViewer-Windows
@@ -164,7 +174,7 @@ jobs:
       if: matrix.os == 'macos-10.15'
       run: |
         ls -R ImageViewer
-        #/Users/runner/work/ImageViewer/Qt/5.15.2/clang_64/bin/macdeployqt ImageViewer/bin/ImageViewer.app
+        /Users/runner/work/ImageViewer/Qt/5.15.2/clang_64/bin/macdeployqt ImageViewer/bin/ImageViewer.app
 
     - name: Publish ImageViewer as GitHub Artifact
       uses: actions/upload-artifact@v1
