@@ -21,6 +21,7 @@
 ##############################################################################
 
 cmake_policy(SET CMP0069 OLD)
+cmake_policy(SET CMP0006 OLD)  # For mac bundles
 
 set( ImageViewer_SRCS ImageViewer.cxx )
 
