@@ -436,11 +436,15 @@ public slots:
   void saveOverlayWithPrompt( void );
   void saveOverlay( std::string fileName );
   void paintOverlayPoint( double x, double y, double z );
+  void setPreserveOverlayPaint( bool preserve )
+    { cPreserveOverlayPaint = preserve; };
   void setPaintRadius( int r )
     { cOverlayPaintRadius = r; };
   void setPaintColor( int c )
     { cOverlayPaintColor = c; };
   void setOverlayImageExtension( const char* ext );
+  void setFixedSliceMoveValue( int delta )
+    { cFixedSliceMoveValue = delta; }
 
   void setSaveOnExitPrefix( const char* prefix );
 
@@ -570,10 +574,12 @@ protected:
   int cDisplayState;
   int cMaxDisplayStates;
   bool cValidOverlayData;
+  bool cPreserveOverlayPaint;
   double cOverlayOpacity;
   int cOverlayPaintRadius;
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
+  int cFixedSliceMoveValue;
 
   std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
   int cWorkflowIndex;

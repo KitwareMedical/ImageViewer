@@ -426,9 +426,11 @@ int parseAndExecImageViewer(int argc, char* argv[])
   viewer.sliceView()->setClickSelectArg( (void*)(viewer.sliceView()) );
   viewer.sliceView()->setKeyEventArgCallBack( myKeyCallback );
   viewer.sliceView()->setKeyEventArg( (void*)(viewer.sliceView()) );
+  viewer.sliceView()->setFixedSliceMoveValue( fixedSliceDelta );
 
   viewer.sliceView()->setIsONSDRuler(ONSDRuler);
 
+  viewer.sliceView()->setPreserveOverlayPaint( preserveOverlayPaint );
   viewer.sliceView()->setPaintColor( paintColor );
   viewer.sliceView()->setPaintRadius( paintRadius );
 
