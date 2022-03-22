@@ -27,7 +27,7 @@ For ITK, we want to compile ITK v5.0 or later.   Begin by checking out ITK's sou
     $ cd /                              (To keep paths short, start at a top-level dir)
     $ mkdir src
     $ cd src
-    $ git clone https://github.com:/InsightSoftwareConsortium/ITK.git -b Release
+    $ git clone https://github.com:/InsightSoftwareConsortium/ITK.git -b release
     $ mkdir ITK-Release
     $ cmake-gui ../ITK
 
