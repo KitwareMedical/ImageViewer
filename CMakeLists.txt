@@ -25,6 +25,7 @@ cmake_minimum_required(VERSION 3.10)
 project(ImageViewer)
 
 cmake_policy(SET CMP0020 NEW)
+cmake_policy(SET CMP0006 OLD)
 
 set(CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 
