@@ -27,20 +27,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-itk-vtk-sem
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: |
-            ../ITK
-            ../ITK-build
-            ../VTK
-            ../VTK-build
-            ../SlicerExecutionModel
-            ../SlicerExecutionModel-build
-          key: vtk${{ env.vtk-git-tag }}-itk${{ env.itk-git-tag }}-sem${{ env.sem-git-tag }}
+
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-itk-vtk-sem
+      with:
+        path: |
+          ../ITK
+          ../ITK-build
+          ../VTK
+          ../VTK-build
+          ../SlicerExecutionModel
+          ../SlicerExecutionModel-build
+        key: vtk${{ env.vtk-git-tag }}-itk${{ env.itk-git-tag }}-sem${{ env.sem-git-tag }}
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
