@@ -54,14 +54,15 @@ using namespace itk;
 *  PAINT = Color the overlay
 */
 const int NUM_ClickModeTypes = 5;
-typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT, CM_RULER, CM_BOX} ClickModeType;
-const char ClickModeTypeName[6][7] =
-  {{'N', 'O', 'P', '\0', ' ', ' ', ' '},
-  {'S', 'e', 'l', 'e', 'c', 't', '\0'},
-  {'C', 'u', 's', 't', 'o', 'm', '\0'},
-  {'P', 'a', 'i', 'n', 't', '\0', ' '},
-  {'R', 'u', 'l', 'e', 'r', '\0', ' '},
-  {'B', 'o', 'x', '\0', ' ', ' ', ' '}};
+typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT3D, CM_PAINT2D, CM_RULER, CM_BOX} ClickModeType;
+const char ClickModeTypeName[7][9] =
+  {{'N', 'O', 'P', '\0', ' ', ' ', ' ', ' ', ' '},
+  {'S', 'e', 'l', 'e', 'c', 't', '\0', ' ', ' '},
+  {'C', 'u', 's', 't', 'o', 'm', '\0', ' ', ' '},
+  {'P', 'a', 'i', 'n', 't','3', 'D', '\0', ' '},
+  {'P', 'a', 'i', 'n', 't','2','D', '\0', ' '},
+  {'R', 'u', 'l', 'e', 'r', '\0', ' ', ' ', ' '},
+  {'B', 'o', 'x', '\0', ' ', ' ', ' ', ' ', ' '}};
 
 /*! SelectMovementType encodes the type of SELECT event */
 const int NUM_SelectMovementTypes = 3;
@@ -127,8 +128,15 @@ struct Step {
 * name: the name of this label
 */
 
-struct PaintStep : Step {
-  PaintStep() : Step(CM_PAINT) {}
+struct PaintStep3D : Step {
+  PaintStep3D() : Step(CM_PAINT3D) {}
+  int label;
+  int radius;
+  std::string name;
+};
+
+struct PaintStep2D : Step {
+  PaintStep2D() : Step(CM_PAINT2D) {}
   int label;
   int radius;
   std::string name;
@@ -435,7 +443,7 @@ public slots:
   void createOverlay( void );
   void saveOverlayWithPrompt( void );
   void saveOverlay( std::string fileName );
-  void paintOverlayPoint( double x, double y, double z );
+  void paintOverlayPoint( double x, double y, double z, std::string dimension);
   void setPreserveOverlayPaint( bool preserve )
     { cPreserveOverlayPaint = preserve; };
   void setPaintRadius( int r )
