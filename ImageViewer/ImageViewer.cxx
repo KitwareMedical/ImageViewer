@@ -479,7 +479,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
         steps.push_back(std::move(step));
       }
-      else if (type == "p3" || type == "P3") {
+      else if (type == "p" || type == "P") {
 
         auto name = workflow[i++];
         auto radiusStr = workflow[i++];

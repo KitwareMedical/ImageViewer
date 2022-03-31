@@ -1781,6 +1781,24 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         else if (cClickMode == CM_BOX && keyEvent->modifiers() & Qt::CTRL) {
           saveBoxesWithPrompt();
         }
+        else if (cClickMode == CM_PAINT3D)
+        {
+          if (!cValidOverlayData)
+          {
+            createOverlay();
+          }
+          cClickMode = CM_PAINT2D;
+          update();
+        }
+        else if (cClickMode == CM_PAINT2D)
+        {
+          if (!cValidOverlayData)
+          {
+            createOverlay();
+          }
+          cClickMode = CM_PAINT3D;
+          update();
+        }
         break;
     case Qt::Key_E:
       setIWModeMax( iwModeMax() == IW_FLIP ? IW_MAX : IW_FLIP );
@@ -2345,14 +2363,14 @@ void QtGlSliceView::paintGL( void )
 
         auto paintStep3D = static_cast<PaintStep3D*>(step.get());
 
-        sprintf( s, "STEP: %d (PAINT3D), L: %s", cWorkflowIndex, paintStep3D->name.c_str());
+        sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep3D->name.c_str());
 
       } 
       else if (step->type == CM_PAINT2D) {
 
         auto paintStep2D = static_cast<PaintStep2D*>(step.get());
 
-        sprintf( s, "STEP: %d (PAINT2D), L: %s", cWorkflowIndex, paintStep2D->name.c_str());
+        sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep2D->name.c_str());
 
       }
       else if (step->type == CM_BOX) {
