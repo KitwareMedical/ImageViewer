@@ -1364,11 +1364,17 @@ void QtGlSliceView::switchWorkflowStep( int index )
 
   auto& step = cWorkflowSteps[index];
 
-  if (step->type == CM_PAINT) {
-    setClickMode(CM_PAINT);
-    auto paintStep = static_cast<PaintStep*>(step.get());
-    cOverlayPaintColor = paintStep->label;
-    cOverlayPaintRadius = paintStep->radius;
+  if (step->type == CM_PAINT3D) {
+    setClickMode(CM_PAINT3D);
+    auto paintStep3D = static_cast<PaintStep3D*>(step.get());
+    cOverlayPaintColor = paintStep3D->label;
+    cOverlayPaintRadius = paintStep3D->radius;
+  }
+  else if (step->type == CM_PAINT2D) {
+    setClickMode(CM_PAINT2D);
+    auto paintStep2D = static_cast<PaintStep2D*>(step.get());
+    cOverlayPaintColor = paintStep2D->label;
+    cOverlayPaintRadius = paintStep2D->radius;
   } else if (step->type == CM_BOX) {
     setClickMode(CM_BOX);
     auto boxStep = static_cast<BoxStep*>(step.get());
@@ -1382,7 +1388,7 @@ void QtGlSliceView::switchWorkflowStep( int index )
   }
 }
 
-void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
+void QtGlSliceView::paintOverlayPoint( double x, double y, double z, std::string dimension)
 {
   if( !cValidOverlayData )
     {
@@ -1417,13 +1423,23 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
     {
     maxY = cDimSize[1]-1;
     }
-
-  int minZ = z-r+1;
+  
+  int maxZ, minZ;
+  if (dimension == "2D")
+  {
+    minZ = z;
+    maxZ = z;
+  }
+  else
+  {
+    minZ = z-r+1;
+    maxZ = z+r-1;
+  }
+  
   if( minZ < 0 )
     {
     minZ = 0;
     }
-  int maxZ = z+r-1;
   if( maxZ >= static_cast<int>(cDimSize[2]) )
     {
     maxZ = cDimSize[2]-1;
@@ -1433,9 +1449,18 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z )
   ImageType::IndexType idx;
   for( int iz=minZ; iz<=maxZ; ++iz )
     {
-    double z2 = iz - z;
-    z2 *= z2;
-    idx[2] = iz;
+    double z2;
+    if (dimension == "2D")
+    {
+      z2 = z;
+      idx[2] = z;   
+    }
+    else
+    {
+      z2 = iz - z;
+      z2 *= z2;
+      idx[2] = iz;
+    }
     for( int iy=minY; iy<=maxY; ++iy )
       {
       double y2 = iy - y;
@@ -1678,7 +1703,15 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
             {
                 createOverlay();
             }
-            cClickMode = CM_PAINT;
+            cClickMode = CM_PAINT3D;
+            update();
+        }
+        else if ( cClickMode == CM_PAINT3D ) {
+            if (!cValidOverlayData)
+            {
+                createOverlay();
+            }
+            cClickMode = CM_PAINT2D;
             update();
         }
       else
@@ -1747,6 +1780,24 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         }
         else if (cClickMode == CM_BOX && keyEvent->modifiers() & Qt::CTRL) {
           saveBoxesWithPrompt();
+        }
+        else if (cClickMode == CM_PAINT3D)
+        {
+          if (!cValidOverlayData)
+          {
+            createOverlay();
+          }
+          cClickMode = CM_PAINT2D;
+          update();
+        }
+        else if (cClickMode == CM_PAINT2D)
+        {
+          if (!cValidOverlayData)
+          {
+            createOverlay();
+          }
+          cClickMode = CM_PAINT3D;
+          update();
         }
         break;
     case Qt::Key_E:
@@ -2265,13 +2316,27 @@ void QtGlSliceView::paintGL( void )
       }
       glDisable(GL_BLEND);
   }
-  else if( cValidOverlayData && cClickMode == CM_PAINT )
+  else if( cValidOverlayData && cClickMode == CM_PAINT3D )
     {
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
     char s[80];
-    sprintf( s, "PAINT: R = %d  C = %d", cOverlayPaintRadius,
+    sprintf( s, "PAINT3D: R = %d  C = %d", cOverlayPaintRadius,
+      cOverlayPaintColor );
+    int posX = width() - widgetFontMetric.horizontalAdvance(s)
+      - widgetFontMetric.horizontalAdvance("00");
+    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+    this->renderText( posX, posY, s, widgetFont );
+    glDisable( GL_BLEND );
+    }
+  else if( cValidOverlayData && cClickMode == CM_PAINT2D )
+    {
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    char s[80];
+    sprintf( s, "PAINT2D: R = %d  C = %d", cOverlayPaintRadius,
       cOverlayPaintColor );
     int posX = width() - widgetFontMetric.horizontalAdvance(s)
       - widgetFontMetric.horizontalAdvance("00");
@@ -2294,13 +2359,21 @@ void QtGlSliceView::paintGL( void )
 
     auto& step = cWorkflowSteps[cWorkflowIndex];
 
-      if (step->type == CM_PAINT) {
+      if (step->type == CM_PAINT3D) {
 
-        auto paintStep = static_cast<PaintStep*>(step.get());
+        auto paintStep3D = static_cast<PaintStep3D*>(step.get());
 
-        sprintf( s, "STEP: %d (PAINT), L: %s", cWorkflowIndex, paintStep->name.c_str());
+        sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep3D->name.c_str());
 
-      } else if (step->type == CM_BOX) {
+      } 
+      else if (step->type == CM_PAINT2D) {
+
+        auto paintStep2D = static_cast<PaintStep2D*>(step.get());
+
+        sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep2D->name.c_str());
+
+      }
+      else if (step->type == CM_BOX) {
 
         auto boxStep = static_cast<BoxStep*>(step.get());
 
@@ -2583,9 +2656,9 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
     return;
     }
 
-  if (cClickMode == CM_SELECT || cClickMode == CM_PAINT ||
-      cClickMode == CM_CUSTOM || cClickMode == CM_RULER ||
-      cClickMode == CM_BOX)
+  if (cClickMode == CM_SELECT || cClickMode == CM_PAINT3D || 
+      cClickMode == CM_PAINT2D || cClickMode == CM_CUSTOM || 
+      cClickMode == CM_RULER || cClickMode == CM_BOX)
   {
       auto p = screenPointToIndex(mouseEvent->x(), mouseEvent->y()).GetDataPointer();
 
@@ -2593,10 +2666,15 @@ void QtGlSliceView::mouseSelectEvent( QMouseEvent* mouseEvent )
       {
           selectPoint(p[0], p[1], p[2]);
       }
-      if (cClickMode == CM_PAINT)
+      if (cClickMode == CM_PAINT3D)
       {
           selectPoint(p[0], p[1], p[2]);
-          paintOverlayPoint(p[0], p[1], p[2]);
+          paintOverlayPoint(p[0], p[1], p[2],"3D");
+      }
+      if (cClickMode == CM_PAINT2D)
+      {
+          selectPoint(p[0], p[1],p[2]);
+          paintOverlayPoint(p[0], p[1], p[2],"2D");
       }
       if (cClickMode == CM_RULER) {
           getRulerToolCollection()->handleMouseEvent(mouseEvent, p);

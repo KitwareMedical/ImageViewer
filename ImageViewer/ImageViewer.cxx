@@ -438,9 +438,13 @@ int parseAndExecImageViewer(int argc, char* argv[])
     {
     viewer.sliceView()->setClickMode( CM_CUSTOM );
     }
-  else if( !strcmp(mouseMode.c_str(),"Paint") )
+  else if( !strcmp(mouseMode.c_str(),"Paint3D") )
     {
-    viewer.sliceView()->setClickMode( CM_PAINT );
+    viewer.sliceView()->setClickMode( CM_PAINT3D );
+    }
+  else if( !strcmp(mouseMode.c_str(),"Paint2D") )
+    {
+    viewer.sliceView()->setClickMode( CM_PAINT2D );
     }
   else if( !strcmp(mouseMode.c_str(),"Ruler") )
     {
@@ -462,13 +466,26 @@ int parseAndExecImageViewer(int argc, char* argv[])
     for (int i = 0; i < workflow.size();) {
       auto type = workflow[i++];
 
-      if (type == "p" || type == "P") {
+      if (type == "p2" || type == "P2") {
 
         auto name = workflow[i++];
         auto radiusStr = workflow[i++];
         auto labelStr = workflow[i++];
 
-        std::unique_ptr<PaintStep> step(new PaintStep());
+        std::unique_ptr<PaintStep2D> step(new PaintStep2D());
+        step->radius = std::atoi(radiusStr.c_str());
+        step->label = std::atoi(labelStr.c_str());
+        step->name = name;
+
+        steps.push_back(std::move(step));
+      }
+      else if (type == "p" || type == "P") {
+
+        auto name = workflow[i++];
+        auto radiusStr = workflow[i++];
+        auto labelStr = workflow[i++];
+
+        std::unique_ptr<PaintStep3D> step(new PaintStep3D());
         step->radius = std::atoi(radiusStr.c_str());
         step->label = std::atoi(labelStr.c_str());
         step->name = name;
