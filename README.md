@@ -8,6 +8,16 @@ ImageViewer is a cross-platform image viewer based on [ITK](http://www.itk.org).
 
 This application was originally bundled with the [ITKApps](http://itk.org/ITKApps.git) repository.
 
+Binaries
+--------
+
+Continuously updated binaries for Windows, Linux, and Macs are automatically created as artifacts using Github Actions with each new pull request.  These are available in the webpage associated with each actions (i.e., on the following link, click on the most recent action that has a green checkmark next to it, and then scroll down to the bottom of that page to see the artifacts associated with that action.
+
+https://github.com/KitwareMedical/ImageViewer/actions
+
+We have also provided binaries for each release.  Follow the release link on the righthand side of the page, and the binaries are bundled with each release.
+
+
 Building
 --------
 
