@@ -1609,6 +1609,8 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         if( cFixedSliceMoveValue > 0 )
         {
           movePace = cFixedSliceMoveValue;
+          cWorkflowIndex = 0;
+          switchWorkflowStep(cWorkflowIndex);
         }
         if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
@@ -1727,6 +1729,8 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       if( cFixedSliceMoveValue > 0 )
       {
         movePace = cFixedSliceMoveValue;
+        cWorkflowIndex = 0;
+        switchWorkflowStep(cWorkflowIndex);
       }
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
