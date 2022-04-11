@@ -336,7 +336,6 @@ QtGlSliceView
 
     cViewOverlayData  = true;
     cValidOverlayData = true;
-    cOverlayOpacity   = 0.75;
 
     if( cWinOverlayData != NULL )
       {
@@ -2234,41 +2233,43 @@ void QtGlSliceView::paintGL( void )
     glDisable( GL_BLEND );
     }
 
-  if( cClickMode == CM_SELECT )
+  if( viewValue() )
     {
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
-    char s[80];
-    if( viewValuePhysicalUnits() )
+    if( cClickMode == CM_SELECT )
       {
-      sprintf( s, "SELECT: Physical points" );
+      glEnable( GL_BLEND );
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+      glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+      char s[80];
+      if( viewValuePhysicalUnits() )
+        {
+        sprintf( s, "SELECT: Physical points" );
+        }
+      else
+        {
+        sprintf( s, "SELECT: Index points" );
+        }
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+        - widgetFontMetric.horizontalAdvance("00");
+      int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+      this->renderText( posX, posY, s, widgetFont );
+      glDisable( GL_BLEND );
       }
-    else
+    else if( cClickMode == CM_CUSTOM )
       {
-      sprintf( s, "SELECT: Index points" );
+      glEnable( GL_BLEND );
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+      glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+      char s[80];
+      sprintf( s, "CUSTOM: Thresh Conn. Comp." );
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+        - widgetFontMetric.horizontalAdvance("00");
+      int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+      this->renderText( posX, posY, s, widgetFont );
+      glDisable( GL_BLEND );
       }
-    int posX = width() - widgetFontMetric.horizontalAdvance(s)
-      - widgetFontMetric.horizontalAdvance("00");
-    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
-    this->renderText( posX, posY, s, widgetFont );
-    glDisable( GL_BLEND );
-    }
-  else if( cClickMode == CM_CUSTOM )
-    {
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
-    char s[80];
-    sprintf( s, "CUSTOM: Thresh Conn. Comp." );
-    int posX = width() - widgetFontMetric.horizontalAdvance(s)
-      - widgetFontMetric.horizontalAdvance("00");
-    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
-    this->renderText( posX, posY, s, widgetFont );
-    glDisable( GL_BLEND );
-    }
-  else if (cClickMode == CM_RULER)
-  {
+    else if (cClickMode == CM_RULER)
+      {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (double)0.75);
@@ -2280,25 +2281,20 @@ void QtGlSliceView::paintGL( void )
       this->renderText(posX, posY, s, widgetFont);
 
       RulerTool* r = getRulerToolCollection()->getActive();
-      if (r != nullptr) {
-          auto d = r->length();
-          sprintf(s, "%s: Length (mm) : %7.2f", r->metaData->name.c_str(), d);
-          posX = width() - widgetFontMetric.horizontalAdvance(s)
-              - widgetFontMetric.horizontalAdvance("00");
-          posY = height() - 4 * (widgetFontMetric.height() + 1);
-          this->renderText(posX, posY, s, widgetFont);
-      }
-      //QPainter painter(this);
-      //painter.setPen(Qt::blue);
-      //painter.drawLine(QLine(0, 0, 100, 100));
-      // if there is a selected/active ruler, then displace its length
-
-
+      if (r != nullptr)
+        {
+        auto d = r->length();
+        sprintf(s, "%s: Length (mm) : %7.2f", r->metaData->name.c_str(), d);
+        posX = width() - widgetFontMetric.horizontalAdvance(s)
+            - widgetFontMetric.horizontalAdvance("00");
+        posY = height() - 4 * (widgetFontMetric.height() + 1);
+        this->renderText(posX, posY, s, widgetFont);
+        }
       getRulerToolCollection()->paint();
       glDisable(GL_BLEND);
-  }
-  else if (cClickMode == CM_BOX)
-  {
+      }
+    else if (cClickMode == CM_BOX)
+      {
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glColor4f(0.1, 0.64, 0.2, (double)0.75);
@@ -2317,88 +2313,80 @@ void QtGlSliceView::paintGL( void )
               - widgetFontMetric.horizontalAdvance("00");
           posY = height() - 4 * (widgetFontMetric.height() + 1);
           this->renderText(posX, posY, s, widgetFont);
-      }
+        }
       glDisable(GL_BLEND);
-  }
-  else if( cValidOverlayData && cClickMode == CM_PAINT3D )
-    {
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
-    char s[80];
-    sprintf( s, "PAINT3D: R = %d  C = %d", cOverlayPaintRadius,
-      cOverlayPaintColor );
-    int posX = width() - widgetFontMetric.horizontalAdvance(s)
-      - widgetFontMetric.horizontalAdvance("00");
-    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
-    this->renderText( posX, posY, s, widgetFont );
-    glDisable( GL_BLEND );
-    }
-  else if( cValidOverlayData && cClickMode == CM_PAINT2D )
-    {
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
-    char s[80];
-    sprintf( s, "PAINT2D: R = %d  C = %d", cOverlayPaintRadius,
-      cOverlayPaintColor );
-    int posX = width() - widgetFontMetric.horizontalAdvance(s)
-      - widgetFontMetric.horizontalAdvance("00");
-    int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
-    this->renderText( posX, posY, s, widgetFont );
-    glDisable( GL_BLEND );
-    }
-
-  if (this->viewOverlayData()) {
-    glEnable(GL_BLEND);
-    getBoxToolCollection()->paint();
-    glDisable(GL_BLEND);
-  }
-
-  if( cWorkflowSteps.size() != 0 ) {
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
-    char s[80];
-
-    auto& step = cWorkflowSteps[cWorkflowIndex];
-
-      if (step->type == CM_PAINT3D) {
-
-        auto paintStep3D = static_cast<PaintStep3D*>(step.get());
-
-        sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep3D->name.c_str());
-
-      } 
-      else if (step->type == CM_PAINT2D) {
-
-        auto paintStep2D = static_cast<PaintStep2D*>(step.get());
-
-        sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep2D->name.c_str());
-
       }
-      else if (step->type == CM_BOX) {
-
-        auto boxStep = static_cast<BoxStep*>(step.get());
-
-        sprintf( s, "STEP: %d (BOX), L: %s", cWorkflowIndex, boxStep->name.c_str());
-      } else if (step->type == CM_RULER)
+    else if( cValidOverlayData && cClickMode == CM_PAINT3D )
       {
-
-        auto rulerStep = static_cast<RulerStep*>(step.get());
-
-        sprintf(s, "STEP: %d (RULER)", cWorkflowIndex);
+      glEnable( GL_BLEND );
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+      glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+      char s[80];
+      sprintf( s, "PAINT3D: R = %d  C = %d", cOverlayPaintRadius,
+        cOverlayPaintColor );
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+        - widgetFontMetric.horizontalAdvance("00");
+      int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+      this->renderText( posX, posY, s, widgetFont );
+      glDisable( GL_BLEND );
       }
-
-    int posX = width() - widgetFontMetric.horizontalAdvance(s)
-      - widgetFontMetric.horizontalAdvance("00");
-    int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
-    this->renderText( posX, posY, s, widgetFont );
-    glDisable( GL_BLEND );
-  }
-
-  if( viewValue() )
-    {
+    else if( cValidOverlayData && cClickMode == CM_PAINT2D )
+      {
+      glEnable( GL_BLEND );
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+      glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+      char s[80];
+      sprintf( s, "PAINT2D: R = %d  C = %d", cOverlayPaintRadius,
+        cOverlayPaintColor );
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+        - widgetFontMetric.horizontalAdvance("00");
+      int posY = height() - 2 * ( widgetFontMetric.height() + 1 );
+      this->renderText( posX, posY, s, widgetFont );
+      glDisable( GL_BLEND );
+      }
+      
+    if( cWorkflowSteps.size() != 0 ) 
+      {
+      glEnable( GL_BLEND );
+      glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+      glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+      char s[80];
+  
+      auto& step = cWorkflowSteps[cWorkflowIndex];
+  
+        if (step->type == CM_PAINT3D) {
+  
+          auto paintStep3D = static_cast<PaintStep3D*>(step.get());
+  
+          sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep3D->name.c_str());
+  
+        } 
+        else if (step->type == CM_PAINT2D) {
+  
+          auto paintStep2D = static_cast<PaintStep2D*>(step.get());
+  
+          sprintf( s, "STEP: %d, L: %s", cWorkflowIndex, paintStep2D->name.c_str());
+  
+        }
+        else if (step->type == CM_BOX) {
+  
+          auto boxStep = static_cast<BoxStep*>(step.get());
+  
+          sprintf( s, "STEP: %d (BOX), L: %s", cWorkflowIndex, boxStep->name.c_str());
+        } else if (step->type == CM_RULER)
+        {
+  
+          auto rulerStep = static_cast<RulerStep*>(step.get());
+  
+          sprintf(s, "STEP: %d (RULER)", cWorkflowIndex);
+        }
+  
+      int posX = width() - widgetFontMetric.horizontalAdvance(s)
+        - widgetFontMetric.horizontalAdvance("00");
+      int posY = height() - 3 * ( widgetFontMetric.height() + 1 );
+      this->renderText( posX, posY, s, widgetFont );
+      glDisable( GL_BLEND );
+      }
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
@@ -2450,6 +2438,12 @@ void QtGlSliceView::paintGL( void )
     this->renderText( posX, posY, s, widgetFont );
     glDisable( GL_BLEND );
     }
+
+  if (this->viewOverlayData()) {
+    glEnable(GL_BLEND);
+    getBoxToolCollection()->paint();
+    glDisable(GL_BLEND);
+  }
 
   QStringList details;
   if( this->orientation() == X_AXIS )
