@@ -30,6 +30,7 @@ limitations under the License.
 // ITK includes
 #include "itkImage.h"
 #include "itkColorTable.h"
+#include "itkMorphologicalContourInterpolator.h"
 
 // ImageViewer includes
 #include "QtImageViewer_Export.h"
@@ -53,7 +54,7 @@ using namespace itk;
 *  SELECT = report pixel info
 *  PAINT = Color the overlay
 */
-const int NUM_ClickModeTypes = 5;
+const int NUM_ClickModeTypes = 7;
 typedef enum {CM_NOP, CM_SELECT, CM_CUSTOM, CM_PAINT3D, CM_PAINT2D, CM_RULER, CM_BOX} ClickModeType;
 const char ClickModeTypeName[7][9] =
   {{'N', 'O', 'P', '\0', ' ', ' ', ' ', ' ', ' '},
@@ -222,6 +223,7 @@ public:
   typedef ImageType::RegionType   RegionType;
   typedef ImageType::SizeType     SizeType;
   typedef ImageType::IndexType    IndexType;
+  typedef itk::MorphologicalContourInterpolator<OverlayType> MciType;
   typedef itk::ColorTable<double> ColorTableType;
   typedef ColorTableType::Pointer ColorTablePointer;
   using PointType3D = itk::Point< double, 3 >;
@@ -441,6 +443,7 @@ public slots:
 
   void setOverlay(bool newOverlay);
   void createOverlay( void );
+  void interpolateOverlay( void );
   void saveOverlayWithPrompt( void );
   void saveOverlay( std::string fileName );
   void paintOverlayPoint( double x, double y, double z, std::string dimension);

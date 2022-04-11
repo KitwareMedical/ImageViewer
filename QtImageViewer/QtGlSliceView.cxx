@@ -333,7 +333,6 @@ QtGlSliceView
   if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
     {
     cOverlayData = newOverlayData;
-
     cViewOverlayData  = true;
     cValidOverlayData = true;
 
@@ -1357,6 +1356,13 @@ void QtGlSliceView::createOverlay( void )
   this->setInputOverlay( cOverlayData );
 }
 
+void QtGlSliceView::interpolateOverlay ()
+{
+  MciType::Pointer mci = MciType::New();
+  mci->SetInput( cOverlayData );
+  mci->Update();
+  cOverlayData = mci->GetOutput();
+}
 
 void QtGlSliceView::switchWorkflowStep( int index ) 
 {
@@ -1396,7 +1402,7 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z, std::string
 
   int r = cOverlayPaintRadius;
   int c = cOverlayPaintColor;
-
+  
   if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)) {
     c = 0;
   }
@@ -1608,8 +1614,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         if( cFixedSliceMoveValue > 0 )
         {
           movePace = cFixedSliceMoveValue;
-          cWorkflowIndex = 0;
-          switchWorkflowStep(cWorkflowIndex);
+          if( cWorkflowSteps.size() != 0 ) 
+          {
+            cWorkflowIndex = 0;
+            switchWorkflowStep(cWorkflowIndex);
+          } 
         }
         if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
@@ -1728,8 +1737,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       if( cFixedSliceMoveValue > 0 )
       {
         movePace = cFixedSliceMoveValue;
-        cWorkflowIndex = 0;
-        switchWorkflowStep(cWorkflowIndex);
+        if( cWorkflowSteps.size() != 0 ) 
+        {
+          cWorkflowIndex = 0;
+          switchWorkflowStep(cWorkflowIndex);
+        }
       }
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
@@ -1964,6 +1976,14 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         {
         setViewValuePhysicalUnits( !viewValuePhysicalUnits() );
         }
+      else if (keyEvent->modifiers() & Qt::CTRL)
+      {
+        if (!cValidOverlayData)
+        {
+          createOverlay();
+        }
+        interpolateOverlay();
+      }
       else
         {
         saveClickedPointsStored();
