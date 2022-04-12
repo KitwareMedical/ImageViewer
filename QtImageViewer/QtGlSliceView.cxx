@@ -67,6 +67,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cWinOverlayData       = NULL;
   cOverlayImageExtension = "mha";
 
+  interp_start_slice = -1;
+  interp_end_slice = -1;
+
   cWorkflowIndex        = 0;
 
   cHelpDialog             = 0;
@@ -1356,10 +1359,15 @@ void QtGlSliceView::createOverlay( void )
   this->setInputOverlay( cOverlayData );
 }
 
-void QtGlSliceView::interpolateOverlay ()
+void QtGlSliceView::interpolateOverlay (int start, int stop)
 {
+  std::vector<IndexValueType> indices;
+  indices.push_back(start);
+  indices.push_back(stop);
   MciType::Pointer mci = MciType::New();
   mci->SetInput( cOverlayData );
+  mci->SetUseCustomSlicePositions(true);
+  mci->SetLabeledSliceIndices(2,cOverlayPaintColor, indices);
   mci->Update();
   cOverlayData = mci->GetOutput();
 }
@@ -1457,8 +1465,8 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z, std::string
     double z2;
     if (dimension == "2D")
     {
-      z2 = z;
-      idx[2] = z;   
+      z2 = 0;
+      idx[2] = iz;   
     }
     else
     {
@@ -1892,16 +1900,22 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       break;
     case Qt::Key_I:
       int newY;
-      if( isYFlipped() )
+      if (keyEvent->modifiers() & Qt::ShiftModifier)
+        {
+        interp_start_slice = sliceNum();
+        }
+      else if( isYFlipped() )
         {
         newY = cWinCenter[cWinOrder[1]]-imgShiftSize;
+        cWinCenter[cWinOrder[1]] = newY;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
       else
         {
         newY = cWinCenter[cWinOrder[1]]+imgShiftSize;
+        cWinCenter[cWinOrder[1]] = newY;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
-      cWinCenter[cWinOrder[1]] = newY;
-      centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
       update();
       break;
     case Qt::Key_M:
@@ -1920,16 +1934,30 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       break;
     case Qt::Key_J:
       int newX;
-      if( isXFlipped() )
+      if (keyEvent->modifiers() & Qt::ShiftModifier)
+        {
+        if (!cValidOverlayData)
+          {
+          createOverlay();
+          }
+        interp_end_slice = sliceNum();
+        if (interp_start_slice != -1 && interp_end_slice != -1)
+          {
+          interpolateOverlay(interp_start_slice, interp_end_slice);
+          }  
+        }
+      else if( isXFlipped() )
         {
         newX = cWinCenter[cWinOrder[0]]+imgShiftSize;
+        cWinCenter[cWinOrder[0]] = newX;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
       else
         {
         newX = cWinCenter[cWinOrder[0]]-imgShiftSize;
+        cWinCenter[cWinOrder[0]] = newX;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
-      cWinCenter[cWinOrder[0]] = newX;
-      centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
       update();
       break;
     case Qt::Key_K:
@@ -1976,14 +2004,6 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         {
         setViewValuePhysicalUnits( !viewValuePhysicalUnits() );
         }
-      else if (keyEvent->modifiers() & Qt::CTRL)
-      {
-        if (!cValidOverlayData)
-        {
-          createOverlay();
-        }
-        interpolateOverlay();
-      }
       else
         {
         saveClickedPointsStored();

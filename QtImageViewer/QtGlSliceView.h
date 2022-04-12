@@ -216,6 +216,7 @@ public:
   typedef QOpenGLWidget                        Superclass;
   typedef double                           ImagePixelType;
   typedef unsigned char                    OverlayPixelType;
+  typedef long int                         IndexValueType;
   typedef itk::Image<ImagePixelType,3>     ImageType;
   typedef itk::Image<OverlayPixelType,3>   OverlayType;
   typedef ImageType::Pointer      ImagePointer;
@@ -443,7 +444,7 @@ public slots:
 
   void setOverlay(bool newOverlay);
   void createOverlay( void );
-  void interpolateOverlay( void );
+  void interpolateOverlay( int start, int stop );
   void saveOverlayWithPrompt( void );
   void saveOverlay( std::string fileName );
   void paintOverlayPoint( double x, double y, double z, std::string dimension);
@@ -591,6 +592,8 @@ protected:
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
   int cFixedSliceMoveValue;
+  int interp_start_slice;
+  int interp_end_slice;
 
   std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
   int cWorkflowIndex;
