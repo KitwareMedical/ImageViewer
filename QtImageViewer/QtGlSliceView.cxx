@@ -67,6 +67,9 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cWinOverlayData       = NULL;
   cOverlayImageExtension = "mha";
 
+  cInterpStartSlice = -1;
+  cInterpEndSlice = -1;
+
   cWorkflowIndex        = 0;
 
   cHelpDialog             = 0;
@@ -333,7 +336,6 @@ QtGlSliceView
   if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
     {
     cOverlayData = newOverlayData;
-
     cViewOverlayData  = true;
     cValidOverlayData = true;
 
@@ -1357,6 +1359,18 @@ void QtGlSliceView::createOverlay( void )
   this->setInputOverlay( cOverlayData );
 }
 
+void QtGlSliceView::interpolateOverlay (int start, int stop)
+{
+  std::vector<IndexValueType> indices;
+  indices.push_back(start);
+  indices.push_back(stop);
+  MciType::Pointer mci = MciType::New();
+  mci->SetInput( cOverlayData );
+  mci->SetUseCustomSlicePositions(true);
+  mci->SetLabeledSliceIndices(2,cOverlayPaintColor, indices);
+  mci->Update();
+  cOverlayData = mci->GetOutput();
+}
 
 void QtGlSliceView::switchWorkflowStep( int index )
 {
@@ -1396,7 +1410,7 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z, std::string
 
   int r = cOverlayPaintRadius;
   int c = cOverlayPaintColor;
-
+  
   if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)) {
     c = 0;
   }
@@ -1449,17 +1463,9 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z, std::string
   for( int iz=minZ; iz<=maxZ; ++iz )
     {
     double z2;
-    if (dimension == "2D")
-      {
-      z2 = 0;
-      idx[2] = iz;
-      }
-    else
-      {
-      z2 = iz - z;
-      z2 *= z2;
-      idx[2] = iz;
-      }
+    z2 = iz - z;
+    z2 *= z2;
+    idx[2] = iz;
     for( int iy=minY; iy<=maxY; ++iy )
       {
       double y2 = iy - y;
@@ -1612,8 +1618,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       movePace = cFastMoveValue[cFastPace];
       if( cFixedSliceMoveValue > 0 )
         {
-        movePace = cFixedSliceMoveValue;
-        cWorkflowIndex = 0;
+          movePace = cFixedSliceMoveValue;
+          if( cWorkflowSteps.size() != 0 ) 
+          {
+            cWorkflowIndex = 0;
+            switchWorkflowStep(cWorkflowIndex);
+          } 
         }
       if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
@@ -1736,8 +1746,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       if( cFixedSliceMoveValue > 0 )
         {
         movePace = cFixedSliceMoveValue;
-        cWorkflowIndex = 0;
+        if( cWorkflowSteps.size() != 0 ) 
+        {
+          cWorkflowIndex = 0;
+          switchWorkflowStep(cWorkflowIndex);
         }
+      }
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
         {
@@ -1891,16 +1905,22 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       break;
     case Qt::Key_I:
       int newY;
-      if( isYFlipped() )
+      if (keyEvent->modifiers() & Qt::ShiftModifier)
+        {
+        cInterpStartSlice = sliceNum();
+        }
+      else if( isYFlipped() )
         {
         newY = cWinCenter[cWinOrder[1]]-imgShiftSize;
+        cWinCenter[cWinOrder[1]] = newY;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
       else
         {
         newY = cWinCenter[cWinOrder[1]]+imgShiftSize;
+        cWinCenter[cWinOrder[1]] = newY;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
-      cWinCenter[cWinOrder[1]] = newY;
-      centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
       update();
       break;
     case Qt::Key_M:
@@ -1919,16 +1939,37 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       break;
     case Qt::Key_J:
       int newX;
-      if( isXFlipped() )
+      if (keyEvent->modifiers() & Qt::ShiftModifier)
+        {
+        if (!cValidOverlayData)
+          {
+          createOverlay();
+          }
+        cInterpEndSlice = sliceNum();
+        if (cInterpStartSlice != -1 && cInterpEndSlice != -1 && cInterpStartSlice != cInterpEndSlice)
+          {
+          if (cInterpStartSlice > cInterpEndSlice)
+            {
+            int tmp = cInterpEndSlice;
+            cInterpEndSlice = cInterpStartSlice;
+            cInterpStartSlice = tmp;
+            }
+          interpolateOverlay(cInterpStartSlice, cInterpEndSlice);
+          cInterpStartSlice = cInterpEndSlice;
+          cInterpEndSlice = -1;
+          }
+      else if( isXFlipped() )
         {
         newX = cWinCenter[cWinOrder[0]]+imgShiftSize;
+        cWinCenter[cWinOrder[0]] = newX;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
       else
         {
         newX = cWinCenter[cWinOrder[0]]-imgShiftSize;
+        cWinCenter[cWinOrder[0]] = newX;
+        centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
         }
-      cWinCenter[cWinOrder[0]] = newX;
-      centerWindow( cWinCenter[0], cWinCenter[1], cWinCenter[2] );
       update();
       break;
     case Qt::Key_K:
