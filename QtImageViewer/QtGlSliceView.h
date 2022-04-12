@@ -592,8 +592,8 @@ protected:
   int cOverlayPaintColor;
   QString cOverlayImageExtension;
   int cFixedSliceMoveValue;
-  int interp_start_slice;
-  int interp_end_slice;
+  int cInterpStartSlice;
+  int cInterpEndSlice;
 
   std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
   int cWorkflowIndex;

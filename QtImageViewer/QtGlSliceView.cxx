@@ -67,8 +67,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cWinOverlayData       = NULL;
   cOverlayImageExtension = "mha";
 
-  interp_start_slice = -1;
-  interp_end_slice = -1;
+  cInterpStartSlice = -1;
+  cInterpEndSlice = -1;
 
   cWorkflowIndex        = 0;
 
@@ -1902,7 +1902,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       int newY;
       if (keyEvent->modifiers() & Qt::ShiftModifier)
         {
-        interp_start_slice = sliceNum();
+        cInterpStartSlice = sliceNum();
         }
       else if( isYFlipped() )
         {
@@ -1940,12 +1940,19 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
           {
           createOverlay();
           }
-        interp_end_slice = sliceNum();
-        if (interp_start_slice != -1 && interp_end_slice != -1)
+        cInterpEndSlice = sliceNum();
+        if (cInterpStartSlice != -1 && cInterpEndSlice != -1 && cInterpStartSlice != cInterpEndSlice)
           {
-          interpolateOverlay(interp_start_slice, interp_end_slice);
-          }  
-        }
+          if (cInterpStartSlice > cInterpEndSlice)
+            {
+            int tmp = cInterpEndSlice;
+            cInterpEndSlice = cInterpStartSlice;
+            cInterpStartSlice = tmp;
+            }
+          interpolateOverlay(cInterpStartSlice, cInterpEndSlice);
+          cInterpStartSlice = cInterpEndSlice;
+          cInterpEndSlice = -1;
+          }
       else if( isXFlipped() )
         {
         newX = cWinCenter[cWinOrder[0]]+imgShiftSize;
