@@ -1958,6 +1958,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
           cInterpStartSlice = cInterpEndSlice;
           cInterpEndSlice = -1;
           }
+        }  
       else if( isXFlipped() )
         {
         newX = cWinCenter[cWinOrder[0]]+imgShiftSize;
