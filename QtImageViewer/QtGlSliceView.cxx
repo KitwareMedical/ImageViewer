@@ -1361,7 +1361,7 @@ void QtGlSliceView::createOverlay( void )
 
 void QtGlSliceView::interpolateOverlay (int start, int stop)
 {
-  std::vector<IndexValueType> indices;
+  std::vector<itk::IndexValueType> indices;
   indices.push_back(start);
   indices.push_back(stop);
   MciType::Pointer mci = MciType::New();
