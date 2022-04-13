@@ -258,6 +258,14 @@
           <label>Workflow Steps</label>
           <default></default>
         </string-vector>
+        <string-vector>
+          <name>workflowPersistent</name>
+          <flag>W</flag>
+          <longflag>workflowPersistent</longflag>
+          <description>Specify Workflow Steps like "p,Pleura,10,1,b,ROI,1,p,Bone,10,1 that persist even when slices are changed."</description>
+          <label>Persistent Workflow Steps</label>
+          <default></default>
+        </string-vector>
         <integer>
           <name>fixedSliceDelta</name>
           <longflag>fixedSliceDelta</longflag>

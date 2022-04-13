@@ -261,9 +261,14 @@ public:
     cClickMode = m;
     };
   
-  void setWorkflowSteps(std::vector<std::unique_ptr<struct Step>> steps) {
-    cWorkflowSteps = std::move(steps);
-  }
+  void setWorkflowSteps(std::vector<std::unique_ptr<struct Step>> steps) 
+    { cWorkflowSteps = std::move(steps); };
+
+  void setUsePersistentWorkflow(bool upw)
+    { cUsePersistentWorkflow = upw; };
+
+  bool usePersistentWorkflow(void)
+    { return cUsePersistentWorkflow; };
 
   ClickModeType clickMode( void )
     { return cClickMode; };
@@ -597,8 +602,10 @@ protected:
 
   std::vector<std::unique_ptr<struct Step>> cWorkflowSteps;
   int cWorkflowIndex;
+  bool cUsePersistentWorkflow;
 
   OverlayPointer cOverlayData;
+  OverlayPointer cPrevOverlayData;
 
   unsigned char *cWinOverlayData;
   QDialog* cHelpDialog;

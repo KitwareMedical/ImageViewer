@@ -34,6 +34,7 @@ limitations under the License.
 #include "itkMinimumMaximumImageCalculator.h"
 #include "itkImageFileWriter.h"
 #include "itkExtractImageFilter.h"
+#include "itkImageDuplicator.h"
 
 //std includes
 #include <cmath>
@@ -71,6 +72,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   cInterpEndSlice = -1;
 
   cWorkflowIndex        = 0;
+
+  cUsePersistentWorkflow  = true;
 
   cHelpDialog             = 0;
 
@@ -118,6 +121,7 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
   sprintf( cAxisLabelY[1], "S" );
   sprintf( cAxisLabelY[2], "P" );
   cOverlayData = NULL;
+  cPrevOverlayData = NULL;
   cImData = NULL;
   cClickSelectV = 0;
   cViewImData  = true;
@@ -335,6 +339,7 @@ QtGlSliceView
 
   if( !cValidImData || newoverlay_size[2]==cImData_size[2] )
     {
+    cPrevOverlayData = cOverlayData;
     cOverlayData = newOverlayData;
     cViewOverlayData  = true;
     cValidOverlayData = true;
@@ -1349,6 +1354,7 @@ void QtGlSliceView::setOverlay( bool newOverlay )
 
 void QtGlSliceView::createOverlay( void )
 {
+  cPrevOverlayData = cOverlayData;
   cOverlayData = OverlayType::New();
 
   cOverlayData->CopyInformation( cImData );
@@ -1361,6 +1367,7 @@ void QtGlSliceView::createOverlay( void )
 
 void QtGlSliceView::interpolateOverlay (int start, int stop)
 {
+  std::cout << "Interploating..." << std::endl;
   std::vector<itk::IndexValueType> indices;
   indices.push_back(start);
   indices.push_back(stop);
@@ -1369,7 +1376,9 @@ void QtGlSliceView::interpolateOverlay (int start, int stop)
   mci->SetUseCustomSlicePositions(true);
   mci->SetLabeledSliceIndices(2,cOverlayPaintColor, indices);
   mci->Update();
+  cPrevOverlayData = cOverlayData;
   cOverlayData = mci->GetOutput();
+  std::cout << "...Done!" << std::endl;
 }
 
 void QtGlSliceView::switchWorkflowStep( int index )
@@ -1411,9 +1420,10 @@ void QtGlSliceView::paintOverlayPoint( double x, double y, double z, std::string
   int r = cOverlayPaintRadius;
   int c = cOverlayPaintColor;
   
-  if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)) {
+  if (QGuiApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
+    {
     c = 0;
-  }
+    }
 
   int minX = x-r+1;
   if( minX < 0 )
@@ -1618,12 +1628,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       movePace = cFastMoveValue[cFastPace];
       if( cFixedSliceMoveValue > 0 )
         {
-          movePace = cFixedSliceMoveValue;
-          if( cWorkflowSteps.size() != 0 ) 
-          {
-            cWorkflowIndex = 0;
-            switchWorkflowStep(cWorkflowIndex);
-          } 
+        movePace = cFixedSliceMoveValue;
+        }
+      if( !cUsePersistentWorkflow && cWorkflowSteps.size() != 0 ) 
+        {
+        cWorkflowIndex = 0;
+        switchWorkflowStep(cWorkflowIndex);
         }
       if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
@@ -1746,12 +1756,12 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       if( cFixedSliceMoveValue > 0 )
         {
         movePace = cFixedSliceMoveValue;
-        if( cWorkflowSteps.size() != 0 ) 
-        {
-          cWorkflowIndex = 0;
-          switchWorkflowStep(cWorkflowIndex);
         }
-      }
+      if( !cUsePersistentWorkflow && cWorkflowSteps.size() != 0 ) 
+        {
+        cWorkflowIndex = 0;
+        switchWorkflowStep(cWorkflowIndex);
+        }
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
         {
@@ -1794,7 +1804,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       update();
       break;
     case Qt::Key_U:
-      if (cClickMode == CM_RULER)
+      if (cClickMode == CM_RULER) 
         {
         if (keyEvent->modifiers() & Qt::CTRL)
           {
@@ -1805,11 +1815,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
           setIsONSDRuler(!isONSDRuler);
           }
         }
-      else if (cClickMode == CM_BOX && keyEvent->modifiers() & Qt::CTRL)
+      else if (cClickMode == CM_BOX && (keyEvent->modifiers() & Qt::CTRL))
         {
         saveBoxesWithPrompt();
         }
-      else if (cClickMode == CM_PAINT3D)
+      else if (cClickMode == CM_PAINT3D && !keyEvent->modifiers())
         {
         if (!cValidOverlayData)
           {
@@ -1818,7 +1828,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         cClickMode = CM_PAINT2D;
         update();
         }
-      else if (cClickMode == CM_PAINT2D)
+      else if (cClickMode == CM_PAINT2D && !keyEvent->modifiers())
         {
         if (!cValidOverlayData)
           {
@@ -1826,6 +1836,17 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
           }
         cClickMode = CM_PAINT3D;
         update();
+        }
+      else if (keyEvent->modifiers() & Qt::ShiftModifier)
+        {
+        if( cPrevOverlayData.IsNotNull() )
+          {
+          std::cout << "Undo." << std::endl;
+          OverlayPointer tmpOverlayData = cOverlayData;
+          cOverlayData = cPrevOverlayData;
+          cPrevOverlayData = tmpOverlayData;
+          update();
+          }
         }
       break;
     case Qt::Key_E:
@@ -1946,7 +1967,9 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
           createOverlay();
           }
         cInterpEndSlice = sliceNum();
-        if (cInterpStartSlice != -1 && cInterpEndSlice != -1 && cInterpStartSlice != cInterpEndSlice)
+        if (cInterpStartSlice != -1
+            && cInterpEndSlice != -1
+            && cInterpStartSlice != cInterpEndSlice)
           {
           if (cInterpStartSlice > cInterpEndSlice)
             {
@@ -2741,6 +2764,16 @@ void QtGlSliceView::mousePressEvent( QMouseEvent* mouseEvent )
 {
   if( mouseEvent->button() & Qt::LeftButton )
     {
+    if( cClickMode == CM_PAINT2D || cClickMode == CM_PAINT3D ||
+        cClickMode == CM_CUSTOM )
+      {
+      std::cout << "Saving overlay for potential undo." << std::endl;
+      using DuplicatorType = itk::ImageDuplicator<OverlayType>;
+      DuplicatorType::Pointer duplicator = DuplicatorType::New();
+      duplicator->SetInputImage(cOverlayData);
+      duplicator->Update();
+      cPrevOverlayData = duplicator->GetOutput();
+      }
     cSelectMovement = SM_PRESS;
     this->mouseSelectEvent( mouseEvent );
     }
