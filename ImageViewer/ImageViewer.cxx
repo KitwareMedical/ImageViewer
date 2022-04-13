@@ -459,6 +459,19 @@ int parseAndExecImageViewer(int argc, char* argv[])
     viewer.sliceView()->setClickMode( CM_SELECT );
     }
 
+  bool usePersistentWorkflow = false;
+  if(workflowPersistent.size() >= 1)
+    {
+    if(workflow.size() >= 1)
+      {
+      std::cerr << "Cannot specify both a workflow and a persistentWorkflow"
+        << std::endl;
+      return EXIT_FAILURE;
+      }
+    workflow = std::move(workflowPersistent);
+    usePersistentWorkflow = true;
+    }
+
   if (workflow.size() >= 1) {
 
     std::vector<std::unique_ptr<struct Step>> steps;
@@ -544,6 +557,7 @@ int parseAndExecImageViewer(int argc, char* argv[])
 
     viewer.sliceView()->setWorkflowSteps(std::move(steps));
     viewer.sliceView()->switchWorkflowStep(0);
+    viewer.sliceView()->setUsePersistentWorkflow(usePersistentWorkflow);
   }
 
   for (auto fileName : jsonAnnotationFiles) {
