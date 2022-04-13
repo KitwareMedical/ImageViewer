@@ -3,7 +3,6 @@ name: Build, test, package
 on: [push,pull_request]
 
 env:
-  vtk-git-tag: "1681cee3489800373c2e183af2d3ca8552e05940"
   sem-git-tag: "master"
   itk-git-tag: "v5.3rc03"
 
@@ -31,16 +30,14 @@ jobs:
     - name: Cache node modules
       uses: actions/cache@v2
       env:
-        cache-name: cache-itk-vtk-sem
+        cache-name: cache-itk-sem
       with:
         path: |
           ../ITK
           ../ITK-build
-          ../VTK
-          ../VTK-build
           ../SlicerExecutionModel
           ../SlicerExecutionModel-build
-        key: vtk${{ env.vtk-git-tag }}-itk${{ env.itk-git-tag }}-sem${{ env.sem-git-tag }}
+        key: itk${{ env.itk-git-tag }}-sem${{ env.sem-git-tag }}
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
@@ -63,33 +60,6 @@ jobs:
 
     - name: Get specific version of CMake
       uses: lukka/get-cmake@v3.18.3
-
-    - name: Download VTK
-      run: |
-        cd ..
-        git clone https://github.com/Kitware/VTK.git
-        pushd VTK
-        git checkout ${{ env.vtk-git-tag }}
-
-    - name: Build VTK
-      if: matrix.os != 'windows-2019'
-      run: |
-        cd ..
-        mkdir VTK-build
-        pushd VTK-build
-        export MACOSX_DEPLOYMENT_TARGET=10.9
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_EXAMPLES:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja ../VTK
-        ninja
-    - name: Build VTK-Windows
-      if: matrix.os == 'windows-2019'
-      run: |
-        cd ..
-        mkdir VTK-build
-        pushd VTK-build
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-        cmake -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DBUILD_EXAMPLES:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja ../VTK
-        ninja
-      shell: cmd
 
     - name: Download ITK
       run: |
@@ -153,7 +123,6 @@ jobs:
       if: matrix.os == 'ubuntu-18.04'
       run: |
         export ITK_DIR="${PWD}/../ITK-build"
-        export VTK_DIR="${PWD}/../VTK-build"
         export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
         cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja .
         ninja
@@ -162,7 +131,6 @@ jobs:
       if: matrix.os == 'macos-10.15'
       run: |
         export ITK_DIR="${PWD}/../ITK-build"
-        export VTK_DIR="${PWD}/../VTK-build"
         export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
         export MACOSX_DEPLOYMENT_TARGET=10.9
         cmake -DCMAKE_MACOSX_BUNDLE:BOOL=ON -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_C_COMPILER:FILEPATH="${{ matrix.c-compiler }}" -DCMAKE_CXX_COMPILER="${{ matrix.cxx-compiler }}" -DCMAKE_BUILD_TYPE:STRING=Release -GNinja .
@@ -172,7 +140,6 @@ jobs:
       if: matrix.os == 'windows-2019'
       run: |
         set ITK_DIR=%CD%\..\ITK-build
-        set VTK_DIR=%CD%\..\VTK-build
         set SlicerExecutionModel_DIR=%CD%\..\SlicerExecutionModel-build
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
               -DBUILD_SHARED_LIBS:BOOL=OFF \
