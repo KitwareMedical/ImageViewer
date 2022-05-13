@@ -1,5 +1,5 @@
-TubeTK ImageViewer
-==================
+ImageViewer
+===========
 
 Description
 -----------
@@ -43,21 +43,15 @@ For ITK, we want to compile ITK v5.0 or later.   Begin by checking out ITK's sou
 
 Using CMake, you should configure ITK with the following options
 * CMAKE_BUILD_TYPE = Release           (This is an advanced option)
-* ITK_LEGACY_SILENT = On               (This is an advanced option)
-* ITK_WRAP_PYTHON = On                 (Note: Only Python3 is supported at this time)
-* Module_MinimalPathExtraction = On    (This is an advanced option)
 * You may also want to turn off building Tests and Examples
 
 Once you have configured and generated your build files (e.g., for make or ninja or whatever):
 
     $ ninja  (or make, or nmake, or whatever is appropriate for your system)
 
-This build process can take many hours on a Windows PC, because it is generating the files needed
-to use ITK with Python, as well as the standard C++ libraries, applications, examples, and tests.
-
 *3) SlicerExecutionModel*
 
-After compiling ITK, we repeat the build process for SlicerExecutionModel (used by ITKTubeTK applications):
+After compiling ITK, we repeat the build process for SlicerExecutionModel:
 
     $ cd /src
     $ git clone https://github.com:/Slicer/SlicerExecutionModel.git
@@ -244,9 +238,6 @@ Where:
    Description: No description provided
 
    Author(s): Kitware
-
-   Acknowledgements: This work is part of the TubeTK-ImageViewer project at
-   Kitware.
 
 ```
 
