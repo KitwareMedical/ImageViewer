@@ -1597,6 +1597,26 @@ IWModeType QtGlSliceView::iwModeMax(void) const
 }
 
 
+void QtGlSliceView::wheelEvent(QWheelEvent* wheelEvent)
+{
+  if(wheelEvent->delta() > 0)
+    {
+    QKeyEvent fakeKeyEvent(QEvent::KeyPress, Qt::Key_Period, Qt::NoModifier,
+      ".");
+    this->keyPressEvent(&fakeKeyEvent);
+    }
+  else if(wheelEvent->delta() < 0)
+    {
+    QKeyEvent fakeKeyEvent(QEvent::KeyPress, Qt::Key_Comma, Qt::NoModifier,
+      ",");
+    this->keyPressEvent(&fakeKeyEvent);
+    }
+  else
+    {
+    QOpenGLWidget::wheelEvent(wheelEvent);
+    }
+}
+
 void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
 {
   int movePace;
@@ -2079,7 +2099,7 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       showHelp();
       break;
     default:
-      this->QWidget::keyPressEvent( keyEvent );
+      QOpenGLWidget::keyPressEvent( keyEvent );
       break;
     }
   if( cKeyEventArgCallBack != NULL )

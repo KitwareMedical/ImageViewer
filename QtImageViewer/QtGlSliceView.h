@@ -25,6 +25,8 @@ limitations under the License.
 // Qt includes
 #include <QString>
 #include <QOpenGLWidget>
+#include <QWheelEvent>
+#include <QKeyEvent>
 #include <QtOpenGL/qgl.h>
 
 // ITK includes
@@ -305,6 +307,8 @@ public:
   virtual void mouseMoveEvent(QMouseEvent *event) ;
 
   virtual void mouseReleaseEvent(QMouseEvent *event);
+
+  virtual void wheelEvent(QWheelEvent* event);
 
   virtual void keyPressEvent(QKeyEvent* event);
 
