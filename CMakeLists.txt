@@ -50,7 +50,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #add_definitions( -DQT_STATIC )
 #add_definitions( -DQT_DESIGNER_STATIC )
 add_definitions( -DQT_THREAD_SUPPORT )
-find_package(Qt5 COMPONENTS Core Widgets Gui REQUIRED)
+find_package(Qt5 5.11 COMPONENTS Core Widgets Gui REQUIRED)
 
 find_package(SlicerExecutionModel REQUIRED)
 include(${SlicerExecutionModel_USE_FILE})
