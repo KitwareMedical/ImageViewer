@@ -321,59 +321,7 @@ bool QtImageViewer::loadJSONAnnotations(QString filePathToLoad)
   bool status = false;
 
   const QJsonObject root = doc.object();
-  if (root.contains("boxes") && root["boxes"].isArray()) {
-    const QJsonArray slices = root["boxes"].toArray();
-    for (auto val1 : slices) {
-      if (val1.isObject()) {
-        const QJsonObject slice = val1.toObject();
-        if (
-          slice.contains("axis") && slice["axis"].isDouble() &&
-          slice.contains("slice") && slice["slice"].isDouble() &&
-          slice.contains("boxes") && slice["boxes"].isArray()
-        ) {
-          const int axis = (int)slice["axis"].toDouble();
-          const int sliceNum = (int)slice["slice"].toDouble();
-          const QJsonArray boxes = slice["boxes"].toArray();
-          for (auto val2 : boxes) {
-            if (val2.isObject()) {
-              const QJsonObject box = val2.toObject();
-              if (
-                box.contains("name") && box["name"].isString() &&
-                box.contains("indices") && box["indices"].isArray()
-              ) {
-                const QString name = box["name"].toString();
-                const QJsonArray indices = box["indices"].toArray();
-                if (
-                  indices.size() == 2 &&
-                  indices[0].isArray() &&
-                  indices[1].isArray()
-                ) {
-                  const QJsonArray pt1Array = indices[0].toArray();
-                  const QJsonArray pt2Array = indices[1].toArray();
-                  if (pt1Array.size() == 3 && pt2Array.size() == 3) {
-                    double point1[] = {
-                      pt1Array[0].toDouble(),
-                      pt1Array[1].toDouble(),
-                      pt1Array[2].toDouble(),
-                    };
-                    double point2[] = {
-                      pt2Array[0].toDouble(),
-                      pt2Array[1].toDouble(),
-                      pt2Array[2].toDouble(),
-                    };
-                    this->sliceView()->addBox(name.toStdString(), axis, sliceNum, point1, point2);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    status = true;
-  }
-
+  status |= this->loadBoxAnnotations(root);
   return status;
 }
 
@@ -400,3 +348,67 @@ void QtImageViewer::releaseFixedSize()
   Q_D(QtImageViewer);
   d->OpenGlWindow->setFixedSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
 }
+
+bool QtImageViewer::loadBoxAnnotations(const QJsonObject &root)
+{
+  if (!(root.contains("boxes") && root["boxes"].isArray()))
+  {
+    return false;
+  }
+
+  const QJsonArray slices = root["boxes"].toArray();
+  for (auto val1 : slices)
+  {
+    if (val1.isObject())
+    {
+      const QJsonObject slice = val1.toObject();
+      if (
+          slice.contains("axis") && slice["axis"].isDouble() &&
+          slice.contains("slice") && slice["slice"].isDouble() &&
+          slice.contains("boxes") && slice["boxes"].isArray())
+      {
+        const int axis = (int)slice["axis"].toDouble();
+        const int sliceNum = (int)slice["slice"].toDouble();
+        const QJsonArray boxes = slice["boxes"].toArray();
+        for (auto val2 : boxes)
+        {
+          if (val2.isObject())
+          {
+            const QJsonObject box = val2.toObject();
+            if (
+                box.contains("name") && box["name"].isString() &&
+                box.contains("indices") && box["indices"].isArray())
+            {
+              const QString name = box["name"].toString();
+              const QJsonArray indices = box["indices"].toArray();
+              if (
+                  indices.size() == 2 &&
+                  indices[0].isArray() &&
+                  indices[1].isArray())
+              {
+                const QJsonArray pt1Array = indices[0].toArray();
+                const QJsonArray pt2Array = indices[1].toArray();
+                if (pt1Array.size() == 3 && pt2Array.size() == 3)
+                {
+                  double point1[] = {
+                      pt1Array[0].toDouble(),
+                      pt1Array[1].toDouble(),
+                      pt1Array[2].toDouble(),
+                  };
+                  double point2[] = {
+                      pt2Array[0].toDouble(),
+                      pt2Array[1].toDouble(),
+                      pt2Array[2].toDouble(),
+                  };
+                  this->sliceView()->addBox(name.toStdString(), axis, sliceNum, point1, point2);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
+}
+

@@ -24,13 +24,14 @@ limitations under the License.
 
 // Qt includes
 #include <QDialog>
+#include <QJsonObject>
 
 // ITK includes
 #include <itkImage.h>
 
 // ImageViewer includes
 #include "QtImageViewer_Export.h"
-class QtGlSliceView;
+    class QtGlSliceView;
 class QtImageViewerPrivate;
 
 class QtImageViewer_EXPORT QtImageViewer : public QDialog
@@ -81,6 +82,7 @@ protected:
 private:
   Q_DECLARE_PRIVATE(QtImageViewer);
   Q_DISABLE_COPY(QtImageViewer);
+  bool loadBoxAnnotations(const QJsonObject& root);
 };
 
 #endif
