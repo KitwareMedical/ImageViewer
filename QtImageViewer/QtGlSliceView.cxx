@@ -3124,13 +3124,17 @@ void QtGlSliceView::renderText( double x, double y, const QString & str,
     }
 }
 
-RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
-    auto axis_slice = std::pair<int, int>(cWinOrder[2], this->sliceNum());
-    if (cRulerCollections.find(axis_slice) == cRulerCollections.end()) {
-        std::unique_ptr< RulerToolCollection > rc(new RulerToolCollection(this, cCurrentRulerMetaFactory, cWinOrder[2], this->sliceNum())); // TODO: figure out which axis we're talking about (remove 2)
-        cRulerCollections[axis_slice] = std::move(rc);
-    }
-    return cRulerCollections[axis_slice].get();
+RulerToolCollection *QtGlSliceView::getRulerToolCollection() {
+  return this->getRulerToolCollection(cWinOrder[2], this->sliceNum());
+}
+
+RulerToolCollection *QtGlSliceView::getRulerToolCollection(int axis, int sliceNum) {
+  auto axis_slice = std::pair<int, int>(axis, sliceNum);
+  if (cRulerCollections.find(axis_slice) == cRulerCollections.end()) {
+    std::unique_ptr<RulerToolCollection> rc(new RulerToolCollection(this, cCurrentRulerMetaFactory, axis, sliceNum)); // TODO: figure out which axis we're talking about (remove 2)
+    cRulerCollections[axis_slice] = std::move(rc);
+  }
+  return cRulerCollections[axis_slice].get();
 }
 
 BoxToolCollection* QtGlSliceView::getBoxToolCollection() {
@@ -3163,5 +3167,17 @@ void QtGlSliceView::addBox(
   auto collection = this->getBoxToolCollection(axis, slice);
   BoxTool* box = collection->createBox(point1, point2);
   box->metaData.get()->name = name;
+}
+
+void QtGlSliceView::addRuler(
+    std::string name,
+    int axis,
+    int slice,
+    double point1[],
+    double point2[]
+) {
+  auto collection = this->getRulerToolCollection(axis, slice);
+  RulerTool* ruler = collection->createRuler(point1, point2);
+  ruler->metaData.get()->name = name;
 }
 #endif

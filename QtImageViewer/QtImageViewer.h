@@ -83,6 +83,7 @@ private:
   Q_DECLARE_PRIVATE(QtImageViewer);
   Q_DISABLE_COPY(QtImageViewer);
   bool loadBoxAnnotations(const QJsonObject& root);
+  bool loadRulerAnnotations(const QJsonObject& root);
 };
 
 #endif

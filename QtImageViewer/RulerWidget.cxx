@@ -199,9 +199,7 @@ void RulerToolCollection::handleMouseEvent(QMouseEvent* event, double index[]) {
         // we're idle and we're clicking to create a new ruler
         if (event->type() == QEvent::MouseButtonRelease && event->button() == Qt::LeftButton) {
             // blank click on screen, make a ruler
-
-            std::unique_ptr< RulerTool > r(new RulerTool(this->parent, RulerTool::PointType3D(index), metaDataFactory->getNext()));
-            this->rulers.push_back(std::move(r));
+            this->createRuler(index);
             this->currentId = this->rulers.size() - 1;
             this->state = RulerToolState::drawing;
             this->paint();
@@ -231,6 +229,22 @@ void RulerToolCollection::handleMouseEvent(QMouseEvent* event, double index[]) {
         break;
     }
 
+}
+
+RulerTool* RulerToolCollection::createRuler(double point1[])
+{
+  std::unique_ptr<RulerTool> r(new RulerTool(this->parent, RulerTool::PointType3D(point1), metaDataFactory->getNext()));
+  auto rulerTool = r.get();
+  this->rulers.push_back(std::move(r));
+  return rulerTool;
+}
+
+RulerTool* RulerToolCollection::createRuler(double point1[], double point2[])
+{
+  auto r = this->createRuler(point1);
+  r->setFloatingIndex(1);
+  r->updateFloatingIndex(point2);
+  return r;
 }
 
 void RulerToolCollection::setMetaDataFactory(std::shared_ptr< RulerToolMetaDataFactory > factory) {

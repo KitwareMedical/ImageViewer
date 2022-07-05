@@ -567,6 +567,16 @@ public slots:
   */
   void addBox(std::string name, int axis, int slice, double point1[], double point2[]);
 
+   /**
+  * Adds a ruler.
+  * \param name name of the ruler
+  * \param axis placed axis
+  * \param slice the slice number
+  * \param point1 first endpoint of the ruler
+  * \param point2 second endpoint of the ruler
+  */
+  void addRuler(std::string name, int axis, int slice, double point1[], double point2[]);
+
 
 signals:
 
@@ -650,6 +660,7 @@ protected:
                                double maxX, double maxY, double maxZ,
                                void * clickBoxArg);
   RulerToolCollection* getRulerToolCollection();
+  RulerToolCollection *getRulerToolCollection(int axis, int sliceNum);
   BoxToolCollection* getBoxToolCollection();
   BoxToolCollection* getBoxToolCollection(int axis, int sliceNum);
 

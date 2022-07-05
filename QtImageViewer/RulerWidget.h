@@ -225,6 +225,18 @@ public:
     virtual ~RulerToolCollection();
 
     /**
+    * Creates a ruler. Only sets one endpoint.
+    * \param point1 the 3D endpoint to set (in image index space)
+    */
+    RulerTool* createRuler(double point1[]);
+    /**
+    * Creates a ruler.
+    * \param point1 the first 3D endpoint to set (in image index space)
+    * \param point2 the second 3D endpoint to set (in image index space)
+    */
+    RulerTool* createRuler(double point1[], double point2[]);
+
+    /**
     * Note, QtGlSliceView does all the computation to determine screen coordinate to image index space.  So we do a lot of image index space back
     * to screen coordinates.
     * 
