@@ -441,10 +441,19 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
             const QJsonObject ruler = val2.toObject();
             if (
                 ruler.contains("name") && ruler["name"].isString() &&
-                ruler.contains("indices") && ruler["indices"].isArray())
+                ruler.contains("indices") && ruler["indices"].isArray() &&
+                ruler.contains("color") && ruler["color"].isString() &&
+                ruler.contains("sortId"))
             {
               const QString name = ruler["name"].toString();
               const QJsonArray indices = ruler["indices"].toArray();
+              const QColor color = ruler["color"].toString();
+              // Note that here we assume -1 will never be used as an ID
+              int sortId = ruler["sortId"].toInt(-1);
+              if (sortId == -1)
+              {
+                return false;
+              }
               if (
                   indices.size() == 2 &&
                   indices[0].isArray() &&
@@ -464,7 +473,8 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
                       pt2Array[1].toDouble(),
                       pt2Array[2].toDouble(),
                   };
-                  this->sliceView()->addRuler(name.toStdString(), axis, sliceNum, point1, point2);
+                  std::unique_ptr< RulerToolMetaData > metaData(new RulerToolMetaData{ sortId, name.toStdString(), color });
+                  this->sliceView()->addRuler(axis, sliceNum, point1, point2, std::move(metaData));
                 }
               }
             }

@@ -48,6 +48,7 @@ class ONSDMetaDataGenerator;
 class RainbowMetaDataGenerator;
 class RulerToolMetaDataFactory;
 class BoxToolMetaDataFactory;
+struct RulerToolMetaData;
 
 using namespace itk;
 
@@ -417,6 +418,18 @@ public:
 
   void setInputImageFilepath(QString filepath);
 
+  /**
+  * Adds a ruler.
+  * \param name name of the ruler
+  * \param axis placed axis
+  * \param slice the slice number
+  * \param point1 first endpoint of the ruler
+  * \param point2 second endpoint of the ruler
+  * \param metaData optional metadata to use for the new ruler, if it already exists.
+  */
+  void addRuler(int axis, int slice, double point1[], double point2[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
+
+
 public slots:
   /// Set the displayState property value.
   /// \sa displayState, displayState()
@@ -566,16 +579,6 @@ public slots:
   * \param point2 bottom right of box
   */
   void addBox(std::string name, int axis, int slice, double point1[], double point2[]);
-
-   /**
-  * Adds a ruler.
-  * \param name name of the ruler
-  * \param axis placed axis
-  * \param slice the slice number
-  * \param point1 first endpoint of the ruler
-  * \param point2 second endpoint of the ruler
-  */
-  void addRuler(std::string name, int axis, int slice, double point1[], double point2[]);
 
 
 signals:

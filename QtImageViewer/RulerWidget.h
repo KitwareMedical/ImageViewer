@@ -227,14 +227,16 @@ public:
     /**
     * Creates a ruler. Only sets one endpoint.
     * \param point1 the 3D endpoint to set (in image index space)
+    * \param metaData optional metadata to use for the new ruler, if it already exists.
     */
-    RulerTool* createRuler(double point1[]);
+    RulerTool* createRuler(double point1[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
     /**
     * Creates a ruler.
     * \param point1 the first 3D endpoint to set (in image index space)
     * \param point2 the second 3D endpoint to set (in image index space)
+    * \param metaData optional metadata to use for the new ruler, if it already exists.
     */
-    RulerTool* createRuler(double point1[], double point2[]);
+    RulerTool* createRuler(double point1[], double point2[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
 
     /**
     * Note, QtGlSliceView does all the computation to determine screen coordinate to image index space.  So we do a lot of image index space back

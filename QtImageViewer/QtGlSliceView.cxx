@@ -3170,14 +3170,13 @@ void QtGlSliceView::addBox(
 }
 
 void QtGlSliceView::addRuler(
-    std::string name,
     int axis,
     int slice,
     double point1[],
-    double point2[]
+    double point2[],
+    std::unique_ptr<RulerToolMetaData> metaData
 ) {
   auto collection = this->getRulerToolCollection(axis, slice);
-  RulerTool* ruler = collection->createRuler(point1, point2);
-  ruler->metaData.get()->name = name;
+  RulerTool* ruler = collection->createRuler(point1, point2, std::move(metaData));
 }
 #endif

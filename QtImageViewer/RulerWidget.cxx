@@ -144,8 +144,10 @@ std::string RulerTool::toJson() {
     char txt[256];
 
     int n = snprintf(txt, sizeof(txt),
-        "{ \"name\" : \"%s\", \"indices\" : [ [%.4f, %.4f, %.4f], [%.4f, %.4f, %.4f] ], \"points\" : [ [%.4f, %.4f, %.4f], [%.4f, %.4f, %.4f] ], \"distance\" : %.4f}",
+        "{ \"sortId\" : %d, \"name\" : \"%s\", \"color\" : \"%s\", \"indices\" : [ [%.4f, %.4f, %.4f], [%.4f, %.4f, %.4f] ], \"points\" : [ [%.4f, %.4f, %.4f], [%.4f, %.4f, %.4f] ], \"distance\" : %.4f}",
+        metaData->sortId,
         metaData->name.c_str(),
+        metaData->color.name().toStdString().c_str(),
         indices[0].GetElement(0),
         indices[0].GetElement(1),
         indices[0].GetElement(2),
@@ -231,17 +233,22 @@ void RulerToolCollection::handleMouseEvent(QMouseEvent* event, double index[]) {
 
 }
 
-RulerTool* RulerToolCollection::createRuler(double point1[])
+RulerTool* RulerToolCollection::createRuler(double point1[], std::unique_ptr<RulerToolMetaData> metaData)
 {
-  std::unique_ptr<RulerTool> r(new RulerTool(this->parent, RulerTool::PointType3D(point1), metaDataFactory->getNext()));
+  if (!metaData)
+  {
+    metaData = metaDataFactory->getNext();
+  }
+
+  std::unique_ptr<RulerTool> r(new RulerTool(this->parent, RulerTool::PointType3D(point1), std::move(metaData)));
   auto rulerTool = r.get();
   this->rulers.push_back(std::move(r));
   return rulerTool;
 }
 
-RulerTool* RulerToolCollection::createRuler(double point1[], double point2[])
+RulerTool* RulerToolCollection::createRuler(double point1[], double point2[], std::unique_ptr<RulerToolMetaData> metaData)
 {
-  auto r = this->createRuler(point1);
+  auto r = this->createRuler(point1, std::move(metaData));
   r->setFloatingIndex(1);
   r->updateFloatingIndex(point2);
   return r;
