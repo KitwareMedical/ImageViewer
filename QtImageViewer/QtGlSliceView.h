@@ -429,6 +429,14 @@ public:
   */
   void addRuler(int axis, int slice, double point1[], double point2[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
 
+  /**
+  * Initializes the state of the rainbow and onsd metadata factories
+  * based on the ids. The ids can be used to derive the states
+  * \param curRainbowId id to initialize the state of the RainbowRulerMetaDataGenerator
+  * \param curOnsdId id to initialize the state of the ONSDMetaDataGenerator
+  */
+  void initializeRulerMetadataFactories(int curRainbowId, int curOnsdId);
+
 
 public slots:
   /// Set the displayState property value.

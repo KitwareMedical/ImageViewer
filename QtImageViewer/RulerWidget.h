@@ -73,6 +73,7 @@ bool operator< (std::unique_ptr< RulerToolMetaData > const& lhs, std::unique_ptr
 class RulerMetaDataGenerator {
 public:
     virtual std::unique_ptr< RulerToolMetaData > operator()(void) = 0;
+    virtual void initializeState(int curId) = 0;
 };
 
 /**
@@ -83,6 +84,9 @@ public:
     RainbowRulerMetaDataGenerator();
 
     std::unique_ptr< RulerToolMetaData > operator()(void);
+
+    // Note, this does not take the current state of the generator into account
+    virtual void initializeState(int curId);
 protected:
     std::vector< std::string > colors = { "#F8766D", "#BB9D00", "#00B81F", "#00C0B8", "#00A5FF", "#E76BF3", "#FF6C90" };
     std::vector< std::string >::iterator curColor;
@@ -98,6 +102,9 @@ public:
     ONSDRulerMetaDataGenerator() { };
 
     std::unique_ptr< RulerToolMetaData > operator()(void);
+
+    // Note, this does not take the current state of the generator into account
+    virtual void initializeState(int curId);
 protected:
     std::vector< std::string > colors = { "#F8766D", "#BB9D00" };
     bool flipper = true;
@@ -125,6 +132,8 @@ public:
     * Return a deleted meta data for reuse.
     */
     void refund(std::unique_ptr< RulerToolMetaData > ruler_meta);
+
+    void initializeState(int curId);
 
 protected:
     std::unique_ptr< RulerMetaDataGenerator > generator;

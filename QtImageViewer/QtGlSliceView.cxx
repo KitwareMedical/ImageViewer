@@ -3179,4 +3179,11 @@ void QtGlSliceView::addRuler(
   auto collection = this->getRulerToolCollection(axis, slice);
   RulerTool* ruler = collection->createRuler(point1, point2, std::move(metaData));
 }
+
+void QtGlSliceView::initializeRulerMetadataFactories(int curRainbowId, int curOnsdId)
+{
+  this->cRainbowMetaFactory->initializeState(curRainbowId);
+  this->cONSDMetaFactory->initializeState(curOnsdId);
+}
+
 #endif

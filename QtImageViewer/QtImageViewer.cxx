@@ -322,7 +322,12 @@ bool QtImageViewer::loadJSONAnnotations(QString filePathToLoad)
 
   const QJsonObject root = doc.object();
   status |= this->loadBoxAnnotations(root);
-  status |= this->loadRulerAnnotations(root);
+
+  int maxRainbowId = 0;
+  int maxOnsdId = 0;
+  status |= this->loadRulerAnnotations(root, maxRainbowId, maxOnsdId);
+
+
   return status;
 }
 
@@ -413,12 +418,15 @@ bool QtImageViewer::loadBoxAnnotations(const QJsonObject &root)
   return true;
 }
 
-bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
+bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root, int& maxRainbowId, int& maxOnsdId)
 {
   if (!(root.contains("rulers") && root["rulers"].isArray()))
   {
     return false;
   }
+
+  int maxRainbowIdTemp = 0;
+  int maxOnsdIdTemp = 0;
 
   const QJsonArray slices = root["rulers"].toArray();
   for (auto val1 : slices)
@@ -445,7 +453,7 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
                 ruler.contains("color") && ruler["color"].isString() &&
                 ruler.contains("sortId"))
             {
-              const QString name = ruler["name"].toString();
+              const std::string name = ruler["name"].toString().toStdString();
               const QJsonArray indices = ruler["indices"].toArray();
               const QColor color = ruler["color"].toString();
               // Note that here we assume -1 will never be used as an ID
@@ -454,6 +462,16 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
               {
                 return false;
               }
+
+              if (name == std::to_string(sortId) && sortId > maxRainbowIdTemp)
+              {
+                maxRainbowIdTemp = sortId;
+              }
+              else if ((name == "R1" || name == "ONSD") && sortId > maxOnsdIdTemp)
+              {
+                maxOnsdIdTemp = sortId;
+              }
+
               if (
                   indices.size() == 2 &&
                   indices[0].isArray() &&
@@ -473,7 +491,7 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
                       pt2Array[1].toDouble(),
                       pt2Array[2].toDouble(),
                   };
-                  std::unique_ptr< RulerToolMetaData > metaData(new RulerToolMetaData{ sortId, name.toStdString(), color });
+                  std::unique_ptr< RulerToolMetaData > metaData(new RulerToolMetaData{ sortId, name, color });
                   this->sliceView()->addRuler(axis, sliceNum, point1, point2, std::move(metaData));
                 }
               }
@@ -483,5 +501,21 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
       }
     }
   }
+  // Successfully parsed all of the serialized rulers,
+  // set the max ids and return true.
+  maxRainbowId = maxRainbowIdTemp;
+  maxOnsdId = maxOnsdIdTemp;
+
+  // Initialize the state of the metadata factories
+  this->sliceView()->initializeRulerMetadataFactories(maxRainbowId + 1, maxOnsdId + 1);
   return true;
 }
+
+bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
+{
+  // Do nothing with the passed integers
+  int maxRainbowId = 0;
+  int maxOnsdId = 0;
+  return this->loadRulerAnnotations(root, maxRainbowId, maxOnsdId);
+}
+

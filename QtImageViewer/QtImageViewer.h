@@ -83,6 +83,7 @@ private:
   Q_DECLARE_PRIVATE(QtImageViewer);
   Q_DISABLE_COPY(QtImageViewer);
   bool loadBoxAnnotations(const QJsonObject& root);
+  bool loadRulerAnnotations(const QJsonObject& root, int& max_rainbow_id, int& max_onsd_id);
   bool loadRulerAnnotations(const QJsonObject& root);
 };
 

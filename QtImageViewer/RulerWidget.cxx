@@ -30,6 +30,12 @@ std::unique_ptr< RulerToolMetaData > RainbowRulerMetaDataGenerator::operator()(v
     return std::unique_ptr< RulerToolMetaData >(new RulerToolMetaData{ id, name, color });
 }
 
+void RainbowRulerMetaDataGenerator::initializeState(int curId)
+{
+  this->curId = curId;
+  this->curColor += (curId % this->colors.size());
+}
+
 std::unique_ptr< RulerToolMetaData > ONSDRulerMetaDataGenerator::operator()(void) {
     std::string name = flipper ? "R1" : "ONSD";
     QColor color = QColor(colors[(int)flipper].c_str());
@@ -39,6 +45,12 @@ std::unique_ptr< RulerToolMetaData > ONSDRulerMetaDataGenerator::operator()(void
     ++curId;
 
     return std::unique_ptr< RulerToolMetaData >(new RulerToolMetaData{ id, name, color });
+}
+
+void ONSDRulerMetaDataGenerator::initializeState(int curId)
+{
+  this->curId = curId;
+  this->flipper = (curId % 2 == 0);
 }
 
 
@@ -59,6 +71,11 @@ std::unique_ptr< RulerToolMetaData > RulerToolMetaDataFactory::getNext() {
 void RulerToolMetaDataFactory::refund(std::unique_ptr< RulerToolMetaData > ruler_meta) {
     refunds.push_back(std::move(ruler_meta));
     std::sort(refunds.begin(), refunds.end());
+}
+
+void RulerToolMetaDataFactory::initializeState(int curId)
+{
+  this->generator->initializeState(curId);
 }
 
 RulerTool::RulerTool(QtGlSliceView* parent0, PointType3D index0, std::unique_ptr< RulerToolMetaData > metaData) :
