@@ -3082,6 +3082,18 @@ void QtGlSliceView::setInputImageFilepath(QString filepath) {
     this->inputImageFilepath = filepath;
 }
 
+void QtGlSliceView::addBox(
+    std::string name,
+    int axis,
+    int slice,
+    double point1[],
+    double point2[]
+) {
+  auto collection = this->getBoxToolCollection(axis, slice);
+  BoxTool* box = collection->createBox(point1, point2);
+  box->metaData.get()->name = name;
+}
+
 void QtGlSliceView::zoomOut()
 {
   if( zoom() <= 1 )
@@ -3153,15 +3165,4 @@ void QtGlSliceView::setIsONSDRuler(bool flag) {
     this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
 }
 
-void QtGlSliceView::addBox(
-    std::string name,
-    int axis,
-    int slice,
-    double point1[],
-    double point2[]
-) {
-  auto collection = this->getBoxToolCollection(axis, slice);
-  BoxTool* box = collection->createBox(point1, point2);
-  box->metaData.get()->name = name;
-}
 #endif
