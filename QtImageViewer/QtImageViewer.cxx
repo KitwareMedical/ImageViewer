@@ -327,7 +327,7 @@ bool QtImageViewer::loadJSONAnnotations(QString filePathToLoad)
   int maxOnsdId = 0;
   status |= this->loadRulerAnnotations(root, maxRainbowId, maxOnsdId);
 
-
+  this->sliceView()->setViewOverlayData(true);
   return status;
 }
 

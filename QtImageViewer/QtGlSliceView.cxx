@@ -2386,7 +2386,6 @@ void QtGlSliceView::paintGL( void )
         posY = height() - 4 * (widgetFontMetric.height() + 1);
         this->renderText(posX, posY, s, widgetFont);
         }
-      getRulerToolCollection()->paint();
       glDisable(GL_BLEND);
       }
     else if (cClickMode == CM_BOX)
@@ -2536,6 +2535,7 @@ void QtGlSliceView::paintGL( void )
     {
     glEnable(GL_BLEND);
     getBoxToolCollection()->paint();
+    getRulerToolCollection()->paint();
     glDisable(GL_BLEND);
     }
 
