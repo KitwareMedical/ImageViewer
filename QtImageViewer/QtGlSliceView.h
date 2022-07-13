@@ -48,6 +48,7 @@ class ONSDMetaDataGenerator;
 class RainbowMetaDataGenerator;
 class RulerToolMetaDataFactory;
 class BoxToolMetaDataFactory;
+struct RulerToolMetaData;
 
 using namespace itk;
 
@@ -418,6 +419,25 @@ public:
   void setInputImageFilepath(QString filepath);
 
   /**
+  * Adds a ruler.
+  * \param name name of the ruler
+  * \param axis placed axis
+  * \param slice the slice number
+  * \param point1 first endpoint of the ruler
+  * \param point2 second endpoint of the ruler
+  * \param metaData optional metadata to use for the new ruler, if it already exists.
+  */
+  void addRuler(int axis, int slice, double point1[], double point2[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
+
+  /**
+  * Initializes the state of the rainbow and onsd metadata factories
+  * based on the ids. The ids can be used to derive the states
+  * \param curRainbowId id to initialize the state of the RainbowRulerMetaDataGenerator
+  * \param curOnsdId id to initialize the state of the ONSDMetaDataGenerator
+  */
+  void initializeRulerMetadataFactories(int curRainbowId, int curOnsdId);
+
+  /**
   * Adds a box.
   * \param name name of the box
   * \param axis placed axis
@@ -650,6 +670,7 @@ protected:
                                double maxX, double maxY, double maxZ,
                                void * clickBoxArg);
   RulerToolCollection* getRulerToolCollection();
+  RulerToolCollection *getRulerToolCollection(int axis, int sliceNum);
   BoxToolCollection* getBoxToolCollection();
   BoxToolCollection* getBoxToolCollection(int axis, int sliceNum);
 

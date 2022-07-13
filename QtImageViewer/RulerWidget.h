@@ -73,6 +73,7 @@ bool operator< (std::unique_ptr< RulerToolMetaData > const& lhs, std::unique_ptr
 class RulerMetaDataGenerator {
 public:
     virtual std::unique_ptr< RulerToolMetaData > operator()(void) = 0;
+    virtual void initializeState(int curId) = 0;
 };
 
 /**
@@ -83,6 +84,9 @@ public:
     RainbowRulerMetaDataGenerator();
 
     std::unique_ptr< RulerToolMetaData > operator()(void);
+
+    // Note, this does not take the current state of the generator into account
+    virtual void initializeState(int curId);
 protected:
     std::vector< std::string > colors = { "#F8766D", "#BB9D00", "#00B81F", "#00C0B8", "#00A5FF", "#E76BF3", "#FF6C90" };
     std::vector< std::string >::iterator curColor;
@@ -98,6 +102,9 @@ public:
     ONSDRulerMetaDataGenerator() { };
 
     std::unique_ptr< RulerToolMetaData > operator()(void);
+
+    // Note, this does not take the current state of the generator into account
+    virtual void initializeState(int curId);
 protected:
     std::vector< std::string > colors = { "#F8766D", "#BB9D00" };
     bool flipper = true;
@@ -125,6 +132,8 @@ public:
     * Return a deleted meta data for reuse.
     */
     void refund(std::unique_ptr< RulerToolMetaData > ruler_meta);
+
+    void initializeState(int curId);
 
 protected:
     std::unique_ptr< RulerMetaDataGenerator > generator;
@@ -223,6 +232,20 @@ public:
     */
     RulerToolCollection(QtGlSliceView* parent, std::shared_ptr< RulerToolMetaDataFactory > metaDataFactory, unsigned short axis, unsigned int slice);
     virtual ~RulerToolCollection();
+
+    /**
+    * Creates a ruler. Only sets one endpoint.
+    * \param point1 the 3D endpoint to set (in image index space)
+    * \param metaData optional metadata to use for the new ruler, if it already exists.
+    */
+    RulerTool* createRuler(double point1[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
+    /**
+    * Creates a ruler.
+    * \param point1 the first 3D endpoint to set (in image index space)
+    * \param point2 the second 3D endpoint to set (in image index space)
+    * \param metaData optional metadata to use for the new ruler, if it already exists.
+    */
+    RulerTool* createRuler(double point1[], double point2[], std::unique_ptr<RulerToolMetaData> metaData = nullptr);
 
     /**
     * Note, QtGlSliceView does all the computation to determine screen coordinate to image index space.  So we do a lot of image index space back

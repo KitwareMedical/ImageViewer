@@ -2386,7 +2386,6 @@ void QtGlSliceView::paintGL( void )
         posY = height() - 4 * (widgetFontMetric.height() + 1);
         this->renderText(posX, posY, s, widgetFont);
         }
-      getRulerToolCollection()->paint();
       glDisable(GL_BLEND);
       }
     else if (cClickMode == CM_BOX)
@@ -2536,6 +2535,7 @@ void QtGlSliceView::paintGL( void )
     {
     glEnable(GL_BLEND);
     getBoxToolCollection()->paint();
+    getRulerToolCollection()->paint();
     glDisable(GL_BLEND);
     }
 
@@ -3136,13 +3136,17 @@ void QtGlSliceView::renderText( double x, double y, const QString & str,
     }
 }
 
-RulerToolCollection* QtGlSliceView::getRulerToolCollection() {
-    auto axis_slice = std::pair<int, int>(cWinOrder[2], this->sliceNum());
-    if (cRulerCollections.find(axis_slice) == cRulerCollections.end()) {
-        std::unique_ptr< RulerToolCollection > rc(new RulerToolCollection(this, cCurrentRulerMetaFactory, cWinOrder[2], this->sliceNum())); // TODO: figure out which axis we're talking about (remove 2)
-        cRulerCollections[axis_slice] = std::move(rc);
-    }
-    return cRulerCollections[axis_slice].get();
+RulerToolCollection *QtGlSliceView::getRulerToolCollection() {
+  return this->getRulerToolCollection(cWinOrder[2], this->sliceNum());
+}
+
+RulerToolCollection *QtGlSliceView::getRulerToolCollection(int axis, int sliceNum) {
+  auto axis_slice = std::pair<int, int>(axis, sliceNum);
+  if (cRulerCollections.find(axis_slice) == cRulerCollections.end()) {
+    std::unique_ptr<RulerToolCollection> rc(new RulerToolCollection(this, cCurrentRulerMetaFactory, axis, sliceNum)); // TODO: figure out which axis we're talking about (remove 2)
+    cRulerCollections[axis_slice] = std::move(rc);
+  }
+  return cRulerCollections[axis_slice].get();
 }
 
 BoxToolCollection* QtGlSliceView::getBoxToolCollection() {
@@ -3163,6 +3167,23 @@ void QtGlSliceView::setIsONSDRuler(bool flag) {
     cCurrentRulerMetaFactory = isONSDRuler ? cONSDMetaFactory : cRainbowMetaFactory;
 
     this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
+}
+
+void QtGlSliceView::addRuler(
+    int axis,
+    int slice,
+    double point1[],
+    double point2[],
+    std::unique_ptr<RulerToolMetaData> metaData
+) {
+  auto collection = this->getRulerToolCollection(axis, slice);
+  RulerTool* ruler = collection->createRuler(point1, point2, std::move(metaData));
+}
+
+void QtGlSliceView::initializeRulerMetadataFactories(int curRainbowId, int curOnsdId)
+{
+  this->cRainbowMetaFactory->initializeState(curRainbowId);
+  this->cONSDMetaFactory->initializeState(curOnsdId);
 }
 
 #endif
