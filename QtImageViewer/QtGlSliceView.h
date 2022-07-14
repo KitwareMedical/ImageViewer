@@ -447,6 +447,67 @@ public:
   */
   void addBox(std::string name, int axis, int slice, double point1[], double point2[]);
 
+  /**
+  * Adds corner text to display.
+  * If an empty string is passed in, the text for the passed frame
+  * and axis is removed.
+  * \param axis placed axis
+  * \param slice the slice number
+  * \param text text to display
+  */
+  void setCornerText(int axis, int slice, QString text);
+
+  /**
+  * Adds corner text to display at the current axis and slice.
+  * If an empty string is passed in, the text for the current frame
+  * and axis is removed.
+  * \param text text to display
+  */
+  void setCornerText(QString text);
+
+   /**
+  * Gets the corner text to display.
+  * If an empty string is returned, there is no corner text
+  * for the given axis and slice
+  * \param axis placed axis
+  * \param slice the slice number
+  */
+  QString getCornerText(int axis, int slice);
+
+  /**
+  * Gets corner text displayed at the current axis and slice.
+  * If an empty string is returned, there is no corner text
+  * for the current axis and slice
+  */
+  QString getCornerText();
+
+  /**
+  * Removes the corner text at the current axis and slice.
+  */
+  void removeCornerText();
+
+   /**
+  * Removes the corner text.
+  * \param axis placed axis
+  * \param slice the slice number
+  */
+  void removeCornerText(int axis, int slice);
+
+  /**
+  * Gets the current axis and slice as a std::pair
+  */
+  std::pair<int, int> getCurrentAxisAndSlice();
+
+  /**
+   * Sets the default dialog box text
+  */
+  void setDefaultDialogBoxText(QString s);
+
+  /**
+   * Gets the default dialog box text
+  */
+  const QString& getDefaultDialogBoxText();
+
 public slots:
   /// Set the displayState property value.
   /// \sa displayState, displayState()
@@ -503,6 +564,8 @@ public slots:
   void saveRulers( std::string fileName );
   void saveBoxesWithPrompt( void );
   void saveBoxes( std::string fileName );
+  void saveCornerTextWithPrompt( void );
+  void saveCornerText( std::string fileName );
 
   void setIWModeMin(IWModeType newIWModeMin);
   void setIWModeMin(const char* mode);
@@ -754,6 +817,10 @@ protected:
   std::shared_ptr< BoxToolMetaDataFactory > cCurrentBoxMetaFactory;
   std::map< std::pair<int, int>, std::unique_ptr< RulerToolCollection > > cRulerCollections;
   std::map< std::pair<int, int>, std::unique_ptr< BoxToolCollection > > cBoxCollections;
+
+  // Should never contain empty qstrings
+  std::map< std::pair<int, int>, QString > cCornerTextCollection;
+  QString defaultDialogBoxText;
 };
   
 #endif

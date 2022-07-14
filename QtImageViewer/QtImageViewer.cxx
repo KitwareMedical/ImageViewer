@@ -327,6 +327,8 @@ bool QtImageViewer::loadJSONAnnotations(QString filePathToLoad)
   int maxOnsdId = 0;
   status |= this->loadRulerAnnotations(root, maxRainbowId, maxOnsdId);
 
+  status |= this->loadCornerTextAnnotations(root);
+
   this->sliceView()->setViewOverlayData(true);
   return status;
 }
@@ -519,3 +521,30 @@ bool QtImageViewer::loadRulerAnnotations(const QJsonObject &root)
   return this->loadRulerAnnotations(root, maxRainbowId, maxOnsdId);
 }
 
+bool QtImageViewer::loadCornerTextAnnotations(const QJsonObject &root)
+{
+  if (!(root.contains("cornerTexts") && root["cornerTexts"].isArray()))
+  {
+    return false;
+  }
+
+  const QJsonArray slices = root["cornerTexts"].toArray();
+  for (auto val1 : slices)
+  {
+    if (val1.isObject())
+    {
+      const QJsonObject slice = val1.toObject();
+      if (
+          slice.contains("axis") && slice["axis"].isDouble() &&
+          slice.contains("slice") && slice["slice"].isDouble() &&
+          slice.contains("text") && slice["text"].isString())
+      {
+        const int axis = (int)slice["axis"].toDouble();
+        const int sliceNum = (int)slice["slice"].toDouble();
+        const QString cornerText = slice["text"].toString();
+        this->sliceView()->setCornerText(axis, sliceNum, cornerText);
+      }
+    }
+  }
+  return true;
+}

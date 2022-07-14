@@ -49,6 +49,7 @@ limitations under the License.
 #include <QBoxLayout>
 #include <QTextEdit>
 #include <memory>
+#include <QInputDialog>
 #include <QGuiApplication>
 #include <QPainterPath>
 
@@ -198,6 +199,8 @@ QtGlSliceView::QtGlSliceView( QWidget* widgetParent )
 
   cCurrentBoxMetaFactory = std::shared_ptr< BoxToolMetaDataFactory >(new BoxToolMetaDataFactory(std::unique_ptr< ConstantBoxMetaDataGenerator >(new ConstantBoxMetaDataGenerator())));
 
+  defaultDialogBoxText = QString();
+
   update();
 }
 
@@ -210,6 +213,8 @@ QtGlSliceView::~QtGlSliceView()
     saveRulers( rulersFileName.toStdString() );
     auto boxesFileName = cSaveOnExitPrefix + ".boxes.json";
     saveBoxes( boxesFileName.toStdString() );
+    auto cornerTextFileName = cSaveOnExitPrefix + ".cornerText.json";
+    saveCornerText( cornerTextFileName.toStdString() );
   }
 }
 
@@ -547,6 +552,51 @@ void QtGlSliceView::saveBoxes( std::string fileName )
     text << "]}";
     fpoints.close();
 }
+
+void QtGlSliceView::saveCornerTextWithPrompt()
+{
+    QFileInfo fileInfo(this->inputImageFilepath);
+    QString newFilepath = fileInfo.path() + "/" + fileInfo.completeBaseName() + ".cornerText.json";
+    QString fileName = QFileDialog::getSaveFileName(this,
+        "Save corner text", newFilepath, "*.*");
+    if (fileName.isNull())
+    {
+        return;
+    }
+
+    saveCornerText(fileName.toStdString());
+}
+
+void QtGlSliceView::saveCornerText( std::string fileName )
+{
+    if (this->cCornerTextCollection.size() == 0)
+    {
+      return;
+    }
+
+    QFile fpoints(QString::fromStdString(fileName));
+    if (!fpoints.open(QIODevice::ReadWrite | QIODevice::Truncate)) // write and overwrite
+    {
+        return;
+    }
+    QTextStream text(&fpoints);
+    text << "{ \"cornerTexts\" : [";
+    bool isFirst = true;
+    for (auto& node : cCornerTextCollection)
+    {
+        std::string sep = isFirst ? "" : ",";
+        auto axis_slice = node.first;
+        auto axis_str = QString::number(axis_slice.first);
+        auto slice_str = QString::number(axis_slice.second);
+
+        text << sep.c_str() << "{ \"axis\" : " + axis_str + ", \"slice\" : " + slice_str + ", \"text\" : ";
+        text << "\"" << node.second << "\"" << "}";
+        isFirst = false;
+    }
+    text << "]}";
+    fpoints.close();
+}
+
 
 void
 QtGlSliceView::update()
@@ -969,6 +1019,9 @@ void QtGlSliceView::showHelp()
     str << QString("   ");
     str << QString("   a s - Decrease, Increase the lower limit of the intensity windowing");
     str << QString("   d - Toggle between clipping and setting-to-white values below IW lower limit");
+    str << QString("   ");
+    str << QString("   g - Open a dialog box to put text in the upper right corner of the screen");
+    str << QString("         Press OK to save, or hit close / hit cancel to cancel");
     str << QString("   ");
     str << QString("   + = - Zoom-in by a factor of 2");
     str << QString("   - _ - Zoom-out by a factor of 2");
@@ -2098,6 +2151,23 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
     case Qt::Key_H:
       showHelp();
       break;
+    case Qt::Key_G:
+      {
+        QString dialogBoxText = this->getDefaultDialogBoxText();
+        QString currentCornerText = this->getCornerText();
+        if (!currentCornerText.isEmpty())
+          dialogBoxText = currentCornerText;
+
+        bool ok;
+        QString text = QInputDialog::getText(this, "", tr("Text to display:"), QLineEdit::Normal, dialogBoxText, &ok);
+        if (ok)
+        {
+          this->setCornerText(text);
+          this->update();
+        }
+      }
+
+      break;
     default:
       QOpenGLWidget::keyPressEvent( keyEvent );
       break;
@@ -2328,6 +2398,19 @@ void QtGlSliceView::paintGL( void )
 
     glDisable( GL_BLEND );
     }
+
+  QString text = this->getCornerText();
+  if (!text.isEmpty())
+  {
+    // Render text
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glColor4f( 0.1, 0.64, 0.2, ( double )0.75 );
+    int posX = width() - widgetFontMetric.horizontalAdvance(text) - 5;
+    int posY = widgetFontMetric.height() + 5;
+    this->renderText( posX, posY, text, widgetFont );
+    glDisable( GL_BLEND );
+  }
 
   if( viewValue() )
     {
@@ -3092,6 +3175,55 @@ void QtGlSliceView::addBox(
   auto collection = this->getBoxToolCollection(axis, slice);
   BoxTool* box = collection->createBox(point1, point2);
   box->metaData.get()->name = name;
+}
+
+void QtGlSliceView::setCornerText(int axis, int slice, QString text) {
+  if (text.isEmpty())
+  {
+    this->removeCornerText(axis, slice);
+    return;
+  }
+  auto axis_slice = std::pair<int, int>(axis, slice);
+  this->cCornerTextCollection[axis_slice] = text;
+}
+
+void QtGlSliceView::setCornerText(QString text) {
+  this->setCornerText(cWinOrder[2], this->sliceNum(), text);
+}
+
+QString QtGlSliceView::getCornerText(int axis, int slice) {
+  auto axis_slice = std::pair<int, int>(axis, slice);
+  auto it = this->cCornerTextCollection.find(axis_slice);
+  if (it == this->cCornerTextCollection.end())
+  {
+    return QString();
+  }
+  return it->second;
+}
+
+QString QtGlSliceView::getCornerText() {
+  return this->getCornerText(cWinOrder[2], this->sliceNum());
+}
+
+void QtGlSliceView::removeCornerText(int axis, int slice) {
+  auto axis_slice = std::pair<int, int>(axis, slice);
+  this->cCornerTextCollection.erase(axis_slice);
+}
+
+void QtGlSliceView::removeCornerText() {
+  return this->removeCornerText(cWinOrder[2], this->sliceNum());
+}
+
+std::pair<int, int> QtGlSliceView::getCurrentAxisAndSlice() {
+  return std::pair<int, int>(cWinOrder[2], this->sliceNum());
+}
+
+void QtGlSliceView::setDefaultDialogBoxText(QString s) {
+  this->defaultDialogBoxText = s;
+}
+
+const QString& QtGlSliceView::getDefaultDialogBoxText() {
+  return this->defaultDialogBoxText;
 }
 
 void QtGlSliceView::zoomOut()
