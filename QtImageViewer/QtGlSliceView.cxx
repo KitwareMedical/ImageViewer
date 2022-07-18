@@ -1402,11 +1402,13 @@ void QtGlSliceView::switchWorkflowStep( int index )
     auto boxStep = static_cast<BoxStep*>(step.get());
     auto collection = getBoxToolCollection();
     collection->setMetaDataFactory(boxStep->factory);
+    this->cCurrentBoxMetaFactory = boxStep->factory;
   } else if (step->type == CM_RULER) {
     setClickMode(CM_RULER);
     auto rulerStep = static_cast<RulerStep *>(step.get());
     auto collection = getRulerToolCollection();
     collection->setMetaDataFactory(rulerStep->factory);
+    this->cCurrentRulerMetaFactory = rulerStep->factory;
   }
 }
 
@@ -1650,11 +1652,6 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         {
         movePace = cFixedSliceMoveValue;
         }
-      if( !cUsePersistentWorkflow && cWorkflowSteps.size() != 0 ) 
-        {
-        cWorkflowIndex = 0;
-        switchWorkflowStep(cWorkflowIndex);
-        }
       if ((int)cWinCenter[cWinOrder[2]] - movePace < 0)
         {
         if ((int)cWinCenter[cWinOrder[2]] == 0)
@@ -1669,6 +1666,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       else
         {
         setSliceNum((int)cWinCenter[cWinOrder[2]] - movePace);
+        }
+      if( !cUsePersistentWorkflow && cWorkflowSteps.size() != 0 ) 
+        {
+        cWorkflowIndex = 0;
+        switchWorkflowStep(cWorkflowIndex);
         }
       update();
       break;
@@ -1777,11 +1779,6 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         {
         movePace = cFixedSliceMoveValue;
         }
-      if( !cUsePersistentWorkflow && cWorkflowSteps.size() != 0 ) 
-        {
-        cWorkflowIndex = 0;
-        switchWorkflowStep(cWorkflowIndex);
-        }
       if( ( int )cWinCenter[cWinOrder[2]]+movePace >=
           ( int )cDimSize[cWinOrder[2]]-1 )
         {
@@ -1790,6 +1787,11 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
       else
         {
         setSliceNum( ( int )cWinCenter[cWinOrder[2]]+movePace );
+        }
+      if( !cUsePersistentWorkflow && cWorkflowSteps.size() != 0 ) 
+        {
+        cWorkflowIndex = 0;
+        switchWorkflowStep(cWorkflowIndex);
         }
       update();
       break;
