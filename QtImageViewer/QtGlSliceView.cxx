@@ -3163,7 +3163,7 @@ BoxToolCollection* QtGlSliceView::getBoxToolCollection(int axis, int sliceNum) {
 }
 
 void QtGlSliceView::setIsONSDRuler(bool flag) {
-    isONSDRuler = !isONSDRuler;
+    isONSDRuler = flag;
     cCurrentRulerMetaFactory = isONSDRuler ? cONSDMetaFactory : cRainbowMetaFactory;
 
     this->getRulerToolCollection()->setMetaDataFactory(cCurrentRulerMetaFactory);
