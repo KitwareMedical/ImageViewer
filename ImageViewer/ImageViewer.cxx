@@ -549,9 +549,13 @@ int parseAndExecImageViewer(int argc, char* argv[])
         step->factory = factory;
 
         steps.push_back(std::move(step));
+      }else if (type == "t" || type == "T") {
+        std::string defaultText = workflow[i++];
+        viewer.sliceView()->setDefaultDialogBoxText(QString::fromStdString(defaultText));
+
       }else
       {
-        throw std::runtime_error("Use p, P, b, B, r, R for this switch");
+        throw std::runtime_error("Use p, P, b, B, r, R, t, T for this switch");
       }
     }
 
