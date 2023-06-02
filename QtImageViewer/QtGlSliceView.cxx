@@ -1063,6 +1063,10 @@ void QtGlSliceView::showHelp()
     str << QString("   Left click to set ruler.  Right-click over X to move or delete");
     str << QString("   u - Toggle between rainbow ruler and ONSD measurements");
     str << QString("   ctrl-U - Save measurements to JSON");
+    str << QString("    ");
+    str << QString("   Workflow: ");
+    str << QString("   space - Advance to next workflow step");
+    str << QString("   shift-space - Go to previous workflow step");
     for( auto &data : str )
       {
       help->append( data );
@@ -1753,13 +1757,21 @@ void QtGlSliceView::keyPressEvent(QKeyEvent* keyEvent)
         }
       break;
     case Qt::Key_Space:
-      if (cWorkflowSteps.size() > 0 && 
-        cWorkflowIndex < cWorkflowSteps.size() - 1)
-        {
-        cWorkflowIndex++;
-        switchWorkflowStep(cWorkflowIndex);
-        update();
+      if ((keyEvent->modifiers() & Qt::ShiftModifier) &&
+          cWorkflowSteps.size() > 0 &&
+          cWorkflowIndex > 0)
+        { // if shift is pressed, go backwards
+          cWorkflowIndex--;
+          switchWorkflowStep(cWorkflowIndex);
+          update();
         }
+      else if (cWorkflowSteps.size() > 0 && 
+          cWorkflowIndex < cWorkflowSteps.size() - 1)
+          {
+          cWorkflowIndex++;
+          switchWorkflowStep(cWorkflowIndex);
+          update();
+          }
       break;
     case Qt::Key_Backspace:
       if (cWorkflowSteps.size() > 0 && cWorkflowIndex > 0)
