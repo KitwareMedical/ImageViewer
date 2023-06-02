@@ -12,15 +12,15 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [ubuntu-18.04, windows-2019, macos-10.15]
+        os: [ubuntu-20.04, windows-2019, macos-11]
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-20.04
             c-compiler: "gcc"
             cxx-compiler: "g++"
           - os: windows-2019
             c-compiler: "cl.exe"
             cxx-compiler: "cl.exe"
-          - os: macos-10.15
+          - os: macos-11
             c-compiler: "clang"
             cxx-compiler: "clang++"
 
@@ -45,7 +45,7 @@ jobs:
         python-version: 3.8
 
     - name: Set up OpenGL
-      if: matrix.os == 'ubuntu-18.04'
+      if: matrix.os == 'ubuntu-20.04'
       run: |
         sudo apt-get update
         sudo apt-get install -y libglu1-mesa-dev mesa-common-dev libgl1-mesa-glx libglvnd-core-dev freeglut3-dev libtbb-dev
@@ -120,7 +120,7 @@ jobs:
       shell: cmd
 
     - name: Build ImageViewer-Linux
-      if: matrix.os == 'ubuntu-18.04'
+      if: matrix.os == 'ubuntu-20.04'
       run: |
         export ITK_DIR="${PWD}/../ITK-build"
         export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
@@ -128,7 +128,7 @@ jobs:
         ninja
 
     - name: Build ImageViewer-Mac
-      if: matrix.os == 'macos-10.15'
+      if: matrix.os == 'macos-11'
       run: |
         export ITK_DIR="${PWD}/../ITK-build"
         export SlicerExecutionModel_DIR="${PWD}/../SlicerExecutionModel-build"
@@ -154,7 +154,7 @@ jobs:
       shell: cmd
 
     - name: Package with Qt - Mac
-      if: matrix.os == 'macos-10.15'
+      if: matrix.os == 'macos-11'
       run: |
         /Users/runner/work/ImageViewer/Qt/5.15.2/clang_64/bin/macdeployqt ImageViewer/bin/ImageViewer.app
         chmod +x ImageViewer/bin/ImageViewer.app/Contents/MacOS/ImageViewer
