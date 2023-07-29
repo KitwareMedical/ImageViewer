@@ -2281,8 +2281,9 @@ void QtGlSliceView::paintGL( void )
     return;
     }
 
-  double scale0 = this->width() / (double) cWinSizeX;
-  double scale1 = this->height() / (double) cWinSizeY;
+  int sizeMax = qMax(this->width(), this->height());
+  double scale0 = sizeMax / (double) cWinSizeX;
+  double scale1 = sizeMax / (double) cWinSizeY;
   int originX = (int)( -cWinMinX * scale0 );
   if( originX < 0 )
     {
