@@ -31,6 +31,11 @@ limitations under the License.
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QApplication>
+#include <QStyle>
+#include <QScreen>
+#include <QSize>
+#include <QGuiApplication>
 
 // QtImageViewer includes
 #include "QtImageViewer.h"
@@ -182,7 +187,30 @@ void QtImageViewerPrivate::updateSize()
     }
   int width = geom.width();
   int height = geom.height();
+
+  QGuiApplication* app = static_cast<QGuiApplication*>qApp;
+  QSize size = app->primaryScreen()->availableSize();
+  
+  // clamp the width height so that it doesn't extend
+  // beyond the screen
+  int maxWidth = size.width();
+  width = std::min(maxWidth, width);
+
   height = this->OpenGlWindow->heightForWidth(width);
+
+  // check if the widget is too high for the screen
+  // if so, find out by how much, and reduce the width
+  // by that relative amount, and recalculate the proper
+  // height by ratio to the new width
+  // need to consider the height of the window title bar too
+  int maxHeight = size.height() - QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
+  if (height > maxHeight) {
+      double ratio = (double)maxHeight / (double)height;
+     
+      width = std::floor((double)width * ratio);
+      height = this->OpenGlWindow->heightForWidth(width);
+  }
+
   // Can't use QWidget::adjustSize() here because it resizes to the
   // sizeHint of the widget. Instead we want to resize using the current
   // size, just update the height.
