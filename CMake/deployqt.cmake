@@ -25,7 +25,7 @@ elseif( APPLE )
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND "${_qt_bin_dir}/macdeployqt"         
               --verbose 1
-              \"$<TARGET_FILE_DIR:${target}>/../..\"
+              \"$<TARGET_FILE:${target}>\"
       COMMENT "Deploying using macdeployqt for target '${target}' ..."
     )
     add_custom_command(TARGET ${target} POST_BUILD
