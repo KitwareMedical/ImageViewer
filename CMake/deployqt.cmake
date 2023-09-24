@@ -20,9 +20,7 @@ if( WIN32 )
       COMMENT "Deploying using windeployqt for target '${target}' ..."
     )
   endfunction()
-endif(WIN32)
-
-if( APPLE )
+elseif( APPLE )
   function(deployqt target)
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND "${_qt_bin_dir}/macdeployqt.exe"         
@@ -42,4 +40,8 @@ if( APPLE )
       COMMENT "Ensuring ImageViewer application is executable."
     )
   endfunction()
-endif(APPLE)
+else()
+  function(deployqt target)
+    message(STATUS "DeployQt for linux = NOP")
+  endfunction()
+endif()
