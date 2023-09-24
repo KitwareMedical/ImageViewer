@@ -23,14 +23,14 @@ if( WIN32 )
 elseif( APPLE )
   function(deployqt target)
     add_custom_command(TARGET ${target} POST_BUILD
-      COMMAND "${_qt_bin_dir}/macdeployqt.exe"         
+      COMMAND "${_qt_bin_dir}/macdeployqt"         
               --verbose 1
               --translations en
               --release
               --no-svg
               --no-angle
               --no-system-d3d-compiler
-              \"$<TARGET_FILE:${target}>\"
+              \"$<TARGET_FILE_DIR:${target}>/../..\"
       COMMENT "Deploying using macdeployqt for target '${target}' ..."
     )
     add_custom_command(TARGET ${target} POST_BUILD
