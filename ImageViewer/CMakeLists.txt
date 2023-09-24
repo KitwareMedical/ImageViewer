@@ -23,6 +23,8 @@
 cmake_policy(SET CMP0069 OLD)
 cmake_policy(SET CMP0006 OLD)  # For mac bundles
 
+
+
 set( ImageViewer_SRCS ImageViewer.cxx )
 
 set( ImageViewer_LIBRARIES 
@@ -46,3 +48,6 @@ SEMMacroBuildCLI(
     ${ImageViewer_INCLUDE_DIRS}
   EXECUTABLE_ONLY
   )
+
+include(deployqt)
+deployqt(ImageViewer)

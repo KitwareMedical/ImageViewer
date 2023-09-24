@@ -27,28 +27,19 @@ project(ImageViewer)
 cmake_policy(SET CMP0020 NEW)
 cmake_policy(SET CMP0006 OLD)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(CMAKE_MODULE_PATH ${ImageViewer_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARIES)
 set_property(GLOBAL PROPERTY ImageViewer_INCLUDE_DIRS)
 set_property(GLOBAL PROPERTY ImageViewer_LIBRARY_DIRS)
 
-if(UNIX)
-  if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC"
-         CACHE STRING "Flags used by all build types." FORCE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC"
-         CACHE STRING "Flags used by all build types." FORCE)
-  endif(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-endif(UNIX)
-
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#add_definitions( -DQT_STATIC )
-#add_definitions( -DQT_DESIGNER_STATIC )
 add_definitions( -DQT_THREAD_SUPPORT )
 find_package(Qt5 5.11 COMPONENTS Core Widgets Gui REQUIRED)
 

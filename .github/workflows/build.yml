@@ -147,18 +147,6 @@ jobs:
         ninja
       shell: cmd
 
-    - name: Package with Qt - Windows
-      if: matrix.os == 'windows-2019'
-      run: |
-        windeployqt --release ImageViewer/bin
-      shell: cmd
-
-    - name: Package with Qt - Mac
-      if: matrix.os == 'macos-11'
-      run: |
-        /Users/runner/work/ImageViewer/Qt/5.15.2/clang_64/bin/macdeployqt ImageViewer/bin/ImageViewer.app
-        chmod +x ImageViewer/bin/ImageViewer.app/Contents/MacOS/ImageViewer
-
     - name: Publish ImageViewer as GitHub Artifact
       uses: actions/upload-artifact@v1
       with:
