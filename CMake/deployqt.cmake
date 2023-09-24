@@ -25,11 +25,6 @@ elseif( APPLE )
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND "${_qt_bin_dir}/macdeployqt"         
               --verbose 1
-              --translations en
-              --release
-              --no-svg
-              --no-angle
-              --no-system-d3d-compiler
               \"$<TARGET_FILE_DIR:${target}>/../..\"
       COMMENT "Deploying using macdeployqt for target '${target}' ..."
     )
