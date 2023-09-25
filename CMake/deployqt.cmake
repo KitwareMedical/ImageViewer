@@ -30,7 +30,7 @@ elseif( APPLE )
     add_custom_command(TARGET ${target} POST_BUILD
       COMMAND "chmod"
                  +x
-                 \"$<TARGET_FILE:${target}>/Contents/MacOS/ImageViewer\"
+                 \"$<TARGET_FILE:${target}>\"
       COMMENT "Ensuring ImageViewer application is executable."
     )
   endfunction()
